@@ -1,8 +1,56 @@
+/*
+ * Copyright (c) 1997, 2020, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.JScrollPane;
+import javax.swing.event.CaretListener;
+import javax.swing.plaf.TextUI;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Keymap;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.JemmyInputException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TextDriver;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -12,16 +60,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.CaretListener;
-import javax.swing.plaf.TextUI;
-import javax.swing.text.*;
-import java.awt.*;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.concurrent.Callable;
-
 
 public class JTextComponentOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JTextComponentOperator.class);
@@ -55,11 +93,12 @@ public class JTextComponentOperator extends JComponentOperator {
     public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
         this(cont, text, stringComparator, 0);
     }
-    
+
     public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JTextComponent) waitComponent(cont,
-                PredicatesJ.of(JTextComponent.class,
-                        new JTextComponentByTextPredicate(text, stringComparator)), index));
+        this((JTextComponent) waitComponent(
+                cont,
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index));
     }
 
     public int getPositionByText(String text, TextChooser tChooser, int index) {
@@ -97,20 +136,26 @@ public class JTextComponentOperator extends JComponentOperator {
     public void enterText(String text) {
         makeComponentVisible();
         requestFocus();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.enterText(JTextComponentOperator.this, text);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.enterText(JTextComponentOperator.this, text);
 
-            return null;
-        }, null, TimeoutKey.JTextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
     public void changeCaretPosition(int position) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.changeCaretPosition(JTextComponentOperator.this, position);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.changeCaretPosition(JTextComponentOperator.this, position);
 
-            return null;
-        }, null, TimeoutKey.JTextComponentOperator_ChangeCaretPositionTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JTextComponentOperator_ChangeCaretPositionTimeout);
 
         if (getVerification()) {
             waitCaretPosition(position);
@@ -134,11 +179,14 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void typeText(String text, int caretPosition) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.typeText(JTextComponentOperator.this, text, caretPosition);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.typeText(JTextComponentOperator.this, text, caretPosition);
 
-            return null;
-        }, null, TimeoutKey.JTextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JTextComponentOperator_TypeTextTimeout);
 
         if (getVerification()) {
             waitText(text, -1);
@@ -151,11 +199,14 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void selectText(int startPosition, int finalPosition) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.selectText(JTextComponentOperator.this, startPosition, finalPosition);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.selectText(JTextComponentOperator.this, startPosition, finalPosition);
 
-            return null;
-        }, null, TimeoutKey.JTextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
     public void selectText(String text, int index) {
@@ -174,11 +225,14 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void clearText() {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.clearText(JTextComponentOperator.this);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.clearText(JTextComponentOperator.this);
 
-            return null;
-        }, null, TimeoutKey.JTextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
     public void scrollToPosition(int position) {
@@ -191,8 +245,8 @@ public class JTextComponentOperator extends JComponentOperator {
         JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         Rectangle rect = modelToView(position);
-        scroller.scrollToComponentRectangle(getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(),
-                (int) rect.getHeight());
+        scroller.scrollToComponentRectangle(
+                getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
     }
 
     public String getDisplayedText() {
@@ -254,11 +308,13 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public int getCaretPosition() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getCaretPosition()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getCaretPosition()));
     }
 
     public Color getDisabledTextColor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getDisabledTextColor()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getDisabledTextColor()));
     }
 
     public Document getDocument() {
@@ -266,7 +322,8 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public char getFocusAccelerator() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getFocusAccelerator()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getFocusAccelerator()));
     }
 
     public Highlighter getHighlighter() {
@@ -282,43 +339,53 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public Dimension getPreferredScrollableViewportSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getPreferredScrollableViewportSize()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getPreferredScrollableViewportSize()));
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource())
+                .getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportHeight()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportWidth()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource())
+                .getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public String getSelectedText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectedText()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectedText()));
     }
 
     public Color getSelectedTextColor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectedTextColor()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectedTextColor()));
     }
 
     public Color getSelectionColor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionColor()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionColor()));
     }
 
     public int getSelectionEnd() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionEnd()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionEnd()));
     }
 
     public int getSelectionStart() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionStart()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionStart()));
     }
 
     public String getText() {
@@ -526,7 +593,8 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public int viewToModel(Point point) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).viewToModel(point)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).viewToModel(point)));
     }
 
     public void write(Writer writer) {
@@ -545,17 +613,19 @@ public class JTextComponentOperator extends JComponentOperator {
         return findJTextComponent(cont, chooser, 0);
     }
 
-    public static JTextComponent findJTextComponent(Container cont, String text, StringComparator stringComparator, int index) {
-        return findJTextComponent(cont, PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
-                                  index);
+    public static JTextComponent findJTextComponent(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return findJTextComponent(
+                cont,
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index);
     }
 
     public static JTextComponent findJTextComponent(Container cont, String text, StringComparator stringComparator) {
         return findJTextComponent(cont, text, stringComparator, 0);
     }
 
-    public static JTextComponent waitJTextComponent(Container cont, Predicate<Component> chooser,
-                                                    int index) {
+    public static JTextComponent waitJTextComponent(Container cont, Predicate<Component> chooser, int index) {
         return (JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class, chooser), index);
     }
 
@@ -563,9 +633,12 @@ public class JTextComponentOperator extends JComponentOperator {
         return waitJTextComponent(cont, chooser, 0);
     }
 
-    public static JTextComponent waitJTextComponent(Container cont, String text, StringComparator stringComparator, int index) {
-        return waitJTextComponent(cont, PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
-                                  index);
+    public static JTextComponent waitJTextComponent(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return waitJTextComponent(
+                cont,
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index);
     }
 
     public static JTextComponent waitJTextComponent(Container cont, String text, StringComparator stringComparator) {
@@ -590,8 +663,8 @@ public class JTextComponentOperator extends JComponentOperator {
             String observedText = jTextComponentOp.getDisplayedText();
             if (beginIdx >= 0) {
                 int endIdx = beginIdx + expectedText.length();
-                return endIdx <= observedText.length() &&
-                        observedText.substring(beginIdx, endIdx).equals(expectedText);
+                return endIdx <= observedText.length()
+                        && observedText.substring(beginIdx, endIdx).equals(expectedText);
             } else {
                 return observedText.contains(expectedText);
             }
@@ -611,8 +684,7 @@ public class JTextComponentOperator extends JComponentOperator {
         }
     }
 
-
-public class NoSuchTextException extends JemmyInputException {
+    public class NoSuchTextException extends JemmyInputException {
         public NoSuchTextException(String text) {
             super("No such text as \"" + text + "\"", getSource());
         }

@@ -1,20 +1,36 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.EventQueue;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import java.awt.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 class JCheckBoxMenuItemOperatorTest {
-
-
 
     private JCheckBoxMenuItem checkBoxMenuItem;
     private JFrame frame;
@@ -52,10 +68,11 @@ class JCheckBoxMenuItemOperatorTest {
         assertNotNull(menuBarOp);
         JCheckBoxMenuItemOperator operator3 = new JCheckBoxMenuItemOperator(menuBarOp);
         assertNotNull(operator3);
-        JCheckBoxMenuItemOperator operator4 = new JCheckBoxMenuItemOperator(menuBarOp,
-                                                  PredicatesJ.byName("JCheckBoxMenuItemOperatorTest"));
+        JCheckBoxMenuItemOperator operator4 =
+                new JCheckBoxMenuItemOperator(menuBarOp, PredicatesJ.byName("JCheckBoxMenuItemOperatorTest"));
         assertNotNull(operator4);
-        JCheckBoxMenuItemOperator operator5 = new JCheckBoxMenuItemOperator(menuBarOp, "JCheckBoxMenuItemOperatorTest", StringComparators.strict());
+        JCheckBoxMenuItemOperator operator5 =
+                new JCheckBoxMenuItemOperator(menuBarOp, "JCheckBoxMenuItemOperatorTest", StringComparators.strict());
         assertNotNull(operator5);
     }
 

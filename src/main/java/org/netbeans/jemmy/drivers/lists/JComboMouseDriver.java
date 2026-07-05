@@ -1,6 +1,32 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.drivers.lists;
 
+import java.util.Collections;
+import javax.swing.UIManager;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -12,9 +38,6 @@ import org.netbeans.jemmy.operators.JComboBoxOperator;
 import org.netbeans.jemmy.operators.JListOperator;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
-import javax.swing.*;
-import java.util.Collections;
-
 public final class JComboMouseDriver extends LightSupportiveDriver implements ListDriver {
     public JComboMouseDriver() {
         super(Collections.singletonList("org.netbeans.jemmy.operators.JComboBoxOperator"));
@@ -24,18 +47,21 @@ public final class JComboMouseDriver extends LightSupportiveDriver implements Li
     public void selectItem(ComponentOperator oper, int index) {
         JComboBoxOperator coper = (JComboBoxOperator) oper;
         if (!coper.isPopupVisible()) {
-            if ("com.sun.java.swing.plaf.motif.MotifLookAndFeel".equals(
-                    UIManager.getLookAndFeel().getClass().getName())) {
+            if ("com.sun.java.swing.plaf.motif.MotifLookAndFeel"
+                    .equals(UIManager.getLookAndFeel().getClass().getName())) {
                 oper.clickMouse(oper.getWidth() - 2, oper.getHeight() / 2, 1);
             } else {
-                DriverManager.newInstance(JemmyProperties.getInstance()).getButtonDriver(coper.getButton()).push(
-                    coper.getButton());
+                DriverManager.newInstance(JemmyProperties.getInstance())
+                        .getButtonDriver(coper.getButton())
+                        .push(coper.getButton());
             }
         }
 
         JListOperator list = new JListOperator(coper.waitList());
         list.setVisualizer(new EmptyVisualizer());
         Timeouts.sleep(TimeoutKey.JComboBoxOperator_BeforeSelectingTimeout);
-        DriverManager.newInstance(JemmyProperties.getInstance()).getListDriver(list).selectItem(list, index);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getListDriver(list)
+                .selectItem(list, index);
     }
 }

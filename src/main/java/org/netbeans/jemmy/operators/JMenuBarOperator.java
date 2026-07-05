@@ -1,23 +1,57 @@
+/*
+ * Copyright (c) 1997, 2022, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
-import java.util.NoSuchElementException;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
+import javax.swing.SingleSelectionModel;
+import javax.swing.plaf.MenuBarUI;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.ComponentSearcher;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-
-import javax.swing.*;
-import javax.swing.plaf.MenuBarUI;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 
 public class JMenuBarOperator extends JComponentOperator {
     public static final String SUBMENU_PREFIX_DPROP = "Submenu";
@@ -43,7 +77,10 @@ public class JMenuBarOperator extends JComponentOperator {
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {
         makeComponentVisible();
 
-        return produceTimeRestricted((Function<Void, JMenuItem>) v -> (JMenuItem) driver.pushMenu(JMenuBarOperator.this, predicates), null, TimeoutKey.JMenuOperator_PushMenuTimeout);
+        return produceTimeRestricted(
+                (Function<Void, JMenuItem>) v -> (JMenuItem) driver.pushMenu(JMenuBarOperator.this, predicates),
+                null,
+                TimeoutKey.JMenuOperator_PushMenuTimeout);
     }
 
     public void pushMenuNoBlock(List<Predicate<Component>> predicates) {
@@ -127,8 +164,7 @@ public class JMenuBarOperator extends JComponentOperator {
         JMenuItemOperator result;
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
             ComponentSearcher searcher = new ComponentSearcher((Container) menuCont.getSource());
-            Component c = searcher.findComponent(new JMenuItemByTextPredicate(path[path.length - 1],
-                              comparator));
+            Component c = searcher.findComponent(new JMenuItemByTextPredicate(path[path.length - 1], comparator));
             result = new JMenuItemOperator((JMenuItem) c);
         } else {
             result = new JMenuItemOperator(menuCont, path[path.length - 1], comparator);
@@ -158,7 +194,8 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public int getComponentIndex(Component component) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getComponentIndex(component)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getComponentIndex(component)));
     }
 
     public JMenu getHelpMenu() {
@@ -205,8 +242,8 @@ public class JMenuBarOperator extends JComponentOperator {
         }));
     }
 
-    public void processKeyEvent(KeyEvent keyEvent, MenuElement[] menuElement,
-                                MenuSelectionManager menuSelectionManager) {
+    public void processKeyEvent(
+            KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).processKeyEvent(keyEvent, menuElement, menuSelectionManager);
 
@@ -214,8 +251,8 @@ public class JMenuBarOperator extends JComponentOperator {
         }));
     }
 
-    public void processMouseEvent(MouseEvent mouseEvent, MenuElement[] menuElement,
-                                  MenuSelectionManager menuSelectionManager) {
+    public void processMouseEvent(
+            MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).processMouseEvent(mouseEvent, menuElement, menuSelectionManager);
 

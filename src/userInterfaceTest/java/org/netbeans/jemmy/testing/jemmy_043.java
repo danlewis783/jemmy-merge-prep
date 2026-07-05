@@ -1,19 +1,28 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.DispatchingModel;
-import org.netbeans.jemmy.JemmyProperties;
-import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.JButtonOperator;
-import org.netbeans.jemmy.operators.JFrameOperator;
-import org.netbeans.jemmy.operators.JTextAreaOperator;
-
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -25,15 +34,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.DispatchingModel;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JTextAreaOperator;
 
 final class jemmy_043 {
-
-
-
 
     @BeforeEach
     void beforeEach() {
@@ -45,7 +56,7 @@ final class jemmy_043 {
     void after() {
         new JFrameOperator("Application_043").setVisible(false);
     }
-    
+
     @Test
     void robotVsQueue() {
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
@@ -83,7 +94,7 @@ final class jemmy_043 {
             compareEvents(linesQueue, linesRobot);
         });
     }
-    
+
     private void compareEvents(List<String> eventListA, List<String> eventListB) {
         int listASize = eventListA.size();
         int listBSize = eventListB.size();
@@ -94,7 +105,8 @@ final class jemmy_043 {
         }
     }
 
-    private List<String> recordEvents(JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
+    private List<String> recordEvents(
+            JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
         EventRecorder eventRecorder = new EventRecorder();
         addListener(eventRecorder, jFrameOp, jTextAreaOp, jButtonOp);
         scenario(jTextAreaOp, jButtonOp);
@@ -104,11 +116,14 @@ final class jemmy_043 {
     }
 
     private void goRobotMode() {
-        JemmyProperties.getInstance().installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut, DispatchingModel.Robot));        
+        JemmyProperties.getInstance()
+                .installDriversAndSetDispatchingModel(
+                        EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut, DispatchingModel.Robot));
     }
 
     private void goQueueMode() {
-        JemmyProperties.getInstance().installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
+        JemmyProperties.getInstance()
+                .installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
     }
 
     private static void scenario(JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
@@ -118,7 +133,8 @@ final class jemmy_043 {
         jTextAreaOp.setText("123\n");
     }
 
-    private static void addListener(EventRecorder listener, JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
+    private static void addListener(
+            EventRecorder listener, JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
         addListeners(jFrameOp.getSource(), listener);
         addListeners(jTextAreaOp.getSource(), listener);
         addListeners(jButtonOp.getSource(), listener);
@@ -129,7 +145,8 @@ final class jemmy_043 {
         comp.addKeyListener(listener);
     }
 
-    private static void removeListener(EventRecorder listener, JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
+    private static void removeListener(
+            EventRecorder listener, JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
         removeListeners(jFrameOp.getSource(), listener);
         removeListeners(jTextAreaOp.getSource(), listener);
         removeListeners(jButtonOp.getSource(), listener);
@@ -191,7 +208,8 @@ final class jemmy_043 {
                 Field[] fields = eventClass.getFields();
                 for (Field field : fields) {
                     if ((field.getModifiers() & (Modifier.PUBLIC | Modifier.STATIC)) != 0
-                            && field.getType().equals(Integer.TYPE) && field.getName().startsWith("VK_")) {
+                            && field.getType().equals(Integer.TYPE)
+                            && field.getName().startsWith("VK_")) {
                         if (keyCode == (Integer) field.get(null)) {
                             return field.getName();
                         }

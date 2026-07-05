@@ -1,26 +1,52 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.testing;
 
-import java.util.function.Function;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.*;
-import org.netbeans.jemmy.operators.JFrameOperator;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ContainerEvent;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import javax.swing.JFrame;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.EventTool;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.TimeoutExpiredException;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
+import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.operators.JFrameOperator;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
 class jemmy_030 {
     private TimeoutOverride override;
 
@@ -64,7 +90,8 @@ class jemmy_030 {
         TimeoutOverride override0 = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 3250L);
 
         try {
-            assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
                     .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (3250 ms) exceeded after (");
         } finally {
             override0.cancel();
@@ -72,22 +99,26 @@ class jemmy_030 {
 
         assertNotNull(eventTool.getLastEvent(AWTEvent.MOUSE_EVENT_MASK), "No mouse event found");
         assertTrue(eventTool.getLastEventTime(AWTEvent.MOUSE_EVENT_MASK) > 0, "No mouse event found");
-        assertTrue(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
+        assertTrue(
+                FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
         eventTool.removeListeners();
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
         TimeoutOverride override1 = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2990);
         try {
-            assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
                     .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (2990 ms) exceeded after (");
         } finally {
             override1.cancel();
         }
 
-        assertTrue(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
+        assertTrue(
+                FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
         eventTool.addListeners();
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
         assertNotNull(eventTool.waitEvent());
-        assertTrue(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
+        assertTrue(
+                FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
         TimeoutOverride overrideA = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L);
         try {
@@ -97,11 +128,14 @@ class jemmy_030 {
         }
         TimeoutOverride overrideB = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L);
         try {
-            assertFalse(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK),"Mouse event was not occurred in 1500 milliseconds");
+            assertFalse(
+                    eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK),
+                    "Mouse event was not occurred in 1500 milliseconds");
         } finally {
             overrideB.cancel();
         }
-        assertTrue(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
+        assertTrue(
+                FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
 
         TimeoutOverride overrideC = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L);
         try {
@@ -119,19 +153,22 @@ class jemmy_030 {
             overrideD.cancel();
         }
 
-        assertTrue(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
+        assertTrue(
+                FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 10));
 
         TimeoutOverride overrideE = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500);
 
         try {
-            assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() -> eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK))
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK))
                     .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (1500 ms) exceeded after (");
         } finally {
             overrideE.cancel();
         }
 
-        assertTrue(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
+        assertTrue(
+                FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished)).runUntilNotNull(null));
     }
 
     private static class FinishedAndQueueEmptyFunction implements Function<Void, Boolean> {
@@ -143,11 +180,15 @@ class jemmy_030 {
 
         @Override
         public Boolean apply(Void obj) {
-            return (finished.get() && (Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null))
-                   ? true : null;
+            return (finished.get()
+                            && (Toolkit.getDefaultToolkit()
+                                            .getSystemEventQueue()
+                                            .peekEvent()
+                                    == null))
+                    ? true
+                    : null;
         }
     }
-
 
     private static class MouseMover implements Callable<Void> {
         private int count;

@@ -1,8 +1,47 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.SpinnerUI;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -13,15 +52,6 @@ import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.JSpinnerByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.SpinnerUI;
-import java.awt.*;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 
 public class JSpinnerOperator extends JComponentOperator {
     private JButtonOperator decreaseOperator = null;
@@ -58,27 +88,36 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scroll(JSpinnerOperator.this, adj);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scroll(JSpinnerOperator.this, adj);
 
-            return null;
-        }, null, TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMaximum(JSpinnerOperator.this, SwingConstants.VERTICAL);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMaximum(JSpinnerOperator.this, SwingConstants.VERTICAL);
 
-            return null;
-        }, null, TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToMinimum() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMinimum(JSpinnerOperator.this, SwingConstants.VERTICAL);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMinimum(JSpinnerOperator.this, SwingConstants.VERTICAL);
 
-            return null;
-        }, null, TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToObject(Object value, int direction) {
@@ -280,7 +319,6 @@ public class JSpinnerOperator extends JComponentOperator {
         }
     }
 
-
     public static class ExactScrollAdjuster extends ObjectScrollAdjuster {
         private final Object obj;
 
@@ -300,7 +338,6 @@ public class JSpinnerOperator extends JComponentOperator {
         }
     }
 
-
     public static class ListScrollAdjuster implements ScrollAdjuster {
         private final List elements;
         private int itemIndex;
@@ -308,7 +345,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
         private ListScrollAdjuster(JSpinnerOperator oper) {
             if (!(Objects.requireNonNull(oper).getModel() instanceof SpinnerListModel)) {
-               throw new IllegalArgumentException("JSpinner model is not a " + SpinnerListModel.class.getName());
+                throw new IllegalArgumentException("JSpinner model is not a " + SpinnerListModel.class.getName());
             }
             model = (SpinnerListModel) oper.getModel();
             elements = model.getList();
@@ -337,7 +374,6 @@ public class JSpinnerOperator extends JComponentOperator {
         }
     }
 
-
     public static class NumberScrollAdjuster implements ScrollAdjuster {
         private final SpinnerNumberModel model;
         private final double value;
@@ -351,7 +387,7 @@ public class JSpinnerOperator extends JComponentOperator {
             }
 
             this.value = value;
-            if (!(Objects.requireNonNull(oper).getModel() instanceof SpinnerNumberModel)){
+            if (!(Objects.requireNonNull(oper).getModel() instanceof SpinnerNumberModel)) {
                 throw new IllegalArgumentException("JSpinner model is not a " + SpinnerNumberModel.class.getName());
             }
             model = (SpinnerNumberModel) oper.getModel();
@@ -372,7 +408,6 @@ public class JSpinnerOperator extends JComponentOperator {
         }
     }
 
-
     public abstract static class ObjectScrollAdjuster implements ScrollAdjuster {
         private final int direction;
         private final SpinnerModel model;
@@ -389,8 +424,8 @@ public class JSpinnerOperator extends JComponentOperator {
             if (matches(model.getValue())) {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
             } else if (((direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) && (model.getNextValue() != null))
-                       || ((direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION)
-                           && (model.getPreviousValue() != null))) {
+                    || ((direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION)
+                            && (model.getPreviousValue() != null))) {
                 return direction;
             } else {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
@@ -403,13 +438,12 @@ public class JSpinnerOperator extends JComponentOperator {
         }
     }
 
-
     public static class ToStringScrollAdjuster extends ObjectScrollAdjuster {
         private final StringComparator comparator;
         private final String pattern;
 
-        public ToStringScrollAdjuster(JSpinnerOperator oper, String pattern, StringComparator comparator,
-                                      int direction) {
+        public ToStringScrollAdjuster(
+                JSpinnerOperator oper, String pattern, StringComparator comparator, int direction) {
             super(oper, direction);
             this.pattern = pattern;
             this.comparator = comparator;

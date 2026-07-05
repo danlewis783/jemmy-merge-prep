@@ -1,7 +1,40 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,24 +46,12 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Collections;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 class JMenuOperatorTest {
 
     @BeforeAll
     static void beforeAll() {
         Timeouts.resetToDefaults();
     }
-
 
     private final AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
     private final AtomicReference<JMenu> jMenuRef = new AtomicReference<>();
@@ -116,7 +137,7 @@ class JMenuOperatorTest {
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.strict());
         jMenuOp.pushMenu("JMenuOperatorTest", "/", StringComparators.strict());
         jMenuOp.pushMenu("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
-        jMenuOp.pushMenu(new String[] { "JMenuOperatorTest" }, StringComparators.caseInsensitiveSubstring());
+        jMenuOp.pushMenu(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.regex());
         jMenuRef.get().removeMenuListener(listener);
     }
@@ -134,7 +155,7 @@ class JMenuOperatorTest {
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.strict());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.strict());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
-        jMenuOp.pushMenuNoBlock(new String[] { "JMenuOperatorTest" }, StringComparators.caseInsensitiveSubstring());
+        jMenuOp.pushMenuNoBlock(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", ",", StringComparators.regex());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.regex());
         jMenuRef.get().removeMenuListener(listener);
@@ -152,7 +173,7 @@ class JMenuOperatorTest {
         jMenuRef.get().addMenuListener(listener);
         assertNotNull(jMenuOp.showMenuItem("Item1", "/", StringComparators.strict()));
         assertNotNull(jMenuOp.showMenuItem(Collections.singletonList(PredicatesJ.byName("Item1"))));
-        assertNotNull(jMenuOp.showMenuItem(new String[] { "Item1" }, StringComparators.strict()));
+        assertNotNull(jMenuOp.showMenuItem(new String[] {"Item1"}, StringComparators.strict()));
         jMenuRef.get().removeMenuListener(listener);
     }
 
@@ -360,7 +381,7 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
         assertNotNull(jMenuOp);
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
-        EventQueue.invokeAndWait(()-> menuItem.set(new JMenuItem("Test")));
+        EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
         jMenuOp.remove(menuItem.get());
     }
 
@@ -401,7 +422,6 @@ class JMenuOperatorTest {
         @Override
         public void actionPerformed(ActionEvent e) {}
     }
-
 
     private static class NullMenuListener implements MenuListener {
         @Override

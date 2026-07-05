@@ -1,17 +1,45 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.drivers.scrolling;
 
+import java.util.Collections;
+import javax.swing.JButton;
+import javax.swing.JSplitPane;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.ScrollDriver;
-import org.netbeans.jemmy.operators.*;
+import org.netbeans.jemmy.operators.ComponentOperator;
+import org.netbeans.jemmy.operators.ContainerOperator;
+import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JSplitPaneOperator;
+import org.netbeans.jemmy.operators.Operator;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-
-import javax.swing.*;
-import java.util.Collections;
 
 public final class JSplitPaneDriver extends LightSupportiveDriver implements ScrollDriver {
     public JSplitPaneDriver() {
@@ -50,13 +78,19 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
         }
     }
 
-    private void moveOnce(JSplitPaneOperator oper, ContainerOperator divOper, ScrollAdjuster adj, int leftPosition,
-                          int rightPosition) {
+    private void moveOnce(
+            JSplitPaneOperator oper,
+            ContainerOperator divOper,
+            ScrollAdjuster adj,
+            int leftPosition,
+            int rightPosition) {
         int currentPosition;
         if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-            currentPosition = (int) (divOper.getLocationOnScreen().getX() - oper.getLocationOnScreen().getX());
+            currentPosition = (int) (divOper.getLocationOnScreen().getX()
+                    - oper.getLocationOnScreen().getX());
         } else {
-            currentPosition = (int) (divOper.getLocationOnScreen().getY() - oper.getLocationOnScreen().getY());
+            currentPosition = (int) (divOper.getLocationOnScreen().getY()
+                    - oper.getLocationOnScreen().getY());
         }
 
         int nextPosition;
@@ -64,7 +98,9 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
             nextPosition = (currentPosition + leftPosition) / 2;
             moveToPosition(oper, divOper, nextPosition - currentPosition);
 
-            if (currentPosition == (int) (divOper.getLocationOnScreen().getY() - oper.getLocationOnScreen().getY())) {
+            if (currentPosition
+                    == (int) (divOper.getLocationOnScreen().getY()
+                            - oper.getLocationOnScreen().getY())) {
                 return;
             }
 
@@ -73,7 +109,9 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
             nextPosition = (currentPosition + rightPosition) / 2;
             moveToPosition(oper, divOper, nextPosition - currentPosition);
 
-            if (currentPosition == (int) (divOper.getLocationOnScreen().getY() - oper.getLocationOnScreen().getY())) {
+            if (currentPosition
+                    == (int) (divOper.getLocationOnScreen().getY()
+                            - oper.getLocationOnScreen().getY())) {
                 return;
             }
 
@@ -83,10 +121,17 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
 
     private void moveTo(JSplitPaneOperator oper, ComponentOperator divOper, int x, int y) {
         DriverManager manager = DriverManager.newInstance(JemmyProperties.getInstance());
-        manager.getMouseDriver(divOper).dragNDrop(divOper, divOper.getCenterX(), divOper.getCenterY(), x, y,
-                               Operator.getDefaultMouseButton(), 0,
-                               TimeoutKey.ComponentOperator_BeforeDragTimeout,
-                               TimeoutKey.ComponentOperator_AfterDragTimeout);
+        manager.getMouseDriver(divOper)
+                .dragNDrop(
+                        divOper,
+                        divOper.getCenterX(),
+                        divOper.getCenterY(),
+                        x,
+                        y,
+                        Operator.getDefaultMouseButton(),
+                        0,
+                        TimeoutKey.ComponentOperator_BeforeDragTimeout,
+                        TimeoutKey.ComponentOperator_AfterDragTimeout);
     }
 
     private void moveToPosition(JSplitPaneOperator oper, ComponentOperator divOper, int nextPosition) {
@@ -99,9 +144,10 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
 
     private void expandTo(JSplitPaneOperator oper, int index) {
         ContainerOperator divOper = oper.getDivider();
-        JButtonOperator bo = new JButtonOperator((JButton) divOper.waitSubComponent(PredicatesJ.of(JButton.class,
-                                 PredicatesJ.alwaysTrue()), index));
-        ButtonDriver bdriver = DriverManager.newInstance(JemmyProperties.getInstance()).getButtonDriver(bo);
+        JButtonOperator bo = new JButtonOperator(
+                (JButton) divOper.waitSubComponent(PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
+        ButtonDriver bdriver =
+                DriverManager.newInstance(JemmyProperties.getInstance()).getButtonDriver(bo);
         bdriver.push(bo);
         bdriver.push(bo);
     }

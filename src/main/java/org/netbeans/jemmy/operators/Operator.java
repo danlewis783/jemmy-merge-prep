@@ -1,25 +1,59 @@
+/*
+ * Copyright (c) 1997, 2022, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.event.InputEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.NoSuchElementException;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.*;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.CharBindingMap;
+import org.netbeans.jemmy.ClassReference;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.FunctionRunner;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.callables.CallablesJ;
 import org.netbeans.jemmy.functions.OperatorPredicateFunction;
-import org.netbeans.jemmy.util.*;
+import org.netbeans.jemmy.util.ComponentVisualizer;
+import org.netbeans.jemmy.util.DefaultPathParser;
+import org.netbeans.jemmy.util.DefaultVisualizer;
+import org.netbeans.jemmy.util.MouseVisualizer;
+import org.netbeans.jemmy.util.PathParser;
+import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public abstract class Operator {
     private static final Logger logger = LoggerFactory.getLogger(Operator.class);
@@ -71,7 +105,7 @@ public abstract class Operator {
     public void setVerification(boolean verification) {
         this.verification = verification;
     }
-    
+
     public String[] getParentPath(String path[]) {
         if (path.length > 1) {
             String[] ppath = new String[path.length - 1];
@@ -134,7 +168,8 @@ public abstract class Operator {
 
     public <T extends Operator> void waitState(Predicate<T> predicate) {
         try {
-            FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this)).runUntilNotNull(null);
+            FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this))
+                    .runUntilNotNull(null);
         } catch (InterruptedException e) {
             throw new JemmyException("Waiting of \"" + predicate.toString() + "\" state has been interrupted!", e);
         }
@@ -152,7 +187,7 @@ public abstract class Operator {
         Throwable throwable = functionRunner.getThrowable();
         if (throwable != null) {
             if (throwable instanceof JemmyException) {
-                throw(JemmyException) throwable;
+                throw (JemmyException) throwable;
             } else {
                 throw new JemmyException("Exception during " + function.toString(), throwable);
             }
@@ -169,9 +204,11 @@ public abstract class Operator {
             throw new JemmyException("interrupted during execution of non-blocking function", e);
         }
 
-        @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"}) Throwable t = functionRunner.getThrowable();
+        @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+        Throwable t = functionRunner.getThrowable();
         if (t != null) {
-            throw new JemmyException(String.format("throwable encountered during exception of function \"%s\"", function));
+            throw new JemmyException(
+                    String.format("throwable encountered during exception of function \"%s\"", function));
         }
     }
 
@@ -184,8 +221,8 @@ public abstract class Operator {
     }
 
     public static ComponentVisualizer setDefaultComponentVisualizer(ComponentVisualizer visualizer) {
-        return (ComponentVisualizer) JemmyProperties.getInstance().put("ComponentOperator.ComponentVisualizer",
-                visualizer);
+        return (ComponentVisualizer)
+                JemmyProperties.getInstance().put("ComponentOperator.ComponentVisualizer", visualizer);
     }
 
     public static ComponentVisualizer getDefaultComponentVisualizer() {
@@ -251,9 +288,9 @@ public abstract class Operator {
 
     private static ComponentOperator createOperator(Component comp, Class compClass) {
         List<String> splitClassName = Arrays.asList(compClass.getName().split("\\."));
-        String className = splitClassName.get(splitClassName.size() -1);
-        Object[] params = { comp };
-        Class[] paramClasses = { compClass };
+        String className = splitClassName.get(splitClassName.size() - 1);
+        Object[] params = {comp};
+        Class[] paramClasses = {compClass};
         for (String operatorPkg : operatorPkgs) {
             String fullyQualifiedClassName = operatorPkg + "." + className + "Operator";
             ClassReference classReference;
@@ -268,7 +305,10 @@ public abstract class Operator {
             Object instance = null;
             try {
                 instance = classReference.newInstance(params, paramClasses);
-            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
+            } catch (InvocationTargetException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InstantiationException e) {
                 logger.warn("", e);
             }
 

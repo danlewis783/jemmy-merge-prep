@@ -1,7 +1,48 @@
+/*
+ * Copyright (c) 1997, 2019, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Rectangle;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.Icon;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JInternalFrame.JDesktopIcon;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.InternalFrameUI;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyInputException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.drivers.InternalFrameDriver;
@@ -13,14 +54,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.JInternalFrame.JDesktopIcon;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.plaf.InternalFrameUI;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class JInternalFrameOperator extends JComponentOperator {
     public static final String IS_RESIZABLE_DPROP = "Resizable";
@@ -221,7 +254,8 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDefaultCloseOperation()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDefaultCloseOperation()));
     }
 
     public JDesktopIcon getDesktopIcon() {
@@ -261,7 +295,8 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public String getWarningString() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getWarningString()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getWarningString()));
     }
 
     public boolean isClosable() {
@@ -529,9 +564,11 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     private void checkIconified(boolean shouldBeIconified) {
-        if ((shouldBeIconified &&!isIcon()) || (!shouldBeIconified && isIcon())) {
-            throw new WrongInternalFrameStateException("JInternal frame should " + (shouldBeIconified ? "" : "not")
-                    + " be iconified to produce this operation", getSource());
+        if ((shouldBeIconified && !isIcon()) || (!shouldBeIconified && isIcon())) {
+            throw new WrongInternalFrameStateException(
+                    "JInternal frame should " + (shouldBeIconified ? "" : "not")
+                            + " be iconified to produce this operation",
+                    getSource());
         }
     }
 
@@ -550,9 +587,9 @@ public class JInternalFrameOperator extends JComponentOperator {
         return findJInternalFrame(cont, chooser, 0);
     }
 
-    public static JInternalFrame findJInternalFrame(Container cont, String text, StringComparator stringComparator, int index) {
-        return findJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator),
-                                  index);
+    public static JInternalFrame findJInternalFrame(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return findJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator), index);
     }
 
     public static JInternalFrame findJInternalFrame(Container cont, String text, StringComparator stringComparator) {
@@ -567,8 +604,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         return findJInternalFrameUnder(comp, new JInternalFramePredicate());
     }
 
-    public static JInternalFrame waitJInternalFrame(Container cont, Predicate<Component> chooser,
-                                                    int index) {
+    public static JInternalFrame waitJInternalFrame(Container cont, Predicate<Component> chooser, int index) {
         Component res = waitComponent(cont, new JInternalFramePredicate(chooser), index);
         if (res instanceof JInternalFrame) {
             return (JInternalFrame) res;
@@ -583,16 +619,17 @@ public class JInternalFrameOperator extends JComponentOperator {
         return waitJInternalFrame(cont, chooser, 0);
     }
 
-    public static JInternalFrame waitJInternalFrame(Container cont, String text, StringComparator stringComparator, int index) {
-        return waitJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator),
-                                  index);
+    public static JInternalFrame waitJInternalFrame(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return waitJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator), index);
     }
 
     public static JInternalFrame waitJInternalFrame(Container cont, String text, StringComparator stringComparator) {
         return waitJInternalFrame(cont, text, stringComparator, 0);
     }
 
-    private static JInternalFrame findOne(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+    private static JInternalFrame findOne(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         Component source = waitComponent(cont, new JInternalFrameByTitlePredicate(text, stringComparator), index);
         if (source instanceof JInternalFrame) {
             return (JInternalFrame) source;

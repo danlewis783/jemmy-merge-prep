@@ -1,24 +1,46 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
+import java.awt.EventQueue;
+import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.Collections;
+import javax.swing.DefaultSingleSelectionModel;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.plaf.MenuBarUI;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.plaf.MenuBarUI;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
 class JMenuBarOperatorTest {
-
-
 
     private JDialog dialog;
     private JFrame frame;
@@ -97,8 +119,8 @@ class JMenuBarOperatorTest {
         assertNotNull(operator1);
         operator1.pushMenu("JMenu1", StringComparators.strict());
         operator1.pushMenu("JMenu1", "/", StringComparators.caseInsensitiveSubstring());
-        operator1.pushMenu(new String [] {"JMenu1"}, StringComparators.strict());
-        operator1.pushMenu(new String [] {"JMenu1"}, StringComparators.caseInsensitiveSubstring());
+        operator1.pushMenu(new String[] {"JMenu1"}, StringComparators.strict());
+        operator1.pushMenu(new String[] {"JMenu1"}, StringComparators.caseInsensitiveSubstring());
         operator1.pushMenu("JMenu1", "/", StringComparators.regex());
         operator1.pushMenu("JMenu1", StringComparators.regex());
     }
@@ -111,8 +133,8 @@ class JMenuBarOperatorTest {
         assertNotNull(operator1);
         operator1.pushMenuNoBlock("JMenu1", StringComparators.strict());
         operator1.pushMenuNoBlock("JMenu1", "/", StringComparators.caseInsensitiveSubstring());
-        operator1.pushMenuNoBlock(new String [] {"JMenu1"}, StringComparators.strict());
-        operator1.pushMenuNoBlock(new String [] {"JMenu1"}, StringComparators.caseInsensitiveSubstring());
+        operator1.pushMenuNoBlock(new String[] {"JMenu1"}, StringComparators.strict());
+        operator1.pushMenuNoBlock(new String[] {"JMenu1"}, StringComparators.caseInsensitiveSubstring());
         operator1.pushMenuNoBlock("JMenu1", "/", StringComparators.regex());
         operator1.pushMenuNoBlock("JMenu1", StringComparators.regex());
     }
@@ -134,7 +156,7 @@ class JMenuBarOperatorTest {
         assertNotNull(operator1);
         operator1.showMenuItem("JMenu1", StringComparators.strict());
         operator1.showMenuItem("JMenu1", "/", StringComparators.strict());
-        operator1.showMenuItem(new String [] {"JMenu1"}, StringComparators.strict());
+        operator1.showMenuItem(new String[] {"JMenu1"}, StringComparators.strict());
         operator1.showMenuItem(Collections.singletonList(PredicatesJ.byName("JMenu1")));
     }
 

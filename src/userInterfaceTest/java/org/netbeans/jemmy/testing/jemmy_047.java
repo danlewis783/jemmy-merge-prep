@@ -1,22 +1,39 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.testing;
 
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.operators.*;
-import org.netbeans.jemmy.util.StringComparators;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 import java.time.Duration;
 import java.util.Calendar;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JSpinnerOperator;
+import org.netbeans.jemmy.operators.JSpinnerOperatorDate;
+import org.netbeans.jemmy.operators.JSpinnerOperatorList;
+import org.netbeans.jemmy.operators.JSpinnerOperatorNumber;
+import org.netbeans.jemmy.util.StringComparators;
 
 class jemmy_047 {
-
-
 
     @Test
     void doit() {
@@ -34,8 +51,10 @@ class jemmy_047 {
             assertThat(e2.getCause().getMessage()).isEqualTo("Impossible to get a minimum of JSpinner model");
 
             JSpinnerOperatorDate jSpinnerOpDate = new JSpinnerOperatorDate(new JSpinnerOperator(jFrameOp, 1));
-            assertEquals(jSpinnerOpDate.getSource(),
-                    new JSpinnerOperator(jFrameOp, jSpinnerOpDate.getValue().toString(), StringComparators.strict()).getSource());
+            assertEquals(
+                    jSpinnerOpDate.getSource(),
+                    new JSpinnerOperator(jFrameOp, jSpinnerOpDate.getValue().toString(), StringComparators.strict())
+                            .getSource());
             Calendar today = Calendar.getInstance();
             today.set(Calendar.DAY_OF_MONTH, 1);
             today.set(Calendar.MONTH, Calendar.NOVEMBER);
@@ -49,10 +68,12 @@ class jemmy_047 {
             jSpinnerOpDate.scrollToDate(tomorrow.getTime());
             jSpinnerOpDate.scrollToDate(yesterday.getTime());
 
-            IllegalArgumentException e3 = assertThrows(IllegalArgumentException.class, ()-> new JSpinnerOperatorNumber(jSpinnerOpDate));
+            IllegalArgumentException e3 =
+                    assertThrows(IllegalArgumentException.class, () -> new JSpinnerOperatorNumber(jSpinnerOpDate));
             assertThat(e3.getMessage()).isEqualTo("JSpinner model is not a javax.swing.SpinnerNumberModel");
 
-            JSpinnerOperatorList jSpinnerOpList = new JSpinnerOperatorList(new JSpinnerOperator(jFrameOp, "one", StringComparators.strict()));
+            JSpinnerOperatorList jSpinnerOpList =
+                    new JSpinnerOperatorList(new JSpinnerOperator(jFrameOp, "one", StringComparators.strict()));
             jSpinnerOpList.scrollToMaximum();
             jSpinnerOpList.scrollToMinimum();
             jSpinnerOpList.scrollToString("two", StringComparators.strict());

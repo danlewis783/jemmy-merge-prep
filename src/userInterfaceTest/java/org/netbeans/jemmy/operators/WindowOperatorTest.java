@@ -1,7 +1,51 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
-import java.util.function.Predicate;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.Label;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,22 +53,12 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 class WindowOperatorTest {
 
     @BeforeAll
     static void beforeAll() {
         Timeouts.resetToDefaults();
     }
-
 
     private AtomicReference<List<String>> eventsRef = new AtomicReference<>();
     private AtomicReference<Dialog> dialogRef = new AtomicReference<>();
@@ -78,24 +112,29 @@ class WindowOperatorTest {
         WindowOperator sub1 = new WindowOperator(operator2);
         assertNotNull(sub1);
         assertSame(dialogRef.get(), sub1.getSource());
-        WindowOperator sub2 = new WindowOperator(operator2, PredicatesJ.byName(dialogRef.get().getName()));
+        WindowOperator sub2 =
+                new WindowOperator(operator2, PredicatesJ.byName(dialogRef.get().getName()));
         assertNotNull(sub2);
         assertSame(dialogRef.get(), sub2.getSource());
     }
 
     @Test
     void findWindow() {
-        Window window1 = WindowOperator.findWindow(PredicatesJ.byName(frameRef.get().getName()));
+        Window window1 =
+                WindowOperator.findWindow(PredicatesJ.byName(frameRef.get().getName()));
         assertSame(frameRef.get(), window1);
-        Window window2 = WindowOperator.findWindow(frameRef.get(), PredicatesJ.byName(dialogRef.get().getName()));
+        Window window2 = WindowOperator.findWindow(
+                frameRef.get(), PredicatesJ.byName(dialogRef.get().getName()));
         assertSame(dialogRef.get(), window2);
     }
 
     @Test
     void waitWindow() {
-        Window window1 = WindowOperator.waitWindow(PredicatesJ.byName(frameRef.get().getName()));
+        Window window1 =
+                WindowOperator.waitWindow(PredicatesJ.byName(frameRef.get().getName()));
         assertSame(frameRef.get(), window1);
-        Window window2 = WindowOperator.waitWindow(frameRef.get(), PredicatesJ.byName(dialogRef.get().getName()));
+        Window window2 = WindowOperator.waitWindow(
+                frameRef.get(), PredicatesJ.byName(dialogRef.get().getName()));
         assertSame(dialogRef.get(), window2);
     }
 
@@ -249,6 +288,7 @@ class WindowOperatorTest {
                 componentMovedY.set(bounds.y);
                 componentMovedCalledCount.incrementAndGet();
             }
+
             @Override
             public void componentResized(ComponentEvent e) {
                 wasComponentResizedCalled.set(true);
@@ -279,6 +319,7 @@ class WindowOperatorTest {
             public void componentMoved(ComponentEvent e) {
                 wasComponentMovedCalled.set(true);
             }
+
             @Override
             public void componentResized(ComponentEvent e) {
                 Rectangle bounds = ((Component) e.getSource()).getBounds();

@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     `java-test-fixtures`
+    id("com.diffplug.spotless") version "8.8.0"
 }
 
 group = "io.github.danlewis783"
@@ -73,4 +74,12 @@ tasks.named("check") {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        removeUnusedImports()
+        palantirJavaFormat()
+    }
 }

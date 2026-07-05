@@ -1,9 +1,28 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.testing;
 
-import java.util.ArrayList;
-import java.util.function.Predicate;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.BeforeAll;
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import javax.swing.JFrame;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
@@ -18,22 +37,14 @@ import org.netbeans.jemmy.util.StringComparators;
 import org.netbeans.jemmy.util.WindowFunction;
 import org.netbeans.jemmy.util.WindowManager;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class jemmy_017 {
-
-
-
 
     @Test
     void doit() {
         ComponentOperator.setDefaultComponentVisualizer(new MouseVisualizer(.5, 5));
         TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20000L);
         try {
-            Application_017.main(new String[]{});
+            Application_017.main(new String[] {});
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
             assertNotNull(jFrame = JFrameOperator.waitJFrame("Application_017/0", StringComparators.substring()));
@@ -57,7 +68,7 @@ class jemmy_017 {
         @Override
         public Predicate<Component> getPredicate() {
             return input -> {
-                if (! (input instanceof JFrame)) {
+                if (!(input instanceof JFrame)) {
                     return false;
                 }
                 JFrame jFrame = (JFrame) input;
@@ -68,7 +79,8 @@ class jemmy_017 {
         @Override
         public Void apply(JFrame jFrame) {
             try {
-                new JButtonOperator(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring())).push();
+                new JButtonOperator(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring()))
+                        .push();
                 processed.add(jFrame);
             } catch (TimeoutExpiredException e) {
                 // don't care

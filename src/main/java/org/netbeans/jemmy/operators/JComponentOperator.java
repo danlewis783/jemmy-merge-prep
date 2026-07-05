@@ -1,23 +1,55 @@
+/*
+ * Copyright (c) 1997, 2018, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.beans.VetoableChangeListener;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import javax.accessibility.AccessibleContext;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.JRootPane;
+import javax.swing.JToolTip;
+import javax.swing.KeyStroke;
+import javax.swing.border.Border;
+import javax.swing.event.AncestorListener;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
 import org.netbeans.jemmy.predicates.JToolTipWindowPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-
-import javax.accessibility.AccessibleContext;
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.event.AncestorListener;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.beans.VetoableChangeListener;
-import java.util.concurrent.Callable;
-
 
 public class JComponentOperator extends ContainerOperator {
     public JComponentOperator(ContainerOperator cont) {
@@ -29,8 +61,7 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public JComponentOperator(ContainerOperator cont, int index) {
-        this((JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()),
-                index));
+        this((JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
     }
 
     public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
@@ -63,8 +94,8 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public JToolTip waitToolTip() {
-        return (JToolTip) waitComponent(WindowOperator.waitWindow(new JToolTipWindowPredicate(), 0),
-                                        PredicatesJ.of(JToolTip.class), 0);
+        return (JToolTip) waitComponent(
+                WindowOperator.waitWindow(new JToolTipWindowPredicate(), 0), PredicatesJ.of(JToolTip.class), 0);
     }
 
     public ContainerOperator getWindowContainerOperator() {
@@ -178,11 +209,13 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
     }
 
     public ActionListener getActionForKeyStroke(KeyStroke keyStroke) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getActionForKeyStroke(keyStroke)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getActionForKeyStroke(keyStroke)));
     }
 
     public boolean getAutoscrolls() {
@@ -194,15 +227,18 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public Object getClientProperty(Object object) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getClientProperty(object)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getClientProperty(object)));
     }
 
     public int getConditionForKeyStroke(KeyStroke keyStroke) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getConditionForKeyStroke(keyStroke)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getConditionForKeyStroke(keyStroke)));
     }
 
     public int getDebugGraphicsOptions() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getDebugGraphicsOptions()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getDebugGraphicsOptions()));
     }
 
     public Insets getInsets(Insets insets) {
@@ -210,11 +246,13 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public Component getNextFocusableComponent() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getNextFocusableComponent()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getNextFocusableComponent()));
     }
 
     public KeyStroke[] getRegisteredKeyStrokes() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getRegisteredKeyStrokes()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getRegisteredKeyStrokes()));
     }
 
     public JRootPane getRootPane() {
@@ -222,7 +260,8 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public Point getToolTipLocation(MouseEvent mouseEvent) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipLocation(mouseEvent)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipLocation(mouseEvent)));
     }
 
     public String getToolTipText() {
@@ -230,11 +269,13 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public String getToolTipText(MouseEvent mouseEvent) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipText(mouseEvent)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipText(mouseEvent)));
     }
 
     public Container getTopLevelAncestor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getTopLevelAncestor()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getTopLevelAncestor()));
     }
 
     public String getUIClassID() {
@@ -262,7 +303,8 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public boolean isOptimizedDrawingEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isOptimizedDrawingEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isOptimizedDrawingEnabled()));
     }
 
     public boolean isPaintingTile() {
@@ -270,7 +312,8 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public boolean isRequestFocusEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isRequestFocusEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isRequestFocusEnabled()));
     }
 
     public boolean isValidateRoot() {
@@ -301,8 +344,7 @@ public class JComponentOperator extends ContainerOperator {
         }));
     }
 
-    public void registerKeyboardAction(ActionListener actionListener, String string,
-                                       KeyStroke keyStroke, int i) {
+    public void registerKeyboardAction(ActionListener actionListener, String string, KeyStroke keyStroke, int i) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JComponent) getSource()).registerKeyboardAction(actionListener, string, keyStroke, i);
 
@@ -343,7 +385,8 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public boolean requestDefaultFocus() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).requestDefaultFocus()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).requestDefaultFocus()));
     }
 
     public void resetKeyboardActions() {
@@ -498,10 +541,9 @@ public class JComponentOperator extends ContainerOperator {
         return findJComponent(cont, chooser, 0);
     }
 
-    public static JComponent findJComponent(Container cont, String toolTipText, StringComparator stringComparator, int index) {
-        return findJComponent(cont,
-                              new JComponentByToolTipPredicate(toolTipText, stringComparator),
-                              index);
+    public static JComponent findJComponent(
+            Container cont, String toolTipText, StringComparator stringComparator, int index) {
+        return findJComponent(cont, new JComponentByToolTipPredicate(toolTipText, stringComparator), index);
     }
 
     public static JComponent findJComponent(Container cont, String toolTipText, StringComparator stringComparator) {
@@ -516,10 +558,9 @@ public class JComponentOperator extends ContainerOperator {
         return waitJComponent(cont, chooser, 0);
     }
 
-    public static JComponent waitJComponent(Container cont, String toolTipText, StringComparator stringComparator, int index) {
-        return waitJComponent(cont,
-                              new JComponentByToolTipPredicate(toolTipText, stringComparator),
-                              index);
+    public static JComponent waitJComponent(
+            Container cont, String toolTipText, StringComparator stringComparator, int index) {
+        return waitJComponent(cont, new JComponentByToolTipPredicate(toolTipText, stringComparator), index);
     }
 
     public static JComponent waitJComponent(Container cont, String toolTipText, StringComparator stringComparator) {

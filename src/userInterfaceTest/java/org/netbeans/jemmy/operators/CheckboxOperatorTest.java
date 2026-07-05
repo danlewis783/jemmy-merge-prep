@@ -1,21 +1,35 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.awt.Checkbox;
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CheckboxOperatorTest {
-
-
 
     private Checkbox checkbox;
     private Frame frame;
@@ -55,7 +69,8 @@ class CheckboxOperatorTest {
 
     @Test
     void testFindCheckbox() {
-        Checkbox checkbox1 = CheckboxOperator.findCheckbox(frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
+        Checkbox checkbox1 = CheckboxOperator.findCheckbox(
+                frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(checkbox1);
         Checkbox checkbox2 = CheckboxOperator.findCheckbox(frame, PredicatesJ.byName("CheckboxOperatorTest"));
         assertNotNull(checkbox2);
@@ -63,7 +78,8 @@ class CheckboxOperatorTest {
 
     @Test
     void testWaitCheckbox() {
-        Checkbox checkbox1 = CheckboxOperator.waitCheckbox(frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
+        Checkbox checkbox1 = CheckboxOperator.waitCheckbox(
+                frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(checkbox1);
         Checkbox checkbox2 = CheckboxOperator.waitCheckbox(frame, PredicatesJ.byName("CheckboxOperatorTest"));
         assertNotNull(checkbox2);

@@ -1,16 +1,33 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.awt.EventQueue;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import java.awt.*;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class AbstractButtonOperatorTest {
 
     private JButton button;
@@ -43,30 +60,31 @@ class AbstractButtonOperatorTest {
         assertNotNull(operator);
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertNotNull(operator1);
-        AbstractButtonOperator operator2 = new AbstractButtonOperator(operator,
-                                               PredicatesJ.byName("AbstractButtonOperatorTest"));
+        AbstractButtonOperator operator2 =
+                new AbstractButtonOperator(operator, PredicatesJ.byName("AbstractButtonOperatorTest"));
         assertNotNull(operator2);
-        AbstractButtonOperator operator3 = new AbstractButtonOperator(operator, "AbstractButtonOperatorTest", StringComparators.strict());
+        AbstractButtonOperator operator3 =
+                new AbstractButtonOperator(operator, "AbstractButtonOperatorTest", StringComparators.strict());
         assertNotNull(operator3);
     }
 
     @Test
     void testFindAbstractButton() {
-        AbstractButton button1 = AbstractButtonOperator.findAbstractButton(frame,
-                                     PredicatesJ.byName("AbstractButtonOperatorTest"));
+        AbstractButton button1 =
+                AbstractButtonOperator.findAbstractButton(frame, PredicatesJ.byName("AbstractButtonOperatorTest"));
         assertNotNull(button1);
-        AbstractButton button2 = AbstractButtonOperator.findAbstractButton(frame, "AbstractButtonOperatorTest",
-                StringComparators.caseInsensitiveSubstring());
+        AbstractButton button2 = AbstractButtonOperator.findAbstractButton(
+                frame, "AbstractButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(button2);
     }
 
     @Test
     void testWaitAbstractButton() {
-        AbstractButton button1 = AbstractButtonOperator.waitAbstractButton(frame,
-                                     PredicatesJ.byName("AbstractButtonOperatorTest"));
+        AbstractButton button1 =
+                AbstractButtonOperator.waitAbstractButton(frame, PredicatesJ.byName("AbstractButtonOperatorTest"));
         assertNotNull(button1);
-        AbstractButton button2 = AbstractButtonOperator.waitAbstractButton(frame, "AbstractButtonOperatorTest",
-                StringComparators.caseInsensitiveSubstring());
+        AbstractButton button2 = AbstractButtonOperator.waitAbstractButton(
+                frame, "AbstractButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(button2);
     }
 

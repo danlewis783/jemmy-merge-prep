@@ -1,7 +1,58 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Enumeration;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
+import javax.swing.plaf.TreeUI;
+import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.JemmyInputException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TreePathAndBoolean;
+import org.netbeans.jemmy.TreePathChooserAndTreePath;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TreeDriver;
 import org.netbeans.jemmy.functions.LoadedFunction;
@@ -12,16 +63,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.TreeExpansionListener;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeWillExpandListener;
-import javax.swing.plaf.TreeUI;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.util.Enumeration;
-import java.util.concurrent.Callable;
 
 public class JTreeOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JTreeOperator.class);
@@ -84,7 +125,8 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public int getChildCount(Object node) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChildCount(node)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChildCount(node)));
     }
 
     public Object[] getChildren(Object node) {
@@ -100,7 +142,8 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public Object getChild(Object node, int index) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChild(node, index)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChild(node, index)));
     }
 
     public int getChildCount(TreePath path) {
@@ -134,14 +177,16 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public Object getRoot() {
-        FunctionRepeater<Void, Object> waiter = FunctionRepeater.on(obj -> {
-            Object root = getModel().getRoot();
-            if ((root == null) || (root.toString() == null) || "null".equals(root.toString())) {
-                return null;
-            } else {
-                return root;
-            }
-        }, TimeoutKey.JTreeOperator_WaitNodeVisibleTimeout);
+        FunctionRepeater<Void, Object> waiter = FunctionRepeater.on(
+                obj -> {
+                    Object root = getModel().getRoot();
+                    if ((root == null) || (root.toString() == null) || "null".equals(root.toString())) {
+                        return null;
+                    } else {
+                        return root;
+                    }
+                },
+                TimeoutKey.JTreeOperator_WaitNodeVisibleTimeout);
         try {
             return waiter.runUntilNotNull(null);
         } catch (InterruptedException e) {
@@ -356,7 +401,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public JPopupMenu callPopupOnPath(TreePath path, int mouseButton) {
         if (path != null) {
-            TreePath[] paths = { path };
+            TreePath[] paths = {path};
 
             return callPopupOnPaths(paths, mouseButton);
         } else {
@@ -380,8 +425,9 @@ public class JTreeOperator extends JComponentOperator {
             scroller.setVisualizer(new EmptyVisualizer());
             Rectangle rect = getPathBounds(path);
             if (rect != null) {
-                scroller.scrollToComponentRectangle(getSource(), (int) rect.getX(), (int) rect.getY(),
-                        (int) rect.getWidth(), (int) rect.getHeight());
+                scroller.scrollToComponentRectangle(
+                        getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int)
+                                rect.getHeight());
             } else {
                 throw new NoSuchPathException(path);
             }
@@ -400,9 +446,15 @@ public class JTreeOperator extends JComponentOperator {
 
     public Component getRenderedComponent(TreePath path, boolean isSelected, boolean isExpanded, boolean cellHasFocus) {
         if (path != null) {
-            return getCellRenderer().getTreeCellRendererComponent((JTree) getSource(), path.getLastPathComponent(),
-                    isSelected, isExpanded, getModel().isLeaf(path.getLastPathComponent()), getRowForPath(path),
-                    cellHasFocus);
+            return getCellRenderer()
+                    .getTreeCellRendererComponent(
+                            (JTree) getSource(),
+                            path.getLastPathComponent(),
+                            isSelected,
+                            isExpanded,
+                            getModel().isLeaf(path.getLastPathComponent()),
+                            getRowForPath(path),
+                            cellHasFocus);
         } else {
             throw new NoSuchPathException();
         }
@@ -419,8 +471,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public void changePathObject(TreePath path, Object newValue) {
         scrollToPath(path);
-        driver.editItem(this, getRowForPath(path), newValue,
-                        TimeoutKey.JTreeOperator_WaitEditingTimeout);
+        driver.editItem(this, getRowForPath(path), newValue, TimeoutKey.JTreeOperator_WaitEditingTimeout);
     }
 
     public void waitExpanded(TreePath path) {
@@ -460,7 +511,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void waitSelected(TreePath path) {
-        waitSelected(new TreePath[] { path });
+        waitSelected(new TreePath[] {path});
     }
 
     public void waitSelected(int[] rows) {
@@ -473,7 +524,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void waitSelected(int row) {
-        waitSelected(new int[]{row});
+        waitSelected(new int[] {row});
     }
 
     public void waitRow(String rowText, StringComparator comparator, int row) {
@@ -610,9 +661,9 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public String convertValueToText(Object object, boolean b, boolean b1, boolean b2,
-                                     int i, boolean b3) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).convertValueToText(object, b, b1, b2, i, b3)));
+    public String convertValueToText(Object object, boolean b, boolean b1, boolean b2, int i, boolean b3) {
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).convertValueToText(object, b, b1, b2, i, b3)));
     }
 
     public void expandPath(TreePath treePath) {
@@ -672,11 +723,13 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public TreePath getClosestPathForLocation(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestPathForLocation(i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestPathForLocation(i, i1)));
     }
 
     public int getClosestRowForLocation(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestRowForLocation(i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestRowForLocation(i, i1)));
     }
 
     public TreePath getEditingPath() {
@@ -684,15 +737,18 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public Enumeration getExpandedDescendants(TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Enumeration>) () -> ((JTree) getSource()).getExpandedDescendants(treePath)));
+        return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Enumeration>)
+                () -> ((JTree) getSource()).getExpandedDescendants(treePath)));
     }
 
     public boolean getInvokesStopCellEditing() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getInvokesStopCellEditing()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getInvokesStopCellEditing()));
     }
 
     public Object getLastSelectedPathComponent() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLastSelectedPathComponent()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLastSelectedPathComponent()));
     }
 
     public TreePath getLeadSelectionPath() {
@@ -728,7 +784,8 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public Dimension getPreferredScrollableViewportSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPreferredScrollableViewportSize()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPreferredScrollableViewportSize()));
     }
 
     public Rectangle getRowBounds(int i) {
@@ -752,19 +809,23 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportHeight()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportWidth()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollsOnExpand() {
@@ -1115,8 +1176,10 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    private TreePath findPathPrimitive(TreePath path, TreePathChooser chooser,
-                                       FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter) {
+    private TreePath findPathPrimitive(
+            TreePath path,
+            TreePathChooser chooser,
+            FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter) {
         if (!isExpanded(path)) {
             if (!isPathSelected(path)) {
                 clickOnPath(path);
@@ -1166,7 +1229,8 @@ public class JTreeOperator extends JComponentOperator {
         return waitJTree(cont, chooser, 0);
     }
 
-    public static JTree waitJTree(Container cont, String text, StringComparator stringComparator, int rowIndex, int index) {
+    public static JTree waitJTree(
+            Container cont, String text, StringComparator stringComparator, int rowIndex, int index) {
         return waitJTree(cont, new JTreeByItemPredicate(text, rowIndex, stringComparator), index);
     }
 
@@ -1179,7 +1243,6 @@ public class JTreeOperator extends JComponentOperator {
 
         public boolean hasAsParent(TreePath path, int indexInParent);
     }
-
 
     public interface TreeRowChooser {
         public boolean checkRow(JTreeOperator oper, int row);
@@ -1261,7 +1324,6 @@ public class JTreeOperator extends JComponentOperator {
         }
     }
 
-
     private class ByRenderedComponentTreeRowChooser implements TreeRowChooser {
         private final Predicate<Component> chooser;
 
@@ -1275,7 +1337,6 @@ public class JTreeOperator extends JComponentOperator {
         }
     }
 
-
     private class BySubStringTreeRowChooser implements TreeRowChooser {
         private final StringComparator comparator;
         private final String subString;
@@ -1287,10 +1348,10 @@ public class JTreeOperator extends JComponentOperator {
 
         @Override
         public boolean checkRow(JTreeOperator oper, int row) {
-            return comparator.equals(oper.getPathForRow(row).getLastPathComponent().toString(), subString);
+            return comparator.equals(
+                    oper.getPathForRow(row).getLastPathComponent().toString(), subString);
         }
     }
-
 
     public class NoSuchPathException extends JemmyInputException {
         public NoSuchPathException() {
@@ -1305,7 +1366,6 @@ public class JTreeOperator extends JComponentOperator {
             super("No such path as \"" + path.toString() + "\"", getSource());
         }
     }
-
 
     private class StringArrayPathChooser implements TreePathChooser {
         final String[] arr;

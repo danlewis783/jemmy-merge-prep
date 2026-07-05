@@ -1,8 +1,49 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
+import javax.swing.event.MenuDragMouseEvent;
+import javax.swing.event.MenuDragMouseListener;
+import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.MenuKeyListener;
+import javax.swing.plaf.MenuItemUI;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
@@ -11,20 +52,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.MenuDragMouseEvent;
-import javax.swing.event.MenuDragMouseListener;
-import javax.swing.event.MenuKeyEvent;
-import javax.swing.event.MenuKeyListener;
-import javax.swing.plaf.MenuItemUI;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
 
 public class JMenuItemOperator extends AbstractButtonOperator {
     private static final Logger logger = LoggerFactory.getLogger(JMenuItemOperator.class);
@@ -109,8 +136,8 @@ public class JMenuItemOperator extends AbstractButtonOperator {
         }));
     }
 
-    public void processKeyEvent(KeyEvent keyEvent, MenuElement[] menuElement,
-                                MenuSelectionManager menuSelectionManager) {
+    public void processKeyEvent(
+            KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JMenuItem) getSource()).processKeyEvent(keyEvent, menuElement, menuSelectionManager);
 
@@ -134,8 +161,8 @@ public class JMenuItemOperator extends AbstractButtonOperator {
         }));
     }
 
-    public void processMouseEvent(MouseEvent mouseEvent, MenuElement[] menuElement,
-                                  MenuSelectionManager menuSelectionManager) {
+    public void processMouseEvent(
+            MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JMenuItem) getSource()).processMouseEvent(mouseEvent, menuElement, menuSelectionManager);
 
@@ -246,8 +273,9 @@ public class JMenuItemOperator extends AbstractButtonOperator {
     }
 
     static List<Predicate<Component>> createPredicates(String[] names, StringComparator comparator) {
-        List<Predicate<Component>> componentPredicateList = Arrays.stream(names).map(name -> new JMenuItemByTextPredicate(name, comparator)).collect(Collectors.toList());
+        List<Predicate<Component>> componentPredicateList = Arrays.stream(names)
+                .map(name -> new JMenuItemByTextPredicate(name, comparator))
+                .collect(Collectors.toList());
         return Collections.unmodifiableList(componentPredicateList);
     }
-
 }

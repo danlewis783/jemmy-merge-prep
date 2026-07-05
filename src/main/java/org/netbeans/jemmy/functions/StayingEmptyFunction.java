@@ -1,33 +1,53 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.functions;
 
+import java.awt.Toolkit;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
-
-import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.util.concurrent.*;
-
 public final class StayingEmptyFunction implements Function<Void, Boolean> {
     private static final Logger logger = LoggerFactory.getLogger(StayingEmptyFunction.class);
     private static final ExecutorService JEMMY_STAYING_EMPTY_SERVICE =
-            Executors.newSingleThreadExecutor(
-                    new ThreadFactory() {
-                        final AtomicLong count = new AtomicLong(0);
+            Executors.newSingleThreadExecutor(new ThreadFactory() {
+                final AtomicLong count = new AtomicLong(0);
 
-                        @Override
-                        public Thread newThread(Runnable runnable) {
-                            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-                            thread.setUncaughtExceptionHandler((t, e) -> logger.warn("uncaught exception in thread " + t.getName(), e));
-                            thread.setName(String.format("jemmy-staying-empty-%d", count.getAndIncrement()));
-                            return thread;
-                        }
-                    });
+                @Override
+                public Thread newThread(Runnable runnable) {
+                    Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+                    thread.setUncaughtExceptionHandler(
+                            (t, e) -> logger.warn("uncaught exception in thread " + t.getName(), e));
+                    thread.setName(String.format("jemmy-staying-empty-%d", count.getAndIncrement()));
+                    return thread;
+                }
+            });
     private static final TimeoutKey DELTA_KEY = TimeoutKey.Waiter_TimeDelta;
     private static final TimeoutKey WAIT_KEY = TimeoutKey.Waiter_WaitingTime;
     private final long emptyTime;
@@ -49,7 +69,11 @@ public final class StayingEmptyFunction implements Function<Void, Boolean> {
         try {
             isEmpty = future.get(wait, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
-            throw new TimeoutExpiredException(String.format("timeout \"%s\" (%d ms) exceeded after (%d ms)", WAIT_KEY, wait, (System.currentTimeMillis() - startTime)), e);
+            throw new TimeoutExpiredException(
+                    String.format(
+                            "timeout \"%s\" (%d ms) exceeded after (%d ms)",
+                            WAIT_KEY, wait, (System.currentTimeMillis() - startTime)),
+                    e);
         } catch (InterruptedException | ExecutionException e) {
             logger.warn("", e);
             throw new RuntimeException(e);
@@ -98,7 +122,8 @@ public final class StayingEmptyFunction implements Function<Void, Boolean> {
         public Boolean call() throws Exception {
             long startTime = System.currentTimeMillis();
             while (true) {
-                boolean eventFound = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() != null;
+                boolean eventFound =
+                        Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() != null;
                 if (eventFound) {
                     return Boolean.FALSE;
                 }

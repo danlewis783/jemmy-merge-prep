@@ -1,11 +1,42 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.testing;
 
-
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.lang.reflect.InvocationTargetException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class Application_032 extends JFrame {
 
@@ -46,26 +77,32 @@ public class Application_032 extends JFrame {
             super("Application_032.ButtonsFrame");
 
             try {
-                Class[] classes = { Class.forName("javax.swing.JButton"),
-                                    Class.forName("javax.swing.JCheckBox"),
-                                    Class.forName("javax.swing.JRadioButton"),
-                                    Class.forName("javax.swing.JToggleButton"),
-                                    Class.forName("javax.swing.JMenuItem") };
-                Class[] paramClasses = { Class.forName("java.lang.String") };
+                Class[] classes = {
+                    Class.forName("javax.swing.JButton"),
+                    Class.forName("javax.swing.JCheckBox"),
+                    Class.forName("javax.swing.JRadioButton"),
+                    Class.forName("javax.swing.JToggleButton"),
+                    Class.forName("javax.swing.JMenuItem")
+                };
+                Class[] paramClasses = {Class.forName("java.lang.String")};
                 Container contentPane = getContentPane();
                 contentPane.setLayout(new FlowLayout());
 
                 for (Class clazz : classes) {
-                    contentPane.add((Component) clazz.getConstructor(paramClasses).newInstance(clazz.getName()));
+                    contentPane.add(
+                            (Component) clazz.getConstructor(paramClasses).newInstance(clazz.getName()));
                 }
 
                 setSize(500, 300);
-            } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+            } catch (InstantiationException
+                    | InvocationTargetException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
 
     private static class ListsFrame extends JFrame {
         ListsFrame() {
@@ -99,17 +136,16 @@ public class Application_032 extends JFrame {
             tbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             tbl.getSelectionModel().setSelectionInterval(1, 1);
             listPane.add(tbl);
-            JList lst = new JList(new String[] { "list_0", "list_1", "list_2", "list_3" });
+            JList lst = new JList(new String[] {"list_0", "list_1", "list_2", "list_3"});
             lst.setSelectedIndex(1);
             listPane.add(lst);
-            DefaultComboBoxModel comboModel = new DefaultComboBoxModel(new String[] { "combo_0", "combo_1",
-                    "combo_2", "combo_3" });
+            DefaultComboBoxModel comboModel =
+                    new DefaultComboBoxModel(new String[] {"combo_0", "combo_1", "combo_2", "combo_3"});
             contentPane.add(new JComboBox(comboModel), BorderLayout.NORTH);
             contentPane.add(listPane, BorderLayout.CENTER);
             setSize(500, 300);
         }
     }
-
 
     private static class MenusFrame extends JFrame {
         MenusFrame() {
@@ -124,26 +160,32 @@ public class Application_032 extends JFrame {
         }
     }
 
-
     private static class TextsFrame extends JFrame {
         TextsFrame() {
             super("Application_032.TextsFrame");
 
             try {
-                Class[] classes = { Class.forName("javax.swing.JTextField"),
-                                    Class.forName("javax.swing.JTextArea"),
-                                    Class.forName("javax.swing.JLabel") };
-                Class[] paramClasses = { Class.forName("java.lang.String") };
+                Class[] classes = {
+                    Class.forName("javax.swing.JTextField"),
+                    Class.forName("javax.swing.JTextArea"),
+                    Class.forName("javax.swing.JLabel")
+                };
+                Class[] paramClasses = {Class.forName("java.lang.String")};
                 Container contentPane = getContentPane();
                 contentPane.setLayout(new FlowLayout());
 
                 for (Class clazz : classes) {
-                    contentPane.add((Component) clazz.getConstructor(paramClasses).newInstance(clazz.getName()));
+                    contentPane.add(
+                            (Component) clazz.getConstructor(paramClasses).newInstance(clazz.getName()));
                 }
 
                 contentPane.add(new JEditorPane("text", "javax.swing.JEditorPane"));
                 setSize(500, 300);
-            } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
+            } catch (InstantiationException
+                    | InvocationTargetException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }

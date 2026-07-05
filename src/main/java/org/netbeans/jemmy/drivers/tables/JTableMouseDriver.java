@@ -1,6 +1,35 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.drivers.tables;
 
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.util.Collections;
+import java.util.concurrent.Callable;
+import javax.swing.text.JTextComponent;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -14,12 +43,6 @@ import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.Operator;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-
-import javax.swing.text.JTextComponent;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.Collections;
-import java.util.concurrent.Callable;
 
 public final class JTableMouseDriver extends LightSupportiveDriver implements TableDriver {
     public JTableMouseDriver() {
@@ -40,22 +63,30 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
             clickOnCell((JTableOperator) oper, row, column, 2);
         }
 
-        JTextComponentOperator textoper =
-            new JTextComponentOperator((JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));
+        JTextComponentOperator textoper = new JTextComponentOperator(
+                (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));
         TextDriver text =
-            DriverManager.newInstance(JemmyProperties.getInstance()).getTextDriver(JTextComponentOperator.class);
+                DriverManager.newInstance(JemmyProperties.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);
         text.typeText(textoper, value.toString(), 0);
-        DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper).pushKey(textoper,
-                                  KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getKeyDriver(oper)
+                .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
 
     protected void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Point point = oper.getPointToClick(row, column);
-            DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper).clickMouse(oper, point.x,
-                                      point.y, clickCount, Operator.getDefaultMouseButton(), 0,
-                                      TimeoutKey.ComponentOperator_MouseClickTimeout);
+            DriverManager.newInstance(JemmyProperties.getInstance())
+                    .getMouseDriver(oper)
+                    .clickMouse(
+                            oper,
+                            point.x,
+                            point.y,
+                            clickCount,
+                            Operator.getDefaultMouseButton(),
+                            0,
+                            TimeoutKey.ComponentOperator_MouseClickTimeout);
             return null;
         }));
     }

@@ -1,28 +1,49 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.netbeans.jemmy.util.StringComparators;
-
-import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.StringComparators;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.*;
 class JComponentOperatorTest {
-
-
 
     private JComponent component;
     private JFrame frame;
@@ -58,26 +79,25 @@ class JComponentOperatorTest {
         assertNotNull(operator);
         JComponentOperator operator1 = new JComponentOperator(operator);
         assertNotNull(operator1);
-        JComponentOperator operator2 = new JComponentOperator(operator,
-                                           PredicatesJ.byName("JComponentOperatorTest"));
+        JComponentOperator operator2 = new JComponentOperator(operator, PredicatesJ.byName("JComponentOperatorTest"));
         assertNotNull(operator2);
     }
 
     @Test
     void testFindJComponent() {
-        JComponent component1 = JComponentOperator.findJComponent(frame,
-                                    PredicatesJ.byName("JComponentOperatorTest"));
+        JComponent component1 = JComponentOperator.findJComponent(frame, PredicatesJ.byName("JComponentOperatorTest"));
         assertNotNull(component1);
-        JComponent component2 = JComponentOperator.findJComponent(frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
+        JComponent component2 = JComponentOperator.findJComponent(
+                frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(component2);
     }
 
     @Test
     void testWaitJComponent() {
-        JComponent component1 = JComponentOperator.waitJComponent(frame,
-                                    PredicatesJ.byName("JComponentOperatorTest"));
+        JComponent component1 = JComponentOperator.waitJComponent(frame, PredicatesJ.byName("JComponentOperatorTest"));
         assertNotNull(component1);
-        JComponent component2 = JComponentOperator.waitJComponent(frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
+        JComponent component2 = JComponentOperator.waitJComponent(
+                frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(component2);
     }
 
@@ -527,8 +547,8 @@ class JComponentOperatorTest {
         JComponentOperator operator1 = new JComponentOperator(operator);
         assertNotNull(operator1);
 
-        assertThatCode(()->
-                EventQueue.invokeAndWait(() ->panel = new JPanel())).doesNotThrowAnyException();
+        assertThatCode(() -> EventQueue.invokeAndWait(() -> panel = new JPanel()))
+                .doesNotThrowAnyException();
 
         operator1.setNextFocusableComponent(panel);
     }
@@ -592,7 +612,6 @@ class JComponentOperatorTest {
         public void actionPerformed(ActionEvent e) {}
     }
 
-
     private class AncestorListenerTest implements AncestorListener {
         @Override
         public void ancestorAdded(AncestorEvent event) {}
@@ -603,7 +622,6 @@ class JComponentOperatorTest {
         @Override
         public void ancestorMoved(AncestorEvent event) {}
     }
-
 
     private class VetoableChangeListenerTest implements VetoableChangeListener {
         @Override

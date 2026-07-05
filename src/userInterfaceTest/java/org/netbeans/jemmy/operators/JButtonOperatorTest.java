@@ -1,22 +1,38 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.EventQueue;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.JComponentOperatorVisiblePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 class JButtonOperatorTest {
-
-
 
     private final AtomicReference<JButton> button = new AtomicReference<>();
     private final AtomicReference<JFrame> frame = new AtomicReference<>();
@@ -58,7 +74,8 @@ class JButtonOperatorTest {
     void findJButton() {
         JButton button1 = JButtonOperator.findJButton(frame.get(), PredicatesJ.byName("JButtonOperatorTest"));
         assertNotNull(button1);
-        JButton button2 = JButtonOperator.findJButton(frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        JButton button2 = JButtonOperator.findJButton(
+                frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(button2);
     }
 
@@ -66,7 +83,8 @@ class JButtonOperatorTest {
     void waitJButton() {
         JButton button1 = JButtonOperator.waitJButton(frame.get(), PredicatesJ.byName("JButtonOperatorTest"));
         assertNotNull(button1);
-        JButton button2 = JButtonOperator.waitJButton(frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        JButton button2 = JButtonOperator.waitJButton(
+                frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(button2);
     }
 
@@ -98,7 +116,9 @@ class JButtonOperatorTest {
 
     @Test
     void issue72187() throws Exception {
-        button.get().addActionListener(event -> EventQueue.invokeLater(() -> button.get().setVisible(false)));
+        button.get()
+                .addActionListener(
+                        event -> EventQueue.invokeLater(() -> button.get().setVisible(false)));
         JFrameOperator operator1 = new JFrameOperator();
         assertNotNull(operator1);
         JButtonOperator operator2 = new JButtonOperator(operator1);
@@ -120,5 +140,4 @@ class JButtonOperatorTest {
         assertFalse(operator4.isVisible());
         assertFalse(button.get().isVisible());
     }
-
 }

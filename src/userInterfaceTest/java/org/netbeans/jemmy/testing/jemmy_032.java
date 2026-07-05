@@ -1,18 +1,49 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.testing;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import org.junit.jupiter.api.BeforeAll;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.operators.*;
+import org.netbeans.jemmy.operators.AbstractButtonOperator;
+import org.netbeans.jemmy.operators.ComponentOperator;
+import org.netbeans.jemmy.operators.ContainerOperator;
+import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JCheckBoxOperator;
+import org.netbeans.jemmy.operators.JComponentOperator;
+import org.netbeans.jemmy.operators.JEditorPaneOperator;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JLabelOperator;
+import org.netbeans.jemmy.operators.JMenuItemOperator;
+import org.netbeans.jemmy.operators.JMenuOperator;
+import org.netbeans.jemmy.operators.JPopupMenuOperator;
+import org.netbeans.jemmy.operators.JRadioButtonOperator;
+import org.netbeans.jemmy.operators.JTextAreaOperator;
+import org.netbeans.jemmy.operators.JTextComponentOperator;
+import org.netbeans.jemmy.operators.JTextFieldOperator;
+import org.netbeans.jemmy.operators.JToggleButtonOperator;
+import org.netbeans.jemmy.operators.WindowOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 class jemmy_032 {
-
-
-
 
     @Test
     void doit() {
@@ -27,11 +58,14 @@ class jemmy_032 {
         assertSame(winOper.getSource(), frameOper.getSource());
         new JButtonOperator(frameOper, "TtON", StringComparators.caseInsensitiveSubstring()).push();
         JFrameOperator bttFrameOper = new JFrameOperator("Application_032.ButtonsFrame");
-        AbstractButtonOperator abo = new AbstractButtonOperator(bttFrameOper, "javax.swing.JButton", StringComparators.caseInsensitiveSubstring());
+        AbstractButtonOperator abo = new AbstractButtonOperator(
+                bttFrameOper, "javax.swing.JButton", StringComparators.caseInsensitiveSubstring());
         AbstractButtonOperator bo = new JButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertSame(abo.getSource(), bo.getSource());
-        abo = new AbstractButtonOperator(bttFrameOper, "javax.swing.JCheckBox", StringComparators.caseInsensitiveSubstring());
-        AbstractButtonOperator tbo = new JToggleButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
+        abo = new AbstractButtonOperator(
+                bttFrameOper, "javax.swing.JCheckBox", StringComparators.caseInsensitiveSubstring());
+        AbstractButtonOperator tbo =
+                new JToggleButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
         bo = new JCheckBoxOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertSame(abo.getSource(), bo.getSource());
         assertSame(tbo.getSource(), bo.getSource());

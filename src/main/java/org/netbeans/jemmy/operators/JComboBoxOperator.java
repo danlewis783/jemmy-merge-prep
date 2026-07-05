@@ -1,7 +1,52 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.ComboBoxEditor;
+import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComboBox.KeySelectionManager;
+import javax.swing.JList;
+import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.event.ListDataEvent;
+import javax.swing.plaf.ComboBoxUI;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
 import org.netbeans.jemmy.predicates.JComboBoxByItemPredicate;
@@ -11,18 +56,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.JComboBox.KeySelectionManager;
-import javax.swing.event.ListDataEvent;
-import javax.swing.plaf.ComboBoxUI;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.util.concurrent.Callable;
-
 
 public class JComboBoxOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JComboBoxOperator.class);
@@ -85,7 +118,8 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public JList waitList() {
         try {
-            return (JList) FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
+            return (JList)
+                    FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
         } catch (InterruptedException e) {
             logger.warn("", e);
         }
@@ -100,7 +134,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public int findItemIndex(String item, StringComparator comparator) {
         ComboBoxModel model = getModel();
-        for (int i = 0, iMax=model.getSize(); i < iMax; i++) {
+        for (int i = 0, iMax = model.getSize(); i < iMax; i++) {
             if (comparator.equals(model.getElementAt(i).toString(), item)) {
                 return i;
             }
@@ -233,7 +267,8 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public KeySelectionManager getKeySelectionManager() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).getKeySelectionManager()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).getKeySelectionManager()));
     }
 
     public int getMaximumRowCount() {
@@ -301,7 +336,8 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public boolean isLightWeightPopupEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).isLightWeightPopupEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).isLightWeightPopupEnabled()));
     }
 
     public boolean isPopupVisible() {
@@ -472,13 +508,13 @@ public class JComboBoxOperator extends JComponentOperator {
         return findJComboBox(cont, chooser, 0);
     }
 
-    public static JComboBox findJComboBox(Container cont, String text, StringComparator stringComparator, int itemIndex,
-            int index) {
-        return findJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator),
-                             index);
+    public static JComboBox findJComboBox(
+            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+        return findJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JComboBox findJComboBox(Container cont, String text, StringComparator stringComparator, int itemIndex) {
+    public static JComboBox findJComboBox(
+            Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return findJComboBox(cont, text, stringComparator, itemIndex, 0);
     }
 
@@ -490,13 +526,13 @@ public class JComboBoxOperator extends JComponentOperator {
         return waitJComboBox(cont, chooser, 0);
     }
 
-    public static JComboBox waitJComboBox(Container cont, String text, StringComparator stringComparator, int itemIndex,
-            int index) {
-        return waitJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator),
-                             index);
+    public static JComboBox waitJComboBox(
+            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+        return waitJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JComboBox waitJComboBox(Container cont, String text, StringComparator stringComparator, int itemIndex) {
+    public static JComboBox waitJComboBox(
+            Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return waitJComboBox(cont, text, stringComparator, itemIndex, 0);
     }
 

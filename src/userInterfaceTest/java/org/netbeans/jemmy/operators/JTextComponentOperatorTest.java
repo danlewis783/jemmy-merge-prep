@@ -1,5 +1,47 @@
+/*
+ * Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.awt.Color;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.StringReader;
+import java.io.StringWriter;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,17 +50,6 @@ import org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.text.*;
-import java.awt.*;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 class JTextComponentOperatorTest {
     private JFrame frame;
 
@@ -43,45 +74,46 @@ class JTextComponentOperatorTest {
     void testConstructor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
-        JTextComponentOperator operator2 = new JTextComponentOperator(operator, StringComparators.strict(), "JTextComponentOperatorTest");
-       assertNotNull(operator2);
-        JTextComponentOperator operator3 = new JTextComponentOperator(operator,
-                                               PredicatesJ.byName("JTextComponentOperatorTest"));
-       assertNotNull(operator3);
+        assertNotNull(operator1);
+        JTextComponentOperator operator2 =
+                new JTextComponentOperator(operator, StringComparators.strict(), "JTextComponentOperatorTest");
+        assertNotNull(operator2);
+        JTextComponentOperator operator3 =
+                new JTextComponentOperator(operator, PredicatesJ.byName("JTextComponentOperatorTest"));
+        assertNotNull(operator3);
     }
 
     @Test
     void testFindJTextComponent() {
         frame.setVisible(true);
-        JTextComponent textComponent = JTextComponentOperator.findJTextComponent(frame, "JTextComponentOperatorTest",
-                                           StringComparators.caseInsensitiveSubstring());
-       assertNotNull(textComponent);
-        JTextComponent textComponent2 = JTextComponentOperator.findJTextComponent(frame,
-                                            PredicatesJ.byName("JTextComponentOperatorTest"));
-       assertNotNull(textComponent2);
+        JTextComponent textComponent = JTextComponentOperator.findJTextComponent(
+                frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
+        assertNotNull(textComponent);
+        JTextComponent textComponent2 =
+                JTextComponentOperator.findJTextComponent(frame, PredicatesJ.byName("JTextComponentOperatorTest"));
+        assertNotNull(textComponent2);
     }
 
     @Test
     void testWaitJTextComponent() {
         frame.setVisible(true);
-        JTextComponent textComponent = JTextComponentOperator.waitJTextComponent(frame, "JTextComponentOperatorTest",
-                                           StringComparators.caseInsensitiveSubstring());
-       assertNotNull(textComponent);
-        JTextComponent textComponent2 = JTextComponentOperator.waitJTextComponent(frame,
-                                            PredicatesJ.byName("JTextComponentOperatorTest"));
-       assertNotNull(textComponent2);
+        JTextComponent textComponent = JTextComponentOperator.waitJTextComponent(
+                frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
+        assertNotNull(textComponent);
+        JTextComponent textComponent2 =
+                JTextComponentOperator.waitJTextComponent(frame, PredicatesJ.byName("JTextComponentOperatorTest"));
+        assertNotNull(textComponent2);
     }
 
     @Test
     void testGetPositionByText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getPositionByText("Text");
         operator1.getPositionByText("Text", new AlwaysFalseTextChooser());
     }
@@ -90,9 +122,9 @@ class JTextComponentOperatorTest {
     void testEnterText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.enterText("Hallo");
     }
 
@@ -100,25 +132,25 @@ class JTextComponentOperatorTest {
     void testChangeCaretPosition() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setText("test");
         operator1.changeCaretPosition(0);
         operator1.changeCaretPosition("test", false);
         operator1.changeCaretPosition("test", 0, false);
 
-        assertThatExceptionOfType(NoSuchTextException.class).isThrownBy(
-                () -> operator1.changeCaretPosition("blabla", 0, false));
+        assertThatExceptionOfType(NoSuchTextException.class)
+                .isThrownBy(() -> operator1.changeCaretPosition("blabla", 0, false));
     }
 
     @Test
     void testTypeText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.typeText("Boooooh!");
     }
 
@@ -126,9 +158,9 @@ class JTextComponentOperatorTest {
     void testSelectText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setText("Hallo");
         operator1.selectText("Hallo");
     }
@@ -137,9 +169,9 @@ class JTextComponentOperatorTest {
     void testClearText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.clearText();
     }
 
@@ -147,9 +179,9 @@ class JTextComponentOperatorTest {
     void testScrollToPosition() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.scrollToPosition(0);
     }
 
@@ -157,9 +189,9 @@ class JTextComponentOperatorTest {
     void testGetDisplayedText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getDisplayedText();
     }
 
@@ -167,9 +199,9 @@ class JTextComponentOperatorTest {
     void testWaitText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setText("Hallo");
         operator1.waitText("Hallo", StringComparators.strict());
     }
@@ -178,9 +210,9 @@ class JTextComponentOperatorTest {
     void testWaitCaretPosition() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setCaretPosition(0);
         operator1.waitCaretPosition(0);
     }
@@ -189,9 +221,9 @@ class JTextComponentOperatorTest {
     void testAddCaretListener() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         CaretListenerTest listener = new CaretListenerTest();
         operator1.addCaretListener(listener);
         operator1.removeCaretListener(listener);
@@ -201,9 +233,9 @@ class JTextComponentOperatorTest {
     void testCopy() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.copy();
     }
 
@@ -211,9 +243,9 @@ class JTextComponentOperatorTest {
     void testCut() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.cut();
     }
 
@@ -221,9 +253,9 @@ class JTextComponentOperatorTest {
     void testGetActions() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getActions();
     }
 
@@ -231,9 +263,9 @@ class JTextComponentOperatorTest {
     void testGetCaret() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setCaret(new DefaultCaret());
         operator1.getCaret();
     }
@@ -242,9 +274,9 @@ class JTextComponentOperatorTest {
     void testGetCaretColor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setCaretColor(Color.black);
         operator1.getCaretColor();
     }
@@ -253,9 +285,9 @@ class JTextComponentOperatorTest {
     void testGetCaretPosition() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setCaretPosition(0);
         operator1.getCaretPosition();
     }
@@ -264,9 +296,9 @@ class JTextComponentOperatorTest {
     void testGetDisabledTextColor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setDisabledTextColor(Color.black);
         operator1.getDisabledTextColor();
     }
@@ -275,9 +307,9 @@ class JTextComponentOperatorTest {
     void testGetDocument() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setDocument(new DefaultStyledDocument());
         operator1.getDocument();
     }
@@ -286,9 +318,9 @@ class JTextComponentOperatorTest {
     void testGetFocusAccelerator() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setFocusAccelerator('a');
         operator1.getFocusAccelerator();
     }
@@ -297,9 +329,9 @@ class JTextComponentOperatorTest {
     void testGetHighlighter() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setHighlighter(new DefaultHighlighter());
         operator1.getHighlighter();
     }
@@ -308,9 +340,9 @@ class JTextComponentOperatorTest {
     void testGetKeymap() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setKeymap(operator1.getKeymap());
     }
 
@@ -318,9 +350,9 @@ class JTextComponentOperatorTest {
     void testGetMargin() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setMargin(new Insets(0, 0, 0, 0));
         operator1.getMargin();
     }
@@ -329,9 +361,9 @@ class JTextComponentOperatorTest {
     void testGetPreferredScrollableViewportSize() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getPreferredScrollableViewportSize();
     }
 
@@ -339,9 +371,9 @@ class JTextComponentOperatorTest {
     void testGetScrollableBlockIncrement() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getScrollableBlockIncrement(new Rectangle(0, 0), 0, 0);
     }
 
@@ -349,9 +381,9 @@ class JTextComponentOperatorTest {
     void testGetScrollableTracksViewportHeight() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getScrollableTracksViewportHeight();
     }
 
@@ -359,9 +391,9 @@ class JTextComponentOperatorTest {
     void testGetScrollableTracksViewportWidth() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getScrollableTracksViewportWidth();
     }
 
@@ -369,9 +401,9 @@ class JTextComponentOperatorTest {
     void testGetScrollableUnitIncrement() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getScrollableUnitIncrement(new Rectangle(0, 0), 0, 0);
     }
 
@@ -379,9 +411,9 @@ class JTextComponentOperatorTest {
     void testGetSelectedText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getSelectedText();
     }
 
@@ -389,9 +421,9 @@ class JTextComponentOperatorTest {
     void testGetSelectedTextColor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setSelectedTextColor(Color.black);
         operator1.getSelectedTextColor();
     }
@@ -400,9 +432,9 @@ class JTextComponentOperatorTest {
     void testGetSelectionColor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setSelectionColor(Color.black);
         operator1.getSelectionColor();
     }
@@ -411,9 +443,9 @@ class JTextComponentOperatorTest {
     void testGetSelectionEnd() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setSelectionEnd(0);
         operator1.getSelectionEnd();
     }
@@ -422,9 +454,9 @@ class JTextComponentOperatorTest {
     void testGetSelectionStart() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setSelectionStart(0);
         operator1.getSelectionStart();
     }
@@ -433,9 +465,9 @@ class JTextComponentOperatorTest {
     void testGetText() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setText("12345");
         operator1.getText();
         operator1.getText(0, 0);
@@ -445,9 +477,9 @@ class JTextComponentOperatorTest {
     void testGetUI() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setUI(operator1.getUI());
     }
 
@@ -455,9 +487,9 @@ class JTextComponentOperatorTest {
     void testIsEditable() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setEditable(true);
         operator1.isEditable();
     }
@@ -466,9 +498,9 @@ class JTextComponentOperatorTest {
     void testModelToView() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.modelToView(0);
     }
 
@@ -476,9 +508,9 @@ class JTextComponentOperatorTest {
     void testMoveCaretPosition() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.moveCaretPosition(0);
     }
 
@@ -486,9 +518,9 @@ class JTextComponentOperatorTest {
     void testPaste() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.paste();
     }
 
@@ -496,9 +528,9 @@ class JTextComponentOperatorTest {
     void testRead() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.read(new StringReader("String"), "String");
     }
 
@@ -506,9 +538,9 @@ class JTextComponentOperatorTest {
     void testReplaceSelection() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.replaceSelection("Hallo");
     }
 
@@ -516,9 +548,9 @@ class JTextComponentOperatorTest {
     void testSelect() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.select(0, 0);
     }
 
@@ -526,9 +558,9 @@ class JTextComponentOperatorTest {
     void testSelectAll() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.selectAll();
     }
 
@@ -536,9 +568,9 @@ class JTextComponentOperatorTest {
     void testViewToModel() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.viewToModel(new Point(0, 0));
     }
 
@@ -546,9 +578,9 @@ class JTextComponentOperatorTest {
     void testWrite() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         JTextComponentOperator operator1 = new JTextComponentOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.write(new StringWriter());
     }
 
@@ -556,7 +588,6 @@ class JTextComponentOperatorTest {
         @Override
         public void caretUpdate(CaretEvent e) {}
     }
-
 
     private static class AlwaysFalseTextChooser implements TextChooser {
         @Override

@@ -1,22 +1,61 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Vector;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ListUI;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyInputException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MultiSelListDriver;
-import org.netbeans.jemmy.predicates.*;
+import org.netbeans.jemmy.predicates.ByListItemElementChooser;
+import org.netbeans.jemmy.predicates.ByRenderedComponentPredicateListItemChooser;
+import org.netbeans.jemmy.predicates.JListByItemPredicate;
+import org.netbeans.jemmy.predicates.JListOperatorByItemPredicate;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.ListUI;
-import java.awt.*;
-import java.util.Vector;
-import java.util.concurrent.Callable;
-
 
 public class JListOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JListOperator.class);
@@ -51,7 +90,8 @@ public class JListOperator extends JComponentOperator {
         this(cont, text, stringComparator, -1, index);
     }
 
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+    public JListOperator(
+            ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         this((JList) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
@@ -62,8 +102,9 @@ public class JListOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(int itemIndex, boolean isSelected, boolean cellHasFocus) {
-        return getCellRenderer().getListCellRendererComponent((JList) getSource(), getModel().getElementAt(itemIndex),
-                itemIndex, isSelected, cellHasFocus);
+        return getCellRenderer()
+                .getListCellRendererComponent(
+                        (JList) getSource(), getModel().getElementAt(itemIndex), itemIndex, isSelected, cellHasFocus);
     }
 
     public Component getRenderedComponent(int itemIndex) {
@@ -138,8 +179,8 @@ public class JListOperator extends JComponentOperator {
                 return null;
             }
 
-            Point point = new Point((int) (rect.getX() + rect.getWidth() / 2),
-                    (int) (rect.getY() + rect.getHeight() / 2));
+            Point point =
+                    new Point((int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
             Object result = getModel().getElementAt(itemIndex);
             clickMouse(point.x, point.y, clickCount);
 
@@ -180,8 +221,8 @@ public class JListOperator extends JComponentOperator {
         JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         Rectangle rect = getCellBounds(itemIndex, itemIndex);
-        scroller.scrollToComponentRectangle(getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(),
-                (int) rect.getHeight());
+        scroller.scrollToComponentRectangle(
+                getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
     }
 
     public void scrollToItem(String item, StringComparator comparator) {
@@ -229,7 +270,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void waitItemSelection(int itemIndex, boolean selected) {
-        waitItemsSelection(new int[]{itemIndex}, selected);
+        waitItemsSelection(new int[] {itemIndex}, selected);
     }
 
     public void waitItem(String item, StringComparator stringComparator, int itemIndex) {
@@ -313,7 +354,8 @@ public class JListOperator extends JComponentOperator {
     }
 
     public Dimension getPreferredScrollableViewportSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getPreferredScrollableViewportSize()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JList) getSource()).getPreferredScrollableViewportSize()));
     }
 
     public Object getPrototypeCellValue() {
@@ -321,19 +363,23 @@ public class JListOperator extends JComponentOperator {
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableTracksViewportHeight()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableTracksViewportWidth()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JList) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public int getSelectedIndex() {
@@ -576,7 +622,8 @@ public class JListOperator extends JComponentOperator {
         return findJList(cont, chooser, 0);
     }
 
-    public static JList findJList(Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+    public static JList findJList(
+            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
@@ -592,7 +639,8 @@ public class JListOperator extends JComponentOperator {
         return waitJList(cont, chooser, 0);
     }
 
-    public static JList waitJList(Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+    public static JList waitJList(
+            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return waitJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
@@ -604,8 +652,7 @@ public class JListOperator extends JComponentOperator {
         public boolean checkItem(JListOperator oper, int index);
     }
 
-
-public class NoSuchItemException extends JemmyInputException {
+    public class NoSuchItemException extends JemmyInputException {
         public NoSuchItemException(int index) {
             super("List does not contain " + index + "'th item", getSource());
         }

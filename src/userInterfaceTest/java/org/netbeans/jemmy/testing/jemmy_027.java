@@ -1,31 +1,51 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.testing;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.EventQueue;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
-
-
-import org.junit.jupiter.api.BeforeAll;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.tree.TreePath;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.ComponentSearcher;
-import org.netbeans.jemmy.operators.*;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JListOperator;
+import org.netbeans.jemmy.operators.JTabbedPaneOperator;
+import org.netbeans.jemmy.operators.JTableOperator;
+import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 class jemmy_027 {
-
-
-
 
     @Test
     void doit() throws Exception {
         Application_027.main(new String[] {});
         JFrame frame = JFrameOperator.waitJFrame("Application_027");
-        JTabbedPaneOperator tabbedPaneOp = new JTabbedPaneOperator(JTabbedPaneOperator.waitJTabbedPane(frame,
-                                               "Table Page", StringComparators.strict(), 0));
+        JTabbedPaneOperator tabbedPaneOp = new JTabbedPaneOperator(
+                JTabbedPaneOperator.waitJTabbedPane(frame, "Table Page", StringComparators.strict(), 0));
         tabbedPaneOp.selectPage("List Page", StringComparators.strict());
 
         AtomicReference<Component> compRef = new AtomicReference<>();
@@ -35,16 +55,16 @@ class jemmy_027 {
         AtomicReference<JTableOperator> tableOpRef = new AtomicReference<>();
         AtomicReference<JTreeOperator> treeOpRef = new AtomicReference<>();
 
-
-        listOpRef.set(new JListOperator(JListOperator.waitJList(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
+        listOpRef.set(new JListOperator(
+                JListOperator.waitJList(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
         listOpRef.get().clickOnItem("0", StringComparators.strict());
 
-            EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0)));
+        EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0)));
 
         assertNotNull(compRef.get());
         assertTrue(compRef.get() instanceof JPanel);
 
-            EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0, true, true)));
+        EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0, true, true)));
 
         Component comp0 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!0!"));
         assertNotNull(comp0);
@@ -52,7 +72,8 @@ class jemmy_027 {
         Component comp1 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("1"));
         assertNotNull(comp1);
         tabbedPaneOp.selectPage("Table Page", StringComparators.strict());
-        tableOpRef.set(new JTableOperator(JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
+        tableOpRef.set(new JTableOperator(
+                JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
         tableOpRef.get().getHeaderOperator().moveColumn(0, 1);
         assertEquals(4, tableOpRef.get().findCellRow("04", StringComparators.strict(), 0, 0));
         assertEquals(0, tableOpRef.get().findCell("04", StringComparators.strict(), 0).x);
@@ -72,7 +93,8 @@ class jemmy_027 {
         assertNotNull(comp11);
         tableOpRef.get().clickOnCell(2, 2, 1);
         tabbedPaneOp.selectPage("Tree Page", StringComparators.strict());
-        treeOpRef.set(new JTreeOperator(JTreeOperator.findJTree(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
+        treeOpRef.set(new JTreeOperator(
+                JTreeOperator.findJTree(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
         rootPathRef.set(treeOpRef.get().getPathForRow(treeOpRef.get().findRow("00", StringComparators.substring())));
         treeOpRef.get().getPathForRow(treeOpRef.get().findRow("00", StringComparators.substring()));
         lastPathRef.set(treeOpRef.get().findPath("40/44", "/", StringComparators.substring()));
@@ -82,7 +104,7 @@ class jemmy_027 {
         assertNotNull(comp44);
         EventQueue.invokeAndWait(() -> compRef.set(treeOpRef.get().getRenderedComponent(rootPathRef.get())));
         Component compDoubleNaught =
-            new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("00"));
+                new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("00"));
         assertNotNull(compDoubleNaught);
     }
 

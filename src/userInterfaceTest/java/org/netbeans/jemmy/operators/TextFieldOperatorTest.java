@@ -1,21 +1,34 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.TextField;
+import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class TextFieldOperatorTest {
-
-
 
     private Frame frame;
     private TextField textField;
@@ -52,37 +65,40 @@ class TextFieldOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         TextFieldOperator operator2 = new TextFieldOperator(operator, PredicatesJ.byName("TextFieldOperatorTest"));
-       assertNotNull(operator2);
-        TextFieldOperator operator3 = new TextFieldOperator(operator, "TextFieldOperatorTest", StringComparators.strict());
-       assertNotNull(operator3);
+        assertNotNull(operator2);
+        TextFieldOperator operator3 =
+                new TextFieldOperator(operator, "TextFieldOperatorTest", StringComparators.strict());
+        assertNotNull(operator3);
     }
 
     @Test
     void testFindTextField() {
         TextField textField1 = TextFieldOperator.findTextField(frame, PredicatesJ.byName("TextFieldOperatorTest"));
-       assertNotNull(textField1);
-        TextField textField2 = TextFieldOperator.findTextField(frame, "TextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
-       assertNotNull(textField2);
+        assertNotNull(textField1);
+        TextField textField2 = TextFieldOperator.findTextField(
+                frame, "TextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
+        assertNotNull(textField2);
     }
 
     @Test
     void testWaitTextField() {
         TextField textField1 = TextFieldOperator.waitTextField(frame, PredicatesJ.byName("TextFieldOperatorTest"));
-       assertNotNull(textField1);
-        TextField textField2 = TextFieldOperator.waitTextField(frame, "TextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
-       assertNotNull(textField2);
+        assertNotNull(textField1);
+        TextField textField2 = TextFieldOperator.waitTextField(
+                frame, "TextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
+        assertNotNull(textField2);
     }
 
     @Test
     void testAddActionListener() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.addActionListener(null);
         operator1.removeActionListener(null);
     }
@@ -90,45 +106,45 @@ class TextFieldOperatorTest {
     @Test
     void testEchoCharIsSet() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.echoCharIsSet();
     }
 
     @Test
     void testGetColumns() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setColumns(operator1.getColumns());
     }
 
     @Test
     void testGetEchoChar() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getEchoChar();
     }
 
     @Test
     void testGetMinimumSize() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getMinimumSize(0);
     }
 
     @Test
     void testGetPreferredSize() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         TextFieldOperator operator1 = new TextFieldOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.getPreferredSize(0);
     }
 }

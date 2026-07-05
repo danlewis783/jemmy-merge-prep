@@ -1,23 +1,40 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxEditor;
-import java.awt.*;
-import java.awt.event.*;
-
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class JComboBoxOperatorTest {
-
-
 
     private BasicComboBoxEditor boxEditor;
     private JComboBox comboBox;
@@ -55,13 +72,15 @@ class JComboBoxOperatorTest {
         assertNotNull(operator1);
         JComboBoxOperator operator2 = new JComboBoxOperator(operator, PredicatesJ.byName("JComboBoxOperatorTest"));
         assertNotNull(operator2);
-        JComboBoxOperator operator3 = new JComboBoxOperator(operator, "JComboBoxOperatorTest", StringComparators.strict());
+        JComboBoxOperator operator3 =
+                new JComboBoxOperator(operator, "JComboBoxOperatorTest", StringComparators.strict());
         assertNotNull(operator3);
     }
 
     @Test
     void testFindJComboBox() {
-        JComboBox comboBox1 = JComboBoxOperator.findJComboBox(frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
+        JComboBox comboBox1 = JComboBoxOperator.findJComboBox(
+                frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertNotNull(comboBox1);
         JComboBox comboBox2 = JComboBoxOperator.findJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
         assertNotNull(comboBox2);
@@ -69,7 +88,8 @@ class JComboBoxOperatorTest {
 
     @Test
     void testWaitJComboBox() {
-        JComboBox comboBox1 = JComboBoxOperator.waitJComboBox(frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
+        JComboBox comboBox1 = JComboBoxOperator.waitJComboBox(
+                frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertNotNull(comboBox1);
         JComboBox comboBox2 = JComboBoxOperator.waitJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
         assertNotNull(comboBox2);
@@ -243,9 +263,8 @@ class JComboBoxOperatorTest {
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
         assertNotNull(operator1);
 
-        assertThatCode(()->
-            EventQueue.invokeAndWait(() -> boxEditor = new BasicComboBoxEditor())).doesNotThrowAnyException();
-
+        assertThatCode(() -> EventQueue.invokeAndWait(() -> boxEditor = new BasicComboBoxEditor()))
+                .doesNotThrowAnyException();
 
         operator1.configureEditor(boxEditor, "");
     }
@@ -484,12 +503,10 @@ class JComboBoxOperatorTest {
         operator1.showPopup();
     }
 
-
     private static class IgnoreActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {}
     }
-
 
     private static class IgnoreItemListener implements ItemListener {
         @Override

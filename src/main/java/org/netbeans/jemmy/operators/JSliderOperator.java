@@ -1,7 +1,40 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import javax.swing.BoundedRangeModel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.SliderUI;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -13,25 +46,19 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.SliderUI;
-import java.awt.*;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.concurrent.Callable;
-
-
 public class JSliderOperator extends JComponentOperator {
     @Deprecated
     public static final int CLICK_SCROLL_MODEL = 1;
+
     public static final String HORIZONTAL_ORIENTATION_DPROP_VALUE = "HORIZONTAL";
     public static final String IS_INVERTED_DPROP = "Inverted";
     public static final String MAXIMUM_DPROP = "Maximum";
     public static final String MINIMUM_DPROP = "Minimum";
     public static final String ORIENTATION_DPROP = "Orientation";
+
     @Deprecated
     public static final int PUSH_AND_WAIT_SCROLL_MODEL = 2;
+
     public static final String VALUE_DPROP = "Value";
     public static final String VERTICAL_ORIENTATION_DPROP_VALUE = "VERTICAL";
     private static final Logger logger = LoggerFactory.getLogger(JSliderOperator.class);
@@ -71,11 +98,14 @@ public class JSliderOperator extends JComponentOperator {
 
     public void scrollTo(ScrollAdjuster adj) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scroll(JSliderOperator.this, adj);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scroll(JSliderOperator.this, adj);
 
-            return null;
-        }, null, TimeoutKey.JSliderOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSliderOperator_WholeScrollTimeout);
     }
 
     public void scrollToValue(int value) {
@@ -103,7 +133,8 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public Hashtable createStandardLabels(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i, i1)));
     }
 
     public int getExtent() {
@@ -351,7 +382,8 @@ public class JSliderOperator extends JComponentOperator {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
             } else {
                 return (getValue() < value)
-                       ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+                        ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION
+                        : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
             }
         }
 

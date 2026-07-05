@@ -1,9 +1,52 @@
+/*
+ * Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+import java.awt.EventQueue;
+import java.awt.Rectangle;
+import java.beans.PropertyVetoException;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JInternalFrame.JDesktopIcon;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.InternalFrameUI;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JInternalFrameOperator.JDesktopIconOperator;
@@ -11,21 +54,7 @@ import org.netbeans.jemmy.operators.JInternalFrameOperator.WrongInternalFrameSta
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.JInternalFrame.JDesktopIcon;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.plaf.InternalFrameUI;
-import java.awt.*;
-import java.beans.PropertyVetoException;
-import java.lang.reflect.InvocationTargetException;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
 class JInternalFrameOperatorTest {
-
-
-
 
     private JPanel contentPane;
     private JDesktopPane desktop;
@@ -75,20 +104,21 @@ class JInternalFrameOperatorTest {
         assertNotNull(operator);
         JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
         assertNotNull(operator2);
-        JInternalFrameOperator operator3 = new JInternalFrameOperator(operator,
-                                               PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrameOperator operator3 =
+                new JInternalFrameOperator(operator, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertNotNull(operator3);
-        JInternalFrameOperator operator4 = new JInternalFrameOperator(operator, "JInternalFrameOperatorTest", StringComparators.strict());
+        JInternalFrameOperator operator4 =
+                new JInternalFrameOperator(operator, "JInternalFrameOperatorTest", StringComparators.strict());
         assertNotNull(operator4);
     }
 
     @Test
     void testFindJInternalFrame() {
-        JInternalFrame internalFrame1 = JInternalFrameOperator.findJInternalFrame(frame,
-                                            PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame1 =
+                JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertNotNull(internalFrame1);
-        JInternalFrame internalFrame2 = JInternalFrameOperator.findJInternalFrame(frame, "JInternalFrameOperatorTest",
-                                            StringComparators.caseInsensitiveSubstring());
+        JInternalFrame internalFrame2 = JInternalFrameOperator.findJInternalFrame(
+                frame, "JInternalFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(internalFrame2);
 
         try {
@@ -103,8 +133,8 @@ class JInternalFrameOperatorTest {
             throw new RuntimeException(e);
         }
 
-        JInternalFrame internalFrame3 = JInternalFrameOperator.findJInternalFrame(frame,
-                                            PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame3 =
+                JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertNull(internalFrame3);
 
         try {
@@ -116,8 +146,8 @@ class JInternalFrameOperatorTest {
             throw new RuntimeException(e);
         }
 
-        JInternalFrame internalFrame4 = JInternalFrameOperator.findJInternalFrame(frame,
-                                            PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame4 =
+                JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertNull(internalFrame4);
     }
 
@@ -126,11 +156,11 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testWaitJInternalFrame() {
-        JInternalFrame internalFrame1 = JInternalFrameOperator.waitJInternalFrame(frame,
-                                            PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame1 =
+                JInternalFrameOperator.waitJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertNotNull(internalFrame1);
-        JInternalFrame internalFrame2 = JInternalFrameOperator.waitJInternalFrame(frame, "JInternalFrameOperatorTest",
-                                            StringComparators.caseInsensitiveSubstring());
+        JInternalFrame internalFrame2 = JInternalFrameOperator.waitJInternalFrame(
+                frame, "JInternalFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(internalFrame2);
     }
 
@@ -675,7 +705,6 @@ class JInternalFrameOperatorTest {
         @Override
         public void internalFrameDeactivated(InternalFrameEvent e) {}
     }
-
 
     private class InternalFrameUITest extends InternalFrameUI {}
 }

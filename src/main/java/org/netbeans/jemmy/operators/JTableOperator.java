@@ -1,8 +1,59 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.EventObject;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableModelEvent;
+import javax.swing.plaf.TableUI;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TableDriver;
 import org.netbeans.jemmy.predicates.JTableByCellValuePredicate;
@@ -12,18 +63,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableModelEvent;
-import javax.swing.plaf.TableUI;
-import javax.swing.table.*;
-import java.awt.*;
-import java.util.EventObject;
-import java.util.concurrent.Callable;
-
 
 public class JTableOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JTableOperator.class);
@@ -62,8 +101,8 @@ public class JTableOperator extends JComponentOperator {
         this(cont, text, stringComparator, row, column, 0);
     }
 
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int column,
-                          int index) {
+    public JTableOperator(
+            ContainerOperator cont, String text, StringComparator stringComparator, int row, int column, int index) {
         this((JTable) waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
     }
 
@@ -76,7 +115,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findCellRow(String text, StringComparator comparator, int column, int index) {
-        return findCell(text, comparator, null, new int[] { column }, index).y;
+        return findCell(text, comparator, null, new int[] {column}, index).y;
     }
 
     public int findCellColumn(String text, StringComparator comparator, int index) {
@@ -84,7 +123,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findCellColumn(String text, StringComparator comparator, int row, int index) {
-        return findCell(text, comparator, new int[] { row }, null, index).x;
+        return findCell(text, comparator, new int[] {row}, null, index).x;
     }
 
     public int findCellRow(String text, StringComparator comparator) {
@@ -104,7 +143,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findCellRow(Predicate<Component> chooser, int column, int index) {
-        return findCell(chooser, null, new int[] { column }, index).y;
+        return findCell(chooser, null, new int[] {column}, index).y;
     }
 
     public int findCellColumn(Predicate<Component> chooser, int index) {
@@ -112,7 +151,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findCellColumn(Predicate<Component> chooser, int row, int index) {
-        return findCell(chooser, new int[] { row }, null, index).x;
+        return findCell(chooser, new int[] {row}, null, index).x;
     }
 
     public Point findCell(Predicate<Component> chooser, int index) {
@@ -140,7 +179,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findCellRow(TableCellChooser chooser, int column, int index) {
-        return findCell(chooser, null, new int[] { column }, index).y;
+        return findCell(chooser, null, new int[] {column}, index).y;
     }
 
     public int findCellColumn(TableCellChooser chooser, int index) {
@@ -148,7 +187,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findCellColumn(TableCellChooser chooser, int row, int index) {
-        return findCell(chooser, new int[] { row }, null, index).x;
+        return findCell(chooser, new int[] {row}, null, index).x;
     }
 
     public Point findCell(TableCellChooser chooser, int index) {
@@ -207,8 +246,7 @@ public class JTableOperator extends JComponentOperator {
         return findCell(chooser, 0);
     }
 
-    public void clickOnCell(int row, int column, int clickCount, int button,
-                            int modifiers) {
+    public void clickOnCell(int row, int column, int clickCount, int button, int modifiers) {
         makeComponentVisible();
         scrollToCell(row, column);
         queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
@@ -249,8 +287,8 @@ public class JTableOperator extends JComponentOperator {
         JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         Rectangle rect = getCellRect(row, column, false);
-        scroller.scrollToComponentRectangle(getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(),
-                (int) rect.getHeight());
+        scroller.scrollToComponentRectangle(
+                getSource(), (int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
     }
 
     public void selectCell(int row, int column) {
@@ -276,8 +314,9 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(int row, int column, boolean isSelected, boolean cellHasFocus) {
-        return getCellRenderer(row, column).getTableCellRendererComponent((JTable) getSource(),
-                               getValueAt(row, column), isSelected, cellHasFocus, row, column);
+        return getCellRenderer(row, column)
+                .getTableCellRendererComponent(
+                        (JTable) getSource(), getValueAt(row, column), isSelected, cellHasFocus, row, column);
     }
 
     public Component getRenderedComponent(int row, int column) {
@@ -296,7 +335,8 @@ public class JTableOperator extends JComponentOperator {
 
     public Component waitCellComponent(Predicate<Component> chooser, int row, int column) {
         try {
-            return FunctionRepeater.on(new CellComponentFunction(chooser, row, column)).runUntilNotNull(null);
+            return FunctionRepeater.on(new CellComponentFunction(chooser, row, column))
+                    .runUntilNotNull(null);
         } catch (InterruptedException e) {
             throw new JemmyException("Waiting has been interrupted", e);
         }
@@ -383,11 +423,13 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int convertColumnIndexToModel(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).convertColumnIndexToModel(i)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).convertColumnIndexToModel(i)));
     }
 
     public int convertColumnIndexToView(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).convertColumnIndexToView(i)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).convertColumnIndexToView(i)));
     }
 
     public void createDefaultColumnsFromModel() {
@@ -403,7 +445,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public boolean editCellAt(int i, int i1, EventObject eventObject) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).editCellAt(i, i1, eventObject)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).editCellAt(i, i1, eventObject)));
     }
 
     public void editingCanceled(ChangeEvent changeEvent) {
@@ -423,7 +466,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public boolean getAutoCreateColumnsFromModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getAutoCreateColumnsFromModel()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getAutoCreateColumnsFromModel()));
     }
 
     public int getAutoResizeMode() {
@@ -447,7 +491,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public boolean getCellSelectionEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getCellSelectionEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getCellSelectionEnabled()));
     }
 
     public TableColumn getColumn(Object object) {
@@ -455,7 +500,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Class getColumnClass(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Class>) () -> ((JTable) getSource()).getColumnClass(i)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of((Callable<Class>) () -> ((JTable) getSource()).getColumnClass(i)));
     }
 
     public int getColumnCount() {
@@ -471,7 +517,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public boolean getColumnSelectionAllowed() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getColumnSelectionAllowed()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getColumnSelectionAllowed()));
     }
 
     public TableCellEditor getDefaultEditor(Class clss) {
@@ -507,7 +554,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Dimension getPreferredScrollableViewportSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getPreferredScrollableViewportSize()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getPreferredScrollableViewportSize()));
     }
 
     public int getRowCount() {
@@ -527,19 +575,23 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableTracksViewportHeight()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableTracksViewportWidth()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public int getSelectedColumn() {
@@ -627,11 +679,13 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Component prepareEditor(TableCellEditor tableCellEditor, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).prepareEditor(tableCellEditor, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).prepareEditor(tableCellEditor, i, i1)));
     }
 
     public Component prepareRenderer(TableCellRenderer tableCellRenderer, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).prepareRenderer(tableCellRenderer, i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).prepareRenderer(tableCellRenderer, i, i1)));
     }
 
     public void removeColumn(TableColumn tableColumn) {
@@ -934,13 +988,13 @@ public class JTableOperator extends JComponentOperator {
         return findJTable(cont, chooser, 0);
     }
 
-    public static JTable findJTable(Container cont, String text, StringComparator stringComparator, int row,
-                                    int column, int index) {
+    public static JTable findJTable(
+            Container cont, String text, StringComparator stringComparator, int row, int column, int index) {
         return findJTable(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index);
     }
 
-    public static JTable findJTable(Container cont, String text, StringComparator stringComparator, int row,
-                                    int column) {
+    public static JTable findJTable(
+            Container cont, String text, StringComparator stringComparator, int row, int column) {
         return findJTable(cont, text, stringComparator, row, column, 0);
     }
 
@@ -952,20 +1006,19 @@ public class JTableOperator extends JComponentOperator {
         return waitJTable(cont, chooser, 0);
     }
 
-    public static JTable waitJTable(Container cont, String text, StringComparator stringComparator, int row,
-                                    int column, int index) {
+    public static JTable waitJTable(
+            Container cont, String text, StringComparator stringComparator, int row, int column, int index) {
         return waitJTable(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index);
     }
 
-    public static JTable waitJTable(Container cont, String text, StringComparator stringComparator, int row,
-                                    int column) {
+    public static JTable waitJTable(
+            Container cont, String text, StringComparator stringComparator, int row, int column) {
         return waitJTable(cont, text, stringComparator, row, column, 0);
     }
 
     public interface TableCellChooser {
         public boolean checkCell(JTableOperator oper, int row, int column);
     }
-
 
     private class ByRenderedComponentTableCellChooser implements TableCellChooser {
         final Predicate<Component> chooser;
@@ -979,7 +1032,6 @@ public class JTableOperator extends JComponentOperator {
             return chooser.test(oper.getRenderedComponent(row, column));
         }
     }
-
 
     private class ByTableCellResidentToStringChooser implements TableCellChooser {
         final StringComparator comparator;
@@ -997,7 +1049,6 @@ public class JTableOperator extends JComponentOperator {
             return comparator.equals((value != null) ? value.toString() : null, expectedToString);
         }
     }
-
 
     private class CellComponentFunction implements Function<Component, Component> {
         private final int column;

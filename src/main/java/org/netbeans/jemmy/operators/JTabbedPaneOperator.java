@@ -1,6 +1,40 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Rectangle;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import javax.swing.Icon;
+import javax.swing.JTabbedPane;
+import javax.swing.SingleSelectionModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.TabbedPaneUI;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -11,13 +45,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.TabbedPaneUI;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class JTabbedPaneOperator extends JComponentOperator {
     public static final String PAGE_PREFIX_DPROP = "Page";
@@ -54,9 +81,10 @@ public class JTabbedPaneOperator extends JComponentOperator {
         this(cont, text, stringComparator, -1, index);
     }
 
-    public JTabbedPaneOperator(ContainerOperator cont, String text, StringComparator stringComparator, int tabIndex, int index) {
-        this((JTabbedPane) waitComponent(cont, new JTabbedPaneByItemPredicate(text, tabIndex, stringComparator),
-                                         index));
+    public JTabbedPaneOperator(
+            ContainerOperator cont, String text, StringComparator stringComparator, int tabIndex, int index) {
+        this((JTabbedPane)
+                waitComponent(cont, new JTabbedPaneByItemPredicate(text, tabIndex, stringComparator), index));
     }
 
     @Deprecated
@@ -155,7 +183,8 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public Icon getDisabledIconAt(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).getDisabledIconAt(i)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).getDisabledIconAt(i)));
     }
 
     public Color getForegroundAt(int i) {
@@ -171,7 +200,8 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public Component getSelectedComponent() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).getSelectedComponent()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).getSelectedComponent()));
     }
 
     public int getSelectedIndex() {
@@ -199,7 +229,8 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public int indexOfComponent(Component component) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).indexOfComponent(component)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).indexOfComponent(component)));
     }
 
     public int indexOfTab(String string) {
@@ -210,8 +241,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).indexOfTab(icon)));
     }
 
-    public void insertTab(String string, Icon icon, Component component, String string1,
-                          int i) {
+    public void insertTab(String string, Icon icon, Component component, String string1, int i) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTabbedPane) getSource()).insertTab(string, icon, component, string1, i);
 
@@ -343,14 +373,13 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return findJTabbedPane(cont, chooser, 0);
     }
 
-    public static JTabbedPane findJTabbedPane(Container cont, String text, StringComparator stringComparator, int itemIndex,
-            int index) {
-        return findJTabbedPane(cont,
-                               new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator),
-                               index);
+    public static JTabbedPane findJTabbedPane(
+            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+        return findJTabbedPane(cont, new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JTabbedPane findJTabbedPane(Container cont, String text, StringComparator stringComparator, int itemIndex) {
+    public static JTabbedPane findJTabbedPane(
+            Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return findJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 
@@ -370,14 +399,13 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return waitJTabbedPane(cont, chooser, 0);
     }
 
-    public static JTabbedPane waitJTabbedPane(Container cont, String text, StringComparator stringComparator, int itemIndex,
-            int index) {
-        return waitJTabbedPane(cont,
-                               new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator),
-                               index);
+    public static JTabbedPane waitJTabbedPane(
+            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+        return waitJTabbedPane(cont, new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JTabbedPane waitJTabbedPane(Container cont, String text, StringComparator stringComparator, int itemIndex) {
+    public static JTabbedPane waitJTabbedPane(
+            Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return waitJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 
@@ -411,7 +439,6 @@ public class JTabbedPaneOperator extends JComponentOperator {
         }
     }
 
-
     private class BySubStringTabPageChooser implements TabPageChooser {
         private final StringComparator comparator;
         private final String title;
@@ -426,6 +453,4 @@ public class JTabbedPaneOperator extends JComponentOperator {
             return comparator.equals(oper.getTitleAt(index), title);
         }
     }
-
-
 }

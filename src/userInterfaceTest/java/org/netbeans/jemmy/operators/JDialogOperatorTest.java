@@ -1,8 +1,40 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.EventQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenuBar;
+import javax.swing.JScrollPane;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.TimeoutKey;
@@ -11,20 +43,10 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
-
 class JDialogOperatorTest {
 
     private final AtomicReference<JDialog> jDialogRef = new AtomicReference<>();
     private final AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
-
-
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -82,11 +104,15 @@ class JDialogOperatorTest {
         assertNotNull(JDialogOperator.waitJDialog(jFrameRef.get(), PredicatesJ.byName("JDialogOperatorTest")));
         Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
         new JDialogOperator();
-        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> future1.get(1000L, TimeUnit.MILLISECONDS)).withMessage(null);
-        
+        assertThatExceptionOfType(TimeoutException.class)
+                .isThrownBy(() -> future1.get(1000L, TimeUnit.MILLISECONDS))
+                .withMessage(null);
+
         Future<JDialog> future2 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable2(jFrameRef.get()));
         new JDialogOperator();
-        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> future2.get(1000L, TimeUnit.MILLISECONDS)).withMessage(null);
+        assertThatExceptionOfType(TimeoutException.class)
+                .isThrownBy(() -> future2.get(1000L, TimeUnit.MILLISECONDS))
+                .withMessage(null);
     }
 
     @Test
@@ -96,13 +122,14 @@ class JDialogOperatorTest {
         new JDialogOperator();
 
         try {
-        assertThatExceptionOfType(ExecutionException.class).isThrownBy(future1::get)
-                .withMessageContaining("timeout \"DialogWaiter_WaitDialogTimeout\" (500 ms) exceeded after (");
+            assertThatExceptionOfType(ExecutionException.class)
+                    .isThrownBy(future1::get)
+                    .withMessageContaining("timeout \"DialogWaiter_WaitDialogTimeout\" (500 ms) exceeded after (");
         } finally {
             override.cancel();
         }
     }
-    
+
     @Test
     void getJMenuBar() throws Exception {
         JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
@@ -210,7 +237,6 @@ class JDialogOperatorTest {
         }
     }
 
-
     private static class GetTopModalDialogRunnable2 implements Runnable {
         private JDialog jDialog;
 
@@ -231,14 +257,12 @@ class JDialogOperatorTest {
         }
     }
 
-
     private static class WaitJDialogCallable1 implements Callable<JDialog> {
         @Override
         public JDialog call() {
             return JDialogOperator.waitJDialog("YouWontEverFindMe", StringComparators.strict());
         }
     }
-
 
     private static class WaitJDialogCallable2 implements Callable<JDialog> {
         private JFrame frame;

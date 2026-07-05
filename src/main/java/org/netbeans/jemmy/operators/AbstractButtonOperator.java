@@ -1,7 +1,42 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
+import javax.swing.Icon;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ButtonUI;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -14,15 +49,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ButtonUI;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
-import java.util.concurrent.Callable;
-
 
 public class AbstractButtonOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(AbstractButtonOperator.class);
@@ -54,7 +80,10 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public AbstractButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((AbstractButton) waitComponent(cont, PredicatesJ.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index));
+        this((AbstractButton) waitComponent(
+                cont,
+                PredicatesJ.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                index));
     }
 
     public void push() {
@@ -70,11 +99,13 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public <F, T> void pushNoBlock() {
-        produceNoBlocking((Function<F, T>) f -> {
-            push();
+        produceNoBlocking(
+                (Function<F, T>) f -> {
+                    push();
 
-            return null;
-        }, null);
+                    return null;
+                },
+                null);
     }
 
     public void changeSelection(boolean selected) {
@@ -88,11 +119,13 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void changeSelectionNoBlock(boolean selected) {
-        produceNoBlocking((Function<Boolean, Void>) param -> {
-            changeSelection(param);
+        produceNoBlocking(
+                (Function<Boolean, Void>) param -> {
+                    changeSelection(param);
 
-            return null;
-        }, selected);
+                    return null;
+                },
+                selected);
     }
 
     public void press() {
@@ -166,23 +199,28 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public String getActionCommand() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getActionCommand()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getActionCommand()));
     }
 
     public Icon getDisabledIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledIcon()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledIcon()));
     }
 
     public Icon getDisabledSelectedIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledSelectedIcon()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledSelectedIcon()));
     }
 
     public int getHorizontalAlignment() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalAlignment()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalAlignment()));
     }
 
     public int getHorizontalTextPosition() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalTextPosition()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalTextPosition()));
     }
 
     public Icon getIcon() {
@@ -206,19 +244,23 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public Icon getRolloverIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getRolloverIcon()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getRolloverIcon()));
     }
 
     public Icon getRolloverSelectedIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getRolloverSelectedIcon()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getRolloverSelectedIcon()));
     }
 
     public Icon getSelectedIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getSelectedIcon()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getSelectedIcon()));
     }
 
     public Object[] getSelectedObjects() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getSelectedObjects()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getSelectedObjects()));
     }
 
     public String getText() {
@@ -230,19 +272,23 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public int getVerticalAlignment() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getVerticalAlignment()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getVerticalAlignment()));
     }
 
     public int getVerticalTextPosition() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getVerticalTextPosition()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getVerticalTextPosition()));
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isBorderPainted()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isBorderPainted()));
     }
 
     public boolean isContentAreaFilled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isContentAreaFilled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isContentAreaFilled()));
     }
 
     public boolean isFocusPainted() {
@@ -250,7 +296,8 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public boolean isRolloverEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isRolloverEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isRolloverEnabled()));
     }
 
     public boolean isSelected() {
@@ -473,9 +520,9 @@ public class AbstractButtonOperator extends JComponentOperator {
         return findAbstractButton(cont, chooser, 0);
     }
 
-    public static AbstractButton findAbstractButton(Container cont, String text, StringComparator stringComparator, int index) {
-        return findAbstractButton(cont, new AbstractButtonByTextPredicate(text, stringComparator),
-                                  index);
+    public static AbstractButton findAbstractButton(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return findAbstractButton(cont, new AbstractButtonByTextPredicate(text, stringComparator), index);
     }
 
     public static AbstractButton findAbstractButton(Container cont, String text, StringComparator stringComparator) {
@@ -490,16 +537,17 @@ public class AbstractButtonOperator extends JComponentOperator {
         return waitAbstractButton(cont, chooser, 0);
     }
 
-    public static AbstractButton waitAbstractButton(Container cont, String text, StringComparator stringComparator, int index) {
-        return waitAbstractButton(cont, new AbstractButtonByTextPredicate(text, stringComparator),
-                                  index);
+    public static AbstractButton waitAbstractButton(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return waitAbstractButton(cont, new AbstractButtonByTextPredicate(text, stringComparator), index);
     }
 
     public static AbstractButton waitAbstractButton(Container cont, String text, StringComparator stringComparator) {
         return waitAbstractButton(cont, text, stringComparator, 0);
     }
 
-    private static class AbstractButtonOperatorSelectedPredicate<T extends AbstractButtonOperator> implements Predicate<T> {
+    private static class AbstractButtonOperatorSelectedPredicate<T extends AbstractButtonOperator>
+            implements Predicate<T> {
         private final boolean selected;
 
         public AbstractButtonOperatorSelectedPredicate(boolean selected) {

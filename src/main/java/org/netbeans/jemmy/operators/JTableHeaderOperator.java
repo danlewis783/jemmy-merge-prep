@@ -1,14 +1,35 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
-import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.drivers.DriverManager;
-import org.netbeans.jemmy.drivers.OrderedListDriver;
-import org.netbeans.jemmy.predicates.PredicatesJ;
-
-import javax.swing.*;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -17,9 +38,12 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.drivers.DriverManager;
+import org.netbeans.jemmy.drivers.OrderedListDriver;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class JTableHeaderOperator extends JComponentOperator {
     private final OrderedListDriver driver;
@@ -84,7 +108,8 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public boolean getReorderingAllowed() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getReorderingAllowed()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getReorderingAllowed()));
     }
 
     public void setResizingAllowed(boolean b) {
@@ -96,7 +121,8 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public boolean getResizingAllowed() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getResizingAllowed()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getResizingAllowed()));
     }
 
     public TableColumn getDraggedColumn() {
@@ -104,11 +130,13 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public int getDraggedDistance() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDraggedDistance()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDraggedDistance()));
     }
 
     public TableColumn getResizingColumn() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getResizingColumn()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getResizingColumn()));
     }
 
     public void setUpdateTableInRealTime(boolean b) {
@@ -120,7 +148,8 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public boolean getUpdateTableInRealTime() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getUpdateTableInRealTime()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getUpdateTableInRealTime()));
     }
 
     public void setDefaultRenderer(TableCellRenderer tableCellRenderer) {
@@ -132,11 +161,13 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public TableCellRenderer getDefaultRenderer() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDefaultRenderer()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDefaultRenderer()));
     }
 
     public int columnAtPoint(Point point) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).columnAtPoint(point)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).columnAtPoint(point)));
     }
 
     public Rectangle getHeaderRect(int i) {

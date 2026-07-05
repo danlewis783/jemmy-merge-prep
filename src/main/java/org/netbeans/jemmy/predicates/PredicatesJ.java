@@ -1,15 +1,30 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.predicates;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
+import java.util.regex.Pattern;
+import javax.swing.JComponent;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.regex.Pattern;
 
 public final class PredicatesJ {
     private PredicatesJ() {}
@@ -18,18 +33,20 @@ public final class PredicatesJ {
         return new IsInstancePredicate(clazz);
     }
 
-    public static Predicate<Component> of(Class ... classes) {
+    public static Predicate<Component> of(Class... classes) {
         return new IsInstanceAnyPredicate(classes);
     }
-    
+
     public static Predicate<Component> of(Class clazz, Predicate<Component> predicate) {
         return new IsInstancePredicate(clazz).and(predicate);
     }
 
     public static Predicate<Component> ofParentOf(Class clazz, Class parentClass, Predicate<Component> predicate) {
-        return new IsInstancePredicate(clazz).and(new WithParentOfTypePredicate(parentClass)).and(predicate);
+        return new IsInstancePredicate(clazz)
+                .and(new WithParentOfTypePredicate(parentClass))
+                .and(predicate);
     }
-    
+
     public static Predicate<Component> ofShowing(Class clazz) {
         return new IsInstancePredicate(clazz).and(new IsShowingPredicate());
     }
@@ -93,8 +110,7 @@ public final class PredicatesJ {
     public static <T extends Component> Predicate<T> alwaysTrue() {
         return t -> true;
     }
-    
-    
+
     private static class AncestorInstanceOfPredicate<T extends Component, U extends Component> implements Predicate<T> {
         private final Class<U> clazz;
 
@@ -113,7 +129,6 @@ public final class PredicatesJ {
         }
     }
 
-
     private static class ByIndexPredicate<T extends Component> implements Predicate<T> {
         private final int i;
         int count;
@@ -129,7 +144,6 @@ public final class PredicatesJ {
         }
     }
 
-
     private static class ClassNamePredicate<T extends Component> implements Predicate<T> {
         private final String className;
 
@@ -143,7 +157,6 @@ public final class PredicatesJ {
         }
     }
 
-
     private static class IsAssignableFromPredicate implements Predicate<Component> {
         private final Class clazz;
 
@@ -156,7 +169,6 @@ public final class PredicatesJ {
             return clazz.isAssignableFrom(comp.getClass());
         }
     }
-
 
     private static class IsInstancePredicate implements Predicate<Component> {
         private final Class clazz;
@@ -172,9 +184,9 @@ public final class PredicatesJ {
     }
 
     private static class IsInstanceAnyPredicate implements Predicate<Component> {
-        private final Class [] classes;
+        private final Class[] classes;
 
-        public IsInstanceAnyPredicate(Class ... classes) {
+        public IsInstanceAnyPredicate(Class... classes) {
             this.classes = classes;
         }
 
@@ -185,11 +197,10 @@ public final class PredicatesJ {
                     return true;
                 }
             }
-            
+
             return false;
         }
     }
-    
 
     private static class IsShowingPredicate<T extends Component> implements Predicate<T> {
         @Override
@@ -198,7 +209,6 @@ public final class PredicatesJ {
         }
     }
 
-    
     private static class NumChildrenPredicate<T extends Container> implements Predicate<T> {
         private final int i;
 
@@ -211,7 +221,6 @@ public final class PredicatesJ {
             return input.getComponents().length == i;
         }
     }
-
 
     private static class TooltipPredicate<T extends Component> implements Predicate<T> {
         private final String tooltip;
@@ -234,7 +243,6 @@ public final class PredicatesJ {
             return (tooltipText != null) && tooltipText.equals(tooltip);
         }
     }
-
 
     private static class TooltipRegexPredicate<T extends Component> implements Predicate<T> {
         private final String regex;
@@ -277,7 +285,7 @@ public final class PredicatesJ {
             return input.isEnabled();
         }
     }
-    
+
     private static class WithParentOfTypePredicate<T extends Component> implements Predicate<T> {
         private final Class clazz;
 
@@ -290,7 +298,7 @@ public final class PredicatesJ {
             return clazz.isInstance(input.getParent());
         }
     }
-    
+
     private static class ByNamePredicate<T extends Component> implements Predicate<T> {
         private final StringComparator comparator;
         private final String requestedName;

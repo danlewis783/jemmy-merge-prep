@@ -1,15 +1,26 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.operators;
 
-import java.util.function.Function;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-import org.junit.jupiter.api.*;
-import org.netbeans.jemmy.*;
-import org.netbeans.jemmy.util.StringComparators;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -17,9 +28,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.function.Function;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.FunctionRunner;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
+import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.util.StringComparators;
 
 final class JFileChooserOperatorTest {
 
@@ -577,18 +601,20 @@ final class JFileChooserOperatorTest {
         TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L);
         int result;
         try {
-            result = FunctionRunner.on((Function<Void, Integer>) v -> op.showDialog(null, "Plus")).submitAndGet(null, TimeoutKey.Testing_A);
+            result = FunctionRunner.on((Function<Void, Integer>) v -> op.showDialog(null, "Plus"))
+                    .submitAndGet(null, TimeoutKey.Testing_A);
         } finally {
             overrideA.cancel();
         }
         TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L);
         try {
             FunctionRunner.on((Function<Void, Void>) v -> {
-                JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
-                assertNotNull(buttonOp);
-                buttonOp.clickMouse();
-                return null;
-            }).submitAndGet(null, TimeoutKey.Testing_B);
+                        JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
+                        assertNotNull(buttonOp);
+                        buttonOp.clickMouse();
+                        return null;
+                    })
+                    .submitAndGet(null, TimeoutKey.Testing_B);
         } finally {
             overrideB.cancel();
         }
@@ -603,18 +629,20 @@ final class JFileChooserOperatorTest {
         TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1000L);
         int result;
         try {
-            result = FunctionRunner.on((Function<Void, Integer>) v -> op.showOpenDialog(null)).submitAndGet(null, TimeoutKey.Testing_C);
+            result = FunctionRunner.on((Function<Void, Integer>) v -> op.showOpenDialog(null))
+                    .submitAndGet(null, TimeoutKey.Testing_C);
         } finally {
             overrideC.cancel();
         }
         TimeoutOverride overrideD = Timeouts.override(TimeoutKey.Testing_D, 1000L);
         try {
             FunctionRunner.on((Function<Void, Void>) v -> {
-                JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
-                assertNotNull(buttonOp);
-                buttonOp.clickMouse();
-                return null;
-            }).submitAndGet(null, TimeoutKey.Testing_D);
+                        JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
+                        assertNotNull(buttonOp);
+                        buttonOp.clickMouse();
+                        return null;
+                    })
+                    .submitAndGet(null, TimeoutKey.Testing_D);
         } finally {
             overrideD.cancel();
         }
@@ -629,18 +657,20 @@ final class JFileChooserOperatorTest {
         TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L);
         int result;
         try {
-            result = FunctionRunner.on((Function<Void, Integer>) v -> op.showSaveDialog(null)).submitAndGet(null, TimeoutKey.Testing_A);
+            result = FunctionRunner.on((Function<Void, Integer>) v -> op.showSaveDialog(null))
+                    .submitAndGet(null, TimeoutKey.Testing_A);
         } finally {
             overrideA.cancel();
         }
         TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L);
         try {
             FunctionRunner.on((Function<Void, Void>) v -> {
-                JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
-                assertNotNull(buttonOp);
-                buttonOp.clickMouse();
-                return null;
-            }).submitAndGet(null, TimeoutKey.Testing_B);
+                        JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
+                        assertNotNull(buttonOp);
+                        buttonOp.clickMouse();
+                        return null;
+                    })
+                    .submitAndGet(null, TimeoutKey.Testing_B);
         } finally {
             overrideB.cancel();
         }

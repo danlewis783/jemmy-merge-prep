@@ -1,13 +1,28 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Caller<T> implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Caller.class);
@@ -29,7 +44,7 @@ public final class Caller<T> implements Runnable {
 
     @Override
     public final void run() {
-        if (! hasRun.compareAndSet(false, true)) {
+        if (!hasRun.compareAndSet(false, true)) {
             throw new IllegalStateException("attempted to re-run Caller");
         }
         try {
@@ -43,7 +58,6 @@ public final class Caller<T> implements Runnable {
                     throw new IllegalStateException("result already non-null");
                 }
             }
-
 
         } catch (Exception e) {
             if (!exception.compareAndSet(null, e)) {

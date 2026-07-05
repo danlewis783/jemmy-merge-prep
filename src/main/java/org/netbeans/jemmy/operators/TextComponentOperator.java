@@ -1,5 +1,34 @@
+/*
+ * Copyright (c) 1997, 2020, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.TextComponent;
+import java.awt.event.TextListener;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.netbeans.jemmy.Caller;
@@ -13,11 +42,6 @@ import org.netbeans.jemmy.predicates.TextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
-import java.awt.event.TextListener;
-import java.util.concurrent.Callable;
-
 
 public class TextComponentOperator extends ComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(TextComponentOperator.class);
@@ -48,26 +72,32 @@ public class TextComponentOperator extends ComponentOperator {
         this((TextComponent) cont.waitSubComponent(PredicatesJ.of(TextComponent.class, chooser), index));
     }
 
-    public TextComponentOperator(ContainerOperator cont, String text,  StringComparator stringComparator, int index) {
+    public TextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         this((TextComponent) waitComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index));
     }
 
     public void changeCaretPosition(int position) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.changeCaretPosition(TextComponentOperator.this, position);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.changeCaretPosition(TextComponentOperator.this, position);
 
-            return null;
-        }, null, TimeoutKey.TextComponentOperator_ChangeCaretPositionTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.TextComponentOperator_ChangeCaretPositionTimeout);
     }
 
     public void selectText(int startPosition, int finalPosition) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) obj -> {
-            driver.selectText(TextComponentOperator.this, startPosition, finalPosition);
+        produceTimeRestricted(
+                (Function<Void, Void>) obj -> {
+                    driver.selectText(TextComponentOperator.this, startPosition, finalPosition);
 
-            return null;
-        }, null, TimeoutKey.TextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.TextComponentOperator_TypeTextTimeout);
     }
 
     public int getPositionByText(String text, int index) {
@@ -93,20 +123,26 @@ public class TextComponentOperator extends ComponentOperator {
 
     public void clearText() {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.clearText(TextComponentOperator.this);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.clearText(TextComponentOperator.this);
 
-            return null;
-        }, null, TimeoutKey.TextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.TextComponentOperator_TypeTextTimeout);
     }
 
     public void typeText(String text, int caretPosition) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.typeText(TextComponentOperator.this, text, caretPosition);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.typeText(TextComponentOperator.this, text, caretPosition);
 
-            return null;
-        }, null, TimeoutKey.TextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.TextComponentOperator_TypeTextTimeout);
     }
 
     public void typeText(String text) {
@@ -115,11 +151,14 @@ public class TextComponentOperator extends ComponentOperator {
 
     public void enterText(String text) {
         makeComponentVisible();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.enterText(TextComponentOperator.this, text);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.enterText(TextComponentOperator.this, text);
 
-            return null;
-        }, null, TimeoutKey.TextComponentOperator_TypeTextTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.TextComponentOperator_TypeTextTimeout);
     }
 
     public void addTextListener(TextListener textListener) {
@@ -131,7 +170,8 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public int getCaretPosition() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getCaretPosition()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getCaretPosition()));
     }
 
     public String getSelectedText() {
@@ -143,7 +183,8 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public int getSelectionStart() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getSelectionStart()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getSelectionStart()));
     }
 
     public String getText() {
@@ -230,9 +271,9 @@ public class TextComponentOperator extends ComponentOperator {
         return findTextComponent(cont, chooser, 0);
     }
 
-    public static TextComponent findTextComponent(Container cont, String text, StringComparator stringComparator, int index) {
-        return findTextComponent(cont, new TextComponentByTextPredicate(text, stringComparator),
-                                 index);
+    public static TextComponent findTextComponent(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return findTextComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index);
     }
 
     public static TextComponent findTextComponent(Container cont, String text, StringComparator stringComparator) {
@@ -247,13 +288,12 @@ public class TextComponentOperator extends ComponentOperator {
         return waitTextComponent(cont, chooser, 0);
     }
 
-    public static TextComponent waitTextComponent(Container cont, String text, StringComparator stringComparator, int index) {
-        return waitTextComponent(cont, new TextComponentByTextPredicate(text, stringComparator),
-                index);
+    public static TextComponent waitTextComponent(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return waitTextComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index);
     }
 
     public static TextComponent waitTextComponent(Container cont, String text, StringComparator stringComparator) {
         return waitTextComponent(cont, text, stringComparator, 0);
     }
-
 }

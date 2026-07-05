@@ -1,7 +1,38 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import javax.swing.JButton;
+import javax.swing.JSplitPane;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -13,13 +44,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.plaf.SplitPaneUI;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class JSplitPaneOperator extends JComponentOperator {
     public static final String HORIZONTAL_ORIENTATION_DPROP_VALUE = "HORIZONTAL";
@@ -67,11 +91,14 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scroll(JSplitPaneOperator.this, adj);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scroll(JSplitPaneOperator.this, adj);
 
-            return null;
-        }, null, TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
     }
 
     public void moveDivider(int dividerLocation) {
@@ -80,24 +107,29 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public void moveDivider(double proportionalLocation) {
         scrollTo(new ValueScrollAdjuster(getMinimumDividerLocation()
-                                         + (int) (proportionalLocation
-                                             * (getMaximumDividerLocation() - getMinimumDividerLocation()))));
+                + (int) (proportionalLocation * (getMaximumDividerLocation() - getMinimumDividerLocation()))));
     }
 
     public void moveToMinimum() {
-        produceTimeRestricted((Function<Void, Void>) obj -> {
-            driver.scrollToMinimum(JSplitPaneOperator.this, getOrientation());
+        produceTimeRestricted(
+                (Function<Void, Void>) obj -> {
+                    driver.scrollToMinimum(JSplitPaneOperator.this, getOrientation());
 
-            return null;
-        }, null, TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
     }
 
     public void moveToMaximum() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMaximum(JSplitPaneOperator.this, getOrientation());
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMaximum(JSplitPaneOperator.this, getOrientation());
 
-            return null;
-        }, null, TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
     }
 
     public void expandRight() {
@@ -121,7 +153,8 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public int getLastDividerLocation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).getLastDividerLocation()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).getLastDividerLocation()));
     }
 
     public Component getLeftComponent() {
@@ -129,11 +162,13 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public int getMaximumDividerLocation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).getMaximumDividerLocation()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).getMaximumDividerLocation()));
     }
 
     public int getMinimumDividerLocation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).getMinimumDividerLocation()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).getMinimumDividerLocation()));
     }
 
     public int getOrientation() {
@@ -157,7 +192,8 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public boolean isOneTouchExpandable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).isOneTouchExpandable()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JSplitPane) getSource()).isOneTouchExpandable()));
     }
 
     public void resetToPreferredSizes() {
@@ -266,8 +302,8 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     private void expandTo(int index) {
         makeComponentVisible();
-        JButtonOperator bo = new JButtonOperator((JButton) getDivider().waitSubComponent(PredicatesJ.of(JButton.class,
-                                 PredicatesJ.alwaysTrue()), index));
+        JButtonOperator bo = new JButtonOperator((JButton)
+                getDivider().waitSubComponent(PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         bo.setVisualizer(new EmptyVisualizer());
         bo.push();
     }
@@ -325,7 +361,8 @@ public class JSplitPaneOperator extends JComponentOperator {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
             } else {
                 return (getDividerLocation() < value)
-                       ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+                        ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION
+                        : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
             }
         }
 

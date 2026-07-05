@@ -1,20 +1,36 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.testing;
-
-import java.util.function.Function;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.*;
-
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.FunctionRunner;
+import org.netbeans.jemmy.TimeoutExpiredException;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
+import org.netbeans.jemmy.Timeouts;
 
 class jemmy_015 {
 
@@ -26,8 +42,6 @@ class jemmy_015 {
     private final AtomicBoolean abort = new AtomicBoolean(false);
     private final AtomicBoolean completedWithoutInterruption = new AtomicBoolean(false);
     private TimeoutOverride override;
-
-
 
     @BeforeEach
     void beforeEach() {
@@ -41,29 +55,31 @@ class jemmy_015 {
 
     @Test
     void test() throws Exception {
-        assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() ->
-            FunctionRunner.on((Function<Void, Boolean>) v -> {
-                long startTime = System.currentTimeMillis();
-                long elapsed;
-                while ((elapsed = (System.currentTimeMillis() - startTime)) < ACTION_TIME) {
-                    try {
-                        Thread.sleep(SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+        assertThatExceptionOfType(TimeoutExpiredException.class)
+                .isThrownBy(() -> FunctionRunner.on((Function<Void, Boolean>) v -> {
+                            long startTime = System.currentTimeMillis();
+                            long elapsed;
+                            while ((elapsed = (System.currentTimeMillis() - startTime)) < ACTION_TIME) {
+                                try {
+                                    Thread.sleep(SLEEP_TIME);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
 
-                    if (abort.get()) {
-                        return null;
-                    }
-                }
+                                if (abort.get()) {
+                                    return null;
+                                }
+                            }
 
-                if (!completedWithoutInterruption.compareAndSet(false, true)) {
-                    // don't care
-                }
+                            if (!completedWithoutInterruption.compareAndSet(false, true)) {
+                                // don't care
+                            }
 
-                return true;
-            }).submitAndGet(null, TimeoutKey.Testing_A)).withMessageContaining(
-                    String.format("timeout \"%s\" (%d ms) exceeded after (", TimeoutKey.Testing_A, MAX_ACTION_TIME));
+                            return true;
+                        })
+                        .submitAndGet(null, TimeoutKey.Testing_A))
+                .withMessageContaining(String.format(
+                        "timeout \"%s\" (%d ms) exceeded after (", TimeoutKey.Testing_A, MAX_ACTION_TIME));
 
         if (!abort.compareAndSet(false, true)) {
             // don't care

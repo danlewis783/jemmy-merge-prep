@@ -1,29 +1,49 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.awt.Container;
+import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import javax.swing.MenuElement;
+import javax.swing.event.MenuDragMouseEvent;
+import javax.swing.event.MenuDragMouseListener;
+import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.MenuKeyListener;
+import javax.swing.plaf.MenuItemUI;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.event.MenuDragMouseEvent;
-import javax.swing.event.MenuDragMouseListener;
-import javax.swing.event.MenuKeyEvent;
-import javax.swing.event.MenuKeyListener;
-import javax.swing.plaf.MenuItemUI;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
-import static org.junit.jupiter.api.Assertions.*;
 class JMenuItemOperatorTest {
-
-
 
     private JFrame frame;
     private JMenu menu;
@@ -71,13 +91,13 @@ class JMenuItemOperatorTest {
         JMenuBarOperator operator1 = new JMenuBarOperator(jFrameOp);
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         JPopupMenuOperator popup = new JPopupMenuOperator();
-        JMenuItem menuItem1 = JMenuItemOperator.findJMenuItem((Container) popup.getSource(),
-                                  PredicatesJ.byName("JMenuItemOperatorTest"));
+        JMenuItem menuItem1 = JMenuItemOperator.findJMenuItem(
+                (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
         assertNotNull(menuItem1);
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         popup = new JPopupMenuOperator();
-        JMenuItem menuItem2 = JMenuItemOperator.findJMenuItem((Container) popup.getSource(), "JMenuItemOperatorTest",
-                                  StringComparators.caseInsensitiveSubstring());
+        JMenuItem menuItem2 = JMenuItemOperator.findJMenuItem(
+                (Container) popup.getSource(), "JMenuItemOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(menuItem2);
     }
 
@@ -87,13 +107,13 @@ class JMenuItemOperatorTest {
         JMenuBarOperator operator1 = new JMenuBarOperator(jFrameOp);
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         JPopupMenuOperator popup = new JPopupMenuOperator();
-        JMenuItem menuItem1 = JMenuItemOperator.waitJMenuItem((Container) popup.getSource(),
-                                  PredicatesJ.byName("JMenuItemOperatorTest"));
+        JMenuItem menuItem1 = JMenuItemOperator.waitJMenuItem(
+                (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
         assertNotNull(menuItem1);
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         popup = new JPopupMenuOperator();
-        JMenuItem menuItem2 = JMenuItemOperator.waitJMenuItem((Container) popup.getSource(), "JMenuItemOperatorTest",
-                                  StringComparators.caseInsensitiveSubstring());
+        JMenuItem menuItem2 = JMenuItemOperator.waitJMenuItem(
+                (Container) popup.getSource(), "JMenuItemOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertNotNull(menuItem2);
     }
 
@@ -130,8 +150,9 @@ class JMenuItemOperatorTest {
             jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a'));
         } catch (JemmyException e) {
             assertEquals("Throwable captured by invocation event", e.getMessage());
-            assertEquals("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.",
-                         e.getCause().getMessage());
+            assertEquals(
+                    "setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.",
+                    e.getCause().getMessage());
         }
 
         assertNull(jMenuItemOp.getAccelerator());
@@ -236,7 +257,7 @@ class JMenuItemOperatorTest {
         assertNotNull(jFrameOp);
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
         assertNotNull(operator1);
-        JMenuItemOperator.createPredicates(new String[]{"Hello"}, StringComparators.regex());
+        JMenuItemOperator.createPredicates(new String[] {"Hello"}, StringComparators.regex());
     }
 
     private static class NullMenuDragMouseListener implements MenuDragMouseListener {
@@ -253,9 +274,7 @@ class JMenuItemOperatorTest {
         public void menuDragMouseReleased(MenuDragMouseEvent e) {}
     }
 
-
     private static class NullMenuItemUI extends MenuItemUI {}
-
 
     private static class NullMenuKeyListener implements MenuKeyListener {
         @Override

@@ -1,26 +1,41 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
-
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.Icon;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ColorChooserUI;
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class JColorChooserOperatorTest {
-
-
 
     private JColorChooser colorChooser;
     private JFrame frame;
@@ -55,8 +70,8 @@ class JColorChooserOperatorTest {
         assertNotNull(operator1);
         JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
         assertNotNull(operator2);
-        JColorChooserOperator operator3 = new JColorChooserOperator(operator1,
-                                              PredicatesJ.byName("JColorChooserOperatorTest"));
+        JColorChooserOperator operator3 =
+                new JColorChooserOperator(operator1, PredicatesJ.byName("JColorChooserOperatorTest"));
         assertNotNull(operator3);
     }
 
@@ -64,8 +79,8 @@ class JColorChooserOperatorTest {
     void testFindJColorChooser() {
         JColorChooser colorChooser = JColorChooserOperator.findJColorChooser(frame);
         assertNotNull(colorChooser);
-        JColorChooser colorChooser2 = JColorChooserOperator.findJColorChooser(frame,
-                                          PredicatesJ.byName("JColorChooserOperatorTest"));
+        JColorChooser colorChooser2 =
+                JColorChooserOperator.findJColorChooser(frame, PredicatesJ.byName("JColorChooserOperatorTest"));
         assertNotNull(colorChooser2);
     }
 
@@ -73,8 +88,8 @@ class JColorChooserOperatorTest {
     void testWaitJColorChooser() {
         JColorChooser colorChooser = JColorChooserOperator.waitJColorChooser(frame);
         assertNotNull(colorChooser);
-        JColorChooser colorChooser2 = JColorChooserOperator.waitJColorChooser(frame,
-                                          PredicatesJ.byName("JColorChooserOperatorTest"));
+        JColorChooser colorChooser2 =
+                JColorChooserOperator.waitJColorChooser(frame, PredicatesJ.byName("JColorChooserOperatorTest"));
         assertNotNull(colorChooser2);
     }
 
@@ -245,9 +260,7 @@ class JColorChooserOperatorTest {
         }
     }
 
-
     private class ColorChooserUITest extends ColorChooserUI {}
-
 
     private class ColorSelectionModelTest implements ColorSelectionModel {
         @Override

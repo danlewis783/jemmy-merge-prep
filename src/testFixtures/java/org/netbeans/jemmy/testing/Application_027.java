@@ -1,7 +1,38 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.testing;
 
-
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -11,13 +42,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.List;
-import java.util.Vector;
+
 public class Application_027 extends JFrame {
 
     private Application_027() {
@@ -137,8 +162,8 @@ public class Application_027 extends JFrame {
         }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
-                int column) {
+        public Component getTableCellEditorComponent(
+                JTable table, Object value, boolean isSelected, int row, int column) {
             this.row = row;
             this.column = column;
             this.tbl = table;
@@ -194,7 +219,6 @@ public class Application_027 extends JFrame {
         }
     }
 
-
     private static class TreeDualComboEditor implements TreeCellEditor {
         final JComboBox fCombo;
         final Vector lists;
@@ -215,8 +239,8 @@ public class Application_027 extends JFrame {
         }
 
         @Override
-        public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean isExpanded,
-                boolean isLeaf, int row) {
+        public Component getTreeCellEditorComponent(
+                JTree tree, Object value, boolean isSelected, boolean isExpanded, boolean isLeaf, int row) {
             this.path = tree.getPathForRow(row);
             this.tree = tree;
             fCombo.setSelectedIndex(Integer.parseInt(value.toString().substring(0, 1)));

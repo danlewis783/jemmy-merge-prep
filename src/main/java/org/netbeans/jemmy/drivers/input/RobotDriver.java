@@ -1,6 +1,37 @@
+/*
+ * Copyright (c) 1997, 2022, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.drivers.input;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -8,14 +39,6 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
 
 public class RobotDriver extends LightSupportiveDriver {
     private static final Logger logger = LoggerFactory.getLogger(RobotDriver.class);
@@ -99,8 +122,15 @@ public class RobotDriver extends LightSupportiveDriver {
         releaseModifiers(modifiers);
     }
 
-    public void dragNDrop(int start_x, int start_y, int end_x, int end_y, int mouseButton, int modifiers,
-                          TimeoutKey before, TimeoutKey after) {
+    public void dragNDrop(
+            int start_x,
+            int start_y,
+            int end_x,
+            int end_y,
+            int mouseButton,
+            int modifiers,
+            TimeoutKey before,
+            TimeoutKey after) {
         moveMouse(start_x, start_y);
         pressMouse(mouseButton, modifiers);
         Timeouts.sleep(before);
@@ -161,7 +191,7 @@ public class RobotDriver extends LightSupportiveDriver {
             }
             return null;
         }));
-        if (! robotRef.compareAndSet(null, inst)) {
+        if (!robotRef.compareAndSet(null, inst)) {
             throw new IllegalStateException("AWT Robot already non-null");
         }
         return inst;

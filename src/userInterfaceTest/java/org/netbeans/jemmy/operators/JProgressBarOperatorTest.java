@@ -1,25 +1,41 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.BoundedRangeModel;
+import javax.swing.JFrame;
+import javax.swing.JProgressBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ProgressBarUI;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ProgressBarUI;
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 class JProgressBarOperatorTest {
-
 
     private final AtomicReference<JFrame> frameRef = new AtomicReference<>();
     private final AtomicReference<JProgressBar> progressBarRef = new AtomicReference<>();
@@ -63,8 +79,8 @@ class JProgressBarOperatorTest {
         assertNotNull(operator);
         JProgressBarOperator operator1 = new JProgressBarOperator(operator);
         assertNotNull(operator1);
-        JProgressBarOperator operator2 = new JProgressBarOperator(operator,
-                                             PredicatesJ.byName("JProgressBarOperatorTest"));
+        JProgressBarOperator operator2 =
+                new JProgressBarOperator(operator, PredicatesJ.byName("JProgressBarOperatorTest"));
         assertNotNull(operator2);
         JProgressBarOperator operator3 = new JProgressBarOperator(progressBarRef.get());
         assertNotNull(operator3);
@@ -74,8 +90,8 @@ class JProgressBarOperatorTest {
     void testFindJProgressBar() {
         JProgressBar progressBar1 = JProgressBarOperator.findJProgressBar(frameRef.get());
         assertNotNull(progressBar1);
-        JProgressBar progressBar2 = JProgressBarOperator.findJProgressBar(frameRef.get(),
-                                        PredicatesJ.byName("JProgressBarOperatorTest"));
+        JProgressBar progressBar2 =
+                JProgressBarOperator.findJProgressBar(frameRef.get(), PredicatesJ.byName("JProgressBarOperatorTest"));
         assertNotNull(progressBar2);
     }
 
@@ -83,8 +99,8 @@ class JProgressBarOperatorTest {
     void testWaitJProgressBar() {
         JProgressBar progressBar1 = JProgressBarOperator.waitJProgressBar(frameRef.get());
         assertNotNull(progressBar1);
-        JProgressBar progressBar2 = JProgressBarOperator.waitJProgressBar(frameRef.get(),
-                                        PredicatesJ.byName("JProgressBarOperatorTest"));
+        JProgressBar progressBar2 =
+                JProgressBarOperator.waitJProgressBar(frameRef.get(), PredicatesJ.byName("JProgressBarOperatorTest"));
         assertNotNull(progressBar2);
     }
 
@@ -273,12 +289,10 @@ class JProgressBarOperatorTest {
         public void removeChangeListener(ChangeListener x) {}
     }
 
-
     private static class NullChangeListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {}
     }
-
 
     private static class NullProgressBarUI extends ProgressBarUI {}
 }

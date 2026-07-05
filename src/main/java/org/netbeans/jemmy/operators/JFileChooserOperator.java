@@ -1,9 +1,62 @@
+/*
+ * Copyright (c) 1997, 2019, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.operators;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.ListModel;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileView;
+import javax.swing.plaf.FileChooserUI;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.ComponentSearcher;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.functions.JListCellIndexIsPaintedFunction;
 import org.netbeans.jemmy.predicates.ButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.JFileChooserJDialogPredicate;
@@ -13,28 +66,16 @@ import org.netbeans.jemmy.util.StringComparators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.filechooser.FileView;
-import javax.swing.plaf.FileChooserUI;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.concurrent.Callable;
-
-
 public class JFileChooserOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JFileChooserOperator.class);
     private final ComponentSearcher innerSearcher;
 
     public JFileChooserOperator() {
-        this((JFileChooser) waitComponent(JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()),
-                PredicatesJ.of(JFileChooser.class)));
+        this((JFileChooser) waitComponent(
+                JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()), PredicatesJ.of(JFileChooser.class)));
 
-
-//        this((JFileChooser) waitComponent(JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate()),
-//                PredicatesJ.of(JFileChooser.class)));
+        //        this((JFileChooser) waitComponent(JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate()),
+        //                PredicatesJ.of(JFileChooser.class)));
     }
 
     public JFileChooserOperator(JFileChooser comp) {
@@ -59,8 +100,8 @@ public class JFileChooserOperator extends JComponentOperator {
         if (aText != null) {
             return (JButton) innerSearcher.findComponent(new ButtonByTextPredicate(aText));
         } else {
-            throw new JemmyException("JFileChooser.getApproveButtonText() " + "and getUI().getApproveButtonText "
-                                     + "return null");
+            throw new JemmyException(
+                    "JFileChooser.getApproveButtonText() " + "and getUI().getApproveButtonText " + "return null");
         }
     }
 
@@ -277,7 +318,8 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public FileFilter getAcceptAllFileFilter() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getAcceptAllFileFilter()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getAcceptAllFileFilter()));
     }
 
     public JComponent getAccessory() {
@@ -285,27 +327,33 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public int getApproveButtonMnemonic() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getApproveButtonMnemonic()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getApproveButtonMnemonic()));
     }
 
     public String getApproveButtonText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getApproveButtonText()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getApproveButtonText()));
     }
 
     public String getApproveButtonToolTipText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getApproveButtonToolTipText()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getApproveButtonToolTipText()));
     }
 
     public FileFilter[] getChoosableFileFilters() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getChoosableFileFilters()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getChoosableFileFilters()));
     }
 
     public File getCurrentDirectory() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getCurrentDirectory()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getCurrentDirectory()));
     }
 
     public String getDescription(File file) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getDescription(file)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getDescription(file)));
     }
 
     public String getDialogTitle() {
@@ -321,11 +369,13 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public int getFileSelectionMode() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getFileSelectionMode()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getFileSelectionMode()));
     }
 
     public FileSystemView getFileSystemView() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getFileSystemView()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getFileSystemView()));
     }
 
     public FileView getFileView() {
@@ -349,7 +399,8 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public String getTypeDescription(File file) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getTypeDescription(file)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).getTypeDescription(file)));
     }
 
     public FileChooserUI getUI() {
@@ -357,23 +408,28 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public boolean isDirectorySelectionEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isDirectorySelectionEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isDirectorySelectionEnabled()));
     }
 
     public boolean isFileHidingEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isFileHidingEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isFileHidingEnabled()));
     }
 
     public boolean isFileSelectionEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isFileSelectionEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isFileSelectionEnabled()));
     }
 
     public boolean isMultiSelectionEnabled() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isMultiSelectionEnabled()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isMultiSelectionEnabled()));
     }
 
     public boolean isTraversable(File file) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isTraversable(file)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).isTraversable(file)));
     }
 
     public void removeActionListener(ActionListener actionListener) {
@@ -385,7 +441,8 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public boolean removeChoosableFileFilter(FileFilter fileFilter) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).removeChoosableFileFilter(fileFilter)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).removeChoosableFileFilter(fileFilter)));
     }
 
     public void rescanCurrentDirectory() {
@@ -533,20 +590,24 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public int showDialog(Component component, String string) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showDialog(component, string)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showDialog(component, string)));
     }
 
     public int showOpenDialog(Component component) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showOpenDialog(component)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showOpenDialog(component)));
     }
 
     public int showSaveDialog(Component component) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showSaveDialog(component)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showSaveDialog(component)));
     }
 
     private void waitPainted(int index) {
         try {
-            FunctionRepeater.on(new JListCellIndexIsPaintedFunction(this::getFileList)).runUntilNotNull(index);
+            FunctionRepeater.on(new JListCellIndexIsPaintedFunction(this::getFileList))
+                    .runUntilNotNull(index);
         } catch (InterruptedException e) {
             logger.warn("", e);
         }
@@ -567,15 +628,16 @@ public class JFileChooserOperator extends JComponentOperator {
     private int findFileIndex(String file, StringComparator comparator) {
         try {
             return FunctionRepeater.on((Function<Void, Integer>) obj -> {
-                File[] files = getFiles();
-                for (int i = 0, iMax = files.length; i < iMax; i++) {
-                    if (comparator.equals(files[i].getName(), file)) {
-                        return i;
-                    }
-                }
+                        File[] files = getFiles();
+                        for (int i = 0, iMax = files.length; i < iMax; i++) {
+                            if (comparator.equals(files[i].getName(), file)) {
+                                return i;
+                            }
+                        }
 
-                return null;
-            }).runUntilNotNull(null);
+                        return null;
+                    })
+                    .runUntilNotNull(null);
         } catch (InterruptedException e) {
             throw new JemmyException("Waiting has been interrupted!", e);
         }
@@ -594,9 +656,10 @@ public class JFileChooserOperator extends JComponentOperator {
 
     private int findFileTypeIndex(String fileType, StringComparator comparator) {
         ComboBoxModel cbModel = getFileTypesCombo().getModel();
-        for (int i = 0, iMax=cbModel.getSize(); i < iMax; i++) {
+        for (int i = 0, iMax = cbModel.getSize(); i < iMax; i++) {
             Object elementAt = cbModel.getElementAt(i);
-            if (elementAt instanceof FileFilter && comparator.equals(((FileFilter) elementAt).getDescription(), fileType)) {
+            if (elementAt instanceof FileFilter
+                    && comparator.equals(((FileFilter) elementAt).getDescription(), fileType)) {
                 return i;
             }
         }
@@ -667,9 +730,10 @@ public class JFileChooserOperator extends JComponentOperator {
     private static class IsJButtonNotInsideComboWithTextPredicate implements Predicate<Component> {
         @Override
         public boolean test(Component comp) {
-            return (comp instanceof JButton) && !(comp.getParent() instanceof JComboBox)
-                    && (((JButton) comp).getText() == null || ((JButton) comp).getText().length() == 0);
+            return (comp instanceof JButton)
+                    && !(comp.getParent() instanceof JComboBox)
+                    && (((JButton) comp).getText() == null
+                            || ((JButton) comp).getText().length() == 0);
         }
     }
-
 }

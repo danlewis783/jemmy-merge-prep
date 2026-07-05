@@ -1,6 +1,40 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dialog;
+import java.awt.Window;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import javax.accessibility.AccessibleContext;
+import javax.swing.JDialog;
+import javax.swing.JLayeredPane;
+import javax.swing.JMenuBar;
+import javax.swing.JRootPane;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
@@ -13,12 +47,6 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.accessibility.AccessibleContext;
-import javax.swing.*;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class JDialogOperator extends DialogOperator {
     private static final Logger logger = LoggerFactory.getLogger(JDialogOperator.class);
@@ -52,8 +80,9 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public JDialogOperator(String title, int index) {
-        this(PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, StringComparators.strict())),
-             index);
+        this(
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, StringComparators.strict())),
+                index);
     }
 
     public JDialogOperator(WindowOperator owner, int index) {
@@ -73,13 +102,15 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public JDialogOperator(WindowOperator owner, String title, StringComparator stringComparator, int index) {
-        this(waitJDialog(owner,
-                         PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
-                         index));
+        this(waitJDialog(
+                owner,
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                index));
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
     }
 
     public Container getContentPane() {
@@ -87,7 +118,8 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getDefaultCloseOperation()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getDefaultCloseOperation()));
     }
 
     public Component getGlassPane() {
@@ -163,8 +195,8 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static JDialog findJDialog(String title, StringComparator stringComparator, int index) {
-        return (JDialog) DialogFunction.getDialog(PredicatesJ.of(JDialog.class,
-                new DialogShowingByTitlePredicate(title, stringComparator)), index);
+        return (JDialog) DialogFunction.getDialog(
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)), index);
     }
 
     public static JDialog findJDialog(String title, StringComparator stringComparator) {
@@ -180,7 +212,8 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static JDialog findJDialog(Window owner, String title, StringComparator stringComparator, int index) {
-        return (JDialog) DialogFunction.getDialog(owner,
+        return (JDialog) DialogFunction.getDialog(
+                owner,
                 PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index);
     }
@@ -194,9 +227,8 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static JDialog waitJDialog(String title, StringComparator stringComparator, int index) {
-        return waitJDialog(PredicatesJ.of(JDialog.class,
-                                          new DialogShowingByTitlePredicate(title,
-                                              stringComparator)), index);
+        return waitJDialog(
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)), index);
     }
 
     public static JDialog waitJDialog(String title, StringComparator stringComparator) {
@@ -208,10 +240,10 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static JDialog waitJDialog(Window owner, String title, StringComparator stringComparator, int index) {
-        return waitJDialog(owner,
-                           PredicatesJ.of(JDialog.class,
-                                          new DialogShowingByTitlePredicate(title,
-                                              stringComparator)), index);
+        return waitJDialog(
+                owner,
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                index);
     }
 
     public static JDialog waitJDialog(Window owner, String title, StringComparator stringComparator) {
@@ -233,9 +265,9 @@ public class JDialogOperator extends DialogOperator {
     protected static JDialog waitJDialog(Window owner, Predicate<Component> predicate, int index) {
         try {
             return (JDialog) FunctionRepeater.on(
-                    new DialogFunction(index, owner,
-                            PredicatesJ.of(JDialog.class, predicate)),
-                    TimeoutKey.DialogWaiter_WaitDialogTimeout).runUntilNotNull(null);
+                            new DialogFunction(index, owner, PredicatesJ.of(JDialog.class, predicate)),
+                            TimeoutKey.DialogWaiter_WaitDialogTimeout)
+                    .runUntilNotNull(null);
         } catch (InterruptedException e) {
             logger.warn("", e);
 

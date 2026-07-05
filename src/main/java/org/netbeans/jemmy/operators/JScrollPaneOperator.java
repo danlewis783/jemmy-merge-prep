@@ -1,6 +1,41 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.plaf.ScrollPaneUI;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
@@ -8,13 +43,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.ScrollPaneUI;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class JScrollPaneOperator extends JComponentOperator {
     private static final int X_POINT_RECT_SIZE = 6;
@@ -145,8 +173,8 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void scrollToComponentPoint(Component comp, int x, int y) {
-        scrollToComponentRectangle(comp, x - X_POINT_RECT_SIZE, y - Y_POINT_RECT_SIZE, 2 * X_POINT_RECT_SIZE,
-                                   2 * Y_POINT_RECT_SIZE);
+        scrollToComponentRectangle(
+                comp, x - X_POINT_RECT_SIZE, y - Y_POINT_RECT_SIZE, 2 * X_POINT_RECT_SIZE, 2 * Y_POINT_RECT_SIZE);
     }
 
     public void scrollToComponent(Component comp) {
@@ -202,11 +230,13 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public JScrollBar createHorizontalScrollBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createHorizontalScrollBar()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createHorizontalScrollBar()));
     }
 
     public JScrollBar createVerticalScrollBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createVerticalScrollBar()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createVerticalScrollBar()));
     }
 
     public JViewport getColumnHeader() {
@@ -218,11 +248,13 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public JScrollBar getHorizontalScrollBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBar()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBar()));
     }
 
     public int getHorizontalScrollBarPolicy() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBarPolicy()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBarPolicy()));
     }
 
     public JViewport getRowHeader() {
@@ -234,11 +266,13 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public JScrollBar getVerticalScrollBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBar()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBar()));
     }
 
     public int getVerticalScrollBarPolicy() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBarPolicy()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBarPolicy()));
     }
 
     public JViewport getViewport() {
@@ -250,7 +284,8 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public Rectangle getViewportBorderBounds() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorderBounds()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorderBounds()));
     }
 
     public void setColumnHeader(JViewport jViewport) {
@@ -358,12 +393,16 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     private void initOperators() {
-        if ((hScrollBarOper == null) && (getHorizontalScrollBar() != null) && getHorizontalScrollBar().isVisible()) {
+        if ((hScrollBarOper == null)
+                && (getHorizontalScrollBar() != null)
+                && getHorizontalScrollBar().isVisible()) {
             hScrollBarOper = new JScrollBarOperator(getHorizontalScrollBar());
             hScrollBarOper.setVisualizer(new EmptyVisualizer());
         }
 
-        if ((vScrollBarOper == null) && (getVerticalScrollBar() != null) && getVerticalScrollBar().isVisible()) {
+        if ((vScrollBarOper == null)
+                && (getVerticalScrollBar() != null)
+                && getVerticalScrollBar().isVisible()) {
             vScrollBarOper = new JScrollBarOperator(getVerticalScrollBar());
             vScrollBarOper.setVisualizer(new EmptyVisualizer());
         }
@@ -428,10 +467,13 @@ public class JScrollPaneOperator extends JComponentOperator {
 
         @Override
         public int getScrollDirection(JScrollBarOperator oper) {
-            Point toPoint = SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
+            Point toPoint =
+                    SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
             int to = (orientation == JScrollBar.HORIZONTAL) ? toPoint.x : toPoint.y;
             int ln = (orientation == JScrollBar.HORIZONTAL) ? width : height;
-            int lv = (orientation == JScrollBar.HORIZONTAL) ? getViewport().getWidth() : getViewport().getHeight();
+            int lv = (orientation == JScrollBar.HORIZONTAL)
+                    ? getViewport().getWidth()
+                    : getViewport().getHeight();
             int vl = oper.getValue();
             if (to < vl) {
                 return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;

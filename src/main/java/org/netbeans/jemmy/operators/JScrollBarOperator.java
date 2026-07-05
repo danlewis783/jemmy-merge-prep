@@ -1,8 +1,44 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.event.AdjustmentListener;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.BoundedRangeModel;
+import javax.swing.JButton;
+import javax.swing.JScrollBar;
+import javax.swing.plaf.ScrollBarUI;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.ComponentSearcher;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
@@ -10,13 +46,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import javax.swing.plaf.ScrollBarUI;
-import java.awt.*;
-import java.awt.event.AdjustmentListener;
-import java.util.concurrent.Callable;
-
 
 public class JScrollBarOperator extends JComponentOperator {
     public static final String HORIZONTAL_ORIENTATION_DPROP_VALUE = "HORIZONTAL";
@@ -66,11 +95,14 @@ public class JScrollBarOperator extends JComponentOperator {
 
     public void scrollTo(ScrollAdjuster adj) {
         initOperators();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scroll(JScrollBarOperator.this, adj);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scroll(JScrollBarOperator.this, adj);
 
-            return null;
-        }, null, TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
     }
 
     public void scrollToValue(int value) {
@@ -78,26 +110,32 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void scrollToValue(double proportionalValue) {
-        scrollTo(new ValueScrollAdjuster((int) (getMinimum()
-                + (getMaximum() - getVisibleAmount() - getMinimum()) * proportionalValue)));
+        scrollTo(new ValueScrollAdjuster(
+                (int) (getMinimum() + (getMaximum() - getVisibleAmount() - getMinimum()) * proportionalValue)));
     }
 
     public void scrollToMinimum() {
         initOperators();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMinimum(JScrollBarOperator.this, getOrientation());
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMinimum(JScrollBarOperator.this, getOrientation());
 
-            return null;
-        }, null, TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
         initOperators();
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMaximum(JScrollBarOperator.this, getOrientation());
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMaximum(JScrollBarOperator.this, getOrientation());
 
-            return null;
-        }, null, TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
     }
 
     public JButtonOperator getDecreaseButton() {
@@ -161,7 +199,8 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public boolean getValueIsAdjusting() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getValueIsAdjusting()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getValueIsAdjusting()));
     }
 
     public int getVisibleAmount() {
@@ -333,7 +372,6 @@ public class JScrollBarOperator extends JComponentOperator {
         public int getScrollDirection(JScrollBarOperator oper);
     }
 
-
     private class CheckerAdjustable implements ScrollAdjuster {
         final ScrollChecker checker;
         final JScrollBarOperator oper;
@@ -354,7 +392,6 @@ public class JScrollBarOperator extends JComponentOperator {
         }
     }
 
-
     private class ValueScrollAdjuster implements ScrollAdjuster {
         final int value;
 
@@ -368,7 +405,8 @@ public class JScrollBarOperator extends JComponentOperator {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
             } else {
                 return (getValue() < value)
-                       ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+                        ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION
+                        : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
             }
         }
 
@@ -377,7 +415,6 @@ public class JScrollBarOperator extends JComponentOperator {
             return getOrientation();
         }
     }
-
 
     private class WaitableChecker implements ScrollAdjuster {
         boolean reached = false;

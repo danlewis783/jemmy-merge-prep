@@ -1,21 +1,34 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.Label;
+import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 class LabelOperatorTest {
-
-
 
     private Frame frame;
     private Label label;
@@ -51,46 +64,46 @@ class LabelOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         LabelOperator operator1 = new LabelOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         LabelOperator operator2 = new LabelOperator(operator, PredicatesJ.byName("LabelOperatorTest"));
-       assertNotNull(operator2);
+        assertNotNull(operator2);
         LabelOperator operator3 = new LabelOperator(operator, "LabelOperatorTest", StringComparators.strict(), 0);
-       assertNotNull(operator3);
+        assertNotNull(operator3);
     }
 
     @Test
     void testFindLabel() {
         Label label = LabelOperator.findLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-       assertNotNull(label);
+        assertNotNull(label);
         Label label2 = LabelOperator.findLabel(frame, PredicatesJ.byName("LabelOperatorTest"));
-       assertNotNull(label2);
+        assertNotNull(label2);
     }
 
     @Test
     void testWaitLabel() {
         Label label = LabelOperator.waitLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-       assertNotNull(label);
+        assertNotNull(label);
         Label label2 = LabelOperator.waitLabel(frame, PredicatesJ.byName("LabelOperatorTest"));
-       assertNotNull(label2);
+        assertNotNull(label2);
     }
 
     @Test
     void testGetAlignment() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         LabelOperator operator1 = new LabelOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setAlignment(operator1.getAlignment());
     }
 
     @Test
     void testGetText() {
         FrameOperator operator = new FrameOperator();
-       assertNotNull(operator);
+        assertNotNull(operator);
         LabelOperator operator1 = new LabelOperator(operator);
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         operator1.setText(operator1.getText());
     }
 }

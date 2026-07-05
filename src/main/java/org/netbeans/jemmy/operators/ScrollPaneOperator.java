@@ -1,19 +1,50 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Adjustable;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.ScrollPane;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import javax.swing.SwingUtilities;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class ScrollPaneOperator extends ContainerOperator {
     private static final int X_POINT_RECT_SIZE = 6;
@@ -57,11 +88,14 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scroll(ScrollPaneOperator.this, adj);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scroll(ScrollPaneOperator.this, adj);
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToHorizontalValue(int value) {
@@ -70,9 +104,11 @@ public class ScrollPaneOperator extends ContainerOperator {
 
     public void scrollToHorizontalValue(double proportionalValue) {
         Adjustable adj = getHAdjustable();
-        scrollTo(new ValueScrollAdjuster((int) (adj.getMinimum()
-                + (adj.getMaximum() - adj.getVisibleAmount() - adj.getMinimum())
-                  * proportionalValue), Adjustable.VERTICAL, getVAdjustable()));
+        scrollTo(new ValueScrollAdjuster(
+                (int) (adj.getMinimum()
+                        + (adj.getMaximum() - adj.getVisibleAmount() - adj.getMinimum()) * proportionalValue),
+                Adjustable.VERTICAL,
+                getVAdjustable()));
     }
 
     public void scrollToVerticalValue(int value) {
@@ -81,9 +117,11 @@ public class ScrollPaneOperator extends ContainerOperator {
 
     public void scrollToVerticalValue(double proportionalValue) {
         Adjustable adj = getVAdjustable();
-        scrollTo(new ValueScrollAdjuster((int) (adj.getMinimum()
-                + (adj.getMaximum() - adj.getVisibleAmount() - adj.getMinimum())
-                  * proportionalValue), Adjustable.VERTICAL, getVAdjustable()));
+        scrollTo(new ValueScrollAdjuster(
+                (int) (adj.getMinimum()
+                        + (adj.getMaximum() - adj.getVisibleAmount() - adj.getMinimum()) * proportionalValue),
+                Adjustable.VERTICAL,
+                getVAdjustable()));
     }
 
     public void scrollToValues(int valueX, int valueY) {
@@ -97,35 +135,47 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public void scrollToTop() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.VERTICAL);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.VERTICAL);
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToBottom() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.VERTICAL);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.VERTICAL);
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToLeft() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToRight() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToComponentRectangle(Component comp, int x, int y, int width, int height) {
@@ -134,8 +184,8 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public void scrollToComponentPoint(Component comp, int x, int y) {
-        scrollToComponentRectangle(comp, x - X_POINT_RECT_SIZE, y - Y_POINT_RECT_SIZE, 2 * X_POINT_RECT_SIZE,
-                                   2 * Y_POINT_RECT_SIZE);
+        scrollToComponentRectangle(
+                comp, x - X_POINT_RECT_SIZE, y - Y_POINT_RECT_SIZE, 2 * X_POINT_RECT_SIZE, 2 * Y_POINT_RECT_SIZE);
     }
 
     public void scrollToComponent(Component comp) {
@@ -153,7 +203,8 @@ public class ScrollPaneOperator extends ContainerOperator {
                 return false;
             }
         } else {
-            if (toPoint.x + comp.getWidth() > getHAdjustable().getValue() + getSource().getWidth()) {
+            if (toPoint.x + comp.getWidth()
+                    > getHAdjustable().getValue() + getSource().getWidth()) {
                 return false;
             }
         }
@@ -167,7 +218,8 @@ public class ScrollPaneOperator extends ContainerOperator {
                 return false;
             }
         } else {
-            if (toPoint.y + comp.getHeight() > getVAdjustable().getValue() + getSource().getHeight()) {
+            if (toPoint.y + comp.getHeight()
+                    > getVAdjustable().getValue() + getSource().getHeight()) {
                 return false;
             }
         }
@@ -194,7 +246,8 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public int getHScrollbarHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getHScrollbarHeight()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getHScrollbarHeight()));
     }
 
     public Point getScrollPosition() {
@@ -202,7 +255,8 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public int getScrollbarDisplayPolicy() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getScrollbarDisplayPolicy()));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getScrollbarDisplayPolicy()));
     }
 
     public Adjustable getVAdjustable() {
@@ -297,11 +351,13 @@ public class ScrollPaneOperator extends ContainerOperator {
         @Override
         public int getScrollDirection() {
             int sp = (orientation == Adjustable.HORIZONTAL)
-                     ? (int) getScrollPosition().getX() : (int) getScrollPosition().getY();
+                    ? (int) getScrollPosition().getX()
+                    : (int) getScrollPosition().getY();
             Point pnt = SwingUtilities.convertPoint(comp, x, y, ((Container) getSource()).getComponents()[0]);
             int cp = (orientation == Adjustable.HORIZONTAL) ? pnt.x : pnt.y;
             int sl = (orientation == Adjustable.HORIZONTAL)
-                     ? (int) getViewportSize().getWidth() : (int) getViewportSize().getHeight();
+                    ? (int) getViewportSize().getWidth()
+                    : (int) getViewportSize().getHeight();
             int cl = (orientation == Adjustable.HORIZONTAL) ? width : height;
             if (cp <= sp) {
                 return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
@@ -317,7 +373,6 @@ public class ScrollPaneOperator extends ContainerOperator {
             return orientation;
         }
     }
-
 
     private class ValueScrollAdjuster implements ScrollAdjuster {
         final Adjustable adj;
@@ -336,7 +391,8 @@ public class ScrollPaneOperator extends ContainerOperator {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
             } else {
                 return (adj.getValue() < value)
-                       ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+                        ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION
+                        : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
             }
         }
 

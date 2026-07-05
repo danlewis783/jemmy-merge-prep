@@ -1,7 +1,33 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.testing;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.time.Duration;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,17 +35,16 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.*;
+import org.netbeans.jemmy.operators.ComponentOperator;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JListOperator;
+import org.netbeans.jemmy.operators.JTabbedPaneOperator;
+import org.netbeans.jemmy.operators.JTableOperator;
+import org.netbeans.jemmy.operators.JTextAreaOperator;
+import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-
-import javax.swing.*;
-import javax.swing.tree.TreePath;
-import java.awt.*;
-import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 final class jemmy_024 {
     private static final StringComparator STRICT = StringComparators.strict();
@@ -44,16 +69,21 @@ final class jemmy_024 {
     @Test
     void test() {
         assertTimeoutPreemptively(Duration.ofSeconds(30), () -> {
-            Application_024.main(new String[]{});
+            Application_024.main(new String[] {});
             ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
             JFrame jFrame = JFrameOperator.waitJFrame("Application_024");
             JFrameOperator jFrameOp = new JFrameOperator(jFrame);
-            JTabbedPaneOperator jTabbedPaneOp = new JTabbedPaneOperator(JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0));
+            JTabbedPaneOperator jTabbedPaneOp =
+                    new JTabbedPaneOperator(JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0));
             Component jTabbedPane = jTabbedPaneOp.getSource();
             assertSame(new JTabbedPaneOperator(jFrameOp).getSource(), jTabbedPane);
-            assertSame(new JTabbedPaneOperator(jFrameOp, "Table", StringComparators.substring()).getSource(), jTabbedPane);
-            assertSame(new JTabbedPaneOperator(jFrameOp, "Tree", StringComparators.substring(), 1, 0).getSource(), jTabbedPane);
-            JTableOperator jTableOp = new JTableOperator(JTableOperator.findJTable(jFrame, null, StringComparators.caseInsensitiveSubstring(), -1, -1));
+            assertSame(
+                    new JTabbedPaneOperator(jFrameOp, "Table", StringComparators.substring()).getSource(), jTabbedPane);
+            assertSame(
+                    new JTabbedPaneOperator(jFrameOp, "Tree", StringComparators.substring(), 1, 0).getSource(),
+                    jTabbedPane);
+            JTableOperator jTableOp = new JTableOperator(
+                    JTableOperator.findJTable(jFrame, null, StringComparators.caseInsensitiveSubstring(), -1, -1));
             jTableOp.clickOnCell(0, 0);
             assertSame(new JTableOperator(jFrameOp).getSource(), jTableOp.getSource());
             assertSame(new JTableOperator(jFrameOp, "00", STRICT).getSource(), jTableOp.getSource());
@@ -74,7 +104,9 @@ final class jemmy_024 {
             jTreeOp.clickOnPath(jTreeOp.getPathForRow(0));
             assertSame(new JTreeOperator(jFrameOp).getSource(), jTreeOp.getSource());
             assertSame(new JTreeOperator(jFrameOp, "-1", StringComparators.regex()).getSource(), jTreeOp.getSource());
-            assertSame(new JTreeOperator(jFrameOp, "49", StringComparators.regex(), 50, 0).getSource(), jTreeOp.getSource());
+            assertSame(
+                    new JTreeOperator(jFrameOp, "49", StringComparators.regex(), 50, 0).getSource(),
+                    jTreeOp.getSource());
             TreePath path49 = jTreeOp.findPath("49", "/", STRICT);
             jTreeOp.scrollToPath(path49);
             jTreeOp.doExpandPath(path49);
@@ -105,7 +137,8 @@ final class jemmy_024 {
             assertEquals(jTreeOp.getMaxSelectionRow(), treeOpSource.getMaxSelectionRow());
             assertEquals(jTreeOp.getMinSelectionRow(), treeOpSource.getMinSelectionRow());
             assertEquals(jTreeOp.getModel(), treeOpSource.getModel());
-            assertEquals(jTreeOp.getPreferredScrollableViewportSize(), treeOpSource.getPreferredScrollableViewportSize());
+            assertEquals(
+                    jTreeOp.getPreferredScrollableViewportSize(), treeOpSource.getPreferredScrollableViewportSize());
             assertEquals(jTreeOp.getRowCount(), treeOpSource.getRowCount());
             assertEquals(jTreeOp.getRowHeight(), treeOpSource.getRowHeight());
             assertEquals(jTreeOp.getScrollableTracksViewportHeight(), treeOpSource.getScrollableTracksViewportHeight());
@@ -138,7 +171,8 @@ final class jemmy_024 {
             assertEquals(jTableOp.getGridColor(), tabOpSource.getGridColor());
             assertEquals(jTableOp.getIntercellSpacing(), tabOpSource.getIntercellSpacing());
             assertEquals(jTableOp.getModel(), tabOpSource.getModel());
-            assertEquals(jTableOp.getPreferredScrollableViewportSize(), tabOpSource.getPreferredScrollableViewportSize());
+            assertEquals(
+                    jTableOp.getPreferredScrollableViewportSize(), tabOpSource.getPreferredScrollableViewportSize());
             assertEquals(jTableOp.getRowCount(), tabOpSource.getRowCount());
             assertEquals(jTableOp.getRowHeight(), tabOpSource.getRowHeight());
             assertEquals(jTableOp.getRowMargin(), tabOpSource.getRowMargin());

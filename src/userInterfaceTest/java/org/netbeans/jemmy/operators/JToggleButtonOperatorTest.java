@@ -1,23 +1,35 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.JFrame;
+import javax.swing.JToggleButton;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 class JToggleButtonOperatorTest {
-
-
 
     private JFrame frame;
     private JToggleButton toggleButton;
@@ -55,43 +67,44 @@ class JToggleButtonOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = new JFrameOperator();
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         JToggleButtonOperator operator2 = new JToggleButtonOperator(operator1);
-       assertNotNull(operator2);
-        JToggleButtonOperator operator3 = new JToggleButtonOperator(operator1,
-                                              PredicatesJ.byName("JToggleButtonOperatorTest"));
-       assertNotNull(operator3);
-        JToggleButtonOperator operator4 = new JToggleButtonOperator(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
-       assertNotNull(operator4);
+        assertNotNull(operator2);
+        JToggleButtonOperator operator3 =
+                new JToggleButtonOperator(operator1, PredicatesJ.byName("JToggleButtonOperatorTest"));
+        assertNotNull(operator3);
+        JToggleButtonOperator operator4 =
+                new JToggleButtonOperator(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
+        assertNotNull(operator4);
     }
 
     @Test
     void testFindJToggleButton() {
-        JToggleButton toggleButton1 = JToggleButtonOperator.findJToggleButton(frame, "JToggleButtonOperatorTest",
-                                          StringComparators.caseInsensitiveSubstring());
-       assertNotNull(toggleButton1);
-        JToggleButton toggleButton2 = JToggleButtonOperator.findJToggleButton(frame,
-                                          PredicatesJ.byName("JToggleButtonOperatorTest"));
-       assertNotNull(toggleButton2);
+        JToggleButton toggleButton1 = JToggleButtonOperator.findJToggleButton(
+                frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        assertNotNull(toggleButton1);
+        JToggleButton toggleButton2 =
+                JToggleButtonOperator.findJToggleButton(frame, PredicatesJ.byName("JToggleButtonOperatorTest"));
+        assertNotNull(toggleButton2);
     }
 
     @Test
     void testWaitJToggleButton() {
-        JToggleButton toggleButton1 = JToggleButtonOperator.waitJToggleButton(frame, "JToggleButtonOperatorTest",
-                                          StringComparators.caseInsensitiveSubstring());
-       assertNotNull(toggleButton1);
-        JToggleButton toggleButton2 = JToggleButtonOperator.waitJToggleButton(frame,
-                                          PredicatesJ.byName("JToggleButtonOperatorTest"));
-       assertNotNull(toggleButton2);
+        JToggleButton toggleButton1 = JToggleButtonOperator.waitJToggleButton(
+                frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        assertNotNull(toggleButton1);
+        JToggleButton toggleButton2 =
+                JToggleButtonOperator.waitJToggleButton(frame, PredicatesJ.byName("JToggleButtonOperatorTest"));
+        assertNotNull(toggleButton2);
     }
 
     @Test
     void testPrepareToClick() {
         JFrameOperator operator1 = new JFrameOperator();
-       assertNotNull(operator1);
+        assertNotNull(operator1);
         JToggleButtonOperator operator2 = new JToggleButtonOperator(operator1);
-       assertNotNull(operator2);
+        assertNotNull(operator2);
         operator2.prepareToClick();
-       assertTrue(toggleButton.isVisible());
+        assertTrue(toggleButton.isVisible());
     }
 }

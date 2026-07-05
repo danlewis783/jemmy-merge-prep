@@ -1,27 +1,49 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.ListUI;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.ListUI;
-import java.awt.*;
-import java.util.Vector;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.junit.jupiter.api.Assertions.*;
 class JListOperatorTest {
-
-
-
 
     private final AtomicReference<JFrame> frame = new AtomicReference<>();
 
@@ -29,7 +51,7 @@ class JListOperatorTest {
     void beforeEach() throws Exception {
         EventQueue.invokeAndWait(() -> {
             JFrame frameNew = new JFrame();
-            JList list = new JList(new String[] { "one", "two", "three", "four" });
+            JList list = new JList(new String[] {"one", "two", "three", "four"});
             list.setName("JListOperatorTest");
             list.setSelectedIndex(0);
             frameNew.getContentPane().add(new JScrollPane(list));
@@ -103,7 +125,10 @@ class JListOperatorTest {
         assertNotNull(operator1);
         assertEquals(0, operator1.findItemIndex("one", StringComparators.strict()));
         assertEquals(0, operator1.findItemIndex("one", StringComparators.caseInsensitiveSubstring()));
-        assertEquals(0, operator1.findItemIndex(input -> input instanceof JLabel && ((JLabel) input).getText().equals("one")));
+        assertEquals(
+                0,
+                operator1.findItemIndex(input ->
+                        input instanceof JLabel && ((JLabel) input).getText().equals("one")));
         operator1.findItemIndex(new FalseListItemChooser(), 2);
         operator1.findItemIndex(new FalseListItemChooser());
     }
@@ -528,7 +553,7 @@ class JListOperatorTest {
         assertNotNull(operator);
         JListOperator operator1 = new JListOperator(operator);
         assertNotNull(operator1);
-        String[] listData = { "one", "two", "three", "four" };
+        String[] listData = {"one", "two", "three", "four"};
         operator1.setListData(listData);
         operator1.setListData(new Vector());
     }
@@ -558,12 +583,10 @@ class JListOperatorTest {
         }
     }
 
-
     private static class NullListSelectionListener implements ListSelectionListener {
         @Override
         public void valueChanged(ListSelectionEvent e) {}
     }
-
 
     private static class NullListUI extends ListUI {
         @Override

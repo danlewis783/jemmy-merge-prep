@@ -1,7 +1,28 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -9,6 +30,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DefaultCharBindingMap implements CharBindingMap {
     private static final Logger logger = LoggerFactory.getLogger(DefaultCharBindingMap.class);
@@ -39,8 +62,11 @@ public final class DefaultCharBindingMap implements CharBindingMap {
     private void initMap() {
         for (Field field : KeyEvent.class.getFields()) {
             String name = field.getName();
-            if ((field.getModifiers() & Modifier.PUBLIC) != 0 && (field.getModifiers() & Modifier.STATIC) != 0
-                    && (field.getType() == Integer.TYPE) && name.startsWith("VK_") && (name.length() == 4)) {
+            if ((field.getModifiers() & Modifier.PUBLIC) != 0
+                    && (field.getModifiers() & Modifier.STATIC) != 0
+                    && (field.getType() == Integer.TYPE)
+                    && name.startsWith("VK_")
+                    && (name.length() == 4)) {
                 String letter = name.substring(3, 4);
                 try {
                     int key = field.getInt(null);
@@ -105,7 +131,6 @@ public final class DefaultCharBindingMap implements CharBindingMap {
             this.modifiers = modifiers;
         }
     }
-
 
     private static final class Holder {
         private static final DefaultCharBindingMap INSTANCE = new DefaultCharBindingMap();

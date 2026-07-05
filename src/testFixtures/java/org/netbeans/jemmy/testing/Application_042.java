@@ -1,22 +1,47 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 
 package org.netbeans.jemmy.testing;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
-import javax.swing.*;
-import java.awt.*;
-
-final  class Application_042 extends JDialog {
+final class Application_042 extends JDialog {
 
     private Application_042() {
         setTitle("Application_042");
         getContentPane().setLayout(new BorderLayout());
-        String[] editableContents = { "editable_one", "editable_two", "editable_three", "editable_four" };
+        String[] editableContents = {"editable_one", "editable_two", "editable_three", "editable_four"};
         DefaultComboBoxModel<String> editableModel = new DefaultComboBoxModel<>(editableContents);
         JComboBox<String> editable = new JComboBox<>(editableModel);
         editable.setEditable(true);
-        editable.getEditor().addActionListener(e -> editableModel.addElement((String) editable.getEditor().getItem()));
+        editable.getEditor()
+                .addActionListener(e ->
+                        editableModel.addElement((String) editable.getEditor().getItem()));
         getContentPane().add(editable, BorderLayout.NORTH);
-        String[] nonEditableContents = { "non_editable_one", "non_editable_two", "non_editable_three", "non_editable_four" };
+        String[] nonEditableContents = {
+            "non_editable_one", "non_editable_two", "non_editable_three", "non_editable_four"
+        };
         JComboBox<String> nonEditable = new JComboBox<>(nonEditableContents);
         nonEditable.setEditable(false);
         getContentPane().add(nonEditable, BorderLayout.SOUTH);

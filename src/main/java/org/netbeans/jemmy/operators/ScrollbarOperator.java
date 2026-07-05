@@ -1,5 +1,34 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Scrollbar;
+import java.awt.event.AdjustmentListener;
+import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.netbeans.jemmy.Caller;
@@ -12,11 +41,6 @@ import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
-import java.awt.event.AdjustmentListener;
-import java.util.concurrent.Callable;
-
 
 public class ScrollbarOperator extends ComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(ScrollbarOperator.class);
@@ -48,11 +72,14 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scroll(ScrollbarOperator.this, adj);
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scroll(ScrollbarOperator.this, adj);
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToValue(int value) {
@@ -60,24 +87,30 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public void scrollToValue(double proportionalValue) {
-        scrollTo(new ValueScrollAdjuster((int) (getMinimum()
-                + (getMaximum() - getVisibleAmount() - getMinimum()) * proportionalValue)));
+        scrollTo(new ValueScrollAdjuster(
+                (int) (getMinimum() + (getMaximum() - getVisibleAmount() - getMinimum()) * proportionalValue)));
     }
 
     public void scrollToMinimum() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMinimum(ScrollbarOperator.this, getOrientation());
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMinimum(ScrollbarOperator.this, getOrientation());
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
-        produceTimeRestricted((Function<Void, Void>) v -> {
-            driver.scrollToMaximum(ScrollbarOperator.this, getOrientation());
+        produceTimeRestricted(
+                (Function<Void, Void>) v -> {
+                    driver.scrollToMaximum(ScrollbarOperator.this, getOrientation());
 
-            return null;
-        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                    return null;
+                },
+                null,
+                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void addAdjustmentListener(AdjustmentListener adjustmentListener) {
@@ -233,7 +266,8 @@ public class ScrollbarOperator extends ComponentOperator {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
             } else {
                 return (getValue() < value)
-                       ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+                        ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION
+                        : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
             }
         }
 
@@ -242,7 +276,6 @@ public class ScrollbarOperator extends ComponentOperator {
             return getOrientation();
         }
     }
-
 
     private class WaitableChecker implements ScrollAdjuster {
         boolean reached = false;

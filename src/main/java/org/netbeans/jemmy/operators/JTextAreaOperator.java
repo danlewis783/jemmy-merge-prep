@@ -1,18 +1,41 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import java.awt.*;
-import java.util.concurrent.Callable;
-
 
 public class JTextAreaOperator extends JTextComponentOperator {
     public JTextAreaOperator(ContainerOperator cont) {
@@ -40,9 +63,10 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public JTextAreaOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JTextArea) waitComponent(cont,
-                                       PredicatesJ.of(JTextArea.class,
-                                           new JTextComponentByTextPredicate(text, stringComparator)), index));
+        this((JTextArea) waitComponent(
+                cont,
+                PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index));
     }
 
     @Deprecated
@@ -55,8 +79,8 @@ public class JTextAreaOperator extends JTextComponentOperator {
     public void changeCaretPosition(int row, int column) {
         int startOffset = getLineStartOffset(row);
         int endOffset = getLineEndOffset(row);
-        super.changeCaretPosition(getLineStartOffset(row)
-                                  + ((column <= endOffset - startOffset) ? column : endOffset - startOffset));
+        super.changeCaretPosition(
+                getLineStartOffset(row) + ((column <= endOffset - startOffset) ? column : endOffset - startOffset));
     }
 
     public void typeText(String text, int row, int column) {
@@ -207,9 +231,10 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public static JTextArea findJTextArea(Container cont, String text, StringComparator stringComparator, int index) {
-        return findJTextArea(cont,
-                             PredicatesJ.of(JTextArea.class,
-                                 new JTextComponentByTextPredicate(text, stringComparator)), index);
+        return findJTextArea(
+                cont,
+                PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index);
     }
 
     public static JTextArea findJTextArea(Container cont, String text, StringComparator stringComparator) {
@@ -225,9 +250,10 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public static JTextArea waitJTextArea(Container cont, String text, StringComparator stringComparator, int index) {
-        return waitJTextArea(cont,
-                             PredicatesJ.of(JTextArea.class,
-                                 new JTextComponentByTextPredicate(text, stringComparator)), index);
+        return waitJTextArea(
+                cont,
+                PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index);
     }
 
     public static JTextArea waitJTextArea(Container cont, String text, StringComparator stringComparator) {

@@ -1,16 +1,48 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.event.ContainerListener;
+import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.*;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.ComponentSearcher;
+import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.ComponentSearcherFunction;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
-import java.awt.event.ContainerListener;
-import java.util.concurrent.Callable;
-
 
 public class ContainerOperator extends ComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(ContainerOperator.class);
@@ -60,12 +92,13 @@ public class ContainerOperator extends ComponentOperator {
     public Component waitSubComponent(Predicate<Component> chooser, int index, TimeoutKey timeoutKey) {
         ComponentSearcher searcher = new ComponentSearcher((Container) getSource());
         try {
-            return FunctionRepeater.on(new ComponentSearcherFunction(searcher, chooser, index), timeoutKey).runUntilNotNull(null);
+            return FunctionRepeater.on(new ComponentSearcherFunction(searcher, chooser, index), timeoutKey)
+                    .runUntilNotNull(null);
         } catch (InterruptedException e) {
             throw new JemmyException("Waiting for \"" + chooser.toString() + "\" component has been interrupted", e);
         }
     }
-    
+
     public ComponentOperator createSubOperator(Predicate<Component> chooser, int index) {
         return createOperator(waitSubComponent(chooser, index));
     }
@@ -99,7 +132,8 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public Component add(String string, Component component) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Container) getSource()).add(string, component)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((Container) getSource()).add(string, component)));
     }
 
     public void addContainerListener(ContainerListener containerListener) {
@@ -111,11 +145,13 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public Component findComponentAt(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Container) getSource()).findComponentAt(i, i1)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((Container) getSource()).findComponentAt(i, i1)));
     }
 
     public Component findComponentAt(Point point) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Container) getSource()).findComponentAt(point)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((Container) getSource()).findComponentAt(point)));
     }
 
     public Component getComponent(int i) {
@@ -139,7 +175,8 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public boolean isAncestorOf(Component component) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Container) getSource()).isAncestorOf(component)));
+        return QueueTool.getInstance()
+                .invokeSmoothly(Caller.of(() -> ((Container) getSource()).isAncestorOf(component)));
     }
 
     public void paintComponents(Graphics graphics) {

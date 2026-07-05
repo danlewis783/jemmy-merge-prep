@@ -1,23 +1,37 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import javax.swing.SwingUtilities;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.*;
-
-import javax.swing.*;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutExpiredException;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
+import org.netbeans.jemmy.Timeouts;
 
 @Disabled // TODO test too flaky for CI
 class jemmy_026 {
     private TimeoutOverride override;
-
-
-
 
     @BeforeEach
     void beforeEach() {
@@ -44,7 +58,8 @@ class jemmy_026 {
         SwingUtilities.invokeLater(new Sleeper("E", 1000));
         SwingUtilities.invokeLater(new Sleeper("F", 1000));
 
-        assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(qt::waitEmpty)
+        assertThatExceptionOfType(TimeoutExpiredException.class)
+                .isThrownBy(qt::waitEmpty)
                 .withMessageContaining("timeout \"QueueTool_WaitQueueEmptyTimeout\" (3000 ms) exceeded after (");
 
         qt.waitEmpty(1000);
@@ -58,7 +73,8 @@ class jemmy_026 {
         SwingUtilities.invokeLater(new Sleeper("L", 1000));
         SwingUtilities.invokeLater(new Sleeper("M", 500));
 
-        assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() -> qt.waitEmpty(600L))
+        assertThatExceptionOfType(TimeoutExpiredException.class)
+                .isThrownBy(() -> qt.waitEmpty(600L))
                 .withMessageContaining("timeout \"QueueTool_WaitQueueEmptyTimeout\" (3000 ms) exceeded after (");
     }
 

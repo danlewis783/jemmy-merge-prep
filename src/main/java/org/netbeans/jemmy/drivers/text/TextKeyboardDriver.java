@@ -1,6 +1,33 @@
+/*
+ * Copyright (c) 1997, 2016, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
 
 package org.netbeans.jemmy.drivers.text;
 
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.List;
 import org.netbeans.jemmy.CharBindingMap;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.TimeoutKey;
@@ -11,10 +38,6 @@ import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.TextDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.List;
-
 public abstract class TextKeyboardDriver extends LightSupportiveDriver implements TextDriver {
     public TextKeyboardDriver(List<String> supported) {
         super(supported);
@@ -22,7 +45,9 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
 
     @Override
     public void changeCaretPosition(ComponentOperator oper, int position) {
-        DriverManager.newInstance(JemmyProperties.getInstance()).getFocusDriver(oper).giveFocus(oper);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getFocusDriver(oper)
+                .giveFocus(oper);
         checkSupported(oper);
         changeCaretPosition(oper, position, 0);
     }
@@ -30,21 +55,31 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
     @Override
     public void selectText(ComponentOperator oper, int startPosition, int finalPosition) {
         changeCaretPosition(oper, startPosition);
-        DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper).pressKey(oper, KeyEvent.VK_SHIFT,
-                                  0);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getKeyDriver(oper)
+                .pressKey(oper, KeyEvent.VK_SHIFT, 0);
         changeCaretPosition(oper, finalPosition, InputEvent.SHIFT_MASK);
-        DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper).releaseKey(oper, KeyEvent.VK_SHIFT,
-                                  0);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getKeyDriver(oper)
+                .releaseKey(oper, KeyEvent.VK_SHIFT, 0);
     }
 
     @Override
     public void clearText(ComponentOperator oper) {
-        DriverManager.newInstance(JemmyProperties.getInstance()).getFocusDriver(oper).giveFocus(oper);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getFocusDriver(oper)
+                .giveFocus(oper);
         checkSupported(oper);
-        KeyDriver kdriver = DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper);
+        KeyDriver kdriver =
+                DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper);
         TimeoutKey betweenTime = getBetweenTimeout(oper);
         while (getCaretPosition(oper) > 0) {
-            kdriver.typeKey(oper, KeyEvent.VK_BACK_SPACE, (char) KeyEvent.VK_BACK_SPACE, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
+            kdriver.typeKey(
+                    oper,
+                    KeyEvent.VK_BACK_SPACE,
+                    (char) KeyEvent.VK_BACK_SPACE,
+                    0,
+                    TimeoutKey.ComponentOperator_PushKeyTimeout);
             Timeouts.sleep(betweenTime);
         }
 
@@ -57,12 +92,18 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
     @Override
     public void typeText(ComponentOperator oper, String text, int caretPosition) {
         changeCaretPosition(oper, caretPosition);
-        KeyDriver kDriver = DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper);
+        KeyDriver kDriver =
+                DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper);
         CharBindingMap map = oper.getCharBindingMap();
         TimeoutKey betweenTime = getBetweenTimeout(oper);
         char[] crs = text.toCharArray();
         for (char cr : crs) {
-            kDriver.typeKey(oper, map.getCharKey(cr), cr, map.getCharModifiers(cr), TimeoutKey.ComponentOperator_PushKeyTimeout);
+            kDriver.typeKey(
+                    oper,
+                    map.getCharKey(cr),
+                    cr,
+                    map.getCharModifiers(cr),
+                    TimeoutKey.ComponentOperator_PushKeyTimeout);
             Timeouts.sleep(betweenTime);
         }
     }
@@ -76,8 +117,9 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
     @Override
     public void enterText(ComponentOperator oper, String text) {
         changeText(oper, text);
-        DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper).pushKey(oper, KeyEvent.VK_ENTER, 0,
-                                  TimeoutKey.TextKeyboardDriver_EnterText);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getKeyDriver(oper)
+                .pushKey(oper, KeyEvent.VK_ENTER, 0, TimeoutKey.TextKeyboardDriver_EnterText);
     }
 
     public abstract String getText(ComponentOperator oper);
@@ -112,9 +154,13 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
     }
 
     private void push(ComponentOperator oper, NavigationKey key, int preModifiers) {
-        DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper).pushKey(oper, key.getKeyCode(),
-                                  key.getModifiers() | preModifiers,
-                                  TimeoutKey.ComponentOperator_PushKeyTimeout);
+        DriverManager.newInstance(JemmyProperties.getInstance())
+                .getKeyDriver(oper)
+                .pushKey(
+                        oper,
+                        key.getKeyCode(),
+                        key.getModifiers() | preModifiers,
+                        TimeoutKey.ComponentOperator_PushKeyTimeout);
         Timeouts.sleep(getBetweenTimeout(oper));
     }
 
