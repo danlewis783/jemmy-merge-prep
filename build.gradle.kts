@@ -13,6 +13,10 @@ java {
     withSourcesJar()
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api(libs.jspecify)
     implementation(libs.slf4j)
