@@ -1,0 +1,445 @@
+package org.netbeans.jemmy.operators;
+
+import java.util.function.Predicate;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.EmptyVisualizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.ScrollPaneUI;
+import java.awt.*;
+import java.util.concurrent.Callable;
+
+
+public class JScrollPaneOperator extends JComponentOperator {
+    private static final int X_POINT_RECT_SIZE = 6;
+    private static final int Y_POINT_RECT_SIZE = 4;
+    private static final Logger logger = LoggerFactory.getLogger(JScrollPaneOperator.class);
+    private JScrollBarOperator hScrollBarOper = null;
+    private JScrollBarOperator vScrollBarOper = null;
+
+    public JScrollPaneOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    public JScrollPaneOperator(JScrollPane b) {
+        super(b);
+    }
+
+    public JScrollPaneOperator(ContainerOperator cont, int index) {
+        this((JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
+    }
+
+    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
+    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
+    }
+
+    public void setValues(int hValue, int vValue) {
+        initOperators();
+        hScrollBarOper.setValue(hValue);
+        vScrollBarOper.setValue(vValue);
+    }
+
+    public void scrollToHorizontalValue(int value) {
+        initOperators();
+        makeComponentVisible();
+
+        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+            hScrollBarOper.scrollToValue(value);
+        }
+    }
+
+    public void scrollToHorizontalValue(double proportionalValue) {
+        initOperators();
+        makeComponentVisible();
+
+        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+            hScrollBarOper.scrollToValue(proportionalValue);
+        }
+    }
+
+    public void scrollToVerticalValue(int value) {
+        initOperators();
+        makeComponentVisible();
+
+        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+            vScrollBarOper.scrollToValue(value);
+        }
+    }
+
+    public void scrollToVerticalValue(double proportionalValue) {
+        initOperators();
+        makeComponentVisible();
+
+        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+            vScrollBarOper.scrollToValue(proportionalValue);
+        }
+    }
+
+    public void scrollToValues(int valueX, int valueY) {
+        scrollToVerticalValue(valueX);
+        scrollToHorizontalValue(valueY);
+    }
+
+    public void scrollToValues(double proportionalValueX, double proportionalValueY) {
+        scrollToVerticalValue(proportionalValueX);
+        scrollToHorizontalValue(proportionalValueY);
+    }
+
+    public void scrollToTop() {
+        initOperators();
+        makeComponentVisible();
+
+        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+            vScrollBarOper.scrollToMinimum();
+        }
+    }
+
+    public void scrollToBottom() {
+        initOperators();
+        makeComponentVisible();
+
+        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+            vScrollBarOper.scrollToMaximum();
+        }
+    }
+
+    public void scrollToLeft() {
+        initOperators();
+        makeComponentVisible();
+
+        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+            hScrollBarOper.scrollToMinimum();
+        }
+    }
+
+    public void scrollToRight() {
+        initOperators();
+        makeComponentVisible();
+
+        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+            hScrollBarOper.scrollToMaximum();
+        }
+    }
+
+    public void scrollToComponentRectangle(Component comp, int x, int y, int width, int height) {
+        initOperators();
+        makeComponentVisible();
+
+        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+            hScrollBarOper.scrollTo(new ComponentRectChecker(comp, x, y, width, height, JScrollBar.HORIZONTAL));
+        }
+
+        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+            vScrollBarOper.scrollTo(new ComponentRectChecker(comp, x, y, width, height, JScrollBar.VERTICAL));
+        }
+    }
+
+    public void scrollToComponentPoint(Component comp, int x, int y) {
+        scrollToComponentRectangle(comp, x - X_POINT_RECT_SIZE, y - Y_POINT_RECT_SIZE, 2 * X_POINT_RECT_SIZE,
+                                   2 * Y_POINT_RECT_SIZE);
+    }
+
+    public void scrollToComponent(Component comp) {
+        scrollToComponentRectangle(comp, 0, 0, comp.getWidth(), comp.getHeight());
+    }
+
+    public JScrollBarOperator getHScrollBarOperator() {
+        initOperators();
+
+        return hScrollBarOper;
+    }
+
+    public JScrollBarOperator getVScrollBarOperator() {
+        initOperators();
+
+        return vScrollBarOper;
+    }
+
+    public boolean checkInside(Component comp, int x, int y, int width, int height) {
+        Component view = getViewport().getView();
+        Point toPoint = SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
+        initOperators();
+
+        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+            if (toPoint.x < hScrollBarOper.getValue()) {
+                return false;
+            }
+
+            if (comp.getWidth() > view.getWidth()) {
+                return toPoint.x > 0;
+            } else {
+                return toPoint.x + comp.getWidth() > hScrollBarOper.getValue() + view.getWidth();
+            }
+        }
+
+        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+            if (toPoint.y < vScrollBarOper.getValue()) {
+                return false;
+            }
+
+            if (comp.getHeight() > view.getHeight()) {
+                return toPoint.y > 0;
+            } else {
+                return toPoint.y + comp.getHeight() > vScrollBarOper.getValue() + view.getHeight();
+            }
+        }
+
+        return true;
+    }
+
+    public boolean checkInside(Component comp) {
+        return checkInside(comp, 0, 0, comp.getWidth(), comp.getHeight());
+    }
+
+    public JScrollBar createHorizontalScrollBar() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createHorizontalScrollBar()));
+    }
+
+    public JScrollBar createVerticalScrollBar() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createVerticalScrollBar()));
+    }
+
+    public JViewport getColumnHeader() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getColumnHeader()));
+    }
+
+    public Component getCorner(String string) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getCorner(string)));
+    }
+
+    public JScrollBar getHorizontalScrollBar() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBar()));
+    }
+
+    public int getHorizontalScrollBarPolicy() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBarPolicy()));
+    }
+
+    public JViewport getRowHeader() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getRowHeader()));
+    }
+
+    public ScrollPaneUI getUI() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getUI()));
+    }
+
+    public JScrollBar getVerticalScrollBar() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBar()));
+    }
+
+    public int getVerticalScrollBarPolicy() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBarPolicy()));
+    }
+
+    public JViewport getViewport() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewport()));
+    }
+
+    public Border getViewportBorder() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorder()));
+    }
+
+    public Rectangle getViewportBorderBounds() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorderBounds()));
+    }
+
+    public void setColumnHeader(JViewport jViewport) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setColumnHeader(jViewport);
+
+            return null;
+        }));
+    }
+
+    public void setColumnHeaderView(Component component) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setColumnHeaderView(component);
+
+            return null;
+        }));
+    }
+
+    public void setCorner(String string, Component component) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setCorner(string, component);
+
+            return null;
+        }));
+    }
+
+    public void setHorizontalScrollBar(JScrollBar jScrollBar) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setHorizontalScrollBar(jScrollBar);
+
+            return null;
+        }));
+    }
+
+    public void setHorizontalScrollBarPolicy(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setHorizontalScrollBarPolicy(i);
+
+            return null;
+        }));
+    }
+
+    public void setRowHeader(JViewport jViewport) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setRowHeader(jViewport);
+
+            return null;
+        }));
+    }
+
+    public void setRowHeaderView(Component component) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setRowHeaderView(component);
+
+            return null;
+        }));
+    }
+
+    public void setUI(ScrollPaneUI scrollPaneUI) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setUI(scrollPaneUI);
+
+            return null;
+        }));
+    }
+
+    public void setVerticalScrollBar(JScrollBar jScrollBar) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setVerticalScrollBar(jScrollBar);
+
+            return null;
+        }));
+    }
+
+    public void setVerticalScrollBarPolicy(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setVerticalScrollBarPolicy(i);
+
+            return null;
+        }));
+    }
+
+    public void setViewport(JViewport jViewport) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setViewport(jViewport);
+
+            return null;
+        }));
+    }
+
+    public void setViewportBorder(Border border) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setViewportBorder(border);
+
+            return null;
+        }));
+    }
+
+    public void setViewportView(Component component) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JScrollPane) getSource()).setViewportView(component);
+
+            return null;
+        }));
+    }
+
+    private void initOperators() {
+        if ((hScrollBarOper == null) && (getHorizontalScrollBar() != null) && getHorizontalScrollBar().isVisible()) {
+            hScrollBarOper = new JScrollBarOperator(getHorizontalScrollBar());
+            hScrollBarOper.setVisualizer(new EmptyVisualizer());
+        }
+
+        if ((vScrollBarOper == null) && (getVerticalScrollBar() != null) && getVerticalScrollBar().isVisible()) {
+            vScrollBarOper = new JScrollBarOperator(getVerticalScrollBar());
+            vScrollBarOper.setVisualizer(new EmptyVisualizer());
+        }
+    }
+
+    public static JScrollPane findJScrollPane(Container cont, Predicate<Component> chooser, int index) {
+        return (JScrollPane) findComponent(cont, PredicatesJ.of(JScrollPane.class, chooser), index);
+    }
+
+    public static JScrollPane findJScrollPane(Container cont, Predicate<Component> chooser) {
+        return findJScrollPane(cont, chooser, 0);
+    }
+
+    public static JScrollPane findJScrollPane(Container cont, int index) {
+        return findJScrollPane(cont, PredicatesJ.alwaysTrue(), index);
+    }
+
+    public static JScrollPane findJScrollPane(Container cont) {
+        return findJScrollPane(cont, 0);
+    }
+
+    public static JScrollPane findJScrollPaneUnder(Component comp, Predicate<Component> chooser) {
+        return (JScrollPane) findContainerUnder(comp, PredicatesJ.of(JScrollPane.class, chooser));
+    }
+
+    public static JScrollPane findJScrollPaneUnder(Component comp) {
+        return findJScrollPaneUnder(comp, PredicatesJ.of(JScrollPane.class));
+    }
+
+    public static JScrollPane waitJScrollPane(Container cont, Predicate<Component> chooser, int index) {
+        return (JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class, chooser), index);
+    }
+
+    public static JScrollPane waitJScrollPane(Container cont, Predicate<Component> chooser) {
+        return waitJScrollPane(cont, chooser, 0);
+    }
+
+    public static JScrollPane waitJScrollPane(Container cont, int index) {
+        return waitJScrollPane(cont, PredicatesJ.alwaysTrue(), index);
+    }
+
+    public static JScrollPane waitJScrollPane(Container cont) {
+        return waitJScrollPane(cont, 0);
+    }
+
+    private class ComponentRectChecker implements JScrollBarOperator.ScrollChecker {
+        final Component comp;
+        final int height;
+        final int orientation;
+        final int width;
+        final int x;
+        final int y;
+
+        public ComponentRectChecker(Component comp, int x, int y, int width, int height, int orientation) {
+            this.comp = comp;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.orientation = orientation;
+        }
+
+        @Override
+        public int getScrollDirection(JScrollBarOperator oper) {
+            Point toPoint = SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
+            int to = (orientation == JScrollBar.HORIZONTAL) ? toPoint.x : toPoint.y;
+            int ln = (orientation == JScrollBar.HORIZONTAL) ? width : height;
+            int lv = (orientation == JScrollBar.HORIZONTAL) ? getViewport().getWidth() : getViewport().getHeight();
+            int vl = oper.getValue();
+            if (to < vl) {
+                return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+            } else if ((to + ln - 1 > vl + lv) && (to > vl)) {
+                return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
+            } else {
+                return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
+            }
+        }
+    }
+}

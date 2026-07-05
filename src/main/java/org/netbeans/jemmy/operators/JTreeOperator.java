@@ -1,0 +1,1349 @@
+package org.netbeans.jemmy.operators;
+
+import java.util.function.Predicate;
+import org.netbeans.jemmy.*;
+import org.netbeans.jemmy.drivers.DriverManager;
+import org.netbeans.jemmy.drivers.TreeDriver;
+import org.netbeans.jemmy.functions.LoadedFunction;
+import org.netbeans.jemmy.predicates.JTreeByItemPredicate;
+import org.netbeans.jemmy.predicates.JTreeOperatorByItemPredicate;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.EmptyVisualizer;
+import org.netbeans.jemmy.util.StringComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
+import javax.swing.plaf.TreeUI;
+import javax.swing.tree.*;
+import java.awt.*;
+import java.util.Enumeration;
+import java.util.concurrent.Callable;
+
+public class JTreeOperator extends JComponentOperator {
+    private static final Logger logger = LoggerFactory.getLogger(JTreeOperator.class);
+    private final TreeDriver driver;
+
+    public JTreeOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    public JTreeOperator(JTree b) {
+        super(b);
+        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getTreeDriver(getClass());
+    }
+
+    public JTreeOperator(ContainerOperator cont, int index) {
+        this((JTree) waitComponent(cont, PredicatesJ.of(JTree.class), index));
+    }
+
+    public JTreeOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
+    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
+    }
+
+    public JTreeOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JTree) cont.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+    }
+
+    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this(cont, text, stringComparator, -1, index);
+    }
+
+    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int index) {
+        this((JTree) waitComponent(cont, new JTreeByItemPredicate(text, row, stringComparator), index));
+    }
+
+    public void doExpandPath(TreePath path) {
+        if (path != null) {
+            driver.expandItem(this, getRowForPath(path));
+            waitExpanded(path);
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void doExpandRow(int row) {
+        driver.expandItem(this, row);
+        waitExpanded(row);
+    }
+
+    public void doMakeVisible(TreePath path) {
+        if (path != null) {
+            makeVisible(path);
+            waitVisible(path);
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public int getChildCount(Object node) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChildCount(node)));
+    }
+
+    public Object[] getChildren(Object node) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+            TreeModel md = ((JTree) getSource()).getModel();
+            Object[] result = new Object[md.getChildCount(node)];
+            for (int i = 0; i < md.getChildCount(node); i++) {
+                result[i] = md.getChild(node, i);
+            }
+
+            return result;
+        }));
+    }
+
+    public Object getChild(Object node, int index) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChild(node, index)));
+    }
+
+    public int getChildCount(TreePath path) {
+        if (path != null) {
+            return getChildCount(path.getLastPathComponent());
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public TreePath getChildPath(TreePath path, int index) {
+        if (path != null) {
+            return path.pathByAddingChild(getChild(path.getLastPathComponent(), index));
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public TreePath[] getChildPaths(TreePath path) {
+        if (path != null) {
+            Object[] children = getChildren(path.getLastPathComponent());
+            TreePath[] result = new TreePath[children.length];
+            for (int i = 0; i < children.length; i++) {
+                result[i] = path.pathByAddingChild(children[i]);
+            }
+
+            return result;
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public Object getRoot() {
+        FunctionRepeater<Void, Object> waiter = FunctionRepeater.on(obj -> {
+            Object root = getModel().getRoot();
+            if ((root == null) || (root.toString() == null) || "null".equals(root.toString())) {
+                return null;
+            } else {
+                return root;
+            }
+        }, TimeoutKey.JTreeOperator_WaitNodeVisibleTimeout);
+        try {
+            return waiter.runUntilNotNull(null);
+        } catch (InterruptedException e) {
+            logger.warn("", e);
+
+            return null;
+        }
+    }
+
+    public TreePath findPath(TreePathChooser chooser) {
+        TreePath rootPath = new TreePath(getRoot());
+        if (chooser.checkPath(rootPath, 0)) {
+            return rootPath;
+        }
+
+        FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter =
+                FunctionRepeater.on(new LoadedFunction(this), TimeoutKey.JTreeOperator_WaitNextNodeTimeout);
+        return findPathPrimitive(rootPath, chooser, waiter);
+    }
+
+    public int findRow(TreeRowChooser chooser, int index) {
+        int count = 0;
+        for (int i = 0; i < getRowCount(); i++) {
+            if (chooser.checkRow(this, i)) {
+                if (count == index) {
+                    return i;
+                } else {
+                    count++;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public int findRow(TreeRowChooser chooser) {
+        return findRow(chooser, 0);
+    }
+
+    public int findRow(String item, StringComparator comparator, int index) {
+        return findRow(new BySubStringTreeRowChooser(item, comparator), index);
+    }
+
+    public int findRow(String item, StringComparator comparator) {
+        return findRow(item, comparator, 0);
+    }
+
+    public int findRow(Predicate<Component> chooser, int index) {
+        return findRow(new ByRenderedComponentTreeRowChooser(chooser), index);
+    }
+
+    public int findRow(Predicate<Component> chooser) {
+        return findRow(chooser, 0);
+    }
+
+    public TreePath findPath(String[] names, int[] indexes, StringComparator comparator) {
+        return findPath(new StringArrayPathChooser(names, indexes, comparator));
+    }
+
+    public TreePath findPath(String[] names, StringComparator comparator) {
+        int[] indexes = new int[0];
+
+        return findPath(names, indexes, comparator);
+    }
+
+    public TreePath findPath(String path, String indexes, String delim, StringComparator comparator) {
+        String[] indexStrings = parseString(indexes, delim);
+        int[] indInts = new int[indexStrings.length];
+        for (int i = 0; i < indexStrings.length; i++) {
+            indInts[i] = Integer.parseInt(indexStrings[i]);
+        }
+
+        return findPath(parseString(path, delim), indInts, comparator);
+    }
+
+    public TreePath findPath(String path, String delim, StringComparator comparator) {
+        return findPath(parseString(path, delim), comparator);
+    }
+
+    public TreePath findPath(String path, StringComparator comparator) {
+        return findPath(parseString(path), comparator);
+    }
+
+    public void doCollapsePath(TreePath path) {
+        if (path != null) {
+            driver.collapseItem(this, getRowForPath(path));
+
+            if (getVerification()) {
+                waitCollapsed(path);
+            }
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void doCollapseRow(int row) {
+        driver.collapseItem(this, row);
+
+        if (getVerification()) {
+            waitCollapsed(row);
+        }
+    }
+
+    public void selectPath(TreePath path) {
+        if (path != null) {
+            scrollToPath(path);
+            queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+                driver.selectItem(JTreeOperator.this, getRowForPath(path));
+
+                return null;
+            }));
+
+            if (getVerification()) {
+                waitSelected(path);
+            }
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void selectRow(int row) {
+        driver.selectItem(this, row);
+
+        if (getVerification()) {
+            waitSelected(row);
+        }
+    }
+
+    public void selectPaths(TreePath[] paths) {
+        int[] rows = new int[paths.length];
+        for (int i = 0; i < paths.length; i++) {
+            rows[i] = getRowForPath(paths[i]);
+        }
+
+        driver.selectItems(this, rows);
+
+        if (getVerification()) {
+            waitSelected(paths);
+        }
+    }
+
+    public Point getPointToClick(TreePath path) {
+        if (path != null) {
+            Rectangle rect = getPathBounds(path);
+            if (rect != null) {
+                return new Point((int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
+            } else {
+                throw new NoSuchPathException(path);
+            }
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public Point getPointToClick(int row) {
+        Rectangle rect = getRowBounds(row);
+        if (rect != null) {
+            return new Point((int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
+        } else {
+            throw new NoSuchPathException(row);
+        }
+    }
+
+    public void clickOnPath(TreePath path, int clickCount, int mouseButton, int modifiers) {
+        if (path != null) {
+            makeComponentVisible();
+
+            if (path.getParentPath() != null) {
+                expandPath(path.getParentPath());
+            }
+
+            makeVisible(path);
+            scrollToPath(path);
+            Point point = getPointToClick(path);
+            clickMouse((int) point.getX(), (int) point.getY(), clickCount, mouseButton, modifiers);
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void clickOnPath(TreePath path, int clickCount, int mouseButton) {
+        clickOnPath(path, clickCount, mouseButton, 0);
+    }
+
+    public void clickOnPath(TreePath path, int clickCount) {
+        clickOnPath(path, clickCount, getDefaultMouseButton());
+    }
+
+    public void clickOnPath(TreePath path) {
+        clickOnPath(path, 1);
+    }
+
+    public JPopupMenu callPopupOnPaths(TreePath[] paths, int mouseButton) {
+        makeComponentVisible();
+
+        for (TreePath path : paths) {
+            if (path.getParentPath() != null) {
+                expandPath(path.getParentPath());
+            }
+        }
+
+        selectPaths(paths);
+        scrollToPath(paths[paths.length - 1]);
+        Point point = getPointToClick(paths[paths.length - 1]);
+
+        return JPopupMenuOperator.callPopup(this, (int) point.getX(), (int) point.getY(), mouseButton);
+    }
+
+    public JPopupMenu callPopupOnPaths(TreePath[] paths) {
+        return callPopupOnPaths(paths, getPopupMouseButton());
+    }
+
+    public JPopupMenu callPopupOnPath(TreePath path, int mouseButton) {
+        if (path != null) {
+            TreePath[] paths = { path };
+
+            return callPopupOnPaths(paths, mouseButton);
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public JPopupMenu callPopupOnPath(TreePath path) {
+        return callPopupOnPath(path, getPopupMouseButton());
+    }
+
+    public void scrollToPath(TreePath path) {
+        if (path != null) {
+            makeComponentVisible();
+            JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+            if (scroll == null) {
+                return;
+            }
+
+            JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+            scroller.setVisualizer(new EmptyVisualizer());
+            Rectangle rect = getPathBounds(path);
+            if (rect != null) {
+                scroller.scrollToComponentRectangle(getSource(), (int) rect.getX(), (int) rect.getY(),
+                        (int) rect.getWidth(), (int) rect.getHeight());
+            } else {
+                throw new NoSuchPathException(path);
+            }
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void scrollToRow(int row) {
+        scrollToPath(getPathForRow(row));
+    }
+
+    public void clickForEdit(TreePath path) {
+        driver.startEditing(this, getRowForPath(path), TimeoutKey.JTreeOperator_WaitEditingTimeout);
+    }
+
+    public Component getRenderedComponent(TreePath path, boolean isSelected, boolean isExpanded, boolean cellHasFocus) {
+        if (path != null) {
+            return getCellRenderer().getTreeCellRendererComponent((JTree) getSource(), path.getLastPathComponent(),
+                    isSelected, isExpanded, getModel().isLeaf(path.getLastPathComponent()), getRowForPath(path),
+                    cellHasFocus);
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public Component getRenderedComponent(TreePath path) {
+        return getRenderedComponent(path, isPathSelected(path), isExpanded(path), false);
+    }
+
+    @Deprecated
+    public void changePathText(TreePath path, String newNodeText) {
+        changePathObject(path, newNodeText);
+    }
+
+    public void changePathObject(TreePath path, Object newValue) {
+        scrollToPath(path);
+        driver.editItem(this, getRowForPath(path), newValue,
+                        TimeoutKey.JTreeOperator_WaitEditingTimeout);
+    }
+
+    public void waitExpanded(TreePath path) {
+        if (path != null) {
+            waitState((Predicate<JTreeOperator>) jTreeOperator -> jTreeOperator.isExpanded(path));
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void waitExpanded(int row) {
+        waitState(new JTreeOperatorIsRowExpandedPredicate(row));
+    }
+
+    public void waitCollapsed(TreePath path) {
+        if (path != null) {
+            waitState(new JTreeOperatorIsTreePathExpandedPredicate(path));
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void waitCollapsed(int row) {
+        waitState(new JTreeOperatorIsRowCollapsedPredicate(row));
+    }
+
+    public void waitVisible(TreePath path) {
+        if (path != null) {
+            waitState(new JTreeOperatorIsPathVisiblePredicate(path));
+        } else {
+            throw new NoSuchPathException();
+        }
+    }
+
+    public void waitSelected(TreePath[] paths) {
+        waitState(new JTreeOperatorBySelectedPathsPredicate(paths));
+    }
+
+    public void waitSelected(TreePath path) {
+        waitSelected(new TreePath[] { path });
+    }
+
+    public void waitSelected(int[] rows) {
+        TreePath[] paths = new TreePath[rows.length];
+        for (int i = 0; i < rows.length; i++) {
+            paths[i] = getPathForRow(rows[i]);
+        }
+
+        waitSelected(paths);
+    }
+
+    public void waitSelected(int row) {
+        waitSelected(new int[]{row});
+    }
+
+    public void waitRow(String rowText, StringComparator comparator, int row) {
+        waitState(new JTreeOperatorByItemPredicate(rowText, row, comparator));
+    }
+
+    public Object chooseSubnode(Object parent, String text, int index, StringComparator comparator) {
+        int count = -1;
+        Object node;
+        for (int i = 0, iMax = getChildCount(parent); i < iMax; i++) {
+            try {
+                node = getChild(parent, i);
+            } catch (JemmyException e) {
+                if (e.getCause() instanceof IndexOutOfBoundsException) {
+                    return null;
+                } else {
+                    throw e;
+                }
+            }
+
+            if (comparator.equals(node.toString(), text)) {
+                count++;
+
+                if (count == index) {
+                    return node;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Object chooseSubnode(Object parent, String text, StringComparator comparator) {
+        return chooseSubnode(parent, text, 0, comparator);
+    }
+
+    public Object chooseSubnode(Object parent, String text, StringComparator stringComparator, int index) {
+        return chooseSubnode(parent, text, index, stringComparator);
+    }
+
+    public void addSelectionInterval(int i, int i1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addSelectionInterval(i, i1);
+
+            return null;
+        }));
+    }
+
+    public void addSelectionPath(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addSelectionPath(treePath);
+
+            return null;
+        }));
+    }
+
+    public void addSelectionPaths(TreePath[] treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addSelectionPaths(treePath);
+
+            return null;
+        }));
+    }
+
+    public void addSelectionRow(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addSelectionRow(i);
+
+            return null;
+        }));
+    }
+
+    public void addSelectionRows(int[] i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addSelectionRows(i);
+
+            return null;
+        }));
+    }
+
+    public void addTreeExpansionListener(TreeExpansionListener treeExpansionListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addTreeExpansionListener(treeExpansionListener);
+
+            return null;
+        }));
+    }
+
+    public void addTreeSelectionListener(TreeSelectionListener treeSelectionListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addTreeSelectionListener(treeSelectionListener);
+
+            return null;
+        }));
+    }
+
+    public void addTreeWillExpandListener(TreeWillExpandListener treeWillExpandListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).addTreeWillExpandListener(treeWillExpandListener);
+
+            return null;
+        }));
+    }
+
+    public void cancelEditing() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).cancelEditing();
+
+            return null;
+        }));
+    }
+
+    public void clearSelection() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).clearSelection();
+
+            return null;
+        }));
+    }
+
+    public void collapsePath(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).collapsePath(treePath);
+
+            return null;
+        }));
+    }
+
+    public void collapseRow(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).collapseRow(i);
+
+            return null;
+        }));
+    }
+
+    public String convertValueToText(Object object, boolean b, boolean b1, boolean b2,
+                                     int i, boolean b3) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).convertValueToText(object, b, b1, b2, i, b3)));
+    }
+
+    public void expandPath(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).expandPath(treePath);
+
+            return null;
+        }));
+    }
+
+    public void expandRow(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).expandRow(i);
+
+            return null;
+        }));
+    }
+
+    public void fireTreeCollapsed(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).fireTreeCollapsed(treePath);
+
+            return null;
+        }));
+    }
+
+    public void fireTreeExpanded(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).fireTreeExpanded(treePath);
+
+            return null;
+        }));
+    }
+
+    public void fireTreeWillCollapse(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).fireTreeWillCollapse(treePath);
+
+            return null;
+        }));
+    }
+
+    public void fireTreeWillExpand(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).fireTreeWillExpand(treePath);
+
+            return null;
+        }));
+    }
+
+    public TreeCellEditor getCellEditor() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getCellEditor()));
+    }
+
+    public TreeCellRenderer getCellRenderer() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getCellRenderer()));
+    }
+
+    public TreePath getClosestPathForLocation(int i, int i1) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestPathForLocation(i, i1)));
+    }
+
+    public int getClosestRowForLocation(int i, int i1) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestRowForLocation(i, i1)));
+    }
+
+    public TreePath getEditingPath() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getEditingPath()));
+    }
+
+    public Enumeration getExpandedDescendants(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Enumeration>) () -> ((JTree) getSource()).getExpandedDescendants(treePath)));
+    }
+
+    public boolean getInvokesStopCellEditing() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getInvokesStopCellEditing()));
+    }
+
+    public Object getLastSelectedPathComponent() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLastSelectedPathComponent()));
+    }
+
+    public TreePath getLeadSelectionPath() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLeadSelectionPath()));
+    }
+
+    public int getLeadSelectionRow() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLeadSelectionRow()));
+    }
+
+    public int getMaxSelectionRow() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getMaxSelectionRow()));
+    }
+
+    public int getMinSelectionRow() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getMinSelectionRow()));
+    }
+
+    public TreeModel getModel() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel()));
+    }
+
+    public Rectangle getPathBounds(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathBounds(treePath)));
+    }
+
+    public TreePath getPathForLocation(int i, int i1) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathForLocation(i, i1)));
+    }
+
+    public TreePath getPathForRow(int i) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathForRow(i)));
+    }
+
+    public Dimension getPreferredScrollableViewportSize() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPreferredScrollableViewportSize()));
+    }
+
+    public Rectangle getRowBounds(int i) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowBounds(i)));
+    }
+
+    public int getRowCount() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowCount()));
+    }
+
+    public int getRowForLocation(int i, int i1) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowForLocation(i, i1)));
+    }
+
+    public int getRowForPath(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowForPath(treePath)));
+    }
+
+    public int getRowHeight() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowHeight()));
+    }
+
+    public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
+    }
+
+    public boolean getScrollableTracksViewportHeight() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportHeight()));
+    }
+
+    public boolean getScrollableTracksViewportWidth() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportWidth()));
+    }
+
+    public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
+    }
+
+    public boolean getScrollsOnExpand() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollsOnExpand()));
+    }
+
+    public int getSelectionCount() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionCount()));
+    }
+
+    public TreeSelectionModel getSelectionModel() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionModel()));
+    }
+
+    public TreePath getSelectionPath() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionPath()));
+    }
+
+    public TreePath[] getSelectionPaths() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionPaths()));
+    }
+
+    public int[] getSelectionRows() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionRows()));
+    }
+
+    public boolean getShowsRootHandles() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getShowsRootHandles()));
+    }
+
+    public TreeUI getUI() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getUI()));
+    }
+
+    public int getVisibleRowCount() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getVisibleRowCount()));
+    }
+
+    public boolean hasBeenExpanded(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).hasBeenExpanded(treePath)));
+    }
+
+    public boolean isCollapsed(int i) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isCollapsed(i)));
+    }
+
+    public boolean isCollapsed(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isCollapsed(treePath)));
+    }
+
+    public boolean isEditable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isEditable()));
+    }
+
+    public boolean isEditing() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isEditing()));
+    }
+
+    public boolean isExpanded(int i) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isExpanded(i)));
+    }
+
+    public boolean isExpanded(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isExpanded(treePath)));
+    }
+
+    public boolean isFixedRowHeight() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isFixedRowHeight()));
+    }
+
+    public boolean isLargeModel() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isLargeModel()));
+    }
+
+    public boolean isPathEditable(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isPathEditable(treePath)));
+    }
+
+    public boolean isPathSelected(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isPathSelected(treePath)));
+    }
+
+    public boolean isRootVisible() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isRootVisible()));
+    }
+
+    public boolean isRowSelected(int i) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isRowSelected(i)));
+    }
+
+    public boolean isSelectionEmpty() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isSelectionEmpty()));
+    }
+
+    public boolean isVisible(TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isVisible(treePath)));
+    }
+
+    public void makeVisible(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).makeVisible(treePath);
+
+            return null;
+        }));
+    }
+
+    public void removeSelectionInterval(int i, int i1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeSelectionInterval(i, i1);
+
+            return null;
+        }));
+    }
+
+    public void removeSelectionPath(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeSelectionPath(treePath);
+
+            return null;
+        }));
+    }
+
+    public void removeSelectionPaths(TreePath[] treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeSelectionPaths(treePath);
+
+            return null;
+        }));
+    }
+
+    public void removeSelectionRow(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeSelectionRow(i);
+
+            return null;
+        }));
+    }
+
+    public void removeSelectionRows(int[] i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeSelectionRows(i);
+
+            return null;
+        }));
+    }
+
+    public void removeTreeExpansionListener(TreeExpansionListener treeExpansionListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeTreeExpansionListener(treeExpansionListener);
+
+            return null;
+        }));
+    }
+
+    public void removeTreeSelectionListener(TreeSelectionListener treeSelectionListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeTreeSelectionListener(treeSelectionListener);
+
+            return null;
+        }));
+    }
+
+    public void removeTreeWillExpandListener(TreeWillExpandListener treeWillExpandListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).removeTreeWillExpandListener(treeWillExpandListener);
+
+            return null;
+        }));
+    }
+
+    public void scrollPathToVisible(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).scrollPathToVisible(treePath);
+
+            return null;
+        }));
+    }
+
+    public void scrollRowToVisible(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).scrollRowToVisible(i);
+
+            return null;
+        }));
+    }
+
+    public void setCellEditor(TreeCellEditor treeCellEditor) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setCellEditor(treeCellEditor);
+
+            return null;
+        }));
+    }
+
+    public void setCellRenderer(TreeCellRenderer treeCellRenderer) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setCellRenderer(treeCellRenderer);
+
+            return null;
+        }));
+    }
+
+    public void setEditable(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setEditable(b);
+
+            return null;
+        }));
+    }
+
+    public void setInvokesStopCellEditing(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setInvokesStopCellEditing(b);
+
+            return null;
+        }));
+    }
+
+    public void setLargeModel(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setLargeModel(b);
+
+            return null;
+        }));
+    }
+
+    public void setModel(TreeModel treeModel) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setModel(treeModel);
+
+            return null;
+        }));
+    }
+
+    public void setRootVisible(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setRootVisible(b);
+
+            return null;
+        }));
+    }
+
+    public void setRowHeight(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setRowHeight(i);
+
+            return null;
+        }));
+    }
+
+    public void setScrollsOnExpand(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setScrollsOnExpand(b);
+
+            return null;
+        }));
+    }
+
+    public void setSelectionInterval(int i, int i1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setSelectionInterval(i, i1);
+
+            return null;
+        }));
+    }
+
+    public void setSelectionModel(TreeSelectionModel treeSelectionModel) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setSelectionModel(treeSelectionModel);
+
+            return null;
+        }));
+    }
+
+    public void setSelectionPath(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setSelectionPath(treePath);
+
+            return null;
+        }));
+    }
+
+    public void setSelectionPaths(TreePath[] treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setSelectionPaths(treePath);
+
+            return null;
+        }));
+    }
+
+    public void setSelectionRow(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setSelectionRow(i);
+
+            return null;
+        }));
+    }
+
+    public void setSelectionRows(int[] i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setSelectionRows(i);
+
+            return null;
+        }));
+    }
+
+    public void setShowsRootHandles(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setShowsRootHandles(b);
+
+            return null;
+        }));
+    }
+
+    public void setUI(TreeUI treeUI) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setUI(treeUI);
+
+            return null;
+        }));
+    }
+
+    public void setVisibleRowCount(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).setVisibleRowCount(i);
+
+            return null;
+        }));
+    }
+
+    public void startEditingAtPath(TreePath treePath) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).startEditingAtPath(treePath);
+
+            return null;
+        }));
+    }
+
+    public boolean stopEditing() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).stopEditing()));
+    }
+
+    public void treeDidChange() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTree) getSource()).treeDidChange();
+
+            return null;
+        }));
+    }
+
+    private TreePath findPathPrimitive(TreePath path, TreePathChooser chooser,
+                                       FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter) {
+        if (!isExpanded(path)) {
+            if (!isPathSelected(path)) {
+                clickOnPath(path);
+            }
+
+            expandPath(path);
+        }
+        TreePathChooserAndTreePath arg = new TreePathChooserAndTreePath(chooser, path);
+        TreePathAndBoolean waitResult;
+        try {
+            waitResult = waiter.runUntilNotNull(arg);
+        } catch (InterruptedException e) {
+            logger.warn("", e);
+
+            return null;
+        }
+
+        TreePath nextPath = waitResult.getTreePath();
+        if (waitResult.isChecked()) {
+            return nextPath;
+        } else {
+            return findPathPrimitive(nextPath, chooser, waiter);
+        }
+    }
+
+    public static JTree findJTree(Container cont, Predicate<Component> chooser, int index) {
+        return (JTree) findComponent(cont, PredicatesJ.of(JTree.class, chooser), index);
+    }
+
+    public static JTree findJTree(Container cont, Predicate<Component> chooser) {
+        return findJTree(cont, chooser, 0);
+    }
+
+    public static JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex, int index) {
+        return findJTree(cont, new JTreeByItemPredicate(text, rowIndex, sc), index);
+    }
+
+    public static JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex) {
+        return findJTree(cont, text, sc, rowIndex, 0);
+    }
+
+    public static JTree waitJTree(Container cont, Predicate<Component> chooser, int index) {
+        return (JTree) waitComponent(cont, PredicatesJ.of(JTree.class, chooser), index);
+    }
+
+    public static JTree waitJTree(Container cont, Predicate<Component> chooser) {
+        return waitJTree(cont, chooser, 0);
+    }
+
+    public static JTree waitJTree(Container cont, String text, StringComparator stringComparator, int rowIndex, int index) {
+        return waitJTree(cont, new JTreeByItemPredicate(text, rowIndex, stringComparator), index);
+    }
+
+    public static JTree waitJTree(Container cont, String text, StringComparator stringComparator, int rowIndex) {
+        return waitJTree(cont, text, stringComparator, rowIndex, 0);
+    }
+
+    public interface TreePathChooser {
+        public boolean checkPath(TreePath path, int indexInParent);
+
+        public boolean hasAsParent(TreePath path, int indexInParent);
+    }
+
+
+    public interface TreeRowChooser {
+        public boolean checkRow(JTreeOperator oper, int row);
+    }
+
+    private static class JTreeOperatorIsRowExpandedPredicate implements Predicate<JTreeOperator> {
+        private final int row;
+
+        public JTreeOperatorIsRowExpandedPredicate(int row) {
+            this.row = row;
+        }
+
+        @Override
+        public boolean test(JTreeOperator jTreeOperator) {
+            return jTreeOperator.isExpanded(row);
+        }
+    }
+
+    private static class JTreeOperatorIsTreePathExpandedPredicate implements Predicate<JTreeOperator> {
+        private final TreePath path;
+
+        public JTreeOperatorIsTreePathExpandedPredicate(TreePath path) {
+            this.path = path;
+        }
+
+        @Override
+        public boolean test(JTreeOperator jTreeOperator) {
+            return jTreeOperator.isCollapsed(path);
+        }
+    }
+
+    private static class JTreeOperatorIsRowCollapsedPredicate implements Predicate<JTreeOperator> {
+        private final int row;
+
+        public JTreeOperatorIsRowCollapsedPredicate(int row) {
+            this.row = row;
+        }
+
+        @Override
+        public boolean test(JTreeOperator jTreeOperator) {
+            return jTreeOperator.isCollapsed(row);
+        }
+    }
+
+    private static class JTreeOperatorIsPathVisiblePredicate implements Predicate<JTreeOperator> {
+        private final TreePath path;
+
+        public JTreeOperatorIsPathVisiblePredicate(TreePath path) {
+            this.path = path;
+        }
+
+        @Override
+        public boolean test(JTreeOperator jTreeOperator) {
+            return jTreeOperator.isVisible(path);
+        }
+    }
+
+    private static class JTreeOperatorBySelectedPathsPredicate implements Predicate<JTreeOperator> {
+        private final TreePath[] paths;
+
+        public JTreeOperatorBySelectedPathsPredicate(TreePath[] paths) {
+            this.paths = paths;
+        }
+
+        @Override
+        public boolean test(JTreeOperator jTreeOperator) {
+            TreePath[] rpaths = jTreeOperator.getSelectionModel().getSelectionPaths();
+            if (rpaths != null) {
+                for (int i = 0; i < rpaths.length; i++) {
+                    if (!rpaths[i].equals(paths[i])) {
+                        return false;
+                    }
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    private class ByRenderedComponentTreeRowChooser implements TreeRowChooser {
+        private final Predicate<Component> chooser;
+
+        public ByRenderedComponentTreeRowChooser(Predicate<Component> chooser) {
+            this.chooser = chooser;
+        }
+
+        @Override
+        public boolean checkRow(JTreeOperator oper, int row) {
+            return chooser.test(oper.getRenderedComponent(oper.getPathForRow(row)));
+        }
+    }
+
+
+    private class BySubStringTreeRowChooser implements TreeRowChooser {
+        private final StringComparator comparator;
+        private final String subString;
+
+        public BySubStringTreeRowChooser(String subString, StringComparator comparator) {
+            this.subString = subString;
+            this.comparator = comparator;
+        }
+
+        @Override
+        public boolean checkRow(JTreeOperator oper, int row) {
+            return comparator.equals(oper.getPathForRow(row).getLastPathComponent().toString(), subString);
+        }
+    }
+
+
+    public class NoSuchPathException extends JemmyInputException {
+        public NoSuchPathException() {
+            super("Unknown/null/invalid tree path.", null);
+        }
+
+        public NoSuchPathException(int index) {
+            super("Tree does not contain " + index + "'th line", getSource());
+        }
+
+        public NoSuchPathException(TreePath path) {
+            super("No such path as \"" + path.toString() + "\"", getSource());
+        }
+    }
+
+
+    private class StringArrayPathChooser implements TreePathChooser {
+        final String[] arr;
+        final StringComparator comparator;
+        final int[] indices;
+
+        StringArrayPathChooser(String[] arr, int[] indices, StringComparator comparator) {
+            this.arr = arr;
+            this.comparator = comparator;
+            this.indices = indices;
+        }
+
+        @Override
+        public boolean checkPath(TreePath path, int indexInParent) {
+            return (path.getPathCount() - 1 == arr.length) && hasAsParent(path, indexInParent);
+        }
+
+        @Override
+        public boolean hasAsParent(TreePath path, int indexInParent) {
+            Object[] comps = path.getPath();
+            Object node;
+            for (int i = 1; i < comps.length; i++) {
+                if (arr.length < path.getPathCount() - 1) {
+                    return false;
+                }
+
+                if (indices.length >= path.getPathCount() - 1) {
+                    node = chooseSubnode(comps[i - 1], arr[i - 1], indices[i - 1], comparator);
+                } else {
+                    node = chooseSubnode(comps[i - 1], arr[i - 1], comparator);
+                }
+
+                if (node != comps[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+}

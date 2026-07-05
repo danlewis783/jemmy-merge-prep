@@ -1,0 +1,651 @@
+package org.netbeans.jemmy.operators;
+
+import java.util.function.Predicate;
+import org.netbeans.jemmy.*;
+import org.netbeans.jemmy.drivers.DriverManager;
+import org.netbeans.jemmy.drivers.FrameDriver;
+import org.netbeans.jemmy.drivers.InternalFrameDriver;
+import org.netbeans.jemmy.drivers.WindowDriver;
+import org.netbeans.jemmy.predicates.JInternalFrameByTitlePredicate;
+import org.netbeans.jemmy.predicates.JInternalFramePredicate;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.EmptyVisualizer;
+import org.netbeans.jemmy.util.StringComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.JInternalFrame.JDesktopIcon;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.InternalFrameUI;
+import java.awt.*;
+import java.util.concurrent.Callable;
+
+
+public class JInternalFrameOperator extends JComponentOperator {
+    public static final String IS_RESIZABLE_DPROP = "Resizable";
+    public static final String IS_SELECTED_DPROP = "Selected";
+    public static final String STATE_CLOSED_DPROP_VALUE = "CLOSED";
+    public static final String STATE_DPROP = "State";
+    public static final String STATE_ICONIFIED_DPROP_VALUE = "ICONIFIED";
+    public static final String STATE_MAXIMAZED_DPROP_VALUE = "MAXIMIZED";
+    public static final String STATE_NORMAL_DPROP_VALUE = "NORMAL";
+    public static final String TITLE_DPROP = "Title";
+    private static final Logger logger = LoggerFactory.getLogger(JInternalFrameOperator.class);
+    private JButtonOperator closeOper;
+    private final FrameDriver fDriver;
+    private final InternalFrameDriver iDriver;
+    private JDesktopIconOperator iconOperator;
+    private JButtonOperator maxOper;
+    private JButtonOperator minOper;
+    private ContainerOperator titleOperator;
+    private final WindowDriver wDriver;
+
+    public JInternalFrameOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    public JInternalFrameOperator(JInternalFrame b) {
+        super(b);
+        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        wDriver = driverManager.getWindowDriver(getClass());
+        fDriver = driverManager.getFrameDriver(getClass());
+        iDriver = driverManager.getInternalFrameDriver(getClass());
+    }
+
+    public JInternalFrameOperator(ContainerOperator cont, int index) {
+        this((JInternalFrame) waitComponent(cont, new JInternalFramePredicate(), index));
+    }
+
+    public JInternalFrameOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
+    public JInternalFrameOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
+    }
+
+    public JInternalFrameOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JInternalFrame) cont.waitSubComponent(new JInternalFramePredicate(chooser), index));
+    }
+
+    public JInternalFrameOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this(findOne(cont, text, stringComparator, index));
+    }
+
+    public void iconify() {
+        checkIconified(false);
+        makeComponentVisible();
+        fDriver.iconify(this);
+
+        if (getVerification()) {
+            waitIcon(true);
+        }
+    }
+
+    public void deiconify() {
+        checkIconified(true);
+        fDriver.deiconify(this);
+
+        if (getVerification()) {
+            waitIcon(false);
+        }
+    }
+
+    public void maximize() {
+        checkIconified(false);
+        makeComponentVisible();
+        fDriver.maximize(this);
+
+        if (getVerification()) {
+            waitMaximum(true);
+        }
+    }
+
+    public void demaximize() {
+        checkIconified(false);
+        makeComponentVisible();
+        fDriver.demaximize(this);
+
+        if (getVerification()) {
+            waitMaximum(false);
+        }
+    }
+
+    public void move(int x, int y) {
+        checkIconified(false);
+        wDriver.move(this, x, y);
+    }
+
+    public void resize(int width, int height) {
+        checkIconified(false);
+        wDriver.resize(this, width, height);
+    }
+
+    public void activate() {
+        checkIconified(false);
+        wDriver.activate(this);
+    }
+
+    public void close() {
+        checkIconified(false);
+        wDriver.close(this);
+    }
+
+    public void scrollToRectangle(int x, int y, int width, int height) {
+        makeComponentVisible();
+        JScrollPane scroll;
+        if (isIcon()) {
+            scroll = (JScrollPane) iconOperator.getContainer(PredicatesJ.of(JScrollPane.class));
+        } else {
+            scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+        }
+
+        if (scroll == null) {
+            return;
+        }
+
+        JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+        scroller.setVisualizer(new EmptyVisualizer());
+        scroller.scrollToComponentRectangle(isIcon() ? iconOperator.getSource() : getSource(), x, y, width, height);
+    }
+
+    public void scrollToRectangle(Rectangle rect) {
+        scrollToRectangle(rect.x, rect.y, rect.width, rect.height);
+    }
+
+    public void scrollToFrame() {
+        if (isIcon()) {
+            scrollToRectangle(0, 0, iconOperator.getWidth(), iconOperator.getHeight());
+        } else {
+            scrollToRectangle(0, 0, getWidth(), getHeight());
+        }
+    }
+
+    public JButtonOperator getMinimizeButton() {
+        initOperators();
+
+        return minOper;
+    }
+
+    public JButtonOperator getMaximizeButton() {
+        initOperators();
+
+        return maxOper;
+    }
+
+    public JButtonOperator getCloseButton() {
+        initOperators();
+
+        return closeOper;
+    }
+
+    public ContainerOperator getTitleOperator() {
+        initOperators();
+
+        return titleOperator;
+    }
+
+    public JDesktopIconOperator getIconOperator() {
+        initOperators();
+
+        return iconOperator;
+    }
+
+    public void waitIcon(boolean icon) {
+        waitState(new JInternalFrameIconPredicate(icon));
+    }
+
+    public void waitMaximum(boolean maximum) {
+        waitState(new JInternalFrameIsMaximumPredicate(maximum));
+    }
+
+    public void addInternalFrameListener(InternalFrameListener internalFrameListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).addInternalFrameListener(internalFrameListener);
+
+            return null;
+        }));
+    }
+
+    public void dispose() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).dispose();
+
+            return null;
+        }));
+    }
+
+    public Container getContentPane() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getContentPane()));
+    }
+
+    public int getDefaultCloseOperation() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDefaultCloseOperation()));
+    }
+
+    public JDesktopIcon getDesktopIcon() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDesktopIcon()));
+    }
+
+    public JDesktopPane getDesktopPane() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDesktopPane()));
+    }
+
+    public Icon getFrameIcon() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getFrameIcon()));
+    }
+
+    public Component getGlassPane() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getGlassPane()));
+    }
+
+    public JMenuBar getJMenuBar() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getJMenuBar()));
+    }
+
+    public int getLayer() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getLayer()));
+    }
+
+    public JLayeredPane getLayeredPane() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getLayeredPane()));
+    }
+
+    public String getTitle() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getTitle()));
+    }
+
+    public InternalFrameUI getUI() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getUI()));
+    }
+
+    public String getWarningString() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getWarningString()));
+    }
+
+    public boolean isClosable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isClosable()));
+    }
+
+    public boolean isClosed() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isClosed()));
+    }
+
+    public boolean isIcon() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isIcon()));
+    }
+
+    public boolean isIconifiable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isIconifiable()));
+    }
+
+    public boolean isMaximizable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isMaximizable()));
+    }
+
+    public boolean isMaximum() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isMaximum()));
+    }
+
+    public boolean isResizable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isResizable()));
+    }
+
+    public boolean isSelected() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isSelected()));
+    }
+
+    public void moveToBack() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).moveToBack();
+
+            return null;
+        }));
+    }
+
+    public void moveToFront() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).moveToFront();
+
+            return null;
+        }));
+    }
+
+    public void pack() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).pack();
+
+            return null;
+        }));
+    }
+
+    public void removeInternalFrameListener(InternalFrameListener internalFrameListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).removeInternalFrameListener(internalFrameListener);
+
+            return null;
+        }));
+    }
+
+    public void setClosable(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setClosable(b);
+
+            return null;
+        }));
+    }
+
+    public void setClosed(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setClosed(b);
+
+            return null;
+        }));
+    }
+
+    public void setContentPane(Container container) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setContentPane(container);
+
+            return null;
+        }));
+    }
+
+    public void setDefaultCloseOperation(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setDefaultCloseOperation(i);
+
+            return null;
+        }));
+    }
+
+    public void setDesktopIcon(JDesktopIcon jDesktopIcon) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setDesktopIcon(jDesktopIcon);
+
+            return null;
+        }));
+    }
+
+    public void setFrameIcon(Icon icon) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setFrameIcon(icon);
+
+            return null;
+        }));
+    }
+
+    public void setGlassPane(Component component) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setGlassPane(component);
+
+            return null;
+        }));
+    }
+
+    public void setIcon(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setIcon(b);
+
+            return null;
+        }));
+    }
+
+    public void setIconifiable(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setIconifiable(b);
+
+            return null;
+        }));
+    }
+
+    public void setJMenuBar(JMenuBar jMenuBar) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setJMenuBar(jMenuBar);
+
+            return null;
+        }));
+    }
+
+    public void setLayer(Integer integer) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setLayer(integer);
+
+            return null;
+        }));
+    }
+
+    public void setLayeredPane(JLayeredPane jLayeredPane) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setLayeredPane(jLayeredPane);
+
+            return null;
+        }));
+    }
+
+    public void setMaximizable(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setMaximizable(b);
+
+            return null;
+        }));
+    }
+
+    public void setMaximum(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setMaximum(b);
+
+            return null;
+        }));
+    }
+
+    public void setResizable(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setResizable(b);
+
+            return null;
+        }));
+    }
+
+    public void setSelected(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setSelected(b);
+
+            return null;
+        }));
+    }
+
+    public void setTitle(String string) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setTitle(string);
+
+            return null;
+        }));
+    }
+
+    public void setUI(InternalFrameUI internalFrameUI) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).setUI(internalFrameUI);
+
+            return null;
+        }));
+    }
+
+    public void toBack() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).toBack();
+
+            return null;
+        }));
+    }
+
+    public void toFront() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JInternalFrame) getSource()).toFront();
+
+            return null;
+        }));
+    }
+
+    protected Container findTitlePane() {
+        return (Container) iDriver.getTitlePane(this);
+    }
+
+    protected void initOperators() {
+        iconOperator = new JDesktopIconOperator(((JInternalFrame) getSource()).getDesktopIcon());
+        Container titlePane = findTitlePane();
+        if (!isIcon() && (titlePane != null)) {
+            if (titleOperator == null) {
+                titleOperator = new ContainerOperator(titlePane);
+                int bttCount = 0;
+                if (getContainer(PredicatesJ.of(JDesktopPane.class)) != null) {
+                    minOper = new JButtonOperator(titleOperator, bttCount);
+                    bttCount++;
+
+                    if (((JInternalFrame) getSource()).isMaximizable()) {
+                        maxOper = new JButtonOperator(titleOperator, bttCount);
+                        bttCount++;
+                    } else {
+                        maxOper = null;
+                    }
+                } else {
+                    minOper = null;
+                    maxOper = null;
+                }
+
+                if (isClosable()) {
+                    closeOper = new JButtonOperator(titleOperator, bttCount);
+                } else {
+                    closeOper = null;
+                }
+            }
+        } else {
+            titleOperator = null;
+            minOper = null;
+            maxOper = null;
+            closeOper = null;
+        }
+    }
+
+    private void checkIconified(boolean shouldBeIconified) {
+        if ((shouldBeIconified &&!isIcon()) || (!shouldBeIconified && isIcon())) {
+            throw new WrongInternalFrameStateException("JInternal frame should " + (shouldBeIconified ? "" : "not")
+                    + " be iconified to produce this operation", getSource());
+        }
+    }
+
+    public static JInternalFrame findJInternalFrame(Container cont, Predicate<Component> chooser, int index) {
+        Component res = findComponent(cont, new JInternalFramePredicate(chooser), index);
+        if (res instanceof JInternalFrame) {
+            return (JInternalFrame) res;
+        } else if (res instanceof JInternalFrame.JDesktopIcon) {
+            return ((JDesktopIcon) res).getInternalFrame();
+        } else {
+            return null;
+        }
+    }
+
+    public static JInternalFrame findJInternalFrame(Container cont, Predicate<Component> chooser) {
+        return findJInternalFrame(cont, chooser, 0);
+    }
+
+    public static JInternalFrame findJInternalFrame(Container cont, String text, StringComparator stringComparator, int index) {
+        return findJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator),
+                                  index);
+    }
+
+    public static JInternalFrame findJInternalFrame(Container cont, String text, StringComparator stringComparator) {
+        return findJInternalFrame(cont, text, stringComparator, 0);
+    }
+
+    public static JInternalFrame findJInternalFrameUnder(Component comp, Predicate<Component> chooser) {
+        return (JInternalFrame) findContainerUnder(comp, new JInternalFramePredicate(chooser));
+    }
+
+    public static JInternalFrame findJInternalFrameUnder(Component comp) {
+        return findJInternalFrameUnder(comp, new JInternalFramePredicate());
+    }
+
+    public static JInternalFrame waitJInternalFrame(Container cont, Predicate<Component> chooser,
+                                                    int index) {
+        Component res = waitComponent(cont, new JInternalFramePredicate(chooser), index);
+        if (res instanceof JInternalFrame) {
+            return (JInternalFrame) res;
+        } else if (res instanceof JInternalFrame.JDesktopIcon) {
+            return ((JDesktopIcon) res).getInternalFrame();
+        } else {
+            throw new TimeoutExpiredException(chooser.toString());
+        }
+    }
+
+    public static JInternalFrame waitJInternalFrame(Container cont, Predicate<Component> chooser) {
+        return waitJInternalFrame(cont, chooser, 0);
+    }
+
+    public static JInternalFrame waitJInternalFrame(Container cont, String text, StringComparator stringComparator, int index) {
+        return waitJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator),
+                                  index);
+    }
+
+    public static JInternalFrame waitJInternalFrame(Container cont, String text, StringComparator stringComparator) {
+        return waitJInternalFrame(cont, text, stringComparator, 0);
+    }
+
+    private static JInternalFrame findOne(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        Component source = waitComponent(cont, new JInternalFrameByTitlePredicate(text, stringComparator), index);
+        if (source instanceof JInternalFrame) {
+            return (JInternalFrame) source;
+        } else if (source instanceof JInternalFrame.JDesktopIcon) {
+            return ((JDesktopIcon) source).getInternalFrame();
+        } else {
+            throw new TimeoutExpiredException("No internal frame was found");
+        }
+    }
+
+    public static class JDesktopIconOperator extends JComponentOperator {
+        public JDesktopIconOperator(JInternalFrame.JDesktopIcon b) {
+            super(b);
+        }
+
+        public JInternalFrame getInternalFrame() {
+            return (JInternalFrame) getEventDispatcher().invokeExistingMethod("getInternalFrame", null, null);
+        }
+
+        public void pushButton() {
+            new JButtonOperator(this).push();
+        }
+    }
+
+    private static class JInternalFrameIconPredicate implements Predicate<JInternalFrameOperator> {
+        private final boolean icon;
+
+        public JInternalFrameIconPredicate(boolean icon) {
+            this.icon = icon;
+        }
+
+        @Override
+        public boolean test(JInternalFrameOperator jInternalFrameOp) {
+            return jInternalFrameOp.isIcon() == icon;
+        }
+    }
+
+    private static class JInternalFrameIsMaximumPredicate implements Predicate<JInternalFrameOperator> {
+        private final boolean isMaximum;
+
+        public JInternalFrameIsMaximumPredicate(boolean isMaximum) {
+            this.isMaximum = isMaximum;
+        }
+
+        @Override
+        public boolean test(JInternalFrameOperator jInternalFrameOp) {
+            return jInternalFrameOp.isMaximum() == isMaximum;
+        }
+    }
+
+    public class WrongInternalFrameStateException extends JemmyInputException {
+        public WrongInternalFrameStateException(String message, Component comp) {
+            super(message, comp);
+        }
+    }
+}

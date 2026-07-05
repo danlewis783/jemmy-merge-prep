@@ -1,0 +1,260 @@
+package org.netbeans.jemmy.operators;
+
+import java.util.function.Predicate;
+import org.netbeans.jemmy.*;
+import org.netbeans.jemmy.drivers.DriverManager;
+import org.netbeans.jemmy.drivers.WindowDriver;
+import org.netbeans.jemmy.functions.WindowFunction;
+import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.event.WindowListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
+
+
+public class WindowOperator extends ContainerOperator {
+    private static final Logger logger = LoggerFactory.getLogger(WindowOperator.class);
+    private final WindowDriver driver;
+
+    public WindowOperator() {
+        this(0);
+    }
+
+    public WindowOperator(int index) {
+        this(waitWindow(PredicatesJ.alwaysTrue(), index));
+    }
+
+    public WindowOperator(Window w) {
+        super(w);
+        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        driver = driverManager.getWindowDriver(getClass());
+    }
+
+    public WindowOperator(WindowOperator owner) {
+        this(owner, 0);
+    }
+
+    public WindowOperator(WindowOperator owner, int index) {
+        this(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
+    }
+
+    public WindowOperator(WindowOperator owner, Predicate<Component> predicate) {
+        this(owner, predicate, 0);
+    }
+
+    public WindowOperator(WindowOperator owner, Predicate<Component> predicate, int index) {
+        this(owner.waitSubWindow(predicate, index));
+    }
+
+    public void activate() {
+        driver.activate(this);
+    }
+
+    public void requestClose() {
+        driver.requestClose(this);
+    }
+
+    public void requestCloseAndThenHide() {
+        driver.requestCloseAndThenHide(this);
+
+        if (getVerification()) {
+            waitClosed();
+        }
+    }
+
+    @Deprecated
+    public void close() {
+        driver.close(this);
+
+        if (getVerification()) {
+            waitClosed();
+        }
+    }
+
+    public void move(int x, int y) {
+        driver.move(this, x, y);
+    }
+
+    public void resize(int width, int height) {
+        driver.resize(this, width, height);
+    }
+
+    public Window findSubWindow(Predicate<Component> predicate, int index) {
+        return findWindow((Window) getSource(), predicate, index);
+    }
+
+    public Window findSubWindow(Predicate<Component> predicate) {
+        return findSubWindow(predicate, 0);
+    }
+
+    public Window waitSubWindow(Predicate<Component> predicate, int index) {
+        try {
+            return FunctionRepeater.on(new WindowFunction<>(index, (Window) getSource(), predicate),
+                    TimeoutKey.WindowWaiter_WaitWindowTimeout).runUntilNotNull(null);
+        } catch (InterruptedException e) {
+            throw new JemmyException("Waiting for \"" + predicate.toString() + "\" window has been interrupted", e);
+        }
+    }
+
+    public Window waitSubWindow(Predicate<Component> chooser) {
+        return waitSubWindow(chooser, 0);
+    }
+
+    public void waitClosed() {
+        waitState(new ComponentOperatorIsVisiblePredicate<WindowOperator>(false));
+    }
+
+    public void addWindowListener(WindowListener windowListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).addWindowListener(windowListener);
+
+            return null;
+        }));
+    }
+
+    public void applyResourceBundle(String string) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).applyResourceBundle(string);
+
+            return null;
+        }));
+    }
+
+    public void applyResourceBundle(ResourceBundle resourceBundle) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).applyResourceBundle(resourceBundle);
+
+            return null;
+        }));
+    }
+
+    public void dispose() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).dispose();
+
+            return null;
+        }));
+    }
+
+    public Component getFocusOwner() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getFocusOwner()));
+    }
+
+    public Window[] getOwnedWindows() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getOwnedWindows()));
+    }
+
+    public Window getOwner() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getOwner()));
+    }
+
+    public String getWarningString() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getWarningString()));
+    }
+
+    public void pack() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).pack();
+
+            return null;
+        }));
+    }
+
+    public void removeWindowListener(WindowListener windowListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).removeWindowListener(windowListener);
+
+            return null;
+        }));
+    }
+
+    public void toBack() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).toBack();
+
+            return null;
+        }));
+    }
+
+    public void toFront() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Window) getSource()).toFront();
+
+            return null;
+        }));
+    }
+
+    public boolean isFocused() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+            try {
+                return (Boolean) new ClassReference<>(getSource()).invokeMethod("isFocused", null, null);
+            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+                logger.warn("", e);
+
+                return false;
+            }
+        }));
+    }
+
+    public boolean isActive() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+            try {
+                return (Boolean) new ClassReference<>(getSource()).invokeMethod("isActive", null, null);
+            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+                logger.warn("", e);
+
+                return false;
+            }
+        }));
+    }
+
+    public static Window findWindow(Predicate<Component> chooser, int index) {
+        return WindowFunction.getWindow(null, chooser, index);
+    }
+
+    public static Window findWindow(Predicate<Component> chooser) {
+        return findWindow(chooser, 0);
+    }
+
+    public static Window findWindow(Window owner, Predicate<Component> chooser, int index) {
+        return WindowFunction.getWindow(owner, chooser, index);
+    }
+
+    public static Window findWindow(Window owner, Predicate<Component> chooser) {
+        return findWindow(owner, chooser, 0);
+    }
+
+    public static Window waitWindow(Predicate<Component> chooser) {
+        return waitWindow(chooser, 0);
+    }
+
+    public static Window waitWindow(Window owner, Predicate<Component> chooser) {
+        return waitWindow(owner, chooser, 0);
+    }
+
+    protected static Window waitWindow(Predicate<Component> chooser, int index) {
+        try {
+            return FunctionRepeater.on(new WindowFunction<>(index, null, chooser),
+                    TimeoutKey.WindowWaiter_WaitWindowTimeout).runUntilNotNull(null);
+        } catch (InterruptedException e) {
+            throw new JemmyException("Waiting for \"" + chooser.toString() + "\" window has been interrupted", e);
+        }
+    }
+
+    protected static Window waitWindow(WindowOperator owner, Predicate<Component> chooser, int index) {
+        return waitWindow((Window) owner.getSource(), chooser, index);
+    }
+
+    protected static Window waitWindow(Window owner, Predicate<Component> chooser, int index) {
+        try {
+            return FunctionRepeater.on(new WindowFunction<>(index, owner, chooser),
+                    TimeoutKey.WindowWaiter_WaitWindowTimeout).runUntilNotNull(null);} catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

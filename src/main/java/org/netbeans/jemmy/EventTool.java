@@ -1,0 +1,131 @@
+package org.netbeans.jemmy;
+
+
+import org.netbeans.jemmy.functions.AwtEventByMaskFunction;
+import org.netbeans.jemmy.functions.NoEventFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+
+public final class EventTool {
+    private static final Logger logger = LoggerFactory.getLogger(EventTool.class);
+    private long currentEventMask = 0;
+    private final ListenerSet listenerSet;
+
+    private EventTool() {
+        listenerSet = ListenerSet.getInstance();
+        String jemmy_event_listening = System.getProperty("jemmy.event_listening");
+        if ((jemmy_event_listening == null) ||!"no".equals(jemmy_event_listening)) {
+            listenerSet.addListeners();
+        }
+    }
+
+    public long getLastEventTime(long eventMask) {
+        return listenerSet.getLastEventTime(eventMask);
+    }
+
+    public AWTEvent getLastEvent(long eventMask) {
+        return listenerSet.getLastEvent(eventMask);
+    }
+
+    public AWTEvent getLastEvent() {
+        return getLastEvent(listenerSet.getTheWholeMask());
+    }
+
+    public void addListeners(long eventMask) {
+        removeListeners();
+        listenerSet.addListeners(eventMask);
+        currentEventMask = eventMask;
+    }
+
+    public void addListeners() {
+        addListeners(listenerSet.getTheWholeMask());
+    }
+
+    public void removeListeners() {
+        listenerSet.removeListeners();
+    }
+
+    public long getCurrentEventMask() {
+        return currentEventMask;
+    }
+
+    public AWTEvent waitEvent(long eventMask) {
+        return waitEvent(eventMask, TimeoutKey.EventTool_WaitEventTimeout);
+    }
+
+    public AWTEvent waitEvent() {
+        return waitEvent(listenerSet.getTheWholeMask());
+    }
+
+    public boolean checkNoEvent() {
+        return checkNoEvent(listenerSet.getTheWholeMask(), TimeoutKey.EventTool_WaitEventTimeout);
+    }
+
+    public boolean checkNoEvent(long eventMask) {
+        return checkNoEvent(eventMask, TimeoutKey.EventTool_WaitEventTimeout);
+    }
+
+    public boolean checkNoEvent(TimeoutKey waitTime) {
+        return checkNoEvent(listenerSet.getTheWholeMask(), waitTime);
+    }
+
+    public void waitNoEvent(long eventMask, TimeoutKey waitTime) {
+        try {
+            FunctionRepeater.on(new NoEventFunction(eventMask, waitTime, this), waitTime,
+                    TimeoutKey.EventTool_EventCheckingDelta).runUntilNotNull(null);} catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private AWTEvent waitEvent(long eventMask, TimeoutKey waitTime) {
+        try {
+            return FunctionRepeater.on(new AwtEventByMaskFunction(eventMask), waitTime,
+                    TimeoutKey.EventTool_EventCheckingDelta).runUntilNotNull(null);} catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void waitNoEvent(long eventMask) {
+        ListenerSet ls = listenerSet;
+        if (ls != null) {
+
+            // surprisingly this field can be null in case of massive
+            // garbage collecting efforts like in NbTestCase.assertGC
+            waitNoEvent(eventMask, TimeoutKey.EventTool_WaitEventTimeout);
+        }
+    }
+
+    public void waitNoEvent(TimeoutKey waitTime) {
+        ListenerSet ls = listenerSet;
+        if (ls != null) {
+
+            // surprisingly this field can be null in case of massive
+            // garbage collecting efforts like in NbTestCase.assertGC
+            waitNoEvent(ls.getTheWholeMask(), waitTime);
+        }
+    }
+    
+    public boolean checkNoEvent(long eventMask, TimeoutKey waitTime) {
+        try {
+            waitEvent(eventMask, waitTime);
+
+            return false;
+        } catch (TimeoutExpiredException e) {
+            return true;
+        }
+    }
+
+    public ListenerSet getListenerSet() {
+        return listenerSet;
+    }
+
+    public static EventTool getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    private static final class Holder {
+        private static final EventTool INSTANCE = new EventTool();
+    }
+}

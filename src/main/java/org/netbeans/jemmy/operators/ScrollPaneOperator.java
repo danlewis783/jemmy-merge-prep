@@ -1,0 +1,348 @@
+package org.netbeans.jemmy.operators;
+
+import java.util.function.Function;
+import java.util.function.Predicate;
+import org.netbeans.jemmy.*;
+import org.netbeans.jemmy.drivers.DriverManager;
+import org.netbeans.jemmy.drivers.ScrollDriver;
+import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.concurrent.Callable;
+
+
+public class ScrollPaneOperator extends ContainerOperator {
+    private static final int X_POINT_RECT_SIZE = 6;
+    private static final int Y_POINT_RECT_SIZE = 4;
+    private static final Logger logger = LoggerFactory.getLogger(ScrollPaneOperator.class);
+
+    static {
+        try {
+            Class.forName("org.netbeans.jemmy.operators.ScrollbarOperator");
+        } catch (Exception e) {
+            throw new JemmyException("Exception", e);
+        }
+    }
+
+    private final ScrollDriver driver;
+
+    public ScrollPaneOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    public ScrollPaneOperator(ScrollPane b) {
+        super(b);
+        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getScrollDriver(getClass());
+    }
+
+    public ScrollPaneOperator(ContainerOperator cont, int index) {
+        this((ScrollPane) waitComponent(cont, PredicatesJ.of(ScrollPane.class), index));
+    }
+
+    public ScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
+    public ScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((ScrollPane) cont.waitSubComponent(PredicatesJ.of(ScrollPane.class, chooser), index));
+    }
+
+    public void setValues(int x, int y) {
+        getHAdjustable().setValue(x);
+        getVAdjustable().setValue(y);
+    }
+
+    public void scrollTo(ScrollAdjuster adj) {
+        produceTimeRestricted((Function<Void, Void>) v -> {
+            driver.scroll(ScrollPaneOperator.this, adj);
+
+            return null;
+        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+    }
+
+    public void scrollToHorizontalValue(int value) {
+        scrollTo(new ValueScrollAdjuster(value, Adjustable.HORIZONTAL, getHAdjustable()));
+    }
+
+    public void scrollToHorizontalValue(double proportionalValue) {
+        Adjustable adj = getHAdjustable();
+        scrollTo(new ValueScrollAdjuster((int) (adj.getMinimum()
+                + (adj.getMaximum() - adj.getVisibleAmount() - adj.getMinimum())
+                  * proportionalValue), Adjustable.VERTICAL, getVAdjustable()));
+    }
+
+    public void scrollToVerticalValue(int value) {
+        scrollTo(new ValueScrollAdjuster(value, Adjustable.VERTICAL, getVAdjustable()));
+    }
+
+    public void scrollToVerticalValue(double proportionalValue) {
+        Adjustable adj = getVAdjustable();
+        scrollTo(new ValueScrollAdjuster((int) (adj.getMinimum()
+                + (adj.getMaximum() - adj.getVisibleAmount() - adj.getMinimum())
+                  * proportionalValue), Adjustable.VERTICAL, getVAdjustable()));
+    }
+
+    public void scrollToValues(int valueX, int valueY) {
+        scrollToVerticalValue(valueX);
+        scrollToHorizontalValue(valueX);
+    }
+
+    public void scrollToValues(double proportionalValueX, double proportionalValueY) {
+        scrollToVerticalValue(proportionalValueX);
+        scrollToHorizontalValue(proportionalValueY);
+    }
+
+    public void scrollToTop() {
+        produceTimeRestricted((Function<Void, Void>) v -> {
+            driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.VERTICAL);
+
+            return null;
+        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+    }
+
+    public void scrollToBottom() {
+        produceTimeRestricted((Function<Void, Void>) v -> {
+            driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.VERTICAL);
+
+            return null;
+        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+    }
+
+    public void scrollToLeft() {
+        produceTimeRestricted((Function<Void, Void>) v -> {
+            driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
+
+            return null;
+        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+    }
+
+    public void scrollToRight() {
+        produceTimeRestricted((Function<Void, Void>) v -> {
+            driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
+
+            return null;
+        }, null, TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+    }
+
+    public void scrollToComponentRectangle(Component comp, int x, int y, int width, int height) {
+        scrollTo(new ComponentRectChecker(comp, x, y, width, height, Adjustable.HORIZONTAL));
+        scrollTo(new ComponentRectChecker(comp, x, y, width, height, Adjustable.VERTICAL));
+    }
+
+    public void scrollToComponentPoint(Component comp, int x, int y) {
+        scrollToComponentRectangle(comp, x - X_POINT_RECT_SIZE, y - Y_POINT_RECT_SIZE, 2 * X_POINT_RECT_SIZE,
+                                   2 * Y_POINT_RECT_SIZE);
+    }
+
+    public void scrollToComponent(Component comp) {
+        scrollToComponentRectangle(comp, 0, 0, comp.getWidth(), comp.getHeight());
+    }
+
+    public boolean checkInside(Component comp, int x, int y, int width, int height) {
+        Point toPoint = SwingUtilities.convertPoint(comp, x, y, getSource());
+        if (toPoint.x < getHAdjustable().getValue()) {
+            return false;
+        }
+
+        if (comp.getWidth() > getSource().getWidth()) {
+            if (toPoint.x > 0) {
+                return false;
+            }
+        } else {
+            if (toPoint.x + comp.getWidth() > getHAdjustable().getValue() + getSource().getWidth()) {
+                return false;
+            }
+        }
+
+        if (toPoint.y < getVAdjustable().getValue()) {
+            return false;
+        }
+
+        if (comp.getHeight() > getSource().getHeight()) {
+            if (toPoint.y > 0) {
+                return false;
+            }
+        } else {
+            if (toPoint.y + comp.getHeight() > getVAdjustable().getValue() + getSource().getHeight()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean checkInside(Component comp) {
+        return checkInside(comp, 0, 0, comp.getWidth(), comp.getHeight());
+    }
+
+    public boolean isScrollbarVisible(int orientation) {
+        if (orientation == Adjustable.HORIZONTAL) {
+            return getViewportSize().getHeight() < getHeight() - getHScrollbarHeight();
+        } else if (orientation == Adjustable.VERTICAL) {
+            return getViewportSize().getWidth() < getWidth() - getVScrollbarWidth();
+        } else {
+            return false;
+        }
+    }
+
+    public Adjustable getHAdjustable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getHAdjustable()));
+    }
+
+    public int getHScrollbarHeight() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getHScrollbarHeight()));
+    }
+
+    public Point getScrollPosition() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getScrollPosition()));
+    }
+
+    public int getScrollbarDisplayPolicy() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getScrollbarDisplayPolicy()));
+    }
+
+    public Adjustable getVAdjustable() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getVAdjustable()));
+    }
+
+    public int getVScrollbarWidth() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getVScrollbarWidth()));
+    }
+
+    public Dimension getViewportSize() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getViewportSize()));
+    }
+
+    public String paramString() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).paramString()));
+    }
+
+    public void setScrollPosition(int i, int i1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((ScrollPane) getSource()).setScrollPosition(i, i1);
+
+            return null;
+        }));
+    }
+
+    public void setScrollPosition(Point point) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((ScrollPane) getSource()).setScrollPosition(point);
+
+            return null;
+        }));
+    }
+
+    public static ScrollPane findScrollPane(Container cont, Predicate<Component> chooser, int index) {
+        return (ScrollPane) findComponent(cont, PredicatesJ.of(ScrollPane.class, chooser), index);
+    }
+
+    public static ScrollPane findScrollPane(Container cont, Predicate<Component> chooser) {
+        return findScrollPane(cont, chooser, 0);
+    }
+
+    public static ScrollPane findScrollPane(Container cont, int index) {
+        return findScrollPane(cont, PredicatesJ.alwaysTrue(), index);
+    }
+
+    public static ScrollPane findScrollPane(Container cont) {
+        return findScrollPane(cont, 0);
+    }
+
+    public static ScrollPane findScrollPaneUnder(Component comp, Predicate<Component> chooser) {
+        return (ScrollPane) findContainerUnder(comp, PredicatesJ.of(ScrollPane.class, chooser));
+    }
+
+    public static ScrollPane findScrollPaneUnder(Component comp) {
+        return findScrollPaneUnder(comp, PredicatesJ.of(ScrollPane.class));
+    }
+
+    public static ScrollPane waitScrollPane(Container cont, Predicate<Component> chooser, int index) {
+        return (ScrollPane) waitComponent(cont, PredicatesJ.of(ScrollPane.class, chooser), index);
+    }
+
+    public static ScrollPane waitScrollPane(Container cont, Predicate<Component> chooser) {
+        return waitScrollPane(cont, chooser, 0);
+    }
+
+    public static ScrollPane waitScrollPane(Container cont, int index) {
+        return waitScrollPane(cont, PredicatesJ.alwaysTrue(), index);
+    }
+
+    public static ScrollPane waitScrollPane(Container cont) {
+        return waitScrollPane(cont, 0);
+    }
+
+    private class ComponentRectChecker implements ScrollAdjuster {
+        final Component comp;
+        final int height;
+        final int orientation;
+        final int width;
+        final int x;
+        final int y;
+
+        public ComponentRectChecker(Component comp, int x, int y, int width, int height, int orientation) {
+            this.comp = comp;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.orientation = orientation;
+        }
+
+        @Override
+        public int getScrollDirection() {
+            int sp = (orientation == Adjustable.HORIZONTAL)
+                     ? (int) getScrollPosition().getX() : (int) getScrollPosition().getY();
+            Point pnt = SwingUtilities.convertPoint(comp, x, y, ((Container) getSource()).getComponents()[0]);
+            int cp = (orientation == Adjustable.HORIZONTAL) ? pnt.x : pnt.y;
+            int sl = (orientation == Adjustable.HORIZONTAL)
+                     ? (int) getViewportSize().getWidth() : (int) getViewportSize().getHeight();
+            int cl = (orientation == Adjustable.HORIZONTAL) ? width : height;
+            if (cp <= sp) {
+                return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+            } else if ((cp + cl > sp + sl) && (cp > sp)) {
+                return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
+            } else {
+                return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
+            }
+        }
+
+        @Override
+        public int getScrollOrientation() {
+            return orientation;
+        }
+    }
+
+
+    private class ValueScrollAdjuster implements ScrollAdjuster {
+        final Adjustable adj;
+        final int orientation;
+        final int value;
+
+        public ValueScrollAdjuster(int value, int orientation, Adjustable adj) {
+            this.value = value;
+            this.orientation = orientation;
+            this.adj = adj;
+        }
+
+        @Override
+        public int getScrollDirection() {
+            if (adj.getValue() == value) {
+                return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
+            } else {
+                return (adj.getValue() < value)
+                       ? ScrollAdjuster.INCREASE_SCROLL_DIRECTION : ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+            }
+        }
+
+        @Override
+        public int getScrollOrientation() {
+            return orientation;
+        }
+    }
+}

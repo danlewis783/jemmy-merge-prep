@@ -1,0 +1,528 @@
+package org.netbeans.jemmy.operators;
+
+import java.util.function.Predicate;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
+import org.netbeans.jemmy.predicates.JToolTipWindowPredicate;
+import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.StringComparator;
+
+import javax.accessibility.AccessibleContext;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.event.AncestorListener;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.beans.VetoableChangeListener;
+import java.util.concurrent.Callable;
+
+
+public class JComponentOperator extends ContainerOperator {
+    public JComponentOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    public JComponentOperator(JComponent b) {
+        super(b);
+    }
+
+    public JComponentOperator(ContainerOperator cont, int index) {
+        this((JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()),
+                index));
+    }
+
+    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
+    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
+    }
+
+    @Override
+    public int getCenterXForClick() {
+        Rectangle rect = getVisibleRect();
+
+        return (int) rect.getX() + (int) rect.getWidth() / 2;
+    }
+
+    @Override
+    public int getCenterYForClick() {
+        Rectangle rect = getVisibleRect();
+
+        return (int) rect.getY() + (int) rect.getHeight() / 2;
+    }
+
+    public JToolTip showToolTip() {
+        enterMouse();
+        moveMouse(getCenterXForClick(), getCenterYForClick());
+
+        return waitToolTip();
+    }
+
+    public JToolTip waitToolTip() {
+        return (JToolTip) waitComponent(WindowOperator.waitWindow(new JToolTipWindowPredicate(), 0),
+                                        PredicatesJ.of(JToolTip.class), 0);
+    }
+
+    public ContainerOperator getWindowContainerOperator() {
+        Component resultComp;
+        if (getSource() instanceof Window) {
+            resultComp = getSource();
+        } else {
+            resultComp = getContainer(PredicatesJ.of(Window.class, JInternalFrame.class));
+        }
+
+        ContainerOperator result;
+        if (resultComp instanceof Window) {
+            result = new WindowOperator((Window) resultComp);
+        } else {
+            result = new ContainerOperator((Container) resultComp);
+        }
+
+        return result;
+    }
+
+    public void addAncestorListener(AncestorListener ancestorListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).addAncestorListener(ancestorListener);
+
+            return null;
+        }));
+    }
+
+    public void addVetoableChangeListener(VetoableChangeListener vetoableChangeListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).addVetoableChangeListener(vetoableChangeListener);
+
+            return null;
+        }));
+    }
+
+    public void computeVisibleRect(Rectangle rectangle) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).computeVisibleRect(rectangle);
+
+            return null;
+        }));
+    }
+
+    public JToolTip createToolTip() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).createToolTip()));
+    }
+
+    public void firePropertyChange(String string, byte b, byte b1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().firePropertyChange(string, b, b1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, char c, char c1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().firePropertyChange(string, c, c1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, double d, double d1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().firePropertyChange(string, d, d1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, float f, float f1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().firePropertyChange(string, f, f1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, int i, int i1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).firePropertyChange(string, i, i1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, long l, long l1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().firePropertyChange(string, l, l1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, short s, short s1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().firePropertyChange(string, s, s1);
+
+            return null;
+        }));
+    }
+
+    public void firePropertyChange(String string, boolean b, boolean b1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).firePropertyChange(string, b, b1);
+
+            return null;
+        }));
+    }
+
+    public AccessibleContext getAccessibleContext() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
+    }
+
+    public ActionListener getActionForKeyStroke(KeyStroke keyStroke) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getActionForKeyStroke(keyStroke)));
+    }
+
+    public boolean getAutoscrolls() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getAutoscrolls()));
+    }
+
+    public Border getBorder() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getBorder()));
+    }
+
+    public Object getClientProperty(Object object) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getClientProperty(object)));
+    }
+
+    public int getConditionForKeyStroke(KeyStroke keyStroke) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getConditionForKeyStroke(keyStroke)));
+    }
+
+    public int getDebugGraphicsOptions() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getDebugGraphicsOptions()));
+    }
+
+    public Insets getInsets(Insets insets) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getInsets(insets)));
+    }
+
+    public Component getNextFocusableComponent() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getNextFocusableComponent()));
+    }
+
+    public KeyStroke[] getRegisteredKeyStrokes() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getRegisteredKeyStrokes()));
+    }
+
+    public JRootPane getRootPane() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getRootPane()));
+    }
+
+    public Point getToolTipLocation(MouseEvent mouseEvent) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipLocation(mouseEvent)));
+    }
+
+    public String getToolTipText() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipText()));
+    }
+
+    public String getToolTipText(MouseEvent mouseEvent) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getToolTipText(mouseEvent)));
+    }
+
+    public Container getTopLevelAncestor() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getTopLevelAncestor()));
+    }
+
+    public String getUIClassID() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getUIClassID()));
+    }
+
+    public Rectangle getVisibleRect() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getVisibleRect()));
+    }
+
+    public void grabFocus() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).grabFocus();
+
+            return null;
+        }));
+    }
+
+    public boolean isFocusCycleRoot() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isFocusCycleRoot()));
+    }
+
+    public boolean isManagingFocus() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isManagingFocus()));
+    }
+
+    public boolean isOptimizedDrawingEnabled() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isOptimizedDrawingEnabled()));
+    }
+
+    public boolean isPaintingTile() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isPaintingTile()));
+    }
+
+    public boolean isRequestFocusEnabled() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isRequestFocusEnabled()));
+    }
+
+    public boolean isValidateRoot() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).isValidateRoot()));
+    }
+
+    public void paintImmediately(int i, int i1, int i2, int i3) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).paintImmediately(i, i1, i2, i3);
+
+            return null;
+        }));
+    }
+
+    public void paintImmediately(Rectangle rectangle) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).paintImmediately(rectangle);
+
+            return null;
+        }));
+    }
+
+    public void putClientProperty(Object object, Object object1) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).putClientProperty(object, object1);
+
+            return null;
+        }));
+    }
+
+    public void registerKeyboardAction(ActionListener actionListener, String string,
+                                       KeyStroke keyStroke, int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).registerKeyboardAction(actionListener, string, keyStroke, i);
+
+            return null;
+        }));
+    }
+
+    public void registerKeyboardAction(ActionListener actionListener, KeyStroke keyStroke, int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).registerKeyboardAction(actionListener, keyStroke, i);
+
+            return null;
+        }));
+    }
+
+    public void removeAncestorListener(AncestorListener ancestorListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).removeAncestorListener(ancestorListener);
+
+            return null;
+        }));
+    }
+
+    public void removeVetoableChangeListener(VetoableChangeListener vetoableChangeListener) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).removeVetoableChangeListener(vetoableChangeListener);
+
+            return null;
+        }));
+    }
+
+    public void repaint(Rectangle rectangle) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).repaint(rectangle);
+
+            return null;
+        }));
+    }
+
+    public boolean requestDefaultFocus() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).requestDefaultFocus()));
+    }
+
+    public void resetKeyboardActions() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).resetKeyboardActions();
+
+            return null;
+        }));
+    }
+
+    public void revalidate() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+            getSource().revalidate();
+
+            return null;
+        }));
+    }
+
+    public void scrollRectToVisible(Rectangle rectangle) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).scrollRectToVisible(rectangle);
+
+            return null;
+        }));
+    }
+
+    public void setAlignmentX(float f) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setAlignmentX(f);
+
+            return null;
+        }));
+    }
+
+    public void setAlignmentY(float f) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setAlignmentY(f);
+
+            return null;
+        }));
+    }
+
+    public void setAutoscrolls(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setAutoscrolls(b);
+
+            return null;
+        }));
+    }
+
+    public void setBorder(Border border) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setBorder(border);
+
+            return null;
+        }));
+    }
+
+    public void setDebugGraphicsOptions(int i) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setDebugGraphicsOptions(i);
+
+            return null;
+        }));
+    }
+
+    public void setDoubleBuffered(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setDoubleBuffered(b);
+
+            return null;
+        }));
+    }
+
+    public void setMaximumSize(Dimension dimension) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().setMaximumSize(dimension);
+
+            return null;
+        }));
+    }
+
+    public void setMinimumSize(Dimension dimension) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().setMinimumSize(dimension);
+
+            return null;
+        }));
+    }
+
+    public void setNextFocusableComponent(Component component) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setNextFocusableComponent(component);
+
+            return null;
+        }));
+    }
+
+    public void setOpaque(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setOpaque(b);
+
+            return null;
+        }));
+    }
+
+    public void setPreferredSize(Dimension dimension) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            getSource().setPreferredSize(dimension);
+
+            return null;
+        }));
+    }
+
+    public void setRequestFocusEnabled(boolean b) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setRequestFocusEnabled(b);
+
+            return null;
+        }));
+    }
+
+    public void setToolTipText(String string) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).setToolTipText(string);
+
+            return null;
+        }));
+    }
+
+    public void unregisterKeyboardAction(KeyStroke keyStroke) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).unregisterKeyboardAction(keyStroke);
+
+            return null;
+        }));
+    }
+
+    public void updateUI() {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JComponent) getSource()).updateUI();
+
+            return null;
+        }));
+    }
+
+    public static JComponent findJComponent(Container cont, Predicate<Component> chooser, int index) {
+        return (JComponent) findComponent(cont, PredicatesJ.of(JComponent.class, chooser), index);
+    }
+
+    public static JComponent findJComponent(Container cont, Predicate<Component> chooser) {
+        return findJComponent(cont, chooser, 0);
+    }
+
+    public static JComponent findJComponent(Container cont, String toolTipText, StringComparator stringComparator, int index) {
+        return findJComponent(cont,
+                              new JComponentByToolTipPredicate(toolTipText, stringComparator),
+                              index);
+    }
+
+    public static JComponent findJComponent(Container cont, String toolTipText, StringComparator stringComparator) {
+        return findJComponent(cont, toolTipText, stringComparator, 0);
+    }
+
+    public static JComponent waitJComponent(Container cont, Predicate<Component> chooser, int index) {
+        return (JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, chooser), index);
+    }
+
+    public static JComponent waitJComponent(Container cont, Predicate<Component> chooser) {
+        return waitJComponent(cont, chooser, 0);
+    }
+
+    public static JComponent waitJComponent(Container cont, String toolTipText, StringComparator stringComparator, int index) {
+        return waitJComponent(cont,
+                              new JComponentByToolTipPredicate(toolTipText, stringComparator),
+                              index);
+    }
+
+    public static JComponent waitJComponent(Container cont, String toolTipText, StringComparator stringComparator) {
+        return waitJComponent(cont, toolTipText, stringComparator, 0);
+    }
+}
