@@ -23,10 +23,9 @@
  * questions.
  */
 /**
- * <h1>Main Jemmy package</h1>
- * Contains basic Jemmy classes.<br><br>
- * Low-level classes to find/wait components, classes to perform waitings, time
- * resricted actions and so on.<br>
+ * <h1>Main Jemmy package</h1> Contains basic Jemmy classes.
+ * <p>
+ * Low-level classes to find/wait components, classes to perform waitings, time resricted actions and so on.
  *
  * @since 02/23/2002
  * <hr>

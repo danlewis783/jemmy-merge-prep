@@ -20,6 +20,7 @@ public interface TimeoutOverride extends AutoCloseable {
 
     /**
      * TimeoutOverride is now {@link AutoCloseable} so it can be used in Java 8 try-with-resources
+     *
      * @see AutoCloseable#close()
      */
     void cancel();

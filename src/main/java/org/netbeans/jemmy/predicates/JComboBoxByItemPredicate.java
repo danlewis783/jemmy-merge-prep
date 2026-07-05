@@ -31,7 +31,6 @@ public final class JComboBoxByItemPredicate implements Predicate<Component> {
     /**
      * @param label if null, the first combo box encountered will be accepted
      * @param itemIndex the index of the combo box item to check, or -1 to check the currently selected item
-     * @param comparator any non-null
      */
     public JComboBoxByItemPredicate(@Nullable String label, int itemIndex, StringComparator comparator) {
         assert itemIndex >= -1 : "invalid itemIndex";
