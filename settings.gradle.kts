@@ -1,1 +1,1 @@
-rootProject.name = "danlewis783-jemmy"
+rootProject.name = "danlewis783-jemmy-merge-prep"
