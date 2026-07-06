@@ -153,6 +153,11 @@ public final class JSliderDriver extends AbstractScrollDriver {
     }
 
     @Override
+    protected int position(ComponentOperator oper, int orientation) {
+        return ((JSliderOperator) oper).getValue();
+    }
+
+    @Override
     protected boolean canDragAndDrop(ComponentOperator oper) {
         return false;
     }

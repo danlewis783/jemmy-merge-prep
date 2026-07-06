@@ -40,6 +40,11 @@ public final class ScrollbarDriver extends AWTScrollDriver {
     }
 
     @Override
+    protected int position(ComponentOperator oper, int orientation) {
+        return ((ScrollbarOperator) oper).getValue();
+    }
+
+    @Override
     public void scrollToMinimum(ComponentOperator oper, int orientation) {
         scroll(oper, new ScrollAdjuster() {
             @Override

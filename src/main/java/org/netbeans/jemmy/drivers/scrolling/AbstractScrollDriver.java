@@ -29,6 +29,7 @@ import java.awt.Adjustable;
 import java.awt.Point;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -53,7 +54,10 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
         }
 
         if (canPushAndWait(oper)) {
-            doPushAndWait(oper, adj);
+            long freezeTimeout = Timeouts.get(TimeoutKey.AbstractScrollDriver_FreezeTimeout);
+            if (!doPushAndWait(oper, adj, freezeTimeout)) {
+                throw new JemmyException("Scrolling stuck for more than " + freezeTimeout + " ms on " + oper);
+            }
         }
 
         for (int i = 0; i < ADJUST_CLICK_COUNT; i++) {
@@ -76,6 +80,8 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
     protected abstract void drag(ComponentOperator oper, Point pnt);
 
     protected abstract TimeoutKey getScrollDeltaTimeout(ComponentOperator oper);
+
+    protected abstract int position(ComponentOperator oper, int orientation);
 
     protected abstract boolean canDragAndDrop(ComponentOperator oper);
 
@@ -110,19 +116,32 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
         }
     }
 
-    protected void doPushAndWait(ComponentOperator oper, ScrollAdjuster adj) {
+    protected boolean doPushAndWait(ComponentOperator oper, ScrollAdjuster adj, long freezeTimeout) {
         int direction = adj.getScrollDirection();
         int orientation = adj.getScrollOrientation();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
             TimeoutKey delta = getScrollDeltaTimeout(oper);
+            int position = position(oper, orientation);
+            long lastChanged = System.currentTimeMillis();
             startPushAndWait(oper, direction, orientation);
 
             while (adj.getScrollDirection() == direction) {
                 Timeouts.sleep(delta);
+                int curPosition = position(oper, orientation);
+                if (curPosition != position) {
+                    position = curPosition;
+                    lastChanged = System.currentTimeMillis();
+                } else if ((System.currentTimeMillis() - lastChanged) > freezeTimeout) {
+                    stopPushAndWait(oper, direction, orientation);
+
+                    return false;
+                }
             }
 
             stopPushAndWait(oper, direction, orientation);
         }
+
+        return true;
     }
 
     protected void doSteps(ComponentOperator oper, ScrollAdjuster adj) {

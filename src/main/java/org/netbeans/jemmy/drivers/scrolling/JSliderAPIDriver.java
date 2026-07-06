@@ -66,6 +66,11 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
+    protected int position(ComponentOperator oper, int orientation) {
+        return ((JSliderOperator) oper).getValue();
+    }
+
+    @Override
     protected TimeoutKey getScrollDeltaTimeout(ComponentOperator oper) {
         return TimeoutKey.JSliderOperator_ScrollingDelta;
     }

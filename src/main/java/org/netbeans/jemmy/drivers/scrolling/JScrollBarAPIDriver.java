@@ -73,6 +73,11 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
+    protected int position(ComponentOperator oper, int orientation) {
+        return ((JScrollBarOperator) oper).getValue();
+    }
+
+    @Override
     protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {

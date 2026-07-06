@@ -172,6 +172,11 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
     }
 
     @Override
+    protected int position(ComponentOperator oper, int orientation) {
+        return ((JScrollBarOperator) oper).getValue();
+    }
+
+    @Override
     protected boolean canDragAndDrop(ComponentOperator oper) {
         if (!isSmallIncrement((JScrollBarOperator) oper)) {
             return false;

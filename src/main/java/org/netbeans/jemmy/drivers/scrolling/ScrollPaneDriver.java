@@ -41,6 +41,13 @@ public final class ScrollPaneDriver extends AWTScrollDriver {
     }
 
     @Override
+    protected int position(ComponentOperator oper, int orientation) {
+        return (orientation == Adjustable.HORIZONTAL)
+                ? ((ScrollPaneOperator) oper).getScrollPosition().x
+                : ((ScrollPaneOperator) oper).getScrollPosition().y;
+    }
+
+    @Override
     public void scrollToMinimum(ComponentOperator oper, int orientation) {
         Adjustable adj = (orientation == Scrollbar.HORIZONTAL)
                 ? ((ScrollPaneOperator) oper).getHAdjustable()

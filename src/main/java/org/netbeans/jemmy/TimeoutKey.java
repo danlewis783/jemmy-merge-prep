@@ -29,6 +29,9 @@ public enum TimeoutKey {
     QueueTool_InvocationTimeout(180000L),
     QueueTool_PreInvocationTimeout(160000L),
     ActionProducer_MaxActionTime(10000L),
+    // 5000 rather than upstream's 1000: native AWT push-scrolling on Windows can
+    // legitimately stall past 1s under load before recovering
+    AbstractScrollDriver_FreezeTimeout(5000L),
     ComponentOperator_PushKeyTimeout(0L),
     ComponentOperator_MouseClickTimeout(10L),
     ComponentOperator_BeforeDragTimeout(0L),
