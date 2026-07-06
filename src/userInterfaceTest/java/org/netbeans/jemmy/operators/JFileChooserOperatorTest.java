@@ -284,7 +284,9 @@ final class JFileChooserOperatorTest {
     void testEnterSubDir() {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertNotNull(op);
-        op.enterSubDir(FN3);
+        File result = op.enterSubDir(FN3);
+        assertEquals(FN3, result.getName());
+        assertEquals(FN3, op.getCurrentDirectory().getName());
     }
 
     @Test

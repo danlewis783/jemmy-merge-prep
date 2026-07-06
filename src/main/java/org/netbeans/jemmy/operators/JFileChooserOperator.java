@@ -201,6 +201,7 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public File enterSubDir(String dir, StringComparator comparator) {
+        setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         selectFile(dir, comparator);
         int index = findFileIndex(dir, comparator);
         waitPainted(index);
