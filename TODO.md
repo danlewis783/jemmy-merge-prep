@@ -14,6 +14,7 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `awt-adjustable-scroll` | Scroll AWT ScrollPane/Scrollbar via Adjustable API instead of held mouse press | **Do proactively** — fixes known flakiness |
 | `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
 | `flaky-ui-tests` | Investigate jemmy_036 focus handoff and JPopupMenuOperatorTest timeout | Do when suite noise becomes annoying |
+| `first-hygiene` | Bring tests in line with FIRST: temp dirs, flaky tags, global-state locks | Low effort, improves suite trust |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
@@ -58,6 +59,35 @@ The AWT scroll flakiness in `jemmy_035`/`jemmy_037` is the same root cause as
 until these are addressed.
 
 **Recommendation: investigate when suite noise matters (CI gating, etc.).**
+
+### `first-hygiene`
+
+Test-suite hygiene against the FIRST criteria (Fast, Isolated, Repeatable,
+Self-validating, Timely — Langr/Hunt/Thomas, *Pragmatic Unit Testing in
+Java 8 with JUnit*):
+
+- **Isolated/Repeatable:** `JFileChooserOperatorTest` creates its fixture
+  files (`showit`, `showit.txt`) in the current working directory; move to
+  JUnit `@TempDir` and point the chooser there.
+- **Isolated:** the `TimeoutsTest` scale tests and
+  `LookAndFeelTest.detectsNimbusAfterSwitching` mutate global state (system
+  property + `Timeouts` singleton; `UIManager` look and feel) with
+  restore-in-`finally` discipline. Safe today because suites run
+  single-threaded; annotate with `@Isolated` / `@ResourceLock` (or document
+  the constraint) before ever enabling JUnit parallel execution.
+- **Repeatable:** tag the known-flaky UI tests (`jemmy_036`,
+  `JPopupMenuOperatorTest.testRobot56091`; see `flaky-ui-tests`) with a JUnit
+  `@Tag("flaky")` and exclude them from the default `check` run so the rest
+  of the suite stays trustworthy while the root causes are open.
+- **Minor:** the `-1`-sentinel regression tests abandon a spinning background
+  thread if they ever fail (`assertTimeoutPreemptively` semantics on an
+  unbounded driver loop). Acceptable in a failing build; a cooperative
+  cancellation check in the test adjuster would clean it up.
+- **Self-validating (done, keep it up):** several inherited UI tests invoked
+  operations without asserting outcomes (`testMaximize`, `testEnterSubDir`
+  before 2026-07-05); prefer strengthening such tests whenever one is touched.
+
+**Recommendation: low-effort batch; do alongside `flaky-ui-tests`.**
 
 ### `winlaf-button-test`
 
