@@ -55,7 +55,6 @@ class jemmy_002 {
     void test() {
         Application_002.main(new String[] {});
         TimeoutOverride override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L);
-        TimeoutOverride override2 = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 60000L);
         try {
             JFrameOperator win0 = new JFrameOperator("Application_002");
             JTextFieldOperator tf0 = new JTextFieldOperator(win0, "Text", StringComparators.caseInsensitiveSubstring());
@@ -188,7 +187,6 @@ class jemmy_002 {
             assertEquals(label.getVerticalTextPosition(), jLabelOp.getVerticalTextPosition());
         } finally {
             override1.cancel();
-            override2.cancel();
         }
     }
 }

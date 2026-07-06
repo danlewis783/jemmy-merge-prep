@@ -539,8 +539,7 @@ class JTreeOperatorTest {
         JTreeOperator operator2 = new JTreeOperator(operator);
         assertNotNull(operator2);
 
-        assertThatExceptionOfType(UnsupportedOperationException.class)
-                .isThrownBy(() -> operator2.convertValueToText(null, true, true, true, 0, true));
+        assertEquals("", operator2.convertValueToText(null, true, true, true, 0, true));
     }
 
     @Test
