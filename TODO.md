@@ -17,6 +17,7 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `first-hygiene` | Bring tests in line with FIRST: temp dirs, flaky tags, global-state locks | Low effort, improves suite trust |
 | `scenario-test-cleanup` | Give the jemmy_nnn/Application_nnn pairs purpose, names, and deduplication | Incremental; fold, rename, or delete |
 | `assertj-migration` | Convert all assertions to AssertJ, killing try/fail/catch idioms first | Incremental; exception tests first |
+| `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Do after scenario-test-cleanup stabilizes names |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
@@ -261,3 +262,50 @@ Upstream `WindowWaiter.waitWindowCount(chooser, count)` / `countWindows`
 (from 7902020): wait until the number of windows matching a predicate reaches
 an expected count. `WindowWaiter` was deleted in this fork; recreate with the
 `functions/` machinery when a test needs "wait until N dialogs exist."
+
+---
+
+## Merge preparation
+
+### `coverage-parity`
+
+Full test-coverage analysis of `C:\dev\jemmy` (the openjdk/jemmy-v2 fork,
+~17 test classes across `test`/`userInterfaceTest`) versus this repository
+(~100 test classes), ensuring this fork has **all** the coverage jemmy has,
+with a durable, documented key mapping each jemmy test to its
+differently-named equivalent here.
+
+Deliverable: `TEST-COVERAGE-MAP.md` — one row per jemmy test class (method
+granularity where classes diverge):
+
+| jemmy test | equivalent here | status |
+|---|---|---|
+| e.g. `TimeoutsGetSetTest` | `TimeoutsTest` | covered |
+| e.g. `JToolTipOperatorTest` | — | N/A until `tooltip-operator` |
+
+Method:
+
+1. **Inventory** jemmy's test classes and classify each test method:
+   - *covered, same name* — no action;
+   - *covered, different name* — record the mapping (the point of the key);
+   - *N/A, subsystem replaced or feature not ported* — record the rationale
+     and cross-reference the TODO mnemonic
+     (`JToolTipOperatorTest` → `tooltip-operator`,
+     `JEditorPaneOperatorTest` → `click-on-reference`,
+     `DumpTest`/`AcessibleDumpPropertiesTest`/`UIStatusTest` →
+     `dump-enrichment`, `ComponentChooserTest` → Predicate-based search);
+   - *gap* — port the test, adapting to this fork's API
+     (`Predicate`/`FunctionRunner`/`TimeoutKey`).
+2. **Quantitative cross-check** — name matching misses semantic gaps; run
+   JaCoCo per-class line coverage of the shared `src/main` classes in both
+   repos and diff the per-class percentages to flag classes jemmy's tests
+   exercise more thoroughly.
+3. **Adopt `LookAndFeelProvider`** from jemmy's test tree while here — it
+   parameterizes tests across installed LAFs and directly serves
+   `winlaf-button-test`.
+4. **Keep the map current** — update it whenever `scenario-test-cleanup`
+   renames a test here, so the key never goes stale.
+
+**Recommendation: do after (or alongside) `scenario-test-cleanup` so the
+mapping is written against stable, meaningful names. This item directly
+serves the repository's purpose — driving the two forks toward each other.**
