@@ -16,6 +16,7 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `flaky-ui-tests` | Investigate jemmy_036 focus handoff and JPopupMenuOperatorTest timeout | Do when suite noise becomes annoying |
 | `first-hygiene` | Bring tests in line with FIRST: temp dirs, flaky tags, global-state locks | Low effort, improves suite trust |
 | `scenario-test-cleanup` | Give the jemmy_nnn/Application_nnn pairs purpose, names, and deduplication | Incremental; fold, rename, or delete |
+| `assertj-migration` | Convert all assertions to AssertJ, killing try/fail/catch idioms first | Incremental; exception tests first |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
@@ -126,6 +127,53 @@ Suggested approach:
 
 **Recommendation: incremental; start with the flaky trio, whose investigation
 requires understanding their purpose anyway.**
+
+### `assertj-migration`
+
+Convert all test assertions to AssertJ fluent assertions (`assertj-core`
+3.27.7, already in `gradle/libs.versions.toml`). Current state (2026-07-06):
+86 of 93 `userInterfaceTest` files and 3 of 8 `test` files still use
+`org.junit.jupiter.api.Assertions`.
+
+Priority order:
+
+1. **try/fail/catch idioms first** — at least `JFrameOperatorTest`,
+   `JListOperatorTest`, `JSpinnerOperatorTest`, `jemmy_001/002/018/021/029`
+   use the pre-JUnit-4 pattern, several with `fail("did not work")` and a
+   meaningless `assertTrue(true)` in the catch block:
+
+   ```java
+   try {
+       operator1.clickOnItem("blabla", StringComparators.strict());
+       fail("did not work");
+   } catch (JListOperator.NoSuchItemException ex) {
+       assertEquals("No such item as \"blabla\"", ex.getMessage());
+   }
+   ```
+
+   becomes
+
+   ```java
+   assertThatExceptionOfType(JListOperator.NoSuchItemException.class)
+           .isThrownBy(() -> operator1.clickOnItem("blabla", StringComparators.strict()))
+           .withMessage("No such item as \"blabla\"");
+   ```
+
+2. **Mechanical conversions** — `assertEquals`/`assertTrue`/`assertNotNull`
+   → `assertThat(...)`, per test class, opportunistically alongside
+   `scenario-test-cleanup` and `first-hygiene` edits rather than as one big
+   diff.
+
+Notes:
+
+- `assertTimeoutPreemptively` (used by the `-1`-sentinel regression tests)
+  has no AssertJ equivalent — keep the JUnit static for those.
+- Converges test style with the C:\dev\jemmy fork, which already had its
+  AssertJ refactor ("Refactor tests to AssertJ 3.27.7 fluent assertions") —
+  one less textual difference for the eventual merge.
+
+**Recommendation: incremental; exception-shaped tests first, the rest
+class-by-class when touched.**
 
 ### `winlaf-button-test`
 
