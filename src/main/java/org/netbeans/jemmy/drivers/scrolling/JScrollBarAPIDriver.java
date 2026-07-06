@@ -42,35 +42,28 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     @Override
     public void scrollToMinimum(ComponentOperator oper, int orientation) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
-        setValue(oper, scroll.getMinimum());
+        scroll.setValue(scroll.getMinimum());
     }
 
     @Override
     public void scrollToMaximum(ComponentOperator oper, int orientation) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
-        setValue(oper, scroll.getMaximum() - scroll.getVisibleAmount());
+        scroll.setValue(scroll.getMaximum() - scroll.getVisibleAmount());
     }
 
     @Override
     protected void step(ComponentOperator oper, ScrollAdjuster adj) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
-        int newValue = -1;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-            newValue = (scroll.getValue() > scroll.getMinimum() + scroll.getUnitIncrement())
-                    ? scroll.getValue() - scroll.getUnitIncrement()
-                    : scroll.getMinimum();
+            scroll.setValue(
+                    (scroll.getValue() > scroll.getMinimum() + scroll.getUnitIncrement())
+                            ? scroll.getValue() - scroll.getUnitIncrement()
+                            : scroll.getMinimum());
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-            newValue = (scroll.getValue() < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getUnitIncrement())
-                    ? scroll.getValue() + scroll.getUnitIncrement()
-                    : scroll.getMaximum();
-        }
-
-        setValue(oper, newValue);
-    }
-
-    private void setValue(ComponentOperator oper, int value) {
-        if (value != -1) {
-            ((JScrollBarOperator) oper).setValue(value);
+            scroll.setValue(
+                    (scroll.getValue() < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getUnitIncrement())
+                            ? scroll.getValue() + scroll.getUnitIncrement()
+                            : scroll.getMaximum());
         }
     }
 
@@ -82,19 +75,17 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     @Override
     protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
-        int newValue = -1;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-            newValue = (scroll.getValue() > scroll.getMinimum() + scroll.getBlockIncrement())
-                    ? scroll.getValue() - scroll.getBlockIncrement()
-                    : scroll.getMinimum();
+            scroll.setValue(
+                    (scroll.getValue() > scroll.getMinimum() + scroll.getBlockIncrement())
+                            ? scroll.getValue() - scroll.getBlockIncrement()
+                            : scroll.getMinimum());
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-            newValue =
+            scroll.setValue(
                     (scroll.getValue() < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getBlockIncrement())
                             ? scroll.getValue() + scroll.getBlockIncrement()
-                            : scroll.getMaximum();
+                            : scroll.getMaximum());
         }
-
-        setValue(oper, newValue);
     }
 
     @Override
