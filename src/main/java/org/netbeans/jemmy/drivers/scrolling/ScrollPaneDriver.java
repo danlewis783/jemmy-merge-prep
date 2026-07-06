@@ -26,25 +26,22 @@
 package org.netbeans.jemmy.drivers.scrolling;
 
 import java.awt.Adjustable;
-import java.awt.Point;
 import java.awt.Scrollbar;
 import java.util.Collections;
-import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.ScrollPaneOperator;
 
 public final class ScrollPaneDriver extends AWTScrollDriver {
-    private static final int CLICK_OFFSET = 5;
 
     public ScrollPaneDriver() {
         super(Collections.singletonList(ScrollPaneOperator.class));
     }
 
     @Override
-    protected int position(ComponentOperator oper, int orientation) {
-        return (orientation == Adjustable.HORIZONTAL)
-                ? ((ScrollPaneOperator) oper).getScrollPosition().x
-                : ((ScrollPaneOperator) oper).getScrollPosition().y;
+    protected Adjustable getAdjustable(ComponentOperator oper, int orientation) {
+        return (orientation == Scrollbar.HORIZONTAL)
+                ? ((ScrollPaneOperator) oper).getHAdjustable()
+                : ((ScrollPaneOperator) oper).getVAdjustable();
     }
 
     @Override
@@ -83,41 +80,5 @@ public final class ScrollPaneDriver extends AWTScrollDriver {
                 return orientation;
             }
         });
-    }
-
-    @Override
-    protected @Nullable Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
-        int x, y;
-        if (orientation == Scrollbar.HORIZONTAL) {
-            int offset = ((ScrollPaneOperator) oper).isScrollbarVisible(Scrollbar.VERTICAL)
-                    ? ((ScrollPaneOperator) oper).getVScrollbarWidth()
-                    : 0;
-            if (direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-                x = oper.getWidth() - 1 - CLICK_OFFSET - offset;
-            } else if (direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-                x = CLICK_OFFSET;
-            } else {
-                return null;
-            }
-
-            y = oper.getHeight() - ((ScrollPaneOperator) oper).getHScrollbarHeight() / 2;
-        } else if (orientation == Scrollbar.VERTICAL) {
-            int offset = ((ScrollPaneOperator) oper).isScrollbarVisible(Scrollbar.HORIZONTAL)
-                    ? ((ScrollPaneOperator) oper).getHScrollbarHeight()
-                    : 0;
-            if (direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-                y = oper.getHeight() - 1 - CLICK_OFFSET - offset;
-            } else if (direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-                y = CLICK_OFFSET;
-            } else {
-                return null;
-            }
-
-            x = oper.getWidth() - ((ScrollPaneOperator) oper).getVScrollbarWidth() / 2;
-        } else {
-            return null;
-        }
-
-        return new Point(x, y);
     }
 }

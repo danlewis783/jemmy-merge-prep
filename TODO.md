@@ -11,7 +11,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
-| `awt-adjustable-scroll` | Scroll AWT ScrollPane/Scrollbar via Adjustable API instead of held mouse press | **Do proactively** — fixes known flakiness |
 | `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
 | `flaky-ui-tests` | Investigate jemmy_036 focus handoff and JPopupMenuOperatorTest timeout | Do when suite noise becomes annoying |
 | `first-hygiene` | Bring tests in line with FIRST: temp dirs, flaky tags, global-state locks | Low effort, improves suite trust |
@@ -32,22 +31,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 
 ## Reliability follow-ups (not upstream ports)
 
-### `awt-adjustable-scroll`
-
-`AWTScrollDriver.startPushAndWait` holds a synthetic mouse press on the native
-scrollbar arrow, but native AWT controls do not auto-repeat from synthetic
-presses on current JDK/Windows 11. Scrolling stalls or never moves;
-scroll-freeze detection (ported 2026-07-05, `AbstractScrollDriver_FreezeTimeout`)
-now diagnoses this quickly instead of hanging 60 s, but the underlying
-unreliability remains — observed intermittently in `jemmy_035` and `jemmy_037`.
-
-Fix: rewrite `ScrollbarDriver` / `ScrollPaneDriver` push-and-wait (or the whole
-scroll strategy) to drive `java.awt.Adjustable.setValue` directly, the way
-`JScrollBarAPIDriver` does for Swing. Converts two known-flaky scenario tests
-into deterministic ones.
-
-**Recommendation: do proactively.**
-
 ### `flaky-ui-tests`
 
 Verified failing intermittently on a clean tree (stash-baseline, 2026-07-05):
@@ -57,9 +40,10 @@ Verified failing intermittently on a clean tree (stash-baseline, 2026-07-05):
 - `JPopupMenuOperatorTest.testRobot56091` — `JMenuOperator_PushMenuTimeout`
   (60 s) exceeded in `JPopupMenuOperator.pushMenu`.
 
-The AWT scroll flakiness in `jemmy_035`/`jemmy_037` is the same root cause as
-`awt-adjustable-scroll`. A full `userInterfaceTest` run is not reliably green
-until these are addressed.
+(The former AWT scroll flakiness in `jemmy_035`/`jemmy_037` was fixed
+2026-07-06 by rewriting the AWT scroll drivers onto the `Adjustable` API.)
+A full `userInterfaceTest` run is not reliably green until the two remaining
+tests are addressed.
 
 **Recommendation: investigate when suite noise matters (CI gating, etc.).**
 

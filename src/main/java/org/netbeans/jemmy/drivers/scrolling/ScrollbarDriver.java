@@ -25,23 +25,21 @@
 
 package org.netbeans.jemmy.drivers.scrolling;
 
-import java.awt.Point;
+import java.awt.Adjustable;
 import java.awt.Scrollbar;
 import java.util.Collections;
-import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.ScrollbarOperator;
 
 public final class ScrollbarDriver extends AWTScrollDriver {
-    private static final int CLICK_OFFSET = 5;
 
     public ScrollbarDriver() {
         super(Collections.singletonList(ScrollbarOperator.class));
     }
 
     @Override
-    protected int position(ComponentOperator oper, int orientation) {
-        return ((ScrollbarOperator) oper).getValue();
+    protected Adjustable getAdjustable(ComponentOperator oper, int orientation) {
+        return (Scrollbar) oper.getSource();
     }
 
     @Override
@@ -77,35 +75,5 @@ public final class ScrollbarDriver extends AWTScrollDriver {
                 return ((ScrollbarOperator) oper).getOrientation();
             }
         });
-    }
-
-    @Override
-    protected @Nullable Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
-        int x, y;
-        if (orientation == Scrollbar.HORIZONTAL) {
-            if (direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-                x = oper.getWidth() - 1 - CLICK_OFFSET;
-            } else if (direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-                x = CLICK_OFFSET;
-            } else {
-                return null;
-            }
-
-            y = oper.getHeight() / 2;
-        } else if (orientation == Scrollbar.VERTICAL) {
-            if (direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-                y = oper.getHeight() - 1 - CLICK_OFFSET;
-            } else if (direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-                y = CLICK_OFFSET;
-            } else {
-                return null;
-            }
-
-            x = oper.getWidth() / 2;
-        } else {
-            return null;
-        }
-
-        return new Point(x, y);
     }
 }
