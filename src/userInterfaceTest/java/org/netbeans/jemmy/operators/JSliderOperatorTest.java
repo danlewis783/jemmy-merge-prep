@@ -18,10 +18,12 @@ package org.netbeans.jemmy.operators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import javax.swing.BoundedRangeModel;
@@ -34,6 +36,7 @@ import javax.swing.plaf.SliderUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.drivers.scrolling.JSliderAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
@@ -126,6 +129,20 @@ class JSliderOperatorTest {
         assertNotNull(operator2);
         operator2.scrollToValue(10);
         assertEquals(10, operator2.getValue());
+    }
+
+    @Test
+    void testApiDriverScrollsToNegativeValue() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            slider.setMinimum(-10);
+            slider.setMaximum(10);
+            slider.setValue(0);
+        });
+        JSliderOperator operator = new JSliderOperator(slider);
+        JSliderAPIDriver driver = new JSliderAPIDriver();
+        assertTimeoutPreemptively(
+                Duration.ofSeconds(15), () -> driver.scroll(operator, new ValueTargetAdjuster(operator, -1)));
+        assertEquals(-1, operator.getValue());
     }
 
     @Test
@@ -428,6 +445,33 @@ class JSliderOperatorTest {
         @Override
         public int getScrollOrientation() {
             return 0;
+        }
+    }
+
+    private static class ValueTargetAdjuster implements ScrollAdjuster {
+        private final JSliderOperator operator;
+        private final int target;
+
+        ValueTargetAdjuster(JSliderOperator operator, int target) {
+            this.operator = operator;
+            this.target = target;
+        }
+
+        @Override
+        public int getScrollDirection() {
+            int value = operator.getValue();
+            if (value > target) {
+                return DECREASE_SCROLL_DIRECTION;
+            } else if (value < target) {
+                return INCREASE_SCROLL_DIRECTION;
+            } else {
+                return DO_NOT_TOUCH_SCROLL_DIRECTION;
+            }
+        }
+
+        @Override
+        public int getScrollOrientation() {
+            return SwingConstants.HORIZONTAL;
         }
     }
 }

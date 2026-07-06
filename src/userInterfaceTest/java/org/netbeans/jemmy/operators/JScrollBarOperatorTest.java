@@ -16,7 +16,9 @@
  */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -25,6 +27,7 @@ import java.awt.GridLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,6 +36,8 @@ import javax.swing.JScrollPane;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.drivers.scrolling.JScrollBarAPIDriver;
+import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
 class JScrollBarOperatorTest {
@@ -130,6 +135,21 @@ class JScrollBarOperatorTest {
         JScrollBarOperator operator1 = new JScrollBarOperator(operator);
         assertNotNull(operator1);
         operator1.scrollToValue(1.0);
+    }
+
+    @Test
+    void testApiDriverScrollsToNegativeValue() throws Exception {
+        JScrollBar[] negativeRange = new JScrollBar[1];
+        EventQueue.invokeAndWait(() -> {
+            negativeRange[0] = new JScrollBar(JScrollBar.VERTICAL, 0, 2, -10, 10);
+            frame.getContentPane().add(negativeRange[0], BorderLayout.EAST);
+            frame.getContentPane().revalidate();
+        });
+        JScrollBarOperator operator = new JScrollBarOperator(negativeRange[0]);
+        JScrollBarAPIDriver driver = new JScrollBarAPIDriver();
+        assertTimeoutPreemptively(
+                Duration.ofSeconds(15), () -> driver.scroll(operator, new ValueTargetAdjuster(operator, -1)));
+        assertEquals(-1, operator.getValue());
     }
 
     @Test
@@ -282,5 +302,32 @@ class JScrollBarOperatorTest {
     private class AdjustmentListenerTest implements AdjustmentListener {
         @Override
         public void adjustmentValueChanged(AdjustmentEvent e) {}
+    }
+
+    private static class ValueTargetAdjuster implements ScrollAdjuster {
+        private final JScrollBarOperator operator;
+        private final int target;
+
+        ValueTargetAdjuster(JScrollBarOperator operator, int target) {
+            this.operator = operator;
+            this.target = target;
+        }
+
+        @Override
+        public int getScrollDirection() {
+            int value = operator.getValue();
+            if (value > target) {
+                return DECREASE_SCROLL_DIRECTION;
+            } else if (value < target) {
+                return INCREASE_SCROLL_DIRECTION;
+            } else {
+                return DO_NOT_TOUCH_SCROLL_DIRECTION;
+            }
+        }
+
+        @Override
+        public int getScrollOrientation() {
+            return JScrollBar.VERTICAL;
+        }
     }
 }
