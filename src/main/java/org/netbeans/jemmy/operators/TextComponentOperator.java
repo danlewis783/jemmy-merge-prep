@@ -31,6 +31,7 @@ import java.awt.event.TextListener;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -263,20 +264,21 @@ public class TextComponentOperator extends ComponentOperator {
         return driver;
     }
 
-    public static TextComponent findTextComponent(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable TextComponent findTextComponent(Container cont, Predicate<Component> chooser, int index) {
         return (TextComponent) findComponent(cont, PredicatesJ.of(TextComponent.class, chooser), index);
     }
 
-    public static TextComponent findTextComponent(Container cont, Predicate<Component> chooser) {
+    public static @Nullable TextComponent findTextComponent(Container cont, Predicate<Component> chooser) {
         return findTextComponent(cont, chooser, 0);
     }
 
-    public static TextComponent findTextComponent(
+    public static @Nullable TextComponent findTextComponent(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findTextComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index);
     }
 
-    public static TextComponent findTextComponent(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable TextComponent findTextComponent(
+            Container cont, String text, StringComparator stringComparator) {
         return findTextComponent(cont, text, stringComparator, 0);
     }
 

@@ -34,6 +34,7 @@ import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.VetoableChangeListener;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.accessibility.AccessibleContext;
@@ -44,6 +45,7 @@ import javax.swing.JToolTip;
 import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
@@ -110,7 +112,7 @@ public class JComponentOperator extends ContainerOperator {
         if (resultComp instanceof Window) {
             result = new WindowOperator((Window) resultComp);
         } else {
-            result = new ContainerOperator((Container) resultComp);
+            result = new ContainerOperator((Container) Objects.requireNonNull(resultComp, "container not found"));
         }
 
         return result;
@@ -533,20 +535,21 @@ public class JComponentOperator extends ContainerOperator {
         }));
     }
 
-    public static JComponent findJComponent(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JComponent findJComponent(Container cont, Predicate<Component> chooser, int index) {
         return (JComponent) findComponent(cont, PredicatesJ.of(JComponent.class, chooser), index);
     }
 
-    public static JComponent findJComponent(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JComponent findJComponent(Container cont, Predicate<Component> chooser) {
         return findJComponent(cont, chooser, 0);
     }
 
-    public static JComponent findJComponent(
+    public static @Nullable JComponent findJComponent(
             Container cont, String toolTipText, StringComparator stringComparator, int index) {
         return findJComponent(cont, new JComponentByToolTipPredicate(toolTipText, stringComparator), index);
     }
 
-    public static JComponent findJComponent(Container cont, String toolTipText, StringComparator stringComparator) {
+    public static @Nullable JComponent findJComponent(
+            Container cont, String toolTipText, StringComparator stringComparator) {
         return findJComponent(cont, toolTipText, stringComparator, 0);
     }
 

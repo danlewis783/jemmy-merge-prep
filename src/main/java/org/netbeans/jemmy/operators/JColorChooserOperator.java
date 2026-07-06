@@ -27,6 +27,7 @@ package org.netbeans.jemmy.operators;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JColorChooser;
@@ -34,6 +35,7 @@ import javax.swing.JComponent;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.plaf.ColorChooserUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
@@ -43,9 +45,9 @@ public class JColorChooserOperator extends JComponentOperator {
     public static final String COLOR_DPROP = "Color";
     private static final String RGB_TITLE = "RGB";
     public static final String SELECTED_PAGE_DPROP = "Selected page";
-    private JTextFieldOperator blue;
-    private JTextFieldOperator green;
-    private JTextFieldOperator red;
+    private @Nullable JTextFieldOperator blue;
+    private @Nullable JTextFieldOperator green;
+    private @Nullable JTextFieldOperator red;
     private final JTabbedPaneOperator tabbed;
 
     public JColorChooserOperator(ContainerOperator cont) {
@@ -81,17 +83,17 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public void enterRed(int value) {
         switchToRGB();
-        red.setText(Integer.toString(value));
+        Objects.requireNonNull(red).setText(Integer.toString(value));
     }
 
     public void enterGreen(int value) {
         switchToRGB();
-        green.setText(Integer.toString(value));
+        Objects.requireNonNull(green).setText(Integer.toString(value));
     }
 
     public void enterBlue(int value) {
         switchToRGB();
-        blue.setText(Integer.toString(value));
+        Objects.requireNonNull(blue).setText(Integer.toString(value));
     }
 
     public void enterColor(int red, int green, int blue) {
@@ -200,19 +202,19 @@ public class JColorChooserOperator extends JComponentOperator {
         }));
     }
 
-    public static JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser, int index) {
         return (JColorChooser) findComponent(cont, PredicatesJ.of(JColorChooser.class, chooser), index);
     }
 
-    public static JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser) {
         return findJColorChooser(cont, chooser, 0);
     }
 
-    public static JColorChooser findJColorChooser(Container cont, int index) {
+    public static @Nullable JColorChooser findJColorChooser(Container cont, int index) {
         return findJColorChooser(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static JColorChooser findJColorChooser(Container cont) {
+    public static @Nullable JColorChooser findJColorChooser(Container cont) {
         return findJColorChooser(cont, 0);
     }
 

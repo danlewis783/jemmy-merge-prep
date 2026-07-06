@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.function.Predicate;
 import javax.swing.JCheckBox;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
@@ -64,22 +65,23 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
                 index));
     }
 
-    public static JCheckBox findJCheckBox(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JCheckBox findJCheckBox(Container cont, Predicate<Component> chooser, int index) {
         return (JCheckBox) findJToggleButton(cont, PredicatesJ.of(JCheckBox.class, chooser), index);
     }
 
-    public static JCheckBox findJCheckBox(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JCheckBox findJCheckBox(Container cont, Predicate<Component> chooser) {
         return findJCheckBox(cont, chooser, 0);
     }
 
-    public static JCheckBox findJCheckBox(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JCheckBox findJCheckBox(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findJCheckBox(
                 cont,
                 PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JCheckBox findJCheckBox(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JCheckBox findJCheckBox(Container cont, String text, StringComparator stringComparator) {
         return findJCheckBox(cont, text, stringComparator, 0);
     }
 

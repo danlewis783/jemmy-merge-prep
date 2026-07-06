@@ -31,6 +31,7 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -52,6 +53,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import javax.swing.plaf.FileChooserUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
@@ -98,7 +100,8 @@ public class JFileChooserOperator extends JComponentOperator {
         }
 
         if (aText != null) {
-            return (JButton) innerSearcher.findComponent(new ButtonByTextPredicate(aText));
+            return (JButton) Objects.requireNonNull(
+                    innerSearcher.findComponent(new ButtonByTextPredicate(aText)), "approve button not found");
         } else {
             throw new JemmyException(
                     "JFileChooser.getApproveButtonText() " + "and getUI().getApproveButtonText " + "return null");
@@ -106,7 +109,9 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public JButton getCancelButton() {
-        return (JButton) innerSearcher.findComponent(new IsJButtonNotInsideComboWithTextPredicate(), 1);
+        return (JButton) Objects.requireNonNull(
+                innerSearcher.findComponent(new IsJButtonNotInsideComboWithTextPredicate(), 1),
+                "cancel button not found");
     }
 
     public JButton getHomeButton() {
@@ -126,11 +131,13 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public JTextField getPathField() {
-        return (JTextField) innerSearcher.findComponent(PredicatesJ.of(JTextField.class));
+        return (JTextField) Objects.requireNonNull(
+                innerSearcher.findComponent(PredicatesJ.of(JTextField.class)), "path field not found");
     }
 
     public JList getFileList() {
-        return (JList) innerSearcher.findComponent(PredicatesJ.of(JList.class));
+        return (JList)
+                Objects.requireNonNull(innerSearcher.findComponent(PredicatesJ.of(JList.class)), "file list not found");
     }
 
     public void approve() {
@@ -156,7 +163,7 @@ public class JFileChooserOperator extends JComponentOperator {
         return getCurrentDirectory();
     }
 
-    public File goHome() {
+    public @Nullable File goHome() {
         if ("Windows".equals(UIManager.getLookAndFeel().getName())) {
             return null;
         }
@@ -614,15 +621,18 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     private JComboBox getCombo(int index) {
-        return (JComboBox) innerSearcher.findComponent(PredicatesJ.of(JComboBox.class), index);
+        return (JComboBox) Objects.requireNonNull(
+                innerSearcher.findComponent(PredicatesJ.of(JComboBox.class), index), "combo box not found");
     }
 
     private JButton getNoTextButton(int index) {
-        return (JButton) innerSearcher.findComponent(new IsJButtonNotInsideComboWithTextPredicate(), index);
+        return (JButton) Objects.requireNonNull(
+                innerSearcher.findComponent(new IsJButtonNotInsideComboWithTextPredicate(), index), "button not found");
     }
 
     private JToggleButton getToggleButton(int index) {
-        return (JToggleButton) innerSearcher.findComponent(PredicatesJ.of(JToggleButton.class), index);
+        return (JToggleButton) Objects.requireNonNull(
+                innerSearcher.findComponent(PredicatesJ.of(JToggleButton.class), index), "toggle button not found");
     }
 
     private int findFileIndex(String file, StringComparator comparator) {
@@ -667,7 +677,7 @@ public class JFileChooserOperator extends JComponentOperator {
         return -1;
     }
 
-    public static JDialog findJFileChooserDialog() {
+    public static @Nullable JDialog findJFileChooserDialog() {
         return JDialogOperator.findJDialog(new JFileChooserJDialogPredicate());
     }
 
@@ -675,7 +685,7 @@ public class JFileChooserOperator extends JComponentOperator {
         return JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
     }
 
-    public static JFileChooser findJFileChooser(Container cont) {
+    public static @Nullable JFileChooser findJFileChooser(Container cont) {
         return (JFileChooser) findComponent(cont, PredicatesJ.of(JFileChooser.class));
     }
 
@@ -683,8 +693,9 @@ public class JFileChooserOperator extends JComponentOperator {
         return (JFileChooser) waitComponent(cont, PredicatesJ.of(JFileChooser.class));
     }
 
-    public static JFileChooser findJFileChooser() {
-        return findJFileChooser(findJFileChooserDialog());
+    public static @Nullable JFileChooser findJFileChooser() {
+        JDialog dialog = findJFileChooserDialog();
+        return (dialog == null) ? null : findJFileChooser(dialog);
     }
 
     public static JFileChooser waitJFileChooser2() {

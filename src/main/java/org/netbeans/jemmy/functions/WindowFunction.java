@@ -21,29 +21,30 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.predicates.IndexPredicate;
 
 public class WindowFunction<T extends Window> implements Function<Void, T> {
     private final int index;
-    private final Window owner;
+    private final @Nullable Window owner;
     private final Predicate<Component> predicate;
 
-    public WindowFunction(int index, Window owner, Predicate<Component> predicate) {
+    public WindowFunction(int index, @Nullable Window owner, Predicate<Component> predicate) {
         this.index = index;
         this.owner = owner;
         this.predicate = predicate;
     }
 
     @Override
-    public T apply(Void obj) {
+    public @Nullable T apply(Void obj) {
         return (T) WindowFunction.getWindow(owner, predicate, index);
     }
 
-    public static Window getWindow(Window owner, Predicate<Component> predicate, int index) {
+    public static @Nullable Window getWindow(@Nullable Window owner, Predicate<Component> predicate, int index) {
         return doGetWindow(owner, new IndexPredicate(predicate, index));
     }
 
-    private static Window doGetWindow(Window owner, Predicate<Component> predicate) {
+    private static @Nullable Window doGetWindow(@Nullable Window owner, Predicate<Component> predicate) {
         if (owner == null) {
             return WindowFunction.doGetWindow(predicate);
         } else {
@@ -63,7 +64,7 @@ public class WindowFunction<T extends Window> implements Function<Void, T> {
         }
     }
 
-    private static Window doGetWindow(Predicate<Component> predicate) {
+    private static @Nullable Window doGetWindow(Predicate<Component> predicate) {
         Window result;
         Frame[] frames = Frame.getFrames();
         for (Frame frame : frames) {

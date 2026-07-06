@@ -34,6 +34,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.SwingUtilities;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -291,27 +292,27 @@ public class ScrollPaneOperator extends ContainerOperator {
         }));
     }
 
-    public static ScrollPane findScrollPane(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable ScrollPane findScrollPane(Container cont, Predicate<Component> chooser, int index) {
         return (ScrollPane) findComponent(cont, PredicatesJ.of(ScrollPane.class, chooser), index);
     }
 
-    public static ScrollPane findScrollPane(Container cont, Predicate<Component> chooser) {
+    public static @Nullable ScrollPane findScrollPane(Container cont, Predicate<Component> chooser) {
         return findScrollPane(cont, chooser, 0);
     }
 
-    public static ScrollPane findScrollPane(Container cont, int index) {
+    public static @Nullable ScrollPane findScrollPane(Container cont, int index) {
         return findScrollPane(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static ScrollPane findScrollPane(Container cont) {
+    public static @Nullable ScrollPane findScrollPane(Container cont) {
         return findScrollPane(cont, 0);
     }
 
-    public static ScrollPane findScrollPaneUnder(Component comp, Predicate<Component> chooser) {
+    public static @Nullable ScrollPane findScrollPaneUnder(Component comp, Predicate<Component> chooser) {
         return (ScrollPane) findContainerUnder(comp, PredicatesJ.of(ScrollPane.class, chooser));
     }
 
-    public static ScrollPane findScrollPaneUnder(Component comp) {
+    public static @Nullable ScrollPane findScrollPaneUnder(Component comp) {
         return findScrollPaneUnder(comp, PredicatesJ.of(ScrollPane.class));
     }
 

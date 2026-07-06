@@ -31,6 +31,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.DialogFunction;
@@ -146,9 +147,7 @@ public class DialogOperator extends WindowOperator {
                             TimeoutKey.DialogWaiter_WaitDialogTimeout)
                     .runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 
@@ -163,9 +162,7 @@ public class DialogOperator extends WindowOperator {
                             TimeoutKey.DialogWaiter_WaitDialogTimeout)
                     .runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 }

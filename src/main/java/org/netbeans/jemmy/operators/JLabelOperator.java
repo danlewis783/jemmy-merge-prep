@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.plaf.LabelUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JLabelByTextPredicate;
@@ -217,19 +218,20 @@ public class JLabelOperator extends JComponentOperator {
         }));
     }
 
-    public static JLabel findJLabel(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JLabel findJLabel(Container cont, Predicate<Component> chooser, int index) {
         return (JLabel) findComponent(cont, PredicatesJ.of(JLabel.class, chooser), index);
     }
 
-    public static JLabel findJLabel(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JLabel findJLabel(Container cont, Predicate<Component> chooser) {
         return findJLabel(cont, chooser, 0);
     }
 
-    public static JLabel findJLabel(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JLabel findJLabel(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findJLabel(cont, new JLabelByTextPredicate(text, stringComparator), index);
     }
 
-    public static JLabel findJLabel(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JLabel findJLabel(Container cont, String text, StringComparator stringComparator) {
         return findJLabel(cont, text, stringComparator, 0);
     }
 

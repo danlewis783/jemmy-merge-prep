@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.functions;
 
 import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.TimeoutKey;
 
@@ -32,7 +33,7 @@ public final class NoEventFunction implements Function<Void, Boolean> {
     }
 
     @Override
-    public Boolean apply(Void obj) {
+    public @Nullable Boolean apply(Void obj) {
         return eventTool.checkNoEvent(eventMask, waitTime) ? true : null;
     }
 }

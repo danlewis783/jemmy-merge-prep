@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.function.Predicate;
 import javax.swing.JRadioButton;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
@@ -64,15 +65,15 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
                 index));
     }
 
-    public static JRadioButton findJRadioButton(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JRadioButton findJRadioButton(Container cont, Predicate<Component> chooser, int index) {
         return (JRadioButton) findJToggleButton(cont, PredicatesJ.of(JRadioButton.class, chooser), index);
     }
 
-    public static JRadioButton findJRadioButton(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JRadioButton findJRadioButton(Container cont, Predicate<Component> chooser) {
         return findJRadioButton(cont, chooser, 0);
     }
 
-    public static JRadioButton findJRadioButton(
+    public static @Nullable JRadioButton findJRadioButton(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJRadioButton(
                 cont,
@@ -80,7 +81,8 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
                 index);
     }
 
-    public static JRadioButton findJRadioButton(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JRadioButton findJRadioButton(
+            Container cont, String text, StringComparator stringComparator) {
         return findJRadioButton(cont, text, stringComparator, 0);
     }
 

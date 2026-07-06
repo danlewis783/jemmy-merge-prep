@@ -29,6 +29,7 @@ import java.awt.Point;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 import javax.swing.JSlider;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -136,7 +137,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
     }
 
     @Override
-    protected Point startDragging(ComponentOperator oper) {
+    protected @Nullable Point startDragging(ComponentOperator oper) {
         return null;
     }
 
@@ -171,7 +172,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
         return 0;
     }
 
-    private Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
+    private @Nullable Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
         int x, y;
         boolean inverted = ((JSliderOperator) oper).getInverted();
         int realDirection;

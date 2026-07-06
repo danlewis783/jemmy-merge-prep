@@ -19,6 +19,7 @@ package org.netbeans.jemmy.callables;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.ComponentIsNotFocusedException;
 import org.netbeans.jemmy.ComponentIsNotVisibleException;
@@ -27,13 +28,13 @@ public final class MethodInvokeCallable implements Callable<Object> {
     private final ClassReference classReference;
     private final Component component;
     private final String methodName;
-    private final Class[] paramClasses;
-    private final Object[] params;
+    private final @Nullable Class[] paramClasses;
+    private final @Nullable Object[] params;
 
     public MethodInvokeCallable(
             String methodName,
-            Object[] params,
-            Class[] paramClasses,
+            @Nullable Object[] params,
+            @Nullable Class[] paramClasses,
             Component component,
             ClassReference classReference) {
         this.methodName = methodName;

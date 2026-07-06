@@ -21,6 +21,7 @@ import java.awt.event.AWTEventListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicLong;
+import org.jspecify.annotations.Nullable;
 
 public final class EventListener implements AWTEventListener {
     private final long eventMask;
@@ -39,7 +40,7 @@ public final class EventListener implements AWTEventListener {
         eventTime.set(System.currentTimeMillis());
     }
 
-    public AWTEvent getEvent() {
+    public @Nullable AWTEvent getEvent() {
         return eventRef.get();
     }
 

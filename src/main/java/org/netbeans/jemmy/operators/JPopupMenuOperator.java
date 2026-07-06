@@ -43,6 +43,7 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SingleSelectionModel;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.PopupMenuUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyException;
@@ -388,11 +389,11 @@ public class JPopupMenuOperator extends JComponentOperator {
         }));
     }
 
-    public static JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser, int index) {
         return (JPopupMenu) findComponent(cont, PredicatesJ.ofShowing(JPopupMenu.class, chooser), index);
     }
 
-    public static JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser) {
         return findJPopupMenu(cont, chooser, 0);
     }
 
@@ -404,7 +405,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         return waitJPopupMenu(cont, chooser, 0);
     }
 
-    public static Window findJPopupWindow(Predicate<Component> chooser) {
+    public static @Nullable Window findJPopupWindow(Predicate<Component> chooser) {
         return WindowFunction.getWindow(null, new JPopupWindowPredicate(chooser), 0);
     }
 
@@ -415,9 +416,7 @@ public class JPopupMenuOperator extends JComponentOperator {
                             TimeoutKey.WindowWaiter_WaitWindowTimeout)
                     .runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 
@@ -461,7 +460,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         return callPopup(comp, x, y, getPopupMouseButton());
     }
 
-    public static JPopupMenu callPopup(Component comp, int mouseButton) {
+    public static @Nullable JPopupMenu callPopup(Component comp, int mouseButton) {
         ComponentOperator co = new ComponentOperator(comp);
         co.makeComponentVisible();
         co.clickForPopup(mouseButton);
@@ -469,7 +468,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         return findJPopupMenu(waitJPopupWindow(PredicatesJ.alwaysTrue()), PredicatesJ.alwaysTrue());
     }
 
-    public static JPopupMenu callPopup(Component comp) {
+    public static @Nullable JPopupMenu callPopup(Component comp) {
         return callPopup(comp, getPopupMouseButton());
     }
 }

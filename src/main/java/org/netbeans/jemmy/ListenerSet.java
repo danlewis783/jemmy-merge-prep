@@ -23,7 +23,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +30,10 @@ import org.slf4j.LoggerFactory;
 public final class ListenerSet {
     private static final Logger logger = LoggerFactory.getLogger(ListenerSet.class);
 
-    private final AtomicReference<Set<EventListener>> listeners;
+    private final Set<EventListener> listeners;
     private final long theWholeMask;
 
     private ListenerSet() {
-        listeners = new AtomicReference<>();
         Set<EventListener> eventListenerSet = new HashSet<>();
         long theWholeMask;
         try {
@@ -57,12 +55,12 @@ public final class ListenerSet {
         }
 
         this.theWholeMask = theWholeMask;
-        listeners.set(Collections.unmodifiableSet(eventListenerSet));
+        listeners = Collections.unmodifiableSet(eventListenerSet);
     }
 
     public void addListeners(long eventMask) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        for (EventListener listener : listeners.get()) {
+        for (EventListener listener : listeners) {
             if ((listener.getEventMask() & eventMask) != 0) {
                 toolkit.addAWTEventListener(listener, listener.getEventMask());
             }
@@ -75,7 +73,7 @@ public final class ListenerSet {
 
     public void removeListeners() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        for (EventListener listener : listeners.get()) {
+        for (EventListener listener : listeners) {
             toolkit.removeAWTEventListener(listener);
         }
     }
@@ -101,7 +99,7 @@ public final class ListenerSet {
     public EventListener getLastEventType(long eventMask) {
         long maxTime = -1;
         EventListener maxType = null;
-        for (EventListener listener : listeners.get()) {
+        for (EventListener listener : listeners) {
             if ((eventMask & listener.getEventMask()) != 0 && (listener.getTime() > maxTime)) {
                 maxType = listener;
                 maxTime = maxType.getTime();

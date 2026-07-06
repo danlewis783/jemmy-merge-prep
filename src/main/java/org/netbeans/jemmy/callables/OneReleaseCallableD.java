@@ -21,6 +21,7 @@ import java.awt.Window;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.swing.MenuElement;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.netbeans.jemmy.operators.WindowOperator;
 
@@ -37,7 +38,7 @@ public class OneReleaseCallableD extends OneReleaseCallable {
     }
 
     @Override
-    public MenuElement getMenuElement() {
+    public @Nullable MenuElement getMenuElement() {
         Window win = JPopupMenuOperator.findJPopupWindow(popupChooser);
         if ((win != null) && new WindowOperator(win).isShowing()) {
             return JPopupMenuOperator.findJPopupMenu(win, popupChooser);

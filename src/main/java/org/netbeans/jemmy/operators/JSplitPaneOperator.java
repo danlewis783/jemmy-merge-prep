@@ -33,6 +33,7 @@ import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -54,7 +55,7 @@ public class JSplitPaneOperator extends JComponentOperator {
     public static final String VALUE_DPROP = "Value";
     public static final String VERTICAL_ORIENTATION_DPROP_VALUE = "VERTICAL";
     private static final Logger logger = LoggerFactory.getLogger(JSplitPaneOperator.class);
-    private ContainerOperator divider;
+    private @Nullable ContainerOperator divider;
     private final ScrollDriver driver;
 
     public JSplitPaneOperator(ContainerOperator cont) {
@@ -308,27 +309,27 @@ public class JSplitPaneOperator extends JComponentOperator {
         bo.push();
     }
 
-    public static JSplitPane findJSplitPane(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JSplitPane findJSplitPane(Container cont, Predicate<Component> chooser, int index) {
         return (JSplitPane) findComponent(cont, PredicatesJ.of(JSplitPane.class, chooser), index);
     }
 
-    public static JSplitPane findJSplitPane(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JSplitPane findJSplitPane(Container cont, Predicate<Component> chooser) {
         return findJSplitPane(cont, chooser, 0);
     }
 
-    public static JSplitPane findJSplitPane(Container cont, int index) {
+    public static @Nullable JSplitPane findJSplitPane(Container cont, int index) {
         return findJSplitPane(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static JSplitPane findJSplitPane(Container cont) {
+    public static @Nullable JSplitPane findJSplitPane(Container cont) {
         return findJSplitPane(cont, 0);
     }
 
-    public static JSplitPane findJSplitPaneUnder(Component comp, Predicate<Component> chooser) {
+    public static @Nullable JSplitPane findJSplitPaneUnder(Component comp, Predicate<Component> chooser) {
         return (JSplitPane) findContainerUnder(comp, PredicatesJ.of(JSplitPane.class, chooser));
     }
 
-    public static JSplitPane findJSplitPaneUnder(Component comp) {
+    public static @Nullable JSplitPane findJSplitPaneUnder(Component comp) {
         return findJSplitPaneUnder(comp, PredicatesJ.of(JSplitPane.class));
     }
 

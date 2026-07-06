@@ -32,6 +32,7 @@ import java.awt.event.ItemListener;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -161,19 +162,20 @@ public class CheckboxOperator extends ComponentOperator {
         }));
     }
 
-    public static Checkbox findCheckbox(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Checkbox findCheckbox(Container cont, Predicate<Component> chooser, int index) {
         return (Checkbox) findComponent(cont, PredicatesJ.of(Checkbox.class, chooser), index);
     }
 
-    public static Checkbox findCheckbox(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Checkbox findCheckbox(Container cont, Predicate<Component> chooser) {
         return findCheckbox(cont, chooser, 0);
     }
 
-    public static Checkbox findCheckbox(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable Checkbox findCheckbox(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findCheckbox(cont, new CheckboxByLabelPredicate(text, stringComparator), index);
     }
 
-    public static Checkbox findCheckbox(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable Checkbox findCheckbox(Container cont, String text, StringComparator stringComparator) {
         return findCheckbox(cont, text, stringComparator, 0);
     }
 

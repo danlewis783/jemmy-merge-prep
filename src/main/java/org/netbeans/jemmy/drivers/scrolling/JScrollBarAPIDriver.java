@@ -27,6 +27,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 
 import java.awt.Point;
 import java.util.Collections;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
@@ -103,7 +104,7 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {}
 
     @Override
-    protected Point startDragging(ComponentOperator oper) {
+    protected @Nullable Point startDragging(ComponentOperator oper) {
         return null;
     }
 

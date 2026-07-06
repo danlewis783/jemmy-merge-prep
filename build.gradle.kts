@@ -1,15 +1,21 @@
+import net.ltgt.gradle.errorprone.CheckSeverity
+import net.ltgt.gradle.errorprone.errorprone
+
 plugins {
     `java-library`
     `java-test-fixtures`
     id("com.diffplug.spotless") version "8.8.0"
+    id("net.ltgt.errorprone") version "4.0.1"
 }
 
 group = "io.github.danlewis783"
 version = "3.0.14-SNAPSHOT"
 
 java {
+    // Compile with 17 (Error Prone/NullAway need a >=11 compiler to run) but keep
+    // emitting Java 8 bytecode via release below, so the artifact stays Java 8.
     toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
+        languageVersion = JavaLanguageVersion.of(17)
     }
     withSourcesJar()
 }
@@ -21,6 +27,10 @@ repositories {
 dependencies {
     api(libs.jspecify)
     implementation(libs.slf4j)
+
+    // Null-checking: NullAway runs as an Error Prone plugin (enabled on main only).
+    errorprone(libs.errorprone.core)
+    errorprone(libs.nullaway)
 }
 
 testing {
@@ -74,6 +84,20 @@ tasks.named("check") {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+    options.release.set(8)
+    options.errorprone.isEnabled.set(false) // off everywhere; enabled for main below
+}
+
+// NullAway only (not the rest of Error Prone), over the project's packages, main
+// sources only - this is a nullness audit, not a general lint pass.
+tasks.named<JavaCompile>("compileJava") {
+    options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
+    options.errorprone {
+        isEnabled.set(true)
+        disableAllChecks.set(true)
+        check("NullAway", CheckSeverity.ERROR)
+        option("NullAway:AnnotatedPackages", "org.netbeans.jemmy")
+    }
 }
 
 spotless {

@@ -44,6 +44,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyException;
@@ -190,13 +191,11 @@ public class JTreeOperator extends JComponentOperator {
         try {
             return waiter.runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 
-    public TreePath findPath(TreePathChooser chooser) {
+    public @Nullable TreePath findPath(TreePathChooser chooser) {
         TreePath rootPath = new TreePath(getRoot());
         if (chooser.checkPath(rootPath, 0)) {
             return rootPath;
@@ -242,17 +241,17 @@ public class JTreeOperator extends JComponentOperator {
         return findRow(chooser, 0);
     }
 
-    public TreePath findPath(String[] names, int[] indexes, StringComparator comparator) {
+    public @Nullable TreePath findPath(String[] names, int[] indexes, StringComparator comparator) {
         return findPath(new StringArrayPathChooser(names, indexes, comparator));
     }
 
-    public TreePath findPath(String[] names, StringComparator comparator) {
+    public @Nullable TreePath findPath(String[] names, StringComparator comparator) {
         int[] indexes = new int[0];
 
         return findPath(names, indexes, comparator);
     }
 
-    public TreePath findPath(String path, String indexes, String delim, StringComparator comparator) {
+    public @Nullable TreePath findPath(String path, String indexes, String delim, StringComparator comparator) {
         String[] indexStrings = parseString(indexes, delim);
         int[] indInts = new int[indexStrings.length];
         for (int i = 0; i < indexStrings.length; i++) {
@@ -262,11 +261,11 @@ public class JTreeOperator extends JComponentOperator {
         return findPath(parseString(path, delim), indInts, comparator);
     }
 
-    public TreePath findPath(String path, String delim, StringComparator comparator) {
+    public @Nullable TreePath findPath(String path, String delim, StringComparator comparator) {
         return findPath(parseString(path, delim), comparator);
     }
 
-    public TreePath findPath(String path, StringComparator comparator) {
+    public @Nullable TreePath findPath(String path, StringComparator comparator) {
         return findPath(parseString(path), comparator);
     }
 
@@ -531,7 +530,7 @@ public class JTreeOperator extends JComponentOperator {
         waitState(new JTreeOperatorByItemPredicate(rowText, row, comparator));
     }
 
-    public Object chooseSubnode(Object parent, String text, int index, StringComparator comparator) {
+    public @Nullable Object chooseSubnode(Object parent, String text, int index, StringComparator comparator) {
         int count = -1;
         Object node;
         for (int i = 0, iMax = getChildCount(parent); i < iMax; i++) {
@@ -557,11 +556,11 @@ public class JTreeOperator extends JComponentOperator {
         return null;
     }
 
-    public Object chooseSubnode(Object parent, String text, StringComparator comparator) {
+    public @Nullable Object chooseSubnode(Object parent, String text, StringComparator comparator) {
         return chooseSubnode(parent, text, 0, comparator);
     }
 
-    public Object chooseSubnode(Object parent, String text, StringComparator stringComparator, int index) {
+    public @Nullable Object chooseSubnode(Object parent, String text, StringComparator stringComparator, int index) {
         return chooseSubnode(parent, text, index, stringComparator);
     }
 
@@ -1176,7 +1175,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    private TreePath findPathPrimitive(
+    private @Nullable TreePath findPathPrimitive(
             TreePath path,
             TreePathChooser chooser,
             FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter) {
@@ -1192,9 +1191,7 @@ public class JTreeOperator extends JComponentOperator {
         try {
             waitResult = waiter.runUntilNotNull(arg);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
 
         TreePath nextPath = waitResult.getTreePath();
@@ -1205,19 +1202,19 @@ public class JTreeOperator extends JComponentOperator {
         }
     }
 
-    public static JTree findJTree(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTree findJTree(Container cont, Predicate<Component> chooser, int index) {
         return (JTree) findComponent(cont, PredicatesJ.of(JTree.class, chooser), index);
     }
 
-    public static JTree findJTree(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTree findJTree(Container cont, Predicate<Component> chooser) {
         return findJTree(cont, chooser, 0);
     }
 
-    public static JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex, int index) {
+    public static @Nullable JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex, int index) {
         return findJTree(cont, new JTreeByItemPredicate(text, rowIndex, sc), index);
     }
 
-    public static JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex) {
+    public static @Nullable JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex) {
         return findJTree(cont, text, sc, rowIndex, 0);
     }
 

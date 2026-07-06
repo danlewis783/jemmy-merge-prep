@@ -35,6 +35,7 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SliderUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -337,19 +338,19 @@ public class JSliderOperator extends JComponentOperator {
         }));
     }
 
-    public static JSlider findJSlider(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JSlider findJSlider(Container cont, Predicate<Component> chooser, int index) {
         return (JSlider) findComponent(cont, PredicatesJ.of(JSlider.class, chooser), index);
     }
 
-    public static JSlider findJSlider(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JSlider findJSlider(Container cont, Predicate<Component> chooser) {
         return findJSlider(cont, chooser, 0);
     }
 
-    public static JSlider findJSlider(Container cont, int index) {
+    public static @Nullable JSlider findJSlider(Container cont, int index) {
         return findJSlider(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static JSlider findJSlider(Container cont) {
+    public static @Nullable JSlider findJSlider(Container cont) {
         return findJSlider(cont, 0);
     }
 

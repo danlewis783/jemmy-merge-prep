@@ -31,6 +31,7 @@ import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
@@ -109,19 +110,20 @@ public class TextFieldOperator extends TextComponentOperator {
         }));
     }
 
-    public static TextField findTextField(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable TextField findTextField(Container cont, Predicate<Component> chooser, int index) {
         return (TextField) findComponent(cont, PredicatesJ.of(TextField.class, chooser), index);
     }
 
-    public static TextField findTextField(Container cont, Predicate<Component> chooser) {
+    public static @Nullable TextField findTextField(Container cont, Predicate<Component> chooser) {
         return findTextField(cont, chooser, 0);
     }
 
-    public static TextField findTextField(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable TextField findTextField(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findTextField(cont, new TextFieldByTextPredicate(text, stringComparator), index);
     }
 
-    public static TextField findTextField(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable TextField findTextField(Container cont, String text, StringComparator stringComparator) {
         return findTextField(cont, text, stringComparator, 0);
     }
 

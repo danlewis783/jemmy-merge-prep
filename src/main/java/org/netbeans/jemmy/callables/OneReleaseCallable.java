@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.MenuElement;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -87,7 +88,7 @@ public abstract class OneReleaseCallable implements Callable<MenuElement> {
     }
 
     @Override
-    public MenuElement call() {
+    public @Nullable MenuElement call() {
         MenuElement element = getMenuElement();
         if (element != null) {
             MenuElement[] subElements = element.getSubElements();
@@ -109,7 +110,7 @@ public abstract class OneReleaseCallable implements Callable<MenuElement> {
         return null;
     }
 
-    public abstract MenuElement getMenuElement();
+    public abstract @Nullable MenuElement getMenuElement();
 
     public void stop() {
         stopped.set(true);

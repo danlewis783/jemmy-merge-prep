@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.ComboBoxEditor;
@@ -42,6 +43,7 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.plaf.ComboBoxUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyException;
@@ -59,9 +61,9 @@ import org.slf4j.LoggerFactory;
 
 public class JComboBoxOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JComboBoxOperator.class);
-    private JButtonOperator button;
+    private @Nullable JButtonOperator button;
     private final ListDriver driver;
-    private JTextFieldOperator text;
+    private @Nullable JTextFieldOperator text;
 
     public JComboBoxOperator(ContainerOperator cont) {
         this(cont, 0);
@@ -108,7 +110,7 @@ public class JComboBoxOperator extends JComponentOperator {
         return button;
     }
 
-    public JTextFieldOperator getTextField() {
+    public @Nullable JTextFieldOperator getTextField() {
         if (((JComboBox) getSource()).isEditable()) {
             text = new JTextFieldOperator(findJTextField());
         }
@@ -121,10 +123,8 @@ public class JComboBoxOperator extends JComponentOperator {
             return (JList)
                     FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
+            throw new JemmyException("Interrupted", e);
         }
-
-        return null;
     }
 
     public void pushComboButton() {
@@ -175,21 +175,21 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public void typeText(String text) {
         makeComponentVisible();
-        JTextFieldOperator tfo = getTextField();
+        JTextFieldOperator tfo = Objects.requireNonNull(getTextField(), "combo box is not editable");
         tfo.setVisualizer(new EmptyVisualizer());
         tfo.typeText(text);
     }
 
     public void clearText() {
         makeComponentVisible();
-        JTextFieldOperator tfo = getTextField();
+        JTextFieldOperator tfo = Objects.requireNonNull(getTextField(), "combo box is not editable");
         tfo.setVisualizer(new EmptyVisualizer());
         tfo.clearText();
     }
 
     public void enterText(String text) {
         makeComponentVisible();
-        JTextFieldOperator tfo = getTextField();
+        JTextFieldOperator tfo = Objects.requireNonNull(getTextField(), "combo box is not editable");
         tfo.setVisualizer(new EmptyVisualizer());
         tfo.enterText(text);
     }
@@ -500,20 +500,20 @@ public class JComboBoxOperator extends JComponentOperator {
         }));
     }
 
-    public static JComboBox findJComboBox(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JComboBox findJComboBox(Container cont, Predicate<Component> chooser, int index) {
         return (JComboBox) findComponent(cont, PredicatesJ.of(JComboBox.class, chooser), index);
     }
 
-    public static JComboBox findJComboBox(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JComboBox findJComboBox(Container cont, Predicate<Component> chooser) {
         return findJComboBox(cont, chooser, 0);
     }
 
-    public static JComboBox findJComboBox(
+    public static @Nullable JComboBox findJComboBox(
             Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JComboBox findJComboBox(
+    public static @Nullable JComboBox findJComboBox(
             Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return findJComboBox(cont, text, stringComparator, itemIndex, 0);
     }

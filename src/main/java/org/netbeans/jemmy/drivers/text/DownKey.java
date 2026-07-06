@@ -25,8 +25,11 @@
 
 package org.netbeans.jemmy.drivers.text;
 
+import java.util.Objects;
+import org.jspecify.annotations.Nullable;
+
 final class DownKey extends GoAndBackKey {
-    private UpKey backKey;
+    private @Nullable UpKey backKey;
 
     public DownKey(int keyCode, int mods) {
         super(keyCode, mods);
@@ -43,6 +46,6 @@ final class DownKey extends GoAndBackKey {
 
     @Override
     public GoAndBackKey getBackKey() {
-        return backKey;
+        return Objects.requireNonNull(backKey, "up key not set");
     }
 }

@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 
 public final class FunctionsJ {
     private FunctionsJ() {}
@@ -38,7 +39,7 @@ public final class FunctionsJ {
 
     private static class AlwaysNullFunction<F, T> implements Function<F, T> {
         @Override
-        public T apply(F f) {
+        public @Nullable T apply(F f) {
             return null;
         }
     }
@@ -51,7 +52,7 @@ public final class FunctionsJ {
         }
 
         @Override
-        public Boolean apply(Void v) {
+        public @Nullable Boolean apply(Void v) {
             return atomicBoolean.get() ? true : null;
         }
     }

@@ -34,8 +34,10 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.FrameFunction;
@@ -147,20 +149,20 @@ public class JFrameOperator extends FrameOperator {
         }));
     }
 
-    public static JFrame findJFrame(Predicate<Component> chooser, int index) {
+    public static @Nullable JFrame findJFrame(Predicate<Component> chooser, int index) {
         return (JFrame) FrameFunction.getFrame(PredicatesJ.of(JFrame.class, chooser), index);
     }
 
-    public static JFrame findJFrame(Predicate<Component> chooser) {
+    public static @Nullable JFrame findJFrame(Predicate<Component> chooser) {
         return findJFrame(chooser, 0);
     }
 
-    public static JFrame findJFrame(String title, StringComparator stringComparator, int index) {
+    public static @Nullable JFrame findJFrame(String title, StringComparator stringComparator, int index) {
         return (JFrame) FrameFunction.getFrame(
                 PredicatesJ.of(JFrame.class, new FrameShowingByTitlePredicate(title, stringComparator)), index);
     }
 
-    public static JFrame findJFrame(String title, StringComparator stringComparator) {
+    public static @Nullable JFrame findJFrame(String title, StringComparator stringComparator) {
         return findJFrame(title, stringComparator, 0);
     }
 
@@ -194,9 +196,7 @@ public class JFrameOperator extends FrameOperator {
                             TimeoutKey.FrameWaiter_WaitFrameTimeout)
                     .runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 }

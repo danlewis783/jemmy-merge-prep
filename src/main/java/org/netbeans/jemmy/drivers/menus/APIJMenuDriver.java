@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -45,9 +46,9 @@ import org.slf4j.LoggerFactory;
 public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriver {
     private static final Logger logger = LoggerFactory.getLogger(APIJMenuDriver.class);
 
-    protected Object push(
+    protected @Nullable Object push(
             ComponentOperator oper,
-            JMenuBar menuBar,
+            @Nullable JMenuBar menuBar,
             List<Predicate<Component>> predicates,
             int depth,
             boolean pressMouse) {

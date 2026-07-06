@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -61,7 +62,7 @@ public final class StayingEmptyFunction implements Function<Void, Boolean> {
     }
 
     @Override
-    public Boolean apply(Void obj) {
+    public @Nullable Boolean apply(Void obj) {
         long startTime = System.currentTimeMillis();
         UntilEventObserved callable = new UntilEventObserved(emptyTime, delta);
         Future<Boolean> future = JEMMY_STAYING_EMPTY_SERVICE.submit(callable);

@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.windows;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.Collections;
+import java.util.Objects;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.drivers.FrameDriver;
@@ -126,6 +127,7 @@ public final class DefaultInternalFrameDriver extends LightSupportiveDriver
     @Override
     public Component getTitlePane(ComponentOperator operator) {
         ComponentSearcher cs = new ComponentSearcher((Container) operator.getSource());
-        return cs.findComponent(PredicatesJ.of(BasicInternalFrameTitlePane.class));
+        return Objects.requireNonNull(
+                cs.findComponent(PredicatesJ.of(BasicInternalFrameTitlePane.class)), "title pane not found");
     }
 }

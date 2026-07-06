@@ -27,6 +27,7 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.AdjustmentListener;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -34,6 +35,7 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.plaf.ScrollBarUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.JemmyProperties;
@@ -56,8 +58,8 @@ public class JScrollBarOperator extends JComponentOperator {
     public static final String VERTICAL_ORIENTATION_DPROP_VALUE = "VERTICAL";
     private static final Logger logger = LoggerFactory.getLogger(JScrollBarOperator.class);
     private final ScrollDriver driver;
-    private JButtonOperator maxButtOperator;
-    private JButtonOperator minButtOperator;
+    private @Nullable JButtonOperator maxButtOperator;
+    private @Nullable JButtonOperator minButtOperator;
 
     public JScrollBarOperator(ContainerOperator cont) {
         this(cont, 0);
@@ -141,13 +143,13 @@ public class JScrollBarOperator extends JComponentOperator {
     public JButtonOperator getDecreaseButton() {
         initOperators();
 
-        return minButtOperator;
+        return Objects.requireNonNull(minButtOperator, "scroll bar has no decrease button");
     }
 
     public JButtonOperator getIncreaseButton() {
         initOperators();
 
-        return maxButtOperator;
+        return Objects.requireNonNull(maxButtOperator, "scroll bar has no increase button");
     }
 
     public void addAdjustmentListener(AdjustmentListener adjustmentListener) {
@@ -336,19 +338,19 @@ public class JScrollBarOperator extends JComponentOperator {
         maxButtOperator.setVisualizer(new EmptyVisualizer());
     }
 
-    public static JScrollBar findJScrollBar(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JScrollBar findJScrollBar(Container cont, Predicate<Component> chooser, int index) {
         return (JScrollBar) findComponent(cont, PredicatesJ.of(JScrollBar.class, chooser), index);
     }
 
-    public static JScrollBar findJScrollBar(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JScrollBar findJScrollBar(Container cont, Predicate<Component> chooser) {
         return findJScrollBar(cont, chooser, 0);
     }
 
-    public static JScrollBar findJScrollBar(Container cont, int index) {
+    public static @Nullable JScrollBar findJScrollBar(Container cont, int index) {
         return findJScrollBar(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static JScrollBar findJScrollBar(Container cont) {
+    public static @Nullable JScrollBar findJScrollBar(Container cont) {
         return findJScrollBar(cont, 0);
     }
 

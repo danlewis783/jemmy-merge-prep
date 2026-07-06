@@ -18,6 +18,7 @@ package org.netbeans.jemmy.functions;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.Operator;
 
 public final class OperatorPredicateFunction<T extends Operator> implements Function<Void, Boolean> {
@@ -30,7 +31,7 @@ public final class OperatorPredicateFunction<T extends Operator> implements Func
     }
 
     @Override
-    public Boolean apply(Void obj) {
+    public @Nullable Boolean apply(Void obj) {
         return predicate.test(operator) ? true : null;
     }
 }

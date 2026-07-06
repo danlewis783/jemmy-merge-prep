@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.function.Predicate;
 import javax.swing.JToggleButton;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
@@ -68,15 +69,15 @@ public class JToggleButtonOperator extends AbstractButtonOperator {
         makeComponentVisible();
     }
 
-    public static JToggleButton findJToggleButton(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JToggleButton findJToggleButton(Container cont, Predicate<Component> chooser, int index) {
         return (JToggleButton) findAbstractButton(cont, PredicatesJ.of(JToggleButton.class, chooser), index);
     }
 
-    public static JToggleButton findJToggleButton(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JToggleButton findJToggleButton(Container cont, Predicate<Component> chooser) {
         return findJToggleButton(cont, chooser, 0);
     }
 
-    public static JToggleButton findJToggleButton(
+    public static @Nullable JToggleButton findJToggleButton(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJToggleButton(
                 cont,
@@ -84,7 +85,8 @@ public class JToggleButtonOperator extends AbstractButtonOperator {
                 index);
     }
 
-    public static JToggleButton findJToggleButton(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JToggleButton findJToggleButton(
+            Container cont, String text, StringComparator stringComparator) {
         return findJToggleButton(cont, text, stringComparator, 0);
     }
 

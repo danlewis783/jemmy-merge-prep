@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
@@ -175,6 +176,9 @@ public abstract class Operator {
         }
     }
 
+    // the result's nullness follows the function's type argument, which pre-generics
+    // NullAway cannot express
+    @SuppressWarnings("NullAway")
     <F, T> T produceTimeRestricted(Function<F, T> function, @Nullable F f, TimeoutKey timeoutKey) {
         FunctionRunner<F, T> functionRunner = FunctionRunner.on(function);
         T ret;
@@ -220,21 +224,25 @@ public abstract class Operator {
         this.visualizer = visualizer;
     }
 
-    public static ComponentVisualizer setDefaultComponentVisualizer(ComponentVisualizer visualizer) {
+    public static @Nullable ComponentVisualizer setDefaultComponentVisualizer(ComponentVisualizer visualizer) {
         return (ComponentVisualizer)
                 JemmyProperties.getInstance().put("ComponentOperator.ComponentVisualizer", visualizer);
     }
 
     public static ComponentVisualizer getDefaultComponentVisualizer() {
-        return (ComponentVisualizer) JemmyProperties.getInstance().get("ComponentOperator.ComponentVisualizer");
+        return (ComponentVisualizer) Objects.requireNonNull(
+                JemmyProperties.getInstance().get("ComponentOperator.ComponentVisualizer"),
+                "ComponentOperator.ComponentVisualizer property not set");
     }
 
-    private static PathParser setDefaultPathParser(PathParser parser) {
+    private static @Nullable PathParser setDefaultPathParser(PathParser parser) {
         return (PathParser) JemmyProperties.getInstance().put("ComponentOperator.PathParser", parser);
     }
 
     private static PathParser getDefaultPathParser() {
-        return (PathParser) JemmyProperties.getInstance().get("ComponentOperator.PathParser");
+        return (PathParser) Objects.requireNonNull(
+                JemmyProperties.getInstance().get("ComponentOperator.PathParser"),
+                "ComponentOperator.PathParser property not set");
     }
 
     private static boolean setDefaultVerification(boolean verification) {
@@ -243,7 +251,8 @@ public abstract class Operator {
     }
 
     private static boolean getDefaultVerification() {
-        return (Boolean) JemmyProperties.getInstance().get("Operator.Verification");
+        return (Boolean) Objects.requireNonNull(
+                JemmyProperties.getInstance().get("Operator.Verification"), "Operator.Verification property not set");
     }
 
     public static boolean isCaptionEqual(String caption, String match, StringComparator comparator) {
@@ -258,7 +267,7 @@ public abstract class Operator {
         return InputEvent.BUTTON3_MASK;
     }
 
-    public static ComponentOperator createOperator(Component comp) {
+    public static @Nullable ComponentOperator createOperator(Component comp) {
         try {
             Class clazz = Class.forName("java.awt.Component");
             Class compClass = comp.getClass();
@@ -286,7 +295,7 @@ public abstract class Operator {
         operatorPkgs.add(pkgName);
     }
 
-    private static ComponentOperator createOperator(Component comp, Class compClass) {
+    private static @Nullable ComponentOperator createOperator(Component comp, Class compClass) {
         List<String> splitClassName = Arrays.asList(compClass.getName().split("\\."));
         String className = splitClassName.get(splitClassName.size() - 1);
         Object[] params = {comp};

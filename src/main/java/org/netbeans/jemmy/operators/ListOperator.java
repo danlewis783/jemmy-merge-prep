@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -276,11 +277,11 @@ public class ListOperator extends ComponentOperator {
         }));
     }
 
-    public static List findList(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable List findList(Container cont, Predicate<Component> chooser, int index) {
         return (List) findComponent(cont, PredicatesJ.of(List.class, chooser), index);
     }
 
-    public static List findList(Container cont, Predicate<Component> chooser) {
+    public static @Nullable List findList(Container cont, Predicate<Component> chooser) {
         return findList(cont, chooser, 0);
     }
 

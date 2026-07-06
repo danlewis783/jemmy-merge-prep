@@ -35,8 +35,10 @@ import javax.swing.JDialog;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.DialogFunction;
@@ -186,39 +188,40 @@ public class JDialogOperator extends DialogOperator {
         }));
     }
 
-    public static JDialog findJDialog(Predicate<Component> predicate, int index) {
+    public static @Nullable JDialog findJDialog(Predicate<Component> predicate, int index) {
         return (JDialog) DialogFunction.getDialog(PredicatesJ.of(JDialog.class, predicate), index);
     }
 
-    public static JDialog findJDialog(Predicate<Component> predicate) {
+    public static @Nullable JDialog findJDialog(Predicate<Component> predicate) {
         return findJDialog(predicate, 0);
     }
 
-    public static JDialog findJDialog(String title, StringComparator stringComparator, int index) {
+    public static @Nullable JDialog findJDialog(String title, StringComparator stringComparator, int index) {
         return (JDialog) DialogFunction.getDialog(
                 PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)), index);
     }
 
-    public static JDialog findJDialog(String title, StringComparator stringComparator) {
+    public static @Nullable JDialog findJDialog(String title, StringComparator stringComparator) {
         return findJDialog(title, stringComparator, 0);
     }
 
-    public static JDialog findJDialog(Window owner, Predicate<Component> predicate, int index) {
+    public static @Nullable JDialog findJDialog(Window owner, Predicate<Component> predicate, int index) {
         return (JDialog) DialogFunction.getDialog(owner, PredicatesJ.of(JDialog.class, predicate), index);
     }
 
-    public static JDialog findJDialog(Window owner, Predicate<Component> predicate) {
+    public static @Nullable JDialog findJDialog(Window owner, Predicate<Component> predicate) {
         return findJDialog(owner, predicate, 0);
     }
 
-    public static JDialog findJDialog(Window owner, String title, StringComparator stringComparator, int index) {
+    public static @Nullable JDialog findJDialog(
+            Window owner, String title, StringComparator stringComparator, int index) {
         return (JDialog) DialogFunction.getDialog(
                 owner,
                 PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index);
     }
 
-    public static JDialog findJDialog(Window owner, String title, StringComparator stringComparator) {
+    public static @Nullable JDialog findJDialog(Window owner, String title, StringComparator stringComparator) {
         return findJDialog(owner, title, stringComparator, 0);
     }
 
@@ -250,7 +253,7 @@ public class JDialogOperator extends DialogOperator {
         return waitJDialog(owner, title, stringComparator, 0);
     }
 
-    public static Dialog getTopModalDialog() {
+    public static @Nullable Dialog getTopModalDialog() {
         return DialogFunction.getDialog(new TopVisibleModalDialogPredicate());
     }
 
@@ -262,16 +265,14 @@ public class JDialogOperator extends DialogOperator {
         return waitJDialog((Window) owner.getSource(), predicate, index);
     }
 
-    protected static JDialog waitJDialog(Window owner, Predicate<Component> predicate, int index) {
+    protected static JDialog waitJDialog(@Nullable Window owner, Predicate<Component> predicate, int index) {
         try {
             return (JDialog) FunctionRepeater.on(
                             new DialogFunction(index, owner, PredicatesJ.of(JDialog.class, predicate)),
                             TimeoutKey.DialogWaiter_WaitDialogTimeout)
                     .runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 }

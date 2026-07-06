@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JMenuItem;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public final class JPopupMenuPushFunction implements Function<Void, JMenuItem> {
     }
 
     @Override
-    public JMenuItem apply(Void v) {
+    public @Nullable JMenuItem apply(Void v) {
         return (JMenuItem) driver.pushMenu(jPopupMenuOperator, predicates);
     }
 }

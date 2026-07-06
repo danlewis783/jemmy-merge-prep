@@ -42,6 +42,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SpinnerUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -54,8 +55,8 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JSpinnerOperator extends JComponentOperator {
-    private JButtonOperator decreaseOperator = null;
-    private JButtonOperator increaseOperator = null;
+    private @Nullable JButtonOperator decreaseOperator = null;
+    private @Nullable JButtonOperator increaseOperator = null;
     private final ScrollDriver driver;
 
     public JSpinnerOperator(ContainerOperator cont) {
@@ -130,7 +131,8 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getIncreaseOperator() {
         if (increaseOperator == null) {
-            increaseOperator = (JButtonOperator) createSubOperator(PredicatesJ.of(JButton.class), 0);
+            increaseOperator = (JButtonOperator)
+                    Objects.requireNonNull(createSubOperator(PredicatesJ.of(JButton.class), 0), "no increase button");
         }
 
         return increaseOperator;
@@ -138,13 +140,14 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getDecreaseOperator() {
         if (decreaseOperator == null) {
-            decreaseOperator = (JButtonOperator) createSubOperator(PredicatesJ.of(JButton.class), 1);
+            decreaseOperator = (JButtonOperator)
+                    Objects.requireNonNull(createSubOperator(PredicatesJ.of(JButton.class), 1), "no decrease button");
         }
 
         return decreaseOperator;
     }
 
-    public Object getMinimum() {
+    public @Nullable Object getMinimum() {
         SpinnerModel model = getModel();
         if (model instanceof SpinnerNumberModel) {
             return ((SpinnerNumberModel) model).getMinimum();
@@ -159,7 +162,7 @@ public class JSpinnerOperator extends JComponentOperator {
         }
     }
 
-    public Object getMaximum() {
+    public @Nullable Object getMaximum() {
         SpinnerModel model = getModel();
         if (model instanceof SpinnerNumberModel) {
             return ((SpinnerNumberModel) model).getMaximum();
@@ -258,19 +261,19 @@ public class JSpinnerOperator extends JComponentOperator {
         }));
     }
 
-    public static JSpinner findJSpinner(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JSpinner findJSpinner(Container cont, Predicate<Component> chooser, int index) {
         return (JSpinner) findComponent(cont, PredicatesJ.of(JSpinner.class, chooser), index);
     }
 
-    public static JSpinner findJSpinner(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JSpinner findJSpinner(Container cont, Predicate<Component> chooser) {
         return findJSpinner(cont, chooser, 0);
     }
 
-    public static JSpinner findJSpinner(Container cont, int index) {
+    public static @Nullable JSpinner findJSpinner(Container cont, int index) {
         return findJSpinner(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static JSpinner findJSpinner(Container cont) {
+    public static @Nullable JSpinner findJSpinner(Container cont) {
         return findJSpinner(cont, 0);
     }
 

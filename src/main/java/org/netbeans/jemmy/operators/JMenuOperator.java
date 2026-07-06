@@ -35,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.MenuElement;
 import javax.swing.event.MenuListener;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -307,19 +308,19 @@ public class JMenuOperator extends JMenuItemOperator {
         }));
     }
 
-    public static JMenu findJMenu(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JMenu findJMenu(Container cont, Predicate<Component> chooser, int index) {
         return (JMenu) findComponent(cont, PredicatesJ.of(JMenu.class, chooser), index);
     }
 
-    public static JMenu findJMenu(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JMenu findJMenu(Container cont, Predicate<Component> chooser) {
         return findJMenu(cont, chooser, 0);
     }
 
-    public static JMenu findJMenu(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JMenu findJMenu(Container cont, String text, StringComparator stringComparator, int index) {
         return findJMenu(cont, new JMenuByLabelPredicate(text, stringComparator), index);
     }
 
-    public static JMenu findJMenu(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JMenu findJMenu(Container cont, String text, StringComparator stringComparator) {
         return findJMenu(cont, text, stringComparator, 0);
     }
 

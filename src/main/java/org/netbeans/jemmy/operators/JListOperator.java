@@ -40,6 +40,7 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ListUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -151,7 +152,7 @@ public class JListOperator extends JComponentOperator {
         return findItemIndex(predicate, 0);
     }
 
-    public Object clickOnItem(int itemIndex, int clickCount) {
+    public @Nullable Object clickOnItem(int itemIndex, int clickCount) {
         checkIndex(itemIndex);
 
         try {
@@ -614,20 +615,21 @@ public class JListOperator extends JComponentOperator {
         }
     }
 
-    public static JList findJList(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JList findJList(Container cont, Predicate<Component> chooser, int index) {
         return (JList) findComponent(cont, PredicatesJ.of(JList.class, chooser), index);
     }
 
-    public static JList findJList(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JList findJList(Container cont, Predicate<Component> chooser) {
         return findJList(cont, chooser, 0);
     }
 
-    public static JList findJList(
+    public static @Nullable JList findJList(
             Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JList findJList(Container cont, String text, StringComparator stringComparator, int itemIndex) {
+    public static @Nullable JList findJList(
+            Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return findJList(cont, text, stringComparator, itemIndex, 0);
     }
 

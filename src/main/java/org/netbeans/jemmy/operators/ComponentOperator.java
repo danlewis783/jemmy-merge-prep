@@ -61,6 +61,7 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.EventDispatcher;
@@ -360,7 +361,7 @@ public class ComponentOperator extends Operator {
         return res;
     }
 
-    public Container getContainer(Predicate<Component> chooser) {
+    public @Nullable Container getContainer(Predicate<Component> chooser) {
         int counter = 0;
         Container cont = getSource().getParent();
         if (cont == null) {
@@ -1130,7 +1131,7 @@ public class ComponentOperator extends Operator {
         }));
     }
 
-    public static Component findComponent(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Component findComponent(Container cont, Predicate<Component> chooser) {
         return findComponent(cont, chooser, 0);
     }
 
@@ -1148,18 +1149,16 @@ public class ComponentOperator extends Operator {
                             obj -> findComponent(cont, PredicatesJ.ofShowing(predicate), index))
                     .runUntilNotNull(null);
         } catch (InterruptedException e) {
-            logger.warn("", e);
-
-            return null;
+            throw new JemmyException("Interrupted", e);
         }
     }
 
-    private static Component findComponent(
+    private static @Nullable Component findComponent(
             Container cont, Predicate<Component> chooser, int index, boolean suppressOutput) {
         return findComponent(cont, chooser, index);
     }
 
-    public static Component findComponent(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Component findComponent(Container cont, Predicate<Component> chooser, int index) {
         return new ComponentSearcher(cont).findComponent(PredicatesJ.ofShowing(chooser), index);
     }
 }

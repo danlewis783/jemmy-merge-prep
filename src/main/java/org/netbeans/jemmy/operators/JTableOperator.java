@@ -49,6 +49,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyException;
@@ -110,7 +111,8 @@ public class JTableOperator extends JComponentOperator {
         return findCell(new ByTableCellResidentToStringChooser(text, comparator), index);
     }
 
-    public Point findCell(String text, StringComparator comparator, int[] rows, int[] columns, int index) {
+    public Point findCell(
+            String text, StringComparator comparator, int @Nullable [] rows, int @Nullable [] columns, int index) {
         return findCell(new ByTableCellResidentToStringChooser(text, comparator), rows, columns, index);
     }
 
@@ -158,7 +160,7 @@ public class JTableOperator extends JComponentOperator {
         return findCell(new ByRenderedComponentTableCellChooser(chooser), index);
     }
 
-    public Point findCell(Predicate<Component> chooser, int[] rows, int[] columns, int index) {
+    public Point findCell(Predicate<Component> chooser, int @Nullable [] rows, int @Nullable [] columns, int index) {
         return findCell(new ByRenderedComponentTableCellChooser(chooser), rows, columns, index);
     }
 
@@ -194,7 +196,7 @@ public class JTableOperator extends JComponentOperator {
         return findCell(chooser, null, null, index);
     }
 
-    public Point findCell(TableCellChooser chooser, int[] rows, int[] columns, int index) {
+    public Point findCell(TableCellChooser chooser, int @Nullable [] rows, int @Nullable [] columns, int index) {
         TableModel model = getModel();
         int[] realRows;
         if (rows != null) {
@@ -980,20 +982,20 @@ public class JTableOperator extends JComponentOperator {
         }));
     }
 
-    public static JTable findJTable(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTable findJTable(Container cont, Predicate<Component> chooser, int index) {
         return (JTable) findComponent(cont, PredicatesJ.of(JTable.class, chooser), index);
     }
 
-    public static JTable findJTable(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTable findJTable(Container cont, Predicate<Component> chooser) {
         return findJTable(cont, chooser, 0);
     }
 
-    public static JTable findJTable(
+    public static @Nullable JTable findJTable(
             Container cont, String text, StringComparator stringComparator, int row, int column, int index) {
         return findJTable(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index);
     }
 
-    public static JTable findJTable(
+    public static @Nullable JTable findJTable(
             Container cont, String text, StringComparator stringComparator, int row, int column) {
         return findJTable(cont, text, stringComparator, row, column, 0);
     }
@@ -1062,7 +1064,7 @@ public class JTableOperator extends JComponentOperator {
         }
 
         @Override
-        public Component apply(Component obj) {
+        public @Nullable Component apply(Component obj) {
             Point point = getPointToClick(row, column);
             Component component = getComponentAt(point.x, point.y);
             if ((component != null) && predicate.test(component)) {

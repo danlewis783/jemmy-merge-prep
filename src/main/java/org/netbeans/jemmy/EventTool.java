@@ -25,6 +25,7 @@
 package org.netbeans.jemmy;
 
 import java.awt.AWTEvent;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.functions.AwtEventByMaskFunction;
 import org.netbeans.jemmy.functions.NoEventFunction;
 import org.slf4j.Logger;
@@ -47,11 +48,11 @@ public final class EventTool {
         return listenerSet.getLastEventTime(eventMask);
     }
 
-    public AWTEvent getLastEvent(long eventMask) {
+    public @Nullable AWTEvent getLastEvent(long eventMask) {
         return listenerSet.getLastEvent(eventMask);
     }
 
-    public AWTEvent getLastEvent() {
+    public @Nullable AWTEvent getLastEvent() {
         return getLastEvent(listenerSet.getTheWholeMask());
     }
 

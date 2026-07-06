@@ -44,6 +44,7 @@ import javax.swing.event.MenuDragMouseListener;
 import javax.swing.event.MenuKeyEvent;
 import javax.swing.event.MenuKeyListener;
 import javax.swing.plaf.MenuItemUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
@@ -212,19 +213,20 @@ public class JMenuItemOperator extends AbstractButtonOperator {
 
     protected void prepareToClick() {}
 
-    public static JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser, int index) {
+    public static @Nullable JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser, int index) {
         return (JMenuItem) findComponent(menu, PredicatesJ.of(JMenuItem.class, chooser), index);
     }
 
-    public static JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser) {
+    public static @Nullable JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser) {
         return findJMenuItem(menu, chooser, 0);
     }
 
-    public static JMenuItem findJMenuItem(Container menu, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JMenuItem findJMenuItem(
+            Container menu, String text, StringComparator stringComparator, int index) {
         return findJMenuItem(menu, new JMenuItemByTextPredicate(text, stringComparator), index);
     }
 
-    public static JMenuItem findJMenuItem(Container menu, String text, StringComparator stringComparator) {
+    public static @Nullable JMenuItem findJMenuItem(Container menu, String text, StringComparator stringComparator) {
         return findJMenuItem(menu, text, stringComparator, 0);
     }
 

@@ -23,6 +23,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JList;
 import javax.swing.plaf.basic.ComboPopup;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.functions.WindowFunction;
 import org.netbeans.jemmy.predicates.PopupWindowPredicate;
@@ -39,7 +40,7 @@ public class ComboBoxPopupListFunction implements Function<Void, Component> {
     }
 
     @Override
-    public Component apply(Void obj) {
+    public @Nullable Component apply(Void obj) {
         Window popupWindow;
         if (popupWindowChooser.test(jComboBoxOperator.getWindow())) {
             popupWindow = jComboBoxOperator.getWindow();

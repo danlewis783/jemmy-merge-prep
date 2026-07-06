@@ -18,6 +18,7 @@ package org.netbeans.jemmy.functions;
 
 import java.awt.AWTEvent;
 import java.util.function.Function;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.EventListener;
 import org.netbeans.jemmy.EventTool;
 
@@ -31,7 +32,7 @@ public final class AwtEventByMaskFunction implements Function<Void, AWTEvent> {
     }
 
     @Override
-    public AWTEvent apply(Void obj) {
+    public @Nullable AWTEvent apply(Void obj) {
         EventListener eventListener = EventTool.getInstance().getListenerSet().getLastEventType(eventMask);
         if ((eventListener != null) && (eventListener.getTime() > startTime)) {
             return eventListener.getEvent();

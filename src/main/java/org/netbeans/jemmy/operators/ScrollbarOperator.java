@@ -31,6 +31,7 @@ import java.awt.event.AdjustmentListener;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -221,19 +222,19 @@ public class ScrollbarOperator extends ComponentOperator {
         }));
     }
 
-    public static Scrollbar findScrollbar(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Scrollbar findScrollbar(Container cont, Predicate<Component> chooser, int index) {
         return (Scrollbar) findComponent(cont, PredicatesJ.of(Scrollbar.class, chooser), index);
     }
 
-    public static Scrollbar findScrollbar(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Scrollbar findScrollbar(Container cont, Predicate<Component> chooser) {
         return findScrollbar(cont, chooser, 0);
     }
 
-    public static Scrollbar findScrollbar(Container cont, int index) {
+    public static @Nullable Scrollbar findScrollbar(Container cont, int index) {
         return findScrollbar(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static Scrollbar findScrollbar(Container cont) {
+    public static @Nullable Scrollbar findScrollbar(Container cont) {
         return findScrollbar(cont, 0);
     }
 

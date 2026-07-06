@@ -35,6 +35,7 @@ import javax.swing.JEditorPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.EditorKit;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -153,15 +154,15 @@ public class JEditorPaneOperator extends JTextComponentOperator {
         }));
     }
 
-    public static JEditorPane findJEditorPane(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JEditorPane findJEditorPane(Container cont, Predicate<Component> chooser, int index) {
         return (JEditorPane) findJTextComponent(cont, PredicatesJ.of(JEditorPane.class, chooser), index);
     }
 
-    public static JEditorPane findJEditorPane(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JEditorPane findJEditorPane(Container cont, Predicate<Component> chooser) {
         return findJEditorPane(cont, chooser, 0);
     }
 
-    public static JEditorPane findJEditorPane(
+    public static @Nullable JEditorPane findJEditorPane(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJEditorPane(
                 cont,
@@ -169,7 +170,8 @@ public class JEditorPaneOperator extends JTextComponentOperator {
                 index);
     }
 
-    public static JEditorPane findJEditorPane(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JEditorPane findJEditorPane(
+            Container cont, String text, StringComparator stringComparator) {
         return findJEditorPane(cont, text, stringComparator, 0);
     }
 

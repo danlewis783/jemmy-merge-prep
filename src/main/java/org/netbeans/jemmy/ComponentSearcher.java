@@ -27,6 +27,7 @@ package org.netbeans.jemmy;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,18 +40,19 @@ public final class ComponentSearcher {
         this.container = container;
     }
 
-    public Component findComponent(Predicate<Component> predicate, int index) {
+    public @Nullable Component findComponent(Predicate<Component> predicate, int index) {
         ordinalIndex = 0;
 
         return findComponentInContainer(container, predicate, index);
     }
 
-    public Component findComponent(Predicate<Component> predicate) {
+    public @Nullable Component findComponent(Predicate<Component> predicate) {
         return findComponent(predicate, 0);
     }
 
     // Depth-First Search
-    private Component findComponentInContainer(Container container, Predicate<Component> predicate, int index) {
+    private @Nullable Component findComponentInContainer(
+            Container container, Predicate<Component> predicate, int index) {
         Component[] components = container.getComponents();
         Component ret;
         for (Component component : components) {

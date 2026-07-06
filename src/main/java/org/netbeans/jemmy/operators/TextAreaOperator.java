@@ -30,6 +30,7 @@ import java.awt.Dimension;
 import java.awt.TextArea;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
@@ -111,19 +112,20 @@ public class TextAreaOperator extends TextComponentOperator {
         }));
     }
 
-    public static TextArea findTextArea(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable TextArea findTextArea(Container cont, Predicate<Component> chooser, int index) {
         return (TextArea) findComponent(cont, PredicatesJ.of(TextArea.class, chooser), index);
     }
 
-    public static TextArea findTextArea(Container cont, Predicate<Component> chooser) {
+    public static @Nullable TextArea findTextArea(Container cont, Predicate<Component> chooser) {
         return findTextArea(cont, chooser, 0);
     }
 
-    public static TextArea findTextArea(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable TextArea findTextArea(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findTextArea(cont, new TextAreaByTextPredicate(text, stringComparator), index);
     }
 
-    public static TextArea findTextArea(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable TextArea findTextArea(Container cont, String text, StringComparator stringComparator) {
         return findTextArea(cont, text, stringComparator, 0);
     }
 

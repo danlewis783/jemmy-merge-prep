@@ -62,15 +62,15 @@ public final class FunctionRunner<F, T> {
         return FunctionRunner.on(FunctionsJ.forPredicate(predicate));
     }
 
-    public Throwable getThrowable() {
+    public @Nullable Throwable getThrowable() {
         return throwable.get();
     }
 
-    public T submitAndGetDefaultTimeout(@Nullable F f) throws InterruptedException {
+    public @Nullable T submitAndGetDefaultTimeout(@Nullable F f) throws InterruptedException {
         return submitAndGet(f, TimeoutKey.ActionProducer_MaxActionTime);
     }
 
-    public T submitAndGet(@Nullable F f, TimeoutKey timeoutKey) throws InterruptedException {
+    public @Nullable T submitAndGet(@Nullable F f, TimeoutKey timeoutKey) throws InterruptedException {
         Future<T> future = JEMMY_ACTION_SERVICE.submit(() -> function.apply(f));
         long timeout = Timeouts.get(timeoutKey);
         long startTime = System.currentTimeMillis();

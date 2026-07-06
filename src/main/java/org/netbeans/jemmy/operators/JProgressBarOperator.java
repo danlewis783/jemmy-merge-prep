@@ -32,6 +32,7 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.JProgressBar;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ProgressBarUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
@@ -202,19 +203,19 @@ public class JProgressBarOperator extends JComponentOperator {
         }));
     }
 
-    public static JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser, int index) {
         return (JProgressBar) findComponent(cont, PredicatesJ.of(JProgressBar.class, chooser), index);
     }
 
-    public static JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser) {
         return findJProgressBar(cont, chooser, 0);
     }
 
-    public static JProgressBar findJProgressBar(Container cont, int index) {
+    public static @Nullable JProgressBar findJProgressBar(Container cont, int index) {
         return findJProgressBar(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static JProgressBar findJProgressBar(Container cont) {
+    public static @Nullable JProgressBar findJProgressBar(Container cont) {
         return findJProgressBar(cont, 0);
     }
 

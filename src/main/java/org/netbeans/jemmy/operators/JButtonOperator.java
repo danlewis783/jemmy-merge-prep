@@ -29,6 +29,7 @@ import java.awt.Container;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JButton;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
@@ -87,20 +88,21 @@ public class JButtonOperator extends AbstractButtonOperator {
         makeComponentVisible();
     }
 
-    public static JButton findJButton(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JButton findJButton(Container cont, Predicate<Component> chooser, int index) {
         return (JButton) findAbstractButton(cont, PredicatesJ.of(JButton.class, chooser), index);
     }
 
-    public static JButton findJButton(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JButton findJButton(Container cont, Predicate<Component> chooser) {
         return findJButton(cont, chooser, 0);
     }
 
-    public static JButton findJButton(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JButton findJButton(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findJButton(
                 cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index);
     }
 
-    public static JButton findJButton(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JButton findJButton(Container cont, String text, StringComparator stringComparator) {
         return findJButton(cont, text, stringComparator, 0);
     }
 

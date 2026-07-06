@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.awt.Scrollbar;
 import java.util.Collections;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.ScrollbarOperator;
 
@@ -74,7 +75,7 @@ public final class ScrollbarDriver extends AWTScrollDriver {
     }
 
     @Override
-    protected Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
+    protected @Nullable Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
         int x, y;
         if (orientation == Scrollbar.HORIZONTAL) {
             if (direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {

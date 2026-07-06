@@ -21,22 +21,23 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.predicates.DialogSubPredicate;
 
 public final class DialogFunction extends WindowFunction<Dialog> {
-    public DialogFunction(int index, Window owner, Predicate<Component> predicate) {
+    public DialogFunction(int index, @Nullable Window owner, Predicate<Component> predicate) {
         super(index, owner, predicate);
     }
 
-    public static Dialog getDialog(Predicate<Component> predicate) {
+    public static @Nullable Dialog getDialog(Predicate<Component> predicate) {
         return (Dialog) WindowFunction.getWindow(null, new DialogSubPredicate(predicate), 0);
     }
 
-    public static Dialog getDialog(Predicate<Component> predicate, int index) {
+    public static @Nullable Dialog getDialog(Predicate<Component> predicate, int index) {
         return (Dialog) WindowFunction.getWindow(null, new DialogSubPredicate(predicate), index);
     }
 
-    public static Dialog getDialog(Window owner, Predicate<Component> predicate, int index) {
+    public static @Nullable Dialog getDialog(@Nullable Window owner, Predicate<Component> predicate, int index) {
         return (Dialog) WindowFunction.getWindow(owner, new DialogSubPredicate(predicate), index);
     }
 }

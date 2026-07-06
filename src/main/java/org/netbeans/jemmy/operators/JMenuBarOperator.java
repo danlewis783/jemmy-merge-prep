@@ -30,6 +30,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -42,6 +43,7 @@ import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SingleSelectionModel;
 import javax.swing.plaf.MenuBarUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.JemmyProperties;
@@ -165,7 +167,7 @@ public class JMenuBarOperator extends JComponentOperator {
         if (System.getProperty("os.name").toLowerCase().contains("mac")) {
             ComponentSearcher searcher = new ComponentSearcher((Container) menuCont.getSource());
             Component c = searcher.findComponent(new JMenuItemByTextPredicate(path[path.length - 1], comparator));
-            result = new JMenuItemOperator((JMenuItem) c);
+            result = new JMenuItemOperator((JMenuItem) Objects.requireNonNull(c, "menu item not found"));
         } else {
             result = new JMenuItemOperator(menuCont, path[path.length - 1], comparator);
         }
@@ -308,11 +310,11 @@ public class JMenuBarOperator extends JComponentOperator {
         }));
     }
 
-    public static JMenuBar findJMenuBar(JFrame frame) {
+    public static @Nullable JMenuBar findJMenuBar(JFrame frame) {
         return findJMenuBar((Container) frame);
     }
 
-    public static JMenuBar findJMenuBar(JDialog dialog) {
+    public static @Nullable JMenuBar findJMenuBar(JDialog dialog) {
         return findJMenuBar((Container) dialog);
     }
 
@@ -328,7 +330,7 @@ public class JMenuBarOperator extends JComponentOperator {
         return waitJMenuBar((Container) dialog);
     }
 
-    public static JMenuBar findJMenuBar(Container cont) {
+    public static @Nullable JMenuBar findJMenuBar(Container cont) {
         return (JMenuBar) findComponent(cont, PredicatesJ.of(JMenuBar.class));
     }
 

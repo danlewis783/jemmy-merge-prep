@@ -19,6 +19,7 @@ package org.netbeans.jemmy.functions;
 import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.TreePathAndBoolean;
 import org.netbeans.jemmy.TreePathChooserAndTreePath;
 import org.netbeans.jemmy.operators.JTreeOperator;
@@ -31,7 +32,7 @@ public final class LoadedFunction implements Function<TreePathChooserAndTreePath
     }
 
     @Override
-    public TreePathAndBoolean apply(TreePathChooserAndTreePath arg) {
+    public @Nullable TreePathAndBoolean apply(TreePathChooserAndTreePath arg) {
         JTreeOperator.TreePathChooser treePathChooser =
                 Objects.requireNonNull(arg, "arg must not be null").getTreePathChooser();
         TreePath path = arg.getTreePath();

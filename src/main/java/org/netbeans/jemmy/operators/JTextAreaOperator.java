@@ -30,6 +30,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
@@ -222,22 +223,23 @@ public class JTextAreaOperator extends JTextComponentOperator {
         }));
     }
 
-    public static JTextArea findJTextArea(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTextArea findJTextArea(Container cont, Predicate<Component> chooser, int index) {
         return (JTextArea) findJTextComponent(cont, PredicatesJ.of(JTextArea.class, chooser), index);
     }
 
-    public static JTextArea findJTextArea(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTextArea findJTextArea(Container cont, Predicate<Component> chooser) {
         return findJTextArea(cont, chooser, 0);
     }
 
-    public static JTextArea findJTextArea(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JTextArea findJTextArea(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextArea(
                 cont,
                 PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JTextArea findJTextArea(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JTextArea findJTextArea(Container cont, String text, StringComparator stringComparator) {
         return findJTextArea(cont, text, stringComparator, 0);
     }
 

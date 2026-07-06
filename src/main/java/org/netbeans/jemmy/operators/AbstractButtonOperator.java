@@ -37,6 +37,7 @@ import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ButtonUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -512,20 +513,21 @@ public class AbstractButtonOperator extends JComponentOperator {
         }));
     }
 
-    public static AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser, int index) {
         return (AbstractButton) findComponent(cont, PredicatesJ.of(AbstractButton.class, chooser), index);
     }
 
-    public static AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser) {
+    public static @Nullable AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser) {
         return findAbstractButton(cont, chooser, 0);
     }
 
-    public static AbstractButton findAbstractButton(
+    public static @Nullable AbstractButton findAbstractButton(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findAbstractButton(cont, new AbstractButtonByTextPredicate(text, stringComparator), index);
     }
 
-    public static AbstractButton findAbstractButton(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable AbstractButton findAbstractButton(
+            Container cont, String text, StringComparator stringComparator) {
         return findAbstractButton(cont, text, stringComparator, 0);
     }
 

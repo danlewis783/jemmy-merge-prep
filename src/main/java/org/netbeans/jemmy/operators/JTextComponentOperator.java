@@ -45,6 +45,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyInputException;
@@ -605,15 +606,15 @@ public class JTextComponentOperator extends JComponentOperator {
         }));
     }
 
-    public static JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser, int index) {
         return (JTextComponent) findComponent(cont, PredicatesJ.of(JTextComponent.class, chooser), index);
     }
 
-    public static JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser) {
         return findJTextComponent(cont, chooser, 0);
     }
 
-    public static JTextComponent findJTextComponent(
+    public static @Nullable JTextComponent findJTextComponent(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextComponent(
                 cont,
@@ -621,7 +622,8 @@ public class JTextComponentOperator extends JComponentOperator {
                 index);
     }
 
-    public static JTextComponent findJTextComponent(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JTextComponent findJTextComponent(
+            Container cont, String text, StringComparator stringComparator) {
         return findJTextComponent(cont, text, stringComparator, 0);
     }
 

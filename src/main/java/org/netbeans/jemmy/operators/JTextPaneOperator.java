@@ -34,6 +34,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -159,22 +160,23 @@ public class JTextPaneOperator extends JEditorPaneOperator {
         }));
     }
 
-    public static JTextPane findJTextPane(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTextPane findJTextPane(Container cont, Predicate<Component> chooser, int index) {
         return (JTextPane) findJTextComponent(cont, PredicatesJ.of(JTextPane.class, chooser), index);
     }
 
-    public static JTextPane findJTextPane(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTextPane findJTextPane(Container cont, Predicate<Component> chooser) {
         return findJTextPane(cont, chooser, 0);
     }
 
-    public static JTextPane findJTextPane(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JTextPane findJTextPane(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextPane(
                 cont,
                 PredicatesJ.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JTextPane findJTextPane(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JTextPane findJTextPane(Container cont, String text, StringComparator stringComparator) {
         return findJTextPane(cont, text, stringComparator, 0);
     }
 

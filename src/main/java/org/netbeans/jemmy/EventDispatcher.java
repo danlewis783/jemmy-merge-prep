@@ -31,13 +31,14 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.callables.MethodInvokeCallable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class EventDispatcher {
     private static final Logger logger = LoggerFactory.getLogger(EventDispatcher.class);
-    private ClassReference<Robot> robotReference = null;
+    private @Nullable ClassReference<Robot> robotReference = null;
     private final Component component;
     private EnumSet<DispatchingModel> model;
     private final ClassReference<Component> reference;
@@ -66,12 +67,12 @@ public final class EventDispatcher {
         this.model = model;
 
         if (this.model.contains(DispatchingModel.Robot)) {
-            createRobot();
+            ClassReference<Robot> robot = createRobot();
 
             try {
                 Object[] params = {this.model.contains(DispatchingModel.Queue) ? Boolean.TRUE : Boolean.FALSE};
                 Class[] paramClasses = {Boolean.TYPE};
-                robotReference.invokeMethod("setAutoWaitForIdle", params, paramClasses);
+                robot.invokeMethod("setAutoWaitForIdle", params, paramClasses);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 logger.warn("problem invoking setAutoWaitForIdle", e);
                 throw new RuntimeException(e);
@@ -89,13 +90,13 @@ public final class EventDispatcher {
         robotReleaseModifiers(modifiers);
     }
 
-    public Object invokeMethod(String methodName, Object[] params, Class[] paramClasses) {
+    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class[] paramClasses) {
         return QueueTool.getInstance()
                 .invokeSmoothly(
                         Caller.of(new MethodInvokeCallable(methodName, params, paramClasses, component, reference)));
     }
 
-    public Object invokeExistingMethod(String methodName, Object[] params, Class[] paramClasses) {
+    public Object invokeExistingMethod(String methodName, @Nullable Object[] params, @Nullable Class[] paramClasses) {
         return invokeMethod(methodName, params, paramClasses);
     }
 
@@ -113,11 +114,13 @@ public final class EventDispatcher {
         }
     }
 
-    private void createRobot() {
+    private ClassReference<Robot> createRobot() {
         try {
             ClassReference<Robot> robotClassRef = new ClassReference<>(Robot.class);
             Robot robot = robotClassRef.newInstance(null, null);
-            robotReference = new ClassReference<>(robot);
+            ClassReference<Robot> created = new ClassReference<>(robot);
+            robotReference = created;
+            return created;
         } catch (InstantiationException
                 | ClassNotFoundException
                 | IllegalAccessException
@@ -130,7 +133,7 @@ public final class EventDispatcher {
 
     private void makeRobotOperation(String methodName, Object[] params, Class[] paramClasses) {
         try {
-            robotReference.invokeMethod(methodName, params, paramClasses);
+            Objects.requireNonNull(robotReference, "robot not created").invokeMethod(methodName, params, paramClasses);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.warn("problem invoking " + methodName, e);
             throw new RuntimeException(e);

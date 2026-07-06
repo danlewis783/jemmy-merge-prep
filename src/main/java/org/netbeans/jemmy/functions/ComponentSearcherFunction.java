@@ -19,6 +19,7 @@ package org.netbeans.jemmy.functions;
 import java.awt.Component;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
 
 public final class ComponentSearcherFunction implements Function<Void, Component> {
@@ -33,7 +34,7 @@ public final class ComponentSearcherFunction implements Function<Void, Component
     }
 
     @Override
-    public Component apply(Void obj) {
+    public @Nullable Component apply(Void obj) {
         return searcher.findComponent(predicate, index);
     }
 }

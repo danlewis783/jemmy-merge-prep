@@ -26,6 +26,7 @@
 package org.netbeans.jemmy.drivers;
 
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.operators.ComponentOperator;
@@ -155,7 +156,7 @@ public final class DriverManager {
         return (MenuDriver) getDriver(DriverType.Menu, operator.getClass());
     }
 
-    private DriverMarker doGetDriver(DriverType driverType, Class opClass) {
+    private @Nullable DriverMarker doGetDriver(DriverType driverType, Class opClass) {
         Class clazz = opClass;
         Object ret;
         do {

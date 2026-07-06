@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
@@ -113,11 +114,11 @@ public class WindowOperator extends ContainerOperator {
         driver.resize(this, width, height);
     }
 
-    public Window findSubWindow(Predicate<Component> predicate, int index) {
+    public @Nullable Window findSubWindow(Predicate<Component> predicate, int index) {
         return findWindow((Window) getSource(), predicate, index);
     }
 
-    public Window findSubWindow(Predicate<Component> predicate) {
+    public @Nullable Window findSubWindow(Predicate<Component> predicate) {
         return findSubWindow(predicate, 0);
     }
 
@@ -244,19 +245,19 @@ public class WindowOperator extends ContainerOperator {
         }));
     }
 
-    public static Window findWindow(Predicate<Component> chooser, int index) {
+    public static @Nullable Window findWindow(Predicate<Component> chooser, int index) {
         return WindowFunction.getWindow(null, chooser, index);
     }
 
-    public static Window findWindow(Predicate<Component> chooser) {
+    public static @Nullable Window findWindow(Predicate<Component> chooser) {
         return findWindow(chooser, 0);
     }
 
-    public static Window findWindow(Window owner, Predicate<Component> chooser, int index) {
+    public static @Nullable Window findWindow(Window owner, Predicate<Component> chooser, int index) {
         return WindowFunction.getWindow(owner, chooser, index);
     }
 
-    public static Window findWindow(Window owner, Predicate<Component> chooser) {
+    public static @Nullable Window findWindow(Window owner, Predicate<Component> chooser) {
         return findWindow(owner, chooser, 0);
     }
 

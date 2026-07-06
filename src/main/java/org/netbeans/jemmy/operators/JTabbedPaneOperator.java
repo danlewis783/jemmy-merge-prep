@@ -35,6 +35,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SingleSelectionModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -365,29 +366,29 @@ public class JTabbedPaneOperator extends JComponentOperator {
         }));
     }
 
-    public static JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser, int index) {
         return (JTabbedPane) findComponent(cont, PredicatesJ.of(JTabbedPane.class, chooser), index);
     }
 
-    public static JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser) {
         return findJTabbedPane(cont, chooser, 0);
     }
 
-    public static JTabbedPane findJTabbedPane(
+    public static @Nullable JTabbedPane findJTabbedPane(
             Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJTabbedPane(cont, new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JTabbedPane findJTabbedPane(
+    public static @Nullable JTabbedPane findJTabbedPane(
             Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return findJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 
-    public static JTabbedPane findJTabbedPaneUnder(Component comp, Predicate<Component> chooser) {
+    public static @Nullable JTabbedPane findJTabbedPaneUnder(Component comp, Predicate<Component> chooser) {
         return (JTabbedPane) findContainerUnder(comp, PredicatesJ.of(JTabbedPane.class, chooser));
     }
 
-    public static JTabbedPane findJTabbedPaneUnder(Component comp) {
+    public static @Nullable JTabbedPane findJTabbedPaneUnder(Component comp) {
         return findJTabbedPaneUnder(comp, PredicatesJ.of(JTabbedPane.class));
     }
 

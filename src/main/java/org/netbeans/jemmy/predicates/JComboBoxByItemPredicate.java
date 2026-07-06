@@ -26,7 +26,7 @@ import org.netbeans.jemmy.util.StringComparator;
 public final class JComboBoxByItemPredicate implements Predicate<Component> {
     private final StringComparator comparator;
     private final int itemIndex;
-    private final String label;
+    private final @Nullable String label;
 
     /**
      * @param label if null, the first combo box encountered will be accepted

@@ -16,12 +16,15 @@
  */
 package org.netbeans.jemmy.predicates;
 
+import org.jspecify.annotations.Nullable;
+
 public final class StringPropertyPredicate extends PropertyPredicate {
     public StringPropertyPredicate(String[] propNames, String[] results) {
         this(propNames, null, null, results);
     }
 
-    public StringPropertyPredicate(String[] propNames, Object[][] params, Class[][] classes, String[] results) {
+    public StringPropertyPredicate(
+            String[] propNames, Object @Nullable [][] params, Class @Nullable [][] classes, String[] results) {
         super(propNames, params, classes, results);
     }
 

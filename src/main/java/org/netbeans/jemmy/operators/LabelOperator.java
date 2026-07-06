@@ -29,6 +29,7 @@ import java.awt.Container;
 import java.awt.Label;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.LabelByLabelPredicate;
@@ -88,19 +89,19 @@ public class LabelOperator extends ComponentOperator {
         }));
     }
 
-    public static Label findLabel(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Label findLabel(Container cont, Predicate<Component> chooser, int index) {
         return (Label) findComponent(cont, PredicatesJ.of(Label.class, chooser), index);
     }
 
-    public static Label findLabel(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Label findLabel(Container cont, Predicate<Component> chooser) {
         return findLabel(cont, chooser, 0);
     }
 
-    public static Label findLabel(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable Label findLabel(Container cont, String text, StringComparator stringComparator, int index) {
         return findLabel(cont, new LabelByLabelPredicate(text, stringComparator), index);
     }
 
-    public static Label findLabel(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable Label findLabel(Container cont, String text, StringComparator stringComparator) {
         return findLabel(cont, text, stringComparator, 0);
     }
 

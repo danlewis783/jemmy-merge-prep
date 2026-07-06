@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public final class ClassReference<T> {
     private static final Logger logger = LoggerFactory.getLogger(ClassReference.class);
     private final Class<T> clazz;
-    private final T instance;
+    private final @Nullable T instance;
 
     public ClassReference(T instance) {
         this.instance =

@@ -27,6 +27,7 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Rectangle;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.Icon;
@@ -38,6 +39,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.InternalFrameUI;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -65,13 +67,13 @@ public class JInternalFrameOperator extends JComponentOperator {
     public static final String STATE_NORMAL_DPROP_VALUE = "NORMAL";
     public static final String TITLE_DPROP = "Title";
     private static final Logger logger = LoggerFactory.getLogger(JInternalFrameOperator.class);
-    private JButtonOperator closeOper;
+    private @Nullable JButtonOperator closeOper;
     private final FrameDriver fDriver;
     private final InternalFrameDriver iDriver;
-    private JDesktopIconOperator iconOperator;
-    private JButtonOperator maxOper;
-    private JButtonOperator minOper;
-    private ContainerOperator titleOperator;
+    private @Nullable JDesktopIconOperator iconOperator;
+    private @Nullable JButtonOperator maxOper;
+    private @Nullable JButtonOperator minOper;
+    private @Nullable ContainerOperator titleOperator;
     private final WindowDriver wDriver;
 
     public JInternalFrameOperator(ContainerOperator cont) {
@@ -169,7 +171,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         makeComponentVisible();
         JScrollPane scroll;
         if (isIcon()) {
-            scroll = (JScrollPane) iconOperator.getContainer(PredicatesJ.of(JScrollPane.class));
+            scroll = (JScrollPane) getIconOperator().getContainer(PredicatesJ.of(JScrollPane.class));
         } else {
             scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
         }
@@ -180,7 +182,8 @@ public class JInternalFrameOperator extends JComponentOperator {
 
         JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
-        scroller.scrollToComponentRectangle(isIcon() ? iconOperator.getSource() : getSource(), x, y, width, height);
+        scroller.scrollToComponentRectangle(
+                isIcon() ? getIconOperator().getSource() : getSource(), x, y, width, height);
     }
 
     public void scrollToRectangle(Rectangle rect) {
@@ -189,7 +192,8 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void scrollToFrame() {
         if (isIcon()) {
-            scrollToRectangle(0, 0, iconOperator.getWidth(), iconOperator.getHeight());
+            scrollToRectangle(
+                    0, 0, getIconOperator().getWidth(), getIconOperator().getHeight());
         } else {
             scrollToRectangle(0, 0, getWidth(), getHeight());
         }
@@ -198,31 +202,31 @@ public class JInternalFrameOperator extends JComponentOperator {
     public JButtonOperator getMinimizeButton() {
         initOperators();
 
-        return minOper;
+        return Objects.requireNonNull(minOper, "internal frame has no minimize button");
     }
 
     public JButtonOperator getMaximizeButton() {
         initOperators();
 
-        return maxOper;
+        return Objects.requireNonNull(maxOper, "internal frame has no maximize button");
     }
 
     public JButtonOperator getCloseButton() {
         initOperators();
 
-        return closeOper;
+        return Objects.requireNonNull(closeOper, "internal frame has no close button");
     }
 
     public ContainerOperator getTitleOperator() {
         initOperators();
 
-        return titleOperator;
+        return Objects.requireNonNull(titleOperator, "internal frame has no title pane");
     }
 
     public JDesktopIconOperator getIconOperator() {
         initOperators();
 
-        return iconOperator;
+        return Objects.requireNonNull(iconOperator, "internal frame has no desktop icon");
     }
 
     public void waitIcon(boolean icon) {
@@ -572,7 +576,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         }
     }
 
-    public static JInternalFrame findJInternalFrame(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JInternalFrame findJInternalFrame(Container cont, Predicate<Component> chooser, int index) {
         Component res = findComponent(cont, new JInternalFramePredicate(chooser), index);
         if (res instanceof JInternalFrame) {
             return (JInternalFrame) res;
@@ -583,24 +587,25 @@ public class JInternalFrameOperator extends JComponentOperator {
         }
     }
 
-    public static JInternalFrame findJInternalFrame(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JInternalFrame findJInternalFrame(Container cont, Predicate<Component> chooser) {
         return findJInternalFrame(cont, chooser, 0);
     }
 
-    public static JInternalFrame findJInternalFrame(
+    public static @Nullable JInternalFrame findJInternalFrame(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJInternalFrame(cont, new JInternalFrameByTitlePredicate(text, stringComparator), index);
     }
 
-    public static JInternalFrame findJInternalFrame(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JInternalFrame findJInternalFrame(
+            Container cont, String text, StringComparator stringComparator) {
         return findJInternalFrame(cont, text, stringComparator, 0);
     }
 
-    public static JInternalFrame findJInternalFrameUnder(Component comp, Predicate<Component> chooser) {
+    public static @Nullable JInternalFrame findJInternalFrameUnder(Component comp, Predicate<Component> chooser) {
         return (JInternalFrame) findContainerUnder(comp, new JInternalFramePredicate(chooser));
     }
 
-    public static JInternalFrame findJInternalFrameUnder(Component comp) {
+    public static @Nullable JInternalFrame findJInternalFrameUnder(Component comp) {
         return findJInternalFrameUnder(comp, new JInternalFramePredicate());
     }
 

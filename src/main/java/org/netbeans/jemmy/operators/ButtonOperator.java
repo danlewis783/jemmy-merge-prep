@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -137,19 +138,20 @@ public class ButtonOperator extends ComponentOperator {
         }));
     }
 
-    public static Button findButton(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Button findButton(Container cont, Predicate<Component> chooser, int index) {
         return (Button) findComponent(cont, PredicatesJ.of(Button.class, chooser), index);
     }
 
-    public static Button findButton(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Button findButton(Container cont, Predicate<Component> chooser) {
         return findButton(cont, chooser, 0);
     }
 
-    public static Button findButton(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable Button findButton(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findButton(cont, new ButtonByLabelPredicate(text, stringComparator), index);
     }
 
-    public static Button findButton(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable Button findButton(Container cont, String text, StringComparator stringComparator) {
         return findButton(cont, text, stringComparator, 0);
     }
 

@@ -94,6 +94,9 @@ public final class QueueTool {
         }
     }
 
+    // the result's nullness follows the Caller's type argument (null for Callable<Void>),
+    // which pre-generics NullAway cannot express
+    @SuppressWarnings("NullAway")
     private <T> T invokeAndWait(Caller<T> caller) {
         if (EventQueue.isDispatchThread()) {
             throw new Error("Cannot call invokeAndWait from the event dispatcher thread");

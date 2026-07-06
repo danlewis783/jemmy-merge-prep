@@ -33,6 +33,7 @@ import java.awt.Point;
 import java.awt.event.ContainerListener;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
@@ -69,11 +70,11 @@ public class ContainerOperator extends ComponentOperator {
         this((Container) cont.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
     }
 
-    public Component findSubComponent(Predicate<Component> chooser, int index) {
+    public @Nullable Component findSubComponent(Predicate<Component> chooser, int index) {
         return searcher.findComponent(chooser, index);
     }
 
-    public Component findSubComponent(Predicate<Component> chooser) {
+    public @Nullable Component findSubComponent(Predicate<Component> chooser) {
         return findSubComponent(chooser, 0);
     }
 
@@ -99,11 +100,11 @@ public class ContainerOperator extends ComponentOperator {
         }
     }
 
-    public ComponentOperator createSubOperator(Predicate<Component> chooser, int index) {
+    public @Nullable ComponentOperator createSubOperator(Predicate<Component> chooser, int index) {
         return createOperator(waitSubComponent(chooser, index));
     }
 
-    public ComponentOperator createSubOperator(Predicate<Component> chooser) {
+    public @Nullable ComponentOperator createSubOperator(Predicate<Component> chooser) {
         return createSubOperator(chooser, 0);
     }
 
@@ -235,27 +236,27 @@ public class ContainerOperator extends ComponentOperator {
         }));
     }
 
-    public static Container findContainer(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Container findContainer(Container cont, Predicate<Component> chooser, int index) {
         return (Container) findComponent(cont, PredicatesJ.of(Container.class, chooser), index);
     }
 
-    public static Container findContainer(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Container findContainer(Container cont, Predicate<Component> chooser) {
         return findContainer(cont, chooser, 0);
     }
 
-    public static Container findContainer(Container cont, int index) {
+    public static @Nullable Container findContainer(Container cont, int index) {
         return findContainer(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static Container findContainer(Container cont) {
+    public static @Nullable Container findContainer(Container cont) {
         return findContainer(cont, 0);
     }
 
-    public static Container findContainerUnder(Component comp, Predicate<Component> chooser) {
+    public static @Nullable Container findContainerUnder(Component comp, Predicate<Component> chooser) {
         return new ComponentOperator(comp).getContainer(PredicatesJ.of(Container.class, chooser));
     }
 
-    public static Container findContainerUnder(Component comp) {
+    public static @Nullable Container findContainerUnder(Component comp) {
         return findContainerUnder(comp, PredicatesJ.alwaysTrue());
     }
 

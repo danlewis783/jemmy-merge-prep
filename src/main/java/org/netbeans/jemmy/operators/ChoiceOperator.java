@@ -30,6 +30,7 @@ import java.awt.Container;
 import java.awt.event.ItemListener;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -229,19 +230,20 @@ public class ChoiceOperator extends ComponentOperator {
         selectItem(findItemIndex(item, comparator, index));
     }
 
-    public static Choice findChoice(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable Choice findChoice(Container cont, Predicate<Component> chooser, int index) {
         return (Choice) findComponent(cont, PredicatesJ.of(Choice.class, chooser), index);
     }
 
-    public static Choice findChoice(Container cont, Predicate<Component> chooser) {
+    public static @Nullable Choice findChoice(Container cont, Predicate<Component> chooser) {
         return findChoice(cont, chooser, 0);
     }
 
-    public static Choice findChoice(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable Choice findChoice(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findChoice(cont, new ChoiceBySelectedItemPredicate(text, stringComparator), index);
     }
 
-    public static Choice findChoice(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable Choice findChoice(Container cont, String text, StringComparator stringComparator) {
         return findChoice(cont, text, stringComparator, 0);
     }
 

@@ -29,6 +29,7 @@ import java.awt.Container;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JPasswordField;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -90,15 +91,15 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
         }));
     }
 
-    public static JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser, int index) {
         return (JPasswordField) findJTextComponent(cont, PredicatesJ.of(JPasswordField.class, chooser), index);
     }
 
-    public static JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser) {
         return findJPasswordField(cont, chooser, 0);
     }
 
-    public static JPasswordField findJPasswordField(
+    public static @Nullable JPasswordField findJPasswordField(
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJPasswordField(
                 cont,
@@ -106,7 +107,8 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
                 index);
     }
 
-    public static JPasswordField findJPasswordField(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JPasswordField findJPasswordField(
+            Container cont, String text, StringComparator stringComparator) {
         return findJPasswordField(cont, text, stringComparator, 0);
     }
 

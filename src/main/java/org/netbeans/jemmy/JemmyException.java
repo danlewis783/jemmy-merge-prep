@@ -26,32 +26,33 @@ package org.netbeans.jemmy;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JemmyException extends RuntimeException {
     private static final Logger logger = LoggerFactory.getLogger(JemmyException.class);
-    private Object object = null;
+    private @Nullable Object object = null;
 
     public JemmyException(String description) {
         super(description);
     }
 
-    public JemmyException(String description, Object object) {
+    public JemmyException(String description, @Nullable Object object) {
         this(description);
         this.object = object;
     }
 
-    public JemmyException(String description, Throwable cause) {
+    public JemmyException(String description, @Nullable Throwable cause) {
         super(description, cause);
     }
 
-    public JemmyException(String description, Throwable cause, Object object) {
+    public JemmyException(String description, @Nullable Throwable cause, @Nullable Object object) {
         super(description, cause);
         this.object = object;
     }
 
-    public Object getObject() {
+    public @Nullable Object getObject() {
         return object;
     }
 

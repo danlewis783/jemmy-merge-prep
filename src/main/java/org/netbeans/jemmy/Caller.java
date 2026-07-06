@@ -21,6 +21,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,11 +81,11 @@ public final class Caller<T> implements Runnable {
         return callable;
     }
 
-    public T getResult() {
+    public @Nullable T getResult() {
         return result.get();
     }
 
-    public Exception getException() {
+    public @Nullable Exception getException() {
         return exception.get();
     }
 

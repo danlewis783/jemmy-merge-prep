@@ -28,6 +28,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.drivers.APIDriverInstaller;
 import org.netbeans.jemmy.drivers.DefaultDriverInstaller;
 import org.netbeans.jemmy.drivers.DriverInstaller;
@@ -46,11 +47,12 @@ public final class JemmyProperties {
     }
 
     public CharBindingMap getCharBindingMap() {
-        return (CharBindingMap) get("binding.map");
+        return (CharBindingMap) Objects.requireNonNull(get("binding.map"), "binding.map property not set");
     }
 
     public EnumSet<DispatchingModel> getDispatchingModel() {
-        return (EnumSet<DispatchingModel>) get("dispatching.model");
+        return (EnumSet<DispatchingModel>)
+                Objects.requireNonNull(get("dispatching.model"), "dispatching.model property not set");
     }
 
     public void installDriversAndSetDispatchingModel(EnumSet<DispatchingModel> model) {
@@ -65,7 +67,7 @@ public final class JemmyProperties {
         put("dispatching.model", model);
     }
 
-    public Object put(String name, Object newValue) {
+    public @Nullable Object put(String name, Object newValue) {
         Object ret = properties.put(name, newValue);
         if ((ret != null) && (ret != newValue)) {
             logger.debug("smashing value of property name \"{}\": was \"{}\", now \"{}\"", name, ret, newValue);
@@ -74,11 +76,11 @@ public final class JemmyProperties {
         return ret;
     }
 
-    public Object get(String name) {
+    public @Nullable Object get(String name) {
         return properties.get(name);
     }
 
-    public Object remove(String name) {
+    public @Nullable Object remove(String name) {
         return properties.remove(name);
     }
 

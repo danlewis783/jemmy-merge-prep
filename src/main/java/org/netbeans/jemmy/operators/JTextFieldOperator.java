@@ -31,6 +31,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JTextField;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -167,22 +168,23 @@ public class JTextFieldOperator extends JTextComponentOperator {
         return buff.toString();
     }
 
-    public static JTextField findJTextField(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JTextField findJTextField(Container cont, Predicate<Component> chooser, int index) {
         return (JTextField) findJTextComponent(cont, PredicatesJ.of(JTextField.class, chooser), index);
     }
 
-    public static JTextField findJTextField(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JTextField findJTextField(Container cont, Predicate<Component> chooser) {
         return findJTextField(cont, chooser, 0);
     }
 
-    public static JTextField findJTextField(Container cont, String text, StringComparator stringComparator, int index) {
+    public static @Nullable JTextField findJTextField(
+            Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextField(
                 cont,
                 PredicatesJ.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JTextField findJTextField(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JTextField findJTextField(Container cont, String text, StringComparator stringComparator) {
         return findJTextField(cont, text, stringComparator, 0);
     }
 

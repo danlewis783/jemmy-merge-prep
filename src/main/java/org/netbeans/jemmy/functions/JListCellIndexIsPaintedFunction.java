@@ -20,6 +20,7 @@ package org.netbeans.jemmy.functions;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import javax.swing.JList;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.JListOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class JListCellIndexIsPaintedFunction implements Function<Integer, Boolea
     }
 
     @Override
-    public Boolean apply(Integer cellIdx) {
+    public @Nullable Boolean apply(Integer cellIdx) {
         JList jList = fileListSupplier.get();
         JListOperator jListOperator = new JListOperator(jList);
         int cellIdxLast = jListOperator.getModel().getSize() - 1;

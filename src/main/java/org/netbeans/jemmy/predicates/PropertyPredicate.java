@@ -20,6 +20,7 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.ClassReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,8 @@ public class PropertyPredicate implements Predicate<Component> {
     protected final String[] propNames;
     protected final Object[] results;
 
-    public PropertyPredicate(String[] propNames, Object[][] params, Class[][] classes, Object[] results) {
+    public PropertyPredicate(
+            String[] propNames, Object @Nullable [][] params, Class @Nullable [][] classes, Object[] results) {
         this.propNames = propNames;
         this.results = results;
 

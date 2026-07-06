@@ -20,6 +20,8 @@ import java.awt.AWTEvent;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.EnumSet;
+import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,7 @@ public final class QueueUtils {
 
     private static volatile boolean isInitialized = false;
     private static volatile boolean isShortcutMode = false;
-    private static volatile JemmyQueue jemmyQueue;
+    private static volatile @Nullable JemmyQueue jemmyQueue;
 
     private static synchronized void initialize() {
         // double check the guard before initializing
@@ -54,7 +56,7 @@ public final class QueueUtils {
         }
 
         if (isShortcutMode && EventQueue.isDispatchThread()) {
-            jemmyQueue.shortcutEvent(event);
+            Objects.requireNonNull(jemmyQueue, "jemmyQueue not initialized").shortcutEvent(event);
         } else {
             Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
         }
