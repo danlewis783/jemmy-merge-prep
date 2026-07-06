@@ -15,6 +15,7 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
 | `flaky-ui-tests` | Investigate jemmy_036 focus handoff and JPopupMenuOperatorTest timeout | Do when suite noise becomes annoying |
 | `first-hygiene` | Bring tests in line with FIRST: temp dirs, flaky tags, global-state locks | Low effort, improves suite trust |
+| `scenario-test-cleanup` | Give the jemmy_nnn/Application_nnn pairs purpose, names, and deduplication | Incremental; fold, rename, or delete |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
@@ -88,6 +89,43 @@ Java 8 with JUnit*):
   before 2026-07-05); prefer strengthening such tests whenever one is touched.
 
 **Recommendation: low-effort batch; do alongside `flaky-ui-tests`.**
+
+### `scenario-test-cleanup`
+
+`src/userInterfaceTest/.../testing/` holds 39 numbered legacy scenario tests
+(`jemmy_001` … `jemmy_048`, with gaps) driving 36 numbered fixtures
+(`Application_nnn` in `testFixtures`). The names convey nothing, each class is
+usually a single `@Test`, coverage overlaps the per-operator test classes to an
+unknown degree, and the known-flaky tests hide among them (`jemmy_035/036/037`).
+Goal: every surviving test has a focused, coherent, encapsulated purpose and a
+name that states it.
+
+Suggested approach:
+
+1. **Inventory** — one line per `jemmy_nnn`: what does it exercise that the
+   corresponding `*OperatorTest` does not? (~40 small files; a read-through,
+   not tooling.)
+2. **Classify and act:**
+   - *Pure duplicate* of operator-test coverage → delete test and fixture.
+   - *Unique single-operator behavior* → move into the matching
+     `*OperatorTest` as a well-named test method; delete the numbered pair.
+   - *Genuine multi-operator workflow* (e.g. dialog + combo + list flows in
+     `jemmy_001`) → keep as a scenario test, but rename both halves for the
+     workflow: `jemmy_037`/`Application_037` → e.g.
+     `TabbedPaneScrollbarScrollingTest`/`TabbedScrollbarsApp`.
+3. **Fixtures follow their tests** — name `Application_nnn` for the UI it
+   builds; if only one test uses a trivial fixture, inline it into the test
+   class and reserve `testFixtures` for genuinely shared apps.
+4. **Traceability** — the numbering gaps (008, 012–014, 023, 034, 044–046)
+   show pruning has already happened; record old→new name mappings in commit
+   messages so history against the legacy NetBeans suite stays searchable.
+5. **Do it incrementally** — batch by operator area, or opportunistically
+   whenever a numbered test breaks or is touched; pairs naturally with
+   `flaky-ui-tests` (renaming `jemmy_036` forces stating what it actually
+   verifies).
+
+**Recommendation: incremental; start with the flaky trio, whose investigation
+requires understanding their purpose anyway.**
 
 ### `winlaf-button-test`
 
