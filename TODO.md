@@ -26,7 +26,7 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `click-on-reference` | Click hyperlink in JEditorPane by anchor | Only when a test wants it |
 | `color-chooser-accessors` | JColorChooserOperator subcomponent getters | Only when a test wants it |
 | `table-change-selection` | JTableOperator.changeSelection mapping | Trivial, on demand |
-| `dump-enrichment` | Richer failure dumps in ComponentStreamer | Nice-to-have, on demand |
+| `dump-on-failure` | Test-layer failure snapshot via TestWatcher + ComponentStreamer | With `flaky-ui-tests`; zero production impact |
 | `window-count-wait` | Wait until N windows match a predicate | Trivial with functions/, on demand |
 
 ---
@@ -248,14 +248,37 @@ choosers beyond the existing `enterColor` helpers.
 the queue (from 7901960's diff). Five-minute add following the existing
 `Caller.of` mapping pattern.
 
-### `dump-enrichment`
+### `dump-on-failure`
 
-Upstream enriched failure dumps over several changes: selected text for text
-components (CODETOOLS-7902736), accessible name/description (7902811), last
-mouse move location + `Component.hasFocus()` (2022 commits). This fork replaced
-`Dumper` with `ComponentStreamer`, so these port as ideas, not code. Note if
-copying upstream's `UIStatus`: it contains a leftover debug stack-trace
-`System.out.println` in `mouseMoved()` — strip it.
+*(Re-scoped 2026-07-06; replaces the earlier `dump-enrichment` idea.)*
+
+This fork has no dump system: `Dumper` was deleted with the old core,
+`getDump()` does not exist, and the `*_DPROP` constants in ~15 operator
+classes are unconsumed vestiges (delete them as part of this item). Porting
+upstream's dump *enrichment* would enrich nothing, and upstream's 2022
+`UIStatus` last-mouse-move tracking is explicitly unwanted: a global mutable
+static written from input hot paths, shipped with a leftover debug
+stack-trace `System.out.println`.
+
+What is worth having — with zero production-code impact — is a test-layer
+failure snapshot, modeled on the jemmy fork's `DumpOnFailure` (a JUnit 5
+`TestWatcher` writing a dump file on failure, named for LAF + test method):
+
+- implement as a JUnit extension in `testFixtures`;
+- walk the live hierarchy with the existing `ComponentStreamer`, printing
+  the properties that matter for post-mortems: class, name, bounds,
+  visible/showing/enabled, `hasFocus()`, accessible name/description,
+  selected text for text components — upstream's enrichment ideas
+  (CODETOOLS-7902736, 7902811) land in the watcher's output, not in the
+  operators;
+- register on the flaky UI tests first: `jemmy_036`'s focus-timeout failure
+  is undiagnosable today without knowing which component held focus at
+  failure time.
+
+Production code stays untouched; the whole feature lives in the test tree
+and is deletable in one commit.
+
+**Recommendation: small, test-layer only; do together with `flaky-ui-tests`.**
 
 ### `window-count-wait`
 
@@ -294,7 +317,7 @@ Method:
      (`JToolTipOperatorTest` → `tooltip-operator`,
      `JEditorPaneOperatorTest` → `click-on-reference`,
      `DumpTest`/`AcessibleDumpPropertiesTest`/`UIStatusTest` →
-     `dump-enrichment`, `ComponentChooserTest` → Predicate-based search);
+     `dump-on-failure`, `ComponentChooserTest` → Predicate-based search);
    - *gap* — port the test, adapting to this fork's API
      (`Predicate`/`FunctionRunner`/`TimeoutKey`).
 2. **Quantitative cross-check** — name matching misses semantic gaps; run
