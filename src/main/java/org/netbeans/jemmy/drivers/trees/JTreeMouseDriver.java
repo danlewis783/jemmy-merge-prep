@@ -52,7 +52,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
     private final QueueTool queueTool;
 
     public JTreeMouseDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTreeOperator"));
+        super(Collections.singletonList(JTreeOperator.class));
         queueTool = QueueTool.getInstance();
     }
 

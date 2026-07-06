@@ -31,7 +31,7 @@ import org.netbeans.jemmy.operators.JTextComponentOperator;
 
 public final class SwingTextAPIDriver extends TextAPIDriver {
     public SwingTextAPIDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTextComponentOperator"));
+        super(Collections.singletonList(JTextComponentOperator.class));
     }
 
     @Override

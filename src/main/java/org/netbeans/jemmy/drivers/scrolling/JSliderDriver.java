@@ -42,7 +42,7 @@ import org.netbeans.jemmy.operators.Operator;
 
 public final class JSliderDriver extends AbstractScrollDriver {
     public JSliderDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JSliderOperator"));
+        super(Collections.singletonList(JSliderOperator.class));
     }
 
     @Override

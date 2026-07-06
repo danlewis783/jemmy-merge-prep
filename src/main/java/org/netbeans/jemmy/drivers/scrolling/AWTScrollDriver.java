@@ -40,7 +40,7 @@ import org.netbeans.jemmy.operators.Operator;
 public abstract class AWTScrollDriver extends AbstractScrollDriver {
     private final QueueTool queueTool;
 
-    public AWTScrollDriver(java.util.List<String> supported) {
+    public AWTScrollDriver(java.util.List<? extends Class<? extends ComponentOperator>> supported) {
         super(supported);
         queueTool = QueueTool.getInstance();
     }

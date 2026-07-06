@@ -49,15 +49,14 @@ import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
+import org.netbeans.jemmy.operators.JMenuOperator;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.netbeans.jemmy.predicates.PopupMenuPredicate;
 
 public final class QueueJMenuDriver extends LightSupportiveDriver implements MenuDriver {
     public QueueJMenuDriver() {
-        super(Collections.unmodifiableList(Arrays.asList(
-                "org.netbeans.jemmy.operators.JMenuOperator",
-                "org.netbeans.jemmy.operators.JMenuBarOperator",
-                "org.netbeans.jemmy.operators.JPopupMenuOperator")));
+        super(Collections.unmodifiableList(
+                Arrays.asList(JMenuOperator.class, JMenuBarOperator.class, JPopupMenuOperator.class)));
     }
 
     @Override

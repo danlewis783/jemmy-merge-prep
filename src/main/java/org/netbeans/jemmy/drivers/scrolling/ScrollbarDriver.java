@@ -36,7 +36,7 @@ public final class ScrollbarDriver extends AWTScrollDriver {
     private static final int CLICK_OFFSET = 5;
 
     public ScrollbarDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ScrollbarOperator"));
+        super(Collections.singletonList(ScrollbarOperator.class));
     }
 
     @Override

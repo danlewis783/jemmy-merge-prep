@@ -39,11 +39,12 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
         super(robotAutoDelay, smooth);
     }
 
-    public MouseRobotDriver(TimeoutKey robotAutoDelay, List<String> supported) {
+    public MouseRobotDriver(TimeoutKey robotAutoDelay, List<? extends Class<? extends ComponentOperator>> supported) {
         super(robotAutoDelay, supported);
     }
 
-    public MouseRobotDriver(TimeoutKey robotAutoDelay, List<String> supported, boolean smooth) {
+    public MouseRobotDriver(
+            TimeoutKey robotAutoDelay, List<? extends Class<? extends ComponentOperator>> supported, boolean smooth) {
         super(robotAutoDelay, supported, smooth);
     }
 

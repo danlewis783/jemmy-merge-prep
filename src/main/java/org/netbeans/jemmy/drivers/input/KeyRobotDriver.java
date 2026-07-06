@@ -36,7 +36,7 @@ public final class KeyRobotDriver extends RobotDriver implements KeyDriver {
         super(robotAutoDelay);
     }
 
-    public KeyRobotDriver(TimeoutKey robotAutoDelay, List<String> supported) {
+    public KeyRobotDriver(TimeoutKey robotAutoDelay, List<? extends Class<? extends ComponentOperator>> supported) {
         super(robotAutoDelay, supported);
     }
 

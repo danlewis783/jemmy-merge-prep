@@ -36,7 +36,7 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     private static final int SMALL_INCREMENT = 1;
 
     public JSliderAPIDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JSliderOperator"));
+        super(Collections.singletonList(JSliderOperator.class));
     }
 
     @Override

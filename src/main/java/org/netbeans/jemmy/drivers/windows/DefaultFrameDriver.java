@@ -39,7 +39,7 @@ public final class DefaultFrameDriver extends LightSupportiveDriver implements F
     private final EventDriver eventDriver;
 
     public DefaultFrameDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.FrameOperator"));
+        super(Collections.singletonList(FrameOperator.class));
         eventDriver = new EventDriver();
     }
 

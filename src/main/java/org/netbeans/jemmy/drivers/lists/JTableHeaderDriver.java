@@ -42,7 +42,7 @@ import org.netbeans.jemmy.operators.Operator;
 
 public final class JTableHeaderDriver extends LightSupportiveDriver implements OrderedListDriver {
     public JTableHeaderDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTableHeaderOperator"));
+        super(Collections.singletonList(JTableHeaderOperator.class));
     }
 
     @Override

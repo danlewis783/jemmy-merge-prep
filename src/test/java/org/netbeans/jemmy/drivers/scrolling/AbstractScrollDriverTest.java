@@ -92,7 +92,7 @@ class AbstractScrollDriverTest {
         private int stopPushAndWaitCalls;
 
         StubScrollDriver(IntSupplier position) {
-            super(Collections.singletonList("org.netbeans.jemmy.operators.ComponentOperator"));
+            super(Collections.singletonList(ComponentOperator.class));
             this.position = position;
         }
 

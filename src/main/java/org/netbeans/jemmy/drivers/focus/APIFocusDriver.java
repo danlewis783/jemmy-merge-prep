@@ -36,7 +36,7 @@ public final class APIFocusDriver extends LightSupportiveDriver implements Focus
     private final EventDriver eventDriver;
 
     public APIFocusDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ComponentOperator"));
+        super(Collections.singletonList(ComponentOperator.class));
         eventDriver = new EventDriver();
     }
 

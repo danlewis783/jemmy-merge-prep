@@ -40,7 +40,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeDriver {
     public JTreeAPIDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTreeOperator"));
+        super(Collections.singletonList(JTreeOperator.class));
     }
 
     @Override

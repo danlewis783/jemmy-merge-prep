@@ -30,10 +30,11 @@ import java.awt.Component;
 import java.util.Collections;
 import org.netbeans.jemmy.QueueUtils;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
+import org.netbeans.jemmy.operators.ComponentOperator;
 
 public class EventDriver extends LightSupportiveDriver {
     public EventDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ComponentOperator"));
+        super(Collections.singletonList(ComponentOperator.class));
     }
 
     public void dispatchEvent(Component comp, AWTEvent event) {

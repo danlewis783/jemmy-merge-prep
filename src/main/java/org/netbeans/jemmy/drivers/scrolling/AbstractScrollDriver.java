@@ -39,7 +39,7 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 public abstract class AbstractScrollDriver extends LightSupportiveDriver implements ScrollDriver {
     public static final int ADJUST_CLICK_COUNT = 10;
 
-    public AbstractScrollDriver(List<String> supported) {
+    public AbstractScrollDriver(List<? extends Class<? extends ComponentOperator>> supported) {
         super(supported);
     }
 

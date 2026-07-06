@@ -37,6 +37,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
+import org.netbeans.jemmy.operators.ComponentOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,14 +57,15 @@ public class RobotDriver extends LightSupportiveDriver {
     }
 
     public RobotDriver(TimeoutKey robotAutoDelay, boolean smooth) {
-        this(robotAutoDelay, Collections.singletonList("org.netbeans.jemmy.operators.ComponentOperator"), smooth);
+        this(robotAutoDelay, Collections.singletonList(ComponentOperator.class), smooth);
     }
 
-    public RobotDriver(TimeoutKey robotAutoDelay, List<String> supported) {
+    public RobotDriver(TimeoutKey robotAutoDelay, List<? extends Class<? extends ComponentOperator>> supported) {
         this(robotAutoDelay, supported, false);
     }
 
-    public RobotDriver(TimeoutKey robotAutoDelay, List<String> supported, boolean smooth) {
+    public RobotDriver(
+            TimeoutKey robotAutoDelay, List<? extends Class<? extends ComponentOperator>> supported, boolean smooth) {
         super(supported);
         this.robotAutoDelay = robotAutoDelay;
         this.smooth = smooth;

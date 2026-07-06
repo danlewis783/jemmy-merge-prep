@@ -42,7 +42,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 public final class DefaultInternalFrameDriver extends LightSupportiveDriver
         implements WindowDriver, FrameDriver, InternalFrameDriver {
     public DefaultInternalFrameDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JInternalFrameOperator"));
+        super(Collections.singletonList(JInternalFrameOperator.class));
     }
 
     @Override

@@ -43,7 +43,7 @@ import org.netbeans.jemmy.operators.Operator;
 
 public final class JListMouseDriver extends LightSupportiveDriver implements MultiSelListDriver {
     public JListMouseDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JListOperator"));
+        super(Collections.singletonList(JListOperator.class));
     }
 
     @Override

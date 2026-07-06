@@ -26,6 +26,7 @@
 package org.netbeans.jemmy.drivers;
 
 import java.util.List;
+import java.util.Map;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
@@ -52,23 +53,19 @@ public final class DriverManager {
         }
     }
 
-    private void setDriver(DriverType driverType, String opClassName, DriverMarker driver) {
-        jemmyProperties.put(driverType.getPropKey() + "." + opClassName, driver);
-    }
-
     public void setDriver(DriverType driverType, LightDriver driver) {
-        for (String className : driver.getSupported()) {
-            setDriver(driverType, className, driver);
+        for (Class<? extends ComponentOperator> opClass : driver.getSupported()) {
+            jemmyProperties.getDriverRegistry(driverType).put(opClass, driver);
         }
     }
 
-    public void removeDriver(DriverType driverType, String opClassName) {
-        jemmyProperties.remove(driverType.getPropKey() + "." + opClassName);
+    public void removeDriver(DriverType driverType, Class<? extends ComponentOperator> opClass) {
+        jemmyProperties.getDriverRegistry(driverType).remove(opClass);
     }
 
-    public void removeDriver(DriverType driverType, List<String> opClassNames) {
-        for (String className : opClassNames) {
-            removeDriver(driverType, className);
+    public void removeDriver(DriverType driverType, List<Class<? extends ComponentOperator>> opClasses) {
+        for (Class<? extends ComponentOperator> opClass : opClasses) {
+            removeDriver(driverType, opClass);
         }
     }
 
@@ -157,13 +154,13 @@ public final class DriverManager {
     }
 
     private @Nullable DriverMarker doGetDriver(DriverType driverType, Class opClass) {
+        Map<Class<?>, DriverMarker> registry = jemmyProperties.getDriverRegistry(driverType);
         Class clazz = opClass;
-        Object ret;
         do {
-            ret = jemmyProperties.get(driverType.getPropKey() + "." + clazz.getName());
+            DriverMarker ret = registry.get(clazz);
 
             if (ret != null) {
-                return (DriverMarker) ret;
+                return ret;
             }
         } while (ComponentOperator.class.isAssignableFrom(clazz = clazz.getSuperclass()));
 

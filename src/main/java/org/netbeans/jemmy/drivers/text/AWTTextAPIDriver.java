@@ -31,7 +31,7 @@ import org.netbeans.jemmy.operators.TextComponentOperator;
 
 public final class AWTTextAPIDriver extends TextAPIDriver {
     public AWTTextAPIDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.TextComponentOperator"));
+        super(Collections.singletonList(TextComponentOperator.class));
     }
 
     @Override

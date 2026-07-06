@@ -42,7 +42,7 @@ public final class ChoiceDriver extends LightSupportiveDriver implements ListDri
     private static final int RIGHT_INDENT = 10;
 
     public ChoiceDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ChoiceOperator"));
+        super(Collections.singletonList(ChoiceOperator.class));
     }
 
     @Override

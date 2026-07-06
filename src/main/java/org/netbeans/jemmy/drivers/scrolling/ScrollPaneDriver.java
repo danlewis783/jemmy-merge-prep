@@ -37,7 +37,7 @@ public final class ScrollPaneDriver extends AWTScrollDriver {
     private static final int CLICK_OFFSET = 5;
 
     public ScrollPaneDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ScrollPaneOperator"));
+        super(Collections.singletonList(ScrollPaneOperator.class));
     }
 
     @Override

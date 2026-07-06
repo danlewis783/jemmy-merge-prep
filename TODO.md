@@ -18,7 +18,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `scenario-test-cleanup` | Give the jemmy_nnn/Application_nnn pairs purpose, names, and deduplication | Incremental; fold, rename, or delete |
 | `assertj-migration` | Convert all assertions to AssertJ, killing try/fail/catch idioms first | Incremental; exception tests first |
 | `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Do after scenario-test-cleanup stabilizes names |
-| `typed-driver-lookup` | Replace string-based driver registration/lookup with Class-based | Mechanical, compile-verified; do before any renames |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
@@ -334,48 +333,3 @@ Method:
 mapping is written against stable, meaningful names. This item directly
 serves the repository's purpose — driving the two forks toward each other.**
 
----
-
-## Design cleanups
-
-### `typed-driver-lookup`
-
-Driver discovery is stringly-typed end to end (57 FQCN string literals in the
-drivers package as of 2026-07-06):
-
-- drivers declare supported operators as fully-qualified class-name strings
-  (`LightSupportiveDriver(List<String>)`, e.g.
-  `singletonList("org.netbeans.jemmy.operators.JSliderOperator")`);
-- `DriverManager.setDriver` registers them in the `JemmyProperties` bag under
-  concatenated string keys (`driverType.getPropKey() + "." + className`);
-- operator constructors resolve via `doGetDriver`, string-walking the
-  operator's superclass chain against those keys;
-- `checkSupported` (`UnsupportedOperatorException`, `List<String>` overload)
-  independently re-implements the same walk by name comparison.
-
-Consequences: renaming or moving an operator class breaks driver resolution
-with no compile error — failure appears at runtime on first use; two parallel
-matching implementations can drift; interface-based support is inexpressible.
-Notably, the type-safe `checkSupported(Class, Class[], Class)` overload using
-`isAssignableFrom` already exists, unused.
-
-Fix:
-
-1. `LightDriver.getSupported()` → `List<Class<? extends ComponentOperator>>`;
-   drivers declare `JSliderOperator.class` (a `Class` reference does not
-   trigger static initialization, so the historical lazy-loading argument for
-   strings does not apply).
-2. `DriverManager` keeps a real registry —
-   `EnumMap<DriverType, Map<Class<?>, DriverMarker>>` — instead of string
-   keys inside the general properties bag.
-3. Lookup and `checkSupported` collapse onto one `isAssignableFrom`-based
-   mechanism (the existing unused overload).
-4. Migrate the 57 literals mechanically; the compiler verifies every one.
-
-Trade-off: upstream jemmy-v2 has the same stringly design, so this diverges
-the internal mechanism further — acceptable because it is not API surface,
-and compile-time checking actively de-risks the class/package renames the
-merge effort will require.
-
-**Recommendation: do before any operator renames or package alignment work;
-the migration is mechanical and self-verifying.**

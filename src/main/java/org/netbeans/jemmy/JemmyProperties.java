@@ -24,6 +24,7 @@
  */
 package org.netbeans.jemmy;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,12 +33,15 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.drivers.APIDriverInstaller;
 import org.netbeans.jemmy.drivers.DefaultDriverInstaller;
 import org.netbeans.jemmy.drivers.DriverInstaller;
+import org.netbeans.jemmy.drivers.DriverMarker;
+import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.InputDriverInstaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class JemmyProperties {
     private static final Logger logger = LoggerFactory.getLogger(JemmyProperties.class);
+    private final Map<DriverType, Map<Class<?>, DriverMarker>> driverRegistry = new EnumMap<>(DriverType.class);
     private final Map<String, Object> properties;
 
     private JemmyProperties() {
@@ -82,6 +86,14 @@ public final class JemmyProperties {
 
     public @Nullable Object remove(String name) {
         return properties.remove(name);
+    }
+
+    /**
+     * The driver registry, keyed by driver type and then operator class. Owned here so its lifecycle matches the
+     * properties instance; all access should go through {@link org.netbeans.jemmy.drivers.DriverManager}.
+     */
+    public Map<Class<?>, DriverMarker> getDriverRegistry(DriverType driverType) {
+        return driverRegistry.computeIfAbsent(driverType, type -> new HashMap<>());
     }
 
     public static JemmyProperties getInstance() {

@@ -38,7 +38,7 @@ public final class JTabAPIDriver extends LightSupportiveDriver implements ListDr
     private final QueueTool queueTool;
 
     public JTabAPIDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTabbedPaneOperator"));
+        super(Collections.singletonList(JTabbedPaneOperator.class));
         queueTool = QueueTool.getInstance();
     }
 

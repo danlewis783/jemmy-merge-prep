@@ -47,7 +47,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
     private static final int SMALL_INCREMENT = 1;
 
     public JScrollBarDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JScrollBarOperator"));
+        super(Collections.singletonList(JScrollBarOperator.class));
     }
 
     @Override

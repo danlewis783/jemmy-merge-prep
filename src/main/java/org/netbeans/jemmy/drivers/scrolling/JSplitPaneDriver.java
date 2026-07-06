@@ -43,7 +43,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JSplitPaneDriver extends LightSupportiveDriver implements ScrollDriver {
     public JSplitPaneDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JSplitPaneOperator"));
+        super(Collections.singletonList(JSplitPaneOperator.class));
     }
 
     @Override

@@ -37,7 +37,7 @@ import org.netbeans.jemmy.operators.Operator;
 
 public final class ButtonMouseDriver extends LightSupportiveDriver implements ButtonDriver {
     public ButtonMouseDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ComponentOperator"));
+        super(Collections.singletonList(ComponentOperator.class));
     }
 
     @Override

@@ -25,15 +25,16 @@
 
 package org.netbeans.jemmy.drivers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public abstract class LightSupportiveDriver implements LightDriver {
-    private final List<String> supported;
+    private final List<Class<? extends ComponentOperator>> supported;
 
-    public LightSupportiveDriver(List<String> supported) {
-        this.supported = Collections.unmodifiableList(supported);
+    public LightSupportiveDriver(List<? extends Class<? extends ComponentOperator>> supported) {
+        this.supported = Collections.unmodifiableList(new ArrayList<>(supported));
     }
 
     public void checkSupported(ComponentOperator oper) {
@@ -41,7 +42,7 @@ public abstract class LightSupportiveDriver implements LightDriver {
     }
 
     @Override
-    public List<String> getSupported() {
-        return Collections.unmodifiableList(supported);
+    public List<Class<? extends ComponentOperator>> getSupported() {
+        return supported;
     }
 }

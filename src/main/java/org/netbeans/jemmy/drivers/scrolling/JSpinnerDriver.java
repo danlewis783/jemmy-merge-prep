@@ -35,7 +35,7 @@ import org.netbeans.jemmy.operators.JSpinnerOperator;
 
 public final class JSpinnerDriver extends LightSupportiveDriver implements ScrollDriver {
     public JSpinnerDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JSpinnerOperator"));
+        super(Collections.singletonList(JSpinnerOperator.class));
     }
 
     @Override

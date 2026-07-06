@@ -40,7 +40,7 @@ public final class DefaultWindowDriver extends LightSupportiveDriver implements 
     final EventDriver eventDriver;
 
     public DefaultWindowDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.WindowOperator"));
+        super(Collections.singletonList(WindowOperator.class));
         eventDriver = new EventDriver();
     }
 

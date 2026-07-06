@@ -54,10 +54,8 @@ import org.netbeans.jemmy.operators.JPopupMenuOperator;
 
 public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDriver {
     public DefaultJMenuDriver() {
-        super(Collections.unmodifiableList(Arrays.asList(
-                "org.netbeans.jemmy.operators.JMenuOperator",
-                "org.netbeans.jemmy.operators.JMenuBarOperator",
-                "org.netbeans.jemmy.operators.JPopupMenuOperator")));
+        super(Collections.unmodifiableList(
+                Arrays.asList(JMenuOperator.class, JMenuBarOperator.class, JPopupMenuOperator.class)));
     }
 
     @Override

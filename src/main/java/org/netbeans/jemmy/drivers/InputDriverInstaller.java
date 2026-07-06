@@ -37,6 +37,17 @@ import org.netbeans.jemmy.drivers.input.KeyEventDriver;
 import org.netbeans.jemmy.drivers.input.KeyRobotDriver;
 import org.netbeans.jemmy.drivers.input.MouseEventDriver;
 import org.netbeans.jemmy.drivers.input.MouseRobotDriver;
+import org.netbeans.jemmy.operators.ButtonOperator;
+import org.netbeans.jemmy.operators.CheckboxOperator;
+import org.netbeans.jemmy.operators.ChoiceOperator;
+import org.netbeans.jemmy.operators.ComponentOperator;
+import org.netbeans.jemmy.operators.LabelOperator;
+import org.netbeans.jemmy.operators.ListOperator;
+import org.netbeans.jemmy.operators.ScrollPaneOperator;
+import org.netbeans.jemmy.operators.ScrollbarOperator;
+import org.netbeans.jemmy.operators.TextAreaOperator;
+import org.netbeans.jemmy.operators.TextComponentOperator;
+import org.netbeans.jemmy.operators.TextFieldOperator;
 
 public final class InputDriverInstaller {
     private final JemmyProperties jemmyProperties;
@@ -63,17 +74,17 @@ public final class InputDriverInstaller {
             driverMgr.setDriver(DriverType.Mouse, mouseE);
 
             try {
-                List<String> awtOperators = Collections.unmodifiableList(Arrays.asList(
-                        "org.netbeans.jemmy.operators.ButtonOperator",
-                        "org.netbeans.jemmy.operators.CheckboxOperator",
-                        "org.netbeans.jemmy.operators.ChoiceOperator",
-                        "org.netbeans.jemmy.operators.LabelOperator",
-                        "org.netbeans.jemmy.operators.ListOperator",
-                        "org.netbeans.jemmy.operators.ScrollPaneOperator",
-                        "org.netbeans.jemmy.operators.ScrollbarOperator",
-                        "org.netbeans.jemmy.operators.TextAreaOperator",
-                        "org.netbeans.jemmy.operators.TextComponentOperator",
-                        "org.netbeans.jemmy.operators.TextFieldOperator"));
+                List<Class<? extends ComponentOperator>> awtOperators = Collections.unmodifiableList(Arrays.asList(
+                        ButtonOperator.class,
+                        CheckboxOperator.class,
+                        ChoiceOperator.class,
+                        LabelOperator.class,
+                        ListOperator.class,
+                        ScrollPaneOperator.class,
+                        ScrollbarOperator.class,
+                        TextAreaOperator.class,
+                        TextComponentOperator.class,
+                        TextFieldOperator.class));
                 LightDriver keyR = new KeyRobotDriver(robotAutoDelay, awtOperators);
                 LightDriver mouseR = new MouseRobotDriver(robotAutoDelay, awtOperators);
                 driverMgr.removeDriver(DriverType.Key, keyR.getSupported());

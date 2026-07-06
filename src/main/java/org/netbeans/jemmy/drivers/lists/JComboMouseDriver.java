@@ -40,7 +40,7 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public final class JComboMouseDriver extends LightSupportiveDriver implements ListDriver {
     public JComboMouseDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JComboBoxOperator"));
+        super(Collections.singletonList(JComboBoxOperator.class));
     }
 
     @Override

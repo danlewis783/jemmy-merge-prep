@@ -46,7 +46,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JTableMouseDriver extends LightSupportiveDriver implements TableDriver {
     public JTableMouseDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTableOperator"));
+        super(Collections.singletonList(JTableOperator.class));
     }
 
     @Override

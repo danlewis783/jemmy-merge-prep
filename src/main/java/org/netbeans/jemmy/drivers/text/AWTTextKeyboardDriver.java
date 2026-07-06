@@ -34,7 +34,7 @@ import org.netbeans.jemmy.operators.TextComponentOperator;
 
 public final class AWTTextKeyboardDriver extends TextKeyboardDriver {
     public AWTTextKeyboardDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.TextComponentOperator"));
+        super(Collections.singletonList(TextComponentOperator.class));
     }
 
     @Override

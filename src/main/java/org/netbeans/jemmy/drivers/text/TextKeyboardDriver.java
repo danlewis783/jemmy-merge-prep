@@ -39,7 +39,7 @@ import org.netbeans.jemmy.drivers.TextDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public abstract class TextKeyboardDriver extends LightSupportiveDriver implements TextDriver {
-    public TextKeyboardDriver(List<String> supported) {
+    public TextKeyboardDriver(List<? extends Class<? extends ComponentOperator>> supported) {
         super(supported);
     }
 

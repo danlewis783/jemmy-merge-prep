@@ -42,7 +42,7 @@ import org.netbeans.jemmy.operators.Operator;
 
 public final class JTabMouseDriver extends LightSupportiveDriver implements ListDriver {
     public JTabMouseDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.JTabbedPaneOperator"));
+        super(Collections.singletonList(JTabbedPaneOperator.class));
     }
 
     @Override

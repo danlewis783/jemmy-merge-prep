@@ -33,7 +33,7 @@ import org.netbeans.jemmy.operators.ListOperator;
 
 public class ListAPIDriver extends LightSupportiveDriver implements MultiSelListDriver {
     public ListAPIDriver() {
-        super(Collections.singletonList("org.netbeans.jemmy.operators.ListOperator"));
+        super(Collections.singletonList(ListOperator.class));
     }
 
     @Override

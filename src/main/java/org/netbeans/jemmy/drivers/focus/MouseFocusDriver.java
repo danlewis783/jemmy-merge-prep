@@ -37,22 +37,33 @@ import org.netbeans.jemmy.drivers.FocusDriver;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.MouseDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
+import org.netbeans.jemmy.operators.JListOperator;
+import org.netbeans.jemmy.operators.JScrollBarOperator;
+import org.netbeans.jemmy.operators.JSliderOperator;
+import org.netbeans.jemmy.operators.JTableOperator;
+import org.netbeans.jemmy.operators.JTextComponentOperator;
+import org.netbeans.jemmy.operators.JTreeOperator;
+import org.netbeans.jemmy.operators.ListOperator;
 import org.netbeans.jemmy.operators.Operator;
+import org.netbeans.jemmy.operators.ScrollbarOperator;
+import org.netbeans.jemmy.operators.TextAreaOperator;
+import org.netbeans.jemmy.operators.TextComponentOperator;
+import org.netbeans.jemmy.operators.TextFieldOperator;
 
 public final class MouseFocusDriver extends LightSupportiveDriver implements FocusDriver {
     public MouseFocusDriver() {
         super(Collections.unmodifiableList(Arrays.asList(
-                "org.netbeans.jemmy.operators.JListOperator",
-                "org.netbeans.jemmy.operators.JScrollBarOperator",
-                "org.netbeans.jemmy.operators.JSliderOperator",
-                "org.netbeans.jemmy.operators.JTableOperator",
-                "org.netbeans.jemmy.operators.JTextComponentOperator",
-                "org.netbeans.jemmy.operators.JTreeOperator",
-                "org.netbeans.jemmy.operators.ListOperator",
-                "org.netbeans.jemmy.operators.ScrollbarOperator",
-                "org.netbeans.jemmy.operators.TextAreaOperator",
-                "org.netbeans.jemmy.operators.TextComponentOperator",
-                "org.netbeans.jemmy.operators.TextFieldOperator")));
+                JListOperator.class,
+                JScrollBarOperator.class,
+                JSliderOperator.class,
+                JTableOperator.class,
+                JTextComponentOperator.class,
+                JTreeOperator.class,
+                ListOperator.class,
+                ScrollbarOperator.class,
+                TextAreaOperator.class,
+                TextComponentOperator.class,
+                TextFieldOperator.class)));
     }
 
     @Override

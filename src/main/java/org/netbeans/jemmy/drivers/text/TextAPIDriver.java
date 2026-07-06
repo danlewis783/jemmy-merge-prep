@@ -37,7 +37,7 @@ import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.TextComponentOperator;
 
 public abstract class TextAPIDriver extends LightSupportiveDriver implements TextDriver {
-    public TextAPIDriver(List<String> supported) {
+    public TextAPIDriver(List<? extends Class<? extends ComponentOperator>> supported) {
         super(supported);
     }
 

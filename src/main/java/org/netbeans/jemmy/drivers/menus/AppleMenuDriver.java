@@ -43,13 +43,12 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.drivers.input.RobotDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
+import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.Operator;
 
 public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
     public AppleMenuDriver() {
-        super(
-                TimeoutKey.Apple_SystemMenuDelay,
-                Collections.singletonList("org.netbeans.jemmy.operators.JMenuBarOperator"));
+        super(TimeoutKey.Apple_SystemMenuDelay, Collections.singletonList(JMenuBarOperator.class));
     }
 
     @Override
