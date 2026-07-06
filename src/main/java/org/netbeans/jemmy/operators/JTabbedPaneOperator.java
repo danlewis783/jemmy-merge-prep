@@ -48,8 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JTabbedPaneOperator extends JComponentOperator {
-    public static final String PAGE_PREFIX_DPROP = "Page";
-    public static final String SELECTED_PAGE_DPROP = "Selected";
     private static final Logger logger = LoggerFactory.getLogger(JTabbedPaneOperator.class);
     private final ListDriver driver;
 

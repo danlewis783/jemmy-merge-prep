@@ -51,17 +51,9 @@ public class JSliderOperator extends JComponentOperator {
     @Deprecated
     public static final int CLICK_SCROLL_MODEL = 1;
 
-    public static final String HORIZONTAL_ORIENTATION_DPROP_VALUE = "HORIZONTAL";
-    public static final String IS_INVERTED_DPROP = "Inverted";
-    public static final String MAXIMUM_DPROP = "Maximum";
-    public static final String MINIMUM_DPROP = "Minimum";
-    public static final String ORIENTATION_DPROP = "Orientation";
-
     @Deprecated
     public static final int PUSH_AND_WAIT_SCROLL_MODEL = 2;
 
-    public static final String VALUE_DPROP = "Value";
-    public static final String VERTICAL_ORIENTATION_DPROP_VALUE = "VERTICAL";
     private static final Logger logger = LoggerFactory.getLogger(JSliderOperator.class);
     private int scrollModel = CLICK_SCROLL_MODEL;
     private final ScrollDriver driver;

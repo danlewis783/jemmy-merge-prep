@@ -42,9 +42,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
 public class JColorChooserOperator extends JComponentOperator {
-    public static final String COLOR_DPROP = "Color";
     private static final String RGB_TITLE = "RGB";
-    public static final String SELECTED_PAGE_DPROP = "Selected page";
     private @Nullable JTextFieldOperator blue;
     private @Nullable JTextFieldOperator green;
     private @Nullable JTextFieldOperator red;

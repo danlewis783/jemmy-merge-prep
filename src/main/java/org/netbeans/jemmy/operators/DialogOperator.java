@@ -43,9 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DialogOperator extends WindowOperator {
-    public static final String IS_MODAL_DPROP = "Modal";
-    public static final String IS_RESIZABLE_DPROP = "Resizable";
-    public static final String TITLE_DPROP = "Title";
     private static final Logger logger = LoggerFactory.getLogger(DialogOperator.class);
 
     public DialogOperator() {

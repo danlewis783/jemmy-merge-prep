@@ -37,7 +37,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JButtonOperator extends AbstractButtonOperator {
-    public static final String IS_DEFAULT_DPROP = "Default button";
 
     public JButtonOperator(ContainerOperator cont) {
         this(cont, 0);

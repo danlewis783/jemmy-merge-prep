@@ -57,7 +57,6 @@ import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuBarOperator extends JComponentOperator {
-    public static final String SUBMENU_PREFIX_DPROP = "Submenu";
     private final MenuDriver driver;
 
     public JMenuBarOperator(ContainerOperator cont) {

@@ -50,12 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JScrollBarOperator extends JComponentOperator {
-    public static final String HORIZONTAL_ORIENTATION_DPROP_VALUE = "HORIZONTAL";
-    public static final String MAXIMUM_DPROP = "Maximum";
-    public static final String MINIMUM_DPROP = "Minimum";
-    public static final String ORIENTATION_DPROP = "Orientation";
-    public static final String VALUE_DPROP = "Value";
-    public static final String VERTICAL_ORIENTATION_DPROP_VALUE = "VERTICAL";
     private static final Logger logger = LoggerFactory.getLogger(JScrollBarOperator.class);
     private final ScrollDriver driver;
     private @Nullable JButtonOperator maxButtOperator;

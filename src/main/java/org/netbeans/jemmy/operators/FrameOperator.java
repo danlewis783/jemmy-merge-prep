@@ -47,11 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FrameOperator extends WindowOperator {
-    public static final String IS_RESIZABLE_DPROP = "Resizable";
-    public static final String STATE_DPROP = "State";
-    public static final String STATE_ICONIFIED_DPROP_VALUE = "ICONIFIED";
-    public static final String STATE_NORMAL_DPROP_VALUE = "NORMAL";
-    public static final String TITLE_DPROP = "Title";
     private static final Logger logger = LoggerFactory.getLogger(FrameOperator.class);
     private final FrameDriver driver;
 

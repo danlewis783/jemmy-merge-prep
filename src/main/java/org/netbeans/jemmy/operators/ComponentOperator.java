@@ -85,13 +85,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ComponentOperator extends Operator {
-    public static final String HEIGHT_DPROP = "Height";
-    public static final String IS_SHOWING_DPROP = "Showing";
-    public static final String IS_VISIBLE_DPROP = "Visible";
-    public static final String NAME_DPROP = "Name:";
-    public static final String WIDTH_DPROP = "Width";
-    public static final String X_DPROP = "X";
-    public static final String Y_DPROP = "Y";
     private static final Logger logger = LoggerFactory.getLogger(ComponentOperator.class);
     private final EventDispatcher dispatcher;
     private final FocusDriver fDriver;

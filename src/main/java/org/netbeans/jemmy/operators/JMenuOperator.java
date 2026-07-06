@@ -49,7 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JMenuOperator extends JMenuItemOperator {
-    public static final String SUBMENU_PREFIX_DPROP = "Submenu";
     private static final Logger logger = LoggerFactory.getLogger(JMenuOperator.class);
     private final MenuDriver driver;
 

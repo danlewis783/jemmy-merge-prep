@@ -37,7 +37,6 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JPasswordFieldOperator extends JTextFieldOperator {
-    public static final String ECHO_CHAR_DPROP = "Echo char";
 
     public JPasswordFieldOperator(ContainerOperator cont) {
         this(cont, 0);

@@ -41,9 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JProgressBarOperator extends JComponentOperator {
-    public static final String MAXIMUM_DPROP = "Maximum";
-    public static final String MINIMUM_DPROP = "Minimum";
-    public static final String VALUE_DPROP = "Value";
     private static final Logger logger = LoggerFactory.getLogger(JProgressBarOperator.class);
 
     public JProgressBarOperator(ContainerOperator cont) {

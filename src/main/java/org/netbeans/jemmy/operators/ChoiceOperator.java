@@ -44,8 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ChoiceOperator extends ComponentOperator {
-    public static final String ITEM_PREFIX_DPROP = "Item";
-    public static final String SELECTED_ITEM_DPROP = "Selected item";
     private static final Logger logger = LoggerFactory.getLogger(ChoiceOperator.class);
     private final ListDriver driver;
 

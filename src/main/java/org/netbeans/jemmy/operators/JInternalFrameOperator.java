@@ -63,14 +63,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JInternalFrameOperator extends JComponentOperator {
-    public static final String IS_RESIZABLE_DPROP = "Resizable";
-    public static final String IS_SELECTED_DPROP = "Selected";
-    public static final String STATE_CLOSED_DPROP_VALUE = "CLOSED";
-    public static final String STATE_DPROP = "State";
-    public static final String STATE_ICONIFIED_DPROP_VALUE = "ICONIFIED";
-    public static final String STATE_MAXIMAZED_DPROP_VALUE = "MAXIMIZED";
-    public static final String STATE_NORMAL_DPROP_VALUE = "NORMAL";
-    public static final String TITLE_DPROP = "Title";
     private static final Logger logger = LoggerFactory.getLogger(JInternalFrameOperator.class);
     private @Nullable JButtonOperator closeOper;
     private final FrameDriver fDriver;
