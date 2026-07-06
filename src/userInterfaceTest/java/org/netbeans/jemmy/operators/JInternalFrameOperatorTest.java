@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.EventQueue;
@@ -247,6 +248,49 @@ class JInternalFrameOperatorTest {
         operator2.close();
         assertTrue(operator2.isClosed());
         assertFalse(internalFrame.isVisible());
+    }
+
+    @Test
+    void testTitleButtonsWhenNotIconifiable() throws Exception {
+        EventQueue.invokeAndWait(() -> internalFrame.setIconifiable(false));
+        JFrameOperator operator = new JFrameOperator();
+        assertNotNull(operator);
+        JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
+        assertNotNull(operator2);
+        assertThrows(NullPointerException.class, operator2::getMinimizeButton);
+        operator2.getMaximizeButton().push();
+        operator2.waitMaximum(true);
+        operator2.getCloseButton().push();
+        operator2.waitClosed();
+        assertTrue(operator2.isClosed());
+    }
+
+    @Test
+    void testWaitActivate() {
+        JFrameOperator operator = new JFrameOperator();
+        assertNotNull(operator);
+        JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
+        assertNotNull(operator2);
+        operator2.activate();
+        operator2.waitActivate(true);
+        assertTrue(operator2.isSelected());
+    }
+
+    @Test
+    void testWaitClosed() throws Exception {
+        JFrameOperator operator = new JFrameOperator();
+        assertNotNull(operator);
+        JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
+        assertNotNull(operator2);
+        EventQueue.invokeAndWait(() -> {
+            try {
+                internalFrame.setClosed(true);
+            } catch (PropertyVetoException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        operator2.waitClosed();
+        assertTrue(operator2.isClosed());
     }
 
     @Test
