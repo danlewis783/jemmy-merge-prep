@@ -53,6 +53,7 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuBarOperator extends JComponentOperator {
@@ -164,7 +165,7 @@ public class JMenuBarOperator extends JComponentOperator {
         }
 
         JMenuItemOperator result;
-        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        if (Platform.isOSX()) {
             ComponentSearcher searcher = new ComponentSearcher((Container) menuCont.getSource());
             Component c = searcher.findComponent(new JMenuItemByTextPredicate(path[path.length - 1], comparator));
             result = new JMenuItemOperator((JMenuItem) Objects.requireNonNull(c, "menu item not found"));
