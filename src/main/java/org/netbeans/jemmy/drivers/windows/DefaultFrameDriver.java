@@ -25,9 +25,7 @@
 
 package org.netbeans.jemmy.drivers.windows;
 
-import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
@@ -64,13 +62,12 @@ public final class DefaultFrameDriver extends LightSupportiveDriver implements F
     @Override
     public void maximize(ComponentOperator oper) {
         checkSupported(oper);
-        oper.setLocation(0, 0);
-        Dimension ssize = Toolkit.getDefaultToolkit().getScreenSize();
-        oper.setSize(ssize.width, ssize.height);
+        ((FrameOperator) oper).setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
     @Override
     public void demaximize(ComponentOperator oper) {
         checkSupported(oper);
+        ((FrameOperator) oper).setExtendedState(Frame.NORMAL);
     }
 }

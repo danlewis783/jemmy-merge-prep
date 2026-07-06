@@ -108,7 +108,7 @@ public class FrameOperator extends WindowOperator {
         driver.maximize(this);
 
         if (getVerification()) {
-            waitState(Frame.NORMAL);
+            waitExtendedState(Frame.MAXIMIZED_BOTH);
         }
     }
 
@@ -116,12 +116,16 @@ public class FrameOperator extends WindowOperator {
         driver.demaximize(this);
 
         if (getVerification()) {
-            waitState(Frame.NORMAL);
+            waitExtendedState(Frame.NORMAL);
         }
     }
 
     public void waitState(int state) {
         waitState(new FrameOperatorState(state));
+    }
+
+    public void waitExtendedState(int state) {
+        waitState(new FrameOperatorExtendedState(state));
     }
 
     public Image getIconImage() {
@@ -130,6 +134,10 @@ public class FrameOperator extends WindowOperator {
 
     public MenuBar getMenuBar() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getMenuBar()));
+    }
+
+    public int getExtendedState() {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getExtendedState()));
     }
 
     public int getState() {
@@ -163,6 +171,14 @@ public class FrameOperator extends WindowOperator {
     public void setResizable(boolean b) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setResizable(b);
+
+            return null;
+        }));
+    }
+
+    public void setExtendedState(int state) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((Frame) getSource()).setExtendedState(state);
 
             return null;
         }));
@@ -207,6 +223,19 @@ public class FrameOperator extends WindowOperator {
         @Override
         public boolean test(FrameOperator frameOp) {
             return frameOp.getState() == state;
+        }
+    }
+
+    private static class FrameOperatorExtendedState implements Predicate<FrameOperator> {
+        private final int state;
+
+        public FrameOperatorExtendedState(int state) {
+            this.state = state;
+        }
+
+        @Override
+        public boolean test(FrameOperator frameOp) {
+            return frameOp.getExtendedState() == state;
         }
     }
 }
