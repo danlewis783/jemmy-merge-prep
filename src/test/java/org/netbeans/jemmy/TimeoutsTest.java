@@ -311,4 +311,62 @@ class TimeoutsTest {
                     .hasMessage("interrupted while sleeping for timeout \"%s\" (%d ms)", key, timeout);
         }
     }
+
+    @Test
+    void scaleMultipliesDefaultValues() {
+        String previous = System.setProperty(Timeouts.TIMEOUTS_SCALE_PROPERTY, "2.5");
+        try {
+            Timeouts.resetToDefaults();
+            assertThat(Timeouts.getTimeoutsScale()).isEqualTo(2.5);
+            TimeoutKey key = TimeoutKey.ActionProducer_MaxActionTime;
+            assertThat(Timeouts.get(key)).isEqualTo(Math.round(key.getDefaultValue() * 2.5));
+        } finally {
+            restoreScaleProperty(previous);
+        }
+    }
+
+    @Test
+    void scaleMultipliesOverriddenValues() {
+        String previous = System.setProperty(Timeouts.TIMEOUTS_SCALE_PROPERTY, "3");
+        try {
+            Timeouts.resetToDefaults();
+            try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.Testing_B, 100L)) {
+                assertThat(Timeouts.get(TimeoutKey.Testing_B)).isEqualTo(300L);
+            }
+        } finally {
+            restoreScaleProperty(previous);
+        }
+    }
+
+    @Test
+    void unparseableScaleIsIgnored() {
+        String previous = System.setProperty(Timeouts.TIMEOUTS_SCALE_PROPERTY, "not a number");
+        try {
+            Timeouts.resetToDefaults();
+            assertThat(Timeouts.getTimeoutsScale()).isEqualTo(1.0);
+        } finally {
+            restoreScaleProperty(previous);
+        }
+    }
+
+    @Test
+    void nonPositiveScaleIsIgnored() {
+        String previous = System.setProperty(Timeouts.TIMEOUTS_SCALE_PROPERTY, "-2");
+        try {
+            Timeouts.resetToDefaults();
+            assertThat(Timeouts.getTimeoutsScale()).isEqualTo(1.0);
+        } finally {
+            restoreScaleProperty(previous);
+        }
+    }
+
+    private static void restoreScaleProperty(String previous) {
+        if (previous == null) {
+            System.clearProperty(Timeouts.TIMEOUTS_SCALE_PROPERTY);
+        } else {
+            System.setProperty(Timeouts.TIMEOUTS_SCALE_PROPERTY, previous);
+        }
+
+        Timeouts.resetToDefaults();
+    }
 }

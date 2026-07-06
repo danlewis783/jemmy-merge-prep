@@ -33,8 +33,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class Timeouts {
+    /**
+     * System property multiplying every timeout value, for running on slow machines. Read at startup and on
+     * {@link #resetToDefaults()}. Must be a positive number; anything else is ignored with a warning.
+     */
+    public static final String TIMEOUTS_SCALE_PROPERTY = "jemmy.timeouts.scale";
+
     private static final Logger logger = LoggerFactory.getLogger(Timeouts.class);
     private final Map<TimeoutKey, TimeoutOverride> overrideMap;
+    private volatile double timeoutsScale;
 
     private Timeouts() {
         overrideMap = new EnumMap<>(TimeoutKey.class);
@@ -48,6 +55,27 @@ public final class Timeouts {
             logger.warn("timeout \"{}\" was overridden before reset", timeoutKey);
         }
         overrideMap.clear();
+        timeoutsScale = readTimeoutsScale();
+    }
+
+    private static double readTimeoutsScale() {
+        String property = System.getProperty(TIMEOUTS_SCALE_PROPERTY);
+        if (property == null) {
+            return 1.0;
+        }
+
+        try {
+            double parsed = Double.parseDouble(property);
+            if (!Double.isFinite(parsed) || (parsed <= 0.0)) {
+                logger.warn("ignoring non-positive {} value \"{}\"", TIMEOUTS_SCALE_PROPERTY, property);
+                return 1.0;
+            }
+
+            return parsed;
+        } catch (NumberFormatException e) {
+            logger.warn("ignoring unparseable {} value \"{}\"", TIMEOUTS_SCALE_PROPERTY, property);
+            return 1.0;
+        }
     }
 
     public static void resetToDefaults() {
@@ -56,11 +84,9 @@ public final class Timeouts {
 
     private synchronized long doGet(TimeoutKey key) {
         TimeoutOverride timeoutOverride = overrideMap.get(key);
-        if (timeoutOverride != null) {
-            return timeoutOverride.get();
-        }
+        long value = (timeoutOverride != null) ? timeoutOverride.get() : key.getDefaultValue();
 
-        return key.getDefaultValue();
+        return Math.round(value * timeoutsScale);
     }
 
     private synchronized TimeoutOverride doOverride(TimeoutKey key, long newValue) {
@@ -77,6 +103,10 @@ public final class Timeouts {
     public static long get(TimeoutKey key) {
         Objects.requireNonNull(key, "key must not be null");
         return getInstance().doGet(key);
+    }
+
+    public static double getTimeoutsScale() {
+        return getInstance().timeoutsScale;
     }
 
     public static void check(TimeoutKey key, long startTime) {
