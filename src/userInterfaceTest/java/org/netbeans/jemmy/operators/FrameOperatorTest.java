@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.awt.EventQueue;
@@ -89,6 +90,7 @@ class FrameOperatorTest {
         FrameOperator operator = new FrameOperator();
         assertNotNull(operator);
         operator.maximize();
+        assertEquals(Frame.MAXIMIZED_BOTH, operator.getExtendedState());
     }
 
     @Test
@@ -96,7 +98,9 @@ class FrameOperatorTest {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
         assertNotNull(operator);
+        operator.maximize();
         operator.demaximize();
+        assertEquals(Frame.NORMAL, operator.getExtendedState());
     }
 
     @Test
