@@ -26,6 +26,8 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -155,7 +157,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         wDriver.move(this, x, y);
 
         if (getVerification()) {
-            waitState(new JInternalFrameLocationPredicate(x, y));
+            waitComponentLocation(new Point(x, y));
         }
     }
 
@@ -164,7 +166,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         wDriver.resize(this, width, height);
 
         if (getVerification()) {
-            waitState(new JInternalFrameSizePredicate(width, height));
+            waitComponentSize(new Dimension(width, height));
         }
     }
 
@@ -729,36 +731,6 @@ public class JInternalFrameOperator extends JComponentOperator {
         @Override
         public boolean test(JInternalFrameOperator jInternalFrameOp) {
             return jInternalFrameOp.isClosed() == isClosed;
-        }
-    }
-
-    private static class JInternalFrameLocationPredicate implements Predicate<JInternalFrameOperator> {
-        private final int x;
-        private final int y;
-
-        public JInternalFrameLocationPredicate(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public boolean test(JInternalFrameOperator jInternalFrameOp) {
-            return (jInternalFrameOp.getX() == x) && (jInternalFrameOp.getY() == y);
-        }
-    }
-
-    private static class JInternalFrameSizePredicate implements Predicate<JInternalFrameOperator> {
-        private final int width;
-        private final int height;
-
-        public JInternalFrameSizePredicate(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
-
-        @Override
-        public boolean test(JInternalFrameOperator jInternalFrameOp) {
-            return (jInternalFrameOp.getWidth() == width) && (jInternalFrameOp.getHeight() == height);
         }
     }
 

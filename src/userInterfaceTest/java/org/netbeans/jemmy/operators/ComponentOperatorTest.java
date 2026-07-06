@@ -85,6 +85,30 @@ class ComponentOperatorTest {
     }
 
     @Test
+    void testWaitComponentSize() throws Exception {
+        ComponentOperator operator = new ComponentOperator(frame);
+        EventQueue.invokeAndWait(() -> frame.setSize(400, 300));
+        operator.waitComponentSize(new Dimension(400, 300));
+        operator.waitComponentSize(new Dimension(300, 200), new Dimension(500, 400));
+    }
+
+    @Test
+    void testWaitComponentLocation() throws Exception {
+        ComponentOperator operator = new ComponentOperator(frame);
+        EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
+        operator.waitComponentLocation(new Point(200, 150));
+        operator.waitComponentLocation(new Point(100, 100), new Point(300, 250));
+    }
+
+    @Test
+    void testWaitComponentLocationOnScreen() throws Exception {
+        ComponentOperator operator = new ComponentOperator(frame);
+        EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
+        operator.waitComponentLocationOnScreen(new Point(200, 150));
+        operator.waitComponentLocationOnScreen(new Point(100, 100), new Point(300, 250));
+    }
+
+    @Test
     void testFindComponent() {
         Component component = ComponentOperator.findComponent(frame, PredicatesJ.byName("ComponentOperatorTest"));
         assertNotNull(component);

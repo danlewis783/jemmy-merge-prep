@@ -77,6 +77,9 @@ import org.netbeans.jemmy.drivers.MouseDriver;
 import org.netbeans.jemmy.predicates.ComponentOperatorIsEnabledPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorIsShowingPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
+import org.netbeans.jemmy.predicates.ComponentOperatorLocationOnScreenPredicate;
+import org.netbeans.jemmy.predicates.ComponentOperatorLocationPredicate;
+import org.netbeans.jemmy.predicates.ComponentOperatorSizePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -408,6 +411,30 @@ public class ComponentOperator extends Operator {
 
     public void waitComponentShowing(boolean visibility) {
         waitState(new ComponentOperatorIsShowingPredicate(visibility));
+    }
+
+    public void waitComponentSize(Dimension exactSize) {
+        waitState(new ComponentOperatorSizePredicate<>(exactSize));
+    }
+
+    public void waitComponentSize(Dimension minSize, Dimension maxSize) {
+        waitState(new ComponentOperatorSizePredicate<>(minSize, maxSize));
+    }
+
+    public void waitComponentLocation(Point exactLocation) {
+        waitState(new ComponentOperatorLocationPredicate<>(exactLocation));
+    }
+
+    public void waitComponentLocation(Point minLocation, Point maxLocation) {
+        waitState(new ComponentOperatorLocationPredicate<>(minLocation, maxLocation));
+    }
+
+    public void waitComponentLocationOnScreen(Point exactLocation) {
+        waitState(new ComponentOperatorLocationOnScreenPredicate<>(exactLocation));
+    }
+
+    public void waitComponentLocationOnScreen(Point minLocation, Point maxLocation) {
+        waitState(new ComponentOperatorLocationOnScreenPredicate<>(minLocation, maxLocation));
     }
 
     public void add(PopupMenu popupMenu) {
