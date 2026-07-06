@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.DumpOnFailure;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -38,6 +40,7 @@ import org.netbeans.jemmy.operators.TextFieldOperator;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
+@ExtendWith(DumpOnFailure.class)
 class jemmy_036 {
     private static final StringComparator STRICT = StringComparators.strict();
     private TimeoutOverride override;

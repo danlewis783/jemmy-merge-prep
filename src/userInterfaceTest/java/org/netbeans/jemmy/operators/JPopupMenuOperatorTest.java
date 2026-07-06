@@ -43,13 +43,16 @@ import javax.swing.plaf.PopupMenuUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.DispatchingModel;
+import org.netbeans.jemmy.DumpOnFailure;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.util.StringComparators;
 
+@ExtendWith(DumpOnFailure.class)
 final class JPopupMenuOperatorTest {
 
     private AtomicReference<JFrame> frameRef;
