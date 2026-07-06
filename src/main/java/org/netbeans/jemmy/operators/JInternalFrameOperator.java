@@ -37,6 +37,7 @@ import javax.swing.JInternalFrame.JDesktopIcon;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.InternalFrameUI;
 import org.jspecify.annotations.Nullable;
@@ -49,11 +50,13 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.drivers.InternalFrameDriver;
 import org.netbeans.jemmy.drivers.WindowDriver;
+import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
 import org.netbeans.jemmy.predicates.JInternalFrameByTitlePredicate;
 import org.netbeans.jemmy.predicates.JInternalFramePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
+import org.netbeans.jemmy.util.StringComparators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,21 +153,37 @@ public class JInternalFrameOperator extends JComponentOperator {
     public void move(int x, int y) {
         checkIconified(false);
         wDriver.move(this, x, y);
+
+        if (getVerification()) {
+            waitState(new JInternalFrameLocationPredicate(x, y));
+        }
     }
 
     public void resize(int width, int height) {
         checkIconified(false);
         wDriver.resize(this, width, height);
+
+        if (getVerification()) {
+            waitState(new JInternalFrameSizePredicate(width, height));
+        }
     }
 
     public void activate() {
         checkIconified(false);
         wDriver.activate(this);
+
+        if (getVerification()) {
+            waitActivate(true);
+        }
     }
 
     public void close() {
         checkIconified(false);
         wDriver.close(this);
+
+        if (getVerification()) {
+            waitClosed();
+        }
     }
 
     public void scrollToRectangle(int x, int y, int width, int height) {
@@ -235,6 +254,14 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void waitMaximum(boolean maximum) {
         waitState(new JInternalFrameIsMaximumPredicate(maximum));
+    }
+
+    public void waitActivate(boolean activate) {
+        waitState(new JInternalFrameIsSelectedPredicate(activate));
+    }
+
+    public void waitClosed() {
+        waitState(new JInternalFrameIsClosedPredicate(true));
     }
 
     public void addInternalFrameListener(InternalFrameListener internalFrameListener) {
@@ -536,28 +563,17 @@ public class JInternalFrameOperator extends JComponentOperator {
         Container titlePane = findTitlePane();
         if (!isIcon() && (titlePane != null)) {
             if (titleOperator == null) {
-                titleOperator = new ContainerOperator(titlePane);
-                int bttCount = 0;
+                ContainerOperator title = new ContainerOperator(titlePane);
+                titleOperator = title;
                 if (getContainer(PredicatesJ.of(JDesktopPane.class)) != null) {
-                    minOper = new JButtonOperator(titleOperator, bttCount);
-                    bttCount++;
-
-                    if (((JInternalFrame) getSource()).isMaximizable()) {
-                        maxOper = new JButtonOperator(titleOperator, bttCount);
-                        bttCount++;
-                    } else {
-                        maxOper = null;
-                    }
+                    minOper = isIconifiable() ? findTitleButton(title, "InternalFrame.iconButtonToolTip") : null;
+                    maxOper = isMaximizable() ? findTitleButton(title, "InternalFrame.maxButtonToolTip") : null;
                 } else {
                     minOper = null;
                     maxOper = null;
                 }
 
-                if (isClosable()) {
-                    closeOper = new JButtonOperator(titleOperator, bttCount);
-                } else {
-                    closeOper = null;
-                }
+                closeOper = isClosable() ? findTitleButton(title, "InternalFrame.closeButtonToolTip") : null;
             }
         } else {
             titleOperator = null;
@@ -565,6 +581,11 @@ public class JInternalFrameOperator extends JComponentOperator {
             maxOper = null;
             closeOper = null;
         }
+    }
+
+    private static JButtonOperator findTitleButton(ContainerOperator title, String tooltipKey) {
+        return new JButtonOperator(
+                title, new JComponentByToolTipPredicate(UIManager.getString(tooltipKey), StringComparators.strict()));
     }
 
     private void checkIconified(boolean shouldBeIconified) {
@@ -682,6 +703,62 @@ public class JInternalFrameOperator extends JComponentOperator {
         @Override
         public boolean test(JInternalFrameOperator jInternalFrameOp) {
             return jInternalFrameOp.isMaximum() == isMaximum;
+        }
+    }
+
+    private static class JInternalFrameIsSelectedPredicate implements Predicate<JInternalFrameOperator> {
+        private final boolean isSelected;
+
+        public JInternalFrameIsSelectedPredicate(boolean isSelected) {
+            this.isSelected = isSelected;
+        }
+
+        @Override
+        public boolean test(JInternalFrameOperator jInternalFrameOp) {
+            return jInternalFrameOp.isSelected() == isSelected;
+        }
+    }
+
+    private static class JInternalFrameIsClosedPredicate implements Predicate<JInternalFrameOperator> {
+        private final boolean isClosed;
+
+        public JInternalFrameIsClosedPredicate(boolean isClosed) {
+            this.isClosed = isClosed;
+        }
+
+        @Override
+        public boolean test(JInternalFrameOperator jInternalFrameOp) {
+            return jInternalFrameOp.isClosed() == isClosed;
+        }
+    }
+
+    private static class JInternalFrameLocationPredicate implements Predicate<JInternalFrameOperator> {
+        private final int x;
+        private final int y;
+
+        public JInternalFrameLocationPredicate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean test(JInternalFrameOperator jInternalFrameOp) {
+            return (jInternalFrameOp.getX() == x) && (jInternalFrameOp.getY() == y);
+        }
+    }
+
+    private static class JInternalFrameSizePredicate implements Predicate<JInternalFrameOperator> {
+        private final int width;
+        private final int height;
+
+        public JInternalFrameSizePredicate(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public boolean test(JInternalFrameOperator jInternalFrameOp) {
+            return (jInternalFrameOp.getWidth() == width) && (jInternalFrameOp.getHeight() == height);
         }
     }
 
