@@ -176,6 +176,14 @@ public abstract class Operator {
         }
     }
 
+    /**
+     * Like {@link #waitState(Predicate)}, but evaluates the predicate on the event dispatch thread, so it can safely
+     * read Swing component state.
+     */
+    public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate) {
+        waitState(new OnQueuePredicate<>(predicate));
+    }
+
     // the result's nullness follows the function's type argument, which pre-generics
     // NullAway cannot express
     @SuppressWarnings("NullAway")
@@ -327,5 +335,23 @@ public abstract class Operator {
         }
 
         return null;
+    }
+
+    private static final class OnQueuePredicate<T extends Operator> implements Predicate<T> {
+        private final Predicate<T> predicate;
+
+        OnQueuePredicate(Predicate<T> predicate) {
+            this.predicate = predicate;
+        }
+
+        @Override
+        public boolean test(T operator) {
+            return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> predicate.test(operator)));
+        }
+
+        @Override
+        public String toString() {
+            return predicate.toString();
+        }
     }
 }
