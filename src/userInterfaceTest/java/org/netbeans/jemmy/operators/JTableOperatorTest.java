@@ -1116,4 +1116,15 @@ class JTableOperatorTest {
         assertNotNull(operator1);
         operator1.valueChanged(new ListSelectionEvent(this, 0, 0, false));
     }
+
+    @Test
+    void testChangeSelection() {
+        JFrameOperator operator = new JFrameOperator();
+        assertNotNull(operator);
+        JTableOperator operator1 = new JTableOperator(operator);
+        assertNotNull(operator1);
+        operator1.changeSelection(1, 0, false, false);
+        assertEquals(1, operator1.getSelectedRow());
+        assertEquals(0, operator1.getSelectedColumn());
+    }
 }

@@ -372,6 +372,14 @@ public class JTableOperator extends JComponentOperator {
         }));
     }
 
+    public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JTable) getSource()).changeSelection(rowIndex, columnIndex, toggle, extend);
+
+            return null;
+        }));
+    }
+
     public void clearSelection() {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTable) getSource()).clearSelection();

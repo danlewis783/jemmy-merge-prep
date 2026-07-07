@@ -497,4 +497,35 @@ class WindowOperatorTest {
             return Collections.emptyEnumeration();
         }
     }
+
+    // ported from openjdk/jemmy-v2 WindowWaiter.waitWindowCount (CODETOOLS-7902020)
+    @Test
+    void testWaitWindowCount() throws Exception {
+        java.util.function.Predicate<Component> countable =
+                comp -> "CountMe".equals(comp.getName()) && comp.isShowing();
+        Frame extra1 = new Frame("CountMe one");
+        Frame extra2 = new Frame("CountMe two");
+        try {
+            EventQueue.invokeAndWait(() -> {
+                extra1.setName("CountMe");
+                extra1.pack();
+                extra1.setVisible(true);
+                extra2.setName("CountMe");
+                extra2.pack();
+                extra2.setVisible(true);
+            });
+            WindowOperator.waitWindowCount(countable, 2);
+            assertEquals(2, WindowOperator.countWindows(countable));
+            EventQueue.invokeAndWait(() -> {
+                extra2.setVisible(false);
+                extra2.dispose();
+            });
+            WindowOperator.waitWindowCount(countable, 1);
+        } finally {
+            EventQueue.invokeAndWait(() -> {
+                extra1.dispose();
+                extra2.dispose();
+            });
+        }
+    }
 }

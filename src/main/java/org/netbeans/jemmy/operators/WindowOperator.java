@@ -137,6 +137,41 @@ public class WindowOperator extends ContainerOperator {
         return waitSubWindow(chooser, 0);
     }
 
+    public static void waitWindowCount(Predicate<Component> chooser, int count) {
+        waitWindowCount(null, chooser, count);
+    }
+
+    public static void waitWindowCount(@Nullable Window owner, Predicate<Component> chooser, int count) {
+        try {
+            FunctionRepeater.on(
+                            (java.util.function.Function<Void, Boolean>)
+                                    unused -> (countWindows(owner, chooser) == count) ? true : null,
+                            TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                    .runUntilNotNull(null);
+        } catch (InterruptedException e) {
+            throw new JemmyException(
+                    "Waiting for " + count + " windows matching \"" + chooser + "\" has been interrupted", e);
+        }
+    }
+
+    public static int countWindows(Predicate<Component> chooser) {
+        return countWindows(null, chooser);
+    }
+
+    public static int countWindows(@Nullable Window owner, Predicate<Component> chooser) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+            Window[] windows = (owner == null) ? Window.getWindows() : owner.getOwnedWindows();
+            int matches = 0;
+            for (Window window : windows) {
+                if (chooser.test(window)) {
+                    matches++;
+                }
+            }
+
+            return matches;
+        }));
+    }
+
     public void waitClosed() {
         waitState(new ComponentOperatorIsVisiblePredicate<WindowOperator>(false));
     }
