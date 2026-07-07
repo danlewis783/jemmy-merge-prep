@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -28,6 +28,6 @@ class FunctionRepeaterTest {
     @Test
     void testIssue30537() throws Exception {
         Object obj = new Object();
-        assertSame(obj, FunctionRepeater.on(f -> f).runUntilNotNull(obj));
+        assertThat(FunctionRepeater.on(f -> f).runUntilNotNull(obj)).isSameAs(obj);
     }
 }

@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dialog;
 import java.awt.EventQueue;
@@ -52,19 +51,19 @@ class ModalDialogWaitingTest {
         JDialogOperator fo = new JDialogOperator(jDialog0);
         JDialogOperator fo2 = new JDialogOperator();
         DialogOperator fo3 = new DialogOperator();
-        assertSame(fo2.getSource(), fo.getSource());
-        assertSame(fo3.getSource(), fo.getSource());
-        assertEquals(0, ((StagedDialogsApp) jDialog0).getIndex());
+        assertThat(fo.getSource()).isSameAs(fo2.getSource());
+        assertThat(fo.getSource()).isSameAs(fo3.getSource());
+        assertThat(((StagedDialogsApp) jDialog0).getIndex()).isEqualTo(0);
         JDialog jDialog1 = JDialogOperator.waitJDialog(TITLE, StringComparators.substring(), 1);
-        assertEquals(1, ((StagedDialogsApp) jDialog1).getIndex());
+        assertThat(((StagedDialogsApp) jDialog1).getIndex()).isEqualTo(1);
         JDialog jDialog2 = JDialogOperator.waitJDialog(TITLE, StringComparators.substring(), 2);
-        assertEquals(2, ((StagedDialogsApp) jDialog2).getIndex());
+        assertThat(((StagedDialogsApp) jDialog2).getIndex()).isEqualTo(2);
         fo = new JDialogOperator(jDialog2);
         fo2 = new JDialogOperator(2);
         fo3 = new DialogOperator(2);
-        assertSame(fo2.getSource(), fo.getSource());
-        assertSame(fo3.getSource(), fo.getSource());
-        assertEquals(2, ((StagedDialogsApp) jDialog2).getIndex());
+        assertThat(fo.getSource()).isSameAs(fo2.getSource());
+        assertThat(fo.getSource()).isSameAs(fo3.getSource());
+        assertThat(((StagedDialogsApp) jDialog2).getIndex()).isEqualTo(2);
         testDialog(new JDialogOperator(jDialog2));
         testJDialog(new JDialogOperator(jDialog2));
         JDialogOperator frm2o = new JDialogOperator(jDialog2);
@@ -74,19 +73,19 @@ class ModalDialogWaitingTest {
 
     private void testDialog(DialogOperator op) {
         Dialog src = (Dialog) op.getSource();
-        assertEquals(src.getTitle(), op.getTitle());
-        assertEquals(src.isModal(), op.isModal());
-        assertEquals(src.isResizable(), op.isResizable());
+        assertThat(op.getTitle()).isEqualTo(src.getTitle());
+        assertThat(op.isModal()).isEqualTo(src.isModal());
+        assertThat(op.isResizable()).isEqualTo(src.isResizable());
     }
 
     private void testJDialog(JDialogOperator op) {
         JDialog src = (JDialog) op.getSource();
-        assertEquals(src.getAccessibleContext(), op.getAccessibleContext());
-        assertEquals(src.getContentPane(), op.getContentPane());
-        assertEquals(src.getDefaultCloseOperation(), op.getDefaultCloseOperation());
-        assertEquals(src.getGlassPane(), op.getGlassPane());
-        assertEquals(src.getJMenuBar(), op.getJMenuBar());
-        assertEquals(src.getLayeredPane(), op.getLayeredPane());
-        assertEquals(src.getRootPane(), op.getRootPane());
+        assertThat(op.getAccessibleContext()).isEqualTo(src.getAccessibleContext());
+        assertThat(op.getContentPane()).isEqualTo(src.getContentPane());
+        assertThat(op.getDefaultCloseOperation()).isEqualTo(src.getDefaultCloseOperation());
+        assertThat(op.getGlassPane()).isEqualTo(src.getGlassPane());
+        assertThat(op.getJMenuBar()).isEqualTo(src.getJMenuBar());
+        assertThat(op.getLayeredPane()).isEqualTo(src.getLayeredPane());
+        assertThat(op.getRootPane()).isEqualTo(src.getRootPane());
     }
 }

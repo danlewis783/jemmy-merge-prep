@@ -17,9 +17,8 @@
 
 package org.netbeans.jemmy;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -85,7 +84,7 @@ class FunctionRunnerTimeoutTest {
 
         Thread.sleep(VERIFY_TIME);
 
-        assertFalse(completedWithoutInterruption.get());
-        assertTrue(abort.get());
+        assertThat(completedWithoutInterruption.get()).isFalse();
+        assertThat(abort.get()).isTrue();
     }
 }

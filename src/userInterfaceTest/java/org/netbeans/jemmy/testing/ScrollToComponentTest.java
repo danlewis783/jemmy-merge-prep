@@ -17,9 +17,6 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -61,52 +58,63 @@ class ScrollToComponentTest {
         JButton butt40 = JButtonOperator.findJButton(jFrame, "40", StringComparators.strict());
         ComponentOperator butt40Op = new ComponentOperator(butt40);
         JScrollPane sp = JScrollPaneOperator.findJScrollPane(jFrame, PredicatesJ.alwaysTrue());
-        assertSame(sp, JScrollPaneOperator.findJScrollPaneUnder(butt00));
+        assertThat(JScrollPaneOperator.findJScrollPaneUnder(butt00)).isSameAs(sp);
         JScrollBarOperator hscroll = new JScrollBarOperator(new JFrameOperator(jFrame), 1);
-        assertEquals(JScrollBar.HORIZONTAL, hscroll.getOrientation());
+        assertThat(hscroll.getOrientation()).isEqualTo(JScrollBar.HORIZONTAL);
         JScrollBarOperator vscroll = new JScrollBarOperator(new JFrameOperator(jFrame));
-        assertEquals(JScrollBar.VERTICAL, vscroll.getOrientation());
+        assertThat(vscroll.getOrientation()).isEqualTo(JScrollBar.VERTICAL);
         JScrollPaneOperator scroller = new JScrollPaneOperator(sp);
-        assertSame(scroller.getSource(), new JScrollPaneOperator(new JFrameOperator(jFrame)).getSource());
+        assertThat(new JScrollPaneOperator(new JFrameOperator(jFrame)).getSource())
+                .isSameAs(scroller.getSource());
         scroller.setValues(
                 scroller.getHorizontalScrollBar().getMaximum(),
                 scroller.getVerticalScrollBar().getMaximum());
-        assertTrue(CheckInside.isInside(butt44Op, scroller, 0, 0, butt44Op.getWidth(), butt44Op.getHeight()));
+        assertThat(CheckInside.isInside(butt44Op, scroller, 0, 0, butt44Op.getWidth(), butt44Op.getHeight()))
+                .isTrue();
         scroller.setValues(0, 0);
-        assertTrue(CheckInside.isInside(butt00Op, scroller, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()));
+        assertThat(CheckInside.isInside(butt00Op, scroller, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
+                .isTrue();
         scroller.scrollToComponentPoint(butt22, butt22Op.getWidth() / 2, butt22Op.getHeight() / 2);
-        assertTrue(CheckInside.isInside(
-                butt22Op, scroller, butt22Op.getWidth() / 2 - 1, butt22Op.getHeight() / 2 - 1, 2, 2));
+        assertThat(CheckInside.isInside(
+                        butt22Op, scroller, butt22Op.getWidth() / 2 - 1, butt22Op.getHeight() / 2 - 1, 2, 2))
+                .isTrue();
         scroller.scrollToRight();
-        assertTrue(CheckInside.isInside(
-                butt24Op, scroller, butt24Op.getWidth() / 2 - 1, butt24Op.getHeight() / 2 - 1, 2, 2));
+        assertThat(CheckInside.isInside(
+                        butt24Op, scroller, butt24Op.getWidth() / 2 - 1, butt24Op.getHeight() / 2 - 1, 2, 2))
+                .isTrue();
         int x22 = 10;
         int y22 = 10;
         int w22 = butt22Op.getWidth() - 20;
         int h22 = butt22Op.getHeight() - 20;
         scroller.scrollToComponentRectangle(butt22, x22, y22, w22, h22);
-        assertTrue(CheckInside.isInside(butt22Op, scroller, x22, y22, w22, h22));
+        assertThat(CheckInside.isInside(butt22Op, scroller, x22, y22, w22, h22)).isTrue();
         scroller.scrollToBottom();
         int x42 = 10;
         int y42 = 10;
         int w42 = butt42Op.getWidth() - 20;
         int h42 = butt42Op.getHeight() - 20;
-        assertTrue(CheckInside.isInside(butt42Op, scroller, x42, y42, w42, h42));
+        assertThat(CheckInside.isInside(butt42Op, scroller, x42, y42, w42, h42)).isTrue();
         scroller.scrollToLeft();
-        assertTrue(CheckInside.isInside(butt40Op, scroller, 0, 0, butt40Op.getWidth(), butt40Op.getHeight()));
+        assertThat(CheckInside.isInside(butt40Op, scroller, 0, 0, butt40Op.getWidth(), butt40Op.getHeight()))
+                .isTrue();
         scroller.scrollToTop();
-        assertTrue(CheckInside.isInside(butt00Op, scroller, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()));
+        assertThat(CheckInside.isInside(butt00Op, scroller, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
+                .isTrue();
         scroller.scrollToValues(0.5, 0.5);
-        assertTrue(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()));
+        assertThat(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
+                .isTrue();
         scroller.scrollToComponent(butt11);
-        assertTrue(CheckInside.isInside(butt11Op, scroller, 0, 0, butt11Op.getWidth(), butt11Op.getHeight()));
+        assertThat(CheckInside.isInside(butt11Op, scroller, 0, 0, butt11Op.getWidth(), butt11Op.getHeight()))
+                .isTrue();
         scroller.scrollToComponent(butt33);
-        assertTrue(CheckInside.isInside(butt33Op, scroller, 0, 0, butt33Op.getWidth(), butt33Op.getHeight()));
+        assertThat(CheckInside.isInside(butt33Op, scroller, 0, 0, butt33Op.getWidth(), butt33Op.getHeight()))
+                .isTrue();
         scroller.getHScrollBarOperator()
                 .scrollTo(op -> Integer.compare((op.getMaximum() - op.getVisibleAmount()) / 2, op.getValue()));
         scroller.getVScrollBarOperator()
                 .scrollTo(op -> Integer.compare((op.getMaximum() - op.getVisibleAmount()) / 2, op.getValue()));
-        assertTrue(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()));
+        assertThat(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
+                .isTrue();
 
         assertThat(testJScrollBar(hscroll))
                 .as("scroll bar block scrolling reached the target value")

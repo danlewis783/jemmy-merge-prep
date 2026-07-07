@@ -17,8 +17,7 @@
 
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.awt.Component;
@@ -77,21 +76,21 @@ final class TabbedComponentsWorkflowTest {
             JTabbedPaneOperator jTabbedPaneOp =
                     new JTabbedPaneOperator(JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0));
             Component jTabbedPane = jTabbedPaneOp.getSource();
-            assertSame(new JTabbedPaneOperator(jFrameOp).getSource(), jTabbedPane);
-            assertSame(
-                    new JTabbedPaneOperator(jFrameOp, "Table", StringComparators.substring()).getSource(), jTabbedPane);
-            assertSame(
-                    new JTabbedPaneOperator(jFrameOp, "Tree", StringComparators.substring(), 1, 0).getSource(),
-                    jTabbedPane);
+            assertThat(jTabbedPane).isSameAs(new JTabbedPaneOperator(jFrameOp).getSource());
+            assertThat(jTabbedPane)
+                    .isSameAs(new JTabbedPaneOperator(jFrameOp, "Table", StringComparators.substring()).getSource());
+            assertThat(jTabbedPane)
+                    .isSameAs(
+                            new JTabbedPaneOperator(jFrameOp, "Tree", StringComparators.substring(), 1, 0).getSource());
             JTableOperator jTableOp = new JTableOperator(
                     JTableOperator.findJTable(jFrame, null, StringComparators.caseInsensitiveSubstring(), -1, -1));
             jTableOp.clickOnCell(0, 0);
-            assertSame(new JTableOperator(jFrameOp).getSource(), jTableOp.getSource());
-            assertSame(new JTableOperator(jFrameOp, "00", STRICT).getSource(), jTableOp.getSource());
-            assertSame(new JTableOperator(jFrameOp, "4949", STRICT, 49, 49).getSource(), jTableOp.getSource());
+            assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp).getSource());
+            assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp, "00", STRICT).getSource());
+            assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp, "4949", STRICT, 49, 49).getSource());
             jTableOp.changeCellObject(49, 49, "-1-1");
             jTableOp.waitCell("-1-1", STRICT, 49, 49);
-            assertEquals("-1-1", jTableOp.getValueAt(49, 49).toString());
+            assertThat(jTableOp.getValueAt(49, 49).toString()).isEqualTo("-1-1");
             jTableOp.scrollToCell(jTableOp.findCellRow("2424", STRICT), jTableOp.findCellColumn("2424", STRICT));
             EventQueue.invokeAndWait(() -> jTableOp.getModel().setValueAt(null, 24, 24));
             jTableOp.getSource().repaint();
@@ -99,15 +98,15 @@ final class TabbedComponentsWorkflowTest {
             jTableOp.scrollToCell(jTableOp.findCellRow("-1-1", STRICT), jTableOp.findCellColumn("-1-1", STRICT));
             jTableOp.changeCellObject(1, 0, "non null text");
             jTableOp.waitCell("non null text", StringComparators.caseInsensitiveSubstring(), 1, 0);
-            assertEquals(-1, jTableOp.findCellRow("-1-1", STRICT));
+            assertThat(jTableOp.findCellRow("-1-1", STRICT)).isEqualTo(-1);
             jTabbedPaneOp.selectPage("Tree Page", STRICT);
             JTreeOperator jTreeOp = new JTreeOperator(new JFrameOperator(jFrame));
             jTreeOp.clickOnPath(jTreeOp.getPathForRow(0));
-            assertSame(new JTreeOperator(jFrameOp).getSource(), jTreeOp.getSource());
-            assertSame(new JTreeOperator(jFrameOp, "-1", StringComparators.regex()).getSource(), jTreeOp.getSource());
-            assertSame(
-                    new JTreeOperator(jFrameOp, "49", StringComparators.regex(), 50, 0).getSource(),
-                    jTreeOp.getSource());
+            assertThat(jTreeOp.getSource()).isSameAs(new JTreeOperator(jFrameOp).getSource());
+            assertThat(jTreeOp.getSource())
+                    .isSameAs(new JTreeOperator(jFrameOp, "-1", StringComparators.regex()).getSource());
+            assertThat(jTreeOp.getSource())
+                    .isSameAs(new JTreeOperator(jFrameOp, "49", StringComparators.regex(), 50, 0).getSource());
             TreePath path49 = jTreeOp.findPath("49", "/", STRICT);
             jTreeOp.scrollToPath(path49);
             jTreeOp.doExpandPath(path49);
@@ -126,72 +125,76 @@ final class TabbedComponentsWorkflowTest {
             JTextAreaOperator jTextAreaOp = new JTextAreaOperator(jFrameOp);
             jTextAreaOp.scrollToPosition(jTextAreaOp.getText().length());
             jTextAreaOp.clearText();
-            assertEquals(0, jTextAreaOp.getText().length());
+            assertThat(jTextAreaOp.getText().length()).isEqualTo(0);
             JTree treeOpSource = (JTree) jTreeOp.getSource();
-            assertEquals(jTreeOp.getCellEditor(), treeOpSource.getCellEditor());
-            assertEquals(jTreeOp.getCellRenderer(), treeOpSource.getCellRenderer());
-            assertEquals(jTreeOp.getEditingPath(), treeOpSource.getEditingPath());
-            assertEquals(jTreeOp.getInvokesStopCellEditing(), treeOpSource.getInvokesStopCellEditing());
-            assertEquals(jTreeOp.getLastSelectedPathComponent(), treeOpSource.getLastSelectedPathComponent());
-            assertEquals(jTreeOp.getLeadSelectionPath(), treeOpSource.getLeadSelectionPath());
-            assertEquals(jTreeOp.getLeadSelectionRow(), treeOpSource.getLeadSelectionRow());
-            assertEquals(jTreeOp.getMaxSelectionRow(), treeOpSource.getMaxSelectionRow());
-            assertEquals(jTreeOp.getMinSelectionRow(), treeOpSource.getMinSelectionRow());
-            assertEquals(jTreeOp.getModel(), treeOpSource.getModel());
-            assertEquals(
-                    jTreeOp.getPreferredScrollableViewportSize(), treeOpSource.getPreferredScrollableViewportSize());
-            assertEquals(jTreeOp.getRowCount(), treeOpSource.getRowCount());
-            assertEquals(jTreeOp.getRowHeight(), treeOpSource.getRowHeight());
-            assertEquals(jTreeOp.getScrollableTracksViewportHeight(), treeOpSource.getScrollableTracksViewportHeight());
-            assertEquals(jTreeOp.getScrollableTracksViewportWidth(), treeOpSource.getScrollableTracksViewportWidth());
-            assertEquals(jTreeOp.getScrollsOnExpand(), treeOpSource.getScrollsOnExpand());
-            assertEquals(jTreeOp.getSelectionCount(), treeOpSource.getSelectionCount());
-            assertEquals(jTreeOp.getSelectionModel(), treeOpSource.getSelectionModel());
-            assertEquals(jTreeOp.getSelectionPath(), treeOpSource.getSelectionPath());
-            assertEquals(jTreeOp.getShowsRootHandles(), treeOpSource.getShowsRootHandles());
-            assertEquals(jTreeOp.getUI(), treeOpSource.getUI());
-            assertEquals(jTreeOp.getVisibleRowCount(), treeOpSource.getVisibleRowCount());
-            assertEquals(jTreeOp.isEditable(), treeOpSource.isEditable());
-            assertEquals(jTreeOp.isEditing(), treeOpSource.isEditing());
-            assertEquals(jTreeOp.isFixedRowHeight(), treeOpSource.isFixedRowHeight());
-            assertEquals(jTreeOp.isLargeModel(), treeOpSource.isLargeModel());
-            assertEquals(jTreeOp.isRootVisible(), treeOpSource.isRootVisible());
-            assertEquals(jTreeOp.isSelectionEmpty(), treeOpSource.isSelectionEmpty());
-            assertEquals(jTreeOp.stopEditing(), treeOpSource.stopEditing());
+            assertThat(treeOpSource.getCellEditor()).isEqualTo(jTreeOp.getCellEditor());
+            assertThat(treeOpSource.getCellRenderer()).isEqualTo(jTreeOp.getCellRenderer());
+            assertThat(treeOpSource.getEditingPath()).isEqualTo(jTreeOp.getEditingPath());
+            assertThat(treeOpSource.getInvokesStopCellEditing()).isEqualTo(jTreeOp.getInvokesStopCellEditing());
+            assertThat(treeOpSource.getLastSelectedPathComponent()).isEqualTo(jTreeOp.getLastSelectedPathComponent());
+            assertThat(treeOpSource.getLeadSelectionPath()).isEqualTo(jTreeOp.getLeadSelectionPath());
+            assertThat(treeOpSource.getLeadSelectionRow()).isEqualTo(jTreeOp.getLeadSelectionRow());
+            assertThat(treeOpSource.getMaxSelectionRow()).isEqualTo(jTreeOp.getMaxSelectionRow());
+            assertThat(treeOpSource.getMinSelectionRow()).isEqualTo(jTreeOp.getMinSelectionRow());
+            assertThat(treeOpSource.getModel()).isEqualTo(jTreeOp.getModel());
+            assertThat(treeOpSource.getPreferredScrollableViewportSize())
+                    .isEqualTo(jTreeOp.getPreferredScrollableViewportSize());
+            assertThat(treeOpSource.getRowCount()).isEqualTo(jTreeOp.getRowCount());
+            assertThat(treeOpSource.getRowHeight()).isEqualTo(jTreeOp.getRowHeight());
+            assertThat(treeOpSource.getScrollableTracksViewportHeight())
+                    .isEqualTo(jTreeOp.getScrollableTracksViewportHeight());
+            assertThat(treeOpSource.getScrollableTracksViewportWidth())
+                    .isEqualTo(jTreeOp.getScrollableTracksViewportWidth());
+            assertThat(treeOpSource.getScrollsOnExpand()).isEqualTo(jTreeOp.getScrollsOnExpand());
+            assertThat(treeOpSource.getSelectionCount()).isEqualTo(jTreeOp.getSelectionCount());
+            assertThat(treeOpSource.getSelectionModel()).isEqualTo(jTreeOp.getSelectionModel());
+            assertThat(treeOpSource.getSelectionPath()).isEqualTo(jTreeOp.getSelectionPath());
+            assertThat(treeOpSource.getShowsRootHandles()).isEqualTo(jTreeOp.getShowsRootHandles());
+            assertThat(treeOpSource.getUI()).isEqualTo(jTreeOp.getUI());
+            assertThat(treeOpSource.getVisibleRowCount()).isEqualTo(jTreeOp.getVisibleRowCount());
+            assertThat(treeOpSource.isEditable()).isEqualTo(jTreeOp.isEditable());
+            assertThat(treeOpSource.isEditing()).isEqualTo(jTreeOp.isEditing());
+            assertThat(treeOpSource.isFixedRowHeight()).isEqualTo(jTreeOp.isFixedRowHeight());
+            assertThat(treeOpSource.isLargeModel()).isEqualTo(jTreeOp.isLargeModel());
+            assertThat(treeOpSource.isRootVisible()).isEqualTo(jTreeOp.isRootVisible());
+            assertThat(treeOpSource.isSelectionEmpty()).isEqualTo(jTreeOp.isSelectionEmpty());
+            assertThat(treeOpSource.stopEditing()).isEqualTo(jTreeOp.stopEditing());
             JTable tabOpSource = (JTable) jTableOp.getSource();
-            assertEquals(jTableOp.getAutoCreateColumnsFromModel(), tabOpSource.getAutoCreateColumnsFromModel());
-            assertEquals(jTableOp.getAutoResizeMode(), tabOpSource.getAutoResizeMode());
-            assertEquals(jTableOp.getCellEditor(), tabOpSource.getCellEditor());
-            assertEquals(jTableOp.getCellSelectionEnabled(), tabOpSource.getCellSelectionEnabled());
-            assertEquals(jTableOp.getColumnCount(), tabOpSource.getColumnCount());
-            assertEquals(jTableOp.getColumnModel(), tabOpSource.getColumnModel());
-            assertEquals(jTableOp.getColumnSelectionAllowed(), tabOpSource.getColumnSelectionAllowed());
-            assertEquals(jTableOp.getEditingColumn(), tabOpSource.getEditingColumn());
-            assertEquals(jTableOp.getEditingRow(), tabOpSource.getEditingRow());
-            assertEquals(jTableOp.getEditorComponent(), tabOpSource.getEditorComponent());
-            assertEquals(jTableOp.getGridColor(), tabOpSource.getGridColor());
-            assertEquals(jTableOp.getIntercellSpacing(), tabOpSource.getIntercellSpacing());
-            assertEquals(jTableOp.getModel(), tabOpSource.getModel());
-            assertEquals(
-                    jTableOp.getPreferredScrollableViewportSize(), tabOpSource.getPreferredScrollableViewportSize());
-            assertEquals(jTableOp.getRowCount(), tabOpSource.getRowCount());
-            assertEquals(jTableOp.getRowHeight(), tabOpSource.getRowHeight());
-            assertEquals(jTableOp.getRowMargin(), tabOpSource.getRowMargin());
-            assertEquals(jTableOp.getRowSelectionAllowed(), tabOpSource.getRowSelectionAllowed());
-            assertEquals(jTableOp.getScrollableTracksViewportHeight(), tabOpSource.getScrollableTracksViewportHeight());
-            assertEquals(jTableOp.getScrollableTracksViewportWidth(), tabOpSource.getScrollableTracksViewportWidth());
-            assertEquals(jTableOp.getSelectedColumn(), tabOpSource.getSelectedColumn());
-            assertEquals(jTableOp.getSelectedColumnCount(), tabOpSource.getSelectedColumnCount());
-            assertEquals(jTableOp.getSelectedRow(), tabOpSource.getSelectedRow());
-            assertEquals(jTableOp.getSelectedRowCount(), tabOpSource.getSelectedRowCount());
-            assertEquals(jTableOp.getSelectionBackground(), tabOpSource.getSelectionBackground());
-            assertEquals(jTableOp.getSelectionForeground(), tabOpSource.getSelectionForeground());
-            assertEquals(jTableOp.getSelectionModel(), tabOpSource.getSelectionModel());
-            assertEquals(jTableOp.getShowHorizontalLines(), tabOpSource.getShowHorizontalLines());
-            assertEquals(jTableOp.getShowVerticalLines(), tabOpSource.getShowVerticalLines());
-            assertEquals(jTableOp.getTableHeader(), tabOpSource.getTableHeader());
-            assertEquals(jTableOp.getUI(), tabOpSource.getUI());
-            assertEquals(jTableOp.isEditing(), tabOpSource.isEditing());
+            assertThat(tabOpSource.getAutoCreateColumnsFromModel()).isEqualTo(jTableOp.getAutoCreateColumnsFromModel());
+            assertThat(tabOpSource.getAutoResizeMode()).isEqualTo(jTableOp.getAutoResizeMode());
+            assertThat(tabOpSource.getCellEditor()).isEqualTo(jTableOp.getCellEditor());
+            assertThat(tabOpSource.getCellSelectionEnabled()).isEqualTo(jTableOp.getCellSelectionEnabled());
+            assertThat(tabOpSource.getColumnCount()).isEqualTo(jTableOp.getColumnCount());
+            assertThat(tabOpSource.getColumnModel()).isEqualTo(jTableOp.getColumnModel());
+            assertThat(tabOpSource.getColumnSelectionAllowed()).isEqualTo(jTableOp.getColumnSelectionAllowed());
+            assertThat(tabOpSource.getEditingColumn()).isEqualTo(jTableOp.getEditingColumn());
+            assertThat(tabOpSource.getEditingRow()).isEqualTo(jTableOp.getEditingRow());
+            assertThat(tabOpSource.getEditorComponent()).isEqualTo(jTableOp.getEditorComponent());
+            assertThat(tabOpSource.getGridColor()).isEqualTo(jTableOp.getGridColor());
+            assertThat(tabOpSource.getIntercellSpacing()).isEqualTo(jTableOp.getIntercellSpacing());
+            assertThat(tabOpSource.getModel()).isEqualTo(jTableOp.getModel());
+            assertThat(tabOpSource.getPreferredScrollableViewportSize())
+                    .isEqualTo(jTableOp.getPreferredScrollableViewportSize());
+            assertThat(tabOpSource.getRowCount()).isEqualTo(jTableOp.getRowCount());
+            assertThat(tabOpSource.getRowHeight()).isEqualTo(jTableOp.getRowHeight());
+            assertThat(tabOpSource.getRowMargin()).isEqualTo(jTableOp.getRowMargin());
+            assertThat(tabOpSource.getRowSelectionAllowed()).isEqualTo(jTableOp.getRowSelectionAllowed());
+            assertThat(tabOpSource.getScrollableTracksViewportHeight())
+                    .isEqualTo(jTableOp.getScrollableTracksViewportHeight());
+            assertThat(tabOpSource.getScrollableTracksViewportWidth())
+                    .isEqualTo(jTableOp.getScrollableTracksViewportWidth());
+            assertThat(tabOpSource.getSelectedColumn()).isEqualTo(jTableOp.getSelectedColumn());
+            assertThat(tabOpSource.getSelectedColumnCount()).isEqualTo(jTableOp.getSelectedColumnCount());
+            assertThat(tabOpSource.getSelectedRow()).isEqualTo(jTableOp.getSelectedRow());
+            assertThat(tabOpSource.getSelectedRowCount()).isEqualTo(jTableOp.getSelectedRowCount());
+            assertThat(tabOpSource.getSelectionBackground()).isEqualTo(jTableOp.getSelectionBackground());
+            assertThat(tabOpSource.getSelectionForeground()).isEqualTo(jTableOp.getSelectionForeground());
+            assertThat(tabOpSource.getSelectionModel()).isEqualTo(jTableOp.getSelectionModel());
+            assertThat(tabOpSource.getShowHorizontalLines()).isEqualTo(jTableOp.getShowHorizontalLines());
+            assertThat(tabOpSource.getShowVerticalLines()).isEqualTo(jTableOp.getShowVerticalLines());
+            assertThat(tabOpSource.getTableHeader()).isEqualTo(jTableOp.getTableHeader());
+            assertThat(tabOpSource.getUI()).isEqualTo(jTableOp.getUI());
+            assertThat(tabOpSource.isEditing()).isEqualTo(jTableOp.isEditing());
         });
     }
 }

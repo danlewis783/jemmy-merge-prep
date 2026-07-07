@@ -16,10 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,62 +61,65 @@ class AwtComponentsTest {
     @Test
     void choiceOp() {
         ChoiceOperator choiceOp = new ChoiceOperator(frameOp);
-        assertNotNull(choiceOp);
+        assertThat(choiceOp).isNotNull();
         choiceOp.selectItem("One", STRICT);
-        assertEquals("One", choiceOp.getSelectedItem());
+        assertThat(choiceOp.getSelectedItem()).isEqualTo("One");
         choiceOp.selectItem("Two", StringComparators.strict());
-        assertEquals("Two", choiceOp.getSelectedItem());
+        assertThat(choiceOp.getSelectedItem()).isEqualTo("Two");
         choiceOp.selectItem("Three", StringComparators.strict());
-        assertEquals("Three", choiceOp.getSelectedItem());
+        assertThat(choiceOp.getSelectedItem()).isEqualTo("Three");
     }
 
     @Test
     void checkBoxOp() {
         CheckboxOperator checkboxOp = new CheckboxOperator(frameOp);
-        assertNotNull(checkboxOp);
+        assertThat(checkboxOp).isNotNull();
         checkboxOp.changeSelection(true);
-        assertTrue(checkboxOp.getState());
+        assertThat(checkboxOp.getState()).isTrue();
         checkboxOp.changeSelection(false);
-        assertFalse(checkboxOp.getState());
+        assertThat(checkboxOp.getState()).isFalse();
     }
 
     @Test
     void buttonOp() {
         ButtonOperator buttonOp = new ButtonOperator(frameOp);
         buttonOp.push();
-        assertNotNull(new LabelOperator(frameOp, "button pushed", StringComparators.strict()));
+        assertThat(new LabelOperator(frameOp, "button pushed", StringComparators.strict()))
+                .isNotNull();
     }
 
     @Test
     void textFieldOp() {
         TextFieldOperator textFieldOp = new TextFieldOperator(frameOp);
-        assertNotNull(textFieldOp);
+        assertThat(textFieldOp).isNotNull();
         textFieldOp.clearText();
         textFieldOp.typeText("Old text");
         textFieldOp.enterText("New text");
-        assertNotNull(new TextFieldOperator(frameOp, "New text", StringComparators.strict()));
+        assertThat(new TextFieldOperator(frameOp, "New text", StringComparators.strict()))
+                .isNotNull();
     }
 
     @Test
     void textAreaOp() {
         TextAreaOperator textAreaOp = new TextAreaOperator(frameOp);
-        assertNotNull(textAreaOp);
+        assertThat(textAreaOp).isNotNull();
         textAreaOp.selectText(0, 10);
         textAreaOp.enterText("Very\nNew\nFew\nLines");
-        assertNotNull(new TextAreaOperator(frameOp, "Very\nNew\nFew\nLines\n", StringComparators.strict()));
+        assertThat(new TextAreaOperator(frameOp, "Very\nNew\nFew\nLines\n", StringComparators.strict()))
+                .isNotNull();
     }
 
     @Test
     void listOp() {
         ListOperator listOp = new ListOperator(frameOp);
-        assertNotNull(listOp);
+        assertThat(listOp).isNotNull();
         listOp.selectItem(0);
-        assertEquals(0, listOp.getSelectedIndex());
+        assertThat(listOp.getSelectedIndex()).isEqualTo(0);
         listOp.selectItem(1);
-        assertEquals(1, listOp.getSelectedIndex());
+        assertThat(listOp.getSelectedIndex()).isEqualTo(1);
         listOp.selectItem(2);
-        assertEquals(2, listOp.getSelectedIndex());
+        assertThat(listOp.getSelectedIndex()).isEqualTo(2);
         listOp.selectItem(3);
-        assertEquals(3, listOp.getSelectedIndex());
+        assertThat(listOp.getSelectedIndex()).isEqualTo(3);
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -67,102 +67,102 @@ class TextAreaOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TextAreaOperator operator2 = new TextAreaOperator(operator, "TextAreaOperatorTest", StringComparators.strict());
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         TextAreaOperator operator3 = new TextAreaOperator(operator, PredicatesJ.byName("TextAreaOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindTextArea() {
         TextArea textArea1 = TextAreaOperator.findTextArea(
                 frame, "TextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textArea1);
+        assertThat(textArea1).isNotNull();
         TextArea textArea2 = TextAreaOperator.findTextArea(frame, PredicatesJ.byName("TextAreaOperatorTest"));
-        assertNotNull(textArea2);
+        assertThat(textArea2).isNotNull();
     }
 
     @Test
     void testWaitTextArea() {
         TextArea textArea1 = TextAreaOperator.waitTextArea(
                 frame, "TextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textArea1);
+        assertThat(textArea1).isNotNull();
         TextArea textArea2 = TextAreaOperator.waitTextArea(frame, PredicatesJ.byName("TextAreaOperatorTest"));
-        assertNotNull(textArea2);
+        assertThat(textArea2).isNotNull();
     }
 
     @Test
     void testGetColumns() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getColumns();
     }
 
     @Test
     void testGetMinimumSize() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getMinimumSize(0, 0);
     }
 
     @Test
     void testGetPreferredSize() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getPreferredSize(0, 0);
     }
 
     @Test
     void testGetRows() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getRows();
     }
 
     @Test
     void testGetScrollbarVisibility() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getScrollbarVisibility();
     }
 
     @Test
     void testReplaceRange() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.replaceRange("Text", 0, 4);
     }
 
     @Test
     void testSetColumns() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setColumns(2);
     }
 
     @Test
     void testSetRows() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextAreaOperator operator1 = new TextAreaOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setRows(2);
     }
 }

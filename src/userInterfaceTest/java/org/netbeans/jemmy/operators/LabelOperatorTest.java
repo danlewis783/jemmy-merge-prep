@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -64,46 +64,46 @@ class LabelOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         LabelOperator operator1 = new LabelOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         LabelOperator operator2 = new LabelOperator(operator, PredicatesJ.byName("LabelOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         LabelOperator operator3 = new LabelOperator(operator, "LabelOperatorTest", StringComparators.strict(), 0);
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindLabel() {
         Label label = LabelOperator.findLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(label);
+        assertThat(label).isNotNull();
         Label label2 = LabelOperator.findLabel(frame, PredicatesJ.byName("LabelOperatorTest"));
-        assertNotNull(label2);
+        assertThat(label2).isNotNull();
     }
 
     @Test
     void testWaitLabel() {
         Label label = LabelOperator.waitLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(label);
+        assertThat(label).isNotNull();
         Label label2 = LabelOperator.waitLabel(frame, PredicatesJ.byName("LabelOperatorTest"));
-        assertNotNull(label2);
+        assertThat(label2).isNotNull();
     }
 
     @Test
     void testGetAlignment() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         LabelOperator operator1 = new LabelOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setAlignment(operator1.getAlignment());
     }
 
     @Test
     void testGetText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         LabelOperator operator1 = new LabelOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setText(operator1.getText());
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.util;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,36 +31,36 @@ class DefaultPathParserTest {
 
     @Test
     void case1() {
-        assertArrayEquals(new String[] {"a", "b", "c"}, parser.parse("a|b|c"));
+        assertThat(parser.parse("a|b|c")).isEqualTo(new String[] {"a", "b", "c"});
     }
 
     @Test
     void case2() {
-        assertArrayEquals(new String[] {"", "b", "c"}, parser.parse("|b|c"));
+        assertThat(parser.parse("|b|c")).isEqualTo(new String[] {"", "b", "c"});
     }
 
     @Test
     void case3() {
-        assertArrayEquals(new String[] {"a", "b", ""}, parser.parse("a|b|"));
+        assertThat(parser.parse("a|b|")).isEqualTo(new String[] {"a", "b", ""});
     }
 
     @Test
     void case4() {
-        assertArrayEquals(new String[] {"a"}, parser.parse("a"));
+        assertThat(parser.parse("a")).isEqualTo(new String[] {"a"});
     }
 
     @Test
     void case5() {
-        assertArrayEquals(new String[] {"", ""}, parser.parse("|"));
+        assertThat(parser.parse("|")).isEqualTo(new String[] {"", ""});
     }
 
     @Test
     void case6() {
-        assertArrayEquals(new String[] {"", "", ""}, parser.parse("||"));
+        assertThat(parser.parse("||")).isEqualTo(new String[] {"", "", ""});
     }
 
     @Test
     void case7() {
-        assertArrayEquals(new String[] {}, parser.parse(""));
+        assertThat(parser.parse("")).isEqualTo(new String[] {});
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -70,20 +70,20 @@ class JRadioButtonMenuItemOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JMenuOperator operator1 = new JMenuOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.showMenuItem("Radio Button 1", StringComparators.strict());
         JPopupMenuOperator popup = new JPopupMenuOperator();
         JRadioButtonMenuItemOperator operator2 = new JRadioButtonMenuItemOperator(popup);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JRadioButtonMenuItemOperator operator3 =
                 new JRadioButtonMenuItemOperator(popup, PredicatesJ.byName("Radio Button 1"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JRadioButtonMenuItemOperator operator4 =
                 new JRadioButtonMenuItemOperator(popup, "Radio Button 1", StringComparators.strict());
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
         JRadioButtonMenuItemOperator operator5 = new JRadioButtonMenuItemOperator(menuItem);
-        assertNotNull(operator5);
+        assertThat(operator5).isNotNull();
     }
 }

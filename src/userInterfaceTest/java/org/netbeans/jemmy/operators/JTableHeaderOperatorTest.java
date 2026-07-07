@@ -16,10 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -89,29 +86,29 @@ class JTableHeaderOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTableHeaderOperator operator2 =
                 new JTableHeaderOperator(operator, PredicatesJ.byName("JTableHeaderOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
     }
 
     @Test
     void testSelectColumn() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectColumn(0);
     }
 
     @Test
     void testSelectColumns() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         int[] columns = new int[2];
         columns[0] = 0;
         columns[1] = 1;
@@ -121,27 +118,27 @@ class JTableHeaderOperatorTest {
     @Test
     void testMoveColumn() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.moveColumn(0, 1);
     }
 
     @Test
     void testGetPointToClick() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getPointToClick(0);
     }
 
     @Test
     void testSetTable() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
 
         try {
             EventQueue.invokeAndWait(() -> table = new JTable());
@@ -150,131 +147,131 @@ class JTableHeaderOperatorTest {
         }
 
         operator1.setTable(table);
-        assertEquals(table, operator1.getTable());
+        assertThat(operator1.getTable()).isEqualTo(table);
     }
 
     @Test
     void testSetReorderingAllowed() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setReorderingAllowed(true);
-        assertTrue(operator1.getReorderingAllowed());
+        assertThat(operator1.getReorderingAllowed()).isTrue();
         operator1.setReorderingAllowed(false);
-        assertTrue(!operator1.getReorderingAllowed());
+        assertThat(operator1.getReorderingAllowed()).isFalse();
     }
 
     @Test
     void testSetResizingAllowed() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setResizingAllowed(true);
-        assertTrue(operator1.getResizingAllowed());
+        assertThat(operator1.getResizingAllowed()).isTrue();
         operator1.setResizingAllowed(false);
-        assertTrue(!operator1.getResizingAllowed());
+        assertThat(operator1.getResizingAllowed()).isFalse();
     }
 
     @Test
     void testGetDraggedColumn() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TableColumn column = table.getTableHeader().getColumnModel().getColumn(1);
         operator1.setDraggedColumn(column);
-        assertEquals(column, operator1.getDraggedColumn());
+        assertThat(operator1.getDraggedColumn()).isEqualTo(column);
     }
 
     @Test
     void testGetDraggedDistance() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setDraggedDistance(10);
-        assertEquals(10, operator1.getDraggedDistance());
+        assertThat(operator1.getDraggedDistance()).isEqualTo(10);
     }
 
     @Test
     void testGetResizingColumn() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TableColumn column = table.getTableHeader().getColumnModel().getColumn(1);
         operator1.setResizingColumn(column);
-        assertEquals(column, operator1.getResizingColumn());
+        assertThat(operator1.getResizingColumn()).isEqualTo(column);
     }
 
     @Test
     void testSetUpdateTableInRealTime() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setUpdateTableInRealTime(true);
-        assertTrue(operator1.getUpdateTableInRealTime());
+        assertThat(operator1.getUpdateTableInRealTime()).isTrue();
         operator1.setUpdateTableInRealTime(false);
-        assertTrue(!operator1.getUpdateTableInRealTime());
+        assertThat(operator1.getUpdateTableInRealTime()).isFalse();
     }
 
     @Test
     void testSetDefaultRenderer() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setDefaultRenderer(null);
-        assertNull(operator1.getDefaultRenderer());
+        assertThat(operator1.getDefaultRenderer()).isNull();
     }
 
     @Test
     void testColumnAtPoint() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.columnAtPoint(new Point(0, 0));
     }
 
     @Test
     void testGetHeaderRect() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
-        assertNotNull(operator1.getHeaderRect(0));
+        assertThat(operator1).isNotNull();
+        assertThat(operator1.getHeaderRect(0)).isNotNull();
     }
 
     @Test
     void testGetUI() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setUI(new NullTableHeaderUI());
-        assertNotNull(operator1.getUI());
+        assertThat(operator1.getUI()).isNotNull();
     }
 
     @Test
     void testSetColumnModel() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setColumnModel(new DefaultTableColumnModel());
-        assertNotNull(operator1.getColumnModel());
+        assertThat(operator1.getColumnModel()).isNotNull();
     }
 
     @Test
     void testColumnAdded() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TableColumnModel model = table.getColumnModel();
         operator1.columnAdded(new TableColumnModelEvent(model, 0, 1));
     }
@@ -282,9 +279,9 @@ class JTableHeaderOperatorTest {
     @Test
     void testColumnRemoved() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TableColumnModel model = table.getColumnModel();
         operator1.columnRemoved(new TableColumnModelEvent(model, 0, 1));
     }
@@ -292,9 +289,9 @@ class JTableHeaderOperatorTest {
     @Test
     void testColumnMoved() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TableColumnModel model = table.getColumnModel();
         operator1.columnMoved(new TableColumnModelEvent(model, 0, 1));
     }
@@ -302,9 +299,9 @@ class JTableHeaderOperatorTest {
     @Test
     void testColumnMarginChanged() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         ChangeEvent event = new ChangeEvent(operator1);
         operator1.columnMarginChanged(event);
     }
@@ -312,9 +309,9 @@ class JTableHeaderOperatorTest {
     @Test
     void testColumnSelectionChanged() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         ListSelectionEvent event = new ListSelectionEvent(operator1, 0, 0, false);
         operator1.columnSelectionChanged(event);
     }
@@ -322,9 +319,9 @@ class JTableHeaderOperatorTest {
     @Test
     void testResizeAndRepaint() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.resizeAndRepaint();
     }
 

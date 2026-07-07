@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.time.Duration;
@@ -62,10 +62,10 @@ class MenuInDialogTest {
 
     private void checkItems(JMenuBarOperator jMenuBarOp, String path, String[] itemTexts) {
         JMenuItemOperator[] items = jMenuBarOp.showMenuItems(path, "|", StringComparators.strict());
-        assertEquals(items.length, itemTexts.length);
+        assertThat(itemTexts.length).isEqualTo(items.length);
 
         for (int i = 0; i < itemTexts.length; i++) {
-            assertEquals(items[i].getText(), itemTexts[i]);
+            assertThat(itemTexts[i]).isEqualTo(items[i].getText());
         }
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Choice;
 import java.awt.EventQueue;
@@ -67,57 +67,57 @@ class ChoiceOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         ChoiceOperator operator2 = new ChoiceOperator(operator, PredicatesJ.byName("ChoiceOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         ChoiceOperator operator3 = new ChoiceOperator(operator, "ChoiceOperatorTest", StringComparators.strict());
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindChoice() {
         Choice choice1 =
                 ChoiceOperator.findChoice(frame, "ChoiceOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(choice1);
+        assertThat(choice1).isNotNull();
         Choice choice2 = ChoiceOperator.findChoice(frame, PredicatesJ.byName("ChoiceOperatorTest"));
-        assertNotNull(choice2);
+        assertThat(choice2).isNotNull();
     }
 
     @Test
     void testWaitChoice() {
         Choice choice1 =
                 ChoiceOperator.waitChoice(frame, "ChoiceOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(choice1);
+        assertThat(choice1).isNotNull();
         Choice choice2 = ChoiceOperator.waitChoice(frame, PredicatesJ.byName("ChoiceOperatorTest"));
-        assertNotNull(choice2);
+        assertThat(choice2).isNotNull();
     }
 
     @Test
     void testFindItemIndex() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.findItemIndex("ChoiceOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testSelectItem() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectItem("ChoiceOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testWaitItemSelected() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectItem(0);
         operator1.waitItemSelected(0);
     }
@@ -125,18 +125,18 @@ class ChoiceOperatorTest {
     @Test
     void testAdd() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.add("ChoiceOperatorTest2");
     }
 
     @Test
     void testAddItemListener() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         ItemListenerTest listener = new ItemListenerTest();
         operator1.addItemListener(listener);
         operator1.removeItemListener(listener);
@@ -145,63 +145,63 @@ class ChoiceOperatorTest {
     @Test
     void testAddNotify() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.addNotify();
     }
 
     @Test
     void testGetItem() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getItem(0);
     }
 
     @Test
     void testGetItemCount() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getItemCount();
     }
 
     @Test
     void testGetSelectedIndex() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSelectedIndex();
     }
 
     @Test
     void testGetSelectedItem() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSelectedItem();
     }
 
     @Test
     void testInsert() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.insert("ChoiceOperatorTest2", 1);
     }
 
     @Test
     void testRemove() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.remove("ChoiceOperatorTest");
         operator1.add("ChoiceOperatorTest");
         operator1.remove(0);
@@ -210,27 +210,27 @@ class ChoiceOperatorTest {
     @Test
     void testRemoveAll() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.removeAll();
     }
 
     @Test
     void testSelect() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.select(0);
     }
 
     @Test
     void testSetState() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ChoiceOperator operator1 = new ChoiceOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setState("ChoiceOperatorTest");
     }
 

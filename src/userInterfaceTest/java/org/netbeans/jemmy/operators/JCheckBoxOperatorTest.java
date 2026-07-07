@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import javax.swing.JCheckBox;
@@ -57,31 +57,31 @@ class JCheckBoxOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JCheckBoxOperator operator2 = new JCheckBoxOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JCheckBoxOperator operator3 = new JCheckBoxOperator(operator1, PredicatesJ.byName("JCheckBoxOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JCheckBoxOperator operator4 =
                 new JCheckBoxOperator(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
     }
 
     @Test
     void testFindJCheckBox() {
         JCheckBox checkBox1 = JCheckBoxOperator.findJCheckBox(frame, PredicatesJ.byName("JCheckBoxOperatorTest"));
-        assertNotNull(checkBox1);
+        assertThat(checkBox1).isNotNull();
         JCheckBox checkBox2 = JCheckBoxOperator.findJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(checkBox2);
+        assertThat(checkBox2).isNotNull();
     }
 
     @Test
     void testWaitJCheckBox() {
         JCheckBox checkBox1 = JCheckBoxOperator.waitJCheckBox(frame, PredicatesJ.byName("JCheckBoxOperatorTest"));
-        assertNotNull(checkBox1);
+        assertThat(checkBox1).isNotNull();
         JCheckBox checkBox2 = JCheckBoxOperator.waitJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(checkBox2);
+        assertThat(checkBox2).isNotNull();
     }
 }

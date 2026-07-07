@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -40,7 +39,8 @@ class InternalFrameWorkflowTest {
         JInternalFrameOperator frame2Op =
                 new JInternalFrameOperator(new JFrameOperator(frame), "Frame 2", StringComparators.strict());
         JInternalFrameOperator fo = new JInternalFrameOperator(new JFrameOperator(frame));
-        assertTrue((fo.getSource() == frame1Op.getSource()) || (fo.getSource() == frame2Op.getSource()));
+        assertThat((fo.getSource() == frame1Op.getSource()) || (fo.getSource() == frame2Op.getSource()))
+                .isTrue();
         frame1Op.deiconify();
         new JButtonOperator(new ContainerOperator(frame2Op.getRootPane())).push();
         new JButtonOperator(new ContainerOperator(frame1Op.getRootPane())).push();
@@ -61,35 +61,45 @@ class InternalFrameWorkflowTest {
 
     private void testJInternalFrame(JInternalFrameOperator op) {
         JInternalFrame src = (JInternalFrame) op.getSource();
-        assertTrue(((src.getContentPane() == null) && (op.getContentPane() == null))
-                || src.getContentPane().equals(op.getContentPane()));
-        assertEquals(src.getDefaultCloseOperation(), op.getDefaultCloseOperation());
-        assertTrue(((src.getDesktopIcon() == null) && (op.getDesktopIcon() == null))
-                || src.getDesktopIcon().equals(op.getDesktopIcon()));
-        assertTrue(((src.getDesktopPane() == null) && (op.getDesktopPane() == null))
-                || src.getDesktopPane().equals(op.getDesktopPane()));
-        assertTrue(((src.getFrameIcon() == null) && (op.getFrameIcon() == null))
-                || src.getFrameIcon().equals(op.getFrameIcon()));
-        assertTrue(((src.getGlassPane() == null) && (op.getGlassPane() == null))
-                || src.getGlassPane().equals(op.getGlassPane()));
-        assertTrue(((src.getJMenuBar() == null) && (op.getJMenuBar() == null))
-                || src.getJMenuBar().equals(op.getJMenuBar()));
-        assertEquals(src.getLayer(), op.getLayer());
-        assertTrue(((src.getLayeredPane() == null) && (op.getLayeredPane() == null))
-                || src.getLayeredPane().equals(op.getLayeredPane()));
-        assertTrue(((src.getTitle() == null) && (op.getTitle() == null))
-                || src.getTitle().equals(op.getTitle()));
-        assertTrue(
-                ((src.getUI() == null) && (op.getUI() == null)) || src.getUI().equals(op.getUI()));
-        assertTrue(((src.getWarningString() == null) && (op.getWarningString() == null))
-                || src.getWarningString().equals(op.getWarningString()));
-        assertEquals(src.isClosable(), op.isClosable());
-        assertEquals(src.isClosed(), op.isClosed());
-        assertEquals(src.isIcon(), op.isIcon());
-        assertEquals(src.isIconifiable(), op.isIconifiable());
-        assertEquals(src.isMaximizable(), op.isMaximizable());
-        assertEquals(src.isMaximum(), op.isMaximum());
-        assertEquals(src.isResizable(), op.isResizable());
-        assertEquals(src.isSelected(), op.isSelected());
+        assertThat(((src.getContentPane() == null) && (op.getContentPane() == null))
+                        || src.getContentPane().equals(op.getContentPane()))
+                .isTrue();
+        assertThat(op.getDefaultCloseOperation()).isEqualTo(src.getDefaultCloseOperation());
+        assertThat(((src.getDesktopIcon() == null) && (op.getDesktopIcon() == null))
+                        || src.getDesktopIcon().equals(op.getDesktopIcon()))
+                .isTrue();
+        assertThat(((src.getDesktopPane() == null) && (op.getDesktopPane() == null))
+                        || src.getDesktopPane().equals(op.getDesktopPane()))
+                .isTrue();
+        assertThat(((src.getFrameIcon() == null) && (op.getFrameIcon() == null))
+                        || src.getFrameIcon().equals(op.getFrameIcon()))
+                .isTrue();
+        assertThat(((src.getGlassPane() == null) && (op.getGlassPane() == null))
+                        || src.getGlassPane().equals(op.getGlassPane()))
+                .isTrue();
+        assertThat(((src.getJMenuBar() == null) && (op.getJMenuBar() == null))
+                        || src.getJMenuBar().equals(op.getJMenuBar()))
+                .isTrue();
+        assertThat(op.getLayer()).isEqualTo(src.getLayer());
+        assertThat(((src.getLayeredPane() == null) && (op.getLayeredPane() == null))
+                        || src.getLayeredPane().equals(op.getLayeredPane()))
+                .isTrue();
+        assertThat(((src.getTitle() == null) && (op.getTitle() == null))
+                        || src.getTitle().equals(op.getTitle()))
+                .isTrue();
+        assertThat(((src.getUI() == null) && (op.getUI() == null))
+                        || src.getUI().equals(op.getUI()))
+                .isTrue();
+        assertThat(((src.getWarningString() == null) && (op.getWarningString() == null))
+                        || src.getWarningString().equals(op.getWarningString()))
+                .isTrue();
+        assertThat(op.isClosable()).isEqualTo(src.isClosable());
+        assertThat(op.isClosed()).isEqualTo(src.isClosed());
+        assertThat(op.isIcon()).isEqualTo(src.isIcon());
+        assertThat(op.isIconifiable()).isEqualTo(src.isIconifiable());
+        assertThat(op.isMaximizable()).isEqualTo(src.isMaximizable());
+        assertThat(op.isMaximum()).isEqualTo(src.isMaximum());
+        assertThat(op.isResizable()).isEqualTo(src.isResizable());
+        assertThat(op.isSelected()).isEqualTo(src.isSelected());
     }
 }

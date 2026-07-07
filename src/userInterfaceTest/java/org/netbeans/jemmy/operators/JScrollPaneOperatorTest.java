@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -61,22 +59,22 @@ class JScrollPaneOperatorTest {
     void testConstructor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JScrollPaneOperator operator2 =
                 new JScrollPaneOperator(operator, PredicatesJ.byName("JScrollPaneOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
     }
 
     @Test
     void testFindJScrollPane() {
         frame.setVisible(true);
         JScrollPane scrollPane1 = JScrollPaneOperator.findJScrollPane(frame);
-        assertNotNull(scrollPane1);
+        assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
                 JScrollPaneOperator.findJScrollPane(frame, PredicatesJ.byName("JScrollPaneOperatorTest"));
-        assertNotNull(scrollPane2);
+        assertThat(scrollPane2).isNotNull();
     }
 
     @Test
@@ -86,19 +84,19 @@ class JScrollPaneOperatorTest {
     void testWaitJScrollPane() {
         frame.setVisible(true);
         JScrollPane scrollPane1 = JScrollPaneOperator.waitJScrollPane(frame);
-        assertNotNull(scrollPane1);
+        assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
                 JScrollPaneOperator.waitJScrollPane(frame, PredicatesJ.byName("JScrollPaneOperatorTest"));
-        assertNotNull(scrollPane2);
+        assertThat(scrollPane2).isNotNull();
     }
 
     @Test
     void testSetValues() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setValues(1, 100);
     }
 
@@ -106,9 +104,9 @@ class JScrollPaneOperatorTest {
     void testScrollToHorizontalValue() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToHorizontalValue(0);
         operator1.scrollToHorizontalValue(0.0);
     }
@@ -117,9 +115,9 @@ class JScrollPaneOperatorTest {
     void testScrollToVerticalValue() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToVerticalValue(0);
         operator1.scrollToVerticalValue(0.0);
     }
@@ -128,9 +126,9 @@ class JScrollPaneOperatorTest {
     void testScrollToValues() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToValues(0, 0);
         operator1.scrollToValues(0.0, 0.0);
     }
@@ -139,9 +137,9 @@ class JScrollPaneOperatorTest {
     void testScrollToTop() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToTop();
     }
 
@@ -149,9 +147,9 @@ class JScrollPaneOperatorTest {
     void testScrollToBottom() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToBottom();
     }
 
@@ -159,9 +157,9 @@ class JScrollPaneOperatorTest {
     void testScrollToLeft() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToLeft();
     }
 
@@ -169,9 +167,9 @@ class JScrollPaneOperatorTest {
     void testScrollToRight() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToRight();
     }
 
@@ -179,9 +177,9 @@ class JScrollPaneOperatorTest {
     void testScrollToComponentRectangle() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToComponentRectangle(textArea, 0, 0, 10, 10);
     }
 
@@ -189,9 +187,9 @@ class JScrollPaneOperatorTest {
     void testScrollToComponentPoint() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToComponentPoint(textArea, 10, 10);
     }
 
@@ -199,9 +197,9 @@ class JScrollPaneOperatorTest {
     void testScrollToComponent() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.scrollToComponent(textArea);
     }
 
@@ -209,29 +207,29 @@ class JScrollPaneOperatorTest {
     void testGetHScrollBarOperator() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
-        assertNotNull(operator1.getHScrollBarOperator());
+        assertThat(operator1).isNotNull();
+        assertThat(operator1.getHScrollBarOperator()).isNotNull();
     }
 
     @Test
     void testGetVScrollBarOperator() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
-        assertNotNull(operator1.getVScrollBarOperator());
+        assertThat(operator1).isNotNull();
+        assertThat(operator1.getVScrollBarOperator()).isNotNull();
     }
 
     @Test
     void testCheckInside() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.checkInside(textArea);
     }
 
@@ -239,9 +237,9 @@ class JScrollPaneOperatorTest {
     void testCreateHorizontalScrollBar() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.createHorizontalScrollBar();
     }
 
@@ -249,9 +247,9 @@ class JScrollPaneOperatorTest {
     void testCreateVerticalScrollBar() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.createVerticalScrollBar();
     }
 
@@ -259,31 +257,31 @@ class JScrollPaneOperatorTest {
     void testGetColumnHeader() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setColumnHeader(null);
-        assertNull(operator1.getColumnHeader());
+        assertThat(operator1.getColumnHeader()).isNull();
     }
 
     @Test
     void testGetCorner() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setCorner(JScrollPane.LOWER_LEFT_CORNER, new JPanel());
-        assertNotNull(operator1.getCorner(JScrollPane.LOWER_LEFT_CORNER));
+        assertThat(operator1.getCorner(JScrollPane.LOWER_LEFT_CORNER)).isNotNull();
     }
 
     @Test
     void testGetHorizontalScrollBar() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setHorizontalScrollBar(new JScrollBar());
         operator1.getHorizontalScrollBar();
     }
@@ -292,9 +290,9 @@ class JScrollPaneOperatorTest {
     void testGetHorizontalScrollBarPolicy() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         operator1.getHorizontalScrollBarPolicy();
     }
@@ -303,9 +301,9 @@ class JScrollPaneOperatorTest {
     void testGetRowHeader() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setRowHeader(null);
         operator1.getRowHeader();
     }
@@ -314,21 +312,21 @@ class JScrollPaneOperatorTest {
     void testGetUI() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         ScrollPaneUITest ui = new ScrollPaneUITest();
         operator1.setUI(ui);
-        assertEquals(ui, operator1.getUI());
+        assertThat(operator1.getUI()).isEqualTo(ui);
     }
 
     @Test
     void testGetVerticalScrollBar() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setVerticalScrollBar(new JScrollBar());
         operator1.getVerticalScrollBar();
     }
@@ -337,9 +335,9 @@ class JScrollPaneOperatorTest {
     void testGetVerticalScrollBarPolicy() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         operator1.getVerticalScrollBarPolicy();
     }
@@ -348,9 +346,9 @@ class JScrollPaneOperatorTest {
     void testGetViewport() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setViewport(null);
         operator1.getViewport();
     }
@@ -359,9 +357,9 @@ class JScrollPaneOperatorTest {
     void testGetViewportBorder() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setViewportBorder(null);
         operator1.getViewportBorder();
     }
@@ -370,9 +368,9 @@ class JScrollPaneOperatorTest {
     void testGetViewportBorderBounds() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getViewportBorderBounds();
     }
 
@@ -380,9 +378,9 @@ class JScrollPaneOperatorTest {
     void testSetColumnHeaderView() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setColumnHeaderView(null);
     }
 
@@ -390,9 +388,9 @@ class JScrollPaneOperatorTest {
     void testSetRowHeaderView() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setRowHeaderView(null);
     }
 
@@ -400,9 +398,9 @@ class JScrollPaneOperatorTest {
     void testSetViewportView() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = new JScrollPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setViewportView(null);
     }
 

@@ -16,10 +16,8 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -47,7 +45,7 @@ class ModalDialogVisualizerTest {
         ModalDialogsApp.main(new String[] {});
         JFrame jFrame = JFrameOperator.waitJFrame("Right one");
         JFrameOperator jFrameOperator = new JFrameOperator(jFrame);
-        assertNull(JDialogOperator.getTopModalDialog());
+        assertThat(JDialogOperator.getTopModalDialog()).isNull();
         JButtonOperator bttOper =
                 new JButtonOperator(JButtonOperator.waitJButton(jFrame, "Button", StringComparators.strict()));
         bttOper.push();
@@ -61,13 +59,14 @@ class ModalDialogVisualizerTest {
         JDialogOperator do2 = new JDialogOperator(jFrameOperator, "Modal dialog", StringComparators.strict());
         JDialogOperator do3 = new JDialogOperator(new AccessibleNamePredicate("Modal dialog"));
 
-        assertFalse(
-                (d != d1) || (d != d2) || (d != do1.getSource()) || (d != do2.getSource()) || (d != do3.getSource()));
-        assertNotNull(JDialogOperator.getTopModalDialog());
+        assertThat((d != d1) || (d != d2) || (d != do1.getSource()) || (d != do2.getSource()) || (d != do3.getSource()))
+                .isFalse();
+        assertThat(JDialogOperator.getTopModalDialog()).isNotNull();
         assertThatExceptionOfType(JemmyInputException.class)
                 .isThrownBy(bttOper::push)
                 .withMessage("Component is not on top modal dialog.");
-        assertNull(JLabelOperator.findJLabel(jFrame, PredicatesJ.alwaysTrue(), 1));
+        assertThat(JLabelOperator.findJLabel(jFrame, PredicatesJ.alwaysTrue(), 1))
+                .isNull();
         new JButtonOperator(do1, "", StringComparators.substring()).push();
         JMenuBarOperator mbo = new JMenuBarOperator(new ContainerOperator(jFrame));
         mbo.pushMenuNoBlock("Menu|MenuItem", "|", StringComparators.caseInsensitiveSubstring());

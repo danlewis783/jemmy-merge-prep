@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,7 +42,7 @@ class JSliderScrollModelsTest {
             new JSliderOperator(JSliderOperator.findJSlider(win, 3))
         };
         for (int i = 0; i < ops.length; i++) {
-            assertSame(ops[i].getSource(), new JSliderOperator(wino, i).getSource());
+            assertThat(new JSliderOperator(wino, i).getSource()).isSameAs(ops[i].getSource());
         }
 
         JLabel label = JLabelOperator.findJLabel(win, "0", StringComparators.strict());
@@ -54,38 +53,38 @@ class JSliderScrollModelsTest {
             int range = max - min;
             op.setScrollModel(JSliderOperator.PUSH_AND_WAIT_SCROLL_MODEL);
             op.scrollToMaximum();
-            assertEquals(max, Integer.parseInt(label.getText()));
+            assertThat(Integer.parseInt(label.getText())).isEqualTo(max);
             value = div10(2.0 * range / 3.0);
             op.setScrollModel(JSliderOperator.CLICK_SCROLL_MODEL);
             op.scrollToValue(value);
-            assertEquals(value, Integer.parseInt(label.getText()));
+            assertThat(Integer.parseInt(label.getText())).isEqualTo(value);
             value = div10(range / 3);
             op.setScrollModel(JSliderOperator.PUSH_AND_WAIT_SCROLL_MODEL);
             op.scrollToValue(value);
-            assertEquals(value, Integer.parseInt(label.getText()));
+            assertThat(Integer.parseInt(label.getText())).isEqualTo(value);
             op.setScrollModel(JSliderOperator.CLICK_SCROLL_MODEL);
             op.scrollToMinimum();
-            assertEquals(min, Integer.parseInt(label.getText()));
+            assertThat(Integer.parseInt(label.getText())).isEqualTo(min);
         }
 
         JSliderOperator op = ops[0];
         JSlider src = (JSlider) op.getSource();
-        assertEquals(src.getExtent(), op.getExtent());
-        assertEquals(src.getInverted(), op.getInverted());
-        assertEquals(src.getLabelTable(), op.getLabelTable());
-        assertEquals(src.getMajorTickSpacing(), op.getMajorTickSpacing());
-        assertEquals(src.getMaximum(), op.getMaximum());
-        assertEquals(src.getMinimum(), op.getMinimum());
-        assertEquals(src.getMinorTickSpacing(), op.getMinorTickSpacing());
-        assertEquals(src.getModel(), op.getModel());
-        assertEquals(src.getOrientation(), op.getOrientation());
-        assertEquals(src.getPaintLabels(), op.getPaintLabels());
-        assertEquals(src.getPaintTicks(), op.getPaintTicks());
-        assertEquals(src.getPaintTrack(), op.getPaintTrack());
-        assertEquals(src.getSnapToTicks(), op.getSnapToTicks());
-        assertEquals(src.getUI(), op.getUI());
-        assertEquals(src.getValue(), op.getValue());
-        assertEquals(src.getValueIsAdjusting(), op.getValueIsAdjusting());
+        assertThat(op.getExtent()).isEqualTo(src.getExtent());
+        assertThat(op.getInverted()).isEqualTo(src.getInverted());
+        assertThat(op.getLabelTable()).isEqualTo(src.getLabelTable());
+        assertThat(op.getMajorTickSpacing()).isEqualTo(src.getMajorTickSpacing());
+        assertThat(op.getMaximum()).isEqualTo(src.getMaximum());
+        assertThat(op.getMinimum()).isEqualTo(src.getMinimum());
+        assertThat(op.getMinorTickSpacing()).isEqualTo(src.getMinorTickSpacing());
+        assertThat(op.getModel()).isEqualTo(src.getModel());
+        assertThat(op.getOrientation()).isEqualTo(src.getOrientation());
+        assertThat(op.getPaintLabels()).isEqualTo(src.getPaintLabels());
+        assertThat(op.getPaintTicks()).isEqualTo(src.getPaintTicks());
+        assertThat(op.getPaintTrack()).isEqualTo(src.getPaintTrack());
+        assertThat(op.getSnapToTicks()).isEqualTo(src.getSnapToTicks());
+        assertThat(op.getUI()).isEqualTo(src.getUI());
+        assertThat(op.getValue()).isEqualTo(src.getValue());
+        assertThat(op.getValueIsAdjusting()).isEqualTo(src.getValueIsAdjusting());
     }
 
     private int div10(double range) {

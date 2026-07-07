@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -70,109 +69,109 @@ class JTextFieldOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JTextFieldOperator operator3 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JTextFieldOperator operator4 =
                 new JTextFieldOperator(operator1, "JTextFieldOperatorTest", StringComparators.strict());
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
     }
 
     @Test
     void testFindJTextField() {
         JTextField textField1 = JTextFieldOperator.findJTextField(frame, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(textField1);
+        assertThat(textField1).isNotNull();
         JTextField textField2 = JTextFieldOperator.findJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textField2);
+        assertThat(textField2).isNotNull();
     }
 
     @Test
     void testWaitJTextField() {
         JTextField textField1 = JTextFieldOperator.waitJTextField(frame, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(textField1);
+        assertThat(textField1).isNotNull();
         JTextField textField2 = JTextFieldOperator.waitJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textField2);
+        assertThat(textField2).isNotNull();
     }
 
     @Test
     void testWaitText() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.waitText("JTextFieldOperatorTest", StringComparators.strict());
-        assertEquals("JTextFieldOperatorTest", textField.getText());
+        assertThat(textField.getText()).isEqualTo("JTextFieldOperatorTest");
         operator2.waitText("JTextFieldOperatorTest\n", StringComparators.strict());
-        assertEquals("JTextFieldOperatorTest", textField.getText());
+        assertThat(textField.getText()).isEqualTo("JTextFieldOperatorTest");
     }
 
     @Test
     void testAddActionListener() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         ActionListener listener = event -> {};
         operator2.addActionListener(listener);
-        assertEquals(listener, textField.getActionListeners()[0]);
+        assertThat(textField.getActionListeners()[0]).isEqualTo(listener);
         operator2.removeActionListener(listener);
-        assertEquals(0, textField.getActionListeners().length);
+        assertThat(textField.getActionListeners().length).isEqualTo(0);
     }
 
     @Test
     void testGetColumns() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setColumns(10);
-        assertEquals(10, operator2.getColumns());
-        assertEquals(textField.getColumns(), operator2.getColumns());
+        assertThat(operator2.getColumns()).isEqualTo(10);
+        assertThat(operator2.getColumns()).isEqualTo(textField.getColumns());
     }
 
     @Test
     void testGetHorizontalAlignment() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setHorizontalAlignment(SwingConstants.RIGHT);
-        assertEquals(SwingConstants.RIGHT, operator2.getHorizontalAlignment());
-        assertEquals(textField.getHorizontalAlignment(), operator2.getHorizontalAlignment());
+        assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.RIGHT);
+        assertThat(operator2.getHorizontalAlignment()).isEqualTo(textField.getHorizontalAlignment());
     }
 
     @Test
     void testGetScrollOffset() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setScrollOffset(operator2.getScrollOffset());
     }
 
     @Test
     void testPostActionEvent() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setActionCommand("ACTION_COMMAND");
         ActionListener1 listener = new ActionListener1();
         operator2.addActionListener(listener);
         operator2.postActionEvent();
-        assertEquals(listener.actionCommand, "ACTION_COMMAND");
+        assertThat(listener.actionCommand).isEqualTo("ACTION_COMMAND");
     }
 
     @Test
     void testGetHorizontalVisibility() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = new JTextFieldOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.getHorizontalVisibility();
     }
 

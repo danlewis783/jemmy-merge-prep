@@ -16,12 +16,9 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.Function;
 import javax.swing.JEditorPane;
@@ -54,20 +51,21 @@ class EditorScrollingInTabsTest {
         QueueTool.getInstance().waitEmpty();
         JFrame frm = JFrameOperator.waitJFrame("EditorTabsApp");
         JFrameOperator frmo = new JFrameOperator(frm);
-        assertEquals(0, new JFrameOperator(frm).getContainers().length, "Jemmy issue #4420394");
+        assertThat(new JFrameOperator(frm).getContainers().length)
+                .as("Jemmy issue #4420394")
+                .isEqualTo(0);
         JTabbedPaneOperator tp = new JTabbedPaneOperator(
                 JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1));
         tp.selectPage("JEditorPane", StringComparators.substring());
         JEditorPaneOperator to = new JEditorPaneOperator(
                 JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring()));
         JEditorPaneOperator t1 = new JEditorPaneOperator(frmo);
-        assertSame(t1.getSource(), to.getSource());
-        assertSame(
-                to.getSource(),
-                JEditorPaneOperator.findJEditorPane(frm, PredicatesJ.alwaysTrue()),
-                "Jemmy issue #4420389");
+        assertThat(to.getSource()).isSameAs(t1.getSource());
+        assertThat(JEditorPaneOperator.findJEditorPane(frm, PredicatesJ.alwaysTrue()))
+                .as("Jemmy issue #4420389")
+                .isSameAs(to.getSource());
         to.typeText(allChars);
-        assertEquals(allChars, to.getText().replace("\r\n", "\n"));
+        assertThat(to.getText().replace("\r\n", "\n")).isEqualTo(allChars);
 
         assertThatExceptionOfType(NoSuchTextException.class).isThrownBy(() -> to.selectText("0987654321"));
 
@@ -84,15 +82,17 @@ class EditorScrollingInTabsTest {
         checkSelectedText(to, "567");
         to.selectText(3, 37);
         to.typeText("3");
-        assertNotNull(JEditorPaneOperator.waitJEditorPane(frm, "0123456789", StringComparators.strict()));
+        assertThat(JEditorPaneOperator.waitJEditorPane(frm, "0123456789", StringComparators.strict()))
+                .isNotNull();
         to.clearText();
-        assertNotNull(JEditorPaneOperator.waitJEditorPane(frm, "", StringComparators.strict()));
-        assertTrue(testJEditorPane(to));
+        assertThat(JEditorPaneOperator.waitJEditorPane(frm, "", StringComparators.strict()))
+                .isNotNull();
+        assertThat(testJEditorPane(to)).isTrue();
         tp.selectPage("JTextArea", StringComparators.substring());
         JTextAreaOperator tao = new JTextAreaOperator(
                 JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring()));
         tao.typeText(allChars);
-        assertEquals(allChars, tao.getText());
+        assertThat(tao.getText()).isEqualTo(allChars);
         tao.selectText(0, 20);
         checkSelectedText(tao, "0123456789\n012345678");
         tao.selectText(allChars.length(), allChars.length() - 20);
@@ -105,11 +105,13 @@ class EditorScrollingInTabsTest {
         checkSelectedText(tao, "0123456789\n0123456789\n");
         tao.selectText(0, 3, 3, 4);
         tao.typeText("3");
-        assertNotNull(JTextAreaOperator.waitJTextArea(frm, "0123456789", StringComparators.strict()));
+        assertThat(JTextAreaOperator.waitJTextArea(frm, "0123456789", StringComparators.strict()))
+                .isNotNull();
         tao.clearText();
-        assertNotNull(JTextAreaOperator.waitJTextArea(frm, "", StringComparators.strict()));
-        assertTrue(testJTabbedPane(tp));
-        assertTrue(testJTextArea(tao));
+        assertThat(JTextAreaOperator.waitJTextArea(frm, "", StringComparators.strict()))
+                .isNotNull();
+        assertThat(testJTabbedPane(tp)).isTrue();
+        assertThat(testJTextArea(tao)).isTrue();
     }
 
     private void checkSelectedText(JTextComponentOperator tco, String eta) throws Exception {

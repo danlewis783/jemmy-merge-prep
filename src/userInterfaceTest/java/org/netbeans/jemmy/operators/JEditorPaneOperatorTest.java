@@ -24,9 +24,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.io.ByteArrayInputStream;
@@ -86,111 +84,110 @@ class JEditorPaneOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator3 =
                 new JEditorPaneOperator(operator1, PredicatesJ.byName("JEditorPaneOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JEditorPaneOperator operator4 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
         JEditorPaneOperator operator5 =
                 new JEditorPaneOperator(operator1, "JEditorPaneOperatorTest", StringComparators.strict());
-        assertNotNull(operator5);
+        assertThat(operator5).isNotNull();
     }
 
     @Test
     void testFindJEditorPane() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPane editorPane1 =
                 JEditorPaneOperator.findJEditorPane(frame, PredicatesJ.byName("JEditorPaneOperatorTest"));
-        assertNotNull(editorPane1);
+        assertThat(editorPane1).isNotNull();
         JEditorPane editorPane2 = JEditorPaneOperator.findJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(editorPane2);
+        assertThat(editorPane2).isNotNull();
     }
 
     @Test
     void testWaitJEditorPane() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPane editorPane1 =
                 JEditorPaneOperator.waitJEditorPane(frame, PredicatesJ.byName("JEditorPaneOperatorTest"));
-        assertNotNull(editorPane1);
+        assertThat(editorPane1).isNotNull();
         JEditorPane editorPane2 = JEditorPaneOperator.waitJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(editorPane2);
+        assertThat(editorPane2).isNotNull();
     }
 
     @Test
     void testAddHyperlinkListener() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         HyperlinkListenerTest listener = new HyperlinkListenerTest();
         operator2.addHyperlinkListener(listener);
-        assertEquals(1, editorPane.getHyperlinkListeners().length);
+        assertThat(editorPane.getHyperlinkListeners().length).isEqualTo(1);
         operator2.fireHyperlinkUpdate(new HyperlinkEvent("", null, null));
-        assertNotNull(listener.event);
+        assertThat(listener.event).isNotNull();
         operator2.removeHyperlinkListener(listener);
-        assertEquals(0, editorPane.getHyperlinkListeners().length);
+        assertThat(editorPane.getHyperlinkListeners().length).isEqualTo(0);
     }
 
     @Test
     void testGetContentType() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator4 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator4);
-        assertEquals("text/plain", operator4.getContentType());
+        assertThat(operator4).isNotNull();
+        assertThat(operator4.getContentType()).isEqualTo("text/plain");
         operator4.setContentType("text/html");
-        assertEquals("text/html", operator4.getContentType());
-        assertEquals(operator4.getContentType(), editorPane.getContentType());
+        assertThat(operator4.getContentType()).isEqualTo("text/html");
+        assertThat(editorPane.getContentType()).isEqualTo(operator4.getContentType());
     }
 
     @Test
     void testGetEditorKit() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         EditorKitTest editorKit = new EditorKitTest();
         operator2.setEditorKit(editorKit);
-        assertEquals(editorKit, operator2.getEditorKit());
-        assertEquals(editorPane.getEditorKit(), operator2.getEditorKit());
+        assertThat(operator2.getEditorKit()).isEqualTo(editorKit);
+        assertThat(operator2.getEditorKit()).isEqualTo(editorPane.getEditorKit());
     }
 
     @Test
     void testGetEditorKitForContentType() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         EditorKitTest editorKit = new EditorKitTest();
         operator2.setEditorKitForContentType("text/plain", editorKit);
-        assertEquals(editorKit, operator2.getEditorKitForContentType("text/plain"));
-        assertEquals(
-                editorPane.getEditorKitForContentType("text/plain"),
-                operator2.getEditorKitForContentType("text/plain"));
+        assertThat(operator2.getEditorKitForContentType("text/plain")).isEqualTo(editorKit);
+        assertThat(operator2.getEditorKitForContentType("text/plain"))
+                .isEqualTo(editorPane.getEditorKitForContentType("text/plain"));
     }
 
     @Test
     void testGetPage() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator4 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
 
         try {
             String urlA = "https://www.google.com/";
             String urlB = "https://www.google.com/";
             operator4.setPage(new URL(urlA));
-            assertEquals(urlA, operator4.getPage().toString());
-            assertEquals(urlA, editorPane.getPage().toString());
+            assertThat(operator4.getPage().toString()).isEqualTo(urlA);
+            assertThat(editorPane.getPage().toString()).isEqualTo(urlA);
             operator4.setPage(urlB);
             JEditorPaneOperator operator5 = new JEditorPaneOperator(operator1);
-            assertEquals(urlB, operator5.getPage().toString());
-            assertEquals(urlB, editorPane.getPage().toString());
+            assertThat(operator5.getPage().toString()).isEqualTo(urlB);
+            assertThat(editorPane.getPage().toString()).isEqualTo(urlB);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -199,12 +196,12 @@ class JEditorPaneOperatorTest {
     @Test
     void testRead() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = new JEditorPaneOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setContentType("text/html");
         operator2.read(new ByteArrayInputStream("<html></html>".getBytes()), HTMLDocument.class);
-        assertTrue(editorPane.getText().startsWith("<html>"));
+        assertThat(editorPane.getText().startsWith("<html>")).isTrue();
     }
 
     private class EditorKitTest extends EditorKit {

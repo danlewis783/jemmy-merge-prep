@@ -16,13 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -104,38 +98,38 @@ class WindowOperatorTest {
 
     @Test
     void constructor() {
-        assertNotNull(new WindowOperator());
-        assertNotNull(new FrameOperator());
+        assertThat(new WindowOperator()).isNotNull();
+        assertThat(new FrameOperator()).isNotNull();
         WindowOperator operator2 = new WindowOperator(frameRef.get());
-        assertNotNull(operator2);
-        assertSame(frameRef.get(), operator2.getSource());
+        assertThat(operator2).isNotNull();
+        assertThat(operator2.getSource()).isSameAs(frameRef.get());
         WindowOperator sub1 = new WindowOperator(operator2);
-        assertNotNull(sub1);
-        assertSame(dialogRef.get(), sub1.getSource());
+        assertThat(sub1).isNotNull();
+        assertThat(sub1.getSource()).isSameAs(dialogRef.get());
         WindowOperator sub2 =
                 new WindowOperator(operator2, PredicatesJ.byName(dialogRef.get().getName()));
-        assertNotNull(sub2);
-        assertSame(dialogRef.get(), sub2.getSource());
+        assertThat(sub2).isNotNull();
+        assertThat(sub2.getSource()).isSameAs(dialogRef.get());
     }
 
     @Test
     void findWindow() {
         Window window1 =
                 WindowOperator.findWindow(PredicatesJ.byName(frameRef.get().getName()));
-        assertSame(frameRef.get(), window1);
+        assertThat(window1).isSameAs(frameRef.get());
         Window window2 = WindowOperator.findWindow(
                 frameRef.get(), PredicatesJ.byName(dialogRef.get().getName()));
-        assertSame(dialogRef.get(), window2);
+        assertThat(window2).isSameAs(dialogRef.get());
     }
 
     @Test
     void waitWindow() {
         Window window1 =
                 WindowOperator.waitWindow(PredicatesJ.byName(frameRef.get().getName()));
-        assertSame(frameRef.get(), window1);
+        assertThat(window1).isSameAs(frameRef.get());
         Window window2 = WindowOperator.waitWindow(
                 frameRef.get(), PredicatesJ.byName(dialogRef.get().getName()));
-        assertSame(dialogRef.get(), window2);
+        assertThat(window2).isSameAs(dialogRef.get());
     }
 
     @Test
@@ -157,8 +151,8 @@ class WindowOperatorTest {
             frameOp.activate();
             sleepOneSec();
             assertLastEventReceived("activated");
-            assertTrue(frameOp.isActive());
-            assertTrue(frameOp.isFocused());
+            assertThat(frameOp.isActive()).isTrue();
+            assertThat(frameOp.isFocused()).isTrue();
             Frame other = new Frame();
             other.setTitle("other");
             other.setName("other" + "_" + "WindowOperatorTest");
@@ -169,8 +163,8 @@ class WindowOperatorTest {
             other.setVisible(true);
             sleepOneSec();
             assertLastEventReceived("deactivated");
-            assertFalse(frameOp.isActive());
-            assertFalse(frameOp.isFocused());
+            assertThat(frameOp.isActive()).isFalse();
+            assertThat(frameOp.isFocused()).isFalse();
             frameOp.activate();
             sleepOneSec();
             assertLastEventReceived("activated");
@@ -221,7 +215,7 @@ class WindowOperatorTest {
             FrameOperator frameOp = new FrameOperator();
             frameOp.requestCloseAndThenHide();
             sleepOneSec();
-            assertFalse(frameRef.get().isVisible());
+            assertThat(frameRef.get().isVisible()).isFalse();
             assertEventsReceived("closing");
         } finally {
             frameRef.get().removeWindowListener(windowListener);
@@ -259,7 +253,9 @@ class WindowOperatorTest {
             FrameOperator frame2Op = new FrameOperator(frame2);
             frame2Op.waitHasFocus();
             assertEventsReceived("closing");
-            assertTrue(frameOp.isShowing(), "Main window should still be showing");
+            assertThat(frameOp.isShowing())
+                    .as("Main window should still be showing")
+                    .isTrue();
             frame2Op.requestClose();
             frameOp.waitState((Predicate<FrameOperator>) frameOperator -> !frameOperator.isDisplayable());
             sleepOneSec();
@@ -294,15 +290,15 @@ class WindowOperatorTest {
                 wasComponentResizedCalled.set(true);
             }
         });
-        assertFalse(100 == frameRef.get().getX());
-        assertFalse(200 == frameRef.get().getY());
+        assertThat(100 == frameRef.get().getX()).isFalse();
+        assertThat(200 == frameRef.get().getY()).isFalse();
         frameOp.move(100, 200);
         sleepOneSec();
-        assertEquals(100, frameRef.get().getX());
-        assertEquals(200, frameRef.get().getY());
-        assertFalse(wasComponentResizedCalled.get());
-        assertEquals(100, componentMovedX.get());
-        assertEquals(200, componentMovedY.get());
+        assertThat(frameRef.get().getX()).isEqualTo(100);
+        assertThat(frameRef.get().getY()).isEqualTo(200);
+        assertThat(wasComponentResizedCalled.get()).isFalse();
+        assertThat(componentMovedX.get()).isEqualTo(100);
+        assertThat(componentMovedY.get()).isEqualTo(200);
     }
 
     @Test
@@ -328,30 +324,30 @@ class WindowOperatorTest {
                 componentResizedCalledCount.incrementAndGet();
             }
         });
-        assertFalse(100 == frameRef.get().getWidth());
-        assertFalse(200 == frameRef.get().getHeight());
+        assertThat(100 == frameRef.get().getWidth()).isFalse();
+        assertThat(200 == frameRef.get().getHeight()).isFalse();
         frameOp.resize(100, 200);
         sleepOneSec();
-        assertFalse(wasComponentMovedCalled.get());
-        assertTrue(componentResizedCalledCount.get() > 1);
-        assertTrue(componentResizedCalledCount.get() < 3);
-        assertTrue(componentResizedWidth.get() > 130);
-        assertTrue(componentResizedWidth.get() < 160);
-        assertEquals(200, componentResizedHeight.get());
+        assertThat(wasComponentMovedCalled.get()).isFalse();
+        assertThat(componentResizedCalledCount.get() > 1).isTrue();
+        assertThat(componentResizedCalledCount.get() < 3).isTrue();
+        assertThat(componentResizedWidth.get() > 130).isTrue();
+        assertThat(componentResizedWidth.get() < 160).isTrue();
+        assertThat(componentResizedHeight.get()).isEqualTo(200);
     }
 
     @Test
     void gindSubWindow() {
         FrameOperator frameOp = new FrameOperator();
         Window window = frameOp.findSubWindow(PredicatesJ.byName("Sub_WindowOperatorTest"));
-        assertSame(dialogRef.get(), window);
+        assertThat(window).isSameAs(dialogRef.get());
     }
 
     @Test
     void waitSubWindow() {
         FrameOperator frameOp = new FrameOperator();
         Window window = frameOp.waitSubWindow(PredicatesJ.byName("Sub_WindowOperatorTest"));
-        assertSame(dialogRef.get(), window);
+        assertThat(window).isSameAs(dialogRef.get());
     }
 
     @Test
@@ -411,31 +407,31 @@ class WindowOperatorTest {
     @Test
     void getFocusOwner() {
         FrameOperator frameOp = new FrameOperator();
-        assertSame(null, frameOp.getFocusOwner());
+        assertThat(frameOp.getFocusOwner()).isSameAs(null);
         frameOp.requestFocus();
         frameOp.waitHasFocus();
-        assertSame(frameRef.get(), frameOp.getFocusOwner());
+        assertThat(frameOp.getFocusOwner()).isSameAs(frameRef.get());
     }
 
     @Test
     void getOwnedWindows() {
         FrameOperator frameOp = new FrameOperator();
         Window[] w = frameOp.getOwnedWindows();
-        assertEquals(1, w.length);
-        assertSame(dialogRef.get(), w[0]);
+        assertThat(w.length).isEqualTo(1);
+        assertThat(w[0]).isSameAs(dialogRef.get());
     }
 
     @Test
     void getOwner() {
         FrameOperator frameOp = new FrameOperator();
-        assertSame(null, frameOp.getOwner());
-        assertSame(frameRef.get(), new WindowOperator(dialogRef.get()).getOwner());
+        assertThat(frameOp.getOwner()).isSameAs(null);
+        assertThat(new WindowOperator(dialogRef.get()).getOwner()).isSameAs(frameRef.get());
     }
 
     @Test
     void getWarningString() {
         FrameOperator frameOp = new FrameOperator();
-        assertNull(frameOp.getWarningString());
+        assertThat(frameOp.getWarningString()).isNull();
     }
 
     @Test
@@ -470,11 +466,11 @@ class WindowOperatorTest {
     }
 
     private void assertLastEventReceived(String s) {
-        assertEquals(s, eventsRef.get().get(eventsRef.get().size() - 1));
+        assertThat(eventsRef.get().get(eventsRef.get().size() - 1)).isEqualTo(s);
     }
 
     private void assertEventsReceived(String... arr) {
-        assertArrayEquals(arr, eventsRef.get().toArray());
+        assertThat(eventsRef.get().toArray()).isEqualTo(arr);
     }
 
     private void sleepOneSec() throws Exception {
@@ -515,7 +511,7 @@ class WindowOperatorTest {
                 extra2.setVisible(true);
             });
             WindowOperator.waitWindowCount(countable, 2);
-            assertEquals(2, WindowOperator.countWindows(countable));
+            assertThat(WindowOperator.countWindows(countable)).isEqualTo(2);
             EventQueue.invokeAndWait(() -> {
                 extra2.setVisible(false);
                 extra2.dispose();

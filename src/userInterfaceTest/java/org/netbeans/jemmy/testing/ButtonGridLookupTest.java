@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.swing.JFrame;
 import org.junit.jupiter.api.Test;
@@ -45,9 +44,9 @@ class ButtonGridLookupTest {
                 String bText = i + "-" + j;
                 JButtonOperator jButtonOp = new JButtonOperator(
                         jFrameOp, new AbstractButtonByTextPredicate(bText, StringComparators.substring()));
-                assertSame(new AbstractButtonOperator(jFrameOp, i * 4 + j).getSource(), jButtonOp.getSource());
-                assertSame(new JButtonOperator(jFrameOp, i * 4 + j).getSource(), jButtonOp.getSource());
-                assertEquals(bText + " button", jButtonOp.showToolTip().getTipText());
+                assertThat(jButtonOp.getSource()).isSameAs(new AbstractButtonOperator(jFrameOp, i * 4 + j).getSource());
+                assertThat(jButtonOp.getSource()).isSameAs(new JButtonOperator(jFrameOp, i * 4 + j).getSource());
+                assertThat(jButtonOp.showToolTip().getTipText()).isEqualTo(bText + " button");
                 jButtonOp.push();
                 jLabelOp.waitText("Button \"" + bText + "\" has been pushed", StringComparators.strict());
                 progress.waitValue(bText, StringComparators.strict());
@@ -59,8 +58,7 @@ class ButtonGridLookupTest {
         buttonOp.getAccessibleContext().setAccessibleDescription("A button to check different finding approaches");
         buttonOp.setText("New Text");
         buttonOp.waitText("New Text", StringComparators.strict());
-        assertSame(
-                buttonOp.getSource(),
-                jFrameOp.findSubComponent(new AbstractButtonByTextPredicate("New Text", StringComparators.strict())));
+        assertThat(jFrameOp.findSubComponent(new AbstractButtonByTextPredicate("New Text", StringComparators.strict())))
+                .isSameAs(buttonOp.getSource());
     }
 }

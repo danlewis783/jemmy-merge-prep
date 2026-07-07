@@ -18,7 +18,6 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.awt.AWTEvent;
@@ -99,7 +98,7 @@ final class RobotVsQueueDispatchTest {
     private void compareEvents(List<String> eventListA, List<String> eventListB) {
         int listASize = eventListA.size();
         int listBSize = eventListB.size();
-        assertEquals(listASize, listBSize);
+        assertThat(listBSize).isEqualTo(listASize);
         int iMax = Math.min(listASize, listBSize);
         for (int i = 0; i < iMax; i++) {
             assertThat(eventListA.get(i)).as("message # %d", (i + 1)).isEqualTo(eventListB.get(i));

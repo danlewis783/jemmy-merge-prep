@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -52,18 +51,18 @@ class FrameOperatorTest {
     void testConstructor() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         FrameOperator operator2 = new FrameOperator(PredicatesJ.byName("FrameOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         FrameOperator operator3 = new FrameOperator("FrameOperatorTest");
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testWaitTitle() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setTitle("Title");
         operator.waitTitle("Title", StringComparators.strict());
     }
@@ -72,7 +71,7 @@ class FrameOperatorTest {
     void testIconify() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.iconify();
     }
 
@@ -80,7 +79,7 @@ class FrameOperatorTest {
     void testDeiconify() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.deiconify();
     }
 
@@ -88,26 +87,26 @@ class FrameOperatorTest {
     void testMaximize() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.maximize();
-        assertEquals(Frame.MAXIMIZED_BOTH, operator.getExtendedState());
+        assertThat(operator.getExtendedState()).isEqualTo(Frame.MAXIMIZED_BOTH);
     }
 
     @Test
     void testDemaximize() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.maximize();
         operator.demaximize();
-        assertEquals(Frame.NORMAL, operator.getExtendedState());
+        assertThat(operator.getExtendedState()).isEqualTo(Frame.NORMAL);
     }
 
     @Test
     void testSetIconImage() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setIconImage(operator.getIconImage());
     }
 
@@ -115,7 +114,7 @@ class FrameOperatorTest {
     void testSetMenuBar() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setMenuBar(operator.getMenuBar());
     }
 
@@ -123,7 +122,7 @@ class FrameOperatorTest {
     void testSetResizable() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setResizable(operator.isResizable());
     }
 
@@ -131,7 +130,7 @@ class FrameOperatorTest {
     void testSetState() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setState(operator.getState());
     }
 
@@ -139,7 +138,7 @@ class FrameOperatorTest {
     void testSetTitle() {
         frame.setVisible(true);
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setTitle(operator.getTitle());
     }
 }

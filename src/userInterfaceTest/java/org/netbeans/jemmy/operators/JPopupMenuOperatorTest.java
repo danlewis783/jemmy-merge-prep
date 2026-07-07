@@ -17,9 +17,7 @@
 
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -113,7 +111,7 @@ final class JPopupMenuOperatorTest {
 
         try {
             JPopupMenuOperator jPopupMenuOp = new JPopupMenuOperator();
-            assertNotNull(jPopupMenuOp);
+            assertThat(jPopupMenuOp).isNotNull();
             jPopupMenuOp.pushMenu("SubMenu|SubMenu item 2", StringComparators.strict());
         } finally {
             jemmyProperties.installDriversAndSetDispatchingModel(oldModel);
@@ -124,27 +122,27 @@ final class JPopupMenuOperatorTest {
     void testConstructor() throws Throwable {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JPopupMenuOperator operator2 = new JPopupMenuOperator(popupRef.get());
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JFrameOperator operator3 = new JFrameOperator();
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void show() throws Throwable {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JPopupMenuOperator operator1 = new JPopupMenuOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
     }
 
     @Test
     void pushMenu() throws Throwable {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.pushMenu("1", StringComparators.strict());
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         String[] menus = new String[1];
@@ -156,7 +154,7 @@ final class JPopupMenuOperatorTest {
     void pushMenuNoBlock() throws Throwable {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.pushMenuNoBlock("1", StringComparators.strict());
     }
 
@@ -164,7 +162,7 @@ final class JPopupMenuOperatorTest {
     void show2() throws Throwable {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.show(frameRef.get(), 0, 0);
     }
 
@@ -172,7 +170,7 @@ final class JPopupMenuOperatorTest {
     void showMenuItems() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.showMenuItems("1234", StringComparators.strict());
         operator.showMenuItems("1234", "/", StringComparators.strict());
     }
@@ -181,7 +179,7 @@ final class JPopupMenuOperatorTest {
     void showMenuItem() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.showMenuItem("1", StringComparators.strict());
         operator.showMenuItem("1", "/", StringComparators.strict());
         operator.showMenuItem(new String[] {"1"}, StringComparators.strict());
@@ -191,7 +189,7 @@ final class JPopupMenuOperatorTest {
     void add() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("4")));
         operator.add(menuItem.get());
@@ -203,19 +201,19 @@ final class JPopupMenuOperatorTest {
     void addPopupMenuListener() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         NullPopupMenuListener listener = new NullPopupMenuListener();
         operator.addPopupMenuListener(listener);
-        assertEquals(2, popupRef.get().getPopupMenuListeners().length);
+        assertThat(popupRef.get().getPopupMenuListeners().length).isEqualTo(2);
         operator.removePopupMenuListener(listener);
-        assertEquals(1, popupRef.get().getPopupMenuListeners().length);
+        assertThat(popupRef.get().getPopupMenuListeners().length).isEqualTo(1);
     }
 
     @Test
     void addSeparator() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.addSeparator();
     }
 
@@ -223,7 +221,7 @@ final class JPopupMenuOperatorTest {
     void getComponentIndex() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.getComponentIndex(frameRef.get());
     }
 
@@ -231,43 +229,43 @@ final class JPopupMenuOperatorTest {
     void getInvoker() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setInvoker(frameRef.get());
-        assertNotNull(operator.getInvoker());
+        assertThat(operator.getInvoker()).isNotNull();
     }
 
     @Test
     void getLabel() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setLabel("12345");
-        assertEquals("12345", operator.getLabel());
+        assertThat(operator.getLabel()).isEqualTo("12345");
     }
 
     @Test
     void getMargin() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
-        assertNotNull(operator.getMargin());
+        assertThat(operator).isNotNull();
+        assertThat(operator.getMargin()).isNotNull();
     }
 
     @Test
     void getSelectionModel() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         SingleSelectionModel model = new DefaultSingleSelectionModel();
         operator.setSelectionModel(model);
-        assertEquals(model, operator.getSelectionModel());
+        assertThat(operator.getSelectionModel()).isEqualTo(model);
     }
 
     @Test
     void getSubElements() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.getSubElements();
     }
 
@@ -275,17 +273,17 @@ final class JPopupMenuOperatorTest {
     void getUi() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         NullPopupMenuUI ui = new NullPopupMenuUI();
         operator.setUI(ui);
-        assertEquals(ui, operator.getUI());
+        assertThat(operator.getUI()).isEqualTo(ui);
     }
 
     @Test
     void insert() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         AtomicReference<JButton> button = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> button.set(new JButton("Hello")));
         operator.insert(button.get(), 0);
@@ -296,29 +294,29 @@ final class JPopupMenuOperatorTest {
     void isBorderPainted() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setBorderPainted(true);
-        assertTrue(operator.isBorderPainted());
+        assertThat(operator.isBorderPainted()).isTrue();
         operator.setBorderPainted(false);
-        assertTrue(!operator.isBorderPainted());
+        assertThat(operator.isBorderPainted()).isFalse();
     }
 
     @Test
     void isLightWeightPopupEnabled() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setLightWeightPopupEnabled(true);
-        assertTrue(operator.isLightWeightPopupEnabled());
+        assertThat(operator.isLightWeightPopupEnabled()).isTrue();
         operator.setLightWeightPopupEnabled(false);
-        assertTrue(!operator.isLightWeightPopupEnabled());
+        assertThat(operator.isLightWeightPopupEnabled()).isFalse();
     }
 
     @Test
     void menuSelectionChanged() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.menuSelectionChanged(true);
     }
 
@@ -326,7 +324,7 @@ final class JPopupMenuOperatorTest {
     void pack() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.pack();
     }
 
@@ -334,7 +332,7 @@ final class JPopupMenuOperatorTest {
     void processKeyEvent() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.processKeyEvent(new KeyEvent(frameRef.get(), 0, 0, 0, 0), null, null);
     }
 
@@ -342,7 +340,7 @@ final class JPopupMenuOperatorTest {
     void processMouseEvent() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.processMouseEvent(new MouseEvent(frameRef.get(), 0, 0, 0, 0, 0, 0, true), null, null);
     }
 
@@ -350,7 +348,7 @@ final class JPopupMenuOperatorTest {
     void setPopupSize() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setPopupSize(100, 100);
         operator.setPopupSize(new Dimension(200, 200));
     }
@@ -359,7 +357,7 @@ final class JPopupMenuOperatorTest {
     void setSelected() throws Exception {
         EventQueue.invokeAndWait(() -> popupRef.get().show(frameRef.get(), 30, 30));
         JPopupMenuOperator operator = new JPopupMenuOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         operator.setSelected(frameRef.get());
     }
 

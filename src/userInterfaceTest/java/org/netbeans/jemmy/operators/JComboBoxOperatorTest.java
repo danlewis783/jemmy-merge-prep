@@ -16,8 +16,8 @@
  */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -67,102 +67,102 @@ class JComboBoxOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JComboBoxOperator operator2 = new JComboBoxOperator(operator, PredicatesJ.byName("JComboBoxOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JComboBoxOperator operator3 =
                 new JComboBoxOperator(operator, "JComboBoxOperatorTest", StringComparators.strict());
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindJComboBox() {
         JComboBox comboBox1 = JComboBoxOperator.findJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
-        assertNotNull(comboBox1);
+        assertThat(comboBox1).isNotNull();
         JComboBox comboBox2 = JComboBoxOperator.findJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
-        assertNotNull(comboBox2);
+        assertThat(comboBox2).isNotNull();
     }
 
     @Test
     void testWaitJComboBox() {
         JComboBox comboBox1 = JComboBoxOperator.waitJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
-        assertNotNull(comboBox1);
+        assertThat(comboBox1).isNotNull();
         JComboBox comboBox2 = JComboBoxOperator.waitJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
-        assertNotNull(comboBox2);
+        assertThat(comboBox2).isNotNull();
     }
 
     @Test
     void testFindJButton() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.findJButton();
     }
 
     @Test
     void testFindJTextField() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.findJTextField();
     }
 
     @Test
     void testGetButton() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getButton();
     }
 
     @Test
     void testGetTextField() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getTextField();
     }
 
     @Test
     void testWaitList() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
     }
 
     @Test
     void testPushComboButton() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.pushComboButton();
     }
 
     @Test
     void testFindItemIndex() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.findItemIndex("JComboBoxOperatorTest", StringComparators.alwaysEqual());
     }
 
     @Test
     void testWaitItem() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.waitItem(0);
         operator1.waitItem("JComboBoxOperatorTest", StringComparators.alwaysEqual());
     }
@@ -170,9 +170,9 @@ class JComboBoxOperatorTest {
     @Test
     void testSelectItem() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectItem(0);
         operator1.selectItem("JComboBoxOperatorTest", StringComparators.strict());
         operator1.selectItem("JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -181,36 +181,36 @@ class JComboBoxOperatorTest {
     @Test
     void testTypeText() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JComboBoxOperator jComboOp = new JComboBoxOperator(jFrameOp);
-        assertNotNull(jComboOp);
+        assertThat(jComboOp).isNotNull();
         jComboOp.typeText("1");
     }
 
     @Test
     void testClearText() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.clearText();
     }
 
     @Test
     void testEnterText() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.enterText("1");
     }
 
     @Test
     void testWaitItemSelected() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectItem(0);
         operator1.waitItemSelected(0);
         operator1.waitItemSelected("JComboBoxOperatorTest", StringComparators.strict());
@@ -219,18 +219,18 @@ class JComboBoxOperatorTest {
     @Test
     void testActionPerformed() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.actionPerformed(null);
     }
 
     @Test
     void testAddActionListener() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         IgnoreActionListener listener = new IgnoreActionListener();
         operator1.addActionListener(listener);
         operator1.removeActionListener(listener);
@@ -239,18 +239,18 @@ class JComboBoxOperatorTest {
     @Test
     void testAddItem() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.addItem("1234");
     }
 
     @Test
     void testAddItemListener() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         IgnoreItemListener listener = new IgnoreItemListener();
         operator1.addItemListener(listener);
         operator1.removeItemListener(listener);
@@ -259,9 +259,9 @@ class JComboBoxOperatorTest {
     @Test
     void testConfigureEditor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
 
         assertThatCode(() -> EventQueue.invokeAndWait(() -> boxEditor = new BasicComboBoxEditor()))
                 .doesNotThrowAnyException();
@@ -272,234 +272,234 @@ class JComboBoxOperatorTest {
     @Test
     void testContentsChanged() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.contentsChanged(null);
     }
 
     @Test
     void testGetActionCommand() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setActionCommand(operator1.getActionCommand());
     }
 
     @Test
     void testGetEditor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setEditor(operator1.getEditor());
     }
 
     @Test
     void testGetItemAt() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getItemAt(0);
     }
 
     @Test
     void testGetItemCount() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getItemCount();
     }
 
     @Test
     void testGetKeySelectionManager() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setKeySelectionManager(operator1.getKeySelectionManager());
     }
 
     @Test
     void testGetMaximumRowCount() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setMaximumRowCount(operator1.getMaximumRowCount());
     }
 
     @Test
     void testGetModel() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setModel(operator1.getModel());
     }
 
     @Test
     void testGetRenderer() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setRenderer(operator1.getRenderer());
     }
 
     @Test
     void testGetSelectedIndex() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setSelectedIndex(operator1.getSelectedIndex());
     }
 
     @Test
     void testGetSelectedItem() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setSelectedItem(operator1.getSelectedItem());
     }
 
     @Test
     void testGetSelectedObjects() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSelectedObjects();
     }
 
     @Test
     void testGetUI() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setUI(operator1.getUI());
     }
 
     @Test
     void testHidePopup() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.hidePopup();
     }
 
     @Test
     void testInsertItemAt() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.insertItemAt("1", 0);
     }
 
     @Test
     void testIntervalAdded() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.intervalAdded(null);
     }
 
     @Test
     void testIntervalRemoved() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.intervalRemoved(null);
     }
 
     @Test
     void testIsEditable() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setEditable(operator1.isEditable());
     }
 
     @Test
     void testIsLightWeightPopupEnabled() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setLightWeightPopupEnabled(operator1.isLightWeightPopupEnabled());
     }
 
     @Test
     void testIsPopupVisible() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setPopupVisible(operator1.isPopupVisible());
     }
 
     @Test
     void testProcessKeyEvent() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.processKeyEvent(new KeyEvent(comboBox, 0, 0, 0, 0, 'a'));
     }
 
     @Test
     void testRemoveAllItems() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.removeAllItems();
     }
 
     @Test
     void testRemoveItem() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.removeItem("1");
     }
 
     @Test
     void testRemoveItemAt() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.removeItemAt(0);
     }
 
     @Test
     void testSelectWithKeyChar() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectWithKeyChar('a');
     }
 
     @Test
     void testShowPopup() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.showPopup();
     }
 

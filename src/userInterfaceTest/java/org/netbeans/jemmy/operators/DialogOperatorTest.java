@@ -16,8 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dialog;
 import java.awt.EventQueue;
@@ -57,27 +56,27 @@ class DialogOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         DialogOperator operator1 = new DialogOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         DialogOperator operator2 = new DialogOperator();
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         DialogOperator operator3 = new DialogOperator(PredicatesJ.byName("DialogOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         DialogOperator operator4 = new DialogOperator("DialogOperatorTest");
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
         DialogOperator operator5 = new DialogOperator(operator, PredicatesJ.byName("DialogOperatorTest"));
-        assertNotNull(operator5);
+        assertThat(operator5).isNotNull();
         DialogOperator operator6 = new DialogOperator(operator, "DialogOperatorTest", StringComparators.strict());
-        assertNotNull(operator6);
+        assertThat(operator6).isNotNull();
     }
 
     @Test
     void testWaitTitle() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         DialogOperator operator1 = new DialogOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setTitle("BOOH");
         operator1.waitTitle("BOOH", StringComparators.strict());
     }
@@ -85,29 +84,29 @@ class DialogOperatorTest {
     @Test
     void testGetTitle() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         DialogOperator operator1 = new DialogOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getTitle();
     }
 
     @Test
     void testIsModal() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         DialogOperator operator1 = new DialogOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setModal(false);
-        assertTrue(!operator1.isModal());
+        assertThat(operator1.isModal()).isFalse();
     }
 
     @Test
     void testIsResizable() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         DialogOperator operator1 = new DialogOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setResizable(true);
-        assertTrue(operator1.isResizable());
+        assertThat(operator1.isResizable()).isTrue();
     }
 }

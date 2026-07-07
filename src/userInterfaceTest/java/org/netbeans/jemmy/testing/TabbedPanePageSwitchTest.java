@@ -16,13 +16,8 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.EventQueue;
 import javax.swing.JButton;
@@ -50,12 +45,14 @@ class TabbedPanePageSwitchTest {
             JFrame win = JFrameOperator.waitJFrame("TabbedPagesApp");
             JTabbedPaneOperator tpo =
                     new JTabbedPaneOperator(new JFrameOperator(win), "Page1", StringComparators.strict());
-            assertNotNull(JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive()));
-            assertNull(JButtonOperator.findJButton(win, "button2", StringComparators.strict()));
+            assertThat(JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive()))
+                    .isNotNull();
+            assertThat(JButtonOperator.findJButton(win, "button2", StringComparators.strict()))
+                    .isNull();
             JButton btt1 = JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive());
             JButtonOperator btt1o = new JButtonOperator(btt1);
-            assertTrue(btt1o.isVisible());
-            assertTrue(btt1o.isShowing());
+            assertThat(btt1o.isVisible()).isTrue();
+            assertThat(btt1o.isShowing()).isTrue();
             EventQueue.invokeAndWait(() -> {
                 btt1.setVisible(false);
                 btt1.setVisible(true);
@@ -66,24 +63,26 @@ class TabbedPanePageSwitchTest {
 
             tpo.selectPage("Page2", StringComparators.strict());
             tpo.waitSelected("Page2", StringComparators.strict());
-            assertTrue(btt1o.isVisible());
-            assertFalse(btt1o.isShowing());
-            assertNotNull(JButtonOperator.findJButton(win, "BUTTON2", StringComparators.caseInsensitive()));
-            assertNull(JButtonOperator.findJButton(win, "button1", StringComparators.strict()));
-            assertNotNull(tpo.selectPage("List Page", StringComparators.strict()));
+            assertThat(btt1o.isVisible()).isTrue();
+            assertThat(btt1o.isShowing()).isFalse();
+            assertThat(JButtonOperator.findJButton(win, "BUTTON2", StringComparators.caseInsensitive()))
+                    .isNotNull();
+            assertThat(JButtonOperator.findJButton(win, "button1", StringComparators.strict()))
+                    .isNull();
+            assertThat(tpo.selectPage("List Page", StringComparators.strict())).isNotNull();
             JListOperator lo = new JListOperator(JListOperator.findJList(win, null, StringComparators.strict(), 0));
-            assertNotNull(lo.clickOnItem(1, 1));
+            assertThat(lo.clickOnItem(1, 1)).isNotNull();
             lo.waitItem("two", StringComparators.strict(), 1);
             lo.waitItem("two", StringComparators.strict(), -1);
             lo.waitItemSelection(1, true);
-            assertEquals(1, lo.getSelectedIndex());
-            assertEquals("two", lo.getSelectedValue());
-            assertSame(lo.getSelectionMode(), ((JList) lo.getSource()).getSelectionMode());
-            assertSame(lo.getSelectionModel(), ((JList) lo.getSource()).getSelectionModel());
+            assertThat(lo.getSelectedIndex()).isEqualTo(1);
+            assertThat(lo.getSelectedValue()).isEqualTo("two");
+            assertThat(((JList) lo.getSource()).getSelectionMode()).isSameAs(lo.getSelectionMode());
+            assertThat(((JList) lo.getSource()).getSelectionModel()).isSameAs(lo.getSelectionModel());
 
             assertThatExceptionOfType(JListOperator.NoSuchItemException.class).isThrownBy(() -> lo.clickOnItem(3, 1));
 
-            assertNotNull(lo.clickOnItem("two", StringComparators.strict(), 1));
+            assertThat(lo.clickOnItem("two", StringComparators.strict(), 1)).isNotNull();
 
             assertThatExceptionOfType(JListOperator.NoSuchItemException.class)
                     .isThrownBy(() -> lo.clickOnItem("four", StringComparators.strict(), 1));

@@ -18,10 +18,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -103,35 +100,41 @@ class JMenuOperatorTest {
     @Test
     void constructor() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
-        assertNotNull(new JMenuOperator(jMenuBarOp));
-        assertNotNull(new JMenuOperator(jMenuBarOp, PredicatesJ.byName("JMenuOperatorTest")));
-        assertNotNull(new JMenuOperator(jMenuBarOp, "JMenuOperatorTest", StringComparators.strict()));
-        assertNotNull(new JMenuOperator(jMenuRef.get()));
+        assertThat(jMenuBarOp).isNotNull();
+        assertThat(new JMenuOperator(jMenuBarOp)).isNotNull();
+        assertThat(new JMenuOperator(jMenuBarOp, PredicatesJ.byName("JMenuOperatorTest")))
+                .isNotNull();
+        assertThat(new JMenuOperator(jMenuBarOp, "JMenuOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(new JMenuOperator(jMenuRef.get())).isNotNull();
     }
 
     @Test
     void findJMenu() {
-        assertNotNull(JMenuOperator.findJMenu(jFrameRef.get(), "JMenuOperatorTest", StringComparators.strict()));
-        assertNotNull(JMenuOperator.findJMenu(jFrameRef.get(), PredicatesJ.byName("JMenuOperatorTest")));
+        assertThat(JMenuOperator.findJMenu(jFrameRef.get(), "JMenuOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(JMenuOperator.findJMenu(jFrameRef.get(), PredicatesJ.byName("JMenuOperatorTest")))
+                .isNotNull();
     }
 
     @Test
     void waitJMenu() {
-        assertNotNull(JMenuOperator.waitJMenu(jFrameRef.get(), "JMenuOperatorTest", StringComparators.strict()));
-        assertNotNull(JMenuOperator.waitJMenu(jFrameRef.get(), PredicatesJ.byName("JMenuOperatorTest")));
+        assertThat(JMenuOperator.waitJMenu(jFrameRef.get(), "JMenuOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(JMenuOperator.waitJMenu(jFrameRef.get(), PredicatesJ.byName("JMenuOperatorTest")))
+                .isNotNull();
     }
 
     @Test
     void pushMenu() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuRef.get().addMenuListener(listener);
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.strict());
@@ -145,11 +148,11 @@ class JMenuOperatorTest {
     @Test
     void pushMenuNoBlock() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuRef.get().addMenuListener(listener);
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.strict());
@@ -164,27 +167,30 @@ class JMenuOperatorTest {
     @Test
     void showMenuItem() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuRef.get().addMenuListener(listener);
-        assertNotNull(jMenuOp.showMenuItem("Item1", "/", StringComparators.strict()));
-        assertNotNull(jMenuOp.showMenuItem(Collections.singletonList(PredicatesJ.byName("Item1"))));
-        assertNotNull(jMenuOp.showMenuItem(new String[] {"Item1"}, StringComparators.strict()));
+        assertThat(jMenuOp.showMenuItem("Item1", "/", StringComparators.strict()))
+                .isNotNull();
+        assertThat(jMenuOp.showMenuItem(Collections.singletonList(PredicatesJ.byName("Item1"))))
+                .isNotNull();
+        assertThat(jMenuOp.showMenuItem(new String[] {"Item1"}, StringComparators.strict()))
+                .isNotNull();
         jMenuRef.get().removeMenuListener(listener);
     }
 
     @Test
     void add() throws Exception {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("JMenuOperatorTest1")));
         jMenuOp.add(menuItem.get());
@@ -195,115 +201,115 @@ class JMenuOperatorTest {
     @Test
     void addMenuListener() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuOp.addMenuListener(listener);
-        assertEquals(1, jMenuRef.get().getMenuListeners().length);
+        assertThat(jMenuRef.get().getMenuListeners().length).isEqualTo(1);
         jMenuOp.removeMenuListener(listener);
-        assertEquals(0, jMenuRef.get().getMenuListeners().length);
+        assertThat(jMenuRef.get().getMenuListeners().length).isEqualTo(0);
     }
 
     @Test
     void addSeparator() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         jMenuOp.addSeparator();
     }
 
     @Test
     void getDelay() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         jMenuOp.setDelay(400);
-        assertEquals(400, jMenuOp.getDelay());
+        assertThat(jMenuOp.getDelay()).isEqualTo(400);
     }
 
     @Test
     void getItem() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertNotNull(jMenuOp.getItem(0));
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.getItem(0)).isNotNull();
     }
 
     @Test
     void getItemCount() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertEquals(2, jMenuOp.getItemCount());
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.getItemCount()).isEqualTo(2);
     }
 
     @Test
     void getMenuComponent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertNotNull(jMenuOp.getMenuComponent(0));
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.getMenuComponent(0)).isNotNull();
     }
 
     @Test
     void getMenuComponentCount() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertEquals(2, jMenuOp.getMenuComponentCount());
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.getMenuComponentCount()).isEqualTo(2);
     }
 
     @Test
     void getMenuComponents() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertNotNull(jMenuOp.getMenuComponents());
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.getMenuComponents()).isNotNull();
     }
 
     @Test
     void getPopupMenu() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         jMenuOp.getPopupMenu();
     }
 
     @Test
     void insert() throws Exception {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
         jMenuOp.insert(menuItem.get(), 0);
@@ -314,72 +320,74 @@ class JMenuOperatorTest {
     @Test
     void insertSeparator() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         jMenuOp.insertSeparator(0);
     }
 
     @Test
     void isMenuComponent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         jMenuOp.isMenuComponent(jFrameRef.get());
     }
 
     @Test
     void isPopupMenuVisible() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertTrue(!jMenuOp.isPopupMenuVisible());
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.isPopupMenuVisible()).isFalse();
         jMenuOp.setPopupMenuVisible(true);
-        assertTrue(jMenuOp.isPopupMenuVisible());
+        assertThat(jMenuOp.isPopupMenuVisible()).isTrue();
     }
 
     @Test
     void isTearOff() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertNotNull(jMenuOp.getSource());
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.getSource()).isNotNull();
 
-        JemmyException t = assertThrows(JemmyException.class, jMenuOp::isTearOff);
-        assertThat(t.getMessage()).isEqualTo("Throwable captured by invocation event");
-        assertThat(t.getCause().getMessage()).isEqualTo("boolean isTearOff() {} not yet implemented");
+        assertThatExceptionOfType(JemmyException.class)
+                .isThrownBy(jMenuOp::isTearOff)
+                .withMessage("Throwable captured by invocation event")
+                .havingCause()
+                .withMessage("boolean isTearOff() {} not yet implemented");
     }
 
     @Test
     void isTopLevelMenu() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
-        assertTrue(jMenuOp.isTopLevelMenu());
+        assertThat(jMenuOp).isNotNull();
+        assertThat(jMenuOp.isTopLevelMenu()).isTrue();
     }
 
     @Test
     void remove() throws Exception {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
         jMenuOp.remove(menuItem.get());
@@ -388,11 +396,11 @@ class JMenuOperatorTest {
     @Test
     void setMenuLocation() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
-        assertNotNull(jMenuBarOp);
+        assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
-        assertNotNull(jMenuOp);
+        assertThat(jMenuOp).isNotNull();
         jMenuOp.setMenuLocation(0, 1);
     }
 

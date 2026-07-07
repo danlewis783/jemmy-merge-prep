@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -54,8 +52,8 @@ class StringComparatorsTest {
     }
 
     private void nullContractTest(StringComparator comparator) {
-        assertFalse(comparator.equals(null, ""));
-        assertTrue(comparator.equals("", null));
+        assertThat(comparator.equals(null, "")).isFalse();
+        assertThat(comparator.equals("", null)).isTrue();
     }
 
     // formerly scenario test jemmy_039
@@ -68,7 +66,9 @@ class StringComparatorsTest {
         };
         StringComparator comparator = StringComparators.regex();
         for (String[] arr : data) {
-            assertEquals(Boolean.parseBoolean(arr[2]), comparator.equals(arr[0], arr[1]), arr[0] + " ~ " + arr[1]);
+            assertThat(comparator.equals(arr[0], arr[1]))
+                    .as("%s ~ %s", arr[0], arr[1])
+                    .isEqualTo(Boolean.parseBoolean(arr[2]));
         }
     }
 }

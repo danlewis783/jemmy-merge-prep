@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -62,36 +60,42 @@ class TabbedListTableTreeTest {
 
         EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0)));
 
-        assertNotNull(compRef.get());
-        assertTrue(compRef.get() instanceof JPanel);
+        assertThat(compRef.get()).isNotNull();
+        assertThat(compRef.get() instanceof JPanel).isTrue();
 
         EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0, true, true)));
 
         Component comp0 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!0!"));
-        assertNotNull(comp0);
+        assertThat(comp0).isNotNull();
         EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(1)));
         Component comp1 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("1"));
-        assertNotNull(comp1);
+        assertThat(comp1).isNotNull();
         tabbedPaneOp.selectPage("Table Page", StringComparators.strict());
         tableOpRef.set(new JTableOperator(
                 JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
         tableOpRef.get().getHeaderOperator().moveColumn(0, 1);
-        assertEquals(4, tableOpRef.get().findCellRow("04", StringComparators.strict(), 0, 0));
-        assertEquals(0, tableOpRef.get().findCell("04", StringComparators.strict(), 0).x);
-        assertEquals(0, tableOpRef.get().findCellColumn("04", StringComparators.strict(), 4, 0));
-        assertEquals(0, tableOpRef.get().findColumn("1", StringComparators.strict()));
+        assertThat(tableOpRef.get().findCellRow("04", StringComparators.strict(), 0, 0))
+                .isEqualTo(4);
+        assertThat(tableOpRef.get().findCell("04", StringComparators.strict(), 0).x)
+                .isEqualTo(0);
+        assertThat(tableOpRef.get().findCellColumn("04", StringComparators.strict(), 4, 0))
+                .isEqualTo(0);
+        assertThat(tableOpRef.get().findColumn("1", StringComparators.strict())).isEqualTo(0);
         tableOpRef.get().getHeaderOperator().moveColumn(1, 0);
-        assertEquals(4, tableOpRef.get().findCellRow("14", StringComparators.strict(), 1, 0));
-        assertEquals(1, tableOpRef.get().findCell("14", StringComparators.strict(), 0).x);
-        assertEquals(1, tableOpRef.get().findCellColumn("14", StringComparators.strict(), 4, 0));
-        assertEquals(0, tableOpRef.get().findColumn("0", StringComparators.strict()));
+        assertThat(tableOpRef.get().findCellRow("14", StringComparators.strict(), 1, 0))
+                .isEqualTo(4);
+        assertThat(tableOpRef.get().findCell("14", StringComparators.strict(), 0).x)
+                .isEqualTo(1);
+        assertThat(tableOpRef.get().findCellColumn("14", StringComparators.strict(), 4, 0))
+                .isEqualTo(1);
+        assertThat(tableOpRef.get().findColumn("0", StringComparators.strict())).isEqualTo(0);
         tableOpRef.get().clickOnCell(0, 0);
         EventQueue.invokeAndWait(() -> compRef.set(tableOpRef.get().getRenderedComponent(0, 0)));
         Component comp00 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!00!"));
-        assertNotNull(comp00);
+        assertThat(comp00).isNotNull();
         EventQueue.invokeAndWait(() -> compRef.set(tableOpRef.get().getRenderedComponent(1, 1)));
         Component comp11 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("11"));
-        assertNotNull(comp11);
+        assertThat(comp11).isNotNull();
         tableOpRef.get().clickOnCell(2, 2, 1);
         tabbedPaneOp.selectPage("Tree Page", StringComparators.strict());
         treeOpRef.set(new JTreeOperator(
@@ -102,11 +106,11 @@ class TabbedListTableTreeTest {
         treeOpRef.get().selectPath(lastPathRef.get());
         EventQueue.invokeAndWait(() -> compRef.set(treeOpRef.get().getRenderedComponent(lastPathRef.get())));
         Component comp44 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!44!"));
-        assertNotNull(comp44);
+        assertThat(comp44).isNotNull();
         EventQueue.invokeAndWait(() -> compRef.set(treeOpRef.get().getRenderedComponent(rootPathRef.get())));
         Component compDoubleNaught =
                 new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("00"));
-        assertNotNull(compDoubleNaught);
+        assertThat(compDoubleNaught).isNotNull();
     }
 
     private static class LabelPredicate implements Predicate<Component> {

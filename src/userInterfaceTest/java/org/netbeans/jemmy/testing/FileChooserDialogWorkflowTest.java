@@ -17,11 +17,8 @@
 
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.time.Duration;
@@ -79,7 +76,7 @@ class FileChooserDialogWorkflowTest {
 
     private JFileChooserOperator launchFileChooser() {
         JButtonOperator jButtonOp = launchFileChooserButtonOpRef.get();
-        assertNotNull(jButtonOp, "jButtonOp is null");
+        assertThat(jButtonOp).as("jButtonOp is null").isNotNull();
         jButtonOp.pushNoBlock();
         JDialog cont = JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
         JFileChooser jFileChooser =
@@ -92,9 +89,9 @@ class FileChooserDialogWorkflowTest {
     void test01() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             JFileChooserOperator jFileChooserOp = launchFileChooser();
-            assertNotNull(jFileChooserOp, "jFileChooserOp is null");
+            assertThat(jFileChooserOp).as("jFileChooserOp is null").isNotNull();
             jFileChooserOp.cancel();
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), "", STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), "", STRICT)).isNotNull();
         });
     }
 
@@ -108,7 +105,7 @@ class FileChooserDialogWorkflowTest {
             fcOp.selectFileType("No directory", STRICT);
             fcOp.selectFileType("Nothing", STRICT);
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -117,9 +114,9 @@ class FileChooserDialogWorkflowTest {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
-            assertSame(JFileChooserOperator.waitJFileChooser(), fcOp.getSource());
+            assertThat(fcOp.getSource()).isSameAs(JFileChooserOperator.waitJFileChooser());
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -128,9 +125,9 @@ class FileChooserDialogWorkflowTest {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
-            assertEquals(fcOp.getCurrentDirectory(), userDir);
+            assertThat(userDir).isEqualTo(fcOp.getCurrentDirectory());
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -140,7 +137,7 @@ class FileChooserDialogWorkflowTest {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -161,12 +158,13 @@ class FileChooserDialogWorkflowTest {
                 fcOp.selectFileType("No directory", STRICT);
                 String firstFileName = firstFile.getName();
                 boolean isFirstFileDisplayed = fcOp.checkFileDisplayed(firstFileName, STRICT); // todo timeout here
-                assertTrue(
-                        isFirstFileDisplayed,
-                        "expected first file (non-directory) " + firstFileName + " to be selected");
+                assertThat(isFirstFileDisplayed)
+                        .as("expected first file (non-directory) " + firstFileName + " to be selected")
+                        .isTrue();
                 String fn = userDir.listFiles()[0].getCanonicalPath();
                 fcOp.chooseFile(fn);
-                assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+                assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT))
+                        .isNotNull();
             }
         });
     }
@@ -177,7 +175,7 @@ class FileChooserDialogWorkflowTest {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -200,7 +198,8 @@ class FileChooserDialogWorkflowTest {
                 fcOp.waitFileDisplayed(firstDirName, STRICT);
                 String fn = userDir.listFiles()[0].getCanonicalPath();
                 fcOp.chooseFile(fn);
-                assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+                assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT))
+                        .isNotNull();
             }
         });
     }
@@ -216,14 +215,14 @@ class FileChooserDialogWorkflowTest {
             fcOp.selectFileType("All", StringComparators.caseInsensitiveSubstring());
             fcOp.waitFileCount(allFiles.length);
             fcOp.goUpLevel();
-            assertEquals(fcOp.getCurrentDirectory(), userDir.getParentFile());
+            assertThat(userDir.getParentFile()).isEqualTo(fcOp.getCurrentDirectory());
             String parentPath = userDir.getParentFile().getCanonicalPath();
             String path = userDir.getCanonicalPath();
             String subDir = path.substring(parentPath.length() + 1);
             fcOp.enterSubDir(subDir, STRICT);
-            assertEquals(fcOp.getCurrentDirectory(), userDir);
+            assertThat(userDir).isEqualTo(fcOp.getCurrentDirectory());
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -234,9 +233,9 @@ class FileChooserDialogWorkflowTest {
             JFileChooserOperator fcOp = launchFileChooser();
             File parentFile = userDir.getParentFile();
             fcOp.selectPathDirectory(parentFile.getName(), STRICT);
-            assertEquals(parentFile, fcOp.getCurrentDirectory());
+            assertThat(fcOp.getCurrentDirectory()).isEqualTo(parentFile);
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -246,7 +245,7 @@ class FileChooserDialogWorkflowTest {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
-            assertNotNull(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT));
+            assertThat(new JTextFieldOperator(jFrameOpRef.get(), fn, STRICT)).isNotNull();
         });
     }
 
@@ -255,34 +254,45 @@ class FileChooserDialogWorkflowTest {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             JFileChooserOperator fcOp = launchFileChooser();
             JFileChooser fc = (JFileChooser) fcOp.getSource();
-            assertTrue(fc.getAcceptAllFileFilter() == null && fcOp.getAcceptAllFileFilter() == null
-                    || fc.getAcceptAllFileFilter().equals(fcOp.getAcceptAllFileFilter()));
-            assertTrue(fc.getAccessory() == null && fcOp.getAccessory() == null
-                    || fc.getAccessory().equals(fcOp.getAccessory()));
-            assertEquals(fc.getApproveButtonMnemonic(), fcOp.getApproveButtonMnemonic());
-            assertTrue(fc.getApproveButtonText() == null && fcOp.getApproveButtonText() == null
-                    || fc.getApproveButtonText().equals(fcOp.getApproveButtonText()));
-            assertTrue(fc.getApproveButtonToolTipText() == null && fcOp.getApproveButtonToolTipText() == null
-                    || fc.getApproveButtonToolTipText().equals(fcOp.getApproveButtonToolTipText()));
-            assertTrue(fc.getCurrentDirectory() == null && fcOp.getCurrentDirectory() == null
-                    || fc.getCurrentDirectory().equals(fcOp.getCurrentDirectory()));
-            assertTrue(fc.getDialogTitle() == null && fcOp.getDialogTitle() == null
-                    || fc.getDialogTitle().equals(fcOp.getDialogTitle()));
-            assertEquals(fc.getDialogType(), fcOp.getDialogType());
-            assertTrue(fc.getFileFilter() == null && fcOp.getFileFilter() == null
-                    || fc.getFileFilter().equals(fcOp.getFileFilter()));
-            assertEquals(fc.getFileSelectionMode(), fcOp.getFileSelectionMode());
-            assertTrue(fc.getFileSystemView() == null && fcOp.getFileSystemView() == null
-                    || fc.getFileSystemView().equals(fcOp.getFileSystemView()));
-            assertTrue(fc.getFileView() == null && fcOp.getFileView() == null
-                    || fc.getFileView().equals(fcOp.getFileView()));
-            assertTrue(fc.getSelectedFile() == null && fcOp.getSelectedFile() == null
-                    || fc.getSelectedFile().equals(fcOp.getSelectedFile()));
-            assertTrue(fc.getUI() == null && fcOp.getUI() == null || fc.getUI().equals(fcOp.getUI()));
-            assertEquals(fc.isDirectorySelectionEnabled(), fcOp.isDirectorySelectionEnabled());
-            assertEquals(fc.isFileHidingEnabled(), fcOp.isFileHidingEnabled());
-            assertEquals(fc.isFileSelectionEnabled(), fcOp.isFileSelectionEnabled());
-            assertEquals(fc.isMultiSelectionEnabled(), fcOp.isMultiSelectionEnabled());
+            assertThat(fc.getAcceptAllFileFilter() == null && fcOp.getAcceptAllFileFilter() == null
+                            || fc.getAcceptAllFileFilter().equals(fcOp.getAcceptAllFileFilter()))
+                    .isTrue();
+            assertThat(fc.getAccessory() == null && fcOp.getAccessory() == null
+                            || fc.getAccessory().equals(fcOp.getAccessory()))
+                    .isTrue();
+            assertThat(fcOp.getApproveButtonMnemonic()).isEqualTo(fc.getApproveButtonMnemonic());
+            assertThat(fc.getApproveButtonText() == null && fcOp.getApproveButtonText() == null
+                            || fc.getApproveButtonText().equals(fcOp.getApproveButtonText()))
+                    .isTrue();
+            assertThat(fc.getApproveButtonToolTipText() == null && fcOp.getApproveButtonToolTipText() == null
+                            || fc.getApproveButtonToolTipText().equals(fcOp.getApproveButtonToolTipText()))
+                    .isTrue();
+            assertThat(fc.getCurrentDirectory() == null && fcOp.getCurrentDirectory() == null
+                            || fc.getCurrentDirectory().equals(fcOp.getCurrentDirectory()))
+                    .isTrue();
+            assertThat(fc.getDialogTitle() == null && fcOp.getDialogTitle() == null
+                            || fc.getDialogTitle().equals(fcOp.getDialogTitle()))
+                    .isTrue();
+            assertThat(fcOp.getDialogType()).isEqualTo(fc.getDialogType());
+            assertThat(fc.getFileFilter() == null && fcOp.getFileFilter() == null
+                            || fc.getFileFilter().equals(fcOp.getFileFilter()))
+                    .isTrue();
+            assertThat(fcOp.getFileSelectionMode()).isEqualTo(fc.getFileSelectionMode());
+            assertThat(fc.getFileSystemView() == null && fcOp.getFileSystemView() == null
+                            || fc.getFileSystemView().equals(fcOp.getFileSystemView()))
+                    .isTrue();
+            assertThat(fc.getFileView() == null && fcOp.getFileView() == null
+                            || fc.getFileView().equals(fcOp.getFileView()))
+                    .isTrue();
+            assertThat(fc.getSelectedFile() == null && fcOp.getSelectedFile() == null
+                            || fc.getSelectedFile().equals(fcOp.getSelectedFile()))
+                    .isTrue();
+            assertThat(fc.getUI() == null && fcOp.getUI() == null || fc.getUI().equals(fcOp.getUI()))
+                    .isTrue();
+            assertThat(fcOp.isDirectorySelectionEnabled()).isEqualTo(fc.isDirectorySelectionEnabled());
+            assertThat(fcOp.isFileHidingEnabled()).isEqualTo(fc.isFileHidingEnabled());
+            assertThat(fcOp.isFileSelectionEnabled()).isEqualTo(fc.isFileSelectionEnabled());
+            assertThat(fcOp.isMultiSelectionEnabled()).isEqualTo(fc.isMultiSelectionEnabled());
         });
     }
 }

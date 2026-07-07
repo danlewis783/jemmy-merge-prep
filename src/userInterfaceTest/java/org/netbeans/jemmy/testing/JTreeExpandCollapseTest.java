@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Function;
 import javax.swing.JFrame;
@@ -65,7 +65,9 @@ class JTreeExpandCollapseTest {
         TreePath pathy = to.findPath("node00", "1", "|", StringComparators.strict());
         to.selectPath(pathy);
         to.selectPath(pathy);
-        assertFalse(to.isEditing(), "JTree turned into editing mode after two path selecting");
+        assertThat(to.isEditing())
+                .as("JTree turned into editing mode after two path selecting")
+                .isFalse();
         to.changePathText(pathy, "node01");
     }
 

@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -70,149 +68,149 @@ class JLabelOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JLabelOperator operator3 = new JLabelOperator(operator1, PredicatesJ.byName("JLabelOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindJLabel() {
         JLabel label1 = JLabelOperator.findJLabel(frame, PredicatesJ.byName("JLabelOperatorTest"));
-        assertNotNull(label1);
+        assertThat(label1).isNotNull();
         JLabel label2 =
                 JLabelOperator.findJLabel(frame, "JLabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(label2);
+        assertThat(label2).isNotNull();
     }
 
     @Test
     void testWaitJLabel() {
         JLabel label1 = JLabelOperator.waitJLabel(frame, PredicatesJ.byName("JLabelOperatorTest"));
-        assertNotNull(label1);
+        assertThat(label1).isNotNull();
         JLabel label2 =
                 JLabelOperator.waitJLabel(frame, "JLabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(label2);
+        assertThat(label2).isNotNull();
     }
 
     @Test
     void testWaitText() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setText("JLabelOperatorTest-");
-        assertEquals(operator2.getText(), "JLabelOperatorTest-");
+        assertThat(operator2.getText()).isEqualTo("JLabelOperatorTest-");
         operator2.setText("JLabelOperatorTest");
         operator2.waitText("JLabelOperatorTest", StringComparators.strict());
-        assertNotNull(operator2.getText());
+        assertThat(operator2.getText()).isNotNull();
     }
 
     @Test
     void testGetDisabledIcon() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setDisabledIcon(null);
-        assertNull(operator2.getDisabledIcon());
+        assertThat(operator2.getDisabledIcon()).isNull();
     }
 
     @Test
     void testGetDisplayedMnemonic() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setDisplayedMnemonic('A');
-        assertEquals('A', operator2.getDisplayedMnemonic());
-        assertEquals(label.getDisplayedMnemonic(), operator2.getDisplayedMnemonic());
+        assertThat(operator2.getDisplayedMnemonic()).isEqualTo('A');
+        assertThat(operator2.getDisplayedMnemonic()).isEqualTo(label.getDisplayedMnemonic());
         operator2.setDisplayedMnemonic((int) 'A');
-        assertEquals('A', operator2.getDisplayedMnemonic());
-        assertEquals(label.getDisplayedMnemonic(), operator2.getDisplayedMnemonic());
+        assertThat(operator2.getDisplayedMnemonic()).isEqualTo('A');
+        assertThat(operator2.getDisplayedMnemonic()).isEqualTo(label.getDisplayedMnemonic());
     }
 
     @Test
     void testGetHorizontalAlignment() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setHorizontalAlignment(SwingConstants.TRAILING);
-        assertEquals(SwingConstants.TRAILING, operator2.getHorizontalAlignment());
+        assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.TRAILING);
     }
 
     @Test
     void testGetHorizontalTextPosition() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setHorizontalTextPosition(SwingConstants.LEFT);
-        assertEquals(SwingConstants.LEFT, operator2.getHorizontalTextPosition());
+        assertThat(operator2.getHorizontalTextPosition()).isEqualTo(SwingConstants.LEFT);
     }
 
     @Test
     void testGetIcon() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setIcon(null);
-        assertNull(operator2.getIcon());
+        assertThat(operator2.getIcon()).isNull();
     }
 
     @Test
     void testGetIconTextGap() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setIconTextGap(15);
-        assertEquals(15, operator2.getIconTextGap());
+        assertThat(operator2.getIconTextGap()).isEqualTo(15);
     }
 
     @Test
     void testGetLabelFor() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setLabelFor(frame);
-        assertEquals(operator2.getLabelFor(), frame);
-        assertEquals(operator2.getLabelFor(), label.getLabelFor());
+        assertThat(frame).isEqualTo(operator2.getLabelFor());
+        assertThat(label.getLabelFor()).isEqualTo(operator2.getLabelFor());
     }
 
     @Test
     void testGetUI() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JLabelOperatorTestUI ui = new JLabelOperatorTestUI();
         operator2.setUI(ui);
-        assertEquals(operator2.getUI(), ui);
-        assertEquals(label.getUI(), ui);
+        assertThat(ui).isEqualTo(operator2.getUI());
+        assertThat(ui).isEqualTo(label.getUI());
     }
 
     @Test
     void testGetVerticalAlignment() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setVerticalAlignment(SwingConstants.TOP);
-        assertEquals(SwingConstants.TOP, operator2.getVerticalAlignment());
+        assertThat(operator2.getVerticalAlignment()).isEqualTo(SwingConstants.TOP);
     }
 
     @Test
     void testGetVerticalTextPosition() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JLabelOperator operator2 = new JLabelOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setVerticalTextPosition(SwingConstants.TOP);
-        assertEquals(SwingConstants.TOP, operator2.getVerticalTextPosition());
+        assertThat(operator2.getVerticalTextPosition()).isEqualTo(SwingConstants.TOP);
     }
 
     private class JLabelOperatorTestUI extends LabelUI {}

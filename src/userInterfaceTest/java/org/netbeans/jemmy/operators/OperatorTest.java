@@ -24,7 +24,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -73,17 +73,17 @@ class OperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ContainerOperator operator1 = new ContainerOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
     }
 
     @Test
     void testIsCaptionEqual() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ContainerOperator operator1 = new ContainerOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         Operator.isCaptionEqual("", "", StringComparators.strict());
         Operator.isCaptionEqual("", "", StringComparators.caseInsensitiveSubstring());
         Operator.isCaptionEqual("", "", StringComparators.regex());
@@ -92,18 +92,18 @@ class OperatorTest {
     @Test
     void testGetParentPath() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ContainerOperator operator1 = new ContainerOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getParentPath(Collections.singletonList(PredicatesJ.byName("1")));
     }
 
     @Test
     void testGetCharsKeys() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ContainerOperator operator1 = new ContainerOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getCharsKeys("");
         operator1.getCharsKeys(new char[] {'a', 'b'});
     }
@@ -111,9 +111,9 @@ class OperatorTest {
     @Test
     void testGetCharsModifiers() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ContainerOperator operator1 = new ContainerOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getCharsModifiers("");
         operator1.getCharsModifiers(new char[] {'b', 'b'});
     }
@@ -121,8 +121,8 @@ class OperatorTest {
     @Test
     void testRunMapping() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         ContainerOperator operator1 = new ContainerOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
     }
 }

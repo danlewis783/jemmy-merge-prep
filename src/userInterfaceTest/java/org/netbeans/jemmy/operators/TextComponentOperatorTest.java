@@ -24,7 +24,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -79,44 +79,44 @@ class TextComponentOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TextComponentOperator operator2 =
                 new TextComponentOperator(operator, PredicatesJ.byName("TextComponentOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         TextComponentOperator operator3 =
                 new TextComponentOperator(operator, "TextComponentOperatorTest", StringComparators.strict());
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindTextComponent() {
         TextComponent component1 = TextComponentOperator.findTextComponent(
                 frame, "TextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(component1);
+        assertThat(component1).isNotNull();
         TextComponent component2 =
                 TextComponentOperator.findTextComponent(frame, PredicatesJ.byName("TextComponentOperatorTest"));
-        assertNotNull(component2);
+        assertThat(component2).isNotNull();
     }
 
     @Test
     void testWaitTextComponent() {
         TextComponent component1 = TextComponentOperator.waitTextComponent(
                 frame, "TextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(component1);
+        assertThat(component1).isNotNull();
         TextComponent component2 =
                 TextComponentOperator.waitTextComponent(frame, PredicatesJ.byName("TextComponentOperatorTest"));
-        assertNotNull(component2);
+        assertThat(component2).isNotNull();
     }
 
     @Test
     @Disabled("FIXME")
     void testChangeCaretPosition() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.changeCaretPosition(1);
     }
 
@@ -124,18 +124,18 @@ class TextComponentOperatorTest {
     @Disabled("FIXME")
     void testSelectText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectText(0, 10);
     }
 
     @Test
     void testGetPositionByText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getPositionByText("Text");
     }
 
@@ -143,9 +143,9 @@ class TextComponentOperatorTest {
     @Disabled("FIXME")
     void testClearText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.clearText();
     }
 
@@ -153,9 +153,9 @@ class TextComponentOperatorTest {
     @Disabled("FIXME")
     void testTypeText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.typeText("BOOOOOOOH !");
     }
 
@@ -163,18 +163,18 @@ class TextComponentOperatorTest {
     @Disabled("FIXME")
     void testEnterText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.enterText("BOOOOOOOH !");
     }
 
     @Test
     void testAddTextListener() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         TextListenerTest listener = new TextListenerTest();
         operator1.addTextListener(listener);
         operator1.removeTextListener(listener);
@@ -183,126 +183,126 @@ class TextComponentOperatorTest {
     @Test
     void testGetCaretPosition() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getCaretPosition();
     }
 
     @Test
     void testGetSelectedText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSelectedText();
     }
 
     @Test
     void testGetSelectionEnd() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSelectionEnd();
     }
 
     @Test
     void testGetSelectionStart() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSelectionStart();
     }
 
     @Test
     void testGetText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getText();
     }
 
     @Test
     void testIsEditable() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.isEditable();
     }
 
     @Test
     void testSelect() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.select(0, 10);
     }
 
     @Test
     void testSelectAll() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.selectAll();
     }
 
     @Test
     void testSetCaretPosition() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setCaretPosition(0);
     }
 
     @Test
     void testSetEditable() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setEditable(true);
     }
 
     @Test
     void testSetSelectionEnd() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setSelectionEnd(1);
     }
 
     @Test
     void testSetSelectionStart() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setSelectionStart(0);
     }
 
     @Test
     void testSetText() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setText("1");
     }
 
     @Test
     void testGetTextDriver() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         TextComponentOperator operator1 = new TextComponentOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getTextDriver();
     }
 

@@ -17,9 +17,7 @@
 
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Container;
 import java.awt.EventQueue;
@@ -80,9 +78,9 @@ class JMenuItemOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
     }
 
     @Test
@@ -93,12 +91,12 @@ class JMenuItemOperatorTest {
         JPopupMenuOperator popup = new JPopupMenuOperator();
         JMenuItem menuItem1 = JMenuItemOperator.findJMenuItem(
                 (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
-        assertNotNull(menuItem1);
+        assertThat(menuItem1).isNotNull();
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         popup = new JPopupMenuOperator();
         JMenuItem menuItem2 = JMenuItemOperator.findJMenuItem(
                 (Container) popup.getSource(), "JMenuItemOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(menuItem2);
+        assertThat(menuItem2).isNotNull();
     }
 
     @Test
@@ -109,20 +107,20 @@ class JMenuItemOperatorTest {
         JPopupMenuOperator popup = new JPopupMenuOperator();
         JMenuItem menuItem1 = JMenuItemOperator.waitJMenuItem(
                 (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
-        assertNotNull(menuItem1);
+        assertThat(menuItem1).isNotNull();
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         popup = new JPopupMenuOperator();
         JMenuItem menuItem2 = JMenuItemOperator.waitJMenuItem(
                 (Container) popup.getSource(), "JMenuItemOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(menuItem2);
+        assertThat(menuItem2).isNotNull();
     }
 
     @Test
     void testAddMenuDragMouseListener() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         MenuDragMouseListener listener = new NullMenuDragMouseListener();
         operator1.addMenuDragMouseListener(listener);
         operator1.removeMenuDragMouseListener(listener);
@@ -131,9 +129,9 @@ class JMenuItemOperatorTest {
     @Test
     void testAddMenuKeyListener() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         NullMenuKeyListener listener = new NullMenuKeyListener();
         operator1.addMenuKeyListener(listener);
         operator1.removeMenuKeyListener(listener);
@@ -142,46 +140,45 @@ class JMenuItemOperatorTest {
     @Test
     void testGetAccelerator() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator jMenuItemOp = new JMenuItemOperator(jFrameOp);
-        assertNotNull(jMenuItemOp);
+        assertThat(jMenuItemOp).isNotNull();
 
         try {
             jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a'));
         } catch (JemmyException e) {
-            assertEquals("Throwable captured by invocation event", e.getMessage());
-            assertEquals(
-                    "setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.",
-                    e.getCause().getMessage());
+            assertThat(e.getMessage()).isEqualTo("Throwable captured by invocation event");
+            assertThat(e.getCause().getMessage())
+                    .isEqualTo("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.");
         }
 
-        assertNull(jMenuItemOp.getAccelerator());
+        assertThat(jMenuItemOp.getAccelerator()).isNull();
     }
 
     @Test
     void testGetComponent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getComponent();
     }
 
     @Test
     void testGetSubElements() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getSubElements();
     }
 
     @Test
     void testIsArmed() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setArmed(true);
         operator1.isArmed();
     }
@@ -189,64 +186,64 @@ class JMenuItemOperatorTest {
     @Test
     void testMenuSelectionChanged() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.menuSelectionChanged(true);
     }
 
     @Test
     void testProcessKeyEvent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.processKeyEvent(new KeyEvent(frame, 0, 0, 0, 0), null, null);
     }
 
     @Test
     void testProcessMenuDragMouseEvent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.processMenuDragMouseEvent(new MenuDragMouseEvent(frame, 0, 0, 0, 0, 0, 0, false, null, null));
     }
 
     @Test
     void testProcessMenuKeyEvent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.processMenuKeyEvent(new MenuKeyEvent(frame, 0, 0, 0, 0, 'a', null, null));
     }
 
     @Test
     void testProcessMouseEvent() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.processMouseEvent(new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false), null, null);
     }
 
     @Test
     void testSetUI() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setUI(new NullMenuItemUI());
-        assertNotNull(operator1.getUI());
+        assertThat(operator1.getUI()).isNotNull();
     }
 
     @Test
     void testGetMenuItems() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JMenuItemOperator.getMenuItems(menu);
         JMenuItemOperator.getMenuItems((MenuElement) menu);
     }
@@ -254,9 +251,9 @@ class JMenuItemOperatorTest {
     @Test
     void testCreateChoosers() {
         JFrameOperator jFrameOp = new JFrameOperator();
-        assertNotNull(jFrameOp);
+        assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JMenuItemOperator.createPredicates(new String[] {"Hello"}, StringComparators.regex());
     }
 

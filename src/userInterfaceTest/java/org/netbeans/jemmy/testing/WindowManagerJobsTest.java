@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -48,12 +48,18 @@ class WindowManagerJobsTest {
             WindowSeriesApp.main(new String[] {});
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
-            assertNotNull(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring()));
-            assertNotNull(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()));
-            assertNotNull(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/1", StringComparators.substring()));
-            assertNotNull(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()));
-            assertNotNull(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/2", StringComparators.substring()));
-            assertNotNull(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()));
+            assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring()))
+                    .isNotNull();
+            assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
+                    .isNotNull();
+            assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/1", StringComparators.substring()))
+                    .isNotNull();
+            assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
+                    .isNotNull();
+            assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/2", StringComparators.substring()))
+                    .isNotNull();
+            assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
+                    .isNotNull();
         } finally {
             override.cancel();
         }

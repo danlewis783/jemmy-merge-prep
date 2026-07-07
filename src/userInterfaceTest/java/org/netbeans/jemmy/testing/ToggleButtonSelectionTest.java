@@ -16,10 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Function;
 import javax.swing.JButton;
@@ -83,8 +80,8 @@ class ToggleButtonSelectionTest {
         JCheckBoxOperator bo0 = new JCheckBoxOperator(box);
         JCheckBoxOperator bo1 = new JCheckBoxOperator(frmo);
         JCheckBoxOperator bo2 = new JCheckBoxOperator(frmo, "JCheckBox", StringComparators.strict());
-        assertSame(bo1.getSource(), bo0.getSource());
-        assertSame(bo2.getSource(), bo0.getSource());
+        assertThat(bo0.getSource()).isSameAs(bo1.getSource());
+        assertThat(bo0.getSource()).isSameAs(bo2.getSource());
         JRadioButton radioButton = JRadioButtonOperator.findJRadioButton(
                 frm0,
                 new StringPropertyPredicate(
@@ -96,34 +93,39 @@ class ToggleButtonSelectionTest {
         JRadioButtonOperator rb0 = new JRadioButtonOperator(radioButton1);
         JRadioButtonOperator rb1 = new JRadioButtonOperator(frmo, 1);
         JRadioButtonOperator rb2 = new JRadioButtonOperator(frmo, "JRadioButton", StringComparators.substring(), 1);
-        assertSame(rb1.getSource(), rb0.getSource());
-        assertSame(rb2.getSource(), rb0.getSource());
-        assertSame(button, JButtonOperator.findJButton(frm0, null, StringComparators.strict()));
-        assertSame(label, JLabelOperator.findJLabel(frm0, null, StringComparators.strict()));
-        assertSame(box, JCheckBoxOperator.findJCheckBox(frm0, null, StringComparators.strict()));
-        assertSame(radioButton, JRadioButtonOperator.findJRadioButton(frm0, null, StringComparators.strict()));
+        assertThat(rb0.getSource()).isSameAs(rb1.getSource());
+        assertThat(rb0.getSource()).isSameAs(rb2.getSource());
+        assertThat(JButtonOperator.findJButton(frm0, null, StringComparators.strict()))
+                .isSameAs(button);
+        assertThat(JLabelOperator.findJLabel(frm0, null, StringComparators.strict()))
+                .isSameAs(label);
+        assertThat(JCheckBoxOperator.findJCheckBox(frm0, null, StringComparators.strict()))
+                .isSameAs(box);
+        assertThat(JRadioButtonOperator.findJRadioButton(frm0, null, StringComparators.strict()))
+                .isSameAs(radioButton);
         boxOper = new JCheckBoxOperator(box);
         JRadioButtonOperator radioOper = new JRadioButtonOperator(radioButton);
         radio1Oper = new JRadioButtonOperator(radioButton1);
-        assertFalse(boxOper.isSelected());
-        assertTrue(radioOper.isSelected());
-        assertFalse(radio1Oper.isSelected());
-        assertNotNull(FunctionRunner.on((Function<Void, Boolean>) obj -> {
-                    try {
-                        boxOper.requestFocus();
-                        boxOper.waitHasFocus();
-                        boxOper.push();
-                        radio1Oper.push();
-                    } catch (TimeoutExpiredException e) {
-                        return null;
-                    }
+        assertThat(boxOper.isSelected()).isFalse();
+        assertThat(radioOper.isSelected()).isTrue();
+        assertThat(radio1Oper.isSelected()).isFalse();
+        assertThat(FunctionRunner.on((Function<Void, Boolean>) obj -> {
+                            try {
+                                boxOper.requestFocus();
+                                boxOper.waitHasFocus();
+                                boxOper.push();
+                                radio1Oper.push();
+                            } catch (TimeoutExpiredException e) {
+                                return null;
+                            }
 
-                    return true;
-                })
-                .submitAndGetDefaultTimeout(null));
+                            return true;
+                        })
+                        .submitAndGetDefaultTimeout(null))
+                .isNotNull();
         radio1Oper.waitHasFocus();
-        assertTrue(boxOper.isSelected());
-        assertFalse(radioOper.isSelected());
-        assertTrue(radio1Oper.isSelected());
+        assertThat(boxOper.isSelected()).isTrue();
+        assertThat(radioOper.isSelected()).isFalse();
+        assertThat(radio1Oper.isSelected()).isTrue();
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.swing.JFrame;
 import javax.swing.JRadioButton;
@@ -51,17 +51,17 @@ class JRadioButtonOperatorTest {
     void testConstructor() {
         frame.setVisible(true);
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JRadioButtonOperator operator1 = new JRadioButtonOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JRadioButtonOperator operator2 =
                 new JRadioButtonOperator(operator, "JRadioButtonOperatorTest", StringComparators.strict());
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JRadioButtonOperator operator3 =
                 new JRadioButtonOperator(operator, PredicatesJ.byName("JRadioButtonOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JRadioButtonOperator operator4 = new JRadioButtonOperator(radioButton);
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
     }
 
     @Test
@@ -69,10 +69,10 @@ class JRadioButtonOperatorTest {
         frame.setVisible(true);
         JRadioButton radioButton1 = JRadioButtonOperator.findJRadioButton(
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(radioButton1);
+        assertThat(radioButton1).isNotNull();
         JRadioButton radioButton2 =
                 JRadioButtonOperator.findJRadioButton(frame, PredicatesJ.byName("JRadioButtonOperatorTest"));
-        assertNotNull(radioButton2);
+        assertThat(radioButton2).isNotNull();
     }
 
     @Test
@@ -80,9 +80,9 @@ class JRadioButtonOperatorTest {
         frame.setVisible(true);
         JRadioButton radioButton1 = JRadioButtonOperator.waitJRadioButton(
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(radioButton1);
+        assertThat(radioButton1).isNotNull();
         JRadioButton radioButton2 =
                 JRadioButtonOperator.waitJRadioButton(frame, PredicatesJ.byName("JRadioButtonOperatorTest"));
-        assertNotNull(radioButton2);
+        assertThat(radioButton2).isNotNull();
     }
 }

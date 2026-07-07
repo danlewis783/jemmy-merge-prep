@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import javax.swing.JCheckBoxMenuItem;
@@ -63,30 +61,30 @@ class JCheckBoxMenuItemOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator frameOp = new JFrameOperator();
-        assertNotNull(frameOp);
+        assertThat(frameOp).isNotNull();
         JMenuBarOperator menuBarOp = new JMenuBarOperator(frameOp);
-        assertNotNull(menuBarOp);
+        assertThat(menuBarOp).isNotNull();
         JCheckBoxMenuItemOperator operator3 = new JCheckBoxMenuItemOperator(menuBarOp);
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JCheckBoxMenuItemOperator operator4 =
                 new JCheckBoxMenuItemOperator(menuBarOp, PredicatesJ.byName("JCheckBoxMenuItemOperatorTest"));
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
         JCheckBoxMenuItemOperator operator5 =
                 new JCheckBoxMenuItemOperator(menuBarOp, "JCheckBoxMenuItemOperatorTest", StringComparators.strict());
-        assertNotNull(operator5);
+        assertThat(operator5).isNotNull();
     }
 
     @Test
     void testGetState() {
         JFrameOperator frameOp = new JFrameOperator();
-        assertNotNull(frameOp);
+        assertThat(frameOp).isNotNull();
         JCheckBoxMenuItemOperator checkBoxMenuItemOp = new JCheckBoxMenuItemOperator(frameOp);
-        assertNotNull(checkBoxMenuItemOp);
+        assertThat(checkBoxMenuItemOp).isNotNull();
         checkBoxMenuItemOp.setState(true);
-        assertTrue(checkBoxMenuItemOp.getState());
-        assertEquals(checkBoxMenuItemOp.getState(), checkBoxMenuItem.getState());
+        assertThat(checkBoxMenuItemOp.getState()).isTrue();
+        assertThat(checkBoxMenuItem.getState()).isEqualTo(checkBoxMenuItemOp.getState());
         checkBoxMenuItemOp.setState(false);
-        assertTrue(!checkBoxMenuItemOp.getState());
-        assertEquals(checkBoxMenuItemOp.getState(), checkBoxMenuItem.getState());
+        assertThat(checkBoxMenuItemOp.getState()).isFalse();
+        assertThat(checkBoxMenuItem.getState()).isEqualTo(checkBoxMenuItemOp.getState());
     }
 }

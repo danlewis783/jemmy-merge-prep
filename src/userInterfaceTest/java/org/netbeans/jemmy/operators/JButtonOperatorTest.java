@@ -16,10 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -63,55 +60,55 @@ class JButtonOperatorTest {
     void constructor() {
         JFrameOperator operator1 = new JFrameOperator();
         JButtonOperator operator2 = new JButtonOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JButtonOperator operator3 = new JButtonOperator(operator1, PredicatesJ.byName("JButtonOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JButtonOperator operator4 = new JButtonOperator(operator1, "JButtonOperatorTest", StringComparators.strict());
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
     }
 
     @Test
     void findJButton() {
         JButton button1 = JButtonOperator.findJButton(frame.get(), PredicatesJ.byName("JButtonOperatorTest"));
-        assertNotNull(button1);
+        assertThat(button1).isNotNull();
         JButton button2 = JButtonOperator.findJButton(
                 frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(button2);
+        assertThat(button2).isNotNull();
     }
 
     @Test
     void waitJButton() {
         JButton button1 = JButtonOperator.waitJButton(frame.get(), PredicatesJ.byName("JButtonOperatorTest"));
-        assertNotNull(button1);
+        assertThat(button1).isNotNull();
         JButton button2 = JButtonOperator.waitJButton(
                 frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(button2);
+        assertThat(button2).isNotNull();
     }
 
     @Test
     void isDefaultCapable() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JButtonOperator operator2 = new JButtonOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setDefaultCapable(true);
-        assertTrue(button.get().isDefaultCapable());
-        assertEquals(operator2.isDefaultCapable(), button.get().isDefaultCapable());
+        assertThat(button.get().isDefaultCapable()).isTrue();
+        assertThat(button.get().isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
         operator2.setDefaultCapable(false);
-        assertFalse(button.get().isDefaultCapable());
-        assertEquals(operator2.isDefaultCapable(), button.get().isDefaultCapable());
+        assertThat(button.get().isDefaultCapable()).isFalse();
+        assertThat(button.get().isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
     }
 
     @Test
     void prepareToClick() {
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JButtonOperator operator2 = new JButtonOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.prepareToClick();
         JButtonOperator operator3 = new JButtonOperator(operator1);
-        assertNotNull(operator3);
-        assertTrue(operator3.isVisible());
+        assertThat(operator3).isNotNull();
+        assertThat(operator3.isVisible()).isTrue();
     }
 
     @Test
@@ -120,24 +117,24 @@ class JButtonOperatorTest {
                 .addActionListener(
                         event -> EventQueue.invokeLater(() -> button.get().setVisible(false)));
         JFrameOperator operator1 = new JFrameOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JButtonOperator operator2 = new JButtonOperator(operator1);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.press();
         operator2.release();
         operator2.waitState(new JComponentOperatorVisiblePredicate(false));
-        assertFalse(button.get().isVisible());
+        assertThat(button.get().isVisible()).isFalse();
         EventQueue.invokeAndWait(() -> button.get().setVisible(true));
         JButtonOperator operator3 = new JButtonOperator(operator1);
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         operator3.clickMouse();
         operator3.waitState(new JComponentOperatorVisiblePredicate(false));
-        assertFalse(button.get().isVisible());
+        assertThat(button.get().isVisible()).isFalse();
         EventQueue.invokeAndWait(() -> button.get().setVisible(true));
         JButtonOperator operator4 = new JButtonOperator(operator1);
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
         operator4.push();
-        assertFalse(operator4.isVisible());
-        assertFalse(button.get().isVisible());
+        assertThat(operator4.isVisible()).isFalse();
+        assertThat(button.get().isVisible()).isFalse();
     }
 }

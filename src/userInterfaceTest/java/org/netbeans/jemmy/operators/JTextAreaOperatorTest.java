@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -64,175 +62,175 @@ class JTextAreaOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JTextAreaOperator operator3 = new JTextAreaOperator(operator, PredicatesJ.byName("JTextAreaOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JTextAreaOperator operator4 =
                 new JTextAreaOperator(operator, "JTextAreaOperatorTest", StringComparators.strict());
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
     }
 
     @Test
     void testFindJTextArea() {
         JTextArea textArea1 = JTextAreaOperator.findJTextArea(
                 frame, "JTextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textArea1);
+        assertThat(textArea1).isNotNull();
         JTextArea textArea2 = JTextAreaOperator.findJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
-        assertNotNull(textArea2);
+        assertThat(textArea2).isNotNull();
     }
 
     @Test
     void testWaitJTextArea() {
         JTextArea textArea1 = JTextAreaOperator.waitJTextArea(
                 frame, "JTextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textArea1);
+        assertThat(textArea1).isNotNull();
         JTextArea textArea2 = JTextAreaOperator.waitJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
-        assertNotNull(textArea2);
+        assertThat(textArea2).isNotNull();
     }
 
     @Test
     void testUsePageNavigationKeys() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.usePageNavigationKeys(true);
     }
 
     @Test
     void testChangeCaretRow() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.changeCaretRow(0);
     }
 
     @Test
     void testChangeCaretPosition() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.changeCaretPosition(0, 0);
     }
 
     @Test
     void testTypeText() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.typeText("Booh!", 0, 0);
     }
 
     @Test
     void testSelectText() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.selectText("JTextAreaOperatorTest");
     }
 
     @Test
     void testSelectLines() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.selectLines(0, 0);
     }
 
     @Test
     void testAppend() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.append("Booh!");
     }
 
     @Test
     void testGetColumns() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setColumns(2);
-        assertEquals(2, operator2.getColumns());
+        assertThat(operator2.getColumns()).isEqualTo(2);
     }
 
     @Test
     void testGetLineCount() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.getLineCount();
     }
 
     @Test
     void testGetLineWrap() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setLineWrap(true);
-        assertTrue(operator2.getLineWrap());
+        assertThat(operator2.getLineWrap()).isTrue();
         operator2.setLineWrap(false);
-        assertTrue(!operator2.getLineWrap());
+        assertThat(operator2.getLineWrap()).isFalse();
     }
 
     @Test
     void testGetRows() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setRows(1);
-        assertEquals(1, operator2.getRows());
+        assertThat(operator2.getRows()).isEqualTo(1);
     }
 
     @Test
     void testGetTabSize() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setTabSize(11);
-        assertEquals(11, operator2.getTabSize());
+        assertThat(operator2.getTabSize()).isEqualTo(11);
     }
 
     @Test
     void testGetWrapStyleWord() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.setWrapStyleWord(true);
-        assertTrue(operator2.getWrapStyleWord());
+        assertThat(operator2.getWrapStyleWord()).isTrue();
         operator2.setWrapStyleWord(false);
-        assertTrue(!operator2.getWrapStyleWord());
+        assertThat(operator2.getWrapStyleWord()).isFalse();
     }
 
     @Test
     void testInsert() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.insert("Booh!", 0);
     }
 
     @Test
     void testReplaceRange() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         operator2.replaceRange("Booh!", 0, 0);
     }
 
@@ -244,12 +242,12 @@ class JTextAreaOperatorTest {
                 " !\"#$%&'()*,-./0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         to.clearText();
         to.typeText(allChars);
-        assertEquals(allChars, to.getText());
+        assertThat(to.getText()).isEqualTo(allChars);
         to.setText("");
-        assertEquals("", to.getText());
+        assertThat(to.getText()).isEqualTo("");
         to.setText(allChars);
-        assertEquals(allChars, to.getText());
+        assertThat(to.getText()).isEqualTo(allChars);
         to.clearText();
-        assertEquals("", to.getText());
+        assertThat(to.getText()).isEqualTo("");
     }
 }

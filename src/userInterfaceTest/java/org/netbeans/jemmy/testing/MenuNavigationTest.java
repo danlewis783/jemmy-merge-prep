@@ -16,12 +16,8 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -60,41 +56,41 @@ class MenuNavigationTest {
             JFrameOperator win0 = new JFrameOperator("MenuNavigationApp");
             JTextFieldOperator tf0 = new JTextFieldOperator(win0, "Text", StringComparators.caseInsensitiveSubstring());
             JTextFieldOperator tf1 = new JTextFieldOperator(win0);
-            assertSame(tf1.getSource(), tf0.getSource());
+            assertThat(tf0.getSource()).isSameAs(tf1.getSource());
             tf0.clearText();
             tf0.typeText("Text has been typed");
             new JTextFieldOperator(win0, "has been typed", StringComparators.caseInsensitiveSubstring());
             JMenuBarOperator mb0 = new JMenuBarOperator(win0);
-            assertEquals(3, mb0.showMenuItems("menu|submenu", StringComparators.strict()).length);
+            assertThat(mb0.showMenuItems("menu|submenu", StringComparators.strict()).length)
+                    .isEqualTo(3);
             mb0.closeSubmenus();
             JMenuItemByTextPredicate menuPredicate1 = new JMenuItemByTextPredicate("menu", StringComparators.strict());
             JMenuItemByTextPredicate menuPredicate2 =
                     new JMenuItemByTextPredicate("submenu", StringComparators.strict());
             List<Predicate<Component>> predicates =
                     Collections.unmodifiableList(Arrays.asList(menuPredicate1, menuPredicate2));
-            assertEquals(3, mb0.showMenuItems(predicates).length);
+            assertThat(mb0.showMenuItems(predicates).length).isEqualTo(3);
             mb0.closeSubmenus();
-            assertEquals("submenu", mb0.showMenuItem(predicates).getText());
+            assertThat(mb0.showMenuItem(predicates).getText()).isEqualTo("submenu");
             mb0.pushMenu("menu", StringComparators.strict());
-            assertEquals(
-                    "menu", mb0.showMenuItem("menu", StringComparators.strict()).getText());
-            assertEquals(
-                    "menuItem",
-                    mb0.showMenuItem("menu|submenu|subsubmenu|menuItem", StringComparators.strict())
-                            .getText());
+            assertThat(mb0.showMenuItem("menu", StringComparators.strict()).getText())
+                    .isEqualTo("menu");
+            assertThat(mb0.showMenuItem("menu|submenu|subsubmenu|menuItem", StringComparators.strict())
+                            .getText())
+                    .isEqualTo("menuItem");
             JMenuItemOperator radioItem = mb0.showMenuItem("menu|submenu|radio", StringComparators.strict());
             JRadioButtonMenuItemOperator radio =
                     new JRadioButtonMenuItemOperator((JRadioButtonMenuItem) radioItem.getSource());
             mb0.showMenuItems("menu|submenu", StringComparators.strict());
-            assertFalse(radio.isSelected());
+            assertThat(radio.isSelected()).isFalse();
             mb0.pushMenu("menu|submenu|radio", StringComparators.strict());
-            assertTrue(radio.isSelected());
+            assertThat(radio.isSelected()).isTrue();
             mb0.pushMenu("menu", StringComparators.strict());
-            assertEquals(
-                    "subsubmenu",
-                    mb0.showMenuItem("menu|submenu|subsubmenu", StringComparators.strict())
-                            .getText());
-            assertNotNull(mb0.pushMenu("menu|submenu|subsubmenu|menuItem", StringComparators.strict()));
+            assertThat(mb0.showMenuItem("menu|submenu|subsubmenu", StringComparators.strict())
+                            .getText())
+                    .isEqualTo("subsubmenu");
+            assertThat(mb0.pushMenu("menu|submenu|subsubmenu|menuItem", StringComparators.strict()))
+                    .isNotNull();
             new JLabelOperator(win0, "Menu \"menu/menuItem\" has been pushed", StringComparators.strict());
             mb0.pushMenu("menu0", StringComparators.strict());
             mb0.pushMenu("menu1Item", StringComparators.strict());
@@ -116,74 +112,95 @@ class MenuNavigationTest {
 
             AbstractButtonOperator absButtonOp = new JButtonOperator(win0, "button", StringComparators.strict());
             AbstractButton button = (AbstractButton) absButtonOp.getSource();
-            assertTrue(((button.getActionCommand() == null) && (absButtonOp.getActionCommand() == null))
-                    || button.getActionCommand().equals(absButtonOp.getActionCommand()));
-            assertTrue(((button.getDisabledIcon() == null) && (absButtonOp.getDisabledIcon() == null))
-                    || button.getDisabledIcon().equals(absButtonOp.getDisabledIcon()));
-            assertTrue(((button.getDisabledSelectedIcon() == null) && (absButtonOp.getDisabledSelectedIcon() == null))
-                    || button.getDisabledSelectedIcon().equals(absButtonOp.getDisabledSelectedIcon()));
-            assertEquals(button.getHorizontalAlignment(), absButtonOp.getHorizontalAlignment());
-            assertEquals(button.getHorizontalTextPosition(), absButtonOp.getHorizontalTextPosition());
-            assertTrue(((button.getIcon() == null) && (absButtonOp.getIcon() == null))
-                    || button.getIcon().equals(absButtonOp.getIcon()));
-            assertTrue(((button.getMargin() == null) && (absButtonOp.getMargin() == null))
-                    || button.getMargin().equals(absButtonOp.getMargin()));
-            assertEquals(button.getMnemonic(), absButtonOp.getMnemonic());
-            assertTrue(((button.getModel() == null) && (absButtonOp.getModel() == null))
-                    || button.getModel().equals(absButtonOp.getModel()));
-            assertTrue(((button.getPressedIcon() == null) && (absButtonOp.getPressedIcon() == null))
-                    || button.getPressedIcon().equals(absButtonOp.getPressedIcon()));
-            assertTrue(((button.getRolloverIcon() == null) && (absButtonOp.getRolloverIcon() == null))
-                    || button.getRolloverIcon().equals(absButtonOp.getRolloverIcon()));
-            assertTrue(((button.getRolloverSelectedIcon() == null) && (absButtonOp.getRolloverSelectedIcon() == null))
-                    || button.getRolloverSelectedIcon().equals(absButtonOp.getRolloverSelectedIcon()));
-            assertTrue(((button.getSelectedIcon() == null) && (absButtonOp.getSelectedIcon() == null))
-                    || button.getSelectedIcon().equals(absButtonOp.getSelectedIcon()));
-            assertTrue(((button.getText() == null) && (absButtonOp.getText() == null))
-                    || button.getText().equals(absButtonOp.getText()));
-            assertTrue(((button.getUI() == null) && (absButtonOp.getUI() == null))
-                    || button.getUI().equals(absButtonOp.getUI()));
-            assertEquals(button.getVerticalAlignment(), absButtonOp.getVerticalAlignment());
-            assertEquals(button.getVerticalTextPosition(), absButtonOp.getVerticalTextPosition());
-            assertEquals(button.isBorderPainted(), absButtonOp.isBorderPainted());
-            assertEquals(button.isContentAreaFilled(), absButtonOp.isContentAreaFilled());
-            assertEquals(button.isFocusPainted(), absButtonOp.isFocusPainted());
-            assertEquals(button.isRolloverEnabled(), absButtonOp.isRolloverEnabled());
-            assertEquals(button.isSelected(), absButtonOp.isSelected());
+            assertThat(((button.getActionCommand() == null) && (absButtonOp.getActionCommand() == null))
+                            || button.getActionCommand().equals(absButtonOp.getActionCommand()))
+                    .isTrue();
+            assertThat(((button.getDisabledIcon() == null) && (absButtonOp.getDisabledIcon() == null))
+                            || button.getDisabledIcon().equals(absButtonOp.getDisabledIcon()))
+                    .isTrue();
+            assertThat(((button.getDisabledSelectedIcon() == null) && (absButtonOp.getDisabledSelectedIcon() == null))
+                            || button.getDisabledSelectedIcon().equals(absButtonOp.getDisabledSelectedIcon()))
+                    .isTrue();
+            assertThat(absButtonOp.getHorizontalAlignment()).isEqualTo(button.getHorizontalAlignment());
+            assertThat(absButtonOp.getHorizontalTextPosition()).isEqualTo(button.getHorizontalTextPosition());
+            assertThat(((button.getIcon() == null) && (absButtonOp.getIcon() == null))
+                            || button.getIcon().equals(absButtonOp.getIcon()))
+                    .isTrue();
+            assertThat(((button.getMargin() == null) && (absButtonOp.getMargin() == null))
+                            || button.getMargin().equals(absButtonOp.getMargin()))
+                    .isTrue();
+            assertThat(absButtonOp.getMnemonic()).isEqualTo(button.getMnemonic());
+            assertThat(((button.getModel() == null) && (absButtonOp.getModel() == null))
+                            || button.getModel().equals(absButtonOp.getModel()))
+                    .isTrue();
+            assertThat(((button.getPressedIcon() == null) && (absButtonOp.getPressedIcon() == null))
+                            || button.getPressedIcon().equals(absButtonOp.getPressedIcon()))
+                    .isTrue();
+            assertThat(((button.getRolloverIcon() == null) && (absButtonOp.getRolloverIcon() == null))
+                            || button.getRolloverIcon().equals(absButtonOp.getRolloverIcon()))
+                    .isTrue();
+            assertThat(((button.getRolloverSelectedIcon() == null) && (absButtonOp.getRolloverSelectedIcon() == null))
+                            || button.getRolloverSelectedIcon().equals(absButtonOp.getRolloverSelectedIcon()))
+                    .isTrue();
+            assertThat(((button.getSelectedIcon() == null) && (absButtonOp.getSelectedIcon() == null))
+                            || button.getSelectedIcon().equals(absButtonOp.getSelectedIcon()))
+                    .isTrue();
+            assertThat(((button.getText() == null) && (absButtonOp.getText() == null))
+                            || button.getText().equals(absButtonOp.getText()))
+                    .isTrue();
+            assertThat(((button.getUI() == null) && (absButtonOp.getUI() == null))
+                            || button.getUI().equals(absButtonOp.getUI()))
+                    .isTrue();
+            assertThat(absButtonOp.getVerticalAlignment()).isEqualTo(button.getVerticalAlignment());
+            assertThat(absButtonOp.getVerticalTextPosition()).isEqualTo(button.getVerticalTextPosition());
+            assertThat(absButtonOp.isBorderPainted()).isEqualTo(button.isBorderPainted());
+            assertThat(absButtonOp.isContentAreaFilled()).isEqualTo(button.isContentAreaFilled());
+            assertThat(absButtonOp.isFocusPainted()).isEqualTo(button.isFocusPainted());
+            assertThat(absButtonOp.isRolloverEnabled()).isEqualTo(button.isRolloverEnabled());
+            assertThat(absButtonOp.isSelected()).isEqualTo(button.isSelected());
             JButtonOperator jButtonOp = new JButtonOperator(win0, "button", StringComparators.strict());
             JButton source = (JButton) jButtonOp.getSource();
-            assertEquals(source.isDefaultButton(), jButtonOp.isDefaultButton());
-            assertEquals(source.isDefaultCapable(), jButtonOp.isDefaultCapable());
+            assertThat(jButtonOp.isDefaultButton()).isEqualTo(source.isDefaultButton());
+            assertThat(jButtonOp.isDefaultCapable()).isEqualTo(source.isDefaultCapable());
             JMenuBar source1 = (JMenuBar) mb0.getSource();
-            assertTrue((((source1.getMargin() == null) && (mb0.getMargin() == null))
-                    || source1.getMargin().equals(mb0.getMargin())));
-            assertEquals(source1.getMenuCount(), mb0.getMenuCount());
-            assertTrue(((source1.getSelectionModel() == null) && (mb0.getSelectionModel() == null))
-                    || source1.getSelectionModel().equals(mb0.getSelectionModel()));
-            assertTrue(((source1.getUI() == null) && (mb0.getUI() == null))
-                    || source1.getUI().equals(mb0.getUI()));
-            assertEquals(source1.isBorderPainted(), mb0.isBorderPainted());
-            assertEquals(source1.isSelected(), mb0.isSelected());
-            assertNotNull(mb0.pushMenu("menu|submenu|subsubmenu|menuItem", StringComparators.strict()));
+            assertThat((((source1.getMargin() == null) && (mb0.getMargin() == null))
+                            || source1.getMargin().equals(mb0.getMargin())))
+                    .isTrue();
+            assertThat(mb0.getMenuCount()).isEqualTo(source1.getMenuCount());
+            assertThat(((source1.getSelectionModel() == null) && (mb0.getSelectionModel() == null))
+                            || source1.getSelectionModel().equals(mb0.getSelectionModel()))
+                    .isTrue();
+            assertThat(((source1.getUI() == null) && (mb0.getUI() == null))
+                            || source1.getUI().equals(mb0.getUI()))
+                    .isTrue();
+            assertThat(mb0.isBorderPainted()).isEqualTo(source1.isBorderPainted());
+            assertThat(mb0.isSelected()).isEqualTo(source1.isSelected());
+            assertThat(mb0.pushMenu("menu|submenu|subsubmenu|menuItem", StringComparators.strict()))
+                    .isNotNull();
             JLabelOperator jLabelOp =
                     new JLabelOperator(win0, "Menu \"menu/menuItem\" has been pushed", StringComparators.strict());
             JLabel label = (JLabel) jLabelOp.getSource();
-            assertTrue(((label.getDisabledIcon() == null) && (jLabelOp.getDisabledIcon() == null))
-                    || label.getDisabledIcon().equals(jLabelOp.getDisabledIcon()));
-            assertEquals(label.getDisplayedMnemonic(), jLabelOp.getDisplayedMnemonic());
-            assertEquals(label.getHorizontalAlignment(), jLabelOp.getHorizontalAlignment());
-            assertEquals(label.getHorizontalTextPosition(), jLabelOp.getHorizontalTextPosition());
-            assertTrue(((label.getIcon() == null) && (jLabelOp.getIcon() == null))
-                    || label.getIcon().equals(jLabelOp.getIcon()));
-            assertEquals(label.getIconTextGap(), jLabelOp.getIconTextGap());
-            assertTrue(((label.getLabelFor() == null) && (jLabelOp.getLabelFor() == null))
-                    || label.getLabelFor().equals(jLabelOp.getLabelFor()));
-            assertTrue(((label.getText() == null) && (jLabelOp.getText() == null))
-                    || label.getText().equals(jLabelOp.getText()));
-            assertTrue(((label.getUI() == null) && (jLabelOp.getUI() == null))
-                    || label.getUI().equals(jLabelOp.getUI()));
-            assertEquals(label.getVerticalAlignment(), jLabelOp.getVerticalAlignment());
-            assertEquals(label.getVerticalTextPosition(), jLabelOp.getVerticalTextPosition());
+            assertThat(((label.getDisabledIcon() == null) && (jLabelOp.getDisabledIcon() == null))
+                            || label.getDisabledIcon().equals(jLabelOp.getDisabledIcon()))
+                    .isTrue();
+            assertThat(jLabelOp.getDisplayedMnemonic()).isEqualTo(label.getDisplayedMnemonic());
+            assertThat(jLabelOp.getHorizontalAlignment()).isEqualTo(label.getHorizontalAlignment());
+            assertThat(jLabelOp.getHorizontalTextPosition()).isEqualTo(label.getHorizontalTextPosition());
+            assertThat(((label.getIcon() == null) && (jLabelOp.getIcon() == null))
+                            || label.getIcon().equals(jLabelOp.getIcon()))
+                    .isTrue();
+            assertThat(jLabelOp.getIconTextGap()).isEqualTo(label.getIconTextGap());
+            assertThat(((label.getLabelFor() == null) && (jLabelOp.getLabelFor() == null))
+                            || label.getLabelFor().equals(jLabelOp.getLabelFor()))
+                    .isTrue();
+            assertThat(((label.getText() == null) && (jLabelOp.getText() == null))
+                            || label.getText().equals(jLabelOp.getText()))
+                    .isTrue();
+            assertThat(((label.getUI() == null) && (jLabelOp.getUI() == null))
+                            || label.getUI().equals(jLabelOp.getUI()))
+                    .isTrue();
+            assertThat(jLabelOp.getVerticalAlignment()).isEqualTo(label.getVerticalAlignment());
+            assertThat(jLabelOp.getVerticalTextPosition()).isEqualTo(label.getVerticalTextPosition());
         } finally {
             override1.cancel();
         }

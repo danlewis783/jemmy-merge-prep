@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.swing.JFrame;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class DeepMenuPushTest {
     void test() {
         DeepMenuApp.main(new String[] {});
         JFrame win = JFrameOperator.waitJFrame("DeepMenuApp");
-        assertNotNull(new JFrameOperator(win));
+        assertThat(new JFrameOperator(win)).isNotNull();
         JMenuBarOperator mbo = new JMenuBarOperator(JMenuBarOperator.findJMenuBar(win));
         TimeoutOverride override = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 15000L);
         try {
@@ -47,9 +47,11 @@ class DeepMenuPushTest {
             }
 
             sb.append("menuItem");
-            assertNotNull(mbo.pushMenu(sb.toString(), "|", StringComparators.strict()));
-            assertNotNull(new JLabelOperator(
-                    JLabelOperator.waitJLabel(win, "menu item has been pushed", StringComparators.strict())));
+            assertThat(mbo.pushMenu(sb.toString(), "|", StringComparators.strict()))
+                    .isNotNull();
+            assertThat(new JLabelOperator(
+                            JLabelOperator.waitJLabel(win, "menu item has been pushed", StringComparators.strict())))
+                    .isNotNull();
         } finally {
             override.cancel();
         }

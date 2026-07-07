@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -52,12 +50,16 @@ class JTreePathNavigationTest {
         JFrame frm = JFrameOperator.waitJFrame("TreePathApp");
         JTreeOperator to = new JTreeOperator(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1));
         TreePath pth = to.findPath("node00", "|", StringComparators.strict());
-        assertEquals(2, to.getChildCount(pth));
-        assertEquals(2, to.getChildCount(pth.getLastPathComponent()));
-        assertSame(to.getChildPath(pth, 0).getLastPathComponent(), to.getChild(pth.getLastPathComponent(), 0));
-        assertSame(to.getChildPath(pth, 1).getLastPathComponent(), to.getChild(pth.getLastPathComponent(), 1));
-        assertSame(to.getChildren(pth.getLastPathComponent())[0], to.getChildPaths(pth)[0].getLastPathComponent());
-        assertSame(to.getChildren(pth.getLastPathComponent())[1], to.getChildPaths(pth)[1].getLastPathComponent());
+        assertThat(to.getChildCount(pth)).isEqualTo(2);
+        assertThat(to.getChildCount(pth.getLastPathComponent())).isEqualTo(2);
+        assertThat(to.getChild(pth.getLastPathComponent(), 0))
+                .isSameAs(to.getChildPath(pth, 0).getLastPathComponent());
+        assertThat(to.getChild(pth.getLastPathComponent(), 1))
+                .isSameAs(to.getChildPath(pth, 1).getLastPathComponent());
+        assertThat(to.getChildPaths(pth)[0].getLastPathComponent())
+                .isSameAs(to.getChildren(pth.getLastPathComponent())[0]);
+        assertThat(to.getChildPaths(pth)[1].getLastPathComponent())
+                .isSameAs(to.getChildren(pth.getLastPathComponent())[1]);
         JListOperator jListOp = new JListOperator(JListOperator.findJList(frm, null, StringComparators.strict(), -1));
         JPopupMenuOperator pmo;
         String[] strPaths = {"", "node00", "node00|node000", "node00|node001", "node01"};
@@ -74,26 +76,24 @@ class JTreePathNavigationTest {
             pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
 
             if (i == 0) {
-                assertTrue(testJPopupMenu(pmo));
+                assertThat(testJPopupMenu(pmo)).isTrue();
             }
 
-            assertEquals(1, pmo.showMenuItems("", "|", StringComparators.strict()).length);
+            assertThat(pmo.showMenuItems("", "|", StringComparators.strict()).length)
+                    .isEqualTo(1);
             List<Predicate<Component>> predicates = Collections.unmodifiableList(Arrays.asList(
                     new JMenuItemByTextPredicate("XXX", StringComparators.strict()),
                     new JMenuItemByTextPredicate("submenu", StringComparators.strict())));
-            assertEquals(2, pmo.showMenuItems(predicates).length);
-            assertEquals("submenu", pmo.showMenuItem(predicates).getText());
-            assertEquals(
-                    "XXX",
-                    pmo.showMenuItem("XXX", "|", StringComparators.strict()).getText());
-            assertEquals(
-                    "menuItem",
-                    pmo.showMenuItem("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict())
-                            .getText());
-            assertEquals(
-                    "subsubmenu",
-                    pmo.showMenuItem("XXX|submenu|subsubmenu", "|", StringComparators.strict())
-                            .getText());
+            assertThat(pmo.showMenuItems(predicates).length).isEqualTo(2);
+            assertThat(pmo.showMenuItem(predicates).getText()).isEqualTo("submenu");
+            assertThat(pmo.showMenuItem("XXX", "|", StringComparators.strict()).getText())
+                    .isEqualTo("XXX");
+            assertThat(pmo.showMenuItem("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict())
+                            .getText())
+                    .isEqualTo("menuItem");
+            assertThat(pmo.showMenuItem("XXX|submenu|subsubmenu", "|", StringComparators.strict())
+                            .getText())
+                    .isEqualTo("subsubmenu");
             pmo.pushMenu("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict());
             TreePath[] pths = {paths[i]};
             FunctionRepeater.on(checker).runUntilNotNull(pths);
@@ -120,8 +120,8 @@ class JTreePathNavigationTest {
             }
         }
 
-        assertTrue(testJList(jListOp));
-        assertTrue(testJSplitPane(split));
+        assertThat(testJList(jListOp)).isTrue();
+        assertThat(testJSplitPane(split)).isTrue();
     }
 
     private boolean testJList(JListOperator jListOperator) {

@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Checkbox;
 import java.awt.EventQueue;
@@ -58,39 +58,39 @@ class CheckboxOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         CheckboxOperator operator2 = new CheckboxOperator(operator, "CheckboxOperatorTest", StringComparators.strict());
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         CheckboxOperator operator3 = new CheckboxOperator(operator, PredicatesJ.byName("CheckboxOperatorTest"));
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindCheckbox() {
         Checkbox checkbox1 = CheckboxOperator.findCheckbox(
                 frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(checkbox1);
+        assertThat(checkbox1).isNotNull();
         Checkbox checkbox2 = CheckboxOperator.findCheckbox(frame, PredicatesJ.byName("CheckboxOperatorTest"));
-        assertNotNull(checkbox2);
+        assertThat(checkbox2).isNotNull();
     }
 
     @Test
     void testWaitCheckbox() {
         Checkbox checkbox1 = CheckboxOperator.waitCheckbox(
                 frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(checkbox1);
+        assertThat(checkbox1).isNotNull();
         Checkbox checkbox2 = CheckboxOperator.waitCheckbox(frame, PredicatesJ.byName("CheckboxOperatorTest"));
-        assertNotNull(checkbox2);
+        assertThat(checkbox2).isNotNull();
     }
 
     @Test
     void testChangeSelection() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setState(false);
         operator1.changeSelectionNoBlock(true);
         operator1.setState(true);
@@ -100,18 +100,18 @@ class CheckboxOperatorTest {
     @Test
     void testChangeSelectionNoBlock() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.changeSelectionNoBlock(true);
     }
 
     @Test
     void testWaitSelected() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.waitSelected(false);
         operator1.setState(true);
         operator1.waitSelected(true);
@@ -120,9 +120,9 @@ class CheckboxOperatorTest {
     @Test
     void testAddItemListener() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         NullItemListener listener = new NullItemListener();
         operator1.addItemListener(listener);
         operator1.removeItemListener(listener);
@@ -131,54 +131,54 @@ class CheckboxOperatorTest {
     @Test
     void testGetCheckboxGroup() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getCheckboxGroup();
     }
 
     @Test
     void testGetLabel() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getLabel();
     }
 
     @Test
     void testGetState() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.getState();
     }
 
     @Test
     void testSetCheckboxGroup() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setCheckboxGroup(operator1.getCheckboxGroup());
     }
 
     @Test
     void testSetLabel() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setLabel(operator1.getLabel());
     }
 
     @Test
     void testSetState() {
         FrameOperator operator = new FrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.setState(operator1.getState());
     }
 

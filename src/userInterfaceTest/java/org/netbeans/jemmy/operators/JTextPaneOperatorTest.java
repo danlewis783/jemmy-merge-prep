@@ -16,9 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -83,114 +81,114 @@ class JTextPaneOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JTextPaneOperator operator2 = new JTextPaneOperator(operator, PredicatesJ.byName("JTextPaneOperatorTest"));
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JTextPaneOperator operator3 =
                 new JTextPaneOperator(operator, "JTextPaneOperatorTest", StringComparators.strict());
-        assertNotNull(operator3);
+        assertThat(operator3).isNotNull();
         JTextPaneOperator operator4 = new JTextPaneOperator(textPane);
-        assertNotNull(operator4);
+        assertThat(operator4).isNotNull();
     }
 
     @Test
     void testFindJTextPane() {
         JTextPane textPane1 = JTextPaneOperator.findJTextPane(
                 frame, "JTextPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textPane1);
+        assertThat(textPane1).isNotNull();
         JTextPane textPane2 = JTextPaneOperator.findJTextPane(frame, PredicatesJ.byName("JTextPaneOperatorTest"));
-        assertNotNull(textPane2);
+        assertThat(textPane2).isNotNull();
     }
 
     @Test
     void testWaitJTextPane() {
         JTextPane textPane1 = JTextPaneOperator.waitJTextPane(
                 frame, "JTextPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertNotNull(textPane1);
+        assertThat(textPane1).isNotNull();
         JTextPane textPane2 = JTextPaneOperator.waitJTextPane(frame, PredicatesJ.byName("JTextPaneOperatorTest"));
-        assertNotNull(textPane2);
+        assertThat(textPane2).isNotNull();
     }
 
     @Test
     void testAddStyle() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.addStyle("1234", null);
-        assertNotNull(operator1.getStyle("1234"));
+        assertThat(operator1.getStyle("1234")).isNotNull();
     }
 
     @Test
     void testGetCharacterAttributes() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         operator1.setCharacterAttributes(attributes, true);
-        assertNotNull(operator1.getCharacterAttributes());
+        assertThat(operator1.getCharacterAttributes()).isNotNull();
     }
 
     @Test
     void testGetInputAttributes() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
-        assertNotNull(operator1.getInputAttributes());
+        assertThat(operator1).isNotNull();
+        assertThat(operator1.getInputAttributes()).isNotNull();
     }
 
     @Test
     void testGetLogicalStyle() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         Style style = null;
         operator1.setLogicalStyle(style);
-        assertEquals(style, operator1.getLogicalStyle());
+        assertThat(operator1.getLogicalStyle()).isEqualTo(style);
     }
 
     @Test
     void testGetParagraphAttributes() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         operator1.setParagraphAttributes(attributes, true);
-        assertNotNull(operator1.getParagraphAttributes());
+        assertThat(operator1.getParagraphAttributes()).isNotNull();
     }
 
     @Test
     void testGetStyle() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
-        assertNull(operator1.getStyle("BLABLA"));
+        assertThat(operator1).isNotNull();
+        assertThat(operator1.getStyle("BLABLA")).isNull();
     }
 
     @Test
     void testGetStyledDocument() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         StyledDocument document = new DefaultStyledDocument();
         operator1.setStyledDocument(document);
-        assertEquals(document, operator1.getStyledDocument());
+        assertThat(operator1.getStyledDocument()).isEqualTo(document);
     }
 
     @Test
     void testInsertComponent() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
 
         try {
             EventQueue.invokeAndWait(() -> button = new JButton());
@@ -204,18 +202,18 @@ class JTextPaneOperatorTest {
     @Test
     void testInsertIcon() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.insertIcon(new ImageIcon());
     }
 
     @Test
     void testRemoveStyle() {
         JFrameOperator operator = new JFrameOperator();
-        assertNotNull(operator);
+        assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         operator1.removeStyle("BLABLA");
     }
 }

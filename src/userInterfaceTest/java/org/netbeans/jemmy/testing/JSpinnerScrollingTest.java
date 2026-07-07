@@ -17,8 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 
 import java.time.Duration;
@@ -45,17 +44,20 @@ class JSpinnerScrollingTest {
             jSpinnerOp.scrollToObject(50, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
             jSpinnerOp.scrollToString("11", StringComparators.strict(), ScrollAdjuster.DECREASE_SCROLL_DIRECTION);
 
-            JemmyException e1 = assertThrows(JemmyException.class, jSpinnerOp::scrollToMaximum);
-            assertThat(e1.getCause().getMessage()).isEqualTo("Impossible to get a maximum of JSpinner model");
+            assertThatExceptionOfType(JemmyException.class)
+                    .isThrownBy(jSpinnerOp::scrollToMaximum)
+                    .havingCause()
+                    .withMessage("Impossible to get a maximum of JSpinner model");
 
-            JemmyException e2 = assertThrows(JemmyException.class, jSpinnerOp::scrollToMinimum);
-            assertThat(e2.getCause().getMessage()).isEqualTo("Impossible to get a minimum of JSpinner model");
+            assertThatExceptionOfType(JemmyException.class)
+                    .isThrownBy(jSpinnerOp::scrollToMinimum)
+                    .havingCause()
+                    .withMessage("Impossible to get a minimum of JSpinner model");
 
             JSpinnerOperatorDate jSpinnerOpDate = new JSpinnerOperatorDate(new JSpinnerOperator(jFrameOp, 1));
-            assertEquals(
-                    jSpinnerOpDate.getSource(),
-                    new JSpinnerOperator(jFrameOp, jSpinnerOpDate.getValue().toString(), StringComparators.strict())
-                            .getSource());
+            assertThat(new JSpinnerOperator(jFrameOp, jSpinnerOpDate.getValue().toString(), StringComparators.strict())
+                            .getSource())
+                    .isEqualTo(jSpinnerOpDate.getSource());
             Calendar today = Calendar.getInstance();
             today.set(Calendar.DAY_OF_MONTH, 1);
             today.set(Calendar.MONTH, Calendar.NOVEMBER);
@@ -69,9 +71,9 @@ class JSpinnerScrollingTest {
             jSpinnerOpDate.scrollToDate(tomorrow.getTime());
             jSpinnerOpDate.scrollToDate(yesterday.getTime());
 
-            IllegalArgumentException e3 =
-                    assertThrows(IllegalArgumentException.class, () -> new JSpinnerOperatorNumber(jSpinnerOpDate));
-            assertThat(e3.getMessage()).isEqualTo("JSpinner model is not a javax.swing.SpinnerNumberModel");
+            assertThatExceptionOfType(IllegalArgumentException.class)
+                    .isThrownBy(() -> new JSpinnerOperatorNumber(jSpinnerOpDate))
+                    .withMessage("JSpinner model is not a javax.swing.SpinnerNumberModel");
 
             JSpinnerOperatorList jSpinnerOpList =
                     new JSpinnerOperatorList(new JSpinnerOperator(jFrameOp, "one", StringComparators.strict()));

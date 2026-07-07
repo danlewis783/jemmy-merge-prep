@@ -16,10 +16,8 @@
  */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
@@ -90,18 +88,26 @@ class JDialogOperatorTest {
 
     @Test
     void findJDialog() {
-        assertNotNull(JDialogOperator.findJDialog("JDialogOperatorTest", StringComparators.strict()));
-        assertNotNull(JDialogOperator.findJDialog(jFrameRef.get(), "JDialogOperatorTest", StringComparators.strict()));
-        assertNotNull(JDialogOperator.findJDialog(PredicatesJ.byName("JDialogOperatorTest")));
-        assertNotNull(JDialogOperator.findJDialog(jFrameRef.get(), PredicatesJ.byName("JDialogOperatorTest")));
+        assertThat(JDialogOperator.findJDialog("JDialogOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(JDialogOperator.findJDialog(jFrameRef.get(), "JDialogOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(JDialogOperator.findJDialog(PredicatesJ.byName("JDialogOperatorTest")))
+                .isNotNull();
+        assertThat(JDialogOperator.findJDialog(jFrameRef.get(), PredicatesJ.byName("JDialogOperatorTest")))
+                .isNotNull();
     }
 
     @Test
     void waitJDialog() {
-        assertNotNull(JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict()));
-        assertNotNull(JDialogOperator.waitJDialog(jFrameRef.get(), "JDialogOperatorTest", StringComparators.strict()));
-        assertNotNull(JDialogOperator.waitJDialog(PredicatesJ.byName("JDialogOperatorTest")));
-        assertNotNull(JDialogOperator.waitJDialog(jFrameRef.get(), PredicatesJ.byName("JDialogOperatorTest")));
+        assertThat(JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(JDialogOperator.waitJDialog(jFrameRef.get(), "JDialogOperatorTest", StringComparators.strict()))
+                .isNotNull();
+        assertThat(JDialogOperator.waitJDialog(PredicatesJ.byName("JDialogOperatorTest")))
+                .isNotNull();
+        assertThat(JDialogOperator.waitJDialog(jFrameRef.get(), PredicatesJ.byName("JDialogOperatorTest")))
+                .isNotNull();
         Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
         new JDialogOperator();
         assertThatExceptionOfType(TimeoutException.class)
@@ -136,16 +142,16 @@ class JDialogOperatorTest {
         AtomicReference<JMenuBar> jMenuBar = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> jMenuBar.set(new JMenuBar()));
         operator.setJMenuBar(jMenuBar.get());
-        assertNotNull(jDialogRef.get().getJMenuBar());
-        assertNotNull(operator.getJMenuBar());
+        assertThat(jDialogRef.get().getJMenuBar()).isNotNull();
+        assertThat(operator.getJMenuBar()).isNotNull();
     }
 
     @Test
     void getDefaultCloseOperation() {
         JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
         operator.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        assertEquals(JDialog.DO_NOTHING_ON_CLOSE, jDialogRef.get().getDefaultCloseOperation());
-        assertEquals(JDialog.DO_NOTHING_ON_CLOSE, operator.getDefaultCloseOperation());
+        assertThat(jDialogRef.get().getDefaultCloseOperation()).isEqualTo(JDialog.DO_NOTHING_ON_CLOSE);
+        assertThat(operator.getDefaultCloseOperation()).isEqualTo(JDialog.DO_NOTHING_ON_CLOSE);
     }
 
     @Test
@@ -154,8 +160,8 @@ class JDialogOperatorTest {
         AtomicReference<JScrollPane> jScrollPane = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> jScrollPane.set(new JScrollPane()));
         operator.setContentPane(jScrollPane.get());
-        assertNotNull(jDialogRef.get().getContentPane());
-        assertNotNull(operator.getContentPane());
+        assertThat(jDialogRef.get().getContentPane()).isNotNull();
+        assertThat(operator.getContentPane()).isNotNull();
     }
 
     @Test
@@ -164,30 +170,30 @@ class JDialogOperatorTest {
         AtomicReference<JScrollPane> glassPane = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> glassPane.set(new JScrollPane()));
         operator.setGlassPane(glassPane.get());
-        assertNotNull(jDialogRef.get().getGlassPane());
-        assertNotNull(operator.getGlassPane());
+        assertThat(jDialogRef.get().getGlassPane()).isNotNull();
+        assertThat(operator.getGlassPane()).isNotNull();
     }
 
     @Test
     void getLayeredPane() {
         JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
         operator.setLayeredPane(new JLayeredPane());
-        assertNotNull(jDialogRef.get().getLayeredPane());
-        assertNotNull(operator.getLayeredPane());
+        assertThat(jDialogRef.get().getLayeredPane()).isNotNull();
+        assertThat(operator.getLayeredPane()).isNotNull();
     }
 
     @Test
     void getRootPane() {
         JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
-        assertNotNull(jDialogRef.get().getRootPane());
-        assertNotNull(operator.getRootPane());
+        assertThat(jDialogRef.get().getRootPane()).isNotNull();
+        assertThat(operator.getRootPane()).isNotNull();
     }
 
     @Test
     void getAccessibleContext() {
         JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
-        assertNotNull(jDialogRef.get().getAccessibleContext());
-        assertNotNull(operator.getAccessibleContext());
+        assertThat(jDialogRef.get().getAccessibleContext()).isNotNull();
+        assertThat(operator.getAccessibleContext()).isNotNull();
     }
 
     @Test
@@ -195,16 +201,16 @@ class JDialogOperatorTest {
         GetTopModalDialogRunnable1 runnable1 = new GetTopModalDialogRunnable1(jDialogRef.get());
         EventQueue.invokeAndWait(runnable1);
         JDialogOperator operator1 = new JDialogOperator();
-        assertNotNull(operator1);
+        assertThat(operator1).isNotNull();
         JDialog dialog1 = (JDialog) JDialogOperator.getTopModalDialog();
-        assertNotNull(dialog1);
+        assertThat(dialog1).isNotNull();
         AtomicReference<GetTopModalDialogRunnable2> runnable2 = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> runnable2.set(new GetTopModalDialogRunnable2(jDialogRef.get())));
         EventQueue.invokeAndWait(runnable2.get());
         JDialogOperator operator2 = new JDialogOperator("JDialogOperatorTest");
-        assertNotNull(operator2);
+        assertThat(operator2).isNotNull();
         JDialog dialog2 = (JDialog) JDialogOperator.getTopModalDialog();
-        assertNotNull(dialog2);
+        assertThat(dialog2).isNotNull();
         EventQueue.invokeAndWait(() -> runnable2.get().cleanup());
     }
 
@@ -216,10 +222,10 @@ class JDialogOperatorTest {
         int y = jDialogRef.get().getY();
         JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
         operator.setLocationRelativeTo(null);
-        assertTrue(x != jDialogRef.get().getX());
-        assertEquals(jDialogRef.get().getX(), operator.getX());
-        assertTrue(y != jDialogRef.get().getY());
-        assertEquals(jDialogRef.get().getY(), operator.getY());
+        assertThat(x != jDialogRef.get().getX()).isTrue();
+        assertThat(operator.getX()).isEqualTo(jDialogRef.get().getX());
+        assertThat(y != jDialogRef.get().getY()).isTrue();
+        assertThat(operator.getY()).isEqualTo(jDialogRef.get().getY());
     }
 
     private static class GetTopModalDialogRunnable1 implements Runnable {
