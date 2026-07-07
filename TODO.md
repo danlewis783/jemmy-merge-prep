@@ -14,7 +14,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `assertj-migration` | Convert remaining JUnit assertions to AssertJ | Ongoing convention; convert classes when touched |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
-| `tooltip-operator` | JToolTipOperator convenience API | Only when a test wants it |
 | `color-chooser-accessors` | JColorChooserOperator subcomponent getters | Only when a test wants it |
 
 ---
@@ -88,15 +87,6 @@ actions live in a popup menu (Motif-style) rather than title buttons.
 ---
 
 ## Feature ports (adopt on demand, each is self-contained)
-
-### `tooltip-operator`
-
-Upstream `JToolTipOperator` (7902278) — 500-line operator with
-`showToolTip`/`waitJToolTip`, plus the `WaitToolTipTimeout` mechanism (7902342).
-This fork already has tooltip predicates (`JToolTipWindowPredicate`,
-`TooltipIsVisibleAndShowingPredicate`, `TrimmingTooltipPredicate`), so this is
-convenience API, not a capability gap. Upstream `JToolTipOperatorTest` adapts
-as the test.
 
 ### `color-chooser-accessors`
 

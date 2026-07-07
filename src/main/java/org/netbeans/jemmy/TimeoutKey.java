@@ -48,6 +48,7 @@ public enum TimeoutKey {
     JSplitPaneOperator_WholeScrollTimeout(60000L),
     JTextComponentOperator_ChangeCaretPositionTimeout(60000L),
     JTextComponentOperator_TypeTextTimeout(60000L),
+    JToolTipOperator_WaitToolTipTimeout(60000L),
     JTreeOperator_BeforeEditTimeout(1000L),
     JTreeOperator_WaitEditingTimeout(60000L),
     JTreeOperator_WaitNodeVisibleTimeout(1000L),

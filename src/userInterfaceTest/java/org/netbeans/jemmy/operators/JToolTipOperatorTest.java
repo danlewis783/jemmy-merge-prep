@@ -1,0 +1,121 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+package org.netbeans.jemmy.operators;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.util.function.Predicate;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JToolTip;
+import javax.swing.ToolTipManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.DumpOnFailure;
+import org.netbeans.jemmy.TimeoutExpiredException;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
+import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.util.StringComparators;
+
+/**
+ * Exercises {@code JToolTipOperator}, ported from openjdk/jemmy-v2 (CODETOOLS-7902278, CODETOOLS-7902342).
+ */
+@ExtendWith(DumpOnFailure.class)
+class JToolTipOperatorTest {
+
+    private static final String TOOLTIP_TEXT = "A simple Tooltip";
+    private static final String LABEL_TEXT = "Roll over here to see a tooltip";
+
+    private final Predicate<Component> byLabelText =
+            comp -> LABEL_TEXT.equals(((JLabel) ((JToolTip) comp).getComponent()).getText());
+
+    private JFrame frame;
+    private JLabel label;
+    private int savedDismissDelay;
+
+    @BeforeEach
+    void beforeEach() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            // keep the tooltip up for the whole constructor cascade; the default 4 s
+            // dismiss delay is too tight on a loaded machine
+            savedDismissDelay = ToolTipManager.sharedInstance().getDismissDelay();
+            ToolTipManager.sharedInstance().setDismissDelay(60000);
+            frame = new JFrame();
+            label = new JLabel(LABEL_TEXT);
+            label.setToolTipText(TOOLTIP_TEXT);
+            frame.getContentPane().add(label);
+            frame.setSize(400, 400);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            ToolTipManager.sharedInstance().setDismissDelay(savedDismissDelay);
+            frame.setVisible(false);
+            frame.dispose();
+        });
+    }
+
+    @Test
+    void showAndFindToolTip() {
+        JLabelOperator labelOperator = new JLabelOperator(label);
+        JToolTipOperator toolTipOperator = new JToolTipOperator(labelOperator.showToolTip());
+        toolTipOperator.waitTipText(TOOLTIP_TEXT, StringComparators.strict());
+        assertThat(toolTipOperator.getTipText()).isEqualTo(TOOLTIP_TEXT);
+        assertThat(toolTipOperator.getComponent()).isSameAs(label);
+        assertThat(toolTipOperator.getUI()).isNotNull();
+
+        // every constructor flavor finds the currently showing tooltip
+        new JToolTipOperator();
+        new JToolTipOperator(labelOperator);
+        new JToolTipOperator(TOOLTIP_TEXT, StringComparators.strict());
+        new JToolTipOperator(byLabelText);
+        new JToolTipOperator(labelOperator, TOOLTIP_TEXT, StringComparators.strict());
+        new JToolTipOperator(labelOperator, byLabelText);
+
+        // clicking dismisses the tooltip
+        labelOperator.clickMouse();
+        try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 2000L)) {
+            assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(JToolTipOperator::waitJToolTip);
+        }
+    }
+
+    @Test
+    void constructorsTimeOutWithoutToolTip() {
+        JLabelOperator dummyLabel = new JLabelOperator(new JLabel());
+        try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1000L)) {
+            assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() -> new JToolTipOperator(dummyLabel));
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> new JToolTipOperator(LABEL_TEXT, StringComparators.strict()));
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> new JToolTipOperator(byLabelText));
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> new JToolTipOperator(dummyLabel, LABEL_TEXT, StringComparators.strict()));
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> new JToolTipOperator(dummyLabel, byLabelText));
+        }
+    }
+}

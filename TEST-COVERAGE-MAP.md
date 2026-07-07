@@ -18,9 +18,9 @@ test is renamed on either side.
 | `JInternalFrameOperatorTest` (ops + testTitleButtons across LAFs) | `JInternalFrameOperatorTest` + `InternalFrameTitleButtonsLafTest` | covered — LAF-parameterized via adopted `LookAndFeelProvider` |
 | `JInternalFrameOperatorCloseTest` | `JInternalFrameOperatorTest.testClose` + `InternalFrameApiDriverTest.closeClosesTheFrame` | covered — `requestCloseAndThenHide` is unsupported in both implementations |
 | `JEditorPaneOperatorTest` (clickOnReference ×2) | `JEditorPaneClickOnReferenceTest` | covered — ported 2026-07-07 with the HTML fixtures |
-| `JToolTipOperatorTest` | — | pending — lands with the `tooltip-operator` port |
+| `JToolTipOperatorTest` | `JToolTipOperatorTest` | covered — ported 2026-07-07 with the `tooltip-operator` port |
 | `MenuTest` (showMenu, pushMenuNoBlock) | `MenuNavigationTest` + `JMenuBarOperatorTest` | covered |
-| `ButtonsAndTooltipsTest` (testPush/testLookups) | `ButtonGridLookupTest` + `JButtonOperatorTest`; tooltip scenario pending with `tooltip-operator` | partial |
+| `ButtonsAndTooltipsTest` (testPush/testLookups) | `ButtonGridLookupTest` + `JButtonOperatorTest` + `JToolTipOperatorTest` | covered |
 | `ComboBoxesAndListTest` | `DialogComboListWorkflowTest` + `JComboBoxOperatorTest` | covered |
 | `MenuButtonTextTest` | `MenuNavigationTest` | covered — same scenario (ex-`jemmy_002`) |
 | `UIStatusTest` | — | N/A — `UIStatus` mouse tracking rejected as production pollution; failure diagnostics live in the test-layer `DumpOnFailure` extension |
