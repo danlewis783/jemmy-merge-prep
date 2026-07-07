@@ -45,7 +45,7 @@ import org.netbeans.jemmy.drivers.scrolling.JSplitPaneDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollPaneDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollbarDriver;
 import org.netbeans.jemmy.drivers.tables.JTableMouseDriver;
-import org.netbeans.jemmy.drivers.text.AWTTextKeyboardDriver;
+import org.netbeans.jemmy.drivers.text.AWTTextAPIDriver;
 import org.netbeans.jemmy.drivers.text.SwingTextKeyboardDriver;
 import org.netbeans.jemmy.drivers.trees.JTreeAPIDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultFrameDriver;
@@ -65,7 +65,7 @@ public final class APIDriverInstaller implements DriverInstaller {
         driverManager.setDriver(DriverType.List, new JTreeAPIDriver());
         driverManager.setDriver(DriverType.MultiSelList, new JTreeAPIDriver());
         driverManager.setDriver(DriverType.Tree, new JTreeAPIDriver());
-        driverManager.setDriver(DriverType.Text, new AWTTextKeyboardDriver());
+        driverManager.setDriver(DriverType.Text, new AWTTextAPIDriver());
         driverManager.setDriver(DriverType.Text, new SwingTextKeyboardDriver());
         driverManager.setDriver(DriverType.Scroll, new ScrollbarDriver());
         driverManager.setDriver(DriverType.Scroll, new ScrollPaneDriver());

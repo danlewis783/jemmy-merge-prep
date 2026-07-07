@@ -25,24 +25,25 @@
 
 package org.netbeans.jemmy.drivers.focus;
 
-import java.awt.event.FocusEvent;
 import java.util.Collections;
 import org.netbeans.jemmy.drivers.FocusDriver;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
-import org.netbeans.jemmy.drivers.input.EventDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public final class APIFocusDriver extends LightSupportiveDriver implements FocusDriver {
-    private final EventDriver eventDriver;
 
     public APIFocusDriver() {
         super(Collections.singletonList(ComponentOperator.class));
-        eventDriver = new EventDriver();
     }
 
     @Override
     public void giveFocus(ComponentOperator operator) {
-        operator.requestFocus();
-        eventDriver.dispatchEvent(operator.getSource(), new FocusEvent(operator.getSource(), FocusEvent.FOCUS_GAINED));
+        if (!operator.hasFocus()) {
+            operator.requestFocus();
+            // wait for the real focus transfer rather than faking a FOCUS_GAINED event: a
+            // synthesized focus event desyncs the KeyboardFocusManager, which then defers all
+            // subsequent key events and typing silently stops working
+            operator.waitHasFocus();
+        }
     }
 }

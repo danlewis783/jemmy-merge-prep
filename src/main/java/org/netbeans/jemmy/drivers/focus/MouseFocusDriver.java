@@ -43,27 +43,20 @@ import org.netbeans.jemmy.operators.JSliderOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
-import org.netbeans.jemmy.operators.ListOperator;
 import org.netbeans.jemmy.operators.Operator;
-import org.netbeans.jemmy.operators.ScrollbarOperator;
-import org.netbeans.jemmy.operators.TextAreaOperator;
-import org.netbeans.jemmy.operators.TextComponentOperator;
-import org.netbeans.jemmy.operators.TextFieldOperator;
 
 public final class MouseFocusDriver extends LightSupportiveDriver implements FocusDriver {
     public MouseFocusDriver() {
+        // Swing components only: synthetic clicks give focus to lightweights, but native AWT
+        // components (TextField, List, ...) ignore synthetic mouse events, so they fall back to
+        // APIFocusDriver's requestFocus(), which issues a real native focus request.
         super(Collections.unmodifiableList(Arrays.asList(
                 JListOperator.class,
                 JScrollBarOperator.class,
                 JSliderOperator.class,
                 JTableOperator.class,
                 JTextComponentOperator.class,
-                JTreeOperator.class,
-                ListOperator.class,
-                ScrollbarOperator.class,
-                TextAreaOperator.class,
-                TextComponentOperator.class,
-                TextFieldOperator.class)));
+                JTreeOperator.class)));
     }
 
     @Override

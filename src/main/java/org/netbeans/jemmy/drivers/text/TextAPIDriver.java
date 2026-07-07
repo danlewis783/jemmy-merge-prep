@@ -25,6 +25,7 @@
 
 package org.netbeans.jemmy.drivers.text;
 
+import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import org.netbeans.jemmy.JemmyProperties;
@@ -106,6 +107,15 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
 
     @Override
     public void enterText(ComponentOperator oper, String text) {
+        if (oper.getSource() instanceof TextArea) {
+            // a real Enter press appends a line break, but native AWT controls ignore synthetic
+            // key events, so apply the newline through the API and skip the key press (under the
+            // robot model a real Enter would otherwise add a second line break)
+            changeText(oper, text + "\n");
+
+            return;
+        }
+
         changeText(oper, text);
         DriverManager.newInstance(JemmyProperties.getInstance())
                 .getKeyDriver(oper)
