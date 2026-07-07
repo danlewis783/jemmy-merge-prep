@@ -18,7 +18,6 @@ package org.netbeans.jemmy.operators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -27,7 +26,6 @@ import java.awt.GridLayout;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.lang.reflect.InvocationTargetException;
-import java.time.Duration;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -147,8 +145,7 @@ class JScrollBarOperatorTest {
         });
         JScrollBarOperator operator = new JScrollBarOperator(negativeRange[0]);
         JScrollBarAPIDriver driver = new JScrollBarAPIDriver();
-        assertTimeoutPreemptively(
-                Duration.ofSeconds(15), () -> driver.scroll(operator, new ValueTargetAdjuster(operator, -1)));
+        driver.scroll(operator, new ValueTargetAdjuster(operator, -1));
         assertEquals(-1, operator.getValue());
     }
 
@@ -307,6 +304,9 @@ class JScrollBarOperatorTest {
     private static class ValueTargetAdjuster implements ScrollAdjuster {
         private final JScrollBarOperator operator;
         private final int target;
+        // gives up instead of scrolling forever, so a regressed driver fails the value
+        // assertion rather than hanging the test
+        private final long deadline = System.currentTimeMillis() + 15_000;
 
         ValueTargetAdjuster(JScrollBarOperator operator, int target) {
             this.operator = operator;
@@ -315,6 +315,10 @@ class JScrollBarOperatorTest {
 
         @Override
         public int getScrollDirection() {
+            if (System.currentTimeMillis() > deadline) {
+                return DO_NOT_TOUCH_SCROLL_DIRECTION;
+            }
+
             int value = operator.getValue();
             if (value > target) {
                 return DECREASE_SCROLL_DIRECTION;

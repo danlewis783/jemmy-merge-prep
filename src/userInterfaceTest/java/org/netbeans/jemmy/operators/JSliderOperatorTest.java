@@ -18,12 +18,10 @@ package org.netbeans.jemmy.operators;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
-import java.time.Duration;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import javax.swing.BoundedRangeModel;
@@ -140,8 +138,7 @@ class JSliderOperatorTest {
         });
         JSliderOperator operator = new JSliderOperator(slider);
         JSliderAPIDriver driver = new JSliderAPIDriver();
-        assertTimeoutPreemptively(
-                Duration.ofSeconds(15), () -> driver.scroll(operator, new ValueTargetAdjuster(operator, -1)));
+        driver.scroll(operator, new ValueTargetAdjuster(operator, -1));
         assertEquals(-1, operator.getValue());
     }
 
@@ -451,6 +448,9 @@ class JSliderOperatorTest {
     private static class ValueTargetAdjuster implements ScrollAdjuster {
         private final JSliderOperator operator;
         private final int target;
+        // gives up instead of scrolling forever, so a regressed driver fails the value
+        // assertion rather than hanging the test
+        private final long deadline = System.currentTimeMillis() + 15_000;
 
         ValueTargetAdjuster(JSliderOperator operator, int target) {
             this.operator = operator;
@@ -459,6 +459,10 @@ class JSliderOperatorTest {
 
         @Override
         public int getScrollDirection() {
+            if (System.currentTimeMillis() > deadline) {
+                return DO_NOT_TOUCH_SCROLL_DIRECTION;
+            }
+
             int value = operator.getValue();
             if (value > target) {
                 return DECREASE_SCROLL_DIRECTION;

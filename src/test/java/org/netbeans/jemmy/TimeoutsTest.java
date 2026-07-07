@@ -30,8 +30,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 @SuppressWarnings("resource")
+// mutates global state (system properties, the Timeouts singleton); never run in parallel
+@Isolated
 class TimeoutsTest {
 
     private static final long ACCEPTABLE_SLEEP_DIFF = 100L;

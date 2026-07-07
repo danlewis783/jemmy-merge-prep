@@ -12,8 +12,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
 | `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
-| `flaky-ui-tests` | Investigate jemmy_036 focus handoff and JPopupMenuOperatorTest timeout | Do when suite noise becomes annoying |
-| `first-hygiene` | Bring tests in line with FIRST: temp dirs, flaky tags, global-state locks | Low effort, improves suite trust |
 | `scenario-test-cleanup` | Give the jemmy_nnn/Application_nnn pairs purpose, names, and deduplication | Incremental; fold, rename, or delete |
 | `assertj-migration` | Convert all assertions to AssertJ, killing try/fail/catch idioms first | Incremental; exception tests first |
 | `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Do after scenario-test-cleanup stabilizes names |
@@ -30,58 +28,13 @@ Each item has a mnemonic. To pick one up later, reference it by name
 
 ## Reliability follow-ups (not upstream ports)
 
-### `flaky-ui-tests`
-
-Verified failing intermittently on a clean tree (stash-baseline, 2026-07-05):
-
-- `jemmy_036` — `TimeoutExpiredException` in `ComponentOperator.waitHasFocus`
-  via `MouseFocusDriver.giveFocus`: focus never arrives after the mouse click.
-- `JPopupMenuOperatorTest.testRobot56091` — `JMenuOperator_PushMenuTimeout`
-  (60 s) exceeded in `JPopupMenuOperator.pushMenu`.
-
-(The former AWT scroll flakiness in `jemmy_035`/`jemmy_037` was fixed
-2026-07-06 by rewriting the AWT scroll drivers onto the `Adjustable` API.)
-A full `userInterfaceTest` run is not reliably green until the two remaining
-tests are addressed.
-
-**Recommendation: investigate when suite noise matters (CI gating, etc.).**
-
-### `first-hygiene`
-
-Test-suite hygiene against the FIRST criteria (Fast, Isolated, Repeatable,
-Self-validating, Timely — Langr/Hunt/Thomas, *Pragmatic Unit Testing in
-Java 8 with JUnit*):
-
-- **Isolated/Repeatable:** `JFileChooserOperatorTest` creates its fixture
-  files (`showit`, `showit.txt`) in the current working directory; move to
-  JUnit `@TempDir` and point the chooser there.
-- **Isolated:** the `TimeoutsTest` scale tests and
-  `LookAndFeelTest.detectsNimbusAfterSwitching` mutate global state (system
-  property + `Timeouts` singleton; `UIManager` look and feel) with
-  restore-in-`finally` discipline. Safe today because suites run
-  single-threaded; annotate with `@Isolated` / `@ResourceLock` (or document
-  the constraint) before ever enabling JUnit parallel execution.
-- **Repeatable:** tag the known-flaky UI tests (`jemmy_036`,
-  `JPopupMenuOperatorTest.testRobot56091`; see `flaky-ui-tests`) with a JUnit
-  `@Tag("flaky")` and exclude them from the default `check` run so the rest
-  of the suite stays trustworthy while the root causes are open.
-- **Minor:** the `-1`-sentinel regression tests abandon a spinning background
-  thread if they ever fail (`assertTimeoutPreemptively` semantics on an
-  unbounded driver loop). Acceptable in a failing build; a cooperative
-  cancellation check in the test adjuster would clean it up.
-- **Self-validating (done, keep it up):** several inherited UI tests invoked
-  operations without asserting outcomes (`testMaximize`, `testEnterSubDir`
-  before 2026-07-05); prefer strengthening such tests whenever one is touched.
-
-**Recommendation: low-effort batch; do alongside `flaky-ui-tests`.**
-
 ### `scenario-test-cleanup`
 
 `src/userInterfaceTest/.../testing/` holds 39 numbered legacy scenario tests
 (`jemmy_001` … `jemmy_048`, with gaps) driving 36 numbered fixtures
 (`Application_nnn` in `testFixtures`). The names convey nothing, each class is
 usually a single `@Test`, coverage overlaps the per-operator test classes to an
-unknown degree, and the known-flaky tests hide among them (`jemmy_035/036/037`).
+unknown degree.
 Goal: every surviving test has a focused, coherent, encapsulated purpose and a
 name that states it.
 
@@ -105,12 +58,9 @@ Suggested approach:
    show pruning has already happened; record old→new name mappings in commit
    messages so history against the legacy NetBeans suite stays searchable.
 5. **Do it incrementally** — batch by operator area, or opportunistically
-   whenever a numbered test breaks or is touched; pairs naturally with
-   `flaky-ui-tests` (renaming `jemmy_036` forces stating what it actually
-   verifies).
+   whenever a numbered test breaks or is touched.
 
-**Recommendation: incremental; start with the flaky trio, whose investigation
-requires understanding their purpose anyway.**
+**Recommendation: incremental; batch by operator area.**
 
 ### `assertj-migration`
 
@@ -145,13 +95,11 @@ Priority order:
 
 2. **Mechanical conversions** — `assertEquals`/`assertTrue`/`assertNotNull`
    → `assertThat(...)`, per test class, opportunistically alongside
-   `scenario-test-cleanup` and `first-hygiene` edits rather than as one big
+   `scenario-test-cleanup` edits rather than as one big
    diff.
 
 Notes:
 
-- `assertTimeoutPreemptively` (used by the `-1`-sentinel regression tests)
-  has no AssertJ equivalent — keep the JUnit static for those.
 - Converges test style with the C:\dev\jemmy fork, which already had its
   AssertJ refactor ("Refactor tests to AssertJ 3.27.7 fluent assertions") —
   one less textual difference for the eventual merge.

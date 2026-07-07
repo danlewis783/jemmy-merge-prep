@@ -20,7 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.swing.UIManager;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
+// mutates global state (the UIManager look and feel); never run in parallel
+@Isolated
 class LookAndFeelTest {
 
     @Test

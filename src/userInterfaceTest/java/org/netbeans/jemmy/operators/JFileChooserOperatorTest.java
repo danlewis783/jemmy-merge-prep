@@ -26,18 +26,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.jemmy.FunctionRunner;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -47,9 +46,11 @@ import org.netbeans.jemmy.util.StringComparators;
 
 final class JFileChooserOperatorTest {
 
-    private static final String FN1 = ".";
     private static final String FN2 = "showit.txt";
     private static final String FN3 = "showit";
+
+    @TempDir
+    private static Path tempDir;
 
     private AtomicReference<JFileChooser> fileChooserRef;
     private AtomicReference<JFrame> frameRef;
@@ -58,21 +59,8 @@ final class JFileChooserOperatorTest {
     @BeforeAll
     static void beforeAll() throws IOException {
         Timeouts.resetToDefaults();
-
-        Path file2 = Paths.get(FN2);
-        Files.createFile(file2);
-
-        Path file3 = Paths.get(FN3);
-        Files.createDirectory(file3);
-    }
-
-    @AfterAll
-    static void afterClass() throws IOException {
-        Path file2 = Paths.get(FN2);
-        Files.deleteIfExists(file2);
-
-        Path file3 = Paths.get(FN3);
-        Files.deleteIfExists(file3);
+        Files.createFile(tempDir.resolve(FN2));
+        Files.createDirectory(tempDir.resolve(FN3));
     }
 
     @BeforeEach
@@ -86,8 +74,7 @@ final class JFileChooserOperatorTest {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             frameRef = new AtomicReference<>(frame);
-            File file = new File(FN1);
-            fileChooser.setCurrentDirectory(file);
+            fileChooser.setCurrentDirectory(tempDir.toFile());
             fileChooserRef = new AtomicReference<>(fileChooser);
         });
     }
@@ -262,7 +249,7 @@ final class JFileChooserOperatorTest {
     void testGoUpLevel() {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertNotNull(op);
-        op.setCurrentDirectory(new File(FN3));
+        op.setCurrentDirectory(tempDir.resolve(FN3).toFile());
         op.goUpLevel();
     }
 
@@ -335,9 +322,10 @@ final class JFileChooserOperatorTest {
     void testWaitFileCount() throws Exception {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertNotNull(op);
-        EventQueue.invokeAndWait(() -> fileChooserRef.get().setCurrentDirectory(new File(FN3)));
+        EventQueue.invokeAndWait(() ->
+                fileChooserRef.get().setCurrentDirectory(tempDir.resolve(FN3).toFile()));
         op.waitFileCount(0);
-        EventQueue.invokeAndWait(() -> fileChooserRef.get().setCurrentDirectory(new File(FN1)));
+        EventQueue.invokeAndWait(() -> fileChooserRef.get().setCurrentDirectory(tempDir.toFile()));
     }
 
     @Test
