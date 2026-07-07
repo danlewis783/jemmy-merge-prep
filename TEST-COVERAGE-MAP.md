@@ -17,7 +17,7 @@ test is renamed on either side.
 | `FileChooserTest` (testSelection/testCount/testGoHome) | `JFileChooserOperatorTest` (testSelectFile/testGetFileCount/testWaitFileCount/testGoHome) | covered |
 | `JInternalFrameOperatorTest` (ops + testTitleButtons across LAFs) | `JInternalFrameOperatorTest` + `InternalFrameTitleButtonsLafTest` | covered — LAF-parameterized via adopted `LookAndFeelProvider` |
 | `JInternalFrameOperatorCloseTest` | `JInternalFrameOperatorTest.testClose` + `InternalFrameApiDriverTest.closeClosesTheFrame` | covered — `requestCloseAndThenHide` is unsupported in both implementations |
-| `JEditorPaneOperatorTest` (clickOnReference ×2) | — | pending — lands with the `click-on-reference` port |
+| `JEditorPaneOperatorTest` (clickOnReference ×2) | `JEditorPaneClickOnReferenceTest` | covered — ported 2026-07-07 with the HTML fixtures |
 | `JToolTipOperatorTest` | — | pending — lands with the `tooltip-operator` port |
 | `MenuTest` (showMenu, pushMenuNoBlock) | `MenuNavigationTest` + `JMenuBarOperatorTest` | covered |
 | `ButtonsAndTooltipsTest` (testPush/testLookups) | `ButtonGridLookupTest` + `JButtonOperatorTest`; tooltip scenario pending with `tooltip-operator` | partial |

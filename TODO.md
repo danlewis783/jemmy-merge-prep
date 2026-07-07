@@ -15,7 +15,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
 | `tooltip-operator` | JToolTipOperator convenience API | Only when a test wants it |
-| `click-on-reference` | Click hyperlink in JEditorPane by anchor | Only when a test wants it |
 | `color-chooser-accessors` | JColorChooserOperator subcomponent getters | Only when a test wants it |
 
 ---
@@ -98,12 +97,6 @@ This fork already has tooltip predicates (`JToolTipWindowPredicate`,
 `TooltipIsVisibleAndShowingPredicate`, `TrimmingTooltipPredicate`), so this is
 convenience API, not a capability gap. Upstream `JToolTipOperatorTest` adapts
 as the test.
-
-### `click-on-reference`
-
-`JEditorPaneOperator.clickOnReference(reference)` (7902156) — scroll to and
-click a hyperlink by anchor name in an HTML `JEditorPane`. Upstream ships
-`JEditorPaneOperatorTest` plus two small HTML fixtures.
 
 ### `color-chooser-accessors`
 

@@ -27,19 +27,27 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.IllegalComponentStateException;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JEditorPaneOperator extends JTextComponentOperator {
@@ -72,6 +80,70 @@ public class JEditorPaneOperator extends JTextComponentOperator {
                 cont,
                 PredicatesJ.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
+    }
+
+    /**
+     * Scrolls to a named anchor reference, waits for the caret to arrive there, and clicks it. Ported from
+     * openjdk/jemmy-v2 (CODETOOLS-7902156).
+     *
+     * @throws IllegalArgumentException if the document has no anchor named {@code reference}
+     * @throws IllegalComponentStateException if the reference is outside the visible area and no enclosing scroll
+     *     pane exists to scroll it into view
+     */
+    public void clickOnReference(String reference) {
+        int expectedCaretPos = getCaretPositionOfReference(reference);
+        Rectangle viewBounds = modelToView(expectedCaretPos);
+        Point expectedCaretPosLoc = new Point(viewBounds.x, viewBounds.y);
+        JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+        if (scroll != null) {
+            JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+            scroller.setVisualizer(new EmptyVisualizer());
+            scroller.scrollToComponentRectangle(
+                    getSource(), viewBounds.x, viewBounds.y, viewBounds.width, viewBounds.height);
+            setCaretPosition(expectedCaretPos);
+        } else if (getVisibleRect().contains(expectedCaretPosLoc)) {
+            scrollToReference(reference);
+        } else {
+            throw new IllegalComponentStateException(
+                    "Component doesn't contain JScrollPane and Reference is out of visible area");
+        }
+
+        waitStateOnQueue(op -> expectedCaretPosLoc.equals(
+                ((JEditorPane) op.getSource()).getCaret().getMagicCaretPosition()));
+        waitCaretPosition(expectedCaretPos);
+        clickMouse(viewBounds.x, viewBounds.y, 1);
+    }
+
+    private int getCaretPositionOfReference(String reference) {
+        Integer pos = QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+            Document doc = ((JEditorPane) getSource()).getDocument();
+            if (doc instanceof HTMLDocument) {
+                for (HTMLDocument.Iterator iter = ((HTMLDocument) doc).getIterator(HTML.Tag.A);
+                        iter.isValid();
+                        iter.next()) {
+                    String nameAttr = (String) iter.getAttributes().getAttribute(HTML.Attribute.NAME);
+                    if (reference.equals(nameAttr)) {
+                        return iter.getStartOffset();
+                    }
+                }
+            }
+
+            return -1;
+        }));
+        if (pos == -1) {
+            throw new IllegalArgumentException(
+                    "Reference " + reference + " doesn't exist in the document " + getDocument() + ".");
+        }
+
+        return pos;
+    }
+
+    public void scrollToReference(String reference) {
+        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            ((JEditorPane) getSource()).scrollToReference(reference);
+
+            return null;
+        }));
     }
 
     public void addHyperlinkListener(HyperlinkListener hyperlinkListener) {
