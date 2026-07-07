@@ -12,7 +12,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
 | `assertj-migration` | Convert remaining JUnit assertions to AssertJ | Ongoing convention; convert classes when touched |
-| `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
 
 ---
@@ -66,15 +65,6 @@ Notes:
 
 **Recommendation: incremental; exception-shaped tests first, the rest
 class-by-class when touched.**
-
-### `filechooser-accessible-names`
-
-`JFileChooserOperator.selectFile` selects by raw list index. Upstream filters
-the file list by accessible name (CODETOOLS-7902413), fixes a macOS NPE in
-`selectFile` (7901960), and handles LAF differences (7902339). Latent here
-because the suite runs Windows + Metal; becomes real on macOS or other LAFs.
-
-**Recommendation: port the series together if the platform matrix ever grows.**
 
 ### `internal-frame-popup-driver`
 

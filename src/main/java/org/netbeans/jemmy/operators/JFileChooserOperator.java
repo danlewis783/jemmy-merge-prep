@@ -25,17 +25,14 @@
 
 package org.netbeans.jemmy.operators;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -45,6 +42,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ListModel;
@@ -53,6 +51,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import javax.swing.plaf.FileChooserUI;
+import javax.swing.table.TableModel;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
@@ -60,9 +59,11 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.functions.JListCellIndexIsPaintedFunction;
+import org.netbeans.jemmy.functions.JTableCellIndexIsPaintedFunction;
 import org.netbeans.jemmy.predicates.ButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.JFileChooserJDialogPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 import org.slf4j.Logger;
@@ -110,7 +111,7 @@ public class JFileChooserOperator extends JComponentOperator {
 
     public JButton getCancelButton() {
         return (JButton) Objects.requireNonNull(
-                innerSearcher.findComponent(new IsJButtonNotInsideComboWithTextPredicate(), 1),
+                innerSearcher.findComponent(new IsJButtonWithTextNotInsideComboPredicate(), 1),
                 "cancel button not found");
     }
 
@@ -135,9 +136,21 @@ public class JFileChooserOperator extends JComponentOperator {
                 innerSearcher.findComponent(PredicatesJ.of(JTextField.class)), "path field not found");
     }
 
-    public JList getFileList() {
-        return (JList)
-                Objects.requireNonNull(innerSearcher.findComponent(PredicatesJ.of(JList.class)), "file list not found");
+    /**
+     * Returns either a JList or JTable, depending on the implementation. The JList is matched by the look and feel's
+     * accessible name for the file list, so directory or path lists in the same chooser are not picked up by mistake
+     * (CODETOOLS-7902413, CODETOOLS-7902339).
+     */
+    public Component getFileList() {
+        final String fileListName;
+        if (LookAndFeel.isMotif() || LookAndFeel.isGTK()) {
+            fileListName = UIManager.getString("FileChooser.filesLabelText", getLocale());
+        } else {
+            fileListName = UIManager.getString("FileChooser.filesListAccessibleName", getLocale());
+        }
+
+        return Objects.requireNonNull(
+                innerSearcher.findComponent(new FileListPredicate(fileListName)), "file list not found");
     }
 
     public void approve() {
@@ -163,15 +176,17 @@ public class JFileChooserOperator extends JComponentOperator {
         return getCurrentDirectory();
     }
 
-    public @Nullable File goHome() {
-        if ("Windows".equals(UIManager.getLookAndFeel().getName())) {
-            return null;
+    public File goHome() {
+        AbstractButtonOperator homeOper;
+        // In Windows and Windows Classic L&F, there is no 'Go Home' button,
+        // but there is a toggle button to go desktop. In Windows platform
+        // 'Go Home' button usually navigates to Desktop only.
+        if (LookAndFeel.isWindows() || LookAndFeel.isWindowsClassic()) {
+            homeOper = new JToggleButtonOperator(this, 1);
+        } else {
+            homeOper = new JButtonOperator(getHomeButton());
         }
 
-        JButton homeButton = getHomeButton();
-        EventQueue.invokeLater(() -> homeButton.setBorder(BorderFactory.createLineBorder(Color.RED, 5)));
-
-        JButtonOperator homeOper = new JButtonOperator(homeButton);
         homeOper.push();
         waitPainted(-1);
 
@@ -179,9 +194,15 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public void clickOnFile(int index, int clickCount) {
-        JListOperator listOper = new JListOperator(getFileList());
         waitPainted(index);
-        listOper.clickOnItem(index, clickCount);
+        Component list = getFileList();
+        if (list instanceof JList) {
+            new JListOperator((JList) list).clickOnItem(index, clickCount);
+        } else if (list instanceof JTable) {
+            new JTableOperator((JTable) list).clickOnCell(index, 0, clickCount);
+        } else {
+            throw new IllegalStateException("Wrong component type");
+        }
     }
 
     public void clickOnFile(String file, StringComparator comparator, int clickCount) {
@@ -214,11 +235,21 @@ public class JFileChooserOperator extends JComponentOperator {
         selectFile(file, StringComparators.strict());
     }
 
+    /**
+     * Selects a file currently in the list without clicking, so it also works where synthesized clicks are unreliable
+     * (CODETOOLS-7901960).
+     */
     public void selectFile(String file, StringComparator comparator) {
         int index = findFileIndex(file, comparator);
-        JListOperator listOper = new JListOperator(getFileList());
         waitPainted(index);
-        listOper.setSelectedIndex(index);
+        Component list = getFileList();
+        if (list instanceof JList) {
+            new JListOperator((JList) list).setSelectedIndex(index);
+        } else if (list instanceof JTable) {
+            new JTableOperator((JTable) list).changeSelection(index, 0, false, false);
+        } else {
+            throw new IllegalStateException("Wrong component type");
+        }
     }
 
     public void selectPathDirectory(String dir, StringComparator comparator) {
@@ -245,20 +276,38 @@ public class JFileChooserOperator extends JComponentOperator {
 
     public int getFileCount() {
         waitPainted(-1);
-
-        return getFileList().getModel().getSize();
+        Component list = getFileList();
+        if (list instanceof JList) {
+            return ((JList) list).getModel().getSize();
+        } else if (list instanceof JTable) {
+            return ((JTable) list).getModel().getRowCount();
+        } else {
+            throw new IllegalStateException("Wrong component type");
+        }
     }
 
     public File[] getFiles() {
         waitPainted(-1);
-        ListModel listModel = getFileList().getModel();
-        int size = listModel.getSize();
-        File[] result = new File[size];
-        for (int i = 0; i < size; i++) {
-            result[i] = (File) listModel.getElementAt(i);
-        }
+        Component list = getFileList();
+        if (list instanceof JList) {
+            ListModel listModel = ((JList) list).getModel();
+            File[] result = new File[listModel.getSize()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = (File) listModel.getElementAt(i);
+            }
 
-        return result;
+            return result;
+        } else if (list instanceof JTable) {
+            TableModel tableModel = ((JTable) list).getModel();
+            File[] result = new File[tableModel.getRowCount()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = (File) tableModel.getValueAt(i, 0);
+            }
+
+            return result;
+        } else {
+            throw new IllegalStateException("Wrong component type");
+        }
     }
 
     public void waitFileCount(int count) {
@@ -613,9 +662,17 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     private void waitPainted(int index) {
+        Component list = getFileList();
         try {
-            FunctionRepeater.on(new JListCellIndexIsPaintedFunction(this::getFileList))
-                    .runUntilNotNull(index);
+            if (list instanceof JList) {
+                FunctionRepeater.on(new JListCellIndexIsPaintedFunction(() -> (JList) getFileList()))
+                        .runUntilNotNull(index);
+            } else if (list instanceof JTable) {
+                FunctionRepeater.on(new JTableCellIndexIsPaintedFunction(() -> (JTable) getFileList()))
+                        .runUntilNotNull(index);
+            } else {
+                throw new IllegalStateException("Wrong component type");
+            }
         } catch (InterruptedException e) {
             logger.warn("", e);
         }
@@ -746,6 +803,33 @@ public class JFileChooserOperator extends JComponentOperator {
                     && !(comp.getParent() instanceof JComboBox)
                     && (((JButton) comp).getText() == null
                             || ((JButton) comp).getText().length() == 0);
+        }
+    }
+
+    private static class IsJButtonWithTextNotInsideComboPredicate implements Predicate<Component> {
+        @Override
+        public boolean test(Component comp) {
+            return (comp instanceof JButton)
+                    && (comp.getParent() != null)
+                    && !(comp.getParent() instanceof JComboBox)
+                    && (((JButton) comp).getText() != null)
+                    && !((JButton) comp).getText().isEmpty();
+        }
+    }
+
+    private static class FileListPredicate implements Predicate<Component> {
+        private final @Nullable String fileListName;
+
+        FileListPredicate(@Nullable String fileListName) {
+            this.fileListName = fileListName;
+        }
+
+        @Override
+        public boolean test(Component comp) {
+            return ((comp instanceof JList)
+                            && (fileListName != null)
+                            && fileListName.equals(comp.getAccessibleContext().getAccessibleName()))
+                    || (comp instanceof JTable);
         }
     }
 }

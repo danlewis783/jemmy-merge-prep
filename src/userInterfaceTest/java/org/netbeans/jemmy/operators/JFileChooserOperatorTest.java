@@ -17,9 +17,11 @@
 
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -31,6 +33,9 @@ import java.util.function.Function;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.UIManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -221,7 +226,26 @@ final class JFileChooserOperatorTest {
     void testGetFileList() {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertNotNull(op);
-        op.getFileList();
+        // in list view the file list is the JList carrying the look and feel's accessible name
+        Component list = op.getFileList();
+        assertThat(list).isInstanceOf(JList.class);
+        assertThat(list.getAccessibleContext().getAccessibleName())
+                .isEqualTo(UIManager.getString("FileChooser.filesListAccessibleName", op.getLocale()));
+    }
+
+    @Test
+    void testDetailsViewUsesTable() {
+        JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
+        new JToggleButtonOperator(op.getDetailsToggleButton()).push();
+        op.waitStateOnQueue(o -> op.getFileList() instanceof JTable);
+        assertThat(op.getFileCount()).isEqualTo(2);
+        assertThat(op.getFiles()).extracting(File::getName).containsExactlyInAnyOrder(FN2, FN3);
+        op.selectFile(FN2);
+        op.waitStateOnQueue(o -> {
+            File selected = ((JFileChooser) op.getSource()).getSelectedFile();
+
+            return (selected != null) && FN2.equals(selected.getName());
+        });
     }
 
     @Test
