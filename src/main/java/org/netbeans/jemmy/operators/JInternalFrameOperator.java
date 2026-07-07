@@ -57,6 +57,7 @@ import org.netbeans.jemmy.predicates.JInternalFrameByTitlePredicate;
 import org.netbeans.jemmy.predicates.JInternalFramePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
+import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 import org.slf4j.Logger;
@@ -70,6 +71,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     private @Nullable JDesktopIconOperator iconOperator;
     private @Nullable JButtonOperator maxOper;
     private @Nullable JButtonOperator minOper;
+    private @Nullable JButtonOperator popupButtonOper;
     private @Nullable ContainerOperator titleOperator;
     private final WindowDriver wDriver;
 
@@ -228,6 +230,16 @@ public class JInternalFrameOperator extends JComponentOperator {
         initOperators();
 
         return Objects.requireNonNull(closeOper, "internal frame has no close button");
+    }
+
+    /**
+     * Waits for the popup button carrying the title actions, present only on look and feels that keep those actions
+     * in a popup menu (Motif-style). Ported from openjdk/jemmy-v2 (CODETOOLS-7902300).
+     */
+    public JButtonOperator getPopupButton() {
+        initOperators();
+
+        return Objects.requireNonNull(popupButtonOper, "internal frame has no popup button");
     }
 
     public ContainerOperator getTitleOperator() {
@@ -560,20 +572,28 @@ public class JInternalFrameOperator extends JComponentOperator {
                 ContainerOperator title = new ContainerOperator(titlePane);
                 titleOperator = title;
                 if (getContainer(PredicatesJ.of(JDesktopPane.class)) != null) {
-                    minOper = isIconifiable() ? findTitleButton(title, "InternalFrame.iconButtonToolTip") : null;
-                    maxOper = isMaximizable() ? findTitleButton(title, "InternalFrame.maxButtonToolTip") : null;
+                    if (LookAndFeel.isMotif()) {
+                        // Motif keeps the title actions in a popup menu behind the sole title button
+                        popupButtonOper = new JButtonOperator(title, 0);
+                    } else {
+                        minOper = isIconifiable() ? findTitleButton(title, "InternalFrame.iconButtonToolTip") : null;
+                        maxOper = isMaximizable() ? findTitleButton(title, "InternalFrame.maxButtonToolTip") : null;
+                    }
                 } else {
                     minOper = null;
                     maxOper = null;
                 }
 
-                closeOper = isClosable() ? findTitleButton(title, "InternalFrame.closeButtonToolTip") : null;
+                closeOper = (isClosable() && !LookAndFeel.isMotif())
+                        ? findTitleButton(title, "InternalFrame.closeButtonToolTip")
+                        : null;
             }
         } else {
             titleOperator = null;
             minOper = null;
             maxOper = null;
             closeOper = null;
+            popupButtonOper = null;
         }
     }
 

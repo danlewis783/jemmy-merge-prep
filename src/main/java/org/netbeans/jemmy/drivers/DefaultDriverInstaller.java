@@ -50,6 +50,8 @@ import org.netbeans.jemmy.drivers.trees.JTreeMouseDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultFrameDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultInternalFrameDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultWindowDriver;
+import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
+import org.netbeans.jemmy.util.LookAndFeel;
 
 public final class DefaultDriverInstaller implements DriverInstaller {
     private final boolean shortcutEvents;
@@ -83,9 +85,12 @@ public final class DefaultDriverInstaller implements DriverInstaller {
         driverManager.setDriver(DriverType.List, new ChoiceDriver());
         driverManager.setDriver(DriverType.Frame, new DefaultFrameDriver());
         driverManager.setDriver(DriverType.Window, new DefaultWindowDriver());
-        driverManager.setDriver(DriverType.Frame, new DefaultInternalFrameDriver());
-        driverManager.setDriver(DriverType.InternalFrame, new DefaultInternalFrameDriver());
-        driverManager.setDriver(DriverType.Window, new DefaultInternalFrameDriver());
+        // Motif keeps internal frame title actions in a popup menu rather than title buttons
+        DefaultInternalFrameDriver internalFrameDriver =
+                LookAndFeel.isMotif() ? new InternalFramePopupMenuDriver() : new DefaultInternalFrameDriver();
+        driverManager.setDriver(DriverType.Frame, internalFrameDriver);
+        driverManager.setDriver(DriverType.InternalFrame, internalFrameDriver);
+        driverManager.setDriver(DriverType.Window, internalFrameDriver);
         driverManager.setDriver(DriverType.Focus, new APIFocusDriver());
         driverManager.setDriver(DriverType.Focus, new MouseFocusDriver());
         driverManager.setDriver(DriverType.Menu, shortcutEvents ? new QueueJMenuDriver() : new DefaultJMenuDriver());

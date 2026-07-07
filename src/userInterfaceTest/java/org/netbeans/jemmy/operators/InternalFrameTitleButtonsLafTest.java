@@ -32,7 +32,8 @@ import org.netbeans.jemmy.util.LookAndFeel;
 /**
  * Verifies the tooltip-based internal frame title button lookup under every installed look and feel — the lookup was
  * ported from openjdk/jemmy-v2 precisely because the previous positional lookup was LAF-order dependent. Motif is
- * skipped: it keeps title actions in a popup menu instead of buttons (see internal-frame-popup-driver in TODO.md).
+ * skipped: it keeps title actions in a popup menu instead of buttons (covered by
+ * {@link InternalFramePopupMenuDriverTest}).
  */
 class InternalFrameTitleButtonsLafTest {
 

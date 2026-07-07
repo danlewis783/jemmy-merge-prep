@@ -12,7 +12,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
 | `assertj-migration` | Convert remaining JUnit assertions to AssertJ | Ongoing convention; convert classes when touched |
-| `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
 
 ---
 
@@ -65,13 +64,4 @@ Notes:
 
 **Recommendation: incremental; exception-shaped tests first, the rest
 class-by-class when touched.**
-
-### `internal-frame-popup-driver`
-
-Upstream `InternalFramePopupMenuDriver` (7902300) supports LAFs where title
-actions live in a popup menu (Motif-style) rather than title buttons.
-
-**Recommendation: skip unless such a LAF is ever in play.**
-
----
 
