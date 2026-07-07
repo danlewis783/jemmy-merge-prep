@@ -41,8 +41,36 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+/**
+ * The tab-conditional accessors ({@code getRedSpinnerOperator()} and friends) return an operator only when the
+ * corresponding chooser tab is already selected, and null otherwise; they never switch tabs. Ported from
+ * openjdk/jemmy-v2 (CODETOOLS-7901925).
+ */
 public class JColorChooserOperator extends JComponentOperator {
     private static final String RGB_TITLE = "RGB";
+    private static final String HSV_TITLE = "HSV";
+    private static final String HSL_TITLE = "HSL";
+    private static final String CMYK_TITLE = "CMYK";
+
+    private static final int HSV_HUE_INDEX = 0;
+    private static final int HSV_SATURATION_INDEX = 1;
+    private static final int HSV_VALUE_INDEX = 2;
+    private static final int HSV_TRANSPARENCY_INDEX = 3;
+    private static final int HSL_HUE_INDEX = 0;
+    private static final int HSL_SATURATION_INDEX = 1;
+    private static final int HSL_LIGHTNESS_INDEX = 2;
+    private static final int HSL_TRANSPARENCY_INDEX = 3;
+    private static final int RGB_RED_INDEX = 0;
+    private static final int RGB_GREEN_INDEX = 1;
+    private static final int RGB_BLUE_INDEX = 2;
+    private static final int RGB_ALPHA_INDEX = 3;
+    private static final int RGB_COLORCODE_TEXT_FIELD_INDEX = 4;
+    private static final int CMYK_CYAN_INDEX = 0;
+    private static final int CMYK_MAGENTA_INDEX = 1;
+    private static final int CMYK_YELLOW_INDEX = 2;
+    private static final int CMYK_BLACK_INDEX = 3;
+    private static final int CMYK_ALPHA_INDEX = 4;
+
     private @Nullable JTextFieldOperator blue;
     private @Nullable JTextFieldOperator green;
     private @Nullable JTextFieldOperator red;
@@ -107,6 +135,122 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public void enterColor(int color) {
         enterColor(new Color(color));
+    }
+
+    public @Nullable JSpinnerOperator getHueSpinnerOperator() {
+        return getSpinnerOperator(new String[] {HSV_TITLE, HSL_TITLE}, new int[] {HSV_HUE_INDEX, HSL_HUE_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getSaturationSpinnerOperator() {
+        return getSpinnerOperator(
+                new String[] {HSV_TITLE, HSL_TITLE}, new int[] {HSV_SATURATION_INDEX, HSL_SATURATION_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getValueSpinnerOperator() {
+        return getSpinnerOperator(new String[] {HSV_TITLE}, new int[] {HSV_VALUE_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getTransparencySpinnerOperator() {
+        return getSpinnerOperator(
+                new String[] {HSL_TITLE, HSV_TITLE}, new int[] {HSL_TRANSPARENCY_INDEX, HSV_TRANSPARENCY_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getLightnessSpinnerOperator() {
+        return getSpinnerOperator(new String[] {HSL_TITLE}, new int[] {HSL_LIGHTNESS_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getRedSpinnerOperator() {
+        return getSpinnerOperator(new String[] {RGB_TITLE}, new int[] {RGB_RED_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getGreenSpinnerOperator() {
+        return getSpinnerOperator(new String[] {RGB_TITLE}, new int[] {RGB_GREEN_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getBlueSpinnerOperator() {
+        return getSpinnerOperator(new String[] {RGB_TITLE}, new int[] {RGB_BLUE_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getAlphaSpinnerOperator() {
+        return getSpinnerOperator(new String[] {RGB_TITLE, CMYK_TITLE}, new int[] {RGB_ALPHA_INDEX, CMYK_ALPHA_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getCyanSpinnerOperator() {
+        return getSpinnerOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_CYAN_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getMagentaSpinnerOperator() {
+        return getSpinnerOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_MAGENTA_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getYellowSpinnerOperator() {
+        return getSpinnerOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_YELLOW_INDEX});
+    }
+
+    public @Nullable JSpinnerOperator getBlackSpinnerOperator() {
+        return getSpinnerOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_BLACK_INDEX});
+    }
+
+    public @Nullable JSliderOperator getHueSliderOperator() {
+        return getSliderOperator(new String[] {HSV_TITLE, HSL_TITLE}, new int[] {HSV_HUE_INDEX, HSL_HUE_INDEX});
+    }
+
+    public @Nullable JSliderOperator getSaturationSliderOperator() {
+        return getSliderOperator(
+                new String[] {HSV_TITLE, HSL_TITLE}, new int[] {HSV_SATURATION_INDEX, HSL_SATURATION_INDEX});
+    }
+
+    public @Nullable JSliderOperator getValueSliderOperator() {
+        return getSliderOperator(new String[] {HSV_TITLE}, new int[] {HSV_VALUE_INDEX});
+    }
+
+    public @Nullable JSliderOperator getTransparencySliderOperator() {
+        return getSliderOperator(
+                new String[] {HSV_TITLE, HSL_TITLE}, new int[] {HSV_TRANSPARENCY_INDEX, HSL_TRANSPARENCY_INDEX});
+    }
+
+    public @Nullable JSliderOperator getLightnessSliderOperator() {
+        return getSliderOperator(new String[] {HSL_TITLE}, new int[] {HSL_LIGHTNESS_INDEX});
+    }
+
+    public @Nullable JSliderOperator getRedSliderOperator() {
+        return getSliderOperator(new String[] {RGB_TITLE}, new int[] {RGB_RED_INDEX});
+    }
+
+    public @Nullable JSliderOperator getGreenSliderOperator() {
+        return getSliderOperator(new String[] {RGB_TITLE}, new int[] {RGB_GREEN_INDEX});
+    }
+
+    public @Nullable JSliderOperator getBlueSliderOperator() {
+        return getSliderOperator(new String[] {RGB_TITLE}, new int[] {RGB_BLUE_INDEX});
+    }
+
+    public @Nullable JSliderOperator getAlphaSliderOperator() {
+        return getSliderOperator(new String[] {RGB_TITLE, CMYK_TITLE}, new int[] {RGB_ALPHA_INDEX, CMYK_ALPHA_INDEX});
+    }
+
+    public @Nullable JSliderOperator getCyanSliderOperator() {
+        return getSliderOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_CYAN_INDEX});
+    }
+
+    public @Nullable JSliderOperator getMagentaSliderOperator() {
+        return getSliderOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_MAGENTA_INDEX});
+    }
+
+    public @Nullable JSliderOperator getYellowSliderOperator() {
+        return getSliderOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_YELLOW_INDEX});
+    }
+
+    public @Nullable JSliderOperator getBlackSliderOperator() {
+        return getSliderOperator(new String[] {CMYK_TITLE}, new int[] {CMYK_BLACK_INDEX});
+    }
+
+    public @Nullable JTextFieldOperator getColorCodeTextFieldOperator() {
+        if (tabbed.getTitleAt(tabbed.getSelectedIndex()).equals(RGB_TITLE)) {
+            return new JTextFieldOperator(this, RGB_COLORCODE_TEXT_FIELD_INDEX);
+        }
+
+        return null;
     }
 
     public void addChooserPanel(AbstractColorChooserPanel abstractColorChooserPanel) {
@@ -230,5 +374,34 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public static JColorChooser waitJColorChooser(Container cont) {
         return waitJColorChooser(cont, 0);
+    }
+
+    private @Nullable JSliderOperator getSliderOperator(String[] tabs, int[] index) {
+        int selectedTabIndex = getSelectedTabIndex(tabs);
+        if (selectedTabIndex != -1) {
+            return new JSliderOperator(this, index[selectedTabIndex]);
+        }
+
+        return null;
+    }
+
+    private @Nullable JSpinnerOperator getSpinnerOperator(String[] tabs, int[] index) {
+        int selectedTabIndex = getSelectedTabIndex(tabs);
+        if (selectedTabIndex != -1) {
+            return new JSpinnerOperator(this, index[selectedTabIndex]);
+        }
+
+        return null;
+    }
+
+    private int getSelectedTabIndex(String[] tabs) {
+        String selectedTitle = tabbed.getTitleAt(tabbed.getSelectedIndex());
+        for (int i = 0; i < tabs.length; i++) {
+            if (selectedTitle.equals(tabs[i])) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

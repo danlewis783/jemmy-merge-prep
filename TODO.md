@@ -14,7 +14,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | `assertj-migration` | Convert remaining JUnit assertions to AssertJ | Ongoing convention; convert classes when touched |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
-| `color-chooser-accessors` | JColorChooserOperator subcomponent getters | Only when a test wants it |
 
 ---
 
@@ -85,12 +84,4 @@ actions live in a popup menu (Motif-style) rather than title buttons.
 **Recommendation: skip unless such a LAF is ever in play.**
 
 ---
-
-## Feature ports (adopt on demand, each is self-contained)
-
-### `color-chooser-accessors`
-
-`JColorChooserOperator` subcomponent accessor methods (7901925, ~335 lines of
-getters for the chooser panels/fields). Port only if tests interact with color
-choosers beyond the existing `enterColor` helpers.
 
