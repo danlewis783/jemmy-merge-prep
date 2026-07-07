@@ -12,9 +12,8 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
 | `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
-| `scenario-test-cleanup` | Give the jemmy_nnn/Application_nnn pairs purpose, names, and deduplication | Incremental; fold, rename, or delete |
 | `assertj-migration` | Convert all assertions to AssertJ, killing try/fail/catch idioms first | Incremental; exception tests first |
-| `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Do after scenario-test-cleanup stabilizes names |
+| `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Names are stable now; ready to execute |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
 | `internal-frame-popup-driver` | Title-actions-in-popup LAF support (Motif-style) | Only if such a LAF is ever used |
@@ -27,62 +26,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 ---
 
 ## Reliability follow-ups (not upstream ports)
-
-### `scenario-test-cleanup`
-
-`src/userInterfaceTest/.../testing/` holds 39 numbered legacy scenario tests
-(`jemmy_001` … `jemmy_048`, with gaps) driving 36 numbered fixtures
-(`Application_nnn` in `testFixtures`). The names convey nothing, each class is
-usually a single `@Test`, coverage overlaps the per-operator test classes to an
-unknown degree.
-Goal: every surviving test has a focused, coherent, encapsulated purpose and a
-name that states it.
-
-**Batch 1 (done 2026-07-06):** deleted `jemmy_004`/`jemmy_007` (duplicate
-coverage) with their fixtures; folded `jemmy_009`/`jemmy_038` into
-`JFrameOperatorTest`, `jemmy_019` into `JSplitPaneOperatorTest`, `jemmy_020`
-into `JTextAreaOperatorTest`, `jemmy_039` into `StringComparatorsTest`;
-moved `jemmy_015` -> `FunctionRunnerTimeoutTest` and `jemmy_026` ->
-`QueueToolWaitEmptyTest` (unit suite), `jemmy_030` -> `EventToolTest`
-(UI suite root).
-
-**Remaining (30 tests, all classified 2026-07-06 as keep-and-rename
-workflows; rename fixture with test, record old->new in commit messages):**
-
-| test | proposed name | subject |
-|---|---|---|
-| jemmy_001 | DialogComboListWorkflowTest | dialogs + combo + list flow |
-| jemmy_002 | MenuNavigationTest | menu bar + radio items |
-| jemmy_003 | ButtonGridLookupTest | by-text vs by-index lookup + progress bar |
-| jemmy_005 | JTreePathNavigationTest | tree child/path API deep coverage |
-| jemmy_006 | JTreeExpandCollapseTest | expand/collapse with paint checks |
-| jemmy_010 | ModalDialogWaitingTest | staged modal/non-modal dialogs |
-| jemmy_011 | ToggleButtonSelectionTest | checkbox/radio focus + selection |
-| jemmy_016 | TabbedPanePageSwitchTest | per-page component visibility |
-| jemmy_017 | WindowManagerJobsTest | WindowManager jobs + MouseVisualizer |
-| jemmy_018 | ScrollToComponentTest | scroll-to-component on button grid |
-| jemmy_021 | EditorScrollingInTabsTest | editor/text scrolling in tabs (#4420394) |
-| jemmy_022 | InternalFrameWorkflowTest | two internal frames ops |
-| jemmy_024 | TabbedComponentsWorkflowTest | list/table/tree/textarea in tabs |
-| jemmy_025 | JSliderScrollModelsTest | 4 sliders, scroll models, label feedback |
-| jemmy_027 | TabbedListTableTreeTest | selections across tab pages |
-| jemmy_028 | VisualizerScrollTest | DefaultVisualizer tab-switch + scroll |
-| jemmy_029 | ModalDialogVisualizerTest | checkForModal visualizer behavior |
-| jemmy_031 | FileChooserDialogWorkflowTest | file chooser dialog flow |
-| jemmy_032 | OperatorConstructorsSmokeTest | 16-operator constructor smoke |
-| jemmy_033 | CreateOperatorTest | createOperator + addOperatorPackage |
-| jemmy_035 | AwtScrollPaneScrollingTest | AWT ScrollPane scrolling geometry |
-| jemmy_036 | AwtComponentsTest | native AWT component interactions |
-| jemmy_037 | TabbedScrollbarScrollingTest | Swing + AWT scrollbars in tabs |
-| jemmy_040 | DeepMenuPushTest | 20-level nested menu push |
-| jemmy_041 | TreeSelectionUnderChangeTest | selectPath while model grows |
-| jemmy_042 | MenuInDialogTest | menus hosted in dialogs |
-| jemmy_043 | RobotVsQueueDispatchTest | robot vs queue dispatching |
-| jemmy_047 | JSpinnerScrollingTest | spinner scroll variants + wrappers |
-| jemmy_048 | LateComponentDiscoveryTest | search finds late-added component |
-
-**Recommendation: execute the rename table in batches; it is mechanical now
-that classification is done.**
 
 ### `assertj-migration`
 
@@ -117,7 +60,7 @@ Priority order:
 
 2. **Mechanical conversions** — `assertEquals`/`assertTrue`/`assertNotNull`
    → `assertThat(...)`, per test class, opportunistically alongside
-   `scenario-test-cleanup` edits rather than as one big
+   other test edits rather than as one big
    diff.
 
 Notes:
@@ -248,10 +191,12 @@ Method:
 3. **Adopt `LookAndFeelProvider`** from jemmy's test tree while here — it
    parameterizes tests across installed LAFs and directly serves
    `winlaf-button-test`.
-4. **Keep the map current** — update it whenever `scenario-test-cleanup`
-   renames a test here, so the key never goes stale.
+4. **Keep the map current** — update it whenever a test
+   is renamed here, so the key never goes stale. The jemmy_nnn -> descriptive
+   name mapping from scenario-test-cleanup (completed 2026-07-06) is recorded
+   in the git history (commits titled "...scenario tests...").
 
-**Recommendation: do after (or alongside) `scenario-test-cleanup` so the
-mapping is written against stable, meaningful names. This item directly
+**Recommendation: ready to execute; test names are now stable and
+meaningful. This item directly
 serves the repository's purpose — driving the two forks toward each other.**
 

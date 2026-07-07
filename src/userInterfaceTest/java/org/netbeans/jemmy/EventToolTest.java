@@ -66,7 +66,7 @@ class EventToolTest {
         eventTool.addListeners(AWTEvent.CONTAINER_EVENT_MASK);
         AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> {
-            JFrame jFrame = new JFrame("Application_030");
+            JFrame jFrame = new JFrame("EventToolTest");
             jFrame.setLocationRelativeTo(null);
             jFrame.setSize(250, 100);
             jFrame.setVisible(true);

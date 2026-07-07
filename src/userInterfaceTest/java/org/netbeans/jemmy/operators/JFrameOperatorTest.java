@@ -40,8 +40,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.netbeans.jemmy.testing.Application_002;
-import org.netbeans.jemmy.testing.Application_009;
+import org.netbeans.jemmy.testing.IndexedFramesApp;
+import org.netbeans.jemmy.testing.MenuNavigationApp;
 import org.netbeans.jemmy.util.StringComparators;
 
 class JFrameOperatorTest {
@@ -177,15 +177,15 @@ class JFrameOperatorTest {
     // formerly scenario test jemmy_009
     @Test
     void waitJFrameByIndexAndRetitle() throws Exception {
-        Application_009.main(new String[] {});
+        IndexedFramesApp.main(new String[] {});
         QueueTool.getInstance().waitEmpty();
         try {
-            JFrame frm0 = JFrameOperator.waitJFrame("Application_009", StringComparators.substring());
-            assertEquals(0, ((Application_009) frm0).getIndex());
-            JFrame frm1 = JFrameOperator.waitJFrame("Application_009", StringComparators.substring(), 1);
-            assertEquals(1, ((Application_009) frm1).getIndex());
-            JFrame frm2 = JFrameOperator.waitJFrame("Application_009", StringComparators.substring(), 2);
-            assertEquals(2, ((Application_009) frm2).getIndex());
+            JFrame frm0 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring());
+            assertEquals(0, ((IndexedFramesApp) frm0).getIndex());
+            JFrame frm1 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring(), 1);
+            assertEquals(1, ((IndexedFramesApp) frm1).getIndex());
+            JFrame frm2 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring(), 2);
+            assertEquals(2, ((IndexedFramesApp) frm2).getIndex());
             JFrameOperator frm2o = new JFrameOperator(frm2);
             frm2o.setTitle("New Title");
             frm2o.waitTitle("New Title", StringComparators.strict());
@@ -197,9 +197,9 @@ class JFrameOperatorTest {
     // formerly scenario test jemmy_038
     @Test
     void frameLifecycleSequence() throws Exception {
-        Application_002.main(new String[] {});
+        MenuNavigationApp.main(new String[] {});
         try {
-            JFrame win = JFrameOperator.waitJFrame("Application_002");
+            JFrame win = JFrameOperator.waitJFrame("MenuNavigationApp");
             JFrameOperator fo = new JFrameOperator(win);
             fo.activate();
             fo.resize(400, 400);
