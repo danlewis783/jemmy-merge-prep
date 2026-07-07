@@ -114,7 +114,7 @@ class EditorScrollingInTabsTest {
         assertThat(testJTextArea(tao)).isTrue();
     }
 
-    private void checkSelectedText(JTextComponentOperator tco, String eta) throws Exception {
+    private void checkSelectedText(JTextComponentOperator tco, String eta) {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
             FunctionRepeater.on(new SelectedTextChecker(tco, eta)).runUntilNotNull(null);
         } catch (TimeoutExpiredException e) {

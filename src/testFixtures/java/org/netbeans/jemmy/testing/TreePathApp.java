@@ -103,7 +103,7 @@ public class TreePathApp extends JFrame {
         }
     }
 
-    class MyModel implements ListModel {
+    static class MyModel implements ListModel {
         private final TreePath[] store;
 
         MyModel(TreePath[] st) {

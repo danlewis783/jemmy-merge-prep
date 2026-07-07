@@ -404,5 +404,5 @@ class JScrollPaneOperatorTest {
         operator1.setViewportView(null);
     }
 
-    private class ScrollPaneUITest extends ScrollPaneUI {}
+    private static class ScrollPaneUITest extends ScrollPaneUI {}
 }

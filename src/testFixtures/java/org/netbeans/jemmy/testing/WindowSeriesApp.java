@@ -26,14 +26,14 @@ import javax.swing.JLabel;
 public class WindowSeriesApp extends JFrame {
 
     private WindowSeriesApp(int index) {
-        super("WindowSeriesApp/" + Integer.toString(index));
+        super("WindowSeriesApp/" + index);
         setSize(300, 300);
         setLocation(index * 50, index * 50);
         getContentPane().setLayout(new FlowLayout());
         JLabel label = new JLabel("has not been processed");
         getContentPane().add(label);
         getContentPane().add(new JButton("another button"));
-        JButton close = new JButton("process " + Integer.toString(index));
+        JButton close = new JButton("process " + index);
         close.addActionListener(e -> label.setText("has been processed"));
         getContentPane().add(close);
     }

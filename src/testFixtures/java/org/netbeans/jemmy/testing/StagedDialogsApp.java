@@ -20,10 +20,10 @@ import java.awt.EventQueue;
 import javax.swing.JDialog;
 
 public class StagedDialogsApp extends JDialog {
-    private int index = 0;
+    private final int index;
 
     public StagedDialogsApp(int index) {
-        super.setTitle("StagedDialogsApp/" + Integer.toString(index));
+        super.setTitle("StagedDialogsApp/" + index);
         this.index = index;
         setSize(300, 300);
         setLocation(index * 50, index * 50);

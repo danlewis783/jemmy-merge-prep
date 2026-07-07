@@ -29,5 +29,5 @@ import java.util.List;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface LightDriver extends DriverMarker {
-    public List<Class<? extends ComponentOperator>> getSupported();
+    List<Class<? extends ComponentOperator>> getSupported();
 }

@@ -311,5 +311,5 @@ class JMenuBarOperatorTest {
         assertThat(operator3.getText()).isEqualTo("JMenuItem11");
     }
 
-    private class MenuBarUIImpl extends MenuBarUI {}
+    private static class MenuBarUIImpl extends MenuBarUI {}
 }

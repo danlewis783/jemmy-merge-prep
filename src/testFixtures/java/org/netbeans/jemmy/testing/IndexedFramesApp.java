@@ -21,10 +21,10 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 public class IndexedFramesApp extends JFrame {
-    private int index = 0;
+    private final int index;
 
     private IndexedFramesApp(int index) {
-        super("IndexedFramesApp/" + Integer.toString(index));
+        super("IndexedFramesApp/" + index);
         this.index = index;
         setSize(300, 300);
         setLocation(index * 50, index * 50);

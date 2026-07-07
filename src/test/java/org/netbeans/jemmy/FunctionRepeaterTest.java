@@ -26,7 +26,7 @@ class FunctionRepeaterTest {
     private static final Logger logger = LoggerFactory.getLogger(FunctionRepeaterTest.class);
 
     @Test
-    void testIssue30537() throws Exception {
+    void testIssue30537() {
         Object obj = new Object();
         assertThat(FunctionRepeater.on(f -> f).runUntilNotNull(obj)).isSameAs(obj);
     }

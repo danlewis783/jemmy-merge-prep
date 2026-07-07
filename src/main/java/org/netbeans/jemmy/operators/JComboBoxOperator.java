@@ -46,7 +46,6 @@ import javax.swing.plaf.ComboBoxUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -119,12 +118,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public JList waitList() {
-        try {
-            return (JList)
-                    FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return (JList) FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
     }
 
     public void pushComboButton() {
@@ -160,11 +154,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void selectItem(int index) {
-        try {
-            waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        waitComponentEnabled();
 
         driver.selectItem(this, waitItem(index));
 

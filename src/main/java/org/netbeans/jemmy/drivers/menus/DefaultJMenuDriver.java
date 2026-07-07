@@ -38,7 +38,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.MenuElement;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -98,12 +97,8 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
             List<Predicate<Component>> predicates,
             int depth,
             boolean pressMouse) {
-        try {
-            oper.waitComponentVisible(true);
-            oper.waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted!", e);
-        }
+        oper.waitComponentVisible(true);
+        oper.waitComponentEnabled();
 
         MouseDriver mDriver =
                 DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
@@ -137,11 +132,7 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
             return push(mo, oper, null, predicates, depth + 1, false);
         } else {
             JMenuItemOperator mio = new JMenuItemOperator(item);
-            try {
-                mio.waitComponentEnabled();
-            } catch (InterruptedException e) {
-                throw new JemmyException("Interrupted!", e);
-            }
+            mio.waitComponentEnabled();
 
             smartMove(oper, mio);
             DriverManager.newInstance(JemmyProperties.getInstance())
@@ -197,12 +188,8 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
 
     protected JMenuItem waitItem(
             ComponentOperator oper, MenuElement element, List<Predicate<Component>> predicates, int depth) {
-        try {
-            return (JMenuItem) FunctionRepeater.on(new JMenuItemFunction(element, predicates, depth))
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting has been interrupted", e);
-        }
+        return (JMenuItem) FunctionRepeater.on(new JMenuItemFunction(element, predicates, depth))
+                .runUntilNotNull(null);
     }
 
     private static @Nullable Object getSelectedElement(JMenuBar bar) {

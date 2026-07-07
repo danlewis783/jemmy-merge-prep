@@ -83,7 +83,7 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
             Timeouts.sleep(betweenTime);
         }
 
-        while (getText(oper).length() > 0) {
+        while (!getText(oper).isEmpty()) {
             kdriver.pushKey(oper, KeyEvent.VK_DELETE, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
             Timeouts.sleep(betweenTime);
         }

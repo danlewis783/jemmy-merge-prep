@@ -69,6 +69,6 @@ public final class EventListener implements AWTEventListener {
 
     @Override
     public int hashCode() {
-        return (int) (eventMask ^ (eventMask >>> 32));
+        return Long.hashCode(eventMask);
     }
 }

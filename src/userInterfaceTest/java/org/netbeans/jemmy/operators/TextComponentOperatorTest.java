@@ -306,7 +306,7 @@ class TextComponentOperatorTest {
         operator1.getTextDriver();
     }
 
-    private class TextListenerTest implements TextListener {
+    private static class TextListenerTest implements TextListener {
         @Override
         public void textValueChanged(TextEvent e) {}
     }

@@ -322,7 +322,7 @@ class ComponentOperatorTest {
     }
 
     @Test
-    void testWaitComponentEnabled() throws Exception {
+    void testWaitComponentEnabled() {
         FrameOperator operator = new FrameOperator();
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);

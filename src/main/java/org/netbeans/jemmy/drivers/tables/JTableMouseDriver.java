@@ -74,7 +74,7 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
                 .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
 
-    protected void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
+    private void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Point point = oper.getPointToClick(row, column);
             DriverManager.newInstance(JemmyProperties.getInstance())

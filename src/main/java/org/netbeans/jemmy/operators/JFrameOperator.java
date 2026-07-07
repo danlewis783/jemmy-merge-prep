@@ -37,7 +37,6 @@ import javax.swing.JRootPane;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.FrameFunction;
@@ -183,20 +182,16 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public static JFrame waitJFrame(String title, StringComparator stringComparator, int index) {
-        try {
-            return (JFrame) FunctionRepeater.on(
-                            new FrameFunction(
-                                    index,
-                                    null,
-                                    PredicatesJ.of(
-                                            Frame.class,
-                                            PredicatesJ.of(
-                                                    JFrame.class,
-                                                    new FrameShowingByTitlePredicate(title, stringComparator)))),
-                            TimeoutKey.FrameWaiter_WaitFrameTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return (JFrame) FunctionRepeater.on(
+                        new FrameFunction(
+                                index,
+                                null,
+                                PredicatesJ.of(
+                                        Frame.class,
+                                        PredicatesJ.of(
+                                                JFrame.class,
+                                                new FrameShowingByTitlePredicate(title, stringComparator)))),
+                        TimeoutKey.FrameWaiter_WaitFrameTimeout)
+                .runUntilNotNull(null);
     }
 }

@@ -46,7 +46,6 @@ import javax.swing.plaf.PopupMenuUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -153,7 +152,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         List<Predicate<Component>> parentPath = getParentPath(predicates);
         JMenu menu;
         ContainerOperator menuCont;
-        if (parentPath.size() > 0) {
+        if (!parentPath.isEmpty()) {
             menu = (JMenu) pushMenu(getParentPath(predicates));
             menuCont = new ContainerOperator(menu.getPopupMenu());
         } else {
@@ -410,28 +409,20 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public static Window waitJPopupWindow(Predicate<Component> chooser) {
-        try {
-            return FunctionRepeater.on(
-                            new WindowFunction<>(0, null, new JPopupWindowPredicate(chooser)),
-                            TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        new WindowFunction<>(0, null, new JPopupWindowPredicate(chooser)),
+                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
     }
 
     public static JPopupMenuOperator waitJPopupMenu(Predicate<Component> popupChooser) {
-        try {
-            Window result = FunctionRepeater.on(
-                            new WindowFunction<>(0, null, new ContainerSearcherPredicate(popupChooser)),
-                            TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                    .runUntilNotNull(null);
-            WindowOperator windowOperator = new WindowOperator(result);
+        Window result = FunctionRepeater.on(
+                        new WindowFunction<>(0, null, new ContainerSearcherPredicate(popupChooser)),
+                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
+        WindowOperator windowOperator = new WindowOperator(result);
 
-            return new JPopupMenuOperator(windowOperator);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Popup waiting has been interrupted", e);
-        }
+        return new JPopupMenuOperator(windowOperator);
     }
 
     public static JPopupMenuOperator waitJPopupMenu(String menuItemText) {

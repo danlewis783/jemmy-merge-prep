@@ -373,7 +373,7 @@ class JSliderOperatorTest {
         assertThat(operator2.getMinimum()).isEqualTo(100);
     }
 
-    private class BoundedRangeModelTest implements BoundedRangeModel {
+    private static class BoundedRangeModelTest implements BoundedRangeModel {
         @Override
         public int getMinimum() {
             return -1;
@@ -424,14 +424,14 @@ class JSliderOperatorTest {
         public void removeChangeListener(ChangeListener x) {}
     }
 
-    private class IgnoreChangeListener implements ChangeListener {
+    private static class IgnoreChangeListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {}
     }
 
-    private class NoopSliderUI extends SliderUI {}
+    private static class NoopSliderUI extends SliderUI {}
 
-    class ScrollAdjusterTest implements ScrollAdjuster {
+    static class ScrollAdjusterTest implements ScrollAdjuster {
         @Override
         public int getScrollDirection() {
             return 0;

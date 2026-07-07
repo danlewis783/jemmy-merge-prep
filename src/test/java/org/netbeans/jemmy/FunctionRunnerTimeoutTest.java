@@ -55,6 +55,7 @@ class FunctionRunnerTimeoutTest {
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(() -> FunctionRunner.on((Function<Void, Boolean>) v -> {
                             long startTime = System.currentTimeMillis();
+                            //noinspection unused
                             long elapsed;
                             while ((elapsed = (System.currentTimeMillis() - startTime)) < ACTION_TIME) {
                                 try {

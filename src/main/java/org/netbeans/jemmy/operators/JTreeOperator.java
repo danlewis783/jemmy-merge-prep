@@ -188,11 +188,7 @@ public class JTreeOperator extends JComponentOperator {
                     }
                 },
                 TimeoutKey.JTreeOperator_WaitNodeVisibleTimeout);
-        try {
-            return waiter.runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return waiter.runUntilNotNull(null);
     }
 
     public @Nullable TreePath findPath(TreePathChooser chooser) {
@@ -1188,11 +1184,7 @@ public class JTreeOperator extends JComponentOperator {
         }
         TreePathChooserAndTreePath arg = new TreePathChooserAndTreePath(chooser, path);
         TreePathAndBoolean waitResult;
-        try {
-            waitResult = waiter.runUntilNotNull(arg);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        waitResult = waiter.runUntilNotNull(arg);
 
         TreePath nextPath = waitResult.getTreePath();
         if (waitResult.isChecked()) {
@@ -1236,13 +1228,13 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public interface TreePathChooser {
-        public boolean checkPath(TreePath path, int indexInParent);
+        boolean checkPath(TreePath path, int indexInParent);
 
-        public boolean hasAsParent(TreePath path, int indexInParent);
+        boolean hasAsParent(TreePath path, int indexInParent);
     }
 
     public interface TreeRowChooser {
-        public boolean checkRow(JTreeOperator oper, int row);
+        boolean checkRow(JTreeOperator oper, int row);
     }
 
     private static class JTreeOperatorIsRowExpandedPredicate implements Predicate<JTreeOperator> {
@@ -1321,7 +1313,7 @@ public class JTreeOperator extends JComponentOperator {
         }
     }
 
-    private class ByRenderedComponentTreeRowChooser implements TreeRowChooser {
+    private static class ByRenderedComponentTreeRowChooser implements TreeRowChooser {
         private final Predicate<Component> chooser;
 
         public ByRenderedComponentTreeRowChooser(Predicate<Component> chooser) {
@@ -1334,7 +1326,7 @@ public class JTreeOperator extends JComponentOperator {
         }
     }
 
-    private class BySubStringTreeRowChooser implements TreeRowChooser {
+    private static class BySubStringTreeRowChooser implements TreeRowChooser {
         private final StringComparator comparator;
         private final String subString;
 
@@ -1360,7 +1352,7 @@ public class JTreeOperator extends JComponentOperator {
         }
 
         public NoSuchPathException(TreePath path) {
-            super("No such path as \"" + path.toString() + "\"", getSource());
+            super("No such path as \"" + path + "\"", getSource());
         }
     }
 

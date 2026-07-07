@@ -43,7 +43,7 @@ public final class CallablesJ {
         }
 
         @Override
-        public String call() throws Exception {
+        public String call() {
             return object.toString();
         }
     }
@@ -56,7 +56,7 @@ public final class CallablesJ {
         }
 
         @Override
-        public String call() throws Exception {
+        public String call() {
             return operator.getSource().toString();
         }
     }
@@ -69,7 +69,7 @@ public final class CallablesJ {
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
             runnable.run();
             return null;
         }

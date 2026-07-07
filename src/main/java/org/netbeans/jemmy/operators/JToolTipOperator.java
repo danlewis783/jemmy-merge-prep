@@ -32,7 +32,6 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.predicates.JToolTipByTipTextPredicate;
@@ -133,14 +132,10 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public static JToolTip waitJToolTip(@Nullable ComponentOperator comp, Predicate<Component> chooser) {
-        try {
-            return FunctionRepeater.on(
-                            (Function<Void, JToolTip>) unused -> findJToolTip(comp, chooser),
-                            TimeoutKey.JToolTipOperator_WaitToolTipTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting for \"" + chooser + "\" JToolTip has been interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        (Function<Void, JToolTip>) unused -> findJToolTip(comp, chooser),
+                        TimeoutKey.JToolTipOperator_WaitToolTipTimeout)
+                .runUntilNotNull(null);
     }
 
     public static JToolTip waitJToolTip(ComponentOperator comp, String tipText, StringComparator comparator) {

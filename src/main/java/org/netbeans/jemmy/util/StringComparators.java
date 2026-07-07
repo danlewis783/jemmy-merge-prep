@@ -57,7 +57,7 @@ public final class StringComparators {
     private static class CaseInsensitiveStringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
-            return expected == null || observed != null && expected.equalsIgnoreCase(observed);
+            return expected == null || expected.equalsIgnoreCase(observed);
         }
     }
 
@@ -79,7 +79,7 @@ public final class StringComparators {
     private static class StrictStringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
-            return expected == null || observed != null && expected.equals(observed);
+            return expected == null || expected.equals(observed);
         }
     }
 

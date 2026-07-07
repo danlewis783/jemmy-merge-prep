@@ -110,11 +110,11 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
     @Override
     public void exitMouse(ComponentOperator oper) {}
 
-    protected int getAbsoluteX(ComponentOperator oper, int x) {
+    private int getAbsoluteX(ComponentOperator oper, int x) {
         return oper.getSource().getLocationOnScreen().x + x;
     }
 
-    protected int getAbsoluteY(ComponentOperator oper, int y) {
+    private int getAbsoluteY(ComponentOperator oper, int y) {
         return oper.getSource().getLocationOnScreen().y + y;
     }
 }

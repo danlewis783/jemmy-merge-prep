@@ -66,11 +66,11 @@ public final class JTableHeaderDriver extends LightSupportiveDriver implements O
         oper.dragNDrop(start.x, start.y, end.x, end.y);
     }
 
-    protected void clickOnHeader(JTableHeaderOperator oper, int index) {
+    private void clickOnHeader(JTableHeaderOperator oper, int index) {
         clickOnHeader(oper, index, 0);
     }
 
-    protected void clickOnHeader(JTableHeaderOperator oper, int index, int modifiers) {
+    private void clickOnHeader(JTableHeaderOperator oper, int index, int modifiers) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Point toClick = oper.getPointToClick(index);
             DriverManager.newInstance(JemmyProperties.getInstance())

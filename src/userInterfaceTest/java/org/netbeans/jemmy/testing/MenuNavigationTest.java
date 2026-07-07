@@ -51,8 +51,7 @@ class MenuNavigationTest {
     @Test
     void test() {
         MenuNavigationApp.main(new String[] {});
-        TimeoutOverride override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L);
-        try {
+        try (TimeoutOverride override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
             JFrameOperator win0 = new JFrameOperator("MenuNavigationApp");
             JTextFieldOperator tf0 = new JTextFieldOperator(win0, "Text", StringComparators.caseInsensitiveSubstring());
             JTextFieldOperator tf1 = new JTextFieldOperator(win0);
@@ -97,17 +96,13 @@ class MenuNavigationTest {
             new JLabelOperator(win0, "Menu \"menu1Item\" has been pushed", StringComparators.strict());
             new JButtonOperator(win0, "button", StringComparators.strict()).push();
             new JLabelOperator(win0, "Button has been pushed", StringComparators.strict());
-            TimeoutOverride override3 =
-                    Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout, 1000L);
-            TimeoutOverride override4 = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 1000L);
-            TimeoutOverride override5 = Timeouts.override(TimeoutKey.JMenuOperator_WaitPopupTimeout, 1000L);
-            try {
+            try (TimeoutOverride override3 =
+                            Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout, 1000L);
+                    TimeoutOverride override4 =
+                            Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 1000L);
+                    TimeoutOverride override5 = Timeouts.override(TimeoutKey.JMenuOperator_WaitPopupTimeout, 1000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> mb0.pushMenu("menu|submenu|subsubmenu2", StringComparators.strict()));
-            } finally {
-                override3.cancel();
-                override4.cancel();
-                override5.cancel();
             }
 
             AbstractButtonOperator absButtonOp = new JButtonOperator(win0, "button", StringComparators.strict());
@@ -201,8 +196,6 @@ class MenuNavigationTest {
                     .isTrue();
             assertThat(jLabelOp.getVerticalAlignment()).isEqualTo(label.getVerticalAlignment());
             assertThat(jLabelOp.getVerticalTextPosition()).isEqualTo(label.getVerticalTextPosition());
-        } finally {
-            override1.cancel();
         }
     }
 }

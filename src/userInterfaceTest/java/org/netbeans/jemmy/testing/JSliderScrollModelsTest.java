@@ -58,7 +58,7 @@ class JSliderScrollModelsTest {
             op.setScrollModel(JSliderOperator.CLICK_SCROLL_MODEL);
             op.scrollToValue(value);
             assertThat(Integer.parseInt(label.getText())).isEqualTo(value);
-            value = div10(range / 3);
+            value = div10((double) range / 3);
             op.setScrollModel(JSliderOperator.PUSH_AND_WAIT_SCROLL_MODEL);
             op.scrollToValue(value);
             assertThat(Integer.parseInt(label.getText())).isEqualTo(value);

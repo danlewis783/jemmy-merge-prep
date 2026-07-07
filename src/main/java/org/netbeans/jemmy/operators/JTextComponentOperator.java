@@ -648,7 +648,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public interface TextChooser {
-        public boolean checkPosition(Document document, int offset);
+        boolean checkPosition(Document document, int offset);
     }
 
     private static class JTextComponentOperatorDisplayedTextPredicate implements Predicate<JTextComponentOperator> {

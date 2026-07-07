@@ -39,7 +39,7 @@ public class AwtButtonGridScrollApp extends JFrame {
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                panel.add(new Button(String.valueOf(i) + String.valueOf(j)));
+                panel.add(new Button(String.valueOf(i) + j));
             }
         }
 

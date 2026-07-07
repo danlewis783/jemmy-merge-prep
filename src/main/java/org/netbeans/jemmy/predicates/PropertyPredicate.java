@@ -62,7 +62,7 @@ public class PropertyPredicate implements Predicate<Component> {
     @Override
     public boolean test(Component comp) {
         String propName;
-        Object value = null;
+        Object value;
         ClassReference classReference = new ClassReference(comp);
         for (int i = 0; i < propNames.length; i++) {
             propName = propNames[i];

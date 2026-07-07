@@ -216,12 +216,12 @@ class ScrollbarOperatorTest {
         operator1.setValues(0, 1, 0, 1);
     }
 
-    private class AdjustmentListenerTest implements AdjustmentListener {
+    private static class AdjustmentListenerTest implements AdjustmentListener {
         @Override
         public void adjustmentValueChanged(AdjustmentEvent e) {}
     }
 
-    class ScrollAdjusterTest implements ScrollAdjuster {
+    static class ScrollAdjusterTest implements ScrollAdjuster {
         @Override
         public int getScrollDirection() {
             return 0;

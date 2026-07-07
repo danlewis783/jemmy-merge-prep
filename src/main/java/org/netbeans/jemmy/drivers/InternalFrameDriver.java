@@ -29,5 +29,5 @@ import java.awt.Component;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface InternalFrameDriver {
-    public Component getTitlePane(ComponentOperator oper);
+    Component getTitlePane(ComponentOperator oper);
 }

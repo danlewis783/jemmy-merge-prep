@@ -122,7 +122,6 @@ public final class EventDispatcher {
             robotReference = created;
             return created;
         } catch (InstantiationException
-                | ClassNotFoundException
                 | IllegalAccessException
                 | NoSuchMethodException
                 | InvocationTargetException e) {
@@ -135,7 +134,7 @@ public final class EventDispatcher {
         try {
             Objects.requireNonNull(robotReference, "robot not created").invokeMethod(methodName, params, paramClasses);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            logger.warn("problem invoking " + methodName, e);
+            logger.warn("problem invoking {}", methodName, e);
             throw new RuntimeException(e);
         }
 

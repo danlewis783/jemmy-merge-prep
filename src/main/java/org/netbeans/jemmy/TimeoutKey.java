@@ -83,7 +83,7 @@ public enum TimeoutKey {
     Testing_C(0L),
     Testing_D(0L);
 
-    private long defaultValue;
+    private final long defaultValue;
 
     TimeoutKey(long defaultValue) {
         this.defaultValue = defaultValue;

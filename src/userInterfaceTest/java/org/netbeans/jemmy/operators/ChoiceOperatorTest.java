@@ -234,7 +234,7 @@ class ChoiceOperatorTest {
         operator1.setState("ChoiceOperatorTest");
     }
 
-    private class ItemListenerTest implements ItemListener {
+    private static class ItemListenerTest implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {}
     }

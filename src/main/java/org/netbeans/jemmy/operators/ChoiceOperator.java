@@ -32,7 +32,6 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -95,11 +94,7 @@ public class ChoiceOperator extends ComponentOperator {
     public void selectItem(int index) {
         makeComponentVisible();
 
-        try {
-            waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted!", e);
-        }
+        waitComponentEnabled();
 
         driver.selectItem(this, index);
 

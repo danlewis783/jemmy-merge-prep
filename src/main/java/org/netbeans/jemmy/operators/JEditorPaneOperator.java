@@ -115,7 +115,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     private int getCaretPositionOfReference(String reference) {
-        Integer pos = QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        int pos = QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
             Document doc = ((JEditorPane) getSource()).getDocument();
             if (doc instanceof HTMLDocument) {
                 for (HTMLDocument.Iterator iter = ((HTMLDocument) doc).getIterator(HTML.Tag.A);

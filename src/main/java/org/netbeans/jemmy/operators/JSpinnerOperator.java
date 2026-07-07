@@ -334,11 +334,6 @@ public class JSpinnerOperator extends JComponentOperator {
         public boolean matches(Object obj) {
             return obj.equals(this.obj);
         }
-
-        @Override
-        public int getScrollOrientation() {
-            return SwingConstants.VERTICAL;
-        }
     }
 
     public static class ListScrollAdjuster implements ScrollAdjuster {
@@ -456,11 +451,6 @@ public class JSpinnerOperator extends JComponentOperator {
         public boolean matches(Object obj) {
             String observed = obj.toString();
             return comparator.equals(observed, pattern);
-        }
-
-        @Override
-        public int getScrollOrientation() {
-            return SwingConstants.VERTICAL;
         }
     }
 }

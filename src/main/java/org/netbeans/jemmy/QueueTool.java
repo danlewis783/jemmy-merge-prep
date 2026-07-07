@@ -41,15 +41,11 @@ public final class QueueTool {
     private QueueTool() {}
 
     public void waitEmpty() {
-        try {
-            FunctionRepeater.on(
-                            new SystemEventQueueEmptyFunction(),
-                            TimeoutKey.QueueTool_WaitQueueEmptyTimeout,
-                            TimeoutKey.QueueTool_QueueCheckingDelta)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        FunctionRepeater.on(
+                        new SystemEventQueueEmptyFunction(),
+                        TimeoutKey.QueueTool_WaitQueueEmptyTimeout,
+                        TimeoutKey.QueueTool_QueueCheckingDelta)
+                .runUntilNotNull(null);
     }
 
     public void waitEmpty(long emptyTime) {
@@ -77,8 +73,6 @@ public final class QueueTool {
             }
 
             throw e;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 

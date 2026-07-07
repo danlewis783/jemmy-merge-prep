@@ -52,7 +52,6 @@ import javax.swing.table.TableModel;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -336,12 +335,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Component waitCellComponent(Predicate<Component> chooser, int row, int column) {
-        try {
-            return FunctionRepeater.on(new CellComponentFunction(chooser, row, column))
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting has been interrupted", e);
-        }
+        return FunctionRepeater.on(new CellComponentFunction(chooser, row, column))
+                .runUntilNotNull(null);
     }
 
     public void waitCell(String cellText, StringComparator comparator, int row, int column) {
@@ -1027,10 +1022,10 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public interface TableCellChooser {
-        public boolean checkCell(JTableOperator oper, int row, int column);
+        boolean checkCell(JTableOperator oper, int row, int column);
     }
 
-    private class ByRenderedComponentTableCellChooser implements TableCellChooser {
+    private static class ByRenderedComponentTableCellChooser implements TableCellChooser {
         final Predicate<Component> chooser;
 
         public ByRenderedComponentTableCellChooser(Predicate<Component> chooser) {
@@ -1043,7 +1038,7 @@ public class JTableOperator extends JComponentOperator {
         }
     }
 
-    private class ByTableCellResidentToStringChooser implements TableCellChooser {
+    private static class ByTableCellResidentToStringChooser implements TableCellChooser {
         final StringComparator comparator;
         final String expectedToString;
 

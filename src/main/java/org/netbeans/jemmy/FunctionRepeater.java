@@ -49,7 +49,7 @@ public final class FunctionRepeater<F, T> {
         return new FunctionRepeater<>(function, waitKey, waitDelta);
     }
 
-    public T runUntilNotNull(@Nullable F f) throws InterruptedException {
+    public T runUntilNotNull(@Nullable F f) {
         if (EventQueue.isDispatchThread()) {
             throw new RuntimeException(NO_WAITING_ALLOWED_ON_EDT);
         }

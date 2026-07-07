@@ -418,12 +418,12 @@ class JTabbedPaneOperatorTest {
         operator1.setEnabledAt(0, true);
     }
 
-    private class ChangeListenerTest implements ChangeListener {
+    private static class ChangeListenerTest implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {}
     }
 
-    private class IconTest implements Icon {
+    private static class IconTest implements Icon {
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {}
 

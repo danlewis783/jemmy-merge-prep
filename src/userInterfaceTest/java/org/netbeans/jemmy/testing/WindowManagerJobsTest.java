@@ -43,8 +43,7 @@ class WindowManagerJobsTest {
     @Test
     void doit() {
         ComponentOperator.setDefaultComponentVisualizer(new MouseVisualizer(.5, 5));
-        TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20000L);
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20000L)) {
             WindowSeriesApp.main(new String[] {});
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
@@ -60,8 +59,6 @@ class WindowManagerJobsTest {
                     .isNotNull();
             assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
                     .isNotNull();
-        } finally {
-            override.cancel();
         }
     }
 

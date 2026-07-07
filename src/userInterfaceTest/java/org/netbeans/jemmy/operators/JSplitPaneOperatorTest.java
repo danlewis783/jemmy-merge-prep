@@ -314,7 +314,7 @@ class JSplitPaneOperatorTest {
         operator1.resetToPreferredSizes();
     }
 
-    class ScrollAdjusterTest implements ScrollAdjuster {
+    static class ScrollAdjusterTest implements ScrollAdjuster {
         @Override
         public int getScrollDirection() {
             return 0;

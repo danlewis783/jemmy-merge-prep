@@ -38,7 +38,6 @@ import javax.swing.JRootPane;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.DialogFunction;
@@ -266,13 +265,9 @@ public class JDialogOperator extends DialogOperator {
     }
 
     protected static JDialog waitJDialog(@Nullable Window owner, Predicate<Component> predicate, int index) {
-        try {
-            return (JDialog) FunctionRepeater.on(
-                            new DialogFunction(index, owner, PredicatesJ.of(JDialog.class, predicate)),
-                            TimeoutKey.DialogWaiter_WaitDialogTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return (JDialog) FunctionRepeater.on(
+                        new DialogFunction(index, owner, PredicatesJ.of(JDialog.class, predicate)),
+                        TimeoutKey.DialogWaiter_WaitDialogTimeout)
+                .runUntilNotNull(null);
     }
 }

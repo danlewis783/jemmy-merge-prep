@@ -31,7 +31,6 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.DialogFunction;
@@ -138,14 +137,10 @@ public class DialogOperator extends WindowOperator {
     }
 
     protected static Dialog waitDialog(Predicate<Component> chooser, int index) {
-        try {
-            return FunctionRepeater.on(
-                            new DialogFunction(index, null, PredicatesJ.of(Dialog.class, chooser)),
-                            TimeoutKey.DialogWaiter_WaitDialogTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        new DialogFunction(index, null, PredicatesJ.of(Dialog.class, chooser)),
+                        TimeoutKey.DialogWaiter_WaitDialogTimeout)
+                .runUntilNotNull(null);
     }
 
     protected static Dialog waitDialog(WindowOperator owner, Predicate<Component> chooser, int index) {
@@ -153,13 +148,9 @@ public class DialogOperator extends WindowOperator {
     }
 
     protected static Dialog waitDialog(Window owner, Predicate<Component> chooser, int index) {
-        try {
-            return FunctionRepeater.on(
-                            new DialogFunction(index, owner, PredicatesJ.of(Dialog.class, chooser)),
-                            TimeoutKey.DialogWaiter_WaitDialogTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        new DialogFunction(index, owner, PredicatesJ.of(Dialog.class, chooser)),
+                        TimeoutKey.DialogWaiter_WaitDialogTimeout)
+                .runUntilNotNull(null);
     }
 }

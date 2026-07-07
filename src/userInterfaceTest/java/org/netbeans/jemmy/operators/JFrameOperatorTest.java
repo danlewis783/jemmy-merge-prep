@@ -42,7 +42,7 @@ import org.netbeans.jemmy.testing.MenuNavigationApp;
 import org.netbeans.jemmy.util.StringComparators;
 
 class JFrameOperatorTest {
-    private AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
+    private final AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
 
     @BeforeEach
     void beforeEach() {
@@ -82,7 +82,7 @@ class JFrameOperatorTest {
     }
 
     @Test
-    void waitJFrame() throws Exception {
+    void waitJFrame() {
         jFrameRef.get().setVisible(true);
         JFrame frame1 = JFrameOperator.waitJFrame(PredicatesJ.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();

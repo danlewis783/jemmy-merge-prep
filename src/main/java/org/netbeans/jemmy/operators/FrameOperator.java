@@ -196,16 +196,12 @@ public class FrameOperator extends WindowOperator {
     }
 
     protected static Frame waitFrame(Predicate<Component> predicate, int index) {
-        try {
-            return FunctionRepeater.on(
-                            new FrameFunction(
-                                    index, null, PredicatesJ.of(Frame.class, PredicatesJ.of(Frame.class, predicate))),
-                            TimeoutKey.FrameWaiter_WaitFrameTimeout,
-                            TimeoutKey.Waiter_TimeDelta)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return FunctionRepeater.on(
+                        new FrameFunction(
+                                index, null, PredicatesJ.of(Frame.class, PredicatesJ.of(Frame.class, predicate))),
+                        TimeoutKey.FrameWaiter_WaitFrameTimeout,
+                        TimeoutKey.Waiter_TimeDelta)
+                .runUntilNotNull(null);
     }
 
     private static class FrameOperatorState implements Predicate<FrameOperator> {

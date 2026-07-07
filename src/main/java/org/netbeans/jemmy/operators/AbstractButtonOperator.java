@@ -39,7 +39,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ButtonUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
@@ -90,11 +89,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     public void push() {
         makeComponentVisible();
 
-        try {
-            waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        waitComponentEnabled();
 
         driver.push(this);
     }
@@ -132,21 +127,13 @@ public class AbstractButtonOperator extends JComponentOperator {
     public void press() {
         makeComponentVisible();
 
-        try {
-            waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        waitComponentEnabled();
 
         driver.press(this);
     }
 
     public void release() {
-        try {
-            waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        waitComponentEnabled();
 
         driver.release(this);
     }

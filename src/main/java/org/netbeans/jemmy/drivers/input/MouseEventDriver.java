@@ -124,7 +124,7 @@ public final class MouseEventDriver extends EventDriver implements MouseDriver {
                 Operator.getDefaultMouseButton());
     }
 
-    protected void dispatchEvent(Component comp, int id, int modifiers, int x, int y, int clickCount, int mouseButton) {
+    private void dispatchEvent(Component comp, int id, int modifiers, int x, int y, int clickCount, int mouseButton) {
         dispatchEvent(
                 comp,
                 new MouseEvent(

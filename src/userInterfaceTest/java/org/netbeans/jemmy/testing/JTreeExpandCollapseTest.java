@@ -37,7 +37,7 @@ class JTreeExpandCollapseTest {
     private JTree tree;
 
     @Test
-    void test() throws Exception {
+    void test() {
         TreeExpandApp.main(new String[] {});
         QueueTool.getInstance().waitEmpty(100);
         JFrame frm = JFrameOperator.waitJFrame("TreeExpandApp");

@@ -213,5 +213,5 @@ class JLabelOperatorTest {
         assertThat(operator2.getVerticalTextPosition()).isEqualTo(SwingConstants.TOP);
     }
 
-    private class JLabelOperatorTestUI extends LabelUI {}
+    private static class JLabelOperatorTestUI extends LabelUI {}
 }

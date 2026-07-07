@@ -44,7 +44,7 @@ public final class ClassReference<T> {
         clazz = (Class<T>) instance.getClass();
     }
 
-    public ClassReference(Class<T> clazz) throws ClassNotFoundException {
+    public ClassReference(Class<T> clazz) {
         this.clazz = Objects.requireNonNull(clazz);
         instance = null;
     }

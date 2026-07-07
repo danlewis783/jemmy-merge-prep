@@ -1139,14 +1139,14 @@ class JTreeOperatorTest {
         operator2.treeDidChange();
     }
 
-    class StringComparatorTest implements StringComparator {
+    static class StringComparatorTest implements StringComparator {
         @Override
         public boolean equals(String observed, String expected) {
             return true;
         }
     }
 
-    private class TreeExpansionListenerTest implements TreeExpansionListener {
+    private static class TreeExpansionListenerTest implements TreeExpansionListener {
         @Override
         public void treeExpanded(TreeExpansionEvent event) {}
 
@@ -1154,12 +1154,12 @@ class JTreeOperatorTest {
         public void treeCollapsed(TreeExpansionEvent event) {}
     }
 
-    private class TreeSelectionListenerTest implements TreeSelectionListener {
+    private static class TreeSelectionListenerTest implements TreeSelectionListener {
         @Override
         public void valueChanged(TreeSelectionEvent e) {}
     }
 
-    private class TreeWillExpandListenerTest implements TreeWillExpandListener {
+    private static class TreeWillExpandListenerTest implements TreeWillExpandListener {
         @Override
         public void treeWillExpand(TreeExpansionEvent event) {}
 

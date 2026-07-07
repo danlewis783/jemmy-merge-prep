@@ -39,7 +39,7 @@ public final class EventTool {
     private EventTool() {
         listenerSet = ListenerSet.getInstance();
         String jemmy_event_listening = System.getProperty("jemmy.event_listening");
-        if ((jemmy_event_listening == null) || !"no".equals(jemmy_event_listening)) {
+        if (!"no".equals(jemmy_event_listening)) {
             listenerSet.addListeners();
         }
     }
@@ -95,25 +95,17 @@ public final class EventTool {
     }
 
     public void waitNoEvent(long eventMask, TimeoutKey waitTime) {
-        try {
-            FunctionRepeater.on(
-                            new NoEventFunction(eventMask, waitTime, this),
-                            waitTime,
-                            TimeoutKey.EventTool_EventCheckingDelta)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        FunctionRepeater.on(
+                        new NoEventFunction(eventMask, waitTime, this),
+                        waitTime,
+                        TimeoutKey.EventTool_EventCheckingDelta)
+                .runUntilNotNull(null);
     }
 
     private AWTEvent waitEvent(long eventMask, TimeoutKey waitTime) {
-        try {
-            return FunctionRepeater.on(
-                            new AwtEventByMaskFunction(eventMask), waitTime, TimeoutKey.EventTool_EventCheckingDelta)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return FunctionRepeater.on(
+                        new AwtEventByMaskFunction(eventMask), waitTime, TimeoutKey.EventTool_EventCheckingDelta)
+                .runUntilNotNull(null);
     }
 
     public void waitNoEvent(long eventMask) {

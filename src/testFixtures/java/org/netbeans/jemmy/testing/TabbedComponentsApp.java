@@ -40,7 +40,7 @@ final class TabbedComponentsApp extends JFrame {
             tableColumns[i] = String.valueOf(i);
 
             for (int j = 0; j < tableItems[i].length; j++) {
-                tableItems[j][i] = String.valueOf(i) + String.valueOf(j);
+                tableItems[j][i] = String.valueOf(i) + j;
             }
         }
 
@@ -61,7 +61,7 @@ final class TabbedComponentsApp extends JFrame {
             model.insertNodeInto(node, root, i);
 
             for (int j = 0; j < FIFTY; j++) {
-                model.insertNodeInto(new DefaultMutableTreeNode(String.valueOf(i) + String.valueOf(j)), node, j);
+                model.insertNodeInto(new DefaultMutableTreeNode(String.valueOf(i) + j), node, j);
             }
         }
 
@@ -77,7 +77,7 @@ final class TabbedComponentsApp extends JFrame {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < FIFTY; i++) {
             for (int j = 0; j < FIFTY; j++) {
-                sb.append(String.valueOf(i)).append(String.valueOf(j));
+                sb.append(i).append(j);
             }
 
             sb.append("\n");

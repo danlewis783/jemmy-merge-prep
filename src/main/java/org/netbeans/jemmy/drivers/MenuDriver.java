@@ -33,5 +33,6 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface MenuDriver {
-    public @Nullable MenuElement pushMenu(ComponentOperator oper, List<Predicate<Component>> predicates);
+    @Nullable
+    MenuElement pushMenu(ComponentOperator oper, List<Predicate<Component>> predicates);
 }

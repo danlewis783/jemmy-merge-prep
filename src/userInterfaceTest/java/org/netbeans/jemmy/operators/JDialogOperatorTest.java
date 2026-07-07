@@ -123,16 +123,12 @@ class JDialogOperatorTest {
 
     @Test
     void waitJDialog_Timeout() {
-        TimeoutOverride override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 500L);
-        Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
-        new JDialogOperator();
-
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 500L)) {
+            Future<JDialog> laFutura = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
+            new JDialogOperator();
             assertThatExceptionOfType(ExecutionException.class)
-                    .isThrownBy(future1::get)
+                    .isThrownBy(laFutura::get)
                     .withMessageContaining("timeout \"DialogWaiter_WaitDialogTimeout\" (500 ms) exceeded after (");
-        } finally {
-            override.cancel();
         }
     }
 
@@ -229,7 +225,7 @@ class JDialogOperatorTest {
     }
 
     private static class GetTopModalDialogRunnable1 implements Runnable {
-        private JDialog jDialog;
+        private final JDialog jDialog;
 
         private GetTopModalDialogRunnable1(JDialog jDialog) {
             this.jDialog = jDialog;
@@ -271,7 +267,7 @@ class JDialogOperatorTest {
     }
 
     private static class WaitJDialogCallable2 implements Callable<JDialog> {
-        private JFrame frame;
+        private final JFrame frame;
 
         private WaitJDialogCallable2(JFrame frame) {
             this.frame = frame;

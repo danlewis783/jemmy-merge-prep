@@ -746,7 +746,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         }
     }
 
-    public class WrongInternalFrameStateException extends JemmyInputException {
+    public static class WrongInternalFrameStateException extends JemmyInputException {
         public WrongInternalFrameStateException(String message, Component comp) {
             super(message, comp);
         }

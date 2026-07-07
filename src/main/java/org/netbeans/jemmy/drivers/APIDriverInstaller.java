@@ -53,7 +53,7 @@ import org.netbeans.jemmy.drivers.windows.DefaultWindowDriver;
 import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
 
 public final class APIDriverInstaller implements DriverInstaller {
-    private boolean shortcutEvents;
+    private final boolean shortcutEvents;
 
     public APIDriverInstaller(boolean shortcutEvents) {
         this.shortcutEvents = shortcutEvents;

@@ -37,7 +37,6 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.ComponentSearcherFunction;
@@ -92,12 +91,8 @@ public class ContainerOperator extends ComponentOperator {
 
     public Component waitSubComponent(Predicate<Component> chooser, int index, TimeoutKey timeoutKey) {
         ComponentSearcher searcher = new ComponentSearcher((Container) getSource());
-        try {
-            return FunctionRepeater.on(new ComponentSearcherFunction(searcher, chooser, index), timeoutKey)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting for \"" + chooser.toString() + "\" component has been interrupted", e);
-        }
+        return FunctionRepeater.on(new ComponentSearcherFunction(searcher, chooser, index), timeoutKey)
+                .runUntilNotNull(null);
     }
 
     public @Nullable ComponentOperator createSubOperator(Predicate<Component> chooser, int index) {

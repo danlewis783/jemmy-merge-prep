@@ -651,7 +651,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public interface ListItemChooser {
-        public boolean checkItem(JListOperator oper, int index);
+        boolean checkItem(JListOperator oper, int index);
     }
 
     public class NoSuchItemException extends JemmyInputException {

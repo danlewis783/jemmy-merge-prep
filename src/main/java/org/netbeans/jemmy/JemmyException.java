@@ -67,7 +67,7 @@ public class JemmyException extends RuntimeException {
 
         if (object != null) {
             ps.println("Object:");
-            ps.println(object.toString());
+            ps.println(object);
         }
     }
 

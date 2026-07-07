@@ -66,7 +66,6 @@ import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.EventDispatcher;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -322,16 +321,12 @@ public class ComponentOperator extends Operator {
         return getCenterY();
     }
 
-    public void waitComponentEnabled() throws InterruptedException {
+    public void waitComponentEnabled() {
         waitState(new ComponentOperatorIsEnabledPredicate<>());
     }
 
     public void wtComponentEnabled() {
-        try {
-            waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted!", e);
-        }
+        waitComponentEnabled();
     }
 
     public Container[] getContainers() {
@@ -391,11 +386,7 @@ public class ComponentOperator extends Operator {
 
     public void waitHasFocus() {
         FunctionRepeater<Void, Boolean> focusWaiter = FunctionRepeater.on(obj -> hasFocus() ? true : null);
-        try {
-            focusWaiter.runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            logger.warn("", e);
-        }
+        focusWaiter.runUntilNotNull(null);
     }
 
     public void waitComponentVisible(boolean visibility) {
@@ -1164,13 +1155,9 @@ public class ComponentOperator extends Operator {
     }
 
     protected static Component waitComponent(Container cont, Predicate<Component> predicate, int index) {
-        try {
-            return FunctionRepeater.on((Function<Void, Component>)
-                            obj -> findComponent(cont, PredicatesJ.ofShowing(predicate), index))
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        (Function<Void, Component>) obj -> findComponent(cont, PredicatesJ.ofShowing(predicate), index))
+                .runUntilNotNull(null);
     }
 
     private static @Nullable Component findComponent(

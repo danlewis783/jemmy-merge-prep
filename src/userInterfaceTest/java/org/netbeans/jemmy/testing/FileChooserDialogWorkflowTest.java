@@ -48,8 +48,8 @@ class FileChooserDialogWorkflowTest {
     private static final StringComparator STRICT = StringComparators.strict();
     private static final long PREEMPTIVE_TIMEOUT_SEC = 2;
     private static File userDir;
-    private AtomicReference<JFrameOperator> jFrameOpRef = new AtomicReference<>();
-    private AtomicReference<JButtonOperator> launchFileChooserButtonOpRef = new AtomicReference<>();
+    private final AtomicReference<JFrameOperator> jFrameOpRef = new AtomicReference<>();
+    private final AtomicReference<JButtonOperator> launchFileChooserButtonOpRef = new AtomicReference<>();
     private TimeoutOverride override;
 
     @BeforeAll

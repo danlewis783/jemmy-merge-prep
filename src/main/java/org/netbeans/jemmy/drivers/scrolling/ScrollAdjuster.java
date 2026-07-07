@@ -26,11 +26,11 @@
 package org.netbeans.jemmy.drivers.scrolling;
 
 public interface ScrollAdjuster {
-    public static final int DECREASE_SCROLL_DIRECTION = -1;
-    public static final int DO_NOT_TOUCH_SCROLL_DIRECTION = 0;
-    public static final int INCREASE_SCROLL_DIRECTION = 1;
+    int DECREASE_SCROLL_DIRECTION = -1;
+    int DO_NOT_TOUCH_SCROLL_DIRECTION = 0;
+    int INCREASE_SCROLL_DIRECTION = 1;
 
-    public int getScrollDirection();
+    int getScrollDirection();
 
-    public int getScrollOrientation();
+    int getScrollOrientation();
 }

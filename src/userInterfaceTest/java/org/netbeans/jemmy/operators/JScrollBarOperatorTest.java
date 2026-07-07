@@ -295,7 +295,7 @@ class JScrollBarOperatorTest {
         operator1.setValues(0, 0, 0, 0);
     }
 
-    private class AdjustmentListenerTest implements AdjustmentListener {
+    private static class AdjustmentListenerTest implements AdjustmentListener {
         @Override
         public void adjustmentValueChanged(AdjustmentEvent e) {}
     }

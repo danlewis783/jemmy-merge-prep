@@ -365,7 +365,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public interface ScrollChecker {
-        public int getScrollDirection(JScrollBarOperator oper);
+        int getScrollDirection(JScrollBarOperator oper);
     }
 
     private class CheckerAdjustable implements ScrollAdjuster {

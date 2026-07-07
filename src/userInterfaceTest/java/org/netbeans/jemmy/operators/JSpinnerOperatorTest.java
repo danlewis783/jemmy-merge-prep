@@ -123,7 +123,7 @@ class JSpinnerOperatorTest {
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
         assertThat(jSpinnerOpNumber).isNotNull();
         assertThat(jSpinnerOpNumber.getNumberModel()).isNotNull();
-        jSpinnerOpNumber.scrollToValue(new Integer(2));
+        jSpinnerOpNumber.scrollToValue(Integer.valueOf(2));
         jSpinnerOpNumber.scrollToValue(4.0);
     }
 

@@ -29,11 +29,11 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface MouseDriver {
-    public void pressMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers);
+    void pressMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers);
 
-    public void releaseMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers);
+    void releaseMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers);
 
-    public void clickMouse(
+    void clickMouse(
             ComponentOperator oper,
             int x,
             int y,
@@ -42,11 +42,11 @@ public interface MouseDriver {
             int modifiers,
             TimeoutKey mouseClick);
 
-    public void moveMouse(ComponentOperator oper, int x, int y);
+    void moveMouse(ComponentOperator oper, int x, int y);
 
-    public void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers);
+    void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers);
 
-    public void dragNDrop(
+    void dragNDrop(
             ComponentOperator oper,
             int start_x,
             int start_y,
@@ -57,7 +57,7 @@ public interface MouseDriver {
             TimeoutKey before,
             TimeoutKey after);
 
-    public void enterMouse(ComponentOperator oper);
+    void enterMouse(ComponentOperator oper);
 
-    public void exitMouse(ComponentOperator oper);
+    void exitMouse(ComponentOperator oper);
 }

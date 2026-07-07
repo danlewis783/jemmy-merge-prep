@@ -584,7 +584,7 @@ class JTextComponentOperatorTest {
         operator1.write(new StringWriter());
     }
 
-    private class CaretListenerTest implements CaretListener {
+    private static class CaretListenerTest implements CaretListener {
         @Override
         public void caretUpdate(CaretEvent e) {}
     }

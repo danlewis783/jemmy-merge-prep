@@ -375,7 +375,7 @@ public class ScrollPaneOperator extends ContainerOperator {
         }
     }
 
-    private class ValueScrollAdjuster implements ScrollAdjuster {
+    private static class ValueScrollAdjuster implements ScrollAdjuster {
         final Adjustable adj;
         final int orientation;
         final int value;

@@ -376,10 +376,7 @@ class WindowOperatorTest {
 
     @Test
     void addWindowListener() throws Exception {
-        WindowListener windowListener = new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {}
-        };
+        WindowListener windowListener = new WindowAdapter() {};
         FrameOperator frameOp = new FrameOperator();
         frameOp.addWindowListener(windowListener);
         sleepOneSec();
@@ -395,10 +392,7 @@ class WindowOperatorTest {
 
     @Test
     void dispose() throws Exception {
-        frameRef.get().addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {}
-        });
+        frameRef.get().addWindowListener(new WindowAdapter() {});
         FrameOperator frameOp = new FrameOperator();
         frameOp.dispose();
         sleepOneSec();

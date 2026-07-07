@@ -175,7 +175,7 @@ class JTextFieldOperatorTest {
         operator2.getHorizontalVisibility();
     }
 
-    class ActionListener1 implements ActionListener {
+    static class ActionListener1 implements ActionListener {
         String actionCommand;
 
         @Override

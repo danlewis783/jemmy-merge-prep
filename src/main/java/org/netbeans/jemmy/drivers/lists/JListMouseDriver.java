@@ -60,11 +60,11 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
         }
     }
 
-    protected void clickOnItem(JListOperator oper, int index) {
+    private void clickOnItem(JListOperator oper, int index) {
         clickOnItem(oper, index, 0);
     }
 
-    protected void clickOnItem(JListOperator oper, int index, int modifiers) {
+    private void clickOnItem(JListOperator oper, int index, int modifiers) {
         if (!EventQueue.isDispatchThread()) {
             oper.scrollToItem(index);
         }

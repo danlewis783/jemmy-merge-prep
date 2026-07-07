@@ -204,7 +204,7 @@ class JEditorPaneOperatorTest {
         assertThat(editorPane.getText().startsWith("<html>")).isTrue();
     }
 
-    private class EditorKitTest extends EditorKit {
+    private static class EditorKitTest extends EditorKit {
         @Override
         public String getContentType() {
             return null;
@@ -243,7 +243,7 @@ class JEditorPaneOperatorTest {
         public void write(Writer out, Document doc, int pos, int len) {}
     }
 
-    class HyperlinkListenerTest implements HyperlinkListener {
+    static class HyperlinkListenerTest implements HyperlinkListener {
         private HyperlinkEvent event;
 
         @Override

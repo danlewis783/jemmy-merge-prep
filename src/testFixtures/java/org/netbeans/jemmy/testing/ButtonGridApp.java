@@ -40,7 +40,7 @@ public class ButtonGridApp extends JFrame {
         JButton butt;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                butt = new JButton(Integer.toString(i) + "-" + Integer.toString(j));
+                butt = new JButton(i + "-" + j);
                 butt.setToolTipText(butt.getText() + " button");
                 butt.addActionListener(event -> {
                     JButton btt = (JButton) event.getSource();

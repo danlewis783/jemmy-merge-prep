@@ -103,7 +103,7 @@ public final class WindowManager {
         }
 
         @Override
-        public Void call() throws Exception {
+        public Void call() {
             if (needStop.get()) {
                 throw new IllegalStateException("attempt to run but already marked stop");
             }

@@ -722,7 +722,7 @@ class JInternalFrameOperatorTest {
         assertThat(operator2.isMaximizable()).isTrue();
     }
 
-    private class InternalFrameListenerTest implements InternalFrameListener {
+    private static class InternalFrameListenerTest implements InternalFrameListener {
         @Override
         public void internalFrameOpened(InternalFrameEvent e) {}
 
@@ -745,5 +745,5 @@ class JInternalFrameOperatorTest {
         public void internalFrameDeactivated(InternalFrameEvent e) {}
     }
 
-    private class InternalFrameUITest extends InternalFrameUI {}
+    private static class InternalFrameUITest extends InternalFrameUI {}
 }

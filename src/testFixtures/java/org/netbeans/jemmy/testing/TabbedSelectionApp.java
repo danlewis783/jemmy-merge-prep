@@ -54,7 +54,7 @@ public class TabbedSelectionApp extends JFrame {
             tableColumns[i] = Integer.toString(i);
 
             for (int j = 0; j < tableItems[i].length; j++) {
-                tableItems[j][i] = Integer.toString(i) + Integer.toString(j);
+                tableItems[j][i] = Integer.toString(i) + j;
             }
         }
 
@@ -86,11 +86,11 @@ public class TabbedSelectionApp extends JFrame {
 
         for (int i = 0; i < nodes.length; i++) {
             nodes[i] = new DefaultMutableTreeNode();
-            nodes[i].setUserObject(Integer.toString(i) + "0");
+            nodes[i].setUserObject(i + "0");
 
             for (int j = 0; j < subnodes[i].length; j++) {
                 subnodes[i][j] = new DefaultMutableTreeNode();
-                subnodes[i][j].setUserObject(Integer.toString(i) + Integer.toString(j));
+                subnodes[i][j].setUserObject(Integer.toString(i) + j);
                 nodes[i].insert(subnodes[i][j], j);
             }
 
@@ -189,7 +189,7 @@ public class TabbedSelectionApp extends JFrame {
 
         @Override
         public Object getCellEditorValue() {
-            return Integer.toString(fCombo.getSelectedIndex()) + Integer.toString(sCombo.getSelectedIndex());
+            return Integer.toString(fCombo.getSelectedIndex()) + sCombo.getSelectedIndex();
         }
 
         @Override
@@ -267,7 +267,7 @@ public class TabbedSelectionApp extends JFrame {
 
         @Override
         public Object getCellEditorValue() {
-            return Integer.toString(fCombo.getSelectedIndex()) + Integer.toString(sCombo.getSelectedIndex());
+            return Integer.toString(fCombo.getSelectedIndex()) + sCombo.getSelectedIndex();
         }
 
         @Override

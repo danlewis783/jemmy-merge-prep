@@ -610,16 +610,12 @@ final class JFileChooserOperatorTest {
     void testShowDialog() throws Exception {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertThat(op).isNotNull();
-        TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L);
         int result;
-        try {
+        try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L)) {
             result = FunctionRunner.on((Function<Void, Integer>) v -> op.showDialog(null, "Plus"))
                     .submitAndGet(null, TimeoutKey.Testing_A);
-        } finally {
-            overrideA.cancel();
         }
-        TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L);
-        try {
+        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L)) {
             FunctionRunner.on((Function<Void, Void>) v -> {
                         JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
                         assertThat(buttonOp).isNotNull();
@@ -627,8 +623,6 @@ final class JFileChooserOperatorTest {
                         return null;
                     })
                     .submitAndGet(null, TimeoutKey.Testing_B);
-        } finally {
-            overrideB.cancel();
         }
         assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
     }
@@ -638,16 +632,12 @@ final class JFileChooserOperatorTest {
     void testShowOpenDialog() throws Exception {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertThat(op).isNotNull();
-        TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1000L);
         int result;
-        try {
+        try (TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1000L)) {
             result = FunctionRunner.on((Function<Void, Integer>) v -> op.showOpenDialog(null))
                     .submitAndGet(null, TimeoutKey.Testing_C);
-        } finally {
-            overrideC.cancel();
         }
-        TimeoutOverride overrideD = Timeouts.override(TimeoutKey.Testing_D, 1000L);
-        try {
+        try (TimeoutOverride overrideD = Timeouts.override(TimeoutKey.Testing_D, 1000L)) {
             FunctionRunner.on((Function<Void, Void>) v -> {
                         JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
                         assertThat(buttonOp).isNotNull();
@@ -655,8 +645,6 @@ final class JFileChooserOperatorTest {
                         return null;
                     })
                     .submitAndGet(null, TimeoutKey.Testing_D);
-        } finally {
-            overrideD.cancel();
         }
         assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
     }
@@ -666,16 +654,12 @@ final class JFileChooserOperatorTest {
     void testShowSaveDialog() throws Exception {
         JFileChooserOperator op = new JFileChooserOperator(fileChooserRef.get());
         assertThat(op).isNotNull();
-        TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L);
         int result;
-        try {
+        try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L)) {
             result = FunctionRunner.on((Function<Void, Integer>) v -> op.showSaveDialog(null))
                     .submitAndGet(null, TimeoutKey.Testing_A);
-        } finally {
-            overrideA.cancel();
         }
-        TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L);
-        try {
+        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L)) {
             FunctionRunner.on((Function<Void, Void>) v -> {
                         JButtonOperator buttonOp = new JButtonOperator(op, "Cancel", StringComparators.strict());
                         assertThat(buttonOp).isNotNull();
@@ -683,8 +667,6 @@ final class JFileChooserOperatorTest {
                         return null;
                     })
                     .submitAndGet(null, TimeoutKey.Testing_B);
-        } finally {
-            overrideB.cancel();
         }
         assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
     }

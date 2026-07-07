@@ -348,12 +348,12 @@ class ListOperatorTest {
         operator1.setMultipleMode(true);
     }
 
-    private class ActionListenerTest implements ActionListener {
+    private static class ActionListenerTest implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {}
     }
 
-    private class ItemListenerTest implements ItemListener {
+    private static class ItemListenerTest implements ItemListener {
         @Override
         public void itemStateChanged(ItemEvent e) {}
     }

@@ -35,7 +35,6 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -123,14 +122,10 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public Window waitSubWindow(Predicate<Component> predicate, int index) {
-        try {
-            return FunctionRepeater.on(
-                            new WindowFunction<>(index, (Window) getSource(), predicate),
-                            TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting for \"" + predicate.toString() + "\" window has been interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        new WindowFunction<>(index, (Window) getSource(), predicate),
+                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
     }
 
     public Window waitSubWindow(Predicate<Component> chooser) {
@@ -142,16 +137,11 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static void waitWindowCount(@Nullable Window owner, Predicate<Component> chooser, int count) {
-        try {
-            FunctionRepeater.on(
-                            (java.util.function.Function<Void, Boolean>)
-                                    unused -> (countWindows(owner, chooser) == count) ? true : null,
-                            TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException(
-                    "Waiting for " + count + " windows matching \"" + chooser + "\" has been interrupted", e);
-        }
+        FunctionRepeater.on(
+                        (java.util.function.Function<Void, Boolean>)
+                                unused -> (countWindows(owner, chooser) == count) ? true : null,
+                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
     }
 
     public static int countWindows(Predicate<Component> chooser) {
@@ -305,13 +295,9 @@ public class WindowOperator extends ContainerOperator {
     }
 
     protected static Window waitWindow(Predicate<Component> chooser, int index) {
-        try {
-            return FunctionRepeater.on(
-                            new WindowFunction<>(index, null, chooser), TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting for \"" + chooser.toString() + "\" window has been interrupted", e);
-        }
+        return FunctionRepeater.on(
+                        new WindowFunction<>(index, null, chooser), TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
     }
 
     protected static Window waitWindow(WindowOperator owner, Predicate<Component> chooser, int index) {
@@ -319,12 +305,8 @@ public class WindowOperator extends ContainerOperator {
     }
 
     protected static Window waitWindow(Window owner, Predicate<Component> chooser, int index) {
-        try {
-            return FunctionRepeater.on(
-                            new WindowFunction<>(index, owner, chooser), TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return FunctionRepeater.on(
+                        new WindowFunction<>(index, owner, chooser), TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
     }
 }

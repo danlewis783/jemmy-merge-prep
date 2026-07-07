@@ -23,5 +23,5 @@ public interface StringComparator {
      * @return true if strings are "equal" according to comparator; true if expected value is null, false if observed
      * value is null
      */
-    public boolean equals(@Nullable String observed, @Nullable String expected);
+    boolean equals(@Nullable String observed, @Nullable String expected);
 }

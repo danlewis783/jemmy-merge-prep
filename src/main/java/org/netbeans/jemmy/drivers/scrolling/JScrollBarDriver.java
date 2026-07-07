@@ -182,7 +182,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
             return false;
         }
 
-        boolean result = false;
+        boolean result;
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
         JButtonOperator less = findAButton(oper, ScrollAdjuster.DECREASE_SCROLL_DIRECTION);

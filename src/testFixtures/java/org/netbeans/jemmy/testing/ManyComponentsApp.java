@@ -128,7 +128,7 @@ public class ManyComponentsApp extends JFrame {
                 tableColumns[i] = Integer.toString(i);
 
                 for (int j = 0; j < tableItems[i].length; j++) {
-                    tableItems[j][i] = "table_" + Integer.toString(i) + Integer.toString(j);
+                    tableItems[j][i] = "table_" + i + j;
                 }
             }
 

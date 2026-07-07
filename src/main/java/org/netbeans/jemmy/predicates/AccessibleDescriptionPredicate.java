@@ -35,7 +35,7 @@ public final class AccessibleDescriptionPredicate extends AccessibilityPredicate
     }
 
     @Override
-    public final boolean checkContext(AccessibleContext context) {
+    public boolean checkContext(AccessibleContext context) {
         return comparator.equals(context.getAccessibleDescription(), description);
     }
 }

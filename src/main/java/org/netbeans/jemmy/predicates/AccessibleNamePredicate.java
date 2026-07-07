@@ -35,7 +35,7 @@ public final class AccessibleNamePredicate extends AccessibilityPredicate {
     }
 
     @Override
-    public final boolean checkContext(AccessibleContext context) {
+    public boolean checkContext(AccessibleContext context) {
         return comparator.equals(context.getAccessibleName(), name);
     }
 }

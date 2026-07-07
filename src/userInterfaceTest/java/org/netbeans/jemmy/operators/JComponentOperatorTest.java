@@ -604,12 +604,12 @@ class JComponentOperatorTest {
         operator1.updateUI();
     }
 
-    private class ActionListenerTest implements ActionListener {
+    private static class ActionListenerTest implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {}
     }
 
-    private class AncestorListenerTest implements AncestorListener {
+    private static class AncestorListenerTest implements AncestorListener {
         @Override
         public void ancestorAdded(AncestorEvent event) {}
 
@@ -620,7 +620,7 @@ class JComponentOperatorTest {
         public void ancestorMoved(AncestorEvent event) {}
     }
 
-    private class VetoableChangeListenerTest implements VetoableChangeListener {
+    private static class VetoableChangeListenerTest implements VetoableChangeListener {
         @Override
         public void vetoableChange(PropertyChangeEvent evt) {}
     }

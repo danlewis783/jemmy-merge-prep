@@ -245,7 +245,7 @@ public class JProgressBarOperator extends JComponentOperator {
         }
     }
 
-    private class JProgressBarOperatorByStringPredicate implements Predicate<JProgressBarOperator> {
+    private static class JProgressBarOperatorByStringPredicate implements Predicate<JProgressBarOperator> {
         private final String value;
         private final StringComparator stringComparator;
 

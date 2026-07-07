@@ -71,7 +71,7 @@ public final class FunctionsJ {
 
         @Override
         public String toString() {
-            return "Function wrapping " + predicate.toString();
+            return "Function wrapping " + predicate;
         }
     }
 }

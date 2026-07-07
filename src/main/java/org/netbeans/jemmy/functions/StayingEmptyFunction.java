@@ -44,7 +44,7 @@ public final class StayingEmptyFunction implements Function<Void, Boolean> {
                 public Thread newThread(Runnable runnable) {
                     Thread thread = Executors.defaultThreadFactory().newThread(runnable);
                     thread.setUncaughtExceptionHandler(
-                            (t, e) -> logger.warn("uncaught exception in thread " + t.getName(), e));
+                            (t, e) -> logger.warn("uncaught exception in thread {}", t.getName(), e));
                     thread.setName(String.format("jemmy-staying-empty-%d", count.getAndIncrement()));
                     return thread;
                 }

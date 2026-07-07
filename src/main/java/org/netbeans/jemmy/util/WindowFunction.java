@@ -21,5 +21,5 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public interface WindowFunction<F> extends Function<F, Void> {
-    public Predicate<Component> getPredicate();
+    Predicate<Component> getPredicate();
 }

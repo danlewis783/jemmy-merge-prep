@@ -32,7 +32,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.MenuDriver;
@@ -46,18 +45,15 @@ import org.slf4j.LoggerFactory;
 public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriver {
     private static final Logger logger = LoggerFactory.getLogger(APIJMenuDriver.class);
 
-    protected @Nullable Object push(
+    @Nullable
+    private Object push(
             ComponentOperator oper,
             @Nullable JMenuBar menuBar,
             List<Predicate<Component>> predicates,
             int depth,
             boolean pressMouse) {
-        try {
-            oper.waitComponentVisible(true);
-            oper.waitComponentEnabled();
-        } catch (InterruptedException e) {
-            throw new JemmyException("Interrupted!", e);
-        }
+        oper.waitComponentVisible(true);
+        oper.waitComponentEnabled();
 
         if (depth > predicates.size() - 1) {
             if (oper instanceof JMenuOperator) {
@@ -97,11 +93,7 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
             return result;
         } else {
             JMenuItemOperator mio = new JMenuItemOperator(item);
-            try {
-                mio.waitComponentEnabled();
-            } catch (InterruptedException e) {
-                throw new JemmyException("Interrupted!", e);
-            }
+            mio.waitComponentEnabled();
 
             mio.doClick();
             ((JMenuOperator) oper).setPopupMenuVisible(false);
@@ -110,7 +102,7 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
         }
     }
 
-    protected void waitNoPopupMenu(ComponentOperator oper) {
+    private void waitNoPopupMenu(ComponentOperator oper) {
         oper.waitState(new JMenuOperatorPopupNotVisible());
     }
 

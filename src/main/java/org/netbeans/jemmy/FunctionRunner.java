@@ -41,7 +41,8 @@ public final class FunctionRunner<F, T> {
         @Override
         public Thread newThread(Runnable runnable) {
             Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-            thread.setUncaughtExceptionHandler((t, e) -> logger.warn("uncaught exception in thread " + t.getName(), e));
+            thread.setUncaughtExceptionHandler(
+                    (t, e) -> logger.warn("uncaught exception in thread {}", t.getName(), e));
             thread.setName(String.format("jemmy-function-waiter-%d", count.getAndIncrement()));
             return thread;
         }
@@ -95,7 +96,7 @@ public final class FunctionRunner<F, T> {
         return null;
     }
 
-    public void run(@Nullable F f) throws InterruptedException {
+    public void run(@Nullable F f) {
         JEMMY_ACTION_SERVICE.execute(() -> function.apply(f));
     }
 }

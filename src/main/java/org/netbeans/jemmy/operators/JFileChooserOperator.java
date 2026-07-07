@@ -76,9 +76,6 @@ public class JFileChooserOperator extends JComponentOperator {
     public JFileChooserOperator() {
         this((JFileChooser) waitComponent(
                 JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()), PredicatesJ.of(JFileChooser.class)));
-
-        //        this((JFileChooser) waitComponent(JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate()),
-        //                PredicatesJ.of(JFileChooser.class)));
     }
 
     public JFileChooserOperator(JFileChooser comp) {
@@ -663,18 +660,14 @@ public class JFileChooserOperator extends JComponentOperator {
 
     private void waitPainted(int index) {
         Component list = getFileList();
-        try {
-            if (list instanceof JList) {
-                FunctionRepeater.on(new JListCellIndexIsPaintedFunction(() -> (JList) getFileList()))
-                        .runUntilNotNull(index);
-            } else if (list instanceof JTable) {
-                FunctionRepeater.on(new JTableCellIndexIsPaintedFunction(() -> (JTable) getFileList()))
-                        .runUntilNotNull(index);
-            } else {
-                throw new IllegalStateException("Wrong component type");
-            }
-        } catch (InterruptedException e) {
-            logger.warn("", e);
+        if (list instanceof JList) {
+            FunctionRepeater.on(new JListCellIndexIsPaintedFunction(() -> (JList) getFileList()))
+                    .runUntilNotNull(index);
+        } else if (list instanceof JTable) {
+            FunctionRepeater.on(new JTableCellIndexIsPaintedFunction(() -> (JTable) getFileList()))
+                    .runUntilNotNull(index);
+        } else {
+            throw new IllegalStateException("Wrong component type");
         }
     }
 
@@ -694,21 +687,17 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     private int findFileIndex(String file, StringComparator comparator) {
-        try {
-            return FunctionRepeater.on((Function<Void, Integer>) obj -> {
-                        File[] files = getFiles();
-                        for (int i = 0, iMax = files.length; i < iMax; i++) {
-                            if (comparator.equals(files[i].getName(), file)) {
-                                return i;
-                            }
+        return FunctionRepeater.on((Function<Void, Integer>) obj -> {
+                    File[] files = getFiles();
+                    for (int i = 0, iMax = files.length; i < iMax; i++) {
+                        if (comparator.equals(files[i].getName(), file)) {
+                            return i;
                         }
+                    }
 
-                        return null;
-                    })
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting has been interrupted!", e);
-        }
+                    return null;
+                })
+                .runUntilNotNull(null);
     }
 
     private int findDirIndex(String dir, StringComparator comparator) {
@@ -802,7 +791,7 @@ public class JFileChooserOperator extends JComponentOperator {
             return (comp instanceof JButton)
                     && !(comp.getParent() instanceof JComboBox)
                     && (((JButton) comp).getText() == null
-                            || ((JButton) comp).getText().length() == 0);
+                            || ((JButton) comp).getText().isEmpty());
         }
     }
 

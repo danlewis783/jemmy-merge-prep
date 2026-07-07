@@ -82,14 +82,11 @@ class EventToolTest {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
         assertThat(eventTool.waitEvent(AWTEvent.MOUSE_EVENT_MASK)).isNotNull();
-        TimeoutOverride override0 = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 3250L);
 
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 3250L)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
                     .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
                     .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (3250 ms) exceeded after (");
-        } finally {
-            override0.cancel();
         }
 
         assertThat(eventTool.getLastEvent(AWTEvent.MOUSE_EVENT_MASK))
@@ -103,13 +100,11 @@ class EventToolTest {
                 .isTrue();
         eventTool.removeListeners();
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
-        TimeoutOverride override1 = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2990);
-        try {
+
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2990)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
                     .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
                     .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (2990 ms) exceeded after (");
-        } finally {
-            override1.cancel();
         }
 
         assertThat(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished))
@@ -122,42 +117,32 @@ class EventToolTest {
                         .runUntilNotNull(null))
                 .isTrue();
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
-        TimeoutOverride overrideA = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L);
-        try {
+
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
             assertThat(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK))
                     .as("Mouse event occurred in 500 milliseconds")
                     .isTrue();
-        } finally {
-            overrideA.cancel();
         }
-        TimeoutOverride overrideB = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L);
-        try {
+
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L)) {
             assertThat(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK))
                     .as("Mouse event was not occurred in 1500 milliseconds")
                     .isFalse();
-        } finally {
-            overrideB.cancel();
         }
         assertThat(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished))
                         .runUntilNotNull(null))
                 .isTrue();
 
-        TimeoutOverride overrideC = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L);
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
             assertThat(eventTool.checkNoEvent())
                     .as("Some event occurred in 500 milliseconds")
                     .isTrue();
-        } finally {
-            overrideC.cancel();
         }
 
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 10));
 
-        TimeoutOverride overrideD = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L);
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
             eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK);
-        } finally {
-            overrideD.cancel();
         }
 
         assertThat(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished))
@@ -165,14 +150,10 @@ class EventToolTest {
                 .isTrue();
         executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 10));
 
-        TimeoutOverride overrideE = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500);
-
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
                     .isThrownBy(() -> eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK))
                     .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (1500 ms) exceeded after (");
-        } finally {
-            overrideE.cancel();
         }
 
         assertThat(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished))
@@ -181,7 +162,7 @@ class EventToolTest {
     }
 
     private static class FinishedAndQueueEmptyFunction implements Function<Void, Boolean> {
-        private AtomicBoolean finished;
+        private final AtomicBoolean finished;
 
         FinishedAndQueueEmptyFunction(AtomicBoolean finished) {
             this.finished = finished;
@@ -200,10 +181,10 @@ class EventToolTest {
     }
 
     private static class MouseMover implements Callable<Void> {
-        private int count;
-        private AtomicBoolean finished;
-        private AtomicReference<JFrameOperator> jFrameOpRef;
-        private long timeToSleep;
+        private final int count;
+        private final AtomicBoolean finished;
+        private final AtomicReference<JFrameOperator> jFrameOpRef;
+        private final long timeToSleep;
 
         MouseMover(AtomicReference<JFrameOperator> jFrameOpRef, AtomicBoolean finished, long timeToSleep, int count) {
             this.count = count;

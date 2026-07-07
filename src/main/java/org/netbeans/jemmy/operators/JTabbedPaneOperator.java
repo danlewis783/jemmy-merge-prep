@@ -409,7 +409,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public interface TabPageChooser {
-        public boolean checkPage(JTabbedPaneOperator oper, int index);
+        boolean checkPage(JTabbedPaneOperator oper, int index);
     }
 
     private static class JTabbedPaneOperatorPredicate implements Predicate<JTabbedPaneOperator> {
@@ -438,7 +438,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
         }
     }
 
-    private class BySubStringTabPageChooser implements TabPageChooser {
+    private static class BySubStringTabPageChooser implements TabPageChooser {
         private final StringComparator comparator;
         private final String title;
 

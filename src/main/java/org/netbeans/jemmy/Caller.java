@@ -44,7 +44,7 @@ public final class Caller<T> implements Runnable {
     }
 
     @Override
-    public final void run() {
+    public void run() {
         if (!hasRun.compareAndSet(false, true)) {
             throw new IllegalStateException("attempted to re-run Caller");
         }

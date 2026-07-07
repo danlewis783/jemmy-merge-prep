@@ -303,7 +303,7 @@ class ScrollPaneOperatorTest {
         operator1.paramString();
     }
 
-    class ScrollAdjusterTest implements ScrollAdjuster {
+    static class ScrollAdjusterTest implements ScrollAdjuster {
         @Override
         public int getScrollDirection() {
             return 0;

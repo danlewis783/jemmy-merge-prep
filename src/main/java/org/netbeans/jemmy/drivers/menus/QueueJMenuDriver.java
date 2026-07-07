@@ -96,8 +96,6 @@ public final class QueueJMenuDriver extends LightSupportiveDriver implements Men
                             waitKey,
                             TimeoutKey.QueueJMenuDriver_OneReleaseDelta)
                     .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         } finally {
             callable.stop();
         }

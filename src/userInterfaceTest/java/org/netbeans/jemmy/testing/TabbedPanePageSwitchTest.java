@@ -40,8 +40,7 @@ class TabbedPanePageSwitchTest {
     @Test
     void doit() throws Exception {
         TabbedPagesApp.main(new String[] {});
-        TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L);
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L)) {
             JFrame win = JFrameOperator.waitJFrame("TabbedPagesApp");
             JTabbedPaneOperator tpo =
                     new JTabbedPaneOperator(new JFrameOperator(win), "Page1", StringComparators.strict());
@@ -86,9 +85,6 @@ class TabbedPanePageSwitchTest {
 
             assertThatExceptionOfType(JListOperator.NoSuchItemException.class)
                     .isThrownBy(() -> lo.clickOnItem("four", StringComparators.strict(), 1));
-
-        } finally {
-            override.cancel();
         }
     }
 }

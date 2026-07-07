@@ -25,7 +25,7 @@
 package org.netbeans.jemmy;
 
 public interface CharBindingMap {
-    public int getCharKey(char c);
+    int getCharKey(char c);
 
-    public int getCharModifiers(char c);
+    int getCharModifiers(char c);
 }

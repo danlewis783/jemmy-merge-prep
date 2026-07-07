@@ -107,7 +107,7 @@ public abstract class Operator {
         this.verification = verification;
     }
 
-    public String[] getParentPath(String path[]) {
+    public String[] getParentPath(String[] path) {
         if (path.length > 1) {
             String[] ppath = new String[path.length - 1];
             System.arraycopy(path, 0, ppath, 0, ppath.length);
@@ -168,12 +168,8 @@ public abstract class Operator {
     }
 
     public <T extends Operator> void waitState(Predicate<T> predicate) {
-        try {
-            FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this))
-                    .runUntilNotNull(null);
-        } catch (InterruptedException e) {
-            throw new JemmyException("Waiting of \"" + predicate.toString() + "\" state has been interrupted!", e);
-        }
+        FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this))
+                .runUntilNotNull(null);
     }
 
     /**
@@ -201,7 +197,7 @@ public abstract class Operator {
             if (throwable instanceof JemmyException) {
                 throw (JemmyException) throwable;
             } else {
-                throw new JemmyException("Exception during " + function.toString(), throwable);
+                throw new JemmyException("Exception during " + function, throwable);
             }
         }
 
@@ -210,11 +206,7 @@ public abstract class Operator {
 
     protected <F, T> void produceNoBlocking(Function<F, T> function, @Nullable F f) {
         FunctionRunner<F, T> functionRunner = FunctionRunner.on(function);
-        try {
-            functionRunner.run(f);
-        } catch (InterruptedException e) {
-            throw new JemmyException("interrupted during execution of non-blocking function", e);
-        }
+        functionRunner.run(f);
 
         @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
         Throwable t = functionRunner.getThrowable();
@@ -286,7 +278,7 @@ public abstract class Operator {
                 }
             } while (clazz.isAssignableFrom(compClass = compClass.getSuperclass()));
         } catch (Throwable t) {
-            logger.warn("unable to create operator for component {}", comp.toString(), t);
+            logger.warn("unable to create operator for component {}", comp, t);
             if (t instanceof RuntimeException) {
                 throw (RuntimeException) t;
             }

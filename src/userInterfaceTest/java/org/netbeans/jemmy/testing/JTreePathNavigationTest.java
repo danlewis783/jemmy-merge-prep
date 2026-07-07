@@ -45,7 +45,7 @@ import org.netbeans.jemmy.util.StringComparators;
 class JTreePathNavigationTest {
 
     @Test
-    void test() throws Exception {
+    void test() {
         TreePathApp.main(new String[] {});
         JFrame frm = JFrameOperator.waitJFrame("TreePathApp");
         JTreeOperator to = new JTreeOperator(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1));

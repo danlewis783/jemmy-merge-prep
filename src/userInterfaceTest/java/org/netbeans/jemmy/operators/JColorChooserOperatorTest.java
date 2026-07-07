@@ -324,7 +324,7 @@ class JColorChooserOperatorTest {
         assertThat(operator.getColorCodeTextFieldOperator()).isNull();
     }
 
-    private class ColorChooserTestPanel extends AbstractColorChooserPanel {
+    private static class ColorChooserTestPanel extends AbstractColorChooserPanel {
         @Override
         public void updateChooser() {}
 
@@ -347,9 +347,9 @@ class JColorChooserOperatorTest {
         }
     }
 
-    private class ColorChooserUITest extends ColorChooserUI {}
+    private static class ColorChooserUITest extends ColorChooserUI {}
 
-    private class ColorSelectionModelTest implements ColorSelectionModel {
+    private static class ColorSelectionModelTest implements ColorSelectionModel {
         @Override
         public Color getSelectedColor() {
             return Color.BLACK;

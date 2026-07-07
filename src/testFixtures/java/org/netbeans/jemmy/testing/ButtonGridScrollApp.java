@@ -38,7 +38,7 @@ public class ButtonGridScrollApp extends JFrame {
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                pane.add(new JButton(String.valueOf(i) + String.valueOf(j)));
+                pane.add(new JButton(String.valueOf(i) + j));
             }
         }
 
