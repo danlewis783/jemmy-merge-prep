@@ -49,8 +49,8 @@ import org.netbeans.jemmy.drivers.text.AWTTextAPIDriver;
 import org.netbeans.jemmy.drivers.text.SwingTextKeyboardDriver;
 import org.netbeans.jemmy.drivers.trees.JTreeAPIDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultFrameDriver;
-import org.netbeans.jemmy.drivers.windows.DefaultInternalFrameDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultWindowDriver;
+import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
 
 public final class APIDriverInstaller implements DriverInstaller {
     private boolean shortcutEvents;
@@ -84,9 +84,9 @@ public final class APIDriverInstaller implements DriverInstaller {
         driverManager.setDriver(DriverType.List, new ChoiceDriver());
         driverManager.setDriver(DriverType.Frame, new DefaultFrameDriver());
         driverManager.setDriver(DriverType.Window, new DefaultWindowDriver());
-        driverManager.setDriver(DriverType.Frame, new DefaultInternalFrameDriver());
-        driverManager.setDriver(DriverType.InternalFrame, new DefaultInternalFrameDriver());
-        driverManager.setDriver(DriverType.Window, new DefaultInternalFrameDriver());
+        driverManager.setDriver(DriverType.Frame, new InternalFrameAPIDriver());
+        driverManager.setDriver(DriverType.InternalFrame, new InternalFrameAPIDriver());
+        driverManager.setDriver(DriverType.Window, new InternalFrameAPIDriver());
         driverManager.setDriver(DriverType.Focus, new APIFocusDriver());
         driverManager.setDriver(DriverType.Focus, new MouseFocusDriver());
         driverManager.setDriver(DriverType.Menu, newMenuDriverA(shortcutEvents));

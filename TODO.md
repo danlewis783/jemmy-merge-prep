@@ -11,7 +11,6 @@ Each item has a mnemonic. To pick one up later, reference it by name
 
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
-| `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
 | `assertj-migration` | Convert remaining JUnit assertions to AssertJ | Ongoing convention; convert classes when touched |
 | `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Names are stable now; ready to execute |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
@@ -96,17 +95,6 @@ the file list by accessible name (CODETOOLS-7902413), fixes a macOS NPE in
 because the suite runs Windows + Metal; becomes real on macOS or other LAFs.
 
 **Recommendation: port the series together if the platform matrix ever grows.**
-
-### `internal-frame-api-driver`
-
-Upstream `InternalFrameAPIDriver` (7902202) implements Window/Frame/InternalFrame
-driver operations directly through the `JInternalFrame` API (`setMaximum`,
-`setIcon`, …) instead of pushing title buttons — immune to LAF entirely, and
-consistent with this fork's preference for API drivers. Upstream installs it as
-the default internal frame driver.
-
-**Recommendation: worth doing even on Windows if internal frames are used much;
-pair with a driver-installation choice (default vs opt-in).**
 
 ### `internal-frame-popup-driver`
 
