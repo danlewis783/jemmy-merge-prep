@@ -16,10 +16,10 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -126,14 +126,9 @@ class DialogComboListWorkflowTest {
         JComboBoxOperator jComboOp7 = new JComboBoxOperator(
                 jDialogOp1, PredicatesJ.byName("on_e", StringComparators.caseInsensitiveSubstring()));
         assertSame(jComboOp6.getSource(), jComboOp7.getSource());
-        TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L);
-        try {
-            new JComboBoxOperator(jDialogOp1, PredicatesJ.byName("non_edit"));
-            fail("Expected TimeoutExpiredException");
-        } catch (TimeoutExpiredException t) {
-            assertTrue(true);
-        } finally {
-            override.cancel();
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L)) {
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> new JComboBoxOperator(jDialogOp1, PredicatesJ.byName("non_edit")));
         }
 
         testComponent(jComboOp1);

@@ -17,11 +17,11 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.function.Function;
 import javax.swing.JEditorPane;
@@ -113,13 +113,10 @@ class EditorScrollingInTabsTest {
     }
 
     private void checkSelectedText(JTextComponentOperator tco, String eta) throws Exception {
-        TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L);
-        try {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
             FunctionRepeater.on(new SelectedTextChecker(tco, eta)).runUntilNotNull(null);
         } catch (TimeoutExpiredException e) {
             fail("\nWrong text selected: " + tco.getSelectedText() + "\n" + "Expected           : " + eta);
-        } finally {
-            override.cancel();
         }
     }
 

@@ -16,10 +16,10 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -108,13 +108,12 @@ class ScrollToComponentTest {
                 .scrollTo(op -> Integer.compare((op.getMaximum() - op.getVisibleAmount()) / 2, op.getValue()));
         assertTrue(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()));
 
-        if (!testJScrollBar(hscroll)) {
-            fail("did not work");
-        }
-
-        if (!testJScrollPane(scroller)) {
-            fail("did not work");
-        }
+        assertThat(testJScrollBar(hscroll))
+                .as("scroll bar block scrolling reached the target value")
+                .isTrue();
+        assertThat(testJScrollPane(scroller))
+                .as("scroll pane block scrolling reached the target value")
+                .isTrue();
     }
 
     private boolean testJScrollBar(JScrollBarOperator jScrollBarOperator) {

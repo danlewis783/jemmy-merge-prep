@@ -16,9 +16,9 @@
  */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -143,12 +143,9 @@ class JListOperatorTest {
         operator1.clickOnItem("one", StringComparators.caseInsensitiveSubstring());
         operator1.clickOnItem("one", StringComparators.regex());
 
-        try {
-            operator1.clickOnItem("blabla", StringComparators.strict());
-            fail("did not work");
-        } catch (JListOperator.NoSuchItemException ex) {
-            assertEquals("No such item as \"blabla\"", ex.getMessage());
-        }
+        assertThatExceptionOfType(JListOperator.NoSuchItemException.class)
+                .isThrownBy(() -> operator1.clickOnItem("blabla", StringComparators.strict()))
+                .withMessage("No such item as \"blabla\"");
     }
 
     @Test

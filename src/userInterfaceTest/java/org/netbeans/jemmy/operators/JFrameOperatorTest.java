@@ -17,11 +17,9 @@
 
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -96,12 +94,7 @@ class JFrameOperatorTest {
         JFrameOperator operator1 = new JFrameOperator();
         assertNotNull(operator1);
 
-        try {
-            assertNull(future.get(1000, TimeUnit.MILLISECONDS));
-            fail("did not work");
-        } catch (TimeoutException e) {
-            assertTrue(true);
-        }
+        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> future.get(1000, TimeUnit.MILLISECONDS));
     }
 
     @Test

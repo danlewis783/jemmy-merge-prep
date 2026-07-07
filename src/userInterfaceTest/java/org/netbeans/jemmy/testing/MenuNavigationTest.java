@@ -16,12 +16,12 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -106,10 +106,8 @@ class MenuNavigationTest {
             TimeoutOverride override4 = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 1000L);
             TimeoutOverride override5 = Timeouts.override(TimeoutKey.JMenuOperator_WaitPopupTimeout, 1000L);
             try {
-                mb0.pushMenu("menu|submenu|subsubmenu2", StringComparators.strict());
-                fail("expected TimeoutExpiredException");
-            } catch (TimeoutExpiredException e) {
-                assertTrue(true);
+                assertThatExceptionOfType(TimeoutExpiredException.class)
+                        .isThrownBy(() -> mb0.pushMenu("menu|submenu|subsubmenu2", StringComparators.strict()));
             } finally {
                 override3.cancel();
                 override4.cancel();

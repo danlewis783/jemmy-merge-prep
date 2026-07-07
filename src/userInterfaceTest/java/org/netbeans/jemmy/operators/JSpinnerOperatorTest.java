@@ -17,10 +17,10 @@
 
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.EventQueue;
 import java.util.Arrays;
@@ -144,12 +144,9 @@ class JSpinnerOperatorTest {
         jSpinnerOpList.scrollToIndex(0);
         assertEquals("1", jSpinnerOpList.getValue());
         assertEquals(0, jSpinnerOpList.findItem("1", STRICT));
-        try {
-            jSpinnerOpList.scrollToString("-1", STRICT);
-            fail("did not work");
-        } catch (JemmyException e) {
-            assertEquals("No \"-1\" item in JSpinner", e.getMessage());
-        }
+        assertThatExceptionOfType(JemmyException.class)
+                .isThrownBy(() -> jSpinnerOpList.scrollToString("-1", STRICT))
+                .withMessage("No \"-1\" item in JSpinner");
     }
 
     @Test

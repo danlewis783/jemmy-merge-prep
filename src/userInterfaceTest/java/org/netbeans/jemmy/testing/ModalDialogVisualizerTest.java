@@ -16,11 +16,10 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -65,12 +64,9 @@ class ModalDialogVisualizerTest {
         assertFalse(
                 (d != d1) || (d != d2) || (d != do1.getSource()) || (d != do2.getSource()) || (d != do3.getSource()));
         assertNotNull(JDialogOperator.getTopModalDialog());
-        try {
-            bttOper.push();
-            fail("did not work");
-        } catch (JemmyInputException e) {
-            assertEquals("Component is not on top modal dialog.", e.getMessage());
-        }
+        assertThatExceptionOfType(JemmyInputException.class)
+                .isThrownBy(bttOper::push)
+                .withMessage("Component is not on top modal dialog.");
         assertNull(JLabelOperator.findJLabel(jFrame, PredicatesJ.alwaysTrue(), 1));
         new JButtonOperator(do1, "", StringComparators.substring()).push();
         JMenuBarOperator mbo = new JMenuBarOperator(new ContainerOperator(jFrame));

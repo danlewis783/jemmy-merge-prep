@@ -12,7 +12,7 @@ Each item has a mnemonic. To pick one up later, reference it by name
 | Mnemonic | Summary | Recommendation |
 |---|---|---|
 | `internal-frame-api-driver` | LAF-immune internal frame driver using JInternalFrame API | **Do proactively** if internal frames matter |
-| `assertj-migration` | Convert all assertions to AssertJ, killing try/fail/catch idioms first | Incremental; exception tests first |
+| `assertj-migration` | Convert remaining JUnit assertions to AssertJ | Ongoing convention; convert classes when touched |
 | `coverage-parity` | Verify this fork has all of jemmy's test coverage; keep a cross-repo test name map | Names are stable now; ready to execute |
 | `winlaf-button-test` | Run JInternalFrameOperatorTest under Windows LAF once | Cheap sanity check, ~minutes |
 | `filechooser-accessible-names` | Accessible-name based file list selection + LAF/Mac handling | Only if non-Windows or non-default LAF |
@@ -36,7 +36,10 @@ Convert all test assertions to AssertJ fluent assertions (`assertj-core`
 
 Priority order:
 
-1. **try/fail/catch idioms first** — at least `JFrameOperatorTest`,
+1. **try/fail/catch idioms — DONE 2026-07-06** (all nine converted to
+   `assertThatExceptionOfType`, boolean-fail pairs to `assertThat(...).isTrue()`,
+   overrides collapsed to try-with-resources where structure allowed). Was:
+   `JFrameOperatorTest`,
    `JListOperatorTest`, `JSpinnerOperatorTest`, `jemmy_001/002/018/021/029`
    use the pre-JUnit-4 pattern, several with `fail("did not work")` and a
    meaningless `assertTrue(true)` in the catch block:
