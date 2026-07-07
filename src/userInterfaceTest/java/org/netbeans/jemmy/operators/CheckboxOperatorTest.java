@@ -93,7 +93,8 @@ class CheckboxOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setState(false);
         operator1.changeSelectionNoBlock(true);
-        operator1.setState(true);
+        // let the no-block click land before clicking the other way, or the two robot clicks race
+        operator1.waitSelected(true);
         operator1.changeSelection(false);
     }
 
@@ -103,7 +104,10 @@ class CheckboxOperatorTest {
         assertThat(operator).isNotNull();
         CheckboxOperator operator1 = new CheckboxOperator(operator);
         assertThat(operator1).isNotNull();
+        operator1.setState(false);
         operator1.changeSelectionNoBlock(true);
+        // wait for the async action so its click cannot outlive this test's frame
+        operator1.waitSelected(true);
     }
 
     @Test
