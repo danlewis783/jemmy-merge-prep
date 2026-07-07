@@ -235,4 +235,21 @@ class JTextAreaOperatorTest {
         assertNotNull(operator2);
         operator2.replaceRange("Booh!", 0, 0);
     }
+
+    // formerly scenario test jemmy_020
+    @Test
+    void typeAllPrintableCharacters() {
+        JTextAreaOperator to = new JTextAreaOperator(new JFrameOperator(frame));
+        String allChars =
+                " !\"#$%&'()*,-./0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        to.clearText();
+        to.typeText(allChars);
+        assertEquals(allChars, to.getText());
+        to.setText("");
+        assertEquals("", to.getText());
+        to.setText(allChars);
+        assertEquals(allChars, to.getText());
+        to.clearText();
+        assertEquals("", to.getText());
+    }
 }

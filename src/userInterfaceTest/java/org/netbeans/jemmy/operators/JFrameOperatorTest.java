@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.awt.EventQueue;
+import java.awt.Frame;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -36,7 +38,10 @@ import javax.swing.JScrollPane;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.testing.Application_002;
+import org.netbeans.jemmy.testing.Application_009;
 import org.netbeans.jemmy.util.StringComparators;
 
 class JFrameOperatorTest {
@@ -167,6 +172,57 @@ class JFrameOperatorTest {
         JFrameOperator operator = new JFrameOperator();
         assertNotNull(operator);
         assertEquals(operator.getRootPane(), jFrameRef.get().getRootPane());
+    }
+
+    // formerly scenario test jemmy_009
+    @Test
+    void waitJFrameByIndexAndRetitle() throws Exception {
+        Application_009.main(new String[] {});
+        QueueTool.getInstance().waitEmpty();
+        try {
+            JFrame frm0 = JFrameOperator.waitJFrame("Application_009", StringComparators.substring());
+            assertEquals(0, ((Application_009) frm0).getIndex());
+            JFrame frm1 = JFrameOperator.waitJFrame("Application_009", StringComparators.substring(), 1);
+            assertEquals(1, ((Application_009) frm1).getIndex());
+            JFrame frm2 = JFrameOperator.waitJFrame("Application_009", StringComparators.substring(), 2);
+            assertEquals(2, ((Application_009) frm2).getIndex());
+            JFrameOperator frm2o = new JFrameOperator(frm2);
+            frm2o.setTitle("New Title");
+            frm2o.waitTitle("New Title", StringComparators.strict());
+        } finally {
+            disposeApplicationFrames();
+        }
+    }
+
+    // formerly scenario test jemmy_038
+    @Test
+    void frameLifecycleSequence() throws Exception {
+        Application_002.main(new String[] {});
+        try {
+            JFrame win = JFrameOperator.waitJFrame("Application_002");
+            JFrameOperator fo = new JFrameOperator(win);
+            fo.activate();
+            fo.resize(400, 400);
+            fo.move(200, 200);
+            fo.maximize();
+            fo.demaximize();
+            fo.iconify();
+            fo.deiconify();
+            fo.requestClose();
+        } finally {
+            disposeApplicationFrames();
+        }
+    }
+
+    private void disposeApplicationFrames() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            for (Frame frame : Frame.getFrames()) {
+                if (frame != jFrameRef.get()) {
+                    frame.setVisible(false);
+                    frame.dispose();
+                }
+            }
+        });
     }
 
     private static class WaitJFrameCallable implements Callable<JFrame> {

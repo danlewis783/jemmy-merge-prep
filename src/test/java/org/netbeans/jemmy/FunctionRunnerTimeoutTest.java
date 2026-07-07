@@ -15,7 +15,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.netbeans.jemmy.testing;
+package org.netbeans.jemmy;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,13 +26,11 @@ import java.util.function.Function;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.FunctionRunner;
-import org.netbeans.jemmy.TimeoutExpiredException;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.TimeoutOverride;
-import org.netbeans.jemmy.Timeouts;
+import org.junit.jupiter.api.parallel.Isolated;
 
-class jemmy_015 {
+// formerly scenario test jemmy_015; mutates the Timeouts singleton, never run in parallel
+@Isolated
+class FunctionRunnerTimeoutTest {
 
     private static final long ACTION_TIME = 700L;
     private static final long MAX_ACTION_TIME = 300L;

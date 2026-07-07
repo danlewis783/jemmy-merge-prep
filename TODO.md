@@ -38,29 +38,51 @@ unknown degree.
 Goal: every surviving test has a focused, coherent, encapsulated purpose and a
 name that states it.
 
-Suggested approach:
+**Batch 1 (done 2026-07-06):** deleted `jemmy_004`/`jemmy_007` (duplicate
+coverage) with their fixtures; folded `jemmy_009`/`jemmy_038` into
+`JFrameOperatorTest`, `jemmy_019` into `JSplitPaneOperatorTest`, `jemmy_020`
+into `JTextAreaOperatorTest`, `jemmy_039` into `StringComparatorsTest`;
+moved `jemmy_015` -> `FunctionRunnerTimeoutTest` and `jemmy_026` ->
+`QueueToolWaitEmptyTest` (unit suite), `jemmy_030` -> `EventToolTest`
+(UI suite root).
 
-1. **Inventory** — one line per `jemmy_nnn`: what does it exercise that the
-   corresponding `*OperatorTest` does not? (~40 small files; a read-through,
-   not tooling.)
-2. **Classify and act:**
-   - *Pure duplicate* of operator-test coverage → delete test and fixture.
-   - *Unique single-operator behavior* → move into the matching
-     `*OperatorTest` as a well-named test method; delete the numbered pair.
-   - *Genuine multi-operator workflow* (e.g. dialog + combo + list flows in
-     `jemmy_001`) → keep as a scenario test, but rename both halves for the
-     workflow: `jemmy_037`/`Application_037` → e.g.
-     `TabbedPaneScrollbarScrollingTest`/`TabbedScrollbarsApp`.
-3. **Fixtures follow their tests** — name `Application_nnn` for the UI it
-   builds; if only one test uses a trivial fixture, inline it into the test
-   class and reserve `testFixtures` for genuinely shared apps.
-4. **Traceability** — the numbering gaps (008, 012–014, 023, 034, 044–046)
-   show pruning has already happened; record old→new name mappings in commit
-   messages so history against the legacy NetBeans suite stays searchable.
-5. **Do it incrementally** — batch by operator area, or opportunistically
-   whenever a numbered test breaks or is touched.
+**Remaining (30 tests, all classified 2026-07-06 as keep-and-rename
+workflows; rename fixture with test, record old->new in commit messages):**
 
-**Recommendation: incremental; batch by operator area.**
+| test | proposed name | subject |
+|---|---|---|
+| jemmy_001 | DialogComboListWorkflowTest | dialogs + combo + list flow |
+| jemmy_002 | MenuNavigationTest | menu bar + radio items |
+| jemmy_003 | ButtonGridLookupTest | by-text vs by-index lookup + progress bar |
+| jemmy_005 | JTreePathNavigationTest | tree child/path API deep coverage |
+| jemmy_006 | JTreeExpandCollapseTest | expand/collapse with paint checks |
+| jemmy_010 | ModalDialogWaitingTest | staged modal/non-modal dialogs |
+| jemmy_011 | ToggleButtonSelectionTest | checkbox/radio focus + selection |
+| jemmy_016 | TabbedPanePageSwitchTest | per-page component visibility |
+| jemmy_017 | WindowManagerJobsTest | WindowManager jobs + MouseVisualizer |
+| jemmy_018 | ScrollToComponentTest | scroll-to-component on button grid |
+| jemmy_021 | EditorScrollingInTabsTest | editor/text scrolling in tabs (#4420394) |
+| jemmy_022 | InternalFrameWorkflowTest | two internal frames ops |
+| jemmy_024 | TabbedComponentsWorkflowTest | list/table/tree/textarea in tabs |
+| jemmy_025 | JSliderScrollModelsTest | 4 sliders, scroll models, label feedback |
+| jemmy_027 | TabbedListTableTreeTest | selections across tab pages |
+| jemmy_028 | VisualizerScrollTest | DefaultVisualizer tab-switch + scroll |
+| jemmy_029 | ModalDialogVisualizerTest | checkForModal visualizer behavior |
+| jemmy_031 | FileChooserDialogWorkflowTest | file chooser dialog flow |
+| jemmy_032 | OperatorConstructorsSmokeTest | 16-operator constructor smoke |
+| jemmy_033 | CreateOperatorTest | createOperator + addOperatorPackage |
+| jemmy_035 | AwtScrollPaneScrollingTest | AWT ScrollPane scrolling geometry |
+| jemmy_036 | AwtComponentsTest | native AWT component interactions |
+| jemmy_037 | TabbedScrollbarScrollingTest | Swing + AWT scrollbars in tabs |
+| jemmy_040 | DeepMenuPushTest | 20-level nested menu push |
+| jemmy_041 | TreeSelectionUnderChangeTest | selectPath while model grows |
+| jemmy_042 | MenuInDialogTest | menus hosted in dialogs |
+| jemmy_043 | RobotVsQueueDispatchTest | robot vs queue dispatching |
+| jemmy_047 | JSpinnerScrollingTest | spinner scroll variants + wrappers |
+| jemmy_048 | LateComponentDiscoveryTest | search finds late-added component |
+
+**Recommendation: execute the rename table in batches; it is mechanical now
+that classification is done.**
 
 ### `assertj-migration`
 

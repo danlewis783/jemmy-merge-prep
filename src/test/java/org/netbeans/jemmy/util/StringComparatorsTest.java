@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -55,5 +56,19 @@ class StringComparatorsTest {
     private void nullContractTest(StringComparator comparator) {
         assertFalse(comparator.equals(null, ""));
         assertTrue(comparator.equals("", null));
+    }
+
+    // formerly scenario test jemmy_039
+    @Test
+    void testRegexPatterns() {
+        String[][] data = {
+            {"one", ".n.", "true"}, {"one", "n", "false"}, {"one", ".e", "false"}, {"one", ".*e", "true"},
+            {"one", "..*e", "true"}, {"one", "...*e", "true"}, {"one", "....*e", "false"}, {"teen", "te*.", "true"},
+            {"seventeen", ".*e*.", "true"}, {"seventeen", "sevente*.", "true"}, {"seventeen", ".*ent.*", "true"}
+        };
+        StringComparator comparator = StringComparators.regex();
+        for (String[] arr : data) {
+            assertEquals(Boolean.parseBoolean(arr[2]), comparator.equals(arr[0], arr[1]), arr[0] + " ~ " + arr[1]);
+        }
     }
 }

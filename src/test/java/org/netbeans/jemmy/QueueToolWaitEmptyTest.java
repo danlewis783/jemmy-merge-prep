@@ -14,7 +14,7 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.netbeans.jemmy.testing;
+package org.netbeans.jemmy;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -23,14 +23,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.TimeoutExpiredException;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.TimeoutOverride;
-import org.netbeans.jemmy.Timeouts;
 
 @Disabled // TODO test too flaky for CI
-class jemmy_026 {
+// formerly scenario test jemmy_026
+class QueueToolWaitEmptyTest {
     private TimeoutOverride override;
 
     @BeforeEach

@@ -326,4 +326,27 @@ class JSplitPaneOperatorTest {
             return 0;
         }
     }
+
+    // formerly scenario test jemmy_019
+    @Test
+    void moveDividerAndExpand() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            // expandLeft/expandRight click the one-touch-expand arrows, and the divider
+            // needs real components on both sides to move between
+            splitPane.setOneTouchExpandable(true);
+            splitPane.setLeftComponent(new JPanel());
+            splitPane.setRightComponent(new JPanel());
+            frame.getContentPane().revalidate();
+        });
+        JSplitPaneOperator split = new JSplitPaneOperator(new JFrameOperator(frame));
+        split.moveDivider(1d);
+        split.moveDivider(0d);
+        split.moveDivider(0.5);
+        split.expandRight();
+        split.expandLeft();
+        split.expandLeft();
+        split.expandRight();
+        split.moveToMinimum();
+        split.moveToMaximum();
+    }
 }

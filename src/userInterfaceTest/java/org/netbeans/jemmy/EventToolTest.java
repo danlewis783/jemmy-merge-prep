@@ -15,7 +15,7 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.netbeans.jemmy.testing;
+package org.netbeans.jemmy;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,15 +39,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.EventTool;
-import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.TimeoutExpiredException;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.TimeoutOverride;
-import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.JFrameOperator;
 
-class jemmy_030 {
+// formerly scenario test jemmy_030
+class EventToolTest {
     private TimeoutOverride override;
 
     @BeforeAll
