@@ -42,6 +42,10 @@ class ButtonOperatorTest {
             button = new Button("ButtonOperatorTest");
             button.setName("ButtonOperatorTest");
             frame.add(button);
+            // AWT operators use real Robot clicks at screen coordinates; if another window
+            // (e.g. a lingering frame from an adjacent test JVM) overlaps this frame, the
+            // click lands on that window instead and the test times out waiting on component state
+            frame.setAlwaysOnTop(true);
             frame.setVisible(true);
         });
     }

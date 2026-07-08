@@ -107,18 +107,27 @@ class JToolTipOperatorTest {
     }
 
     @Test
-    void constructorsTimeOutWithoutToolTip() {
-        JLabelOperator dummyLabel = new JLabelOperator(new JLabel());
-        try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1000L)) {
-            assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(() -> new JToolTipOperator(dummyLabel));
-            assertThatExceptionOfType(TimeoutExpiredException.class)
-                    .isThrownBy(() -> new JToolTipOperator(LABEL_TEXT, StringComparators.strict()));
-            assertThatExceptionOfType(TimeoutExpiredException.class)
-                    .isThrownBy(() -> new JToolTipOperator(byLabelText));
-            assertThatExceptionOfType(TimeoutExpiredException.class)
-                    .isThrownBy(() -> new JToolTipOperator(dummyLabel, LABEL_TEXT, StringComparators.strict()));
-            assertThatExceptionOfType(TimeoutExpiredException.class)
-                    .isThrownBy(() -> new JToolTipOperator(dummyLabel, byLabelText));
+    void constructorsTimeOutWithoutToolTip() throws InterruptedException, InvocationTargetException {
+        // the shared frame's label has a real tooltip; if the physical mouse cursor happens
+        // to rest over the centered frame, ToolTipManager would show that tooltip mid-test
+        // and the constructors below would find it instead of timing out
+        EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(false));
+        try {
+            JLabelOperator dummyLabel = new JLabelOperator(new JLabel());
+            try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1000L)) {
+                assertThatExceptionOfType(TimeoutExpiredException.class)
+                        .isThrownBy(() -> new JToolTipOperator(dummyLabel));
+                assertThatExceptionOfType(TimeoutExpiredException.class)
+                        .isThrownBy(() -> new JToolTipOperator(LABEL_TEXT, StringComparators.strict()));
+                assertThatExceptionOfType(TimeoutExpiredException.class)
+                        .isThrownBy(() -> new JToolTipOperator(byLabelText));
+                assertThatExceptionOfType(TimeoutExpiredException.class)
+                        .isThrownBy(() -> new JToolTipOperator(dummyLabel, LABEL_TEXT, StringComparators.strict()));
+                assertThatExceptionOfType(TimeoutExpiredException.class)
+                        .isThrownBy(() -> new JToolTipOperator(dummyLabel, byLabelText));
+            }
+        } finally {
+            EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(true));
         }
     }
 }

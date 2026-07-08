@@ -45,6 +45,10 @@ class CheckboxOperatorTest {
             checkbox.setName("CheckboxOperatorTest");
             frame.add(checkbox);
             frame.pack();
+            // AWT operators use real Robot clicks at screen coordinates; if another window
+            // (e.g. a lingering frame from an adjacent test JVM) overlaps this frame, the
+            // click lands on that window instead and waitSelected times out
+            frame.setAlwaysOnTop(true);
             frame.setVisible(true);
         });
     }
