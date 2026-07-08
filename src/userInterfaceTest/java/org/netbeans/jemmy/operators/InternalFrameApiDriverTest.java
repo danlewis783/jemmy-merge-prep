@@ -28,7 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
@@ -47,7 +47,7 @@ class InternalFrameApiDriverTest {
 
     @BeforeAll
     static void beforeAll() {
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         InternalFrameAPIDriver driver = new InternalFrameAPIDriver();
         driverManager.setDriver(DriverType.Frame, driver);
         driverManager.setDriver(DriverType.InternalFrame, driver);

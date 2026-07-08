@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.lists;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.KeyDriver;
@@ -49,7 +49,7 @@ public final class ChoiceDriver extends LightSupportiveDriver implements ListDri
     public void selectItem(ComponentOperator oper, int index) {
         ChoiceOperator choiceOperator = (ChoiceOperator) oper;
         Point pointToClick = getClickPoint(oper);
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getMouseDriver(oper)
                 .clickMouse(
                         oper,
@@ -60,7 +60,7 @@ public final class ChoiceDriver extends LightSupportiveDriver implements ListDri
                         0,
                         TimeoutKey.ComponentOperator_MouseClickTimeout);
         KeyDriver keyDriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getKeyDriver(oper);
         while (choiceOperator.getSelectedIndex() != index) {
             keyDriver.pushKey(
                     oper,

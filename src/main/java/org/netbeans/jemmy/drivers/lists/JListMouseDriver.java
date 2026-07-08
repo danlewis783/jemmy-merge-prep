@@ -31,7 +31,7 @@ import java.awt.event.InputEvent;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -71,7 +71,7 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
 
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Rectangle rect = oper.getCellBounds(index, index);
-            DriverManager.newInstance(JemmyProperties.getInstance())
+            DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)
                     .clickMouse(
                             oper,

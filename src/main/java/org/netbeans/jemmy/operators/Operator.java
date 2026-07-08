@@ -41,8 +41,8 @@ import org.netbeans.jemmy.CharBindingMap;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.FunctionRunner;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.callables.CallablesJ;
@@ -84,7 +84,7 @@ public abstract class Operator {
 
     public Operator() {
         queueTool = QueueTool.getInstance();
-        this.charBindingMap = JemmyProperties.getInstance().getCharBindingMap();
+        this.charBindingMap = JemmyContext.getInstance().getCharBindingMap();
         this.visualizer = getDefaultComponentVisualizer();
         this.verification = getDefaultVerification();
         this.pathParser = getDefaultPathParser();

@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.concurrent.Callable;
 import javax.swing.text.JTextComponent;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -66,7 +66,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         ((JTreeOperator) oper).clearSelection();
         checkSupported(oper);
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         JTreeOperator toper = (JTreeOperator) oper;
         for (int i = 0; i < indices.length; i++) {
             int index = i;
@@ -94,7 +94,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         checkSupported(oper);
         JTreeOperator toper = (JTreeOperator) oper;
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         if (!toper.isExpanded(index)) {
             queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
                 Point p = toper.getPointToClick(index);
@@ -116,7 +116,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         checkSupported(oper);
         JTreeOperator toper = (JTreeOperator) oper;
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         if (toper.isExpanded(index)) {
             queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
                 Point p = toper.getPointToClick(index);
@@ -137,10 +137,10 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
     public void editItem(ComponentOperator oper, int index, Object newValue, TimeoutKey waitEditorTime) {
         JTextComponentOperator textoper = startEditingAndReturnEditor(oper, index, waitEditorTime);
         TextDriver text =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getTextDriver(JTextComponentOperator.class);
+                DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);
         text.typeText(textoper, newValue.toString(), 0);
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getKeyDriver(oper)
                 .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
@@ -155,7 +155,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         checkSupported(oper);
         JTreeOperator toper = (JTreeOperator) oper;
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Point p = toper.getPointToClick(index);
             mdriver.clickMouse(

@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -53,7 +53,7 @@ public class FrameOperator extends WindowOperator {
 
     public FrameOperator(Frame w) {
         super(w);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getFrameDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getFrameDriver(getClass());
     }
 
     public FrameOperator(int index) {

@@ -25,7 +25,7 @@
 
 package org.netbeans.jemmy.drivers;
 
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.buttons.ButtonMouseDriver;
 import org.netbeans.jemmy.drivers.focus.APIFocusDriver;
 import org.netbeans.jemmy.drivers.focus.MouseFocusDriver;
@@ -61,8 +61,8 @@ public final class DefaultDriverInstaller implements DriverInstaller {
     }
 
     @Override
-    public void install(JemmyProperties jemmyProperties) {
-        DriverManager driverManager = DriverManager.newInstance(jemmyProperties);
+    public void install(JemmyContext jemmyContext) {
+        DriverManager driverManager = DriverManager.newInstance(jemmyContext);
         driverManager.setDriver(DriverType.List, new JTreeMouseDriver());
         driverManager.setDriver(DriverType.MultiSelList, new JTreeMouseDriver());
         driverManager.setDriver(DriverType.Tree, new JTreeMouseDriver());

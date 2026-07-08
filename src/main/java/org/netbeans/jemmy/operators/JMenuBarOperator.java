@@ -46,7 +46,7 @@ import javax.swing.plaf.MenuBarUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -65,7 +65,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
     public JMenuBarOperator(JMenuBar b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getMenuDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
 
     public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser) {

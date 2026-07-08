@@ -37,8 +37,8 @@ public final class QueueUtils {
         if (isInitialized) {
             return;
         }
-        JemmyProperties jemmyProperties = JemmyProperties.getInstance();
-        EnumSet<DispatchingModel> dispatchingModel = jemmyProperties.getDispatchingModel();
+        JemmyContext jemmyContext = JemmyContext.getInstance();
+        EnumSet<DispatchingModel> dispatchingModel = jemmyContext.getDispatchingModel();
         boolean isShortcutMode = dispatchingModel.contains(DispatchingModel.Shortcut);
         if (isShortcutMode) {
             JemmyQueue jemmyQueue = JemmyQueue.getInstance();

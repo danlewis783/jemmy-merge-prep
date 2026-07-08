@@ -42,8 +42,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ListUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyInputException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -68,7 +68,7 @@ public class JListOperator extends JComponentOperator {
 
     public JListOperator(JList<?> b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getMultiSelListDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
 
     public JListOperator(ContainerOperator cont, int index) {

@@ -30,7 +30,7 @@ import java.awt.event.InputEvent;
 import java.util.Collections;
 import java.util.concurrent.Callable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -73,7 +73,7 @@ public final class JTableHeaderDriver extends LightSupportiveDriver implements O
     private void clickOnHeader(JTableHeaderOperator oper, int index, int modifiers) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Point toClick = oper.getPointToClick(index);
-            DriverManager.newInstance(JemmyProperties.getInstance())
+            DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)
                     .clickMouse(
                             oper,

@@ -66,7 +66,7 @@ import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.EventDispatcher;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -90,7 +90,7 @@ public class ComponentOperator extends Operator {
 
     public ComponentOperator(Component source) {
         this.source = Objects.requireNonNull(source, "source");
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         kDriver = driverManager.getKeyDriver(getClass());
         mDriver = driverManager.getMouseDriver(getClass());
         fDriver = driverManager.getFocusDriver(getClass());

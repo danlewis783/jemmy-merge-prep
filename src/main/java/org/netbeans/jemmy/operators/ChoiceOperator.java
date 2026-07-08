@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
@@ -45,7 +45,7 @@ public class ChoiceOperator extends ComponentOperator {
 
     public ChoiceOperator(Choice b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getListDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
     public ChoiceOperator(ContainerOperator cont) {

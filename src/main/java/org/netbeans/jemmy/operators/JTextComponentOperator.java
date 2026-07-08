@@ -47,9 +47,9 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyInputException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -69,7 +69,7 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public JTextComponentOperator(JTextComponent b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getTextDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
     }
 
     public JTextComponentOperator(ContainerOperator cont, int index) {

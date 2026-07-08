@@ -30,8 +30,8 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import org.netbeans.jemmy.DispatchingModel;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.input.KeyEventDriver;
 import org.netbeans.jemmy.drivers.input.KeyRobotDriver;
@@ -50,21 +50,20 @@ import org.netbeans.jemmy.operators.TextComponentOperator;
 import org.netbeans.jemmy.operators.TextFieldOperator;
 
 public final class InputDriverInstaller {
-    private final JemmyProperties jemmyProperties;
+    private final JemmyContext jemmyContext;
     private final TimeoutKey robotAutoDelay;
     private final boolean smooth;
     private final boolean useEventDrivers;
 
-    public InputDriverInstaller(
-            EnumSet<DispatchingModel> model, TimeoutKey robotAutoDelay, JemmyProperties jemmyProperties) {
+    public InputDriverInstaller(EnumSet<DispatchingModel> model, TimeoutKey robotAutoDelay, JemmyContext jemmyContext) {
         this.useEventDrivers = !model.contains(DispatchingModel.Robot);
         this.smooth = model.contains(DispatchingModel.SmoothRobot);
         this.robotAutoDelay = robotAutoDelay;
-        this.jemmyProperties = jemmyProperties;
+        this.jemmyContext = jemmyContext;
     }
 
     public void install() {
-        DriverManager driverMgr = DriverManager.newInstance(jemmyProperties);
+        DriverManager driverMgr = DriverManager.newInstance(jemmyContext);
         if (useEventDrivers) {
             LightDriver keyE = new KeyEventDriver();
             LightDriver mouseE = new MouseEventDriver();

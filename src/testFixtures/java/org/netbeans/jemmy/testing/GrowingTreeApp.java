@@ -30,7 +30,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.netbeans.jemmy.DispatchingModel;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 
 public class GrowingTreeApp extends JFrame {
     private DefaultTreeModel model;
@@ -63,7 +63,7 @@ public class GrowingTreeApp extends JFrame {
         container.add(start, BorderLayout.SOUTH);
         time = System.currentTimeMillis() % 100;
 
-        if (JemmyProperties.getInstance().getDispatchingModel().contains(DispatchingModel.Robot)) {
+        if (JemmyContext.getInstance().getDispatchingModel().contains(DispatchingModel.Robot)) {
             time = time * 10;
         }
 

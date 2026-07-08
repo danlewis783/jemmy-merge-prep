@@ -37,7 +37,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TabbedPaneUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
@@ -54,7 +54,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
 
     public JTabbedPaneOperator(JTabbedPane b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getListDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
     public JTabbedPaneOperator(ContainerOperator cont, int index) {

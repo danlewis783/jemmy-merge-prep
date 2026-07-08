@@ -46,7 +46,7 @@ public final class EventDispatcher {
     public EventDispatcher(Component component) {
         this.component = Objects.requireNonNull(component, "component");
         reference = new ClassReference<>(component);
-        setDispatchingModel(JemmyProperties.getInstance().getDispatchingModel());
+        setDispatchingModel(JemmyContext.getInstance().getDispatchingModel());
     }
 
     public void robotSetAutoDelay() {

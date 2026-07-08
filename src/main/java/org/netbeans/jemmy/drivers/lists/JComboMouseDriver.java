@@ -27,7 +27,7 @@ package org.netbeans.jemmy.drivers.lists;
 
 import java.util.Collections;
 import javax.swing.UIManager;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -51,7 +51,7 @@ public final class JComboMouseDriver extends LightSupportiveDriver implements Li
                     .equals(UIManager.getLookAndFeel().getClass().getName())) {
                 oper.clickMouse(oper.getWidth() - 2, oper.getHeight() / 2, 1);
             } else {
-                DriverManager.newInstance(JemmyProperties.getInstance())
+                DriverManager.newInstance(JemmyContext.getInstance())
                         .getButtonDriver(coper.getButton())
                         .push(coper.getButton());
             }
@@ -60,7 +60,7 @@ public final class JComboMouseDriver extends LightSupportiveDriver implements Li
         JListOperator list = new JListOperator(coper.waitList());
         list.setVisualizer(new EmptyVisualizer());
         Timeouts.sleep(TimeoutKey.JComboBoxOperator_BeforeSelectingTimeout);
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getListDriver(list)
                 .selectItem(list, index);
     }

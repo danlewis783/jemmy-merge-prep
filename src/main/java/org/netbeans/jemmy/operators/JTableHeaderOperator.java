@@ -40,7 +40,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.OrderedListDriver;
@@ -55,7 +55,7 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public JTableHeaderOperator(JTableHeader b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getOrderedListDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getOrderedListDriver(getClass());
     }
 
     public JTableHeaderOperator(ContainerOperator cont, int index) {

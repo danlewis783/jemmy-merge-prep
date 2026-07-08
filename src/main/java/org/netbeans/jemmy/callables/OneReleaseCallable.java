@@ -26,8 +26,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.MenuElement;
 import org.jspecify.annotations.Nullable;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.operators.JMenuItemOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
@@ -37,7 +37,7 @@ public abstract class OneReleaseCallable implements Callable<MenuElement> {
     private final AtomicBoolean stopped = new AtomicBoolean();
     private final List<Predicate<Component>> predicates;
     private final int depth;
-    private final DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+    private final DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
 
     public OneReleaseCallable(List<Predicate<Component>> predicates, int depth, boolean mousePressed) {
         this.predicates = predicates;

@@ -49,7 +49,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.DispatchingModel;
 import org.netbeans.jemmy.DumpOnFailure;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -108,16 +108,16 @@ final class JPopupMenuOperatorTest {
             popup.add(subMenu);
             popup.show(frame, 30, 30);
         });
-        JemmyProperties jemmyProperties = JemmyProperties.getInstance();
-        EnumSet<DispatchingModel> oldModel = jemmyProperties.getDispatchingModel();
-        jemmyProperties.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
+        JemmyContext jemmyContext = JemmyContext.getInstance();
+        EnumSet<DispatchingModel> oldModel = jemmyContext.getDispatchingModel();
+        jemmyContext.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
 
         try {
             JPopupMenuOperator jPopupMenuOp = new JPopupMenuOperator();
             assertThat(jPopupMenuOp).isNotNull();
             jPopupMenuOp.pushMenu("SubMenu|SubMenu item 2", StringComparators.strict());
         } finally {
-            jemmyProperties.installDriversAndSetDispatchingModel(oldModel);
+            jemmyContext.installDriversAndSetDispatchingModel(oldModel);
         }
     }
 

@@ -31,7 +31,7 @@ import java.util.concurrent.Callable;
 import javax.swing.JSlider;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -87,7 +87,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
             QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
                 Point clickPoint = getClickPoint(oper, adj.getScrollDirection(), adj.getScrollOrientation());
                 if (clickPoint != null) {
-                    DriverManager.newInstance(JemmyProperties.getInstance())
+                    DriverManager.newInstance(JemmyContext.getInstance())
                             .getMouseDriver(oper)
                             .clickMouse(
                                     oper,
@@ -113,7 +113,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
             Point clickPoint = getClickPoint(oper, direction, orientation);
             if (clickPoint != null) {
                 MouseDriver mdriver =
-                        DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                        DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
                 mdriver.moveMouse(oper, clickPoint.x, clickPoint.y);
                 mdriver.pressMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
             }
@@ -128,7 +128,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
             Point clickPoint = getClickPoint(oper, direction, orientation);
             if (clickPoint != null) {
                 MouseDriver mdriver =
-                        DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                        DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
                 mdriver.releaseMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
             }
 

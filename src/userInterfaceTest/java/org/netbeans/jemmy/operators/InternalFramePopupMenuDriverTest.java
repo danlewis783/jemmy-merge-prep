@@ -27,7 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.DumpOnFailure;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
@@ -58,7 +58,7 @@ class InternalFramePopupMenuDriverTest {
                 throw new RuntimeException(e);
             }
         });
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         InternalFramePopupMenuDriver driver = new InternalFramePopupMenuDriver();
         driverManager.setDriver(DriverType.Frame, driver);
         driverManager.setDriver(DriverType.InternalFrame, driver);

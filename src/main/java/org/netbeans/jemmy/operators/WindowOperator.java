@@ -35,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -60,7 +60,7 @@ public class WindowOperator extends ContainerOperator {
 
     public WindowOperator(Window w) {
         super(w);
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         driver = driverManager.getWindowDriver(getClass());
     }
 

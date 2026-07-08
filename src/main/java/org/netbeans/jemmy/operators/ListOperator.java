@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MultiSelListDriver;
@@ -51,7 +51,7 @@ public class ListOperator extends ComponentOperator {
 
     public ListOperator(List b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getMultiSelListDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
 
     public ListOperator(ContainerOperator cont, int index) {

@@ -36,8 +36,8 @@ import java.util.function.Predicate;
 import javax.swing.SwingUtilities;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -65,7 +65,7 @@ public class ScrollPaneOperator extends ContainerOperator {
 
     public ScrollPaneOperator(ScrollPane b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getScrollDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public ScrollPaneOperator(ContainerOperator cont, int index) {

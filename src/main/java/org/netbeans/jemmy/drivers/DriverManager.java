@@ -28,16 +28,16 @@ package org.netbeans.jemmy.drivers;
 import java.util.List;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public final class DriverManager {
 
-    private final JemmyProperties jemmyProperties;
+    private final JemmyContext jemmyContext;
 
-    private DriverManager(JemmyProperties jemmyProperties) {
-        this.jemmyProperties = jemmyProperties;
+    private DriverManager(JemmyContext jemmyContext) {
+        this.jemmyContext = jemmyContext;
     }
 
     private DriverMarker getDriver(DriverType driverType, Class<?> clazz) {
@@ -52,12 +52,12 @@ public final class DriverManager {
 
     public void setDriver(DriverType driverType, LightDriver driver) {
         for (Class<? extends ComponentOperator> opClass : driver.getSupported()) {
-            jemmyProperties.getDriverRegistry(driverType).put(opClass, driver);
+            jemmyContext.getDriverRegistry(driverType).put(opClass, driver);
         }
     }
 
     public void removeDriver(DriverType driverType, Class<? extends ComponentOperator> opClass) {
-        jemmyProperties.getDriverRegistry(driverType).remove(opClass);
+        jemmyContext.getDriverRegistry(driverType).remove(opClass);
     }
 
     public void removeDriver(DriverType driverType, List<Class<? extends ComponentOperator>> opClasses) {
@@ -151,7 +151,7 @@ public final class DriverManager {
     }
 
     private @Nullable DriverMarker doGetDriver(DriverType driverType, Class<?> opClass) {
-        Map<Class<?>, DriverMarker> registry = jemmyProperties.getDriverRegistry(driverType);
+        Map<Class<?>, DriverMarker> registry = jemmyContext.getDriverRegistry(driverType);
         Class<?> clazz = opClass;
         do {
             DriverMarker ret = registry.get(clazz);
@@ -164,7 +164,7 @@ public final class DriverManager {
         return null;
     }
 
-    public static DriverManager newInstance(JemmyProperties jemmyProperties) {
-        return new DriverManager(jemmyProperties);
+    public static DriverManager newInstance(JemmyContext jemmyContext) {
+        return new DriverManager(jemmyContext);
     }
 }

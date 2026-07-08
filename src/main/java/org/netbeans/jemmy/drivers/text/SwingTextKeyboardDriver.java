@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.text;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.KeyDriver;
@@ -45,11 +45,11 @@ public final class SwingTextKeyboardDriver extends TextKeyboardDriver {
     @Override
     public void clearText(ComponentOperator oper) {
         if ((oper instanceof JTextAreaOperator) || (oper instanceof JEditorPaneOperator)) {
-            DriverManager.newInstance(JemmyProperties.getInstance())
+            DriverManager.newInstance(JemmyContext.getInstance())
                     .getFocusDriver(oper)
                     .giveFocus(oper);
             KeyDriver kdriver =
-                    DriverManager.newInstance(JemmyProperties.getInstance()).getKeyDriver(oper);
+                    DriverManager.newInstance(JemmyContext.getInstance()).getKeyDriver(oper);
             selectText(oper, 0, getText(oper).length());
             kdriver.pushKey(oper, KeyEvent.VK_DELETE, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
         } else {

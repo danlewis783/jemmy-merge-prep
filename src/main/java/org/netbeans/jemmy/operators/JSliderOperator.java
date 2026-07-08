@@ -37,7 +37,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SliderUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -61,7 +61,7 @@ public class JSliderOperator extends JComponentOperator {
 
     public JSliderOperator(JSlider b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getScrollDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public JSliderOperator(ContainerOperator cont, int index) {

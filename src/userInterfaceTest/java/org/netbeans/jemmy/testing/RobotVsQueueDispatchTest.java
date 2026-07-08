@@ -37,7 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.DispatchingModel;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -116,13 +116,13 @@ final class RobotVsQueueDispatchTest {
     }
 
     private void goRobotMode() {
-        JemmyProperties.getInstance()
+        JemmyContext.getInstance()
                 .installDriversAndSetDispatchingModel(
                         EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut, DispatchingModel.Robot));
     }
 
     private void goQueueMode() {
-        JemmyProperties.getInstance()
+        JemmyContext.getInstance()
                 .installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
     }
 

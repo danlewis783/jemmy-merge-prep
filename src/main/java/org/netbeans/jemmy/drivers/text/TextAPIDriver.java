@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.text;
 import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.util.List;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -117,7 +117,7 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
         }
 
         changeText(oper, text);
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getKeyDriver(oper)
                 .pushKey(oper, KeyEvent.VK_ENTER, 0, TimeoutKey.TextApiDriver_EnterText);
     }

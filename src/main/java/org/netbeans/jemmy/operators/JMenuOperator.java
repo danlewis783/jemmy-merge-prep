@@ -37,7 +37,7 @@ import javax.swing.MenuElement;
 import javax.swing.event.MenuListener;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -55,7 +55,7 @@ public class JMenuOperator extends JMenuItemOperator {
 
     public JMenuOperator(JMenu menu) {
         super(menu);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getMenuDriver(this);
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(this);
     }
 
     public JMenuOperator(ContainerOperator cont, int index) {

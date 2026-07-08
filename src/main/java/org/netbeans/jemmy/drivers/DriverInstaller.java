@@ -25,8 +25,8 @@
 
 package org.netbeans.jemmy.drivers;
 
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 
 public interface DriverInstaller {
-    void install(JemmyProperties jemmyProperties);
+    void install(JemmyContext jemmyContext);
 }

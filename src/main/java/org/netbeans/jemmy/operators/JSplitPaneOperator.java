@@ -35,7 +35,7 @@ import javax.swing.plaf.SplitPaneUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -54,7 +54,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public JSplitPaneOperator(JSplitPane b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getScrollDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public JSplitPaneOperator(ContainerOperator cont, int index) {

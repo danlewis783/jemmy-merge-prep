@@ -36,7 +36,7 @@ import javax.swing.JMenuBar;
 import javax.swing.MenuElement;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.callables.OneReleaseCallable;
@@ -61,7 +61,7 @@ public final class QueueJMenuDriver extends LightSupportiveDriver implements Men
 
     @Override
     public MenuElement pushMenu(ComponentOperator componentOperator, List<Predicate<Component>> predicates) {
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         checkSupported(componentOperator);
         MenuElement result;
         OneReleaseCallable callable;

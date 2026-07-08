@@ -38,12 +38,26 @@ import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.InputDriverInstaller;
 import org.netbeans.jemmy.util.Platform;
 
-public final class JemmyProperties {
+/**
+ * Process-wide harness state: the active input {@link DispatchingModel dispatching model}, the driver
+ * registry backing {@link org.netbeans.jemmy.drivers.DriverManager}, and the keyboard
+ * {@link CharBindingMap character bindings}.
+ *
+ * <p>Changing the dispatching model through {@link #installDriversAndSetDispatchingModel(EnumSet)}
+ * reinstalls the input and component drivers to match, so the registry always reflects the current
+ * model. There is one instance per JVM, obtained with {@link #getInstance()}.
+ *
+ * <p>Upstream Jemmy's counterpart, {@code JemmyProperties}, backs this state with a string-keyed
+ * property map fed by {@code jemmy.*} system properties, plus per-thread stacks of such maps. This
+ * fork keeps only the typed state above — no property map, no system properties, no thread-locality —
+ * and renamed the class to match.
+ */
+public final class JemmyContext {
     private final Map<DriverType, Map<Class<?>, DriverMarker>> driverRegistry = new EnumMap<>(DriverType.class);
     private final CharBindingMap charBindingMap;
     private @Nullable EnumSet<DispatchingModel> dispatchingModel;
 
-    private JemmyProperties() {
+    private JemmyContext() {
         charBindingMap = DefaultCharBindingMap.getInstance();
         installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
     }
@@ -75,7 +89,7 @@ public final class JemmyProperties {
         return driverRegistry.computeIfAbsent(driverType, type -> new HashMap<>());
     }
 
-    public static JemmyProperties getInstance() {
+    public static JemmyContext getInstance() {
         return Holder.INSTANCE;
     }
 
@@ -91,6 +105,6 @@ public final class JemmyProperties {
     }
 
     private static final class Holder {
-        private static final JemmyProperties INSTANCE = new JemmyProperties();
+        private static final JemmyContext INSTANCE = new JemmyContext();
     }
 }

@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.concurrent.Callable;
 import javax.swing.JTabbedPane;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -51,7 +51,7 @@ public final class JTabMouseDriver extends LightSupportiveDriver implements List
             QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
                 Rectangle rect =
                         ((JTabbedPaneOperator) oper).getUI().getTabBounds((JTabbedPane) oper.getSource(), index);
-                DriverManager.newInstance(JemmyProperties.getInstance())
+                DriverManager.newInstance(JemmyContext.getInstance())
                         .getMouseDriver(oper)
                         .clickMouse(
                                 oper,

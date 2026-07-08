@@ -26,7 +26,7 @@
 package org.netbeans.jemmy.drivers.buttons;
 
 import java.util.Collections;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -43,7 +43,7 @@ public final class ButtonMouseDriver extends LightSupportiveDriver implements Bu
     @Override
     public void press(ComponentOperator oper) {
         MouseDriver mouseDriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         mouseDriver.moveMouse(oper, oper.getCenterXForClick(), oper.getCenterYForClick());
         mouseDriver.pressMouse(
                 oper, oper.getCenterXForClick(), oper.getCenterYForClick(), Operator.getDefaultMouseButton(), 0);
@@ -51,7 +51,7 @@ public final class ButtonMouseDriver extends LightSupportiveDriver implements Bu
 
     @Override
     public void release(ComponentOperator oper) {
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getMouseDriver(oper)
                 .releaseMouse(
                         oper,
@@ -63,7 +63,7 @@ public final class ButtonMouseDriver extends LightSupportiveDriver implements Bu
 
     @Override
     public void push(ComponentOperator oper) {
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getMouseDriver(oper)
                 .clickMouse(
                         oper,

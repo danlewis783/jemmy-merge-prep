@@ -52,7 +52,7 @@ import javax.swing.table.TableModel;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TableDriver;
@@ -71,7 +71,7 @@ public class JTableOperator extends JComponentOperator {
 
     public JTableOperator(JTable b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getTableDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getTableDriver(getClass());
     }
 
     public JTableOperator(ContainerOperator cont, int index) {

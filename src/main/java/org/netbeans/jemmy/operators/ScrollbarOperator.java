@@ -33,7 +33,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -50,7 +50,7 @@ public class ScrollbarOperator extends ComponentOperator {
 
     public ScrollbarOperator(Scrollbar b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getScrollDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public ScrollbarOperator(ContainerOperator cont, int index) {

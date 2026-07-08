@@ -27,7 +27,7 @@ package org.netbeans.jemmy.drivers.trees;
 
 import java.util.Collections;
 import javax.swing.text.JTextComponent;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -71,7 +71,7 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
     public void editItem(ComponentOperator oper, int index, Object newValue, TimeoutKey waitEditorTime) {
         JTextComponentOperator textoper = startEditingAndReturnEditor(oper, index, waitEditorTime);
         TextDriver text =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getTextDriver(JTextComponentOperator.class);
+                DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);
         text.typeText(textoper, newValue.toString(), 0);
         ((JTreeOperator) oper).stopEditing();

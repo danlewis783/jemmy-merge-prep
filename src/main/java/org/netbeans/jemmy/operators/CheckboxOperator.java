@@ -34,7 +34,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -47,7 +47,7 @@ public class CheckboxOperator extends ComponentOperator {
 
     public CheckboxOperator(Checkbox b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getButtonDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
     }
 
     public CheckboxOperator(ContainerOperator cont) {

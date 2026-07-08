@@ -38,7 +38,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.MenuElement;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -101,13 +101,13 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
         oper.waitComponentEnabled();
 
         MouseDriver mDriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         smartMove(lastItem, oper);
 
         if (depth > predicates.size() - 1) {
             if ((oper instanceof JMenuOperator) && (menuBar != null) && (getSelectedElement(menuBar) != null)) {
             } else {
-                DriverManager.newInstance(JemmyProperties.getInstance())
+                DriverManager.newInstance(JemmyContext.getInstance())
                         .getButtonDriver(oper)
                         .push(oper);
             }
@@ -118,7 +118,7 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
         if (pressMouse
                 && !((JMenuOperator) oper).isPopupMenuVisible()
                 && !((menuBar != null) && (getSelectedElement(menuBar) != null))) {
-            DriverManager.newInstance(JemmyProperties.getInstance())
+            DriverManager.newInstance(JemmyContext.getInstance())
                     .getButtonDriver(oper)
                     .push(oper);
         }
@@ -135,7 +135,7 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
             mio.waitComponentEnabled();
 
             smartMove(oper, mio);
-            DriverManager.newInstance(JemmyProperties.getInstance())
+            DriverManager.newInstance(JemmyContext.getInstance())
                     .getButtonDriver(oper)
                     .push(mio);
             return item;

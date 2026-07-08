@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.concurrent.Callable;
 import javax.swing.text.JTextComponent;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -66,10 +66,10 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
         JTextComponentOperator textoper = new JTextComponentOperator(
                 (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));
         TextDriver text =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getTextDriver(JTextComponentOperator.class);
+                DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);
         text.typeText(textoper, value.toString(), 0);
-        DriverManager.newInstance(JemmyProperties.getInstance())
+        DriverManager.newInstance(JemmyContext.getInstance())
                 .getKeyDriver(oper)
                 .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
@@ -77,7 +77,7 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
     private void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             Point point = oper.getPointToClick(row, column);
-            DriverManager.newInstance(JemmyProperties.getInstance())
+            DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)
                     .clickMouse(
                             oper,

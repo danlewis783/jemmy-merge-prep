@@ -26,7 +26,7 @@
 package org.netbeans.jemmy.drivers.lists;
 
 import java.awt.event.KeyEvent;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FocusDriver;
@@ -45,7 +45,7 @@ public final class ListKeyboardDriver extends ListAPIDriver implements MultiSelL
             super.selectItem(listOp, index);
         }
 
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         FocusDriver focusDriver = driverManager.getFocusDriver(compOp);
         focusDriver.giveFocus(compOp);
         KeyDriver keyDriver = driverManager.getKeyDriver(compOp);

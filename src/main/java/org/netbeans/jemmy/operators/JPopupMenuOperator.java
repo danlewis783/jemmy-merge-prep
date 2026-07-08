@@ -46,7 +46,7 @@ import javax.swing.plaf.PopupMenuUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -76,7 +76,7 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public JPopupMenuOperator(JPopupMenu popup) {
         super(popup);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getMenuDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
 
     public JPopupMenuOperator(ContainerOperator cont, Predicate<Component> chooser) {

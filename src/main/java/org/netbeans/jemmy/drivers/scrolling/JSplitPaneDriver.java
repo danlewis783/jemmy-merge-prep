@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -120,7 +120,7 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     }
 
     private void moveTo(JSplitPaneOperator oper, ComponentOperator divOper, int x, int y) {
-        DriverManager manager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager manager = DriverManager.newInstance(JemmyContext.getInstance());
         manager.getMouseDriver(divOper)
                 .dragNDrop(
                         divOper,
@@ -147,7 +147,7 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
         JButtonOperator bo = new JButtonOperator(
                 (JButton) divOper.waitSubComponent(PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         ButtonDriver bdriver =
-                DriverManager.newInstance(JemmyProperties.getInstance()).getButtonDriver(bo);
+                DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(bo);
         bdriver.push(bo);
         bdriver.push(bo);
     }

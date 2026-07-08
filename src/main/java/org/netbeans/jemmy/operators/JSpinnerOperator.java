@@ -44,7 +44,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SpinnerUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.JemmyProperties;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -65,7 +65,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JSpinnerOperator(JSpinner b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyProperties.getInstance()).getScrollDriver(getClass());
+        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public JSpinnerOperator(ContainerOperator cont, int index) {

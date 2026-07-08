@@ -44,8 +44,8 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.InternalFrameUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyInputException;
-import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -78,7 +78,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public JInternalFrameOperator(JInternalFrame b) {
         super(b);
-        DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
+        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         wDriver = driverManager.getWindowDriver(getClass());
         fDriver = driverManager.getFrameDriver(getClass());
         iDriver = driverManager.getInternalFrameDriver(getClass());
