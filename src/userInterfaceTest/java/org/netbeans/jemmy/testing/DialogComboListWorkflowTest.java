@@ -65,7 +65,6 @@ class DialogComboListWorkflowTest {
         EventQueue.invokeAndWait(() -> application001 = new DialogComboListApp());
         EventQueue.invokeLater(() -> application001.setVisible(true));
         EventQueue.invokeAndWait(() -> {});
-        System.setProperty("jemmy.dump.a11y", "on");
         JDialog jDialog = JDialogOperator.waitJDialog("DialogComboListApp", StringComparators.strict());
         JDialogOperator jDialogOp1 = new JDialogOperator(jDialog);
         JDialogOperator jDialogOp2 = new JDialogOperator();

@@ -192,3 +192,9 @@ tests) must stay green — it is the behavioral contract.
   intentional omission: a global multiplier silently distorts every wait,
   including explicit overrides, making timing environment-dependent and
   failures hard to reproduce. Use `Timeouts.override(...)` per key instead.
+- `jemmy.event_listening` was likewise removed 2026-07-08: it was a
+  read-once negative option that silently degraded the event waits relying
+  on the global listeners. `EventTool.addListeners()`/`removeListeners()`
+  are the explicit controls. The only remaining system properties the
+  library reads are `os.name` (via `Platform`) and Apple's own
+  `apple.laf.useScreenMenuBar`.

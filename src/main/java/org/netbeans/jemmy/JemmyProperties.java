@@ -36,58 +36,35 @@ import org.netbeans.jemmy.drivers.DriverInstaller;
 import org.netbeans.jemmy.drivers.DriverMarker;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.InputDriverInstaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.netbeans.jemmy.util.Platform;
 
 public final class JemmyProperties {
-    private static final Logger logger = LoggerFactory.getLogger(JemmyProperties.class);
     private final Map<DriverType, Map<Class<?>, DriverMarker>> driverRegistry = new EnumMap<>(DriverType.class);
-    private final Map<String, Object> properties;
+    private final CharBindingMap charBindingMap;
+    private @Nullable EnumSet<DispatchingModel> dispatchingModel;
 
     private JemmyProperties() {
-        properties = new HashMap<>();
-        put("binding.map", DefaultCharBindingMap.getInstance());
+        charBindingMap = DefaultCharBindingMap.getInstance();
         installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
     }
 
     public CharBindingMap getCharBindingMap() {
-        return (CharBindingMap) Objects.requireNonNull(get("binding.map"), "binding.map property not set");
+        return charBindingMap;
     }
 
-    @SuppressWarnings("unchecked") // "dispatching.model" is only ever set to an EnumSet<DispatchingModel>
     public EnumSet<DispatchingModel> getDispatchingModel() {
-        return (EnumSet<DispatchingModel>)
-                Objects.requireNonNull(get("dispatching.model"), "dispatching.model property not set");
+        return Objects.requireNonNull(dispatchingModel, "dispatching model not set");
     }
 
     public void installDriversAndSetDispatchingModel(EnumSet<DispatchingModel> model) {
-        Objects.requireNonNull(model);
-        @SuppressWarnings("unchecked") // "dispatching.model" is only ever set to an EnumSet<DispatchingModel>
-        EnumSet<DispatchingModel> prev = (EnumSet<DispatchingModel>) get("dispatching.model");
-        if (model.equals(prev)) {
+        Objects.requireNonNull(model, "model");
+        if (model.equals(dispatchingModel)) {
             return;
         }
 
         new InputDriverInstaller(model, TimeoutKey.EventDispatcher_RobotAutoDelay, this).install();
         findDriverInstaller(model).install(this);
-        put("dispatching.model", model);
-    }
-
-    public @Nullable Object put(String name, Object newValue) {
-        Object ret = properties.put(name, newValue);
-        if ((ret != null) && (ret != newValue)) {
-            logger.debug("smashing value of property name \"{}\": was \"{}\", now \"{}\"", name, ret, newValue);
-        }
-
-        return ret;
-    }
-
-    public @Nullable Object get(String name) {
-        return properties.get(name);
-    }
-
-    public @Nullable Object remove(String name) {
-        return properties.remove(name);
+        dispatchingModel = model;
     }
 
     /**
@@ -104,7 +81,7 @@ public final class JemmyProperties {
 
     private static DriverInstaller findDriverInstaller(EnumSet<DispatchingModel> model) {
         DriverInstaller ret;
-        if (System.getProperty("os.name").startsWith("Mac OS X")) {
+        if (Platform.isOSX()) {
             ret = new APIDriverInstaller(model.contains(DispatchingModel.Shortcut));
         } else {
             ret = new DefaultDriverInstaller(model.contains(DispatchingModel.Shortcut));

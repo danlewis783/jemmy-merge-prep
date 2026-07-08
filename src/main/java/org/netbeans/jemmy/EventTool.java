@@ -29,16 +29,21 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.functions.AwtEventByMaskFunction;
 import org.netbeans.jemmy.functions.NoEventFunction;
 
+/**
+ * Tracks AWT events through global listeners, supporting the wait-for-event and wait-for-quiet functions.
+ *
+ * <p>Unlike upstream Jemmy, this fork intentionally omits the {@code jemmy.event_listening} system property
+ * that suppressed listener registration: it was a read-once negative option that silently degraded the event
+ * waits relying on the listeners. Use {@link #addListeners()} and {@link #removeListeners()} for explicit
+ * control instead.
+ */
 public final class EventTool {
     private long currentEventMask = 0;
     private final ListenerSet listenerSet;
 
     private EventTool() {
         listenerSet = ListenerSet.getInstance();
-        String jemmyEventListening = System.getProperty("jemmy.event_listening");
-        if (!"no".equals(jemmyEventListening)) {
-            listenerSet.addListeners();
-        }
+        listenerSet.addListeners();
     }
 
     public long getLastEventTime(long eventMask) {

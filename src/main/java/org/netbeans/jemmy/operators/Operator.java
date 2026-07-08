@@ -52,6 +52,7 @@ import org.netbeans.jemmy.util.DefaultPathParser;
 import org.netbeans.jemmy.util.DefaultVisualizer;
 import org.netbeans.jemmy.util.MouseVisualizer;
 import org.netbeans.jemmy.util.PathParser;
+import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,13 +60,13 @@ import org.slf4j.LoggerFactory;
 public abstract class Operator {
     private static final Logger logger = LoggerFactory.getLogger(Operator.class);
     private static final List<String> operatorPkgs = new ArrayList<>();
+    private static volatile @Nullable ComponentVisualizer defaultComponentVisualizer;
+    private static volatile @Nullable PathParser defaultPathParser;
+    private static volatile boolean defaultVerification;
 
     static {
-        String os = System.getProperty("os.name").toUpperCase();
-        if (os.startsWith("LINUX")) {
+        if (Platform.isLinux()) {
             setDefaultComponentVisualizer(new MouseVisualizer(0.5, 10));
-        } else if (os.startsWith("SUNOS")) {
-            setDefaultComponentVisualizer(new MouseVisualizer(0.0, 0));
         } else {
             setDefaultComponentVisualizer(new DefaultVisualizer());
         }
@@ -225,34 +226,33 @@ public abstract class Operator {
     }
 
     public static @Nullable ComponentVisualizer setDefaultComponentVisualizer(ComponentVisualizer visualizer) {
-        return (ComponentVisualizer)
-                JemmyProperties.getInstance().put("ComponentOperator.ComponentVisualizer", visualizer);
+        ComponentVisualizer previous = defaultComponentVisualizer;
+        defaultComponentVisualizer = visualizer;
+        return previous;
     }
 
     public static ComponentVisualizer getDefaultComponentVisualizer() {
-        return (ComponentVisualizer) Objects.requireNonNull(
-                JemmyProperties.getInstance().get("ComponentOperator.ComponentVisualizer"),
-                "ComponentOperator.ComponentVisualizer property not set");
+        return Objects.requireNonNull(defaultComponentVisualizer, "default component visualizer not set");
     }
 
     private static @Nullable PathParser setDefaultPathParser(PathParser parser) {
-        return (PathParser) JemmyProperties.getInstance().put("ComponentOperator.PathParser", parser);
+        PathParser previous = defaultPathParser;
+        defaultPathParser = parser;
+        return previous;
     }
 
     private static PathParser getDefaultPathParser() {
-        return (PathParser) Objects.requireNonNull(
-                JemmyProperties.getInstance().get("ComponentOperator.PathParser"),
-                "ComponentOperator.PathParser property not set");
+        return Objects.requireNonNull(defaultPathParser, "default path parser not set");
     }
 
     private static boolean setDefaultVerification(boolean verification) {
-        Boolean ret = (Boolean) JemmyProperties.getInstance().put("Operator.Verification", verification);
-        return (ret != null) && ret;
+        boolean previous = defaultVerification;
+        defaultVerification = verification;
+        return previous;
     }
 
     private static boolean getDefaultVerification() {
-        return (Boolean) Objects.requireNonNull(
-                JemmyProperties.getInstance().get("Operator.Verification"), "Operator.Verification property not set");
+        return defaultVerification;
     }
 
     public static boolean isCaptionEqual(String caption, String match, StringComparator comparator) {
