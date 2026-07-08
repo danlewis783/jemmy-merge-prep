@@ -30,13 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.drivers.APIDriverInstaller;
-import org.netbeans.jemmy.drivers.DefaultDriverInstaller;
 import org.netbeans.jemmy.drivers.DriverInstaller;
+import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverMarker;
 import org.netbeans.jemmy.drivers.DriverType;
-import org.netbeans.jemmy.drivers.InputDriverInstaller;
-import org.netbeans.jemmy.util.Platform;
 
 /**
  * Process-wide harness state: the active input {@link DispatchingModel dispatching model}, the driver
@@ -76,8 +73,8 @@ public final class JemmyContext {
             return;
         }
 
-        new InputDriverInstaller(model, TimeoutKey.EventDispatcher_RobotAutoDelay, this).install();
-        findDriverInstaller(model).install(this);
+        DriverInstaller.installAll(DriverManager.newInstance(this), model);
+
         dispatchingModel = model;
     }
 
@@ -91,17 +88,6 @@ public final class JemmyContext {
 
     public static JemmyContext getInstance() {
         return Holder.INSTANCE;
-    }
-
-    private static DriverInstaller findDriverInstaller(EnumSet<DispatchingModel> model) {
-        DriverInstaller ret;
-        if (Platform.isOSX()) {
-            ret = new APIDriverInstaller(model.contains(DispatchingModel.Shortcut));
-        } else {
-            ret = new DefaultDriverInstaller(model.contains(DispatchingModel.Shortcut));
-        }
-
-        return ret;
     }
 
     private static final class Holder {
