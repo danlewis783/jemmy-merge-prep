@@ -108,8 +108,8 @@ several times (e.g. 3×) — they must pass consistently, not once.
 
 ### Phase 4 — `first-hygiene`
 Per the TODO item: `@TempDir` for `JFileChooserOperatorTest` fixture files;
-`@Isolated`/`@ResourceLock` on global-state unit tests (`TimeoutsTest` scale
-tests, `LookAndFeelTest` Nimbus switch); `@Tag("flaky")` + default-`check`
+`@Isolated`/`@ResourceLock` on global-state unit tests (`TimeoutsTest`,
+`LookAndFeelTest` Nimbus switch); `@Tag("flaky")` + default-`check`
 exclusion for whatever remains flaky after phases 2–3; optional cooperative
 cancellation in the `-1`-sentinel test adjusters.
 
@@ -188,5 +188,7 @@ tests) must stay green — it is the behavioral contract.
   fine for regression pins, but don't wrap unbounded loops without noting it.
 - The Gradle configuration cache is on; if it misbehaves after build-script
   edits (JaCoCo), `--no-configuration-cache` is acceptable for one-off runs.
-- `Timeouts` scale (`jemmy.timeouts.scale`) multiplies overrides too;
-  `resetToDefaults()` re-reads it — relevant when writing timeout tests.
+- Timeout scaling (`jemmy.timeouts.scale`) was removed 2026-07-08 as an
+  intentional omission: a global multiplier silently distorts every wait,
+  including explicit overrides, making timing environment-dependent and
+  failures hard to reproduce. Use `Timeouts.override(...)` per key instead.
