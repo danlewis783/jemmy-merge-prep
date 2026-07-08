@@ -198,3 +198,8 @@ tests) must stay green — it is the behavioral contract.
   are the explicit controls. The only remaining system properties the
   library reads are `os.name` (via `Platform`) and Apple's own
   `apple.laf.useScreenMenuBar`.
+- Reflective operator creation (`Operator.createOperator`,
+  `addOperatorPackage`, `ContainerOperator.createSubOperator`) was removed
+  2026-07-08 as an intentional omission: naming-convention reflection no
+  typed caller needed, and it pinned the `(Component)` constructor to
+  public, blocking the factory-method construction redesign.

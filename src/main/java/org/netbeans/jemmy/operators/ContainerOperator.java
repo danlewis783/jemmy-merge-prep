@@ -92,14 +92,6 @@ public class ContainerOperator extends ComponentOperator {
                 .runUntilNotNull(null);
     }
 
-    public @Nullable ComponentOperator createSubOperator(Predicate<Component> chooser, int index) {
-        return createOperator(waitSubComponent(chooser, index));
-    }
-
-    public @Nullable ComponentOperator createSubOperator(Predicate<Component> chooser) {
-        return createSubOperator(chooser, 0);
-    }
-
     public Component add(Component component) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Container) getSource()).add(component)));
     }

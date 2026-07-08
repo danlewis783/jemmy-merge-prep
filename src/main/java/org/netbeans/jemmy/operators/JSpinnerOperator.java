@@ -131,8 +131,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getIncreaseOperator() {
         if (increaseOperator == null) {
-            increaseOperator = (JButtonOperator)
-                    Objects.requireNonNull(createSubOperator(PredicatesJ.of(JButton.class), 0), "no increase button");
+            increaseOperator = new JButtonOperator((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 0));
         }
 
         return increaseOperator;
@@ -140,8 +139,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getDecreaseOperator() {
         if (decreaseOperator == null) {
-            decreaseOperator = (JButtonOperator)
-                    Objects.requireNonNull(createSubOperator(PredicatesJ.of(JButton.class), 1), "no decrease button");
+            decreaseOperator = new JButtonOperator((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 1));
         }
 
         return decreaseOperator;

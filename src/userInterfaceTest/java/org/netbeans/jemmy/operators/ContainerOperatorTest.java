@@ -107,14 +107,6 @@ class ContainerOperatorTest {
     }
 
     @Test
-    void testCreateSubOperator() {
-        FrameOperator operator = new FrameOperator();
-        assertThat(operator).isNotNull();
-        Operator operator1 = operator.createSubOperator(PredicatesJ.byName("ContainerOperatorTest"));
-        assertThat(operator1).isNotNull();
-    }
-
-    @Test
     void testAdd() {
         FrameOperator operator = new FrameOperator();
         assertThat(operator).isNotNull();
