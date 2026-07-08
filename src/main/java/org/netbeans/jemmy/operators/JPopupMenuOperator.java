@@ -49,7 +49,6 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.functions.JPopupMenuPushFunction;
@@ -435,7 +434,6 @@ public class JPopupMenuOperator extends JComponentOperator {
     public static JPopupMenu callPopup(ComponentOperator oper, int x, int y, int mouseButton) {
         oper.makeComponentVisible();
         oper.clickForPopup(x, y, mouseButton);
-        Timeouts.sleep(TimeoutKey.JMenuOperator_WaitBeforePopupTimeout);
 
         return waitJPopupMenu(
                 waitJPopupWindow(new JPopupMenuInvokerIsInsideOperatorPredicate(oper)), PredicatesJ.alwaysTrue());

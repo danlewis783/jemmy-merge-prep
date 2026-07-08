@@ -28,12 +28,13 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.util.Collections;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 import javax.swing.JScrollBar;
 import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MouseDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
@@ -52,27 +53,38 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
 
     @Override
     public void scrollToMinimum(ComponentOperator oper, int orientation) {
+        JScrollBarOperator scrollBar = (JScrollBarOperator) oper;
         startDragging(oper);
         Point pnt = new Point(0, 0);
         drag(oper, pnt);
-        while (((JScrollBarOperator) oper).getValue() > ((JScrollBarOperator) oper).getMinimum()) {
-            Timeouts.sleep(TimeoutKey.Waiter_TimeDelta);
+        try {
+            FunctionRepeater.on(
+                            (Function<Void, Boolean>)
+                                    unused -> (scrollBar.getValue() <= scrollBar.getMinimum()) ? Boolean.TRUE : null,
+                            TimeoutKey.JScrollBarOperator_WholeScrollTimeout)
+                    .runUntilNotNull(null);
+        } finally {
+            drop(oper, pnt);
         }
-
-        drop(oper, pnt);
     }
 
     @Override
     public void scrollToMaximum(ComponentOperator oper, int orientation) {
+        JScrollBarOperator scrollBar = (JScrollBarOperator) oper;
         startDragging(oper);
         Point pnt = new Point(oper.getWidth() - 1, oper.getHeight() - 1);
         drag(oper, pnt);
-        while (((JScrollBarOperator) oper).getValue()
-                > ((JScrollBarOperator) oper).getMaximum() - ((JScrollBarOperator) oper).getVisibleAmount()) {
-            Timeouts.sleep(TimeoutKey.Waiter_TimeDelta);
+        try {
+            FunctionRepeater.on(
+                            (Function<Void, Boolean>) unused ->
+                                    (scrollBar.getValue() <= scrollBar.getMaximum() - scrollBar.getVisibleAmount())
+                                            ? Boolean.TRUE
+                                            : null,
+                            TimeoutKey.JScrollBarOperator_WholeScrollTimeout)
+                    .runUntilNotNull(null);
+        } finally {
+            drop(oper, pnt);
         }
-
-        drop(oper, pnt);
     }
 
     @Override

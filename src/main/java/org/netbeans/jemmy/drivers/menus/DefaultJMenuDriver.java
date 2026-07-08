@@ -39,8 +39,6 @@ import javax.swing.MenuElement;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.MenuDriver;
@@ -123,7 +121,6 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
                     .push(oper);
         }
 
-        Timeouts.sleep(TimeoutKey.JMenuOperator_WaitBeforePopupTimeout);
         JMenuItem item = waitItem(oper, waitPopupMenu(oper), predicates, depth);
         mDriver.exitMouse(oper);
 

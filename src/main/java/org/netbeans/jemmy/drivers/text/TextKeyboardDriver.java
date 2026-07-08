@@ -69,7 +69,11 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
         KeyDriver kdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getKeyDriver(oper);
         TimeoutKey betweenTime = getBetweenTimeout(oper);
+        // deadline so a text component that ignores the keystrokes (not editable, events lost)
+        // fails with TimeoutExpiredException instead of looping forever
+        long startTime = System.currentTimeMillis();
         while (getCaretPosition(oper) > 0) {
+            Timeouts.check(TimeoutKey.Waiter_WaitingTime, startTime);
             kdriver.typeKey(
                     oper,
                     KeyEvent.VK_BACK_SPACE,
@@ -80,6 +84,7 @@ public abstract class TextKeyboardDriver extends LightSupportiveDriver implement
         }
 
         while (!getText(oper).isEmpty()) {
+            Timeouts.check(TimeoutKey.Waiter_WaitingTime, startTime);
             kdriver.pushKey(oper, KeyEvent.VK_DELETE, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
             Timeouts.sleep(betweenTime);
         }

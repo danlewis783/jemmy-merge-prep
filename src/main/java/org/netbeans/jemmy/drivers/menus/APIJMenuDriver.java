@@ -32,8 +32,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.operators.AbstractButtonOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
@@ -73,7 +71,6 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
             waitPopupMenu(oper);
         }
 
-        Timeouts.sleep(TimeoutKey.JMenuOperator_WaitBeforePopupTimeout);
         JMenuItem item = waitItem(oper, waitPopupMenu(oper), predicates, depth);
         if (item instanceof JMenu) {
             JMenuOperator mo = JMenuOperator.of((JMenu) item);

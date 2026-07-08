@@ -17,7 +17,6 @@
 package org.netbeans.jemmy;
 
 public enum TimeoutKey {
-    JMenuOperator_WaitBeforePopupTimeout(0L),
     JMenuOperator_WaitPopupTimeout(60000L),
     JMenuOperator_PushMenuTimeout(60000L),
     EventDispatcher_RobotAutoDelay(10L),
@@ -39,7 +38,6 @@ public enum TimeoutKey {
     ComponentOperator_WaitComponentEnabledTimeout(60000L),
     ComponentOperator_WaitFocusTimeout(60000L),
     ComponentOperator_WaitComponentTimeout(10000L),
-    JComboBoxOperator_BeforeSelectingTimeout(0L),
     JScrollBarOperator_WholeScrollTimeout(60000L),
     JScrollBarOperator_DragAndDropScrollingDelta(0L),
     JSliderOperator_WholeScrollTimeout(60000L),
