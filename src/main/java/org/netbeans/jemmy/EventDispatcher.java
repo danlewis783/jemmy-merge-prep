@@ -44,8 +44,7 @@ public final class EventDispatcher {
     private final ClassReference<Component> reference;
 
     public EventDispatcher(Component component) {
-        this.component =
-                Objects.requireNonNull(component, "attempted to pass null Component to EventDispatcher constructor");
+        this.component = Objects.requireNonNull(component, "component");
         reference = new ClassReference<>(component);
         setDispatchingModel(JemmyProperties.getInstance().getDispatchingModel());
     }
