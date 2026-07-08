@@ -20,7 +20,6 @@ package org.netbeans.jemmy.testing;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -51,11 +50,7 @@ public class SpinnersApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new SpinnersApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new SpinnersApp().setVisible(true));
     }
 }

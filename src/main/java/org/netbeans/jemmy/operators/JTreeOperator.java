@@ -731,8 +731,8 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getEditingPath()));
     }
 
-    public Enumeration getExpandedDescendants(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Enumeration>)
+    public Enumeration<TreePath> getExpandedDescendants(@Nullable TreePath treePath) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Enumeration<TreePath>>)
                 () -> ((JTree) getSource()).getExpandedDescendants(treePath)));
     }
 

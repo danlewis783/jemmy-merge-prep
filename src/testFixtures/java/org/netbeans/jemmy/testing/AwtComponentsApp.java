@@ -66,7 +66,7 @@ public class AwtComponentsApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] argv) throws Exception {
-        EventQueue.invokeAndWait(() -> new AwtComponentsApp().setVisible(true));
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new AwtComponentsApp().setVisible(true));
     }
 }

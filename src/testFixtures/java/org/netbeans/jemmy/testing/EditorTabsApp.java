@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -38,11 +37,7 @@ public class EditorTabsApp extends JFrame {
         setSize(200, 400);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new EditorTabsApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new EditorTabsApp().setVisible(true));
     }
 }

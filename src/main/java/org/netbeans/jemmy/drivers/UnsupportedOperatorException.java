@@ -30,12 +30,12 @@ import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public final class UnsupportedOperatorException extends JemmyException {
-    public UnsupportedOperatorException(Class driver, Class operator) {
+    public UnsupportedOperatorException(Class<?> driver, Class<?> operator) {
         super(driver.getName() + " operators are not supported by " + operator.getName() + " driver!");
     }
 
     public static void checkSupported(
-            Class driver, List<Class<? extends ComponentOperator>> supported, Class operator) {
+            Class<?> driver, List<Class<? extends ComponentOperator>> supported, Class<?> operator) {
         for (Class<? extends ComponentOperator> supportedClass : supported) {
             if (supportedClass.isAssignableFrom(operator)) {
                 return;

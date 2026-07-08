@@ -48,7 +48,7 @@ class AwtComponentsTest {
     void beforeEach() throws Exception {
         Timeouts.resetToDefaults();
         override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L);
-        AwtComponentsApp.main(new String[] {});
+        AwtComponentsApp.main();
         frameOp = new JFrameOperator("AwtComponentsApp");
     }
 

@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.beans.PropertyVetoException;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -70,21 +69,17 @@ public class ObscuredFieldApp extends JFrame {
         return target;
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                try {
-                    new ObscuredFieldApp().setVisible(true);
-                } catch (PropertyVetoException e) {
-                    throw new RuntimeException(e);
-                }
-                JFrame wFrame = new JFrame("Wrong one");
-                wFrame.setLocation(0, 0);
-                wFrame.setSize(500, 500);
-                wFrame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                new ObscuredFieldApp().setVisible(true);
+            } catch (PropertyVetoException e) {
+                throw new RuntimeException(e);
+            }
+            JFrame wFrame = new JFrame("Wrong one");
+            wFrame.setLocation(0, 0);
+            wFrame.setSize(500, 500);
+            wFrame.setVisible(true);
+        });
     }
 }

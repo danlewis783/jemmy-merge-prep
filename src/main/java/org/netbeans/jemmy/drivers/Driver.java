@@ -26,5 +26,5 @@
 package org.netbeans.jemmy.drivers;
 
 public interface Driver extends DriverMarker {
-    Class[] getSupported();
+    Class<?>[] getSupported();
 }

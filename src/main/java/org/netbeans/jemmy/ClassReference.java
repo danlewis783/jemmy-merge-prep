@@ -57,28 +57,28 @@ public final class ClassReference<T> {
         instance = null;
     }
 
-    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class[] paramsClasses)
+    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class<?>[] paramsClasses)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         if (params == null) {
             params = new Object[0];
         }
 
         if (paramsClasses == null) {
-            paramsClasses = new Class[0];
+            paramsClasses = new Class<?>[0];
         }
 
         Method method = clazz.getMethod(methodName, paramsClasses);
         return method.invoke(instance, params);
     }
 
-    public T newInstance(@Nullable Object[] params, @Nullable Class[] paramsClasses)
+    public T newInstance(@Nullable Object[] params, @Nullable Class<?>[] paramsClasses)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         if (params == null) {
             params = new Object[0];
         }
 
         if (paramsClasses == null) {
-            paramsClasses = new Class[0];
+            paramsClasses = new Class<?>[0];
         }
 
         Constructor<T> constructor = clazz.getConstructor(paramsClasses);

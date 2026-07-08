@@ -24,7 +24,7 @@ public final class StringPropertyPredicate extends PropertyPredicate {
     }
 
     public StringPropertyPredicate(
-            String[] propNames, Object @Nullable [][] params, Class @Nullable [][] classes, String[] results) {
+            String[] propNames, Object @Nullable [][] params, Class<?> @Nullable [][] classes, String[] results) {
         super(propNames, params, classes, results);
     }
 

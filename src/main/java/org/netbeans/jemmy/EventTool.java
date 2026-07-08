@@ -38,8 +38,8 @@ public final class EventTool {
 
     private EventTool() {
         listenerSet = ListenerSet.getInstance();
-        String jemmy_event_listening = System.getProperty("jemmy.event_listening");
-        if (!"no".equals(jemmy_event_listening)) {
+        String jemmyEventListening = System.getProperty("jemmy.event_listening");
+        if (!"no".equals(jemmyEventListening)) {
             listenerSet.addListeners();
         }
     }

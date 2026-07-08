@@ -154,7 +154,7 @@ public class JSpinnerOperator extends JComponentOperator {
         } else if (model instanceof SpinnerDateModel) {
             return ((SpinnerDateModel) model).getEnd();
         } else if (model instanceof SpinnerListModel) {
-            List list = ((SpinnerListModel) model).getList();
+            List<?> list = ((SpinnerListModel) model).getList();
 
             return list.get(list.size() - 1);
         } else {
@@ -169,7 +169,7 @@ public class JSpinnerOperator extends JComponentOperator {
         } else if (model instanceof SpinnerDateModel) {
             return ((SpinnerDateModel) model).getEnd();
         } else if (model instanceof SpinnerListModel) {
-            List list = ((SpinnerListModel) model).getList();
+            List<?> list = ((SpinnerListModel) model).getList();
 
             return list.get(list.size() - 1);
         } else {
@@ -337,7 +337,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static class ListScrollAdjuster implements ScrollAdjuster {
-        private final List elements;
+        private final List<?> elements;
         private int itemIndex;
         private final SpinnerListModel model;
 

@@ -33,7 +33,7 @@ class JSliderScrollModelsTest {
 
     @Test
     void test() {
-        SlidersApp.main(new String[] {});
+        SlidersApp.main();
         JFrame win = JFrameOperator.waitJFrame("SlidersApp");
         JFrameOperator wino = new JFrameOperator(win);
         JSliderOperator[] ops = {

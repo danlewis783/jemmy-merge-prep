@@ -64,12 +64,8 @@ public class ManyComponentsApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] agrv) {
-        try {
-            EventQueue.invokeAndWait(() -> new ManyComponentsApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new ManyComponentsApp().setVisible(true));
     }
 
     private static class ButtonsFrame extends JFrame {
@@ -77,18 +73,18 @@ public class ManyComponentsApp extends JFrame {
             super("ManyComponentsApp.ButtonsFrame");
 
             try {
-                Class[] classes = {
+                Class<?>[] classes = {
                     Class.forName("javax.swing.JButton"),
                     Class.forName("javax.swing.JCheckBox"),
                     Class.forName("javax.swing.JRadioButton"),
                     Class.forName("javax.swing.JToggleButton"),
                     Class.forName("javax.swing.JMenuItem")
                 };
-                Class[] paramClasses = {Class.forName("java.lang.String")};
+                Class<?>[] paramClasses = {Class.forName("java.lang.String")};
                 Container contentPane = getContentPane();
                 contentPane.setLayout(new FlowLayout());
 
-                for (Class clazz : classes) {
+                for (Class<?> clazz : classes) {
                     contentPane.add(
                             (Component) clazz.getConstructor(paramClasses).newInstance(clazz.getName()));
                 }
@@ -136,12 +132,12 @@ public class ManyComponentsApp extends JFrame {
             tbl.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             tbl.getSelectionModel().setSelectionInterval(1, 1);
             listPane.add(tbl);
-            JList lst = new JList(new String[] {"list_0", "list_1", "list_2", "list_3"});
+            JList<String> lst = new JList<>(new String[] {"list_0", "list_1", "list_2", "list_3"});
             lst.setSelectedIndex(1);
             listPane.add(lst);
-            DefaultComboBoxModel comboModel =
-                    new DefaultComboBoxModel(new String[] {"combo_0", "combo_1", "combo_2", "combo_3"});
-            contentPane.add(new JComboBox(comboModel), BorderLayout.NORTH);
+            DefaultComboBoxModel<String> comboModel =
+                    new DefaultComboBoxModel<>(new String[] {"combo_0", "combo_1", "combo_2", "combo_3"});
+            contentPane.add(new JComboBox<>(comboModel), BorderLayout.NORTH);
             contentPane.add(listPane, BorderLayout.CENTER);
             setSize(500, 300);
         }
@@ -165,16 +161,16 @@ public class ManyComponentsApp extends JFrame {
             super("ManyComponentsApp.TextsFrame");
 
             try {
-                Class[] classes = {
+                Class<?>[] classes = {
                     Class.forName("javax.swing.JTextField"),
                     Class.forName("javax.swing.JTextArea"),
                     Class.forName("javax.swing.JLabel")
                 };
-                Class[] paramClasses = {Class.forName("java.lang.String")};
+                Class<?>[] paramClasses = {Class.forName("java.lang.String")};
                 Container contentPane = getContentPane();
                 contentPane.setLayout(new FlowLayout());
 
-                for (Class clazz : classes) {
+                for (Class<?> clazz : classes) {
                     contentPane.add(
                             (Component) clazz.getConstructor(paramClasses).newInstance(clazz.getName()));
                 }

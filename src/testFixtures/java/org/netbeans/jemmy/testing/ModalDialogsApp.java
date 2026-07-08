@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -49,12 +48,8 @@ public class ModalDialogsApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new ModalDialogsApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new ModalDialogsApp().setVisible(true));
     }
 
     private static class MyModalDialog extends JDialog {

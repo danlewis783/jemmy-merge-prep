@@ -102,7 +102,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public void waitSelected(boolean selected) {
-        waitState(new CheckboxOperatorStateSelectedPredicate(selected));
+        waitState(new CheckboxOperatorStateSelectedPredicate<>(selected));
     }
 
     public void addItemListener(ItemListener itemListener) {

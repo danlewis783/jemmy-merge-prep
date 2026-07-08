@@ -33,7 +33,7 @@ public class StagedDialogsApp extends JDialog {
         return index;
     }
 
-    public static void main(String[] argv) {
+    public static void main(String... args) {
         EventQueue.invokeLater(() -> {
             new StagedDialogsApp(0).setVisible(true);
             new StagedDialogsApp(1).setVisible(true);

@@ -53,7 +53,7 @@ class JListOperatorTest {
     void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             JFrame frameNew = new JFrame();
-            JList list = new JList(new String[] {"one", "two", "three", "four"});
+            JList<String> list = new JList<>(new String[] {"one", "two", "three", "four"});
             list.setName("JListOperatorTest");
             list.setSelectedIndex(0);
             frameNew.getContentPane().add(new JScrollPane(list));
@@ -86,17 +86,17 @@ class JListOperatorTest {
 
     @Test
     void testFindJList() {
-        JList list1 = JListOperator.findJList(frame, PredicatesJ.byName("JListOperatorTest"));
+        JList<?> list1 = JListOperator.findJList(frame, PredicatesJ.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
-        JList list2 = JListOperator.findJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
+        JList<?> list2 = JListOperator.findJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();
     }
 
     @Test
     void testWaitJList() {
-        JList list1 = JListOperator.waitJList(frame, PredicatesJ.byName("JListOperatorTest"));
+        JList<?> list1 = JListOperator.waitJList(frame, PredicatesJ.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
-        JList list2 = JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
+        JList<?> list2 = JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();
     }
 
@@ -553,7 +553,7 @@ class JListOperatorTest {
         assertThat(operator1).isNotNull();
         String[] listData = {"one", "two", "three", "four"};
         operator1.setListData(listData);
-        operator1.setListData(new Vector());
+        operator1.setListData(new Vector<>());
     }
 
     @Test
@@ -562,7 +562,7 @@ class JListOperatorTest {
         assertThat(operator).isNotNull();
         JListOperator operator1 = new JListOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.setModel(new DefaultListModel());
+        operator1.setModel(new DefaultListModel<>());
     }
 
     @Test
@@ -586,6 +586,8 @@ class JListOperatorTest {
         public void valueChanged(ListSelectionEvent e) {}
     }
 
+    // ListUI's abstract methods take raw JList under --release 8; generified overrides would not override
+    @SuppressWarnings("rawtypes")
     private static class NullListUI extends ListUI {
         @Override
         public int locationToIndex(JList list, Point location) {

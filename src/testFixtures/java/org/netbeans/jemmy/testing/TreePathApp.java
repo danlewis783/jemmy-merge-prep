@@ -20,7 +20,6 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -37,7 +36,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 public class TreePathApp extends JFrame {
-    private final JList list;
+    private final JList<TreePath> list;
     private final JPopupMenu popup;
     private final JCheckBox showWrong;
     private final JTree tree;
@@ -45,8 +44,8 @@ public class TreePathApp extends JFrame {
 
     private TreePathApp() {
         super("TreePathApp");
-        DefaultMutableTreeNode node_1 = new DefaultMutableTreeNode();
-        node_1.setUserObject("node-1");
+        DefaultMutableTreeNode nodeMinus1 = new DefaultMutableTreeNode();
+        nodeMinus1.setUserObject("node-1");
         DefaultMutableTreeNode node000 = new DefaultMutableTreeNode();
         node000.setUserObject("node000");
         DefaultMutableTreeNode node001 = new DefaultMutableTreeNode();
@@ -59,12 +58,12 @@ public class TreePathApp extends JFrame {
         node01.setUserObject("node01");
         DefaultMutableTreeNode node0 = new DefaultMutableTreeNode();
         node0.setUserObject("node0");
-        node0.insert(node_1, 0);
+        node0.insert(nodeMinus1, 0);
         node0.insert(node00, 1);
         node0.insert(node01, 2);
         tree = new JTree(node0);
         tree.setEditable(true);
-        list = new JList();
+        list = new JList<>();
         wrongPopup = new JPopupMenu();
         JMenuItem wpb = new JMenuItem(
                 "Huge row ...........................................................................................................................................");
@@ -95,15 +94,11 @@ public class TreePathApp extends JFrame {
         setSize(400, 200);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new TreePathApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new TreePathApp().setVisible(true));
     }
 
-    static class MyModel implements ListModel {
+    static class MyModel implements ListModel<TreePath> {
         private final TreePath[] store;
 
         MyModel(TreePath[] st) {
@@ -118,7 +113,7 @@ public class TreePathApp extends JFrame {
         public void addListDataListener(ListDataListener l) {}
 
         @Override
-        public Object getElementAt(int index) {
+        public TreePath getElementAt(int index) {
             return store[index];
         }
 

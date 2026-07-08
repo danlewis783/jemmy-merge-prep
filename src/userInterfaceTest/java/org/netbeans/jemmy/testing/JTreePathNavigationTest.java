@@ -48,7 +48,7 @@ class JTreePathNavigationTest {
 
     @Test
     void test() {
-        TreePathApp.main(new String[] {});
+        TreePathApp.main();
         JFrame frm = JFrameOperator.waitJFrame("TreePathApp");
         JTreeOperator to = new JTreeOperator(
                 Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1)));
@@ -428,7 +428,7 @@ class JTreePathNavigationTest {
 
         @Override
         public @Nullable Boolean apply(TreePath[] treePath) {
-            ListModel model = lo.getModel();
+            ListModel<?> model = lo.getModel();
             if (model.getSize() != treePath.length) {
                 return null;
             }

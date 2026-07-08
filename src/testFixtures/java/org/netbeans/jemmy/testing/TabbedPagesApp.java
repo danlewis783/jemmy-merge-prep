@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -37,19 +36,15 @@ public class TabbedPagesApp extends JFrame {
         pane2.setLayout(new FlowLayout());
         pane2.add(new JButton("button2"));
         tp.add("Page2", pane2);
-        JPanel list_pane = new JPanel();
+        JPanel listPane = new JPanel();
         String[] listItems = {"one", "two", "three"};
-        list_pane.add(new JList(listItems));
-        tp.add("List Page", list_pane);
+        listPane.add(new JList<>(listItems));
+        tp.add("List Page", listPane);
         getContentPane().add(tp);
         setSize(400, 400);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new TabbedPagesApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new TabbedPagesApp().setVisible(true));
     }
 }

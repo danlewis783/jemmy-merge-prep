@@ -504,9 +504,9 @@ public class JTableOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getColumn(object)));
     }
 
-    public Class getColumnClass(int i) {
+    public Class<?> getColumnClass(int i) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of((Callable<Class>) () -> ((JTable) getSource()).getColumnClass(i)));
+                .invokeSmoothly(Caller.of((Callable<Class<?>>) () -> ((JTable) getSource()).getColumnClass(i)));
     }
 
     public int getColumnCount() {
@@ -526,11 +526,11 @@ public class JTableOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getColumnSelectionAllowed()));
     }
 
-    public TableCellEditor getDefaultEditor(Class clss) {
+    public TableCellEditor getDefaultEditor(Class<?> clss) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getDefaultEditor(clss)));
     }
 
-    public TableCellRenderer getDefaultRenderer(Class clss) {
+    public TableCellRenderer getDefaultRenderer(Class<?> clss) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getDefaultRenderer(clss)));
     }
 
@@ -793,7 +793,7 @@ public class JTableOperator extends JComponentOperator {
         }));
     }
 
-    public void setDefaultEditor(Class clss, TableCellEditor tableCellEditor) {
+    public void setDefaultEditor(Class<?> clss, TableCellEditor tableCellEditor) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTable) getSource()).setDefaultEditor(clss, tableCellEditor);
 
@@ -801,7 +801,7 @@ public class JTableOperator extends JComponentOperator {
         }));
     }
 
-    public void setDefaultRenderer(Class clss, @Nullable TableCellRenderer tableCellRenderer) {
+    public void setDefaultRenderer(Class<?> clss, @Nullable TableCellRenderer tableCellRenderer) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTable) getSource()).setDefaultRenderer(clss, tableCellRenderer);
 

@@ -44,7 +44,7 @@ class WindowManagerJobsTest {
     void doit() {
         ComponentOperator.setDefaultComponentVisualizer(new MouseVisualizer(.5, 5));
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20000L)) {
-            WindowSeriesApp.main(new String[] {});
+            WindowSeriesApp.main();
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
             assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring()))

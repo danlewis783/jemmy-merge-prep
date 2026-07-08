@@ -68,7 +68,7 @@ public class JComboBoxOperator extends JComponentOperator {
         this(cont, 0);
     }
 
-    public JComboBoxOperator(JComboBox b) {
+    public JComboBoxOperator(JComboBox<?> b) {
         super(b);
         driver = DriverManager.newInstance(JemmyProperties.getInstance()).getListDriver(getClass());
     }
@@ -117,8 +117,9 @@ public class JComboBoxOperator extends JComponentOperator {
         return text;
     }
 
-    public JList waitList() {
-        return (JList) FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
+    public JList<?> waitList() {
+        return (JList<?>)
+                FunctionRepeater.on(new ComboBoxPopupListFunction(this)).runUntilNotNull(null);
     }
 
     public void pushComboButton() {
@@ -127,7 +128,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public int findItemIndex(String item, StringComparator comparator) {
-        ComboBoxModel model = getModel();
+        ComboBoxModel<?> model = getModel();
         for (int i = 0, iMax = model.getSize(); i < iMax; i++) {
             if (comparator.equals(model.getElementAt(i).toString(), item)) {
                 return i;
@@ -265,11 +266,11 @@ public class JComboBoxOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).getMaximumRowCount()));
     }
 
-    public ComboBoxModel getModel() {
+    public ComboBoxModel<?> getModel() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).getModel()));
     }
 
-    public ListCellRenderer getRenderer() {
+    public ListCellRenderer<?> getRenderer() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComboBox) getSource()).getRenderer()));
     }
 
@@ -434,7 +435,7 @@ public class JComboBoxOperator extends JComponentOperator {
         }));
     }
 
-    public void setModel(ComboBoxModel comboBoxModel) {
+    public void setModel(ComboBoxModel<?> comboBoxModel) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JComboBox) getSource()).setModel(comboBoxModel);
 
@@ -450,7 +451,7 @@ public class JComboBoxOperator extends JComponentOperator {
         }));
     }
 
-    public void setRenderer(ListCellRenderer listCellRenderer) {
+    public void setRenderer(ListCellRenderer<?> listCellRenderer) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JComboBox) getSource()).setRenderer(listCellRenderer);
 
@@ -490,38 +491,38 @@ public class JComboBoxOperator extends JComponentOperator {
         }));
     }
 
-    public static @Nullable JComboBox findJComboBox(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JComboBox<?> findJComboBox(Container cont, Predicate<Component> chooser, int index) {
         return (JComboBox) findComponent(cont, PredicatesJ.of(JComboBox.class, chooser), index);
     }
 
-    public static @Nullable JComboBox findJComboBox(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JComboBox<?> findJComboBox(Container cont, Predicate<Component> chooser) {
         return findJComboBox(cont, chooser, 0);
     }
 
-    public static @Nullable JComboBox findJComboBox(
+    public static @Nullable JComboBox<?> findJComboBox(
             Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static @Nullable JComboBox findJComboBox(
+    public static @Nullable JComboBox<?> findJComboBox(
             Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return findJComboBox(cont, text, stringComparator, itemIndex, 0);
     }
 
-    public static JComboBox waitJComboBox(Container cont, Predicate<Component> chooser, int index) {
+    public static JComboBox<?> waitJComboBox(Container cont, Predicate<Component> chooser, int index) {
         return (JComboBox) waitComponent(cont, PredicatesJ.of(JComboBox.class, chooser), index);
     }
 
-    public static JComboBox waitJComboBox(Container cont, Predicate<Component> chooser) {
+    public static JComboBox<?> waitJComboBox(Container cont, Predicate<Component> chooser) {
         return waitJComboBox(cont, chooser, 0);
     }
 
-    public static JComboBox waitJComboBox(
+    public static JComboBox<?> waitJComboBox(
             Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return waitJComboBox(cont, new JComboBoxByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JComboBox waitJComboBox(
+    public static JComboBox<?> waitJComboBox(
             Container cont, String text, StringComparator stringComparator, int itemIndex) {
         return waitJComboBox(cont, text, stringComparator, itemIndex, 0);
     }

@@ -82,21 +82,21 @@ public final class MouseEventDriver extends EventDriver implements MouseDriver {
     @Override
     public void dragNDrop(
             ComponentOperator oper,
-            int start_x,
-            int start_y,
-            int end_x,
-            int end_y,
+            int startX,
+            int startY,
+            int endX,
+            int endY,
             int mouseButton,
             int modifiers,
             TimeoutKey before,
             TimeoutKey after) {
         dispatchEvent(
-                oper.getSource(), MouseEvent.MOUSE_ENTERED, 0, start_x, start_y, 0, Operator.getDefaultMouseButton());
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, start_x, start_y, 1, mouseButton);
+                oper.getSource(), MouseEvent.MOUSE_ENTERED, 0, startX, startY, 0, Operator.getDefaultMouseButton());
+        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, startX, startY, 1, mouseButton);
         Timeouts.sleep(before);
-        dragMouse(oper, end_x, end_y, mouseButton, modifiers);
+        dragMouse(oper, endX, endY, mouseButton, modifiers);
         Timeouts.sleep(after);
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, end_x, end_y, 1, mouseButton);
+        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, endX, endY, 1, mouseButton);
         exitMouse(oper);
     }
 

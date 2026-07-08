@@ -49,7 +49,7 @@ final class RobotVsQueueDispatchTest {
     @BeforeEach
     void beforeEach() {
         Timeouts.resetToDefaults();
-        TypingFeedbackApp.main(new String[] {});
+        TypingFeedbackApp.main();
     }
 
     @AfterEach
@@ -204,7 +204,7 @@ final class RobotVsQueueDispatchTest {
 
         private String getKeyName(int keyCode) {
             try {
-                Class eventClass = Class.forName("java.awt.event.KeyEvent");
+                Class<?> eventClass = Class.forName("java.awt.event.KeyEvent");
                 Field[] fields = eventClass.getFields();
                 for (Field field : fields) {
                     if ((field.getModifiers() & (Modifier.PUBLIC | Modifier.STATIC)) != 0

@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import javax.swing.JButton;
@@ -77,11 +76,7 @@ public class GrowingTreeApp extends JFrame {
         setSize(300, 300);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new GrowingTreeApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new GrowingTreeApp().setVisible(true));
     }
 }

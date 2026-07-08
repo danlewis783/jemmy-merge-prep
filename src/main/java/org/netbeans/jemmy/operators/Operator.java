@@ -268,8 +268,8 @@ public abstract class Operator {
 
     public static @Nullable ComponentOperator createOperator(Component comp) {
         try {
-            Class clazz = Class.forName("java.awt.Component");
-            Class compClass = comp.getClass();
+            Class<?> clazz = Class.forName("java.awt.Component");
+            Class<?> compClass = comp.getClass();
             ComponentOperator result;
             do {
                 if ((result = createOperator(comp, compClass)) != null) {
@@ -294,16 +294,16 @@ public abstract class Operator {
         operatorPkgs.add(pkgName);
     }
 
-    private static @Nullable ComponentOperator createOperator(Component comp, Class compClass) {
+    private static @Nullable ComponentOperator createOperator(Component comp, Class<?> compClass) {
         List<String> splitClassName = Arrays.asList(compClass.getName().split("\\."));
         String className = splitClassName.get(splitClassName.size() - 1);
         Object[] params = {comp};
-        Class[] paramClasses = {compClass};
+        Class<?>[] paramClasses = {compClass};
         for (String operatorPkg : operatorPkgs) {
             String fullyQualifiedClassName = operatorPkg + "." + className + "Operator";
-            ClassReference classReference;
+            ClassReference<?> classReference;
             try {
-                classReference = new ClassReference(fullyQualifiedClassName);
+                classReference = new ClassReference<>(fullyQualifiedClassName);
             } catch (ClassNotFoundException e) {
                 logger.warn("", e);
 

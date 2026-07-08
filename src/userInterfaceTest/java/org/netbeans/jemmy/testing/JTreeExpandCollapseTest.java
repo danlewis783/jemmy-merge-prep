@@ -42,7 +42,7 @@ class JTreeExpandCollapseTest {
 
     @Test
     void test() {
-        TreeExpandApp.main(new String[] {});
+        TreeExpandApp.main();
         QueueTool.getInstance().waitEmpty(100);
         JFrame frm = JFrameOperator.waitJFrame("TreeExpandApp");
         tree = Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1));

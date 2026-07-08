@@ -61,7 +61,7 @@ class FileChooserDialogWorkflowTest {
     void beforeEach() {
         Timeouts.resetToDefaults();
         override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L);
-        FileChooserLaunchApp.main(new String[] {});
+        FileChooserLaunchApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("FileChooserLaunchApp");
         frameOp = new JFrameOperator(jFrame);
         launchFileChooserButtonOp =

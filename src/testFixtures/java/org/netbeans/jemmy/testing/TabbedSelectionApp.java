@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
@@ -120,7 +119,7 @@ public class TabbedSelectionApp extends JFrame {
             listItems[i] = Integer.toString(i);
         }
 
-        JList list = new JList(listItems);
+        JList<String> list = new JList<>(listItems);
         list.setCellRenderer((list1, value, index, isSelected, cellHasFocus) -> {
             JPanel res = new JPanel();
             if (isSelected) {
@@ -138,26 +137,22 @@ public class TabbedSelectionApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new TabbedSelectionApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new TabbedSelectionApp().setVisible(true));
     }
 
     private static class TableDualComboEditor implements TableCellEditor {
-        private final JComboBox fCombo;
+        private final JComboBox<String> fCombo;
         private final List<CellEditorListener> listeners;
         private final JPanel res;
         private int row, column;
-        private final JComboBox sCombo;
+        private final JComboBox<String> sCombo;
         private @Nullable JTable tbl;
 
         TableDualComboEditor(String[] tableColumns) {
             res = new JPanel();
-            fCombo = new JComboBox(tableColumns);
-            sCombo = new JComboBox(tableColumns);
+            fCombo = new JComboBox<>(tableColumns);
+            sCombo = new JComboBox<>(tableColumns);
             res.add(fCombo);
             res.add(sCombo);
             listeners = new ArrayList<>();
@@ -222,27 +217,27 @@ public class TabbedSelectionApp extends JFrame {
     }
 
     private static class TreeDualComboEditor implements TreeCellEditor {
-        final JComboBox fCombo;
-        final Vector lists;
+        final JComboBox<String> fCombo;
+        final Vector<CellEditorListener> lists;
 
         @Nullable
         TreePath path;
 
         final JPanel res;
-        final JComboBox sCombo;
+        final JComboBox<String> sCombo;
 
         @Nullable
         JTree tree;
 
         TreeDualComboEditor(String[] tableColumns) {
             res = new JPanel();
-            fCombo = new JComboBox(tableColumns);
+            fCombo = new JComboBox<>(tableColumns);
             fCombo.setPopupVisible(false);
-            sCombo = new JComboBox(tableColumns);
+            sCombo = new JComboBox<>(tableColumns);
             sCombo.setPopupVisible(false);
             res.add(fCombo);
             res.add(sCombo);
-            lists = new Vector();
+            lists = new Vector<>();
         }
 
         @Override
@@ -268,8 +263,8 @@ public class TabbedSelectionApp extends JFrame {
             ((DefaultMutableTreeNode) Objects.requireNonNull(path).getLastPathComponent())
                     .setUserObject(getCellEditorValue());
 
-            for (Object list : lists) {
-                ((CellEditorListener) list).editingCanceled(new ChangeEvent(tree));
+            for (CellEditorListener list : lists) {
+                list.editingCanceled(new ChangeEvent(tree));
             }
         }
 
@@ -298,8 +293,8 @@ public class TabbedSelectionApp extends JFrame {
             ((DefaultMutableTreeNode) Objects.requireNonNull(path).getLastPathComponent())
                     .setUserObject(getCellEditorValue());
 
-            for (Object list : lists) {
-                ((CellEditorListener) list).editingStopped(new ChangeEvent(tree));
+            for (CellEditorListener list : lists) {
+                list.editingStopped(new ChangeEvent(tree));
             }
 
             return true;

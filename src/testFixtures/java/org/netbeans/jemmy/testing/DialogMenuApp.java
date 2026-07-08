@@ -71,7 +71,7 @@ final class DialogMenuApp extends JDialog {
         setModal(true);
     }
 
-    public static void main(String[] argv) {
+    public static void main(String... args) {
         EventQueue.invokeLater(() -> new DialogMenuApp().setVisible(true));
     }
 }

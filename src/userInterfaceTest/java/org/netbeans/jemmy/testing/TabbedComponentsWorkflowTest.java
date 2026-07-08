@@ -70,7 +70,7 @@ final class TabbedComponentsWorkflowTest {
     @Test
     void test() {
         assertTimeoutPreemptively(Duration.ofSeconds(30), () -> {
-            TabbedComponentsApp.main(new String[] {});
+            TabbedComponentsApp.main();
             ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
             JFrame jFrame = JFrameOperator.waitJFrame("TabbedComponentsApp");
             JFrameOperator jFrameOp = new JFrameOperator(jFrame);
@@ -114,8 +114,8 @@ final class TabbedComponentsWorkflowTest {
             TreePath path4949 = Objects.requireNonNull(jTreeOp.findPath("49/4949", "/", STRICT));
             jTreeOp.waitRow("4949", StringComparators.regex(), 100);
             jTreeOp.changePathObject(path4949, "-1-1");
-            TreePath path_1_1 = Objects.requireNonNull(jTreeOp.findPath("49/-1-1", "/", STRICT));
-            jTreeOp.scrollToPath(path_1_1);
+            TreePath pathMinus1Minus1 = Objects.requireNonNull(jTreeOp.findPath("49/-1-1", "/", STRICT));
+            jTreeOp.scrollToPath(pathMinus1Minus1);
             TreePath path0 = Objects.requireNonNull(jTreeOp.findPath("", "/", STRICT));
             jTreeOp.scrollToPath(path0);
             jTabbedPaneOp.selectPage("List Page", STRICT);

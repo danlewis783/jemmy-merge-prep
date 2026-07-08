@@ -58,12 +58,12 @@ import org.netbeans.jemmy.util.StringComparators;
 @SuppressWarnings("NullAway.Init")
 class DialogComboListWorkflowTest {
 
-    private DialogComboListApp application_001;
+    private DialogComboListApp application001;
 
     @Test
     void test() throws Exception {
-        EventQueue.invokeAndWait(() -> application_001 = new DialogComboListApp());
-        EventQueue.invokeLater(() -> application_001.setVisible(true));
+        EventQueue.invokeAndWait(() -> application001 = new DialogComboListApp());
+        EventQueue.invokeLater(() -> application001.setVisible(true));
         EventQueue.invokeAndWait(() -> {});
         System.setProperty("jemmy.dump.a11y", "on");
         JDialog jDialog = JDialogOperator.waitJDialog("DialogComboListApp", StringComparators.strict());
@@ -341,7 +341,7 @@ class DialogComboListWorkflowTest {
     }
 
     private void testJComboBox(JComboBoxOperator op) {
-        JComboBox src = (JComboBox) op.getSource();
+        JComboBox<?> src = (JComboBox<?>) op.getSource();
         assertThat(((src.getActionCommand() == null) && (op.getActionCommand() == null))
                         || src.getActionCommand().equals(op.getActionCommand()))
                 .isTrue();

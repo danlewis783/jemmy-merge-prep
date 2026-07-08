@@ -38,7 +38,7 @@ class ScrollToComponentTest {
 
     @Test
     void test() {
-        ButtonGridScrollApp.main(new String[] {});
+        ButtonGridScrollApp.main();
         ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         JFrame jFrame = JFrameOperator.waitJFrame("ButtonGridScrollApp");
         JButton butt00 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "00", StringComparators.strict()));

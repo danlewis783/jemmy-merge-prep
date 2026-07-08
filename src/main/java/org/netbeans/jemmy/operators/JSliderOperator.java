@@ -121,11 +121,11 @@ public class JSliderOperator extends JComponentOperator {
         }));
     }
 
-    public Hashtable createStandardLabels(int i) {
+    public Hashtable<?, ?> createStandardLabels(int i) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i)));
     }
 
-    public Hashtable createStandardLabels(int i, int i1) {
+    public Hashtable<?, ?> createStandardLabels(int i, int i1) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i, i1)));
     }
@@ -138,7 +138,7 @@ public class JSliderOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getInverted()));
     }
 
-    public Dictionary getLabelTable() {
+    public Dictionary<?, ?> getLabelTable() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getLabelTable()));
     }
 
@@ -218,7 +218,7 @@ public class JSliderOperator extends JComponentOperator {
         }));
     }
 
-    public void setLabelTable(Dictionary dictionary) {
+    public void setLabelTable(Dictionary<?, ?> dictionary) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setLabelTable(dictionary);
 

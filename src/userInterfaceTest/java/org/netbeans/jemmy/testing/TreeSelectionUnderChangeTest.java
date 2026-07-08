@@ -29,7 +29,7 @@ class TreeSelectionUnderChangeTest {
 
     @Test
     void selectPath() throws Exception {
-        GrowingTreeApp.main(new String[] {});
+        GrowingTreeApp.main();
         JFrameOperator frameOp = new JFrameOperator("GrowingTreeApp");
         frameOp.maximize();
         long time = Long.parseLong(new JLabelOperator(frameOp).getText());

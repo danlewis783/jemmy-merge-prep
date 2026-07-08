@@ -66,7 +66,7 @@ public class JListOperator extends JComponentOperator {
         this(cont, 0);
     }
 
-    public JListOperator(JList b) {
+    public JListOperator(JList<?> b) {
         super(b);
         driver = DriverManager.newInstance(JemmyProperties.getInstance()).getMultiSelListDriver(getClass());
     }
@@ -103,9 +103,14 @@ public class JListOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(int itemIndex, boolean isSelected, boolean cellHasFocus) {
-        return getCellRenderer()
+        return getRenderedComponent((JList<?>) getSource(), itemIndex, isSelected, cellHasFocus);
+    }
+
+    private static <E> Component getRenderedComponent(
+            JList<E> list, int itemIndex, boolean isSelected, boolean cellHasFocus) {
+        return list.getCellRenderer()
                 .getListCellRendererComponent(
-                        (JList) getSource(), getModel().getElementAt(itemIndex), itemIndex, isSelected, cellHasFocus);
+                        list, list.getModel().getElementAt(itemIndex), itemIndex, isSelected, cellHasFocus);
     }
 
     public Component getRenderedComponent(int itemIndex) {
@@ -113,7 +118,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public int findItemIndex(ListItemChooser chooser, int index) {
-        ListModel model = getModel();
+        ListModel<?> model = getModel();
         int count = 0;
         if (model == null) {
             throw new NullPointerException("model null");
@@ -161,7 +166,7 @@ public class JListOperator extends JComponentOperator {
             logger.warn("", e);
         }
 
-        JList source = (JList) getSource();
+        JList<?> source = (JList<?>) getSource();
         if (source.getModel().getSize() <= itemIndex) {
             logger.warn("JList \"{}\" does not contain {}'th item", getSourceToString(), itemIndex);
 
@@ -275,7 +280,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void waitItem(String item, StringComparator stringComparator, int itemIndex) {
-        waitState(new JListOperatorByItemPredicate(item, itemIndex, stringComparator));
+        waitState(new JListOperatorByItemPredicate<>(item, itemIndex, stringComparator));
     }
 
     public void addListSelectionListener(ListSelectionListener listSelectionListener) {
@@ -318,7 +323,7 @@ public class JListOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getCellBounds(i, i1)));
     }
 
-    public ListCellRenderer getCellRenderer() {
+    public ListCellRenderer<?> getCellRenderer() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getCellRenderer()));
     }
 
@@ -350,7 +355,7 @@ public class JListOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getMinSelectionIndex()));
     }
 
-    public ListModel getModel() {
+    public ListModel<?> getModel() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JList) getSource()).getModel()));
     }
 
@@ -459,7 +464,7 @@ public class JListOperator extends JComponentOperator {
         }));
     }
 
-    public void setCellRenderer(ListCellRenderer listCellRenderer) {
+    public void setCellRenderer(ListCellRenderer<?> listCellRenderer) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JList) getSource()).setCellRenderer(listCellRenderer);
 
@@ -483,7 +488,7 @@ public class JListOperator extends JComponentOperator {
         }));
     }
 
-    public void setListData(Vector vector) {
+    public void setListData(Vector<?> vector) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JList) getSource()).setListData(vector);
 
@@ -499,7 +504,7 @@ public class JListOperator extends JComponentOperator {
         }));
     }
 
-    public void setModel(ListModel listModel) {
+    public void setModel(ListModel<?> listModel) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JList) getSource()).setModel(listModel);
 
@@ -615,38 +620,38 @@ public class JListOperator extends JComponentOperator {
         }
     }
 
-    public static @Nullable JList findJList(Container cont, Predicate<Component> chooser, int index) {
+    public static @Nullable JList<?> findJList(Container cont, Predicate<Component> chooser, int index) {
         return (JList) findComponent(cont, PredicatesJ.of(JList.class, chooser), index);
     }
 
-    public static @Nullable JList findJList(Container cont, Predicate<Component> chooser) {
+    public static @Nullable JList<?> findJList(Container cont, Predicate<Component> chooser) {
         return findJList(cont, chooser, 0);
     }
 
-    public static @Nullable JList findJList(
+    public static @Nullable JList<?> findJList(
             Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static @Nullable JList findJList(
+    public static @Nullable JList<?> findJList(
             Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex) {
         return findJList(cont, text, stringComparator, itemIndex, 0);
     }
 
-    public static JList waitJList(Container cont, Predicate<Component> chooser, int index) {
+    public static JList<?> waitJList(Container cont, Predicate<Component> chooser, int index) {
         return (JList) waitComponent(cont, PredicatesJ.of(JList.class, chooser), index);
     }
 
-    public static JList waitJList(Container cont, Predicate<Component> chooser) {
+    public static JList<?> waitJList(Container cont, Predicate<Component> chooser) {
         return waitJList(cont, chooser, 0);
     }
 
-    public static JList waitJList(
+    public static JList<?> waitJList(
             Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return waitJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JList waitJList(
+    public static JList<?> waitJList(
             Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex) {
         return waitJList(cont, text, stringComparator, itemIndex, 0);
     }

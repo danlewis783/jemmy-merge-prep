@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.beans.PropertyVetoException;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -76,11 +75,7 @@ public class InternalFramesApp extends JFrame {
         }
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new InternalFramesApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new InternalFramesApp().setVisible(true));
     }
 }

@@ -166,7 +166,7 @@ class JFrameOperatorTest {
     // formerly scenario test jemmy_009
     @Test
     void waitJFrameByIndexAndRetitle() throws InterruptedException, InvocationTargetException {
-        IndexedFramesApp.main(new String[] {});
+        IndexedFramesApp.main();
         QueueTool.getInstance().waitEmpty();
         try {
             JFrame frm0 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring());
@@ -186,7 +186,7 @@ class JFrameOperatorTest {
     // formerly scenario test jemmy_038
     @Test
     void frameLifecycleSequence() throws InterruptedException, InvocationTargetException {
-        MenuNavigationApp.main(new String[] {});
+        MenuNavigationApp.main();
         try {
             JFrame win = JFrameOperator.waitJFrame("MenuNavigationApp");
             JFrameOperator fo = new JFrameOperator(win);

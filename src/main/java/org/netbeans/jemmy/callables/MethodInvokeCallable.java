@@ -25,18 +25,18 @@ import org.netbeans.jemmy.ComponentIsNotFocusedException;
 import org.netbeans.jemmy.ComponentIsNotVisibleException;
 
 public final class MethodInvokeCallable implements Callable<Object> {
-    private final ClassReference classReference;
+    private final ClassReference<?> classReference;
     private final Component component;
     private final String methodName;
-    private final @Nullable Class[] paramClasses;
+    private final @Nullable Class<?>[] paramClasses;
     private final @Nullable Object[] params;
 
     public MethodInvokeCallable(
             String methodName,
             @Nullable Object[] params,
-            @Nullable Class[] paramClasses,
+            @Nullable Class<?>[] paramClasses,
             Component component,
-            ClassReference classReference) {
+            ClassReference<?> classReference) {
         this.methodName = methodName;
         this.params = params;
         this.paramClasses = paramClasses;

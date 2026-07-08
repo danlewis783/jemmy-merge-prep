@@ -29,7 +29,7 @@ class TabbedScrollbarScrollingTest {
 
     @Test
     void test() {
-        TabbedScrollbarsApp.main(new String[] {});
+        TabbedScrollbarsApp.main();
         JFrame win = JFrameOperator.waitJFrame("TabbedScrollbarsApp");
         JFrameOperator fro = new JFrameOperator(win);
         JTabbedPaneOperator tb = new JTabbedPaneOperator(fro);

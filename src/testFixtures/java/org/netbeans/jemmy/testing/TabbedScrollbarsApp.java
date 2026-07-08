@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Scrollbar;
 import java.awt.Toolkit;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -53,11 +52,7 @@ public class TabbedScrollbarsApp extends JFrame {
         setSize(size);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new TabbedScrollbarsApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new TabbedScrollbarsApp().setVisible(true));
     }
 }

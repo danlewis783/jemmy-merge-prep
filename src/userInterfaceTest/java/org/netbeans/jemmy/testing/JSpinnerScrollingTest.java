@@ -38,7 +38,7 @@ class JSpinnerScrollingTest {
     @Test
     void doit() {
         assertTimeout(Duration.ofSeconds(10L), () -> {
-            SpinnersApp.main(new String[] {});
+            SpinnersApp.main();
             JFrameOperator jFrameOp = new JFrameOperator("SpinnersApp");
             JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
             jSpinnerOp.scrollToObject(50, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);

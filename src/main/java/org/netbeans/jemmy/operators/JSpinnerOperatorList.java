@@ -35,7 +35,7 @@ public class JSpinnerOperatorList extends JSpinnerOperator {
     }
 
     public int findItem(String pattern, StringComparator comparator) {
-        List list = getListModel().getList();
+        List<?> list = getListModel().getList();
         for (int i = 0, iMax = list.size(); i < iMax; i++) {
             if (comparator.equals(list.get(i).toString(), pattern)) {
                 return i;

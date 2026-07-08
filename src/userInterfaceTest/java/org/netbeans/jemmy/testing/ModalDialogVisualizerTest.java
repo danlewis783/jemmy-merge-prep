@@ -42,7 +42,7 @@ class ModalDialogVisualizerTest {
     @Test
     void doit() {
         ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).checkForModal(true);
-        ModalDialogsApp.main(new String[] {});
+        ModalDialogsApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("Right one");
         JFrameOperator jFrameOperator = new JFrameOperator(jFrame);
         assertThat(JDialogOperator.getTopModalDialog()).isNull();

@@ -23,7 +23,6 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.ScrollPane;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 public class AwtButtonGridScrollApp extends JFrame {
@@ -46,11 +45,7 @@ public class AwtButtonGridScrollApp extends JFrame {
         setSize(150, 150);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new AwtButtonGridScrollApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new AwtButtonGridScrollApp().setVisible(true));
     }
 }

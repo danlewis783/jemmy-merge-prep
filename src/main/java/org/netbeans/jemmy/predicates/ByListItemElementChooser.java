@@ -31,7 +31,7 @@ public final class ByListItemElementChooser implements JListOperator.ListItemCho
 
     @Override
     public boolean checkItem(JListOperator jListOperator, int index) {
-        ListModel model = jListOperator.getModel();
+        ListModel<?> model = jListOperator.getModel();
         Object elementAt = model.getElementAt(index);
 
         return comparator.equals(elementAt.toString(), expectedElementToString);

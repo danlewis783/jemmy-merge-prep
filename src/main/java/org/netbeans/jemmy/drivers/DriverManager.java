@@ -43,7 +43,7 @@ public final class DriverManager {
         this.jemmyProperties = jemmyProperties;
     }
 
-    private DriverMarker getDriver(DriverType driverType, Class clazz) {
+    private DriverMarker getDriver(DriverType driverType, Class<?> clazz) {
         DriverMarker ret = doGetDriver(driverType, clazz);
         if (ret == null) {
             throw new JemmyException(
@@ -69,15 +69,15 @@ public final class DriverManager {
         }
     }
 
-    public TreeDriver getTreeDriver(Class opClass) {
+    public TreeDriver getTreeDriver(Class<?> opClass) {
         return (TreeDriver) getDriver(DriverType.Tree, opClass);
     }
 
-    public TextDriver getTextDriver(Class opClass) {
+    public TextDriver getTextDriver(Class<?> opClass) {
         return (TextDriver) getDriver(DriverType.Text, opClass);
     }
 
-    public KeyDriver getKeyDriver(Class opClass) {
+    public KeyDriver getKeyDriver(Class<?> opClass) {
         return (KeyDriver) getDriver(DriverType.Key, opClass);
     }
 
@@ -85,7 +85,7 @@ public final class DriverManager {
         return (KeyDriver) getDriver(DriverType.Key, operator.getClass());
     }
 
-    public MouseDriver getMouseDriver(Class opClass) {
+    public MouseDriver getMouseDriver(Class<?> opClass) {
         return (MouseDriver) getDriver(DriverType.Mouse, opClass);
     }
 
@@ -93,11 +93,11 @@ public final class DriverManager {
         return (MouseDriver) getDriver(DriverType.Mouse, operator.getClass());
     }
 
-    public ScrollDriver getScrollDriver(Class opClass) {
+    public ScrollDriver getScrollDriver(Class<?> opClass) {
         return (ScrollDriver) getDriver(DriverType.Scroll, opClass);
     }
 
-    public ButtonDriver getButtonDriver(Class opClass) {
+    public ButtonDriver getButtonDriver(Class<?> opClass) {
         return (ButtonDriver) getDriver(DriverType.Button, opClass);
     }
 
@@ -105,7 +105,7 @@ public final class DriverManager {
         return (ButtonDriver) getDriver(DriverType.Button, operator.getClass());
     }
 
-    public ListDriver getListDriver(Class opClass) {
+    public ListDriver getListDriver(Class<?> opClass) {
         return (ListDriver) getDriver(DriverType.List, opClass);
     }
 
@@ -113,31 +113,31 @@ public final class DriverManager {
         return (ListDriver) getDriver(DriverType.List, operator.getClass());
     }
 
-    public MultiSelListDriver getMultiSelListDriver(Class opClass) {
+    public MultiSelListDriver getMultiSelListDriver(Class<?> opClass) {
         return (MultiSelListDriver) getDriver(DriverType.MultiSelList, opClass);
     }
 
-    public OrderedListDriver getOrderedListDriver(Class opClass) {
+    public OrderedListDriver getOrderedListDriver(Class<?> opClass) {
         return (OrderedListDriver) getDriver(DriverType.OrderedList, opClass);
     }
 
-    public TableDriver getTableDriver(Class opClass) {
+    public TableDriver getTableDriver(Class<?> opClass) {
         return (TableDriver) getDriver(DriverType.Table, opClass);
     }
 
-    public WindowDriver getWindowDriver(Class opClass) {
+    public WindowDriver getWindowDriver(Class<?> opClass) {
         return (WindowDriver) getDriver(DriverType.Window, opClass);
     }
 
-    public FrameDriver getFrameDriver(Class opClass) {
+    public FrameDriver getFrameDriver(Class<?> opClass) {
         return (FrameDriver) getDriver(DriverType.Frame, opClass);
     }
 
-    public InternalFrameDriver getInternalFrameDriver(Class opClass) {
+    public InternalFrameDriver getInternalFrameDriver(Class<?> opClass) {
         return (InternalFrameDriver) getDriver(DriverType.InternalFrame, opClass);
     }
 
-    public FocusDriver getFocusDriver(Class opClass) {
+    public FocusDriver getFocusDriver(Class<?> opClass) {
         return (FocusDriver) getDriver(DriverType.Focus, opClass);
     }
 
@@ -145,7 +145,7 @@ public final class DriverManager {
         return (FocusDriver) getDriver(DriverType.Focus, operator.getClass());
     }
 
-    public MenuDriver getMenuDriver(Class opClass) {
+    public MenuDriver getMenuDriver(Class<?> opClass) {
         return (MenuDriver) getDriver(DriverType.Menu, opClass);
     }
 
@@ -153,9 +153,9 @@ public final class DriverManager {
         return (MenuDriver) getDriver(DriverType.Menu, operator.getClass());
     }
 
-    private @Nullable DriverMarker doGetDriver(DriverType driverType, Class opClass) {
+    private @Nullable DriverMarker doGetDriver(DriverType driverType, Class<?> opClass) {
         Map<Class<?>, DriverMarker> registry = jemmyProperties.getDriverRegistry(driverType);
-        Class clazz = opClass;
+        Class<?> clazz = opClass;
         do {
             DriverMarker ret = registry.get(clazz);
 

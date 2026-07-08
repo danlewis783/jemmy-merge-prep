@@ -54,7 +54,7 @@ public final class EventDispatcher {
         if (robotReference != null) {
             try {
                 Object[] params = {(int) Timeouts.get(TimeoutKey.EventDispatcher_RobotAutoDelay)};
-                Class[] paramClasses = {Integer.TYPE};
+                Class<?>[] paramClasses = {Integer.TYPE};
                 robotReference.invokeMethod("setAutoDelay", params, paramClasses);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 logger.warn("", e);
@@ -71,7 +71,7 @@ public final class EventDispatcher {
 
             try {
                 Object[] params = {this.model.contains(DispatchingModel.Queue) ? Boolean.TRUE : Boolean.FALSE};
-                Class[] paramClasses = {Boolean.TYPE};
+                Class<?>[] paramClasses = {Boolean.TYPE};
                 robot.invokeMethod("setAutoWaitForIdle", params, paramClasses);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 logger.warn("problem invoking setAutoWaitForIdle", e);
@@ -82,21 +82,22 @@ public final class EventDispatcher {
 
     public void robotPressKey(int keyCode, int modifiers) {
         robotPressModifiers(modifiers);
-        makeRobotOperation("keyPress", new Object[] {keyCode}, new Class[] {Integer.TYPE});
+        makeRobotOperation("keyPress", new Object[] {keyCode}, new Class<?>[] {Integer.TYPE});
     }
 
     public void robotReleaseKey(int keyCode, int modifiers) {
-        makeRobotOperation("keyRelease", new Object[] {keyCode}, new Class[] {Integer.TYPE});
+        makeRobotOperation("keyRelease", new Object[] {keyCode}, new Class<?>[] {Integer.TYPE});
         robotReleaseModifiers(modifiers);
     }
 
-    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class[] paramClasses) {
+    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class<?>[] paramClasses) {
         return QueueTool.getInstance()
                 .invokeSmoothly(
                         Caller.of(new MethodInvokeCallable(methodName, params, paramClasses, component, reference)));
     }
 
-    public Object invokeExistingMethod(String methodName, @Nullable Object[] params, @Nullable Class[] paramClasses) {
+    public Object invokeExistingMethod(
+            String methodName, @Nullable Object[] params, @Nullable Class<?>[] paramClasses) {
         return invokeMethod(methodName, params, paramClasses);
     }
 
@@ -130,7 +131,7 @@ public final class EventDispatcher {
         }
     }
 
-    private void makeRobotOperation(String methodName, Object[] params, Class[] paramClasses) {
+    private void makeRobotOperation(String methodName, Object[] params, Class<?>[] paramClasses) {
         try {
             Objects.requireNonNull(robotReference, "robot not created").invokeMethod(methodName, params, paramClasses);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

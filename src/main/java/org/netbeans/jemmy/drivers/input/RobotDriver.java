@@ -125,18 +125,18 @@ public class RobotDriver extends LightSupportiveDriver {
     }
 
     public void dragNDrop(
-            int start_x,
-            int start_y,
-            int end_x,
-            int end_y,
+            int startX,
+            int startY,
+            int endX,
+            int endY,
             int mouseButton,
             int modifiers,
             TimeoutKey before,
             TimeoutKey after) {
-        moveMouse(start_x, start_y);
+        moveMouse(startX, startY);
         pressMouse(mouseButton, modifiers);
         Timeouts.sleep(before);
-        moveMouse(end_x, end_y);
+        moveMouse(endX, endY);
         Timeouts.sleep(after);
         releaseMouse(mouseButton, modifiers);
     }

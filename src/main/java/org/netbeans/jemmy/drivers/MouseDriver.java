@@ -48,10 +48,10 @@ public interface MouseDriver {
 
     void dragNDrop(
             ComponentOperator oper,
-            int start_x,
-            int start_y,
-            int end_x,
-            int end_y,
+            int startX,
+            int startY,
+            int endX,
+            int endY,
             int mouseButton,
             int modifiers,
             TimeoutKey before,

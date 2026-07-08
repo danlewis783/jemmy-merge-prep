@@ -80,7 +80,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void waitTitle(String title, StringComparator stringComparator) {
-        waitState(new FrameOperatorShowingByTitlePredicate(title, stringComparator));
+        waitState(new FrameOperatorShowingByTitlePredicate<>(title, stringComparator));
     }
 
     public void iconify() {

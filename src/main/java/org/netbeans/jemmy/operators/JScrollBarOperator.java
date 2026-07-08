@@ -81,7 +81,7 @@ public class JScrollBarOperator extends JComponentOperator {
         scrollToValue(getValue() + (increase ? 1 : -1));
     }
 
-    public void scrollTo(Function w, @Nullable Object waiterParam, boolean increase) {
+    public void scrollTo(Function<Object, ?> w, @Nullable Object waiterParam, boolean increase) {
         scrollTo(new WaitableChecker(w, waiterParam, increase, this));
     }
 
@@ -414,12 +414,12 @@ public class JScrollBarOperator extends JComponentOperator {
 
     private class WaitableChecker implements ScrollAdjuster {
         boolean reached = false;
-        final Function function;
+        final Function<Object, ?> function;
         final boolean increase;
         final @Nullable Object waitParam;
 
         public WaitableChecker(
-                Function function, @Nullable Object waitParam, boolean increase, JScrollBarOperator oper) {
+                Function<Object, ?> function, @Nullable Object waitParam, boolean increase, JScrollBarOperator oper) {
             this.function = function;
             this.waitParam = waitParam;
             this.increase = increase;

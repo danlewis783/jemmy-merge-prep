@@ -42,7 +42,7 @@ class TabbedListTableTreeTest {
 
     @Test
     void doit() throws Exception {
-        TabbedSelectionApp.main(new String[] {});
+        TabbedSelectionApp.main();
         JFrame frame = JFrameOperator.waitJFrame("TabbedSelectionApp");
         JTabbedPaneOperator tabbedPaneOp = new JTabbedPaneOperator(
                 JTabbedPaneOperator.waitJTabbedPane(frame, "Table Page", StringComparators.strict(), 0));

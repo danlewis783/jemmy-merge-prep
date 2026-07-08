@@ -50,7 +50,7 @@ class MenuNavigationTest {
 
     @Test
     void test() {
-        MenuNavigationApp.main(new String[] {});
+        MenuNavigationApp.main();
         try (TimeoutOverride override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
             JFrameOperator win0 = new JFrameOperator("MenuNavigationApp");
             JTextFieldOperator tf0 = new JTextFieldOperator(win0, "Text", StringComparators.caseInsensitiveSubstring());

@@ -27,15 +27,15 @@ import org.slf4j.LoggerFactory;
 
 public class JListCellIndexIsPaintedFunction implements Function<Integer, Boolean> {
     private static final Logger logger = LoggerFactory.getLogger(JListCellIndexIsPaintedFunction.class);
-    private final Supplier<JList> fileListSupplier;
+    private final Supplier<JList<?>> fileListSupplier;
 
-    public JListCellIndexIsPaintedFunction(Supplier<JList> fileListSupplier) {
+    public JListCellIndexIsPaintedFunction(Supplier<JList<?>> fileListSupplier) {
         this.fileListSupplier = fileListSupplier;
     }
 
     @Override
     public @Nullable Boolean apply(Integer cellIdx) {
-        JList jList = fileListSupplier.get();
+        JList<?> jList = fileListSupplier.get();
         JListOperator jListOperator = new JListOperator(jList);
         int cellIdxLast = jListOperator.getModel().getSize() - 1;
         if (cellIdxLast == -1) {

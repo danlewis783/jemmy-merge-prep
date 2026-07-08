@@ -68,7 +68,7 @@ public class ScrollbarOperator extends ComponentOperator {
         this((Scrollbar) cont.waitSubComponent(PredicatesJ.of(Scrollbar.class, chooser), index));
     }
 
-    public void scrollTo(Function w, @Nullable Object waiterParam, boolean increase) {
+    public void scrollTo(Function<Object, ?> w, @Nullable Object waiterParam, boolean increase) {
         scrollTo(new WaitableChecker(w, waiterParam, increase, this));
     }
 
@@ -280,12 +280,15 @@ public class ScrollbarOperator extends ComponentOperator {
 
     private class WaitableChecker implements ScrollAdjuster {
         boolean reached = false;
-        final Function function;
+        final Function<Object, ?> function;
         final @Nullable Object functionParam;
         final boolean increase;
 
         public WaitableChecker(
-                Function function, @Nullable Object functionParam, boolean increase, ScrollbarOperator oper) {
+                Function<Object, ?> function,
+                @Nullable Object functionParam,
+                boolean increase,
+                ScrollbarOperator oper) {
             this.function = function;
             this.functionParam = functionParam;
             this.increase = increase;

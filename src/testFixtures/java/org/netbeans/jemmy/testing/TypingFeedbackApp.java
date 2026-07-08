@@ -40,7 +40,7 @@ final class TypingFeedbackApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] argv) {
+    public static void main(String... args) {
         EventQueue.invokeLater(() -> new TypingFeedbackApp().setVisible(true));
     }
 }

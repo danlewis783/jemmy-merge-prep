@@ -178,25 +178,25 @@ public class ComponentOperator extends Operator {
         dragMouse(x, y, getDefaultMouseButton());
     }
 
-    public void dragNDrop(int start_x, int start_y, int end_x, int end_y, int mouseButton, int modifiers) {
+    public void dragNDrop(int startX, int startY, int endX, int endY, int mouseButton, int modifiers) {
         mDriver.dragNDrop(
                 this,
-                start_x,
-                start_y,
-                end_x,
-                end_y,
+                startX,
+                startY,
+                endX,
+                endY,
                 mouseButton,
                 modifiers,
                 TimeoutKey.ComponentOperator_BeforeDragTimeout,
                 TimeoutKey.ComponentOperator_AfterDragTimeout);
     }
 
-    public void dragNDrop(int start_x, int start_y, int end_x, int end_y, int mouseButton) {
-        dragNDrop(start_x, start_y, end_x, end_y, mouseButton, 0);
+    public void dragNDrop(int startX, int startY, int endX, int endY, int mouseButton) {
+        dragNDrop(startX, startY, endX, endY, mouseButton, 0);
     }
 
-    public void dragNDrop(int start_x, int start_y, int end_x, int end_y) {
-        dragNDrop(start_x, start_y, end_x, end_y, getDefaultMouseButton(), 0);
+    public void dragNDrop(int startX, int startY, int endX, int endY) {
+        dragNDrop(startX, startY, endX, endY, getDefaultMouseButton(), 0);
     }
 
     public void clickForPopup(int x, int y, int mouseButton) {

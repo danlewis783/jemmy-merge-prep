@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -49,11 +48,7 @@ public class DeepMenuApp extends JFrame {
         setSize(200, 200);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new DeepMenuApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new DeepMenuApp().setVisible(true));
     }
 }

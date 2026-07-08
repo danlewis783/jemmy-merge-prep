@@ -90,7 +90,7 @@ final class TabbedComponentsApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public static void main(String[] argv) {
+    public static void main(String... args) {
         EventQueue.invokeLater(() -> new TabbedComponentsApp().setVisible(true));
     }
 }

@@ -33,7 +33,7 @@ class InternalFrameWorkflowTest {
 
     @Test
     void test() {
-        InternalFramesApp.main(new String[] {});
+        InternalFramesApp.main();
         JFrame frame =
                 Objects.requireNonNull(JFrameOperator.findJFrame("InternalFramesApp", StringComparators.substring()));
         JInternalFrameOperator frame1Op =

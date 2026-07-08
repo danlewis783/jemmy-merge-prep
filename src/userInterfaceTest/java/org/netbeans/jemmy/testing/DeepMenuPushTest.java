@@ -34,7 +34,7 @@ class DeepMenuPushTest {
 
     @Test
     void test() {
-        DeepMenuApp.main(new String[] {});
+        DeepMenuApp.main();
         JFrame win = JFrameOperator.waitJFrame("DeepMenuApp");
         assertThat(new JFrameOperator(win)).isNotNull();
         JMenuBarOperator mbo = new JMenuBarOperator(Objects.requireNonNull(JMenuBarOperator.findJMenuBar(win)));

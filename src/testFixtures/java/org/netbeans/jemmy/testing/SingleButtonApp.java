@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -36,7 +35,7 @@ final class SingleButtonApp extends JFrame {
         getContentPane().add(label);
     }
 
-    public static void main(String[] argv) throws InvocationTargetException, InterruptedException {
-        EventQueue.invokeAndWait(() -> new SingleButtonApp().setVisible(true));
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new SingleButtonApp().setVisible(true));
     }
 }

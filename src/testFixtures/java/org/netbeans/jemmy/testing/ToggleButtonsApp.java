@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -55,11 +54,7 @@ public class ToggleButtonsApp extends JFrame {
         setSize(300, 300);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> new ToggleButtonsApp().setVisible(true));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> new ToggleButtonsApp().setVisible(true));
     }
 }

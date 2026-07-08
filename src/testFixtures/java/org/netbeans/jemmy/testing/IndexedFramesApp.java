@@ -17,7 +17,6 @@
 package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 
 public class IndexedFramesApp extends JFrame {
@@ -34,15 +33,11 @@ public class IndexedFramesApp extends JFrame {
         return index;
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                new IndexedFramesApp(0).setVisible(true);
-                new IndexedFramesApp(1).setVisible(true);
-                new IndexedFramesApp(2).setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> {
+            new IndexedFramesApp(0).setVisible(true);
+            new IndexedFramesApp(1).setVisible(true);
+            new IndexedFramesApp(2).setVisible(true);
+        });
     }
 }

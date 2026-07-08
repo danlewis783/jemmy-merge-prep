@@ -83,11 +83,11 @@ public class JFileChooserOperator extends JComponentOperator {
         innerSearcher = new ComponentSearcher(comp);
     }
 
-    public JComboBox getPathCombo() {
+    public JComboBox<?> getPathCombo() {
         return getCombo(0);
     }
 
-    public JComboBox getFileTypesCombo() {
+    public JComboBox<?> getFileTypesCombo() {
         return getCombo(1);
     }
 
@@ -287,7 +287,7 @@ public class JFileChooserOperator extends JComponentOperator {
         waitPainted(-1);
         Component list = getFileList();
         if (list instanceof JList) {
-            ListModel listModel = ((JList) list).getModel();
+            ListModel<?> listModel = ((JList<?>) list).getModel();
             File[] result = new File[listModel.getSize()];
             for (int i = 0; i < result.length; i++) {
                 result[i] = (File) listModel.getElementAt(i);
@@ -661,7 +661,7 @@ public class JFileChooserOperator extends JComponentOperator {
     private void waitPainted(int index) {
         Component list = getFileList();
         if (list instanceof JList) {
-            FunctionRepeater.on(new JListCellIndexIsPaintedFunction(() -> (JList) getFileList()))
+            FunctionRepeater.on(new JListCellIndexIsPaintedFunction(() -> (JList<?>) getFileList()))
                     .runUntilNotNull(index);
         } else if (list instanceof JTable) {
             FunctionRepeater.on(new JTableCellIndexIsPaintedFunction(() -> (JTable) getFileList()))
@@ -671,7 +671,7 @@ public class JFileChooserOperator extends JComponentOperator {
         }
     }
 
-    private JComboBox getCombo(int index) {
+    private JComboBox<?> getCombo(int index) {
         return (JComboBox) Objects.requireNonNull(
                 innerSearcher.findComponent(PredicatesJ.of(JComboBox.class), index), "combo box not found");
     }
@@ -701,7 +701,7 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     private int findDirIndex(String dir, StringComparator comparator) {
-        ComboBoxModel cbModel = getPathCombo().getModel();
+        ComboBoxModel<?> cbModel = getPathCombo().getModel();
         for (int i = cbModel.getSize() - 1; i >= 0; i--) {
             if (comparator.equals(((File) cbModel.getElementAt(i)).getName(), dir)) {
                 return i;
@@ -712,7 +712,7 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     private int findFileTypeIndex(String fileType, StringComparator comparator) {
-        ComboBoxModel cbModel = getFileTypesCombo().getModel();
+        ComboBoxModel<?> cbModel = getFileTypesCombo().getModel();
         for (int i = 0, iMax = cbModel.getSize(); i < iMax; i++) {
             Object elementAt = cbModel.getElementAt(i);
             if (elementAt instanceof FileFilter

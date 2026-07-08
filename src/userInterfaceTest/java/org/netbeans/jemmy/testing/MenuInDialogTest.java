@@ -40,7 +40,7 @@ class MenuInDialogTest {
     @Test
     void test() {
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
-            DialogMenuApp.main(new String[] {});
+            DialogMenuApp.main();
             JDialogOperator jDialogOp = new JDialogOperator("DialogMenuApp");
             JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jDialogOp);
             checkItems(jMenuBarOp, "", new String[] {"menu0", "menu1"});

@@ -27,13 +27,13 @@ import org.slf4j.LoggerFactory;
 
 public class PropertyPredicate implements Predicate<Component> {
     private static final Logger logger = LoggerFactory.getLogger(PropertyPredicate.class);
-    private final Class[][] classes;
+    private final Class<?>[][] classes;
     private final Object[][] params;
     protected final String[] propNames;
     protected final Object[] results;
 
     public PropertyPredicate(
-            String[] propNames, Object @Nullable [][] params, Class @Nullable [][] classes, Object[] results) {
+            String[] propNames, Object @Nullable [][] params, Class<?> @Nullable [][] classes, Object[] results) {
         this.propNames = propNames;
         this.results = results;
 
@@ -46,10 +46,10 @@ public class PropertyPredicate implements Predicate<Component> {
         if (classes != null) {
             this.classes = classes;
         } else {
-            this.classes = new Class[this.params.length][0];
+            this.classes = new Class<?>[this.params.length][0];
 
             for (int i = 0; i < this.params.length; i++) {
-                Class[] clazz = new Class[this.params[i].length];
+                Class<?>[] clazz = new Class<?>[this.params[i].length];
                 for (int j = 0; j < this.params[i].length; j++) {
                     clazz[j] = this.params[i][j].getClass();
                 }
@@ -63,7 +63,7 @@ public class PropertyPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         String propName;
         Object value;
-        ClassReference classReference = new ClassReference(comp);
+        ClassReference<?> classReference = new ClassReference<>(comp);
         for (int i = 0; i < propNames.length; i++) {
             propName = propNames[i];
 
@@ -94,7 +94,7 @@ public class PropertyPredicate implements Predicate<Component> {
         return value.equals(etalon);
     }
 
-    private boolean isField(Component comp, String propName, Class[] params) throws SecurityException {
+    private boolean isField(Component comp, String propName, Class<?>[] params) throws SecurityException {
         try {
             Class<? extends Component> compClass = comp.getClass();
             compClass.getField(propName);

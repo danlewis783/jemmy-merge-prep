@@ -83,19 +83,19 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
     @Override
     public void dragNDrop(
             ComponentOperator oper,
-            int start_x,
-            int start_y,
-            int end_x,
-            int end_y,
+            int startX,
+            int startY,
+            int endX,
+            int endY,
             int mouseButton,
             int modifiers,
             TimeoutKey before,
             TimeoutKey after) {
         dragNDrop(
-                getAbsoluteX(oper, start_x),
-                getAbsoluteY(oper, start_y),
-                getAbsoluteX(oper, end_x),
-                getAbsoluteY(oper, end_y),
+                getAbsoluteX(oper, startX),
+                getAbsoluteY(oper, startY),
+                getAbsoluteX(oper, endX),
+                getAbsoluteY(oper, endY),
                 mouseButton,
                 modifiers,
                 before,

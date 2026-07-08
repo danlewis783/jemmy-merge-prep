@@ -35,7 +35,7 @@ class AwtScrollPaneScrollingTest {
 
     @Test
     void test() {
-        AwtButtonGridScrollApp.main(new String[] {});
+        AwtButtonGridScrollApp.main();
         ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         JFrame jFrame = JFrameOperator.waitJFrame("AwtButtonGridScrollApp");
         Button butt00 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "00", StringComparators.strict()));

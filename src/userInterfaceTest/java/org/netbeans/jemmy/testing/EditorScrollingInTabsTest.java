@@ -48,7 +48,7 @@ class EditorScrollingInTabsTest {
 
     @Test
     void test() {
-        EditorTabsApp.main(new String[] {});
+        EditorTabsApp.main();
         String allChars = "0123456789\n0123456789\n0123456789\n0123456789";
         QueueTool.getInstance().waitEmpty();
         JFrame frm = JFrameOperator.waitJFrame("EditorTabsApp");

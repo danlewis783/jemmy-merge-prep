@@ -46,7 +46,7 @@ class OperatorConstructorsSmokeTest {
 
     @Test
     void doit() {
-        ManyComponentsApp.main(new String[] {});
+        ManyComponentsApp.main();
         WindowOperator winOper = new WindowOperator();
         JFrameOperator frameOper = new JFrameOperator("ManyComponentsApp");
         ComponentOperator cmpo = new ComponentOperator(frameOper, 3);

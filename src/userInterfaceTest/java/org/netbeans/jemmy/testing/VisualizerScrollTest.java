@@ -32,7 +32,7 @@ class VisualizerScrollTest {
     void test() {
         ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).switchTab(true);
         ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).scroll(true);
-        ObscuredFieldApp.main(new String[] {});
+        ObscuredFieldApp.main();
         JFrame win = JFrameOperator.waitJFrame("Right one");
         JTextField trg = ((ObscuredFieldApp) win).getTarget();
         JTextFieldOperator trgo = new JTextFieldOperator(trg);

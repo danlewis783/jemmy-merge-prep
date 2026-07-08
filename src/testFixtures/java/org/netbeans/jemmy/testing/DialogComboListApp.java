@@ -28,8 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class DialogComboListApp extends JDialog {
-    private final JComboBox editable;
-    private final DefaultComboBoxModel editableModel;
+    private final JComboBox<String> editable;
+    private final DefaultComboBoxModel<String> editableModel;
 
     public DialogComboListApp() {
         super.setTitle("DialogComboListApp");
@@ -39,13 +39,13 @@ public class DialogComboListApp extends JDialog {
         GridBagConstraints c = new GridBagConstraints();
         pane.setLayout(gridbag);
         getContentPane().add(new JScrollPane(pane), BorderLayout.CENTER);
-        String[] editable_contents = {"editable_one", "editable_two", "editable_three", "editable_four"};
-        editableModel = new DefaultComboBoxModel(editable_contents);
-        editable = new JComboBox(editableModel);
+        String[] editableContents = {"editable_one", "editable_two", "editable_three", "editable_four"};
+        editableModel = new DefaultComboBoxModel<>(editableContents);
+        editable = new JComboBox<>(editableModel);
         editable.setEditable(true);
         editable.getEditor()
-                .addActionListener(
-                        e -> editableModel.addElement(editable.getEditor().getItem()));
+                .addActionListener(e ->
+                        editableModel.addElement((String) editable.getEditor().getItem()));
         editable.setName("editable");
         c.fill = GridBagConstraints.CENTER;
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -53,30 +53,30 @@ public class DialogComboListApp extends JDialog {
         c.weighty = 1.0;
         gridbag.setConstraints(editable, c);
         pane.add(editable);
-        String[] list_contents = {"list_one", "list_two", "list_three", "list_four"};
-        JList list = new JList(list_contents);
+        String[] listContents = {"list_one", "list_two", "list_three", "list_four"};
+        JList<String> list = new JList<>(listContents);
         list.setName("list");
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.gridheight = 2;
         c.weighty = 1.0;
         gridbag.setConstraints(list, c);
         pane.add(list);
-        String[] non_editable_contents = {
+        String[] nonEditableContents = {
             "non_editable_one", "non_editable_two", "non_editable_three", "non_editable_four"
         };
-        JComboBox non_editable = new JComboBox(non_editable_contents);
-        non_editable.setEditable(false);
-        non_editable.setName("non_editable");
+        JComboBox<String> nonEditable = new JComboBox<>(nonEditableContents);
+        nonEditable.setEditable(false);
+        nonEditable.setName("non_editable");
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.gridheight = 1;
         c.weighty = 1.0;
-        gridbag.setConstraints(non_editable, c);
-        pane.add(non_editable);
+        gridbag.setConstraints(nonEditable, c);
+        pane.add(nonEditable);
         setSize(200, 200);
         setModal(true);
     }
 
-    public static void main(String[] argv) {
+    public static void main(String... args) {
         EventQueue.invokeLater(() -> new DialogComboListApp().setVisible(true));
     }
 }

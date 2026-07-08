@@ -64,7 +64,7 @@ class ToggleButtonSelectionTest {
 
     @Test
     void doit() throws Exception {
-        ToggleButtonsApp.main(new String[] {});
+        ToggleButtonsApp.main();
         QueueTool.getInstance().waitEmpty();
 
         JFrame frm0 = JFrameOperator.waitJFrame("ToggleButtonsApp");
@@ -76,7 +76,7 @@ class ToggleButtonSelectionTest {
         JLabel label = JLabelOperator.findJLabel(
                 frm0, new StringPropertyPredicate(new String[] {"getText"}, new String[] {"JLabel"}));
         Object[][] params = {{"classname"}};
-        Class[][] classes = {{Object.class}};
+        Class<?>[][] classes = {{Object.class}};
         Object[] results = {"JCheckBox"};
         JCheckBox box = Objects.requireNonNull(JCheckBoxOperator.findJCheckBox(
                 frm0, new PropertyPredicate(new String[] {"getClientProperty"}, params, classes, results)));

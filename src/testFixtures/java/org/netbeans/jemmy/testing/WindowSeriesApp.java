@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,15 +37,11 @@ public class WindowSeriesApp extends JFrame {
         getContentPane().add(close);
     }
 
-    public static void main(String[] argv) {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                new WindowSeriesApp(0).setVisible(true);
-                new WindowSeriesApp(1).setVisible(true);
-                new WindowSeriesApp(2).setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String... args) {
+        EventQueue.invokeLater(() -> {
+            new WindowSeriesApp(0).setVisible(true);
+            new WindowSeriesApp(1).setVisible(true);
+            new WindowSeriesApp(2).setVisible(true);
+        });
     }
 }

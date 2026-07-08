@@ -33,7 +33,7 @@ class ButtonGridLookupTest {
 
     @Test
     void doit() {
-        ButtonGridApp.main(new String[] {});
+        ButtonGridApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("ButtonGridApp");
         JFrameOperator jFrameOp = new JFrameOperator(jFrame);
         JLabelOperator jLabelOp =

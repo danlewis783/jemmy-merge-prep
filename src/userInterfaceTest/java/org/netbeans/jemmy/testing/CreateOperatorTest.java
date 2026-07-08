@@ -40,7 +40,7 @@ final class CreateOperatorTest {
     @Test
     void test() {
         Assertions.assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
-            SingleButtonApp.main(new String[] {});
+            SingleButtonApp.main();
             JFrameOperator frameOp = new JFrameOperator("SingleButtonApp");
             JButtonOperator buttonOp = new JButtonOperator(frameOp, "Button", StringComparators.strict());
             ComponentOperator buttonOp1 = ComponentOperator.createOperator(buttonOp.getSource());
