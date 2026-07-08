@@ -124,9 +124,9 @@ public class TabbedSelectionApp extends JFrame {
             JPanel res = new JPanel();
             if (isSelected) {
                 res.setBorder(new BevelBorder(BevelBorder.LOWERED));
-                res.add(new JLabel("!" + value.toString() + "!"));
+                res.add(new JLabel("!" + value + "!"));
             } else {
-                res.add(new JLabel(value.toString()));
+                res.add(new JLabel(value));
             }
 
             return res;

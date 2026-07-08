@@ -195,7 +195,7 @@ public class JFileChooserOperator extends JComponentOperator {
         waitPainted(index);
         Component list = getFileList();
         if (list instanceof JList) {
-            JListOperator.of((JList) list).clickOnItem(index, clickCount);
+            JListOperator.of((JList<?>) list).clickOnItem(index, clickCount);
         } else if (list instanceof JTable) {
             JTableOperator.of((JTable) list).clickOnCell(index, 0, clickCount);
         } else {
@@ -242,7 +242,7 @@ public class JFileChooserOperator extends JComponentOperator {
         waitPainted(index);
         Component list = getFileList();
         if (list instanceof JList) {
-            JListOperator.of((JList) list).setSelectedIndex(index);
+            JListOperator.of((JList<?>) list).setSelectedIndex(index);
         } else if (list instanceof JTable) {
             JTableOperator.of((JTable) list).changeSelection(index, 0, false, false);
         } else {
@@ -276,7 +276,7 @@ public class JFileChooserOperator extends JComponentOperator {
         waitPainted(-1);
         Component list = getFileList();
         if (list instanceof JList) {
-            return ((JList) list).getModel().getSize();
+            return ((JList<?>) list).getModel().getSize();
         } else if (list instanceof JTable) {
             return ((JTable) list).getModel().getRowCount();
         } else {
@@ -673,7 +673,7 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     private JComboBox<?> getCombo(int index) {
-        return (JComboBox) Objects.requireNonNull(
+        return (JComboBox<?>) Objects.requireNonNull(
                 innerSearcher.findComponent(PredicatesJ.of(JComboBox.class), index), "combo box not found");
     }
 

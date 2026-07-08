@@ -40,10 +40,10 @@ public final class JListByItemPredicate implements Predicate<Component> {
                 return true;
             }
 
-            if (((JList) comp).getModel().getSize() > itemIndex) {
+            if (((JList<?>) comp).getModel().getSize() > itemIndex) {
                 int ii = itemIndex;
                 if (ii == -1) {
-                    ii = ((JList) comp).getSelectedIndex();
+                    ii = ((JList<?>) comp).getSelectedIndex();
 
                     if (ii == -1) {
                         return false;
@@ -51,7 +51,7 @@ public final class JListByItemPredicate implements Predicate<Component> {
                 }
 
                 return comparator.equals(
-                        ((JList) comp).getModel().getElementAt(ii).toString(), label);
+                        ((JList<?>) comp).getModel().getElementAt(ii).toString(), label);
             }
         }
 

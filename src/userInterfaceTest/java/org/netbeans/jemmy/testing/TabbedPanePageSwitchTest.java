@@ -79,8 +79,8 @@ class TabbedPanePageSwitchTest {
             lo.waitItemSelection(1, true);
             assertThat(lo.getSelectedIndex()).isEqualTo(1);
             assertThat(lo.getSelectedValue()).isEqualTo("two");
-            assertThat(((JList) lo.getSource()).getSelectionMode()).isSameAs(lo.getSelectionMode());
-            assertThat(((JList) lo.getSource()).getSelectionModel()).isSameAs(lo.getSelectionModel());
+            assertThat(((JList<?>) lo.getSource()).getSelectionMode()).isSameAs(lo.getSelectionMode());
+            assertThat(((JList<?>) lo.getSource()).getSelectionModel()).isSameAs(lo.getSelectionModel());
 
             assertThatExceptionOfType(JListOperator.NoSuchItemException.class).isThrownBy(() -> lo.clickOnItem(3, 1));
 

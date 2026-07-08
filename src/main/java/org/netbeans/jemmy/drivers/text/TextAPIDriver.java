@@ -56,8 +56,8 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     @Override
     public void selectText(ComponentOperator oper, int startPosition, int finalPosition) {
         checkSupported(oper);
-        int start = (startPosition < finalPosition) ? startPosition : finalPosition;
-        int end = (startPosition > finalPosition) ? startPosition : finalPosition;
+        int start = Math.min(startPosition, finalPosition);
+        int end = Math.max(startPosition, finalPosition);
         if (oper instanceof TextComponentOperator) {
             TextComponentOperator toper = (TextComponentOperator) oper;
             toper.setSelectionStart(start);

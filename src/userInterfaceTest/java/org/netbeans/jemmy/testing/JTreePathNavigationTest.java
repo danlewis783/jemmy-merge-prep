@@ -80,7 +80,7 @@ class JTreePathNavigationTest {
             pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
 
             if (i == 0) {
-                assertThat(testJPopupMenu(pmo)).isTrue();
+                assertMirrorsSource(pmo);
             }
 
             assertThat(pmo.showMenuItems("", "|", StringComparators.strict()).length)
@@ -125,298 +125,65 @@ class JTreePathNavigationTest {
             }
         }
 
-        assertThat(testJList(jListOp)).isTrue();
-        assertThat(testJSplitPane(split)).isTrue();
+        assertMirrorsSource(jListOp);
+        assertMirrorsSource(split);
     }
 
-    private boolean testJList(JListOperator jListOperator) {
-        if (((JList) jListOperator.getSource()).getAnchorSelectionIndex() == jListOperator.getAnchorSelectionIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getCellRenderer() == null && (jListOperator.getCellRenderer() == null)
-                || ((JList) jListOperator.getSource()).getCellRenderer().equals(jListOperator.getCellRenderer())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getFirstVisibleIndex() == jListOperator.getFirstVisibleIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getFixedCellHeight() == jListOperator.getFixedCellHeight()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getFixedCellWidth() == jListOperator.getFixedCellWidth()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getLastVisibleIndex() == jListOperator.getLastVisibleIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getLeadSelectionIndex() == jListOperator.getLeadSelectionIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getMaxSelectionIndex() == jListOperator.getMaxSelectionIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getMinSelectionIndex() == jListOperator.getMinSelectionIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getModel() == null && (jListOperator.getModel() == null)
-                || ((JList) jListOperator.getSource()).getModel().equals(jListOperator.getModel())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getPreferredScrollableViewportSize() == null
-                        && (jListOperator.getPreferredScrollableViewportSize() == null)
-                || ((JList) jListOperator.getSource())
-                        .getPreferredScrollableViewportSize()
-                        .equals(jListOperator.getPreferredScrollableViewportSize())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getPrototypeCellValue() == null
-                        && (jListOperator.getPrototypeCellValue() == null)
-                || ((JList) jListOperator.getSource())
-                        .getPrototypeCellValue()
-                        .equals(jListOperator.getPrototypeCellValue())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getScrollableTracksViewportHeight()
-                == jListOperator.getScrollableTracksViewportHeight()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getScrollableTracksViewportWidth()
-                == jListOperator.getScrollableTracksViewportWidth()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getSelectedIndex() == jListOperator.getSelectedIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getSelectedValue() == null && (jListOperator.getSelectedValue() == null)
-                || ((JList) jListOperator.getSource()).getSelectedValue().equals(jListOperator.getSelectedValue())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getSelectionBackground() == null
-                        && (jListOperator.getSelectionBackground() == null)
-                || ((JList) jListOperator.getSource())
-                        .getSelectionBackground()
-                        .equals(jListOperator.getSelectionBackground())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getSelectionForeground() == null
-                        && (jListOperator.getSelectionForeground() == null)
-                || ((JList) jListOperator.getSource())
-                        .getSelectionForeground()
-                        .equals(jListOperator.getSelectionForeground())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getSelectionMode() == jListOperator.getSelectionMode()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getSelectionModel() == null
-                        && (jListOperator.getSelectionModel() == null)
-                || ((JList) jListOperator.getSource()).getSelectionModel().equals(jListOperator.getSelectionModel())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getUI() == null && (jListOperator.getUI() == null)
-                || ((JList) jListOperator.getSource()).getUI().equals(jListOperator.getUI())) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getValueIsAdjusting() == jListOperator.getValueIsAdjusting()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).getVisibleRowCount() == jListOperator.getVisibleRowCount()) {
-        } else {
-            return false;
-        }
-
-        if (((JList) jListOperator.getSource()).isSelectionEmpty() == jListOperator.isSelectionEmpty()) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private static void assertMirrorsSource(JListOperator operator) {
+        JList<?> source = (JList<?>) operator.getSource();
+        assertThat(operator.getAnchorSelectionIndex()).isEqualTo(source.getAnchorSelectionIndex());
+        assertThat(operator.getCellRenderer()).isEqualTo(source.getCellRenderer());
+        assertThat(operator.getFirstVisibleIndex()).isEqualTo(source.getFirstVisibleIndex());
+        assertThat(operator.getFixedCellHeight()).isEqualTo(source.getFixedCellHeight());
+        assertThat(operator.getFixedCellWidth()).isEqualTo(source.getFixedCellWidth());
+        assertThat(operator.getLastVisibleIndex()).isEqualTo(source.getLastVisibleIndex());
+        assertThat(operator.getLeadSelectionIndex()).isEqualTo(source.getLeadSelectionIndex());
+        assertThat(operator.getMaxSelectionIndex()).isEqualTo(source.getMaxSelectionIndex());
+        assertThat(operator.getMinSelectionIndex()).isEqualTo(source.getMinSelectionIndex());
+        assertThat(operator.getModel()).isEqualTo(source.getModel());
+        assertThat(operator.getPreferredScrollableViewportSize())
+                .isEqualTo(source.getPreferredScrollableViewportSize());
+        assertThat(operator.getPrototypeCellValue()).isEqualTo(source.getPrototypeCellValue());
+        assertThat(operator.getScrollableTracksViewportHeight()).isEqualTo(source.getScrollableTracksViewportHeight());
+        assertThat(operator.getScrollableTracksViewportWidth()).isEqualTo(source.getScrollableTracksViewportWidth());
+        assertThat(operator.getSelectedIndex()).isEqualTo(source.getSelectedIndex());
+        assertThat(operator.getSelectedValue()).isEqualTo(source.getSelectedValue());
+        assertThat(operator.getSelectionBackground()).isEqualTo(source.getSelectionBackground());
+        assertThat(operator.getSelectionForeground()).isEqualTo(source.getSelectionForeground());
+        assertThat(operator.getSelectionMode()).isEqualTo(source.getSelectionMode());
+        assertThat(operator.getSelectionModel()).isEqualTo(source.getSelectionModel());
+        assertThat(operator.getUI()).isEqualTo(source.getUI());
+        assertThat(operator.getValueIsAdjusting()).isEqualTo(source.getValueIsAdjusting());
+        assertThat(operator.getVisibleRowCount()).isEqualTo(source.getVisibleRowCount());
+        assertThat(operator.isSelectionEmpty()).isEqualTo(source.isSelectionEmpty());
     }
 
-    private boolean testJSplitPane(JSplitPaneOperator jSplitPaneOperator) {
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getBottomComponent() == null
-                        && (jSplitPaneOperator.getBottomComponent() == null)
-                || ((JSplitPane) jSplitPaneOperator.getSource())
-                        .getBottomComponent()
-                        .equals(jSplitPaneOperator.getBottomComponent())) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getDividerLocation()
-                == jSplitPaneOperator.getDividerLocation()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getDividerSize() == jSplitPaneOperator.getDividerSize()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getLastDividerLocation()
-                == jSplitPaneOperator.getLastDividerLocation()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getLeftComponent() == null
-                        && (jSplitPaneOperator.getLeftComponent() == null)
-                || ((JSplitPane) jSplitPaneOperator.getSource())
-                        .getLeftComponent()
-                        .equals(jSplitPaneOperator.getLeftComponent())) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getMaximumDividerLocation()
-                == jSplitPaneOperator.getMaximumDividerLocation()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getMinimumDividerLocation()
-                == jSplitPaneOperator.getMinimumDividerLocation()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getOrientation() == jSplitPaneOperator.getOrientation()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getRightComponent() == null
-                        && (jSplitPaneOperator.getRightComponent() == null)
-                || ((JSplitPane) jSplitPaneOperator.getSource())
-                        .getRightComponent()
-                        .equals(jSplitPaneOperator.getRightComponent())) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getTopComponent() == null
-                        && (jSplitPaneOperator.getTopComponent() == null)
-                || ((JSplitPane) jSplitPaneOperator.getSource())
-                        .getTopComponent()
-                        .equals(jSplitPaneOperator.getTopComponent())) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).getUI() == null && (jSplitPaneOperator.getUI() == null)
-                || ((JSplitPane) jSplitPaneOperator.getSource()).getUI().equals(jSplitPaneOperator.getUI())) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).isContinuousLayout()
-                == jSplitPaneOperator.isContinuousLayout()) {
-        } else {
-            return false;
-        }
-
-        if (((JSplitPane) jSplitPaneOperator.getSource()).isOneTouchExpandable()
-                == jSplitPaneOperator.isOneTouchExpandable()) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private static void assertMirrorsSource(JSplitPaneOperator operator) {
+        JSplitPane source = (JSplitPane) operator.getSource();
+        assertThat(operator.getBottomComponent()).isEqualTo(source.getBottomComponent());
+        assertThat(operator.getDividerLocation()).isEqualTo(source.getDividerLocation());
+        assertThat(operator.getDividerSize()).isEqualTo(source.getDividerSize());
+        assertThat(operator.getLastDividerLocation()).isEqualTo(source.getLastDividerLocation());
+        assertThat(operator.getLeftComponent()).isEqualTo(source.getLeftComponent());
+        assertThat(operator.getMaximumDividerLocation()).isEqualTo(source.getMaximumDividerLocation());
+        assertThat(operator.getMinimumDividerLocation()).isEqualTo(source.getMinimumDividerLocation());
+        assertThat(operator.getOrientation()).isEqualTo(source.getOrientation());
+        assertThat(operator.getRightComponent()).isEqualTo(source.getRightComponent());
+        assertThat(operator.getTopComponent()).isEqualTo(source.getTopComponent());
+        assertThat(operator.getUI()).isEqualTo(source.getUI());
+        assertThat(operator.isContinuousLayout()).isEqualTo(source.isContinuousLayout());
+        assertThat(operator.isOneTouchExpandable()).isEqualTo(source.isOneTouchExpandable());
     }
 
-    private boolean testJPopupMenu(JPopupMenuOperator jPopupMenuOperator) {
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).getInvoker() == null
-                        && (jPopupMenuOperator.getInvoker() == null)
-                || ((JPopupMenu) jPopupMenuOperator.getSource()).getInvoker().equals(jPopupMenuOperator.getInvoker())) {
-        } else {
-            return false;
-        }
-
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).getLabel() == null && (jPopupMenuOperator.getLabel() == null)
-                || ((JPopupMenu) jPopupMenuOperator.getSource()).getLabel().equals(jPopupMenuOperator.getLabel())) {
-        } else {
-            return false;
-        }
-
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).getMargin() == null
-                        && (jPopupMenuOperator.getMargin() == null)
-                || ((JPopupMenu) jPopupMenuOperator.getSource()).getMargin().equals(jPopupMenuOperator.getMargin())) {
-        } else {
-            return false;
-        }
-
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).getSelectionModel() == null
-                        && (jPopupMenuOperator.getSelectionModel() == null)
-                || ((JPopupMenu) jPopupMenuOperator.getSource())
-                        .getSelectionModel()
-                        .equals(jPopupMenuOperator.getSelectionModel())) {
-        } else {
-            return false;
-        }
-
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).getUI() == null && (jPopupMenuOperator.getUI() == null)
-                || ((JPopupMenu) jPopupMenuOperator.getSource()).getUI().equals(jPopupMenuOperator.getUI())) {
-        } else {
-            return false;
-        }
-
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).isBorderPainted() == jPopupMenuOperator.isBorderPainted()) {
-        } else {
-            return false;
-        }
-
-        if (((JPopupMenu) jPopupMenuOperator.getSource()).isLightWeightPopupEnabled()
-                == jPopupMenuOperator.isLightWeightPopupEnabled()) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private static void assertMirrorsSource(JPopupMenuOperator operator) {
+        JPopupMenu source = (JPopupMenu) operator.getSource();
+        assertThat(operator.getInvoker()).isEqualTo(source.getInvoker());
+        assertThat(operator.getLabel()).isEqualTo(source.getLabel());
+        assertThat(operator.getMargin()).isEqualTo(source.getMargin());
+        assertThat(operator.getSelectionModel()).isEqualTo(source.getSelectionModel());
+        assertThat(operator.getUI()).isEqualTo(source.getUI());
+        assertThat(operator.isBorderPainted()).isEqualTo(source.isBorderPainted());
+        assertThat(operator.isLightWeightPopupEnabled()).isEqualTo(source.isLightWeightPopupEnabled());
     }
 
     private static class JListOperatorTreePathChecker implements Function<TreePath[], Boolean> {
