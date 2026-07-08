@@ -29,30 +29,31 @@ import org.netbeans.jemmy.util.StringComparators;
 public final class PredicatesJ {
     private PredicatesJ() {}
 
-    public static Predicate<Component> of(Class clazz) {
+    public static Predicate<Component> of(Class<?> clazz) {
         return new IsInstancePredicate(clazz);
     }
 
-    public static Predicate<Component> of(Class... classes) {
+    public static Predicate<Component> of(Class<?>... classes) {
         return new IsInstanceAnyPredicate(classes);
     }
 
-    public static Predicate<Component> of(Class clazz, Predicate<Component> predicate) {
+    public static Predicate<Component> of(Class<?> clazz, Predicate<Component> predicate) {
         return new IsInstancePredicate(clazz).and(predicate);
     }
 
-    public static Predicate<Component> ofParentOf(Class clazz, Class parentClass, Predicate<Component> predicate) {
+    public static Predicate<Component> ofParentOf(
+            Class<?> clazz, Class<?> parentClass, Predicate<Component> predicate) {
         return new IsInstancePredicate(clazz)
-                .and(new WithParentOfTypePredicate(parentClass))
+                .and(new WithParentOfTypePredicate<>(parentClass))
                 .and(predicate);
     }
 
-    public static Predicate<Component> ofShowing(Class clazz) {
-        return new IsInstancePredicate(clazz).and(new IsShowingPredicate());
+    public static Predicate<Component> ofShowing(Class<?> clazz) {
+        return new IsInstancePredicate(clazz).and(new IsShowingPredicate<>());
     }
 
-    public static Predicate<Component> ofShowing(Class clazz, Predicate<Component> predicate) {
-        return new IsInstancePredicate(clazz).and(new IsShowingPredicate()).and(predicate);
+    public static Predicate<Component> ofShowing(Class<?> clazz, Predicate<Component> predicate) {
+        return new IsInstancePredicate(clazz).and(new IsShowingPredicate<>()).and(predicate);
     }
 
     public static Predicate<Component> ofShowing(Predicate<Component> predicate) {
@@ -60,10 +61,10 @@ public final class PredicatesJ {
     }
 
     public static Predicate<Component> isShowing() {
-        return new IsShowingPredicate();
+        return new IsShowingPredicate<>();
     }
 
-    public static Predicate<Component> isAssignableFrom(Class clazz) {
+    public static Predicate<Component> isAssignableFrom(Class<?> clazz) {
         return new IsAssignableFromPredicate(clazz);
     }
 
@@ -158,9 +159,9 @@ public final class PredicatesJ {
     }
 
     private static class IsAssignableFromPredicate implements Predicate<Component> {
-        private final Class clazz;
+        private final Class<?> clazz;
 
-        public IsAssignableFromPredicate(Class clazz) {
+        public IsAssignableFromPredicate(Class<?> clazz) {
             this.clazz = clazz;
         }
 
@@ -171,9 +172,9 @@ public final class PredicatesJ {
     }
 
     private static class IsInstancePredicate implements Predicate<Component> {
-        private final Class clazz;
+        private final Class<?> clazz;
 
-        public IsInstancePredicate(Class clazz) {
+        public IsInstancePredicate(Class<?> clazz) {
             this.clazz = clazz;
         }
 
@@ -184,15 +185,15 @@ public final class PredicatesJ {
     }
 
     private static class IsInstanceAnyPredicate implements Predicate<Component> {
-        private final Class[] classes;
+        private final Class<?>[] classes;
 
-        public IsInstanceAnyPredicate(Class... classes) {
+        public IsInstanceAnyPredicate(Class<?>... classes) {
             this.classes = classes;
         }
 
         @Override
         public boolean test(Component input) {
-            for (Class clazz : classes) {
+            for (Class<?> clazz : classes) {
                 if (clazz.isInstance(input)) {
                     return true;
                 }
@@ -287,9 +288,9 @@ public final class PredicatesJ {
     }
 
     private static class WithParentOfTypePredicate<T extends Component> implements Predicate<T> {
-        private final Class clazz;
+        private final Class<?> clazz;
 
-        private WithParentOfTypePredicate(Class clazz) {
+        private WithParentOfTypePredicate(Class<?> clazz) {
             this.clazz = clazz;
         }
 

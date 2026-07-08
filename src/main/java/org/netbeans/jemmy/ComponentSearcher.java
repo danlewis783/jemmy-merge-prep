@@ -26,18 +26,16 @@ package org.netbeans.jemmy;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.util.Objects;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class ComponentSearcher {
-    private static final Logger logger = LoggerFactory.getLogger(ComponentSearcher.class);
     private final Container container;
     private int ordinalIndex;
 
     public ComponentSearcher(Container container) {
-        this.container = container;
+        this.container = Objects.requireNonNull(container, "container");
     }
 
     public @Nullable Component findComponent(Predicate<Component> predicate, int index) {
@@ -53,6 +51,11 @@ public final class ComponentSearcher {
     // Depth-First Search
     private @Nullable Component findComponentInContainer(
             Container container, Predicate<Component> predicate, int index) {
+
+        if (index < 0) {
+            throw new IllegalArgumentException("index must not be negative");
+        }
+
         Component[] components = container.getComponents();
         Component ret;
         for (Component component : components) {

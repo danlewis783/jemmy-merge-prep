@@ -43,7 +43,7 @@ public final class WindowManager {
         jobs = new ArrayList<>();
     }
 
-    public void add(WindowFunction job) {
+    public void add(WindowFunction<?> job) {
         synchronized (jobs) {
             WindowJobPerformer performer = new WindowJobPerformer(job);
             jobs.add(performer);
@@ -51,7 +51,7 @@ public final class WindowManager {
         }
     }
 
-    public void remove(WindowFunction job) {
+    public void remove(WindowFunction<?> job) {
         List<WindowJobPerformer> stopList = new ArrayList<>();
         synchronized (jobs) {
             for (WindowJobPerformer performer : jobs) {
@@ -65,10 +65,10 @@ public final class WindowManager {
         }
     }
 
-    private boolean performJobOnce(WindowFunction job) {
+    private boolean performJobOnce(WindowFunction<?> job) {
         Window win = org.netbeans.jemmy.functions.WindowFunction.getWindow(null, job.getPredicate(), 0);
         if (win != null) {
-            job.apply(win);
+            apply(job, win);
 
             return true;
         } else {
@@ -76,11 +76,16 @@ public final class WindowManager {
         }
     }
 
+    @SuppressWarnings("unchecked") // the job's predicate only matches windows of its own F type
+    private static <F> void apply(WindowFunction<F> job, Window win) {
+        job.apply((F) win);
+    }
+
     private static WindowManager getInstance() {
         return Holder.instance;
     }
 
-    public static void addJob(WindowFunction job) {
+    public static void addJob(WindowFunction<?> job) {
         getInstance().add(job);
     }
 
@@ -90,9 +95,9 @@ public final class WindowManager {
 
     private static class WindowJobPerformer implements Callable<Void> {
         private final AtomicBoolean needStop = new AtomicBoolean(false);
-        private final WindowFunction job;
+        private final WindowFunction<?> job;
 
-        private WindowJobPerformer(WindowFunction job) {
+        private WindowJobPerformer(WindowFunction<?> job) {
             this.job = job;
         }
 

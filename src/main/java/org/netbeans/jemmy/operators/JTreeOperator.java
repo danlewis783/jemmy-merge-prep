@@ -62,11 +62,8 @@ import org.netbeans.jemmy.predicates.JTreeOperatorByItemPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JTreeOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JTreeOperator.class);
     private final TreeDriver driver;
 
     public JTreeOperator(ContainerOperator cont) {

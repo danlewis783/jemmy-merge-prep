@@ -34,7 +34,7 @@ public final class LoadedFunction implements Function<TreePathChooserAndTreePath
     @Override
     public @Nullable TreePathAndBoolean apply(TreePathChooserAndTreePath arg) {
         JTreeOperator.TreePathChooser treePathChooser =
-                Objects.requireNonNull(arg, "arg must not be null").getTreePathChooser();
+                Objects.requireNonNull(arg, "arg").getTreePathChooser();
         TreePath path = arg.getTreePath();
         Object[] children = jTreeOp.getChildren(path.getLastPathComponent());
         for (int j = 0; j < children.length; j++) {

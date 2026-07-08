@@ -38,11 +38,8 @@ import org.netbeans.jemmy.predicates.DialogOperatorShowingByTitlePredicate;
 import org.netbeans.jemmy.predicates.DialogShowingByTitlePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DialogOperator extends WindowOperator {
-    private static final Logger logger = LoggerFactory.getLogger(DialogOperator.class);
 
     public DialogOperator() {
         this(0);

@@ -87,7 +87,7 @@ tasks.named("check") {
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     options.release.set(8)
-    options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xlint:rawtypes"))
+    options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xlint:rawtypes,unchecked"))
     options.errorprone {
         isEnabled.set(true)
         disableAllChecks.set(true)

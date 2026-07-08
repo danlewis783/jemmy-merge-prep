@@ -40,11 +40,8 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.predicates.ButtonByLabelPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ButtonOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(ButtonOperator.class);
     private final ButtonDriver driver;
 
     public ButtonOperator(Button b) {

@@ -36,6 +36,7 @@ public class WindowFunction<T extends Window> implements Function<Void, T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked") // the predicate only matches windows of type T
     public @Nullable T apply(Void obj) {
         return (T) WindowFunction.getWindow(owner, predicate, index);
     }

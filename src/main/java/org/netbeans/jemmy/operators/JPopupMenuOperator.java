@@ -61,11 +61,8 @@ import org.netbeans.jemmy.predicates.JPopupWindowPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JPopupMenuOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JPopupMenuOperator.class);
     private final MenuDriver driver;
 
     public JPopupMenuOperator() {

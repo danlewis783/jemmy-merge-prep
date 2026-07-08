@@ -38,11 +38,8 @@ import org.netbeans.jemmy.predicates.JLabelByTextPredicate;
 import org.netbeans.jemmy.predicates.JLabelOperatorByLabelPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JLabelOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JLabelOperator.class);
 
     public JLabelOperator(ContainerOperator cont) {
         this(cont, 0);

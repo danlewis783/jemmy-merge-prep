@@ -41,11 +41,8 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.predicates.CheckboxByLabelPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CheckboxOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(CheckboxOperator.class);
     private final ButtonDriver driver;
 
     public CheckboxOperator(Checkbox b) {

@@ -46,11 +46,8 @@ import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JScrollBarOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JScrollBarOperator.class);
     private final ScrollDriver driver;
     private @Nullable JButtonOperator maxButtOperator;
     private @Nullable JButtonOperator minButtOperator;

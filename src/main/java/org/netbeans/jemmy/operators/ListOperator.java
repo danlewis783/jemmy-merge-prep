@@ -41,11 +41,8 @@ import org.netbeans.jemmy.drivers.MultiSelListDriver;
 import org.netbeans.jemmy.predicates.ListByItemPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ListOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(ListOperator.class);
     private final MultiSelListDriver driver;
 
     public ListOperator(ContainerOperator cont) {

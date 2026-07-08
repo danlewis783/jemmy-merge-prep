@@ -51,11 +51,8 @@ import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JMenuItemOperator extends AbstractButtonOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JMenuItemOperator.class);
 
     public JMenuItemOperator(ContainerOperator cont) {
         this(cont, 0);

@@ -54,6 +54,7 @@ public final class JemmyProperties {
         return (CharBindingMap) Objects.requireNonNull(get("binding.map"), "binding.map property not set");
     }
 
+    @SuppressWarnings("unchecked") // "dispatching.model" is only ever set to an EnumSet<DispatchingModel>
     public EnumSet<DispatchingModel> getDispatchingModel() {
         return (EnumSet<DispatchingModel>)
                 Objects.requireNonNull(get("dispatching.model"), "dispatching.model property not set");
@@ -61,6 +62,7 @@ public final class JemmyProperties {
 
     public void installDriversAndSetDispatchingModel(EnumSet<DispatchingModel> model) {
         Objects.requireNonNull(model);
+        @SuppressWarnings("unchecked") // "dispatching.model" is only ever set to an EnumSet<DispatchingModel>
         EnumSet<DispatchingModel> prev = (EnumSet<DispatchingModel>) get("dispatching.model");
         if (model.equals(prev)) {
             return;

@@ -44,11 +44,8 @@ import org.netbeans.jemmy.predicates.FrameShowingByTitlePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JFrameOperator extends FrameOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JFrameOperator.class);
 
     public JFrameOperator() {
         this(0);

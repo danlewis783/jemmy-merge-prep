@@ -44,8 +44,6 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JSliderOperator extends JComponentOperator {
     @Deprecated
@@ -54,7 +52,6 @@ public class JSliderOperator extends JComponentOperator {
     @Deprecated
     public static final int PUSH_AND_WAIT_SCROLL_MODEL = 2;
 
-    private static final Logger logger = LoggerFactory.getLogger(JSliderOperator.class);
     private int scrollModel = CLICK_SCROLL_MODEL;
     private final ScrollDriver driver;
 

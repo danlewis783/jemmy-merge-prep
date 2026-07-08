@@ -167,6 +167,7 @@ public abstract class Operator {
         return getCharsModifiers(s.toCharArray());
     }
 
+    @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
     public <T extends Operator> void waitState(Predicate<T> predicate) {
         FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this))
                 .runUntilNotNull(null);

@@ -43,13 +43,10 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JScrollPaneOperator extends JComponentOperator {
     private static final int X_POINT_RECT_SIZE = 6;
     private static final int Y_POINT_RECT_SIZE = 4;
-    private static final Logger logger = LoggerFactory.getLogger(JScrollPaneOperator.class);
     private @Nullable JScrollBarOperator hScrollBarOper = null;
     private @Nullable JScrollBarOperator vScrollBarOper = null;
 

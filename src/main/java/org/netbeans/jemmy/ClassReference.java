@@ -30,17 +30,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class ClassReference<T> {
-    private static final Logger logger = LoggerFactory.getLogger(ClassReference.class);
     private final Class<T> clazz;
     private final @Nullable T instance;
 
+    @SuppressWarnings("unchecked") // getClass() on a T is a Class<? extends T>
     public ClassReference(T instance) {
-        this.instance =
-                Objects.requireNonNull(instance, "attempted to pass null instance to ClassReference constructor");
+        this.instance = Objects.requireNonNull(instance, "instance");
         clazz = (Class<T>) instance.getClass();
     }
 
@@ -49,6 +46,7 @@ public final class ClassReference<T> {
         instance = null;
     }
 
+    @SuppressWarnings("unchecked") // the caller chooses T to match the named class
     public ClassReference(String className) throws ClassNotFoundException {
         if (Objects.requireNonNull(className).trim().isEmpty()) {
             throw new IllegalArgumentException();
@@ -57,32 +55,16 @@ public final class ClassReference<T> {
         instance = null;
     }
 
-    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class<?>[] paramsClasses)
+    public Object invokeMethod(String methodName, Object @Nullable [] params, Class<?> @Nullable [] paramsClasses)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        if (params == null) {
-            params = new Object[0];
-        }
-
-        if (paramsClasses == null) {
-            paramsClasses = new Class<?>[0];
-        }
-
-        Method method = clazz.getMethod(methodName, paramsClasses);
-        return method.invoke(instance, params);
+        Method method = clazz.getMethod(methodName, paramsClasses == null ? new Class<?>[0] : paramsClasses);
+        return method.invoke(instance, params == null ? new Object[0] : params);
     }
 
-    public T newInstance(@Nullable Object[] params, @Nullable Class<?>[] paramsClasses)
+    public T newInstance(Object @Nullable [] params, Class<?> @Nullable [] paramsClasses)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-        if (params == null) {
-            params = new Object[0];
-        }
-
-        if (paramsClasses == null) {
-            paramsClasses = new Class<?>[0];
-        }
-
-        Constructor<T> constructor = clazz.getConstructor(paramsClasses);
-        return constructor.newInstance(params);
+        Constructor<T> constructor = clazz.getConstructor(paramsClasses == null ? new Class<?>[0] : paramsClasses);
+        return constructor.newInstance(params == null ? new Object[0] : params);
     }
 
     public Object getField(String fieldName) throws NoSuchFieldException, IllegalAccessException {

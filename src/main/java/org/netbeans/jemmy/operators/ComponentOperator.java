@@ -80,11 +80,8 @@ import org.netbeans.jemmy.predicates.ComponentOperatorLocationOnScreenPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorLocationPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorSizePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ComponentOperator extends Operator {
-    private static final Logger logger = LoggerFactory.getLogger(ComponentOperator.class);
     private final EventDispatcher dispatcher;
     private final FocusDriver fDriver;
     private final KeyDriver kDriver;
@@ -92,8 +89,7 @@ public class ComponentOperator extends Operator {
     private final Component source;
 
     public ComponentOperator(Component source) {
-        this.source =
-                Objects.requireNonNull(source, "attempted to pass null Component to ComponentOperator constructor");
+        this.source = Objects.requireNonNull(source, "source");
         DriverManager driverManager = DriverManager.newInstance(JemmyProperties.getInstance());
         kDriver = driverManager.getKeyDriver(getClass());
         mDriver = driverManager.getMouseDriver(getClass());

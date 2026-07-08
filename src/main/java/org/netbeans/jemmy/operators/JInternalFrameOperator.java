@@ -60,11 +60,8 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JInternalFrameOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JInternalFrameOperator.class);
     private @Nullable JButtonOperator closeOper;
     private final FrameDriver fDriver;
     private final InternalFrameDriver iDriver;

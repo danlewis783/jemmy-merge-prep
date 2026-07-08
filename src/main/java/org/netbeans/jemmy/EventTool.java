@@ -28,11 +28,8 @@ import java.awt.AWTEvent;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.functions.AwtEventByMaskFunction;
 import org.netbeans.jemmy.functions.NoEventFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class EventTool {
-    private static final Logger logger = LoggerFactory.getLogger(EventTool.class);
     private long currentEventMask = 0;
     private final ListenerSet listenerSet;
 

@@ -136,7 +136,7 @@ class TimeoutsTest {
     void overrideNoChangeSad() {
         TimeoutKey key = TimeoutKey.Testing_A;
         assumeThat(key.getDefaultValue()).isEqualTo(0L);
-        assertThatExceptionOfType(AssertionError.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> Timeouts.override(key, 0L))
                 .withMessage("override of \"%s\" failed because new value (0 ms) same as default", key);
     }

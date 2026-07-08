@@ -45,11 +45,8 @@ import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.predicates.JMenuByLabelPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JMenuOperator extends JMenuItemOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JMenuOperator.class);
     private final MenuDriver driver;
 
     public JMenuOperator(ContainerOperator cont) {

@@ -46,11 +46,8 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.TopVisibleModalDialogPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JDialogOperator extends DialogOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JDialogOperator.class);
 
     public JDialogOperator() {
         this(0);

@@ -47,11 +47,8 @@ import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.AbstractButtonOperatorByTextPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AbstractButtonOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractButtonOperator.class);
     private final ButtonDriver driver;
 
     public AbstractButtonOperator(AbstractButton b) {

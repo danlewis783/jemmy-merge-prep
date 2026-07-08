@@ -93,15 +93,17 @@ public final class Timeouts {
         if (overrideMap.containsKey(key)) {
             throw new IllegalStateException(String.format("override of \"%s\" failed because already overridden", key));
         }
-        assert newValue != key.getDefaultValue()
-                : String.format("override of \"%s\" failed because new value (%d ms) same as default", key, newValue);
+        if (newValue == key.getDefaultValue()) {
+            throw new IllegalArgumentException(String.format(
+                    "override of \"%s\" failed because new value (%d ms) same as default", key, newValue));
+        }
         TimeoutOverride ret = new TimeoutOverrideImpl(key, newValue);
         overrideMap.put(key, ret);
         return ret;
     }
 
     public static long get(TimeoutKey key) {
-        Objects.requireNonNull(key, "key must not be null");
+        Objects.requireNonNull(key, "key");
         return getInstance().doGet(key);
     }
 
@@ -119,7 +121,7 @@ public final class Timeouts {
     }
 
     public static TimeoutOverride override(TimeoutKey key, long newValue) {
-        Objects.requireNonNull(key, "key must not be null");
+        Objects.requireNonNull(key, "key");
         if (newValue < 0L) {
             throw new IllegalArgumentException(String.format(
                     "attempt to override \"%s\" failed because new value (%d ms) must be non-negative", key, newValue));

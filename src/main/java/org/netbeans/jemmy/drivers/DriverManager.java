@@ -31,11 +31,8 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.operators.ComponentOperator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class DriverManager {
-    private static final Logger logger = LoggerFactory.getLogger(DriverManager.class);
 
     private final JemmyProperties jemmyProperties;
 

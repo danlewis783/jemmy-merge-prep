@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.predicates;
 
 import java.awt.Component;
+import java.util.Objects;
 import java.util.function.Predicate;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -33,11 +34,12 @@ public final class JComboBoxByItemPredicate implements Predicate<Component> {
      * @param itemIndex the index of the combo box item to check, or -1 to check the currently selected item
      */
     public JComboBoxByItemPredicate(@Nullable String label, int itemIndex, StringComparator comparator) {
-        assert itemIndex >= -1 : "invalid itemIndex";
-        assert comparator != null : "comparator null";
+        if (itemIndex < -1) {
+            throw new IllegalArgumentException("invalid itemIndex");
+        }
         this.label = label;
         this.itemIndex = itemIndex;
-        this.comparator = comparator;
+        this.comparator = Objects.requireNonNull(comparator, "comparator");
     }
 
     @Override
@@ -47,8 +49,8 @@ public final class JComboBoxByItemPredicate implements Predicate<Component> {
                 return true;
             }
 
-            JComboBox jComboBox = (JComboBox) comp;
-            ComboBoxModel model = jComboBox.getModel();
+            JComboBox<?> jComboBox = (JComboBox<?>) comp;
+            ComboBoxModel<?> model = jComboBox.getModel();
             if (model.getSize() > itemIndex) {
                 int ii = itemIndex;
                 if (ii == -1) {

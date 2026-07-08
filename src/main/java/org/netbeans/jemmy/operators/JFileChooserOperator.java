@@ -66,11 +66,8 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JFileChooserOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JFileChooserOperator.class);
     private final ComponentSearcher innerSearcher;
 
     public JFileChooserOperator() {

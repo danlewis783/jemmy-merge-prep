@@ -19,11 +19,8 @@ package org.netbeans.jemmy;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class FunctionRepeaterTest {
-    private static final Logger logger = LoggerFactory.getLogger(FunctionRepeaterTest.class);
 
     @Test
     void testIssue30537() {

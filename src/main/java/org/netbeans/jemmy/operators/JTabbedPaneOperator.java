@@ -44,11 +44,8 @@ import org.netbeans.jemmy.drivers.ListDriver;
 import org.netbeans.jemmy.predicates.JTabbedPaneByItemPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JTabbedPaneOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JTabbedPaneOperator.class);
     private final ListDriver driver;
 
     public JTabbedPaneOperator(ContainerOperator cont) {

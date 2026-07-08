@@ -61,11 +61,8 @@ import org.netbeans.jemmy.predicates.JTableOperatorByCellValuePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JTableOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JTableOperator.class);
     private final TableDriver driver;
 
     public JTableOperator(ContainerOperator cont) {

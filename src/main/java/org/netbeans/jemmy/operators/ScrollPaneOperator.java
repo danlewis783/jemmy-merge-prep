@@ -44,13 +44,10 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ScrollPaneOperator extends ContainerOperator {
     private static final int X_POINT_RECT_SIZE = 6;
     private static final int Y_POINT_RECT_SIZE = 4;
-    private static final Logger logger = LoggerFactory.getLogger(ScrollPaneOperator.class);
 
     static {
         try {

@@ -22,11 +22,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class Caller<T> implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(Caller.class);
     private final Callable<T> callable;
     private final CountDownLatch endGate;
     private final AtomicReference<@Nullable Exception> exception;

@@ -37,11 +37,8 @@ import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JProgressBarOperator extends JComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(JProgressBarOperator.class);
 
     public JProgressBarOperator(ContainerOperator cont) {
         this(cont, 0);

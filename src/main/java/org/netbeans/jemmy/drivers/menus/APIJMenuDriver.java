@@ -39,11 +39,8 @@ import org.netbeans.jemmy.operators.AbstractButtonOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JMenuItemOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriver {
-    private static final Logger logger = LoggerFactory.getLogger(APIJMenuDriver.class);
 
     @Nullable
     private Object push(

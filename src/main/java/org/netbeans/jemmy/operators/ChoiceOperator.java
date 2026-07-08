@@ -39,11 +39,8 @@ import org.netbeans.jemmy.drivers.ListDriver;
 import org.netbeans.jemmy.predicates.ChoiceBySelectedItemPredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ChoiceOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(ChoiceOperator.class);
     private final ListDriver driver;
 
     public ChoiceOperator(Choice b) {

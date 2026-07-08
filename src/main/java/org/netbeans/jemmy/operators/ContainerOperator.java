@@ -41,11 +41,8 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.ComponentSearcherFunction;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ContainerOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(ContainerOperator.class);
     private final ComponentSearcher searcher;
 
     public ContainerOperator(Container b) {

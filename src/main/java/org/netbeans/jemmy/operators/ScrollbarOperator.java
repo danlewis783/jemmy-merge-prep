@@ -40,11 +40,8 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ScrollbarOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(ScrollbarOperator.class);
     private final ScrollDriver driver;
 
     public ScrollbarOperator(ContainerOperator cont) {

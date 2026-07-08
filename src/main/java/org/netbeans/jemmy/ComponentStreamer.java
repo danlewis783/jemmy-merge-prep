@@ -44,7 +44,7 @@ public final class ComponentStreamer {
     public static <T extends Component> Stream<T> streamOfType(Container container, Class<T> clazz) {
         Stream.Builder<Component> streamBuilder = Stream.builder();
         buildStream(container, streamBuilder);
-        return streamBuilder.build().filter(clazz::isInstance).map(c -> (T) c);
+        return streamBuilder.build().filter(clazz::isInstance).map(clazz::cast);
     }
 
     public static <T extends Component> Stream<T> streamOfTypeNamed(Component component, Class<T> clazz, String name) {
@@ -64,7 +64,7 @@ public final class ComponentStreamer {
                 .build()
                 .filter(clazz::isInstance)
                 .filter(c -> name.equalsIgnoreCase(c.getName()))
-                .map(c -> (T) c);
+                .map(clazz::cast);
     }
 
     public static Stream<Component> streamShowing(Component component) {
@@ -87,7 +87,7 @@ public final class ComponentStreamer {
         return streamBuilder
                 .build()
                 .filter(c -> clazz.isInstance(c) && c.isShowing() && c.isVisible())
-                .map(c -> (T) c);
+                .map(clazz::cast);
     }
 
     public static <T extends Component> Stream<T> streamShowingAndVisibleAndEnabledOfType(
@@ -97,7 +97,7 @@ public final class ComponentStreamer {
         return streamBuilder
                 .build()
                 .filter(c -> clazz.isInstance(c) && c.isShowing() && c.isVisible() && c.isEnabled())
-                .map(c -> (T) c);
+                .map(clazz::cast);
     }
 
     private static void buildStream(Container container, Stream.Builder<Component> streamBuilder) {

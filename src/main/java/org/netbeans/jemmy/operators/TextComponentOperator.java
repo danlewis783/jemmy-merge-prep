@@ -41,11 +41,8 @@ import org.netbeans.jemmy.drivers.TextDriver;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.TextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TextComponentOperator extends ComponentOperator {
-    private static final Logger logger = LoggerFactory.getLogger(TextComponentOperator.class);
     private final TextDriver driver;
 
     public TextComponentOperator(ContainerOperator cont) {
