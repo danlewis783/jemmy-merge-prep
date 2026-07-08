@@ -19,14 +19,15 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JList;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JListByItemPredicate implements Predicate<Component> {
     private final StringComparator comparator;
     private final int itemIndex;
-    private final String label;
+    private final @Nullable String label;
 
-    public JListByItemPredicate(String label, int itemIndex, StringComparator comparator) {
+    public JListByItemPredicate(@Nullable String label, int itemIndex, StringComparator comparator) {
         this.label = label;
         this.itemIndex = itemIndex;
         this.comparator = comparator;

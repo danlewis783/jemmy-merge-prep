@@ -159,10 +159,10 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
         operYl = (long) oper.getSource().getLocationOnScreen().getY();
         operYr = operYl + oper.getSource().getHeight();
         long overXl, overXr, overYl, overYr;
-        overXl = (lastXl > operXl) ? lastXl : operXl;
-        overXr = (lastXr < operXr) ? lastXr : operXr;
-        overYl = (lastYl > operYl) ? lastYl : operYl;
-        overYr = (lastYr < operYr) ? lastYr : operYr;
+        overXl = Math.max(lastXl, operXl);
+        overXr = Math.min(lastXr, operXr);
+        overYl = Math.max(lastYl, operYl);
+        overYr = Math.min(lastYr, operYr);
 
         if (overXl < overXr) {
             last.moveMouse((int) ((overXr - overXl) / 2 - lastXl), last.getCenterY());

@@ -30,12 +30,15 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ColorChooserUI;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JColorChooserOperatorTest {
 
     private JColorChooser colorChooser;
@@ -44,7 +47,7 @@ class JColorChooserOperatorTest {
     private JPanel panelPreview;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             colorChooser = new JColorChooser();
@@ -57,11 +60,10 @@ class JColorChooserOperatorTest {
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -139,15 +141,11 @@ class JColorChooserOperatorTest {
     }
 
     @Test
-    void testAddChooserPanel() {
+    void testAddChooserPanel() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator1 = new JFrameOperator();
         JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
 
-        try {
-            EventQueue.invokeAndWait(() -> panel = new ColorChooserTestPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panel = new ColorChooserTestPanel());
 
         operator2.addChooserPanel(panel);
         assertThat(operator2.getChooserPanels()).hasSize(6);
@@ -181,15 +179,11 @@ class JColorChooserOperatorTest {
     }
 
     @Test
-    void testGetPreviewPanel() {
+    void testGetPreviewPanel() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator1 = new JFrameOperator();
         JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
 
-        try {
-            EventQueue.invokeAndWait(() -> panelPreview = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panelPreview = new JPanel());
 
         operator2.setPreviewPanel(panelPreview);
         assertThat(operator2.getPreviewPanel()).isEqualTo(colorChooser.getPreviewPanel());
@@ -337,12 +331,12 @@ class JColorChooserOperatorTest {
         }
 
         @Override
-        public Icon getSmallDisplayIcon() {
+        public @Nullable Icon getSmallDisplayIcon() {
             return null;
         }
 
         @Override
-        public Icon getLargeDisplayIcon() {
+        public @Nullable Icon getLargeDisplayIcon() {
             return null;
         }
     }

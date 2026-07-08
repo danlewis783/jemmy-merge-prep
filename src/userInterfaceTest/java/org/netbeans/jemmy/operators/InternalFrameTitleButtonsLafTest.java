@@ -20,10 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.awt.EventQueue;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.UIManager;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,29 +33,33 @@ import org.netbeans.jemmy.util.LookAndFeel;
  * skipped: it keeps title actions in a popup menu instead of buttons (covered by
  * {@link InternalFramePopupMenuDriverTest}).
  */
+// UI fixtures are created on the EDT inside each test; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class InternalFrameTitleButtonsLafTest {
 
     private JFrame frame;
     private JInternalFrame internalFrame;
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             if (frame != null) {
                 frame.setVisible(false);
                 frame.dispose();
-                frame = null;
             }
         });
     }
 
     @ParameterizedTest
     @MethodSource("org.netbeans.jemmy.testing.LookAndFeelProvider#availableLookAndFeels")
-    void titleButtonsWork(String lookAndFeel) throws Exception {
+    void titleButtonsWork(String lookAndFeel) throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             try {
                 UIManager.setLookAndFeel(lookAndFeel);
-            } catch (Exception e) {
+            } catch (UnsupportedLookAndFeelException
+                    | ClassNotFoundException
+                    | InstantiationException
+                    | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
 

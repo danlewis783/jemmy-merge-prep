@@ -111,7 +111,7 @@ public class ContainerOperator extends ComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Container) getSource()).add(component, i)));
     }
 
-    public void add(Component component, Object object) {
+    public void add(Component component, @Nullable Object object) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((Container) getSource()).add(component, object);
 
@@ -119,7 +119,7 @@ public class ContainerOperator extends ComponentOperator {
         }));
     }
 
-    public void add(Component component, Object object, int i) {
+    public void add(Component component, @Nullable Object object, int i) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((Container) getSource()).add(component, object, i);
 

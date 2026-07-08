@@ -120,7 +120,7 @@ public final class StayingEmptyFunction implements Function<Void, Boolean> {
         }
 
         @Override
-        public Boolean call() throws Exception {
+        public Boolean call() throws InterruptedException {
             long startTime = System.currentTimeMillis();
             while (true) {
                 boolean eventFound =

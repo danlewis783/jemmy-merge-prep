@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy.testing;
 
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -38,7 +39,7 @@ class TreeSelectionUnderChangeTest {
 
         for (int i = 0; i < 20; i++) {
             Thread.sleep((int) (time * 3));
-            tree.selectPath(tree.findPath("node" + i, "|", StringComparators.strict()));
+            tree.selectPath(Objects.requireNonNull(tree.findPath("node" + i, "|", StringComparators.strict())));
         }
     }
 }

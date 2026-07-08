@@ -27,6 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class AccessibleNamePredicateTest {
 
     private JButton button;
@@ -47,7 +49,6 @@ class AccessibleNamePredicateTest {
     void after() {
         frame.setVisible(false);
         frame.dispose();
-        frame = null;
     }
 
     @Test

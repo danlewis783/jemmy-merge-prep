@@ -24,6 +24,7 @@ import java.awt.AWTEvent;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ContainerEvent;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import javax.swing.JFrame;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,7 +70,7 @@ class EventToolTest {
             jFrame.setVisible(true);
             jFrameRef.set(jFrame);
         });
-        AtomicReference<JFrameOperator> jFrameOpRef = new AtomicReference<>(new JFrameOperator(jFrameRef.get()));
+        JFrameOperator jFrameOp = new JFrameOperator(Objects.requireNonNull(jFrameRef.get()));
         assertThat(eventTool.getLastEvent() instanceof ContainerEvent).isTrue();
         assertThat(eventTool.getCurrentEventMask()).isEqualTo(AWTEvent.CONTAINER_EVENT_MASK);
         assertThat(eventTool.getLastEvent(AWTEvent.WINDOW_EVENT_MASK))
@@ -80,7 +82,7 @@ class EventToolTest {
         eventTool.addListeners();
         AtomicBoolean finished = new AtomicBoolean(false);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
+        executorService.submit(new MouseMover(jFrameOp, finished, 1000, 1));
         assertThat(eventTool.waitEvent(AWTEvent.MOUSE_EVENT_MASK)).isNotNull();
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 3250L)) {
@@ -99,7 +101,7 @@ class EventToolTest {
                         .runUntilNotNull(null))
                 .isTrue();
         eventTool.removeListeners();
-        executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
+        executorService.submit(new MouseMover(jFrameOp, finished, 1000, 1));
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2990)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
@@ -111,12 +113,12 @@ class EventToolTest {
                         .runUntilNotNull(null))
                 .isTrue();
         eventTool.addListeners();
-        executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
+        executorService.submit(new MouseMover(jFrameOp, finished, 1000, 1));
         assertThat(eventTool.waitEvent()).isNotNull();
         assertThat(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished))
                         .runUntilNotNull(null))
                 .isTrue();
-        executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 1));
+        executorService.submit(new MouseMover(jFrameOp, finished, 1000, 1));
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
             assertThat(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK))
@@ -139,7 +141,7 @@ class EventToolTest {
                     .isTrue();
         }
 
-        executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 10));
+        executorService.submit(new MouseMover(jFrameOp, finished, 1000, 10));
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
             eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK);
@@ -148,7 +150,7 @@ class EventToolTest {
         assertThat(FunctionRepeater.on(new FinishedAndQueueEmptyFunction(finished))
                         .runUntilNotNull(null))
                 .isTrue();
-        executorService.submit(new MouseMover(jFrameOpRef, finished, 1000, 10));
+        executorService.submit(new MouseMover(jFrameOp, finished, 1000, 10));
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
@@ -169,7 +171,7 @@ class EventToolTest {
         }
 
         @Override
-        public Boolean apply(Void obj) {
+        public @Nullable Boolean apply(Void obj) {
             return (finished.get()
                             && (Toolkit.getDefaultToolkit()
                                             .getSystemEventQueue()
@@ -183,14 +185,14 @@ class EventToolTest {
     private static class MouseMover implements Callable<Void> {
         private final int count;
         private final AtomicBoolean finished;
-        private final AtomicReference<JFrameOperator> jFrameOpRef;
+        private final JFrameOperator jFrameOp;
         private final long timeToSleep;
 
-        MouseMover(AtomicReference<JFrameOperator> jFrameOpRef, AtomicBoolean finished, long timeToSleep, int count) {
+        MouseMover(JFrameOperator jFrameOp, AtomicBoolean finished, long timeToSleep, int count) {
             this.count = count;
             this.timeToSleep = timeToSleep;
             this.finished = finished;
-            this.jFrameOpRef = jFrameOpRef;
+            this.jFrameOp = jFrameOp;
         }
 
         @Override
@@ -199,9 +201,8 @@ class EventToolTest {
 
             for (int i = 0; i < count; i++) {
                 Thread.sleep(timeToSleep);
-                JFrameOperator jframeOpDeref = jFrameOpRef.get();
-                jframeOpDeref.enterMouse();
-                jframeOpDeref.exitMouse();
+                jFrameOp.enterMouse();
+                jFrameOp.exitMouse();
             }
 
             finished.set(true);

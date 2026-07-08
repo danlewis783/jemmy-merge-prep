@@ -179,7 +179,7 @@ public class JDialogOperator extends DialogOperator {
         }));
     }
 
-    public void setLocationRelativeTo(Component component) {
+    public void setLocationRelativeTo(@Nullable Component component) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setLocationRelativeTo(component);
 

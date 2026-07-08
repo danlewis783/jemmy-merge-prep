@@ -21,14 +21,15 @@ import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTreeByItemPredicate implements Predicate<Component> {
     private final StringComparator comparator;
-    private final String label;
+    private final @Nullable String label;
     private final int rowIndex;
 
-    public JTreeByItemPredicate(String label, int rowIndex, StringComparator comparator) {
+    public JTreeByItemPredicate(@Nullable String label, int rowIndex, StringComparator comparator) {
         this.label = label;
         this.rowIndex = rowIndex;
         this.comparator = comparator;

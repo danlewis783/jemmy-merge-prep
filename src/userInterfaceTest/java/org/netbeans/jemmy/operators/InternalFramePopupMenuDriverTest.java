@@ -19,10 +19,8 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.UIManager;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,17 +39,22 @@ import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
  * defaults are unaffected elsewhere.
  */
 @ExtendWith(DumpOnFailure.class)
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class InternalFramePopupMenuDriverTest {
 
     private JFrame frame;
     private JInternalFrame internalFrame;
 
     @BeforeAll
-    static void beforeAll() throws Exception {
+    static void beforeAll() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-            } catch (Exception e) {
+            } catch (UnsupportedLookAndFeelException
+                    | ClassNotFoundException
+                    | InstantiationException
+                    | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -63,7 +66,7 @@ class InternalFramePopupMenuDriverTest {
     }
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             JDesktopPane desktop = new JDesktopPane();
@@ -80,7 +83,7 @@ class InternalFramePopupMenuDriverTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();

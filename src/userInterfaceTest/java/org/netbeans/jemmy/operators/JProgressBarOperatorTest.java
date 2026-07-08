@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.within;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
@@ -34,42 +33,34 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JProgressBarOperatorTest {
 
-    private final AtomicReference<JFrame> frameRef = new AtomicReference<>();
-    private final AtomicReference<JProgressBar> progressBarRef = new AtomicReference<>();
+    private JFrame frame;
+    private JProgressBar progressBar;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                JFrame jFrame = new JFrame();
-                JProgressBar jProgressBar = new JProgressBar();
-                jProgressBar.setName("JProgressBarOperatorTest");
-                progressBarRef.set(jProgressBar);
-                jFrame.getContentPane().add(jProgressBar);
-                jFrame.pack();
-                jFrame.setLocationRelativeTo(null);
-                jFrame.setVisible(true);
-                frameRef.set(jFrame);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame();
+            JProgressBar jProgressBar = new JProgressBar();
+            jProgressBar.setName("JProgressBarOperatorTest");
+            progressBar = jProgressBar;
+            jFrame.getContentPane().add(jProgressBar);
+            jFrame.pack();
+            jFrame.setLocationRelativeTo(null);
+            jFrame.setVisible(true);
+            frame = jFrame;
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                JFrame jFrame = frameRef.get();
-                jFrame.setVisible(false);
-                jFrame.dispose();
-                frameRef.set(null);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -81,25 +72,25 @@ class JProgressBarOperatorTest {
         JProgressBarOperator operator2 =
                 new JProgressBarOperator(operator, PredicatesJ.byName("JProgressBarOperatorTest"));
         assertThat(operator2).isNotNull();
-        JProgressBarOperator operator3 = new JProgressBarOperator(progressBarRef.get());
+        JProgressBarOperator operator3 = new JProgressBarOperator(progressBar);
         assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindJProgressBar() {
-        JProgressBar progressBar1 = JProgressBarOperator.findJProgressBar(frameRef.get());
+        JProgressBar progressBar1 = JProgressBarOperator.findJProgressBar(frame);
         assertThat(progressBar1).isNotNull();
         JProgressBar progressBar2 =
-                JProgressBarOperator.findJProgressBar(frameRef.get(), PredicatesJ.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.findJProgressBar(frame, PredicatesJ.byName("JProgressBarOperatorTest"));
         assertThat(progressBar2).isNotNull();
     }
 
     @Test
     void testWaitJProgressBar() {
-        JProgressBar progressBar1 = JProgressBarOperator.waitJProgressBar(frameRef.get());
+        JProgressBar progressBar1 = JProgressBarOperator.waitJProgressBar(frame);
         assertThat(progressBar1).isNotNull();
         JProgressBar progressBar2 =
-                JProgressBarOperator.waitJProgressBar(frameRef.get(), PredicatesJ.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.waitJProgressBar(frame, PredicatesJ.byName("JProgressBarOperatorTest"));
         assertThat(progressBar2).isNotNull();
     }
 
@@ -124,9 +115,9 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         NullChangeListener listener = new NullChangeListener();
         operator1.addChangeListener(listener);
-        assertThat(progressBarRef.get().getChangeListeners().length).isEqualTo(2);
+        assertThat(progressBar.getChangeListeners().length).isEqualTo(2);
         operator1.removeChangeListener(listener);
-        assertThat(progressBarRef.get().getChangeListeners().length).isEqualTo(1);
+        assertThat(progressBar.getChangeListeners().length).isEqualTo(1);
     }
 
     @Test
@@ -137,7 +128,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setMaximum(101);
         assertThat(operator1.getMaximum()).isEqualTo(101);
-        assertThat(progressBarRef.get().getMaximum()).isEqualTo(101);
+        assertThat(progressBar.getMaximum()).isEqualTo(101);
     }
 
     @Test
@@ -148,7 +139,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setMinimum(7);
         assertThat(operator1.getMinimum()).isEqualTo(7);
-        assertThat(progressBarRef.get().getMinimum()).isEqualTo(7);
+        assertThat(progressBar.getMinimum()).isEqualTo(7);
     }
 
     @Test
@@ -160,7 +151,7 @@ class JProgressBarOperatorTest {
         NullBoundedRangeModel model = new NullBoundedRangeModel();
         operator1.setModel(model);
         assertThat(operator1.getModel()).isEqualTo(model);
-        assertThat(progressBarRef.get().getModel()).isEqualTo(model);
+        assertThat(progressBar.getModel()).isEqualTo(model);
     }
 
     @Test
@@ -171,7 +162,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setOrientation(JProgressBar.VERTICAL);
         assertThat(operator1.getOrientation()).isEqualTo(JProgressBar.VERTICAL);
-        assertThat(progressBarRef.get().getOrientation()).isEqualTo(JProgressBar.VERTICAL);
+        assertThat(progressBar.getOrientation()).isEqualTo(JProgressBar.VERTICAL);
     }
 
     @Test
@@ -184,7 +175,7 @@ class JProgressBarOperatorTest {
         operator1.setMaximum(100);
         operator1.setValue(50);
         assertThat(operator1.getPercentComplete()).isCloseTo(0.5, within(1.0e-5));
-        assertThat(progressBarRef.get().getPercentComplete()).isCloseTo(0.5, within(1.0e-5));
+        assertThat(progressBar.getPercentComplete()).isCloseTo(0.5, within(1.0e-5));
     }
 
     @Test
@@ -195,7 +186,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setString("BLABLA");
         assertThat(operator1.getString()).isEqualTo("BLABLA");
-        assertThat(progressBarRef.get().getString()).isEqualTo("BLABLA");
+        assertThat(progressBar.getString()).isEqualTo("BLABLA");
     }
 
     @Test
@@ -207,7 +198,7 @@ class JProgressBarOperatorTest {
         NullProgressBarUI progressBarUI = new NullProgressBarUI();
         operator1.setUI(progressBarUI);
         assertThat(operator1.getUI()).isEqualTo(progressBarUI);
-        assertThat(progressBarRef.get().getUI()).isEqualTo(progressBarUI);
+        assertThat(progressBar.getUI()).isEqualTo(progressBarUI);
     }
 
     @Test
@@ -218,10 +209,10 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setBorderPainted(true);
         assertThat(operator1.isBorderPainted()).isTrue();
-        assertThat(progressBarRef.get().isBorderPainted()).isTrue();
+        assertThat(progressBar.isBorderPainted()).isTrue();
         operator1.setBorderPainted(false);
         assertThat(operator1.isBorderPainted()).isFalse();
-        assertThat(progressBarRef.get().isBorderPainted()).isFalse();
+        assertThat(progressBar.isBorderPainted()).isFalse();
     }
 
     @Test
@@ -232,9 +223,9 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setStringPainted(true);
         assertThat(operator1.isStringPainted()).isTrue();
-        assertThat(progressBarRef.get().isStringPainted()).isTrue();
+        assertThat(progressBar.isStringPainted()).isTrue();
         operator1.setStringPainted(false);
-        assertThat(progressBarRef.get().isStringPainted()).isFalse();
+        assertThat(progressBar.isStringPainted()).isFalse();
     }
 
     private static class NullBoundedRangeModel implements BoundedRangeModel {

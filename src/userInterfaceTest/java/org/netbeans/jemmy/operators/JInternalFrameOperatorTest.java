@@ -50,6 +50,8 @@ import org.netbeans.jemmy.operators.JInternalFrameOperator.WrongInternalFrameSta
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JInternalFrameOperatorTest {
 
     private JPanel contentPane;
@@ -61,37 +63,28 @@ class JInternalFrameOperatorTest {
     private JMenuBar menuBar;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                desktop = new JDesktopPane();
-                frame.setContentPane(desktop);
-                internalFrame = new JInternalFrame("JInternalFrameOperatorTest", true, true, true, true);
-                internalFrame.setName("JInternalFrameOperatorTest");
-                internalFrame.setSize(100, 100);
-                internalFrame.setVisible(true);
-                desktop.add(internalFrame);
-                frame.setSize(200, 200);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            desktop = new JDesktopPane();
+            frame.setContentPane(desktop);
+            internalFrame = new JInternalFrame("JInternalFrameOperatorTest", true, true, true, true);
+            internalFrame.setName("JInternalFrameOperatorTest");
+            internalFrame.setSize(100, 100);
+            internalFrame.setVisible(true);
+            desktop.add(internalFrame);
+            frame.setSize(200, 200);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -109,7 +102,7 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testFindJInternalFrame() {
+    void testFindJInternalFrame() throws InterruptedException, InvocationTargetException {
         JInternalFrame internalFrame1 =
                 JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertThat(internalFrame1).isNotNull();
@@ -117,30 +110,22 @@ class JInternalFrameOperatorTest {
                 frame, "JInternalFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(internalFrame2).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> {
-                try {
-                    internalFrame.setIcon(true);
-                } catch (PropertyVetoException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> {
+            try {
+                internalFrame.setIcon(true);
+            } catch (PropertyVetoException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         JInternalFrame internalFrame3 =
                 JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
         assertThat(internalFrame3).isNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> {
-                JDesktopIcon desktopIcon = new JDesktopIcon(internalFrame);
-                internalFrame.setDesktopIcon(desktopIcon);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> {
+            JDesktopIcon desktopIcon = new JDesktopIcon(internalFrame);
+            internalFrame.setDesktopIcon(desktopIcon);
+        });
 
         JInternalFrame internalFrame4 =
                 JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
@@ -246,7 +231,7 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testTitleButtonsWhenNotIconifiable() throws Exception {
+    void testTitleButtonsWhenNotIconifiable() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> internalFrame.setIconifiable(false));
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
@@ -272,7 +257,7 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testWaitClosed() throws Exception {
+    void testWaitClosed() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
@@ -406,17 +391,13 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testGetContentPane() {
+    void testGetContentPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
         assertThat(operator2).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> contentPane = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> contentPane = new JPanel());
 
         operator2.setContentPane(contentPane);
         assertThat(operator2.getContentPane()).isEqualTo(contentPane);
@@ -434,17 +415,13 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testGetDesktopIcon() {
+    void testGetDesktopIcon() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
         assertThat(operator2).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> icon = new JDesktopIcon(internalFrame));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> icon = new JDesktopIcon(internalFrame));
 
         operator2.setDesktopIcon(icon);
         assertThat(operator2.getDesktopIcon()).isEqualTo(icon);
@@ -471,34 +448,26 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testGetGlassPane() {
+    void testGetGlassPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
         assertThat(operator2).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> glassPane = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> glassPane = new JPanel());
 
         operator2.setGlassPane(glassPane);
         assertThat(operator2.getGlassPane()).isEqualTo(glassPane);
     }
 
     @Test
-    void testGetJMenuBar() {
+    void testGetJMenuBar() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = new JInternalFrameOperator(operator);
         assertThat(operator2).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> menuBar = new JMenuBar());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> menuBar = new JMenuBar());
 
         operator2.setJMenuBar(menuBar);
         assertThat(operator2.getJMenuBar()).isEqualTo(menuBar);

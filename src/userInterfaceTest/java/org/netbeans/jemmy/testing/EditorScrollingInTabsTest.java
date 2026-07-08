@@ -20,11 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 
+import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
@@ -45,7 +47,7 @@ import org.netbeans.jemmy.util.StringComparators;
 class EditorScrollingInTabsTest {
 
     @Test
-    void test() throws Exception {
+    void test() {
         EditorTabsApp.main(new String[] {});
         String allChars = "0123456789\n0123456789\n0123456789\n0123456789";
         QueueTool.getInstance().waitEmpty();
@@ -54,11 +56,11 @@ class EditorScrollingInTabsTest {
         assertThat(new JFrameOperator(frm).getContainers().length)
                 .as("Jemmy issue #4420394")
                 .isEqualTo(0);
-        JTabbedPaneOperator tp = new JTabbedPaneOperator(
-                JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1));
+        JTabbedPaneOperator tp = new JTabbedPaneOperator(Objects.requireNonNull(
+                JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1)));
         tp.selectPage("JEditorPane", StringComparators.substring());
-        JEditorPaneOperator to = new JEditorPaneOperator(
-                JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring()));
+        JEditorPaneOperator to = new JEditorPaneOperator(Objects.requireNonNull(
+                JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring())));
         JEditorPaneOperator t1 = new JEditorPaneOperator(frmo);
         assertThat(to.getSource()).isSameAs(t1.getSource());
         assertThat(JEditorPaneOperator.findJEditorPane(frm, PredicatesJ.alwaysTrue()))
@@ -89,8 +91,8 @@ class EditorScrollingInTabsTest {
                 .isNotNull();
         assertThat(testJEditorPane(to)).isTrue();
         tp.selectPage("JTextArea", StringComparators.substring());
-        JTextAreaOperator tao = new JTextAreaOperator(
-                JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring()));
+        JTextAreaOperator tao = new JTextAreaOperator(Objects.requireNonNull(
+                JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring())));
         tao.typeText(allChars);
         assertThat(tao.getText()).isEqualTo(allChars);
         tao.selectText(0, 20);
@@ -242,7 +244,7 @@ class EditorScrollingInTabsTest {
         }
 
         @Override
-        public Boolean apply(Void v) {
+        public @Nullable Boolean apply(Void v) {
             String selectedText = tco.getSelectedText();
             if ((selectedText != null) && selectedText.equals(eta)) {
                 return true;

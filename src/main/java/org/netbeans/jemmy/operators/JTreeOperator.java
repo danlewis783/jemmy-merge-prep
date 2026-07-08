@@ -265,7 +265,7 @@ public class JTreeOperator extends JComponentOperator {
         return findPath(parseString(path), comparator);
     }
 
-    public void doCollapsePath(TreePath path) {
+    public void doCollapsePath(@Nullable TreePath path) {
         if (path != null) {
             driver.collapseItem(this, getRowForPath(path));
 
@@ -568,7 +568,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void addSelectionPath(TreePath treePath) {
+    public void addSelectionPath(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionPath(treePath);
 
@@ -576,7 +576,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void addSelectionPaths(TreePath[] treePath) {
+    public void addSelectionPaths(TreePath @Nullable [] treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionPaths(treePath);
 
@@ -592,7 +592,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void addSelectionRows(int[] i) {
+    public void addSelectionRows(int @Nullable [] i) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionRows(i);
 
@@ -640,7 +640,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void collapsePath(TreePath treePath) {
+    public void collapsePath(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).collapsePath(treePath);
 
@@ -656,12 +656,12 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public String convertValueToText(Object object, boolean b, boolean b1, boolean b2, int i, boolean b3) {
+    public String convertValueToText(@Nullable Object object, boolean b, boolean b1, boolean b2, int i, boolean b3) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).convertValueToText(object, b, b1, b2, i, b3)));
     }
 
-    public void expandPath(TreePath treePath) {
+    public void expandPath(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).expandPath(treePath);
 
@@ -677,7 +677,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void fireTreeCollapsed(TreePath treePath) {
+    public void fireTreeCollapsed(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeCollapsed(treePath);
 
@@ -685,7 +685,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void fireTreeExpanded(TreePath treePath) {
+    public void fireTreeExpanded(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeExpanded(treePath);
 
@@ -693,7 +693,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void fireTreeWillCollapse(TreePath treePath) {
+    public void fireTreeWillCollapse(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeWillCollapse(treePath);
 
@@ -701,7 +701,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void fireTreeWillExpand(TreePath treePath) {
+    public void fireTreeWillExpand(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeWillExpand(treePath);
 
@@ -731,7 +731,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getEditingPath()));
     }
 
-    public Enumeration getExpandedDescendants(TreePath treePath) {
+    public Enumeration getExpandedDescendants(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Enumeration>)
                 () -> ((JTree) getSource()).getExpandedDescendants(treePath)));
     }
@@ -766,7 +766,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel()));
     }
 
-    public Rectangle getPathBounds(TreePath treePath) {
+    public Rectangle getPathBounds(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathBounds(treePath)));
     }
 
@@ -795,7 +795,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowForLocation(i, i1)));
     }
 
-    public int getRowForPath(TreePath treePath) {
+    public int getRowForPath(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowForPath(treePath)));
     }
 
@@ -859,7 +859,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getVisibleRowCount()));
     }
 
-    public boolean hasBeenExpanded(TreePath treePath) {
+    public boolean hasBeenExpanded(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).hasBeenExpanded(treePath)));
     }
 
@@ -867,7 +867,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isCollapsed(i)));
     }
 
-    public boolean isCollapsed(TreePath treePath) {
+    public boolean isCollapsed(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isCollapsed(treePath)));
     }
 
@@ -883,7 +883,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isExpanded(i)));
     }
 
-    public boolean isExpanded(TreePath treePath) {
+    public boolean isExpanded(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isExpanded(treePath)));
     }
 
@@ -895,11 +895,11 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isLargeModel()));
     }
 
-    public boolean isPathEditable(TreePath treePath) {
+    public boolean isPathEditable(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isPathEditable(treePath)));
     }
 
-    public boolean isPathSelected(TreePath treePath) {
+    public boolean isPathSelected(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isPathSelected(treePath)));
     }
 
@@ -915,11 +915,11 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isSelectionEmpty()));
     }
 
-    public boolean isVisible(TreePath treePath) {
+    public boolean isVisible(@Nullable TreePath treePath) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isVisible(treePath)));
     }
 
-    public void makeVisible(TreePath treePath) {
+    public void makeVisible(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).makeVisible(treePath);
 
@@ -935,7 +935,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void removeSelectionPath(TreePath treePath) {
+    public void removeSelectionPath(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionPath(treePath);
 
@@ -943,7 +943,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void removeSelectionPaths(TreePath[] treePath) {
+    public void removeSelectionPaths(TreePath @Nullable [] treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionPaths(treePath);
 
@@ -959,7 +959,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void removeSelectionRows(int[] i) {
+    public void removeSelectionRows(int @Nullable [] i) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionRows(i);
 
@@ -991,7 +991,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void scrollPathToVisible(TreePath treePath) {
+    public void scrollPathToVisible(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).scrollPathToVisible(treePath);
 
@@ -1151,7 +1151,7 @@ public class JTreeOperator extends JComponentOperator {
         }));
     }
 
-    public void startEditingAtPath(TreePath treePath) {
+    public void startEditingAtPath(@Nullable TreePath treePath) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).startEditingAtPath(treePath);
 
@@ -1202,11 +1202,12 @@ public class JTreeOperator extends JComponentOperator {
         return findJTree(cont, chooser, 0);
     }
 
-    public static @Nullable JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex, int index) {
+    public static @Nullable JTree findJTree(
+            Container cont, @Nullable String text, StringComparator sc, int rowIndex, int index) {
         return findJTree(cont, new JTreeByItemPredicate(text, rowIndex, sc), index);
     }
 
-    public static @Nullable JTree findJTree(Container cont, String text, StringComparator sc, int rowIndex) {
+    public static @Nullable JTree findJTree(Container cont, @Nullable String text, StringComparator sc, int rowIndex) {
         return findJTree(cont, text, sc, rowIndex, 0);
     }
 
@@ -1219,11 +1220,12 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public static JTree waitJTree(
-            Container cont, String text, StringComparator stringComparator, int rowIndex, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int rowIndex, int index) {
         return waitJTree(cont, new JTreeByItemPredicate(text, rowIndex, stringComparator), index);
     }
 
-    public static JTree waitJTree(Container cont, String text, StringComparator stringComparator, int rowIndex) {
+    public static JTree waitJTree(
+            Container cont, @Nullable String text, StringComparator stringComparator, int rowIndex) {
         return waitJTree(cont, text, stringComparator, rowIndex, 0);
     }
 

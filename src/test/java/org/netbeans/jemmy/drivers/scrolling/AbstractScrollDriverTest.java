@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntSupplier;
 import javax.swing.JLabel;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.TimeoutKey;
@@ -117,7 +118,7 @@ class AbstractScrollDriverTest {
         }
 
         @Override
-        protected Point startDragging(ComponentOperator oper) {
+        protected @Nullable Point startDragging(ComponentOperator oper) {
             return null;
         }
 

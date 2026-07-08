@@ -19,13 +19,14 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.AbstractButton;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class AbstractButtonByTextPredicate implements Predicate<Component> {
-    private final String expectedText;
+    private final @Nullable String expectedText;
     private final StringComparator stringComparator;
 
-    public AbstractButtonByTextPredicate(String expectedText, StringComparator stringComparator) {
+    public AbstractButtonByTextPredicate(@Nullable String expectedText, StringComparator stringComparator) {
         this.expectedText = expectedText;
         this.stringComparator = stringComparator;
     }

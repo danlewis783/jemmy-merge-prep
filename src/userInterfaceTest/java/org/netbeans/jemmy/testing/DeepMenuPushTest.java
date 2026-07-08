@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
 import javax.swing.JFrame;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.TimeoutKey;
@@ -36,7 +37,7 @@ class DeepMenuPushTest {
         DeepMenuApp.main(new String[] {});
         JFrame win = JFrameOperator.waitJFrame("DeepMenuApp");
         assertThat(new JFrameOperator(win)).isNotNull();
-        JMenuBarOperator mbo = new JMenuBarOperator(JMenuBarOperator.findJMenuBar(win));
+        JMenuBarOperator mbo = new JMenuBarOperator(Objects.requireNonNull(JMenuBarOperator.findJMenuBar(win)));
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 15000L)) {
             StringBuilder sb = new StringBuilder();

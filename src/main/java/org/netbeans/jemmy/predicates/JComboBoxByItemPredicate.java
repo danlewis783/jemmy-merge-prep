@@ -59,7 +59,7 @@ public final class JComboBoxByItemPredicate implements Predicate<Component> {
                     }
                 }
 
-                @Nullable Object item = model.getElementAt(ii);
+                Object item = model.getElementAt(ii);
                 return comparator.equals(String.valueOf(item), label);
             }
         }

@@ -23,8 +23,8 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
@@ -35,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ListUI;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,12 +43,14 @@ import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JListOperatorTest {
 
-    private final AtomicReference<JFrame> frame = new AtomicReference<>();
+    private JFrame frame;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             JFrame frameNew = new JFrame();
             JList list = new JList(new String[] {"one", "two", "three", "four"});
@@ -57,16 +60,15 @@ class JListOperatorTest {
             frameNew.setSize(300, 200);
             frameNew.setLocationRelativeTo(null);
             frameNew.setVisible(true);
-            frame.set(frameNew);
+            frame = frameNew;
         });
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
-            frame.get().setVisible(false);
-            frame.get().dispose();
-            frame.set(null);
+            frame.setVisible(false);
+            frame.dispose();
         });
     }
 
@@ -84,17 +86,17 @@ class JListOperatorTest {
 
     @Test
     void testFindJList() {
-        JList list1 = JListOperator.findJList(frame.get(), PredicatesJ.byName("JListOperatorTest"));
+        JList list1 = JListOperator.findJList(frame, PredicatesJ.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
-        JList list2 = JListOperator.findJList(frame.get(), "one", StringComparators.caseInsensitiveSubstring(), 0);
+        JList list2 = JListOperator.findJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();
     }
 
     @Test
     void testWaitJList() {
-        JList list1 = JListOperator.waitJList(frame.get(), PredicatesJ.byName("JListOperatorTest"));
+        JList list1 = JListOperator.waitJList(frame, PredicatesJ.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
-        JList list2 = JListOperator.waitJList(frame.get(), "one", StringComparators.caseInsensitiveSubstring(), 0);
+        JList list2 = JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();
     }
 
@@ -591,12 +593,12 @@ class JListOperatorTest {
         }
 
         @Override
-        public Point indexToLocation(JList list, int index) {
+        public @Nullable Point indexToLocation(JList list, int index) {
             return null;
         }
 
         @Override
-        public Rectangle getCellBounds(JList list, int index1, int index2) {
+        public @Nullable Rectangle getCellBounds(JList list, int index1, int index2) {
             return null;
         }
     }

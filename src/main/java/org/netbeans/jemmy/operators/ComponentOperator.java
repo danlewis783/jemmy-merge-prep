@@ -501,12 +501,12 @@ public class ComponentOperator extends Operator {
         }));
     }
 
-    public int checkImage(Image image, int i, int i1, ImageObserver imageObserver) {
+    public int checkImage(Image image, int i, int i1, @Nullable ImageObserver imageObserver) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> getSource().checkImage(image, i, i1, imageObserver)));
     }
 
-    public int checkImage(Image image, ImageObserver imageObserver) {
+    public int checkImage(Image image, @Nullable ImageObserver imageObserver) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> getSource().checkImage(image, imageObserver)));
     }
@@ -844,12 +844,12 @@ public class ComponentOperator extends Operator {
         }));
     }
 
-    public boolean prepareImage(Image image, int i, int i1, ImageObserver imageObserver) {
+    public boolean prepareImage(Image image, int i, int i1, @Nullable ImageObserver imageObserver) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> getSource().prepareImage(image, i, i1, imageObserver)));
     }
 
-    public boolean prepareImage(Image image, ImageObserver imageObserver) {
+    public boolean prepareImage(Image image, @Nullable ImageObserver imageObserver) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> getSource().prepareImage(image, imageObserver)));
     }

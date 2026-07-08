@@ -19,13 +19,14 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.text.JTextComponent;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTextComponentByTextPredicate implements Predicate<Component> {
     private final StringComparator comparator;
-    private final String expectedText;
+    private final @Nullable String expectedText;
 
-    public JTextComponentByTextPredicate(String expectedText, StringComparator comparator) {
+    public JTextComponentByTextPredicate(@Nullable String expectedText, StringComparator comparator) {
         this.expectedText = expectedText;
         this.comparator = comparator;
     }

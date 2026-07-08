@@ -25,6 +25,7 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Window;
+import java.util.Objects;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -53,6 +54,8 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_001
+// UI fixtures are created on the EDT in the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class DialogComboListWorkflowTest {
 
     private DialogComboListApp application_001;
@@ -71,18 +74,18 @@ class DialogComboListWorkflowTest {
         assertThat(dialogOp.getSource()).isSameAs(jDialogOp1.getSource());
         Window window = new ComponentOperator(jDialog).getWindow();
         assertThat(jDialog).isSameAs(window);
-        JScrollPaneOperator jScrollPaneOp =
-                new JScrollPaneOperator(JScrollPaneOperator.findJScrollPane(jDialog, PredicatesJ.alwaysTrue()));
-        JComboBoxOperator jComboOp1 = new JComboBoxOperator(
-                JComboBoxOperator.findJComboBox(jDialog, "editable_one", StringComparators.strict(), 0));
+        JScrollPaneOperator jScrollPaneOp = new JScrollPaneOperator(
+                Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jDialog, PredicatesJ.alwaysTrue())));
+        JComboBoxOperator jComboOp1 = new JComboBoxOperator(Objects.requireNonNull(
+                JComboBoxOperator.findJComboBox(jDialog, "editable_one", StringComparators.strict(), 0)));
         JComboBoxOperator jComboOp2 = new JComboBoxOperator(jDialogOp1);
         JComboBoxOperator jComboOp3 = new JComboBoxOperator(jDialogOp1, "editable_one", StringComparators.strict());
         JComboBoxOperator jComboOp4 = new JComboBoxOperator(jDialogOp1, PredicatesJ.byName("editable"));
         assertThat(jComboOp2.getSource()).isSameAs(jComboOp1.getSource());
         assertThat(jComboOp3.getSource()).isSameAs(jComboOp1.getSource());
         assertThat(jComboOp4.getSource()).isSameAs(jComboOp1.getSource());
-        JComboBoxOperator jComboOp5 = new JComboBoxOperator(
-                JComboBoxOperator.findJComboBox(jDialog, "non_editable_one", StringComparators.strict(), 0));
+        JComboBoxOperator jComboOp5 = new JComboBoxOperator(Objects.requireNonNull(
+                JComboBoxOperator.findJComboBox(jDialog, "non_editable_one", StringComparators.strict(), 0)));
         assertThat(jComboOp1.getItemCount()).isEqualTo(4);
         JListOperator jListOp1 = new JListOperator(jDialogOp1);
         jListOp1.clickOnItem("two", StringComparators.caseInsensitiveSubstring());

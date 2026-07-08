@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.IllegalComponentStateException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Objects;
 import javax.swing.JEditorPane;
@@ -38,6 +39,8 @@ import org.junit.jupiter.api.Test;
  * Exercises {@code JEditorPaneOperator.clickOnReference}, ported from openjdk/jemmy-v2 (CODETOOLS-7902156), with
  * and without an enclosing scroll pane. The HTML fixtures link to each other by named anchors.
  */
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JEditorPaneClickOnReferenceTest {
 
     private static final String PAGE1 = "page1";
@@ -61,7 +64,7 @@ class JEditorPaneClickOnReferenceTest {
     private JEditorPane editorPane;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             frame.setPreferredSize(new Dimension(800, 600));
@@ -69,7 +72,7 @@ class JEditorPaneClickOnReferenceTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             editorPane.removeHyperlinkListener(listener);
             frame.setVisible(false);
@@ -78,7 +81,7 @@ class JEditorPaneClickOnReferenceTest {
     }
 
     @Test
-    void clickOnReferenceWithScrollPane() throws Exception {
+    void clickOnReferenceWithScrollPane() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             editorPane = newEditorPane();
             frame.getContentPane().add(new JScrollPane(editorPane), BorderLayout.CENTER);
@@ -108,7 +111,7 @@ class JEditorPaneClickOnReferenceTest {
     }
 
     @Test
-    void clickOnReferenceWithoutScrollPane() throws Exception {
+    void clickOnReferenceWithoutScrollPane() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             editorPane = newEditorPane();
             frame.getContentPane().add(editorPane);

@@ -23,7 +23,9 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.Action;
 import javax.swing.JFrame;
@@ -32,6 +34,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +46,8 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JMenuOperatorTest {
 
     @BeforeAll
@@ -50,13 +55,13 @@ class JMenuOperatorTest {
         Timeouts.resetToDefaults();
     }
 
-    private final AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
-    private final AtomicReference<JMenu> jMenuRef = new AtomicReference<>();
+    private JFrame frame;
+    private JMenu menu;
     private TimeoutOverride override1;
     private TimeoutOverride override2;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 2000L);
         override2 = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 2000L);
         EventQueue.invokeAndWait(() -> {
@@ -77,19 +82,17 @@ class JMenuOperatorTest {
             jFrame.setJMenuBar(jMenuBar);
             jFrame.setSize(250, 100);
             jFrame.setVisible(true);
-            jFrameRef.set(jFrame);
-            jMenuRef.set(jMenu);
+            frame = jFrame;
+            menu = jMenu;
         });
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() throws InterruptedException, InvocationTargetException {
         try {
             EventQueue.invokeAndWait(() -> {
-                JFrame jFrame = jFrameRef.get();
-                jFrame.setVisible(false);
-                jFrame.dispose();
-                jFrameRef.set(null);
+                frame.setVisible(false);
+                frame.dispose();
             });
         } finally {
             override1.cancel();
@@ -108,22 +111,22 @@ class JMenuOperatorTest {
                 .isNotNull();
         assertThat(new JMenuOperator(jMenuBarOp, "JMenuOperatorTest", StringComparators.strict()))
                 .isNotNull();
-        assertThat(new JMenuOperator(jMenuRef.get())).isNotNull();
+        assertThat(new JMenuOperator(menu)).isNotNull();
     }
 
     @Test
     void findJMenu() {
-        assertThat(JMenuOperator.findJMenu(jFrameRef.get(), "JMenuOperatorTest", StringComparators.strict()))
+        assertThat(JMenuOperator.findJMenu(frame, "JMenuOperatorTest", StringComparators.strict()))
                 .isNotNull();
-        assertThat(JMenuOperator.findJMenu(jFrameRef.get(), PredicatesJ.byName("JMenuOperatorTest")))
+        assertThat(JMenuOperator.findJMenu(frame, PredicatesJ.byName("JMenuOperatorTest")))
                 .isNotNull();
     }
 
     @Test
     void waitJMenu() {
-        assertThat(JMenuOperator.waitJMenu(jFrameRef.get(), "JMenuOperatorTest", StringComparators.strict()))
+        assertThat(JMenuOperator.waitJMenu(frame, "JMenuOperatorTest", StringComparators.strict()))
                 .isNotNull();
-        assertThat(JMenuOperator.waitJMenu(jFrameRef.get(), PredicatesJ.byName("JMenuOperatorTest")))
+        assertThat(JMenuOperator.waitJMenu(frame, PredicatesJ.byName("JMenuOperatorTest")))
                 .isNotNull();
     }
 
@@ -136,13 +139,13 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
-        jMenuRef.get().addMenuListener(listener);
+        menu.addMenuListener(listener);
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.strict());
         jMenuOp.pushMenu("JMenuOperatorTest", "/", StringComparators.strict());
         jMenuOp.pushMenu("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenu(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.regex());
-        jMenuRef.get().removeMenuListener(listener);
+        menu.removeMenuListener(listener);
     }
 
     @Test
@@ -154,14 +157,14 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
-        jMenuRef.get().addMenuListener(listener);
+        menu.addMenuListener(listener);
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.strict());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.strict());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenuNoBlock(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", ",", StringComparators.regex());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.regex());
-        jMenuRef.get().removeMenuListener(listener);
+        menu.removeMenuListener(listener);
     }
 
     @Test
@@ -173,18 +176,18 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
-        jMenuRef.get().addMenuListener(listener);
+        menu.addMenuListener(listener);
         assertThat(jMenuOp.showMenuItem("Item1", "/", StringComparators.strict()))
                 .isNotNull();
         assertThat(jMenuOp.showMenuItem(Collections.singletonList(PredicatesJ.byName("Item1"))))
                 .isNotNull();
         assertThat(jMenuOp.showMenuItem(new String[] {"Item1"}, StringComparators.strict()))
                 .isNotNull();
-        jMenuRef.get().removeMenuListener(listener);
+        menu.removeMenuListener(listener);
     }
 
     @Test
-    void add() throws Exception {
+    void add() throws InterruptedException, InvocationTargetException {
         JFrameOperator jFrameOp = new JFrameOperator();
         assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
@@ -193,7 +196,7 @@ class JMenuOperatorTest {
         assertThat(jMenuOp).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("JMenuOperatorTest1")));
-        jMenuOp.add(menuItem.get());
+        jMenuOp.add(Objects.requireNonNull(menuItem.get()));
         jMenuOp.add("JMenuOperatorTest2");
         jMenuOp.add(new NullAction());
     }
@@ -208,9 +211,9 @@ class JMenuOperatorTest {
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuOp.addMenuListener(listener);
-        assertThat(jMenuRef.get().getMenuListeners().length).isEqualTo(1);
+        assertThat(menu.getMenuListeners().length).isEqualTo(1);
         jMenuOp.removeMenuListener(listener);
-        assertThat(jMenuRef.get().getMenuListeners().length).isEqualTo(0);
+        assertThat(menu.getMenuListeners().length).isEqualTo(0);
     }
 
     @Test
@@ -303,7 +306,7 @@ class JMenuOperatorTest {
     }
 
     @Test
-    void insert() throws Exception {
+    void insert() throws InterruptedException, InvocationTargetException {
         JFrameOperator jFrameOp = new JFrameOperator();
         assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
@@ -312,7 +315,7 @@ class JMenuOperatorTest {
         assertThat(jMenuOp).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
-        jMenuOp.insert(menuItem.get(), 0);
+        jMenuOp.insert(Objects.requireNonNull(menuItem.get()), 0);
         jMenuOp.insert("Testing", 0);
         jMenuOp.insert(new NullAction(), 0);
     }
@@ -336,7 +339,7 @@ class JMenuOperatorTest {
         assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = new JMenuOperator(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
-        jMenuOp.isMenuComponent(jFrameRef.get());
+        jMenuOp.isMenuComponent(frame);
     }
 
     @Test
@@ -381,7 +384,7 @@ class JMenuOperatorTest {
     }
 
     @Test
-    void remove() throws Exception {
+    void remove() throws InterruptedException, InvocationTargetException {
         JFrameOperator jFrameOp = new JFrameOperator();
         assertThat(jFrameOp).isNotNull();
         JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jFrameOp);
@@ -390,7 +393,7 @@ class JMenuOperatorTest {
         assertThat(jMenuOp).isNotNull();
         AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
-        jMenuOp.remove(menuItem.get());
+        jMenuOp.remove(Objects.requireNonNull(menuItem.get()));
     }
 
     @Test
@@ -406,7 +409,7 @@ class JMenuOperatorTest {
 
     private static class NullAction implements Action {
         @Override
-        public Object getValue(String key) {
+        public @Nullable Object getValue(String key) {
             return null;
         }
 

@@ -32,28 +32,40 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.PopupMenu;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.FocusAdapter;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.MemoryImageSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class ComponentOperatorTest {
 
     private Frame frame;
     private Panel panel;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new Frame();
             frame.setName("FrameOperatorTest");
@@ -66,11 +78,10 @@ class ComponentOperatorTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -85,7 +96,7 @@ class ComponentOperatorTest {
     }
 
     @Test
-    void testWaitComponentSize() throws Exception {
+    void testWaitComponentSize() throws InterruptedException, InvocationTargetException {
         ComponentOperator operator = new ComponentOperator(frame);
         EventQueue.invokeAndWait(() -> frame.setSize(400, 300));
         operator.waitComponentSize(new Dimension(400, 300));
@@ -93,7 +104,7 @@ class ComponentOperatorTest {
     }
 
     @Test
-    void testWaitComponentLocation() throws Exception {
+    void testWaitComponentLocation() throws InterruptedException, InvocationTargetException {
         ComponentOperator operator = new ComponentOperator(frame);
         EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
         operator.waitComponentLocation(new Point(200, 150));
@@ -101,7 +112,7 @@ class ComponentOperatorTest {
     }
 
     @Test
-    void testWaitComponentLocationOnScreen() throws Exception {
+    void testWaitComponentLocationOnScreen() throws InterruptedException, InvocationTargetException {
         ComponentOperator operator = new ComponentOperator(frame);
         EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
         operator.waitComponentLocationOnScreen(new Point(200, 150));
@@ -414,7 +425,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addComponentListener(null);
+        operator1.addComponentListener(new ComponentAdapter() {});
     }
 
     @Test
@@ -423,7 +434,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addFocusListener(null);
+        operator1.addFocusListener(new FocusAdapter() {});
     }
 
     @Test
@@ -432,7 +443,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addInputMethodListener(null);
+        operator1.addInputMethodListener(new NullInputMethodListener());
     }
 
     @Test
@@ -441,7 +452,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addKeyListener(null);
+        operator1.addKeyListener(new KeyAdapter() {});
     }
 
     @Test
@@ -450,7 +461,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addMouseListener(null);
+        operator1.addMouseListener(new MouseAdapter() {});
     }
 
     @Test
@@ -459,7 +470,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addMouseMotionListener(null);
+        operator1.addMouseMotionListener(new MouseMotionAdapter() {});
     }
 
     @Test
@@ -477,8 +488,8 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addPropertyChangeListener(null);
-        operator1.addPropertyChangeListener(null, null);
+        operator1.addPropertyChangeListener(event -> {});
+        operator1.addPropertyChangeListener("enabled", event -> {});
     }
 
     @Test
@@ -487,8 +498,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.checkImage(null, null);
-        operator1.checkImage(null, 100, 100, null);
+        Image image = operator1.createImage(100, 100);
+        operator1.checkImage(image, null);
+        operator1.checkImage(image, 100, 100, null);
     }
 
     @Test
@@ -507,7 +519,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.createImage(null);
+        operator1.createImage(new MemoryImageSource(100, 100, new int[100 * 100], 0, 100));
         operator1.createImage(100, 100);
     }
 
@@ -828,7 +840,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.imageUpdate(null, 100, 100, 100, 100, 100);
+        operator1.imageUpdate(operator1.createImage(100, 100), 100, 100, 100, 100, 100);
     }
 
     @Test
@@ -958,8 +970,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.prepareImage(null, null);
-        operator1.prepareImage(null, 100, 100, null);
+        Image image = operator1.createImage(100, 100);
+        operator1.prepareImage(image, null);
+        operator1.prepareImage(image, 100, 100, null);
     }
 
     @Test
@@ -986,7 +999,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.remove(null);
+        PopupMenu popupMenu = new PopupMenu();
+        operator1.add(popupMenu);
+        operator1.remove(popupMenu);
     }
 
     @Test
@@ -995,7 +1010,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeComponentListener(null);
+        operator1.removeComponentListener(new ComponentAdapter() {});
     }
 
     @Test
@@ -1004,7 +1019,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeFocusListener(null);
+        operator1.removeFocusListener(new FocusAdapter() {});
     }
 
     @Test
@@ -1013,7 +1028,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeInputMethodListener(null);
+        operator1.removeInputMethodListener(new NullInputMethodListener());
     }
 
     @Test
@@ -1022,7 +1037,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeKeyListener(null);
+        operator1.removeKeyListener(new KeyAdapter() {});
     }
 
     @Test
@@ -1031,7 +1046,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeMouseListener(null);
+        operator1.removeMouseListener(new MouseAdapter() {});
     }
 
     @Test
@@ -1040,7 +1055,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeMouseMotionListener(null);
+        operator1.removeMouseMotionListener(new MouseMotionAdapter() {});
     }
 
     @Test
@@ -1058,8 +1073,8 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removePropertyChangeListener(null);
-        operator1.removePropertyChangeListener(null, null);
+        operator1.removePropertyChangeListener(event -> {});
+        operator1.removePropertyChangeListener("enabled", event -> {});
     }
 
     @Test
@@ -1108,5 +1123,13 @@ class ComponentOperatorTest {
         ComponentOperator operator1 = new ComponentOperator(operator);
         assertThat(operator1).isNotNull();
         operator1.validate();
+    }
+
+    private static class NullInputMethodListener implements InputMethodListener {
+        @Override
+        public void inputMethodTextChanged(InputMethodEvent event) {}
+
+        @Override
+        public void caretPositionChanged(InputMethodEvent event) {}
     }
 }

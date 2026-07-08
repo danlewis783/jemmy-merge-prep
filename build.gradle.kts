@@ -82,21 +82,21 @@ tasks.named("check") {
     dependsOn(testing.suites.named("userInterfaceTest"))
 }
 
+// NullAway only (not the rest of Error Prone), over the project's packages, on
+// every source set - this is a nullness audit, not a general lint pass.
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     options.release.set(8)
-    options.errorprone.isEnabled.set(false) // off everywhere; enabled for main below
-}
-
-// NullAway only (not the rest of Error Prone), over the project's packages, main
-// sources only - this is a nullness audit, not a general lint pass.
-tasks.named<JavaCompile>("compileJava") {
     options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
     options.errorprone {
         isEnabled.set(true)
         disableAllChecks.set(true)
         check("NullAway", CheckSeverity.ERROR)
         option("NullAway:AnnotatedPackages", "org.netbeans.jemmy")
+        // assertThat(x).isNotNull() counts as a null check in test code
+        option("NullAway:HandleTestAssertionLibraries", "true")
+        // JUnit injects @TempDir fields before any initializer runs
+        option("NullAway:ExcludedFieldAnnotations", "org.junit.jupiter.api.io.TempDir")
     }
 }
 

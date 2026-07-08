@@ -28,39 +28,32 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JPasswordFieldOperatorTest {
 
     private JFrame frame;
     private JPasswordField passwordField;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                passwordField = new JPasswordField("JPasswordFieldOperatorTest");
-                passwordField.setName("JPasswordFieldOperatorTest");
-                frame.getContentPane().add(passwordField);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            passwordField = new JPasswordField("JPasswordFieldOperatorTest");
+            passwordField.setName("JPasswordFieldOperatorTest");
+            frame.getContentPane().add(passwordField);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -116,18 +109,14 @@ class JPasswordFieldOperatorTest {
     }
 
     @Test
-    void testGetPassword() {
+    void testGetPassword() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator1 = new JFrameOperator();
         assertThat(operator1).isNotNull();
         JPasswordFieldOperator operator3 =
                 new JPasswordFieldOperator(operator1, PredicatesJ.byName("JPasswordFieldOperatorTest"));
         assertThat(operator3).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> passwordField.setText("hallo"));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> passwordField.setText("hallo"));
 
         assertThat(operator3.getPassword()[0]).isEqualTo('h');
         assertThat(operator3.getPassword()[1]).isEqualTo('a');

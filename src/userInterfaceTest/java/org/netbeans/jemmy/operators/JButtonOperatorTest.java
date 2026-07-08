@@ -19,7 +19,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
-import java.util.concurrent.atomic.AtomicReference;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
@@ -29,30 +29,31 @@ import org.netbeans.jemmy.predicates.JComponentOperatorVisiblePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JButtonOperatorTest {
 
-    private final AtomicReference<JButton> button = new AtomicReference<>();
-    private final AtomicReference<JFrame> frame = new AtomicReference<>();
+    private JButton button;
+    private JFrame frame;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
-            frame.set(new JFrame());
-            button.set(new JButton("JButtonOperatorTest"));
-            button.get().setName("JButtonOperatorTest");
-            frame.get().getContentPane().add(button.get());
-            frame.get().pack();
-            frame.get().setLocationRelativeTo(null);
-            frame.get().setVisible(true);
+            frame = new JFrame();
+            button = new JButton("JButtonOperatorTest");
+            button.setName("JButtonOperatorTest");
+            frame.getContentPane().add(button);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
         });
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
-            frame.get().setVisible(false);
-            frame.get().dispose();
-            frame.set(null);
+            frame.setVisible(false);
+            frame.dispose();
         });
     }
 
@@ -69,19 +70,19 @@ class JButtonOperatorTest {
 
     @Test
     void findJButton() {
-        JButton button1 = JButtonOperator.findJButton(frame.get(), PredicatesJ.byName("JButtonOperatorTest"));
+        JButton button1 = JButtonOperator.findJButton(frame, PredicatesJ.byName("JButtonOperatorTest"));
         assertThat(button1).isNotNull();
-        JButton button2 = JButtonOperator.findJButton(
-                frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        JButton button2 =
+                JButtonOperator.findJButton(frame, "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(button2).isNotNull();
     }
 
     @Test
     void waitJButton() {
-        JButton button1 = JButtonOperator.waitJButton(frame.get(), PredicatesJ.byName("JButtonOperatorTest"));
+        JButton button1 = JButtonOperator.waitJButton(frame, PredicatesJ.byName("JButtonOperatorTest"));
         assertThat(button1).isNotNull();
-        JButton button2 = JButtonOperator.waitJButton(
-                frame.get(), "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        JButton button2 =
+                JButtonOperator.waitJButton(frame, "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(button2).isNotNull();
     }
 
@@ -92,11 +93,11 @@ class JButtonOperatorTest {
         JButtonOperator operator2 = new JButtonOperator(operator1);
         assertThat(operator2).isNotNull();
         operator2.setDefaultCapable(true);
-        assertThat(button.get().isDefaultCapable()).isTrue();
-        assertThat(button.get().isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
+        assertThat(button.isDefaultCapable()).isTrue();
+        assertThat(button.isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
         operator2.setDefaultCapable(false);
-        assertThat(button.get().isDefaultCapable()).isFalse();
-        assertThat(button.get().isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
+        assertThat(button.isDefaultCapable()).isFalse();
+        assertThat(button.isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
     }
 
     @Test
@@ -112,10 +113,8 @@ class JButtonOperatorTest {
     }
 
     @Test
-    void issue72187() throws Exception {
-        button.get()
-                .addActionListener(
-                        event -> EventQueue.invokeLater(() -> button.get().setVisible(false)));
+    void issue72187() throws InterruptedException, InvocationTargetException {
+        button.addActionListener(event -> EventQueue.invokeLater(() -> button.setVisible(false)));
         JFrameOperator operator1 = new JFrameOperator();
         assertThat(operator1).isNotNull();
         JButtonOperator operator2 = new JButtonOperator(operator1);
@@ -123,18 +122,18 @@ class JButtonOperatorTest {
         operator2.press();
         operator2.release();
         operator2.waitState(new JComponentOperatorVisiblePredicate(false));
-        assertThat(button.get().isVisible()).isFalse();
-        EventQueue.invokeAndWait(() -> button.get().setVisible(true));
+        assertThat(button.isVisible()).isFalse();
+        EventQueue.invokeAndWait(() -> button.setVisible(true));
         JButtonOperator operator3 = new JButtonOperator(operator1);
         assertThat(operator3).isNotNull();
         operator3.clickMouse();
         operator3.waitState(new JComponentOperatorVisiblePredicate(false));
-        assertThat(button.get().isVisible()).isFalse();
-        EventQueue.invokeAndWait(() -> button.get().setVisible(true));
+        assertThat(button.isVisible()).isFalse();
+        EventQueue.invokeAndWait(() -> button.setVisible(true));
         JButtonOperator operator4 = new JButtonOperator(operator1);
         assertThat(operator4).isNotNull();
         operator4.push();
         assertThat(operator4.isVisible()).isFalse();
-        assertThat(button.get().isVisible()).isFalse();
+        assertThat(button.isVisible()).isFalse();
     }
 }

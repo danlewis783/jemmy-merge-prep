@@ -208,7 +208,6 @@ public abstract class Operator {
         FunctionRunner<F, T> functionRunner = FunctionRunner.on(function);
         functionRunner.run(f);
 
-        @SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
         Throwable t = functionRunner.getThrowable();
         if (t != null) {
             throw new JemmyException(

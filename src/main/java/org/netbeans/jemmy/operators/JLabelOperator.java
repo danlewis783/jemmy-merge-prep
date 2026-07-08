@@ -122,7 +122,7 @@ public class JLabelOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((JLabel) getSource()).getVerticalTextPosition()));
     }
 
-    public void setDisabledIcon(Icon icon) {
+    public void setDisabledIcon(@Nullable Icon icon) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JLabel) getSource()).setDisabledIcon(icon);
 
@@ -162,7 +162,7 @@ public class JLabelOperator extends JComponentOperator {
         }));
     }
 
-    public void setIcon(Icon icon) {
+    public void setIcon(@Nullable Icon icon) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JLabel) getSource()).setIcon(icon);
 
@@ -227,11 +227,12 @@ public class JLabelOperator extends JComponentOperator {
     }
 
     public static @Nullable JLabel findJLabel(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJLabel(cont, new JLabelByTextPredicate(text, stringComparator), index);
     }
 
-    public static @Nullable JLabel findJLabel(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JLabel findJLabel(
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return findJLabel(cont, text, stringComparator, 0);
     }
 
@@ -243,11 +244,12 @@ public class JLabelOperator extends JComponentOperator {
         return waitJLabel(cont, chooser, 0);
     }
 
-    public static JLabel waitJLabel(Container cont, String text, StringComparator stringComparator, int index) {
+    public static JLabel waitJLabel(
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJLabel(cont, new JLabelByTextPredicate(text, stringComparator), index);
     }
 
-    public static JLabel waitJLabel(Container cont, String text, StringComparator stringComparator) {
+    public static JLabel waitJLabel(Container cont, @Nullable String text, StringComparator stringComparator) {
         return waitJLabel(cont, text, stringComparator, 0);
     }
 }

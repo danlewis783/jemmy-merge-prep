@@ -20,6 +20,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Button;
+import java.util.Objects;
 import javax.swing.JFrame;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.ButtonOperator;
@@ -37,15 +38,15 @@ class AwtScrollPaneScrollingTest {
         AwtButtonGridScrollApp.main(new String[] {});
         ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         JFrame jFrame = JFrameOperator.waitJFrame("AwtButtonGridScrollApp");
-        Button butt00 = ButtonOperator.findButton(jFrame, "00", StringComparators.strict());
-        Button butt04 = ButtonOperator.findButton(jFrame, "04", StringComparators.strict());
-        Button butt11 = ButtonOperator.findButton(jFrame, "11", StringComparators.strict());
-        Button butt22 = ButtonOperator.findButton(jFrame, "22", StringComparators.strict());
-        Button butt24 = ButtonOperator.findButton(jFrame, "24", StringComparators.strict());
-        Button butt33 = ButtonOperator.findButton(jFrame, "33", StringComparators.strict());
-        Button butt44 = ButtonOperator.findButton(jFrame, "44", StringComparators.strict());
-        Button butt42 = ButtonOperator.findButton(jFrame, "42", StringComparators.strict());
-        Button butt40 = ButtonOperator.findButton(jFrame, "40", StringComparators.strict());
+        Button butt00 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "00", StringComparators.strict()));
+        Button butt04 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "04", StringComparators.strict()));
+        Button butt11 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "11", StringComparators.strict()));
+        Button butt22 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "22", StringComparators.strict()));
+        Button butt24 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "24", StringComparators.strict()));
+        Button butt33 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "33", StringComparators.strict()));
+        Button butt44 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "44", StringComparators.strict()));
+        Button butt42 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "42", StringComparators.strict()));
+        Button butt40 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "40", StringComparators.strict()));
         ScrollPaneOperator scrollPaneOp = new ScrollPaneOperator(new JFrameOperator(jFrame));
         assertThat(ScrollPaneOperator.findScrollPaneUnder(butt00)).isSameAs(scrollPaneOp.getSource());
         scrollPaneOp.setValues(

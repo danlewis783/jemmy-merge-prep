@@ -439,7 +439,7 @@ public class JComponentOperator extends ContainerOperator {
         }));
     }
 
-    public void setBorder(Border border) {
+    public void setBorder(@Nullable Border border) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JComponent) getSource()).setBorder(border);
 

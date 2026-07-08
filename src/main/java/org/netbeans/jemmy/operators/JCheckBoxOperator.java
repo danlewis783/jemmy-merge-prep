@@ -74,14 +74,15 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
     }
 
     public static @Nullable JCheckBox findJCheckBox(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJCheckBox(
                 cont,
                 PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static @Nullable JCheckBox findJCheckBox(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JCheckBox findJCheckBox(
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return findJCheckBox(cont, text, stringComparator, 0);
     }
 
@@ -93,14 +94,15 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
         return waitJCheckBox(cont, chooser, 0);
     }
 
-    public static JCheckBox waitJCheckBox(Container cont, String text, StringComparator stringComparator, int index) {
+    public static JCheckBox waitJCheckBox(
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJCheckBox(
                 cont,
                 PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JCheckBox waitJCheckBox(Container cont, String text, StringComparator stringComparator) {
+    public static JCheckBox waitJCheckBox(Container cont, @Nullable String text, StringComparator stringComparator) {
         return waitJCheckBox(cont, text, stringComparator, 0);
     }
 }

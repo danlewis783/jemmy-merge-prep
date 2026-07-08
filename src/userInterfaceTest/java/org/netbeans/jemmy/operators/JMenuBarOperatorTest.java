@@ -22,6 +22,7 @@ import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.JDialog;
@@ -30,6 +31,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
 import javax.swing.plaf.MenuBarUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +40,8 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JMenuBarOperatorTest {
 
     private JDialog dialog;
@@ -46,7 +51,7 @@ class JMenuBarOperatorTest {
     private JPanel panel;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             menuBar = new JMenuBar();
@@ -64,11 +69,10 @@ class JMenuBarOperatorTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -83,7 +87,7 @@ class JMenuBarOperatorTest {
     }
 
     @Test
-    void testFindJMenuBar() throws Exception {
+    void testFindJMenuBar() throws InterruptedException, InvocationTargetException {
         JMenuBar menuBar1 = JMenuBarOperator.findJMenuBar(frame);
         assertThat(menuBar1).isNotNull();
         EventQueue.invokeAndWait(() -> dialog = new JDialog());
@@ -92,7 +96,7 @@ class JMenuBarOperatorTest {
     }
 
     @Test
-    void testWaitJMenuBar() throws Exception {
+    void testWaitJMenuBar() throws InterruptedException, InvocationTargetException {
         JMenuBar menuBar1 = JMenuBarOperator.waitJMenuBar(frame);
         assertThat(menuBar1).isNotNull();
         EventQueue.invokeAndWait(() -> {
@@ -167,7 +171,7 @@ class JMenuBarOperatorTest {
     }
 
     @Test
-    void testAdd() throws Exception {
+    void testAdd() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = new JMenuBarOperator(operator);
@@ -277,7 +281,8 @@ class JMenuBarOperatorTest {
         assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = new JMenuBarOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.processKeyEvent(new KeyEvent(frame, 0, 0, 0, 0), null, null);
+        operator1.processKeyEvent(
+                new KeyEvent(frame, 0, 0, 0, 0), new MenuElement[0], MenuSelectionManager.defaultManager());
     }
 
     @Test
@@ -286,11 +291,14 @@ class JMenuBarOperatorTest {
         assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = new JMenuBarOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.processMouseEvent(new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false), null, null);
+        operator1.processMouseEvent(
+                new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false),
+                new MenuElement[0],
+                MenuSelectionManager.defaultManager());
     }
 
     @Test
-    void testSetSelected() throws Exception {
+    void testSetSelected() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = new JMenuBarOperator(operator);

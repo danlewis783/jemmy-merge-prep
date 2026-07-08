@@ -624,12 +624,12 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static @Nullable JList findJList(
-            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
     public static @Nullable JList findJList(
-            Container cont, String text, StringComparator stringComparator, int itemIndex) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex) {
         return findJList(cont, text, stringComparator, itemIndex, 0);
     }
 
@@ -642,11 +642,12 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static JList waitJList(
-            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return waitJList(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
-    public static JList waitJList(Container cont, String text, StringComparator stringComparator, int itemIndex) {
+    public static JList waitJList(
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex) {
         return waitJList(cont, text, stringComparator, itemIndex, 0);
     }
 

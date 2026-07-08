@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -43,6 +44,8 @@ import org.netbeans.jemmy.predicates.StringPropertyPredicate;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_011
+// operator fields are assigned mid-test before the checker lambdas read them
+@SuppressWarnings("NullAway.Init")
 class ToggleButtonSelectionTest {
 
     private JCheckBoxOperator boxOper;
@@ -75,21 +78,21 @@ class ToggleButtonSelectionTest {
         Object[][] params = {{"classname"}};
         Class[][] classes = {{Object.class}};
         Object[] results = {"JCheckBox"};
-        JCheckBox box = JCheckBoxOperator.findJCheckBox(
-                frm0, new PropertyPredicate(new String[] {"getClientProperty"}, params, classes, results));
+        JCheckBox box = Objects.requireNonNull(JCheckBoxOperator.findJCheckBox(
+                frm0, new PropertyPredicate(new String[] {"getClientProperty"}, params, classes, results)));
         JCheckBoxOperator bo0 = new JCheckBoxOperator(box);
         JCheckBoxOperator bo1 = new JCheckBoxOperator(frmo);
         JCheckBoxOperator bo2 = new JCheckBoxOperator(frmo, "JCheckBox", StringComparators.strict());
         assertThat(bo0.getSource()).isSameAs(bo1.getSource());
         assertThat(bo0.getSource()).isSameAs(bo2.getSource());
-        JRadioButton radioButton = JRadioButtonOperator.findJRadioButton(
+        JRadioButton radioButton = Objects.requireNonNull(JRadioButtonOperator.findJRadioButton(
                 frm0,
                 new StringPropertyPredicate(
-                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton"}));
-        JRadioButton radioButton1 = JRadioButtonOperator.findJRadioButton(
+                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton"})));
+        JRadioButton radioButton1 = Objects.requireNonNull(JRadioButtonOperator.findJRadioButton(
                 frm0,
                 new StringPropertyPredicate(
-                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton1"}));
+                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton1"})));
         JRadioButtonOperator rb0 = new JRadioButtonOperator(radioButton1);
         JRadioButtonOperator rb1 = new JRadioButtonOperator(frmo, 1);
         JRadioButtonOperator rb2 = new JRadioButtonOperator(frmo, "JRadioButton", StringComparators.substring(), 1);

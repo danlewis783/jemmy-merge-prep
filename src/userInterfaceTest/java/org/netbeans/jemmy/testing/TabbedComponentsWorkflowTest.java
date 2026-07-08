@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.time.Duration;
+import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -73,8 +74,8 @@ final class TabbedComponentsWorkflowTest {
             ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
             JFrame jFrame = JFrameOperator.waitJFrame("TabbedComponentsApp");
             JFrameOperator jFrameOp = new JFrameOperator(jFrame);
-            JTabbedPaneOperator jTabbedPaneOp =
-                    new JTabbedPaneOperator(JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0));
+            JTabbedPaneOperator jTabbedPaneOp = new JTabbedPaneOperator(
+                    Objects.requireNonNull(JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0)));
             Component jTabbedPane = jTabbedPaneOp.getSource();
             assertThat(jTabbedPane).isSameAs(new JTabbedPaneOperator(jFrameOp).getSource());
             assertThat(jTabbedPane)
@@ -82,8 +83,8 @@ final class TabbedComponentsWorkflowTest {
             assertThat(jTabbedPane)
                     .isSameAs(
                             new JTabbedPaneOperator(jFrameOp, "Tree", StringComparators.substring(), 1, 0).getSource());
-            JTableOperator jTableOp = new JTableOperator(
-                    JTableOperator.findJTable(jFrame, null, StringComparators.caseInsensitiveSubstring(), -1, -1));
+            JTableOperator jTableOp = new JTableOperator(Objects.requireNonNull(
+                    JTableOperator.findJTable(jFrame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
             jTableOp.clickOnCell(0, 0);
             assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp).getSource());
             assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp, "00", STRICT).getSource());
@@ -107,15 +108,15 @@ final class TabbedComponentsWorkflowTest {
                     .isSameAs(new JTreeOperator(jFrameOp, "-1", StringComparators.regex()).getSource());
             assertThat(jTreeOp.getSource())
                     .isSameAs(new JTreeOperator(jFrameOp, "49", StringComparators.regex(), 50, 0).getSource());
-            TreePath path49 = jTreeOp.findPath("49", "/", STRICT);
+            TreePath path49 = Objects.requireNonNull(jTreeOp.findPath("49", "/", STRICT));
             jTreeOp.scrollToPath(path49);
             jTreeOp.doExpandPath(path49);
-            TreePath path4949 = jTreeOp.findPath("49/4949", "/", STRICT);
+            TreePath path4949 = Objects.requireNonNull(jTreeOp.findPath("49/4949", "/", STRICT));
             jTreeOp.waitRow("4949", StringComparators.regex(), 100);
             jTreeOp.changePathObject(path4949, "-1-1");
-            TreePath path_1_1 = jTreeOp.findPath("49/-1-1", "/", STRICT);
+            TreePath path_1_1 = Objects.requireNonNull(jTreeOp.findPath("49/-1-1", "/", STRICT));
             jTreeOp.scrollToPath(path_1_1);
-            TreePath path0 = jTreeOp.findPath("", "/", STRICT);
+            TreePath path0 = Objects.requireNonNull(jTreeOp.findPath("", "/", STRICT));
             jTreeOp.scrollToPath(path0);
             jTabbedPaneOp.selectPage("List Page", STRICT);
             JListOperator listOper = new JListOperator(new JFrameOperator(jFrame));

@@ -25,8 +25,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.event.ListDataEvent;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,17 +36,19 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JComboBoxOperatorTest {
 
     private BasicComboBoxEditor boxEditor;
-    private JComboBox comboBox;
+    private JComboBox<String> comboBox;
     private JFrame frame;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
-            comboBox = new JComboBox();
+            comboBox = new JComboBox<>();
             comboBox.setName("JComboBoxOperatorTest");
             comboBox.setEditable(true);
             comboBox.addItem("JComboBoxOperatorTest");
@@ -56,11 +60,10 @@ class JComboBoxOperatorTest {
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -79,19 +82,19 @@ class JComboBoxOperatorTest {
 
     @Test
     void testFindJComboBox() {
-        JComboBox comboBox1 = JComboBoxOperator.findJComboBox(
+        JComboBox<?> comboBox1 = JComboBoxOperator.findJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(comboBox1).isNotNull();
-        JComboBox comboBox2 = JComboBoxOperator.findJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
+        JComboBox<?> comboBox2 = JComboBoxOperator.findJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
         assertThat(comboBox2).isNotNull();
     }
 
     @Test
     void testWaitJComboBox() {
-        JComboBox comboBox1 = JComboBoxOperator.waitJComboBox(
+        JComboBox<?> comboBox1 = JComboBoxOperator.waitJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(comboBox1).isNotNull();
-        JComboBox comboBox2 = JComboBoxOperator.waitJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
+        JComboBox<?> comboBox2 = JComboBoxOperator.waitJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
         assertThat(comboBox2).isNotNull();
     }
 
@@ -222,7 +225,7 @@ class JComboBoxOperatorTest {
         assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.actionPerformed(null);
+        operator1.actionPerformed(new ActionEvent(comboBox, ActionEvent.ACTION_PERFORMED, "comboBoxEdited"));
     }
 
     @Test
@@ -275,7 +278,7 @@ class JComboBoxOperatorTest {
         assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.contentsChanged(null);
+        operator1.contentsChanged(new ListDataEvent(comboBox, ListDataEvent.CONTENTS_CHANGED, 0, 0));
     }
 
     @Test
@@ -410,7 +413,7 @@ class JComboBoxOperatorTest {
         assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.intervalAdded(null);
+        operator1.intervalAdded(new ListDataEvent(comboBox, ListDataEvent.INTERVAL_ADDED, 0, 0));
     }
 
     @Test
@@ -419,7 +422,7 @@ class JComboBoxOperatorTest {
         assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = new JComboBoxOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.intervalRemoved(null);
+        operator1.intervalRemoved(new ListDataEvent(comboBox, ListDataEvent.INTERVAL_REMOVED, 0, 0));
     }
 
     @Test

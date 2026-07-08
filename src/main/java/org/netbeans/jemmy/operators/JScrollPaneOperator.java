@@ -295,7 +295,7 @@ public class JScrollPaneOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorderBounds()));
     }
 
-    public void setColumnHeader(JViewport jViewport) {
+    public void setColumnHeader(@Nullable JViewport jViewport) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setColumnHeader(jViewport);
 
@@ -303,7 +303,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }));
     }
 
-    public void setColumnHeaderView(Component component) {
+    public void setColumnHeaderView(@Nullable Component component) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setColumnHeaderView(component);
 
@@ -335,7 +335,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }));
     }
 
-    public void setRowHeader(JViewport jViewport) {
+    public void setRowHeader(@Nullable JViewport jViewport) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setRowHeader(jViewport);
 
@@ -343,7 +343,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }));
     }
 
-    public void setRowHeaderView(Component component) {
+    public void setRowHeaderView(@Nullable Component component) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setRowHeaderView(component);
 
@@ -375,7 +375,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }));
     }
 
-    public void setViewport(JViewport jViewport) {
+    public void setViewport(@Nullable JViewport jViewport) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setViewport(jViewport);
 
@@ -383,7 +383,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }));
     }
 
-    public void setViewportBorder(Border border) {
+    public void setViewportBorder(@Nullable Border border) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setViewportBorder(border);
 
@@ -391,7 +391,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }));
     }
 
-    public void setViewportView(Component component) {
+    public void setViewportView(@Nullable Component component) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setViewportView(component);
 

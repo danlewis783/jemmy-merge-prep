@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.Action;
@@ -45,19 +46,22 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLDocument;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JEditorPaneOperatorTest {
 
     private JEditorPane editorPane;
     private JFrame frame;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame("JFrameOperatorTest");
             editorPane = new JEditorPane();
@@ -77,7 +81,6 @@ class JEditorPaneOperatorTest {
         EventQueue.invokeLater(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -172,25 +175,21 @@ class JEditorPaneOperatorTest {
     }
 
     @Test
-    void testGetPage() {
+    void testGetPage() throws MalformedURLException {
         JFrameOperator operator1 = new JFrameOperator();
         assertThat(operator1).isNotNull();
         JEditorPaneOperator operator4 = new JEditorPaneOperator(operator1);
         assertThat(operator4).isNotNull();
 
-        try {
-            String urlA = "https://www.google.com/";
-            String urlB = "https://www.google.com/";
-            operator4.setPage(new URL(urlA));
-            assertThat(operator4.getPage().toString()).isEqualTo(urlA);
-            assertThat(editorPane.getPage().toString()).isEqualTo(urlA);
-            operator4.setPage(urlB);
-            JEditorPaneOperator operator5 = new JEditorPaneOperator(operator1);
-            assertThat(operator5.getPage().toString()).isEqualTo(urlB);
-            assertThat(editorPane.getPage().toString()).isEqualTo(urlB);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        String urlA = "https://www.google.com/";
+        String urlB = "https://www.google.com/";
+        operator4.setPage(new URL(urlA));
+        assertThat(operator4.getPage().toString()).isEqualTo(urlA);
+        assertThat(editorPane.getPage().toString()).isEqualTo(urlA);
+        operator4.setPage(urlB);
+        JEditorPaneOperator operator5 = new JEditorPaneOperator(operator1);
+        assertThat(operator5.getPage().toString()).isEqualTo(urlB);
+        assertThat(editorPane.getPage().toString()).isEqualTo(urlB);
     }
 
     @Test
@@ -206,22 +205,22 @@ class JEditorPaneOperatorTest {
 
     private static class EditorKitTest extends EditorKit {
         @Override
-        public String getContentType() {
+        public @Nullable String getContentType() {
             return null;
         }
 
         @Override
-        public ViewFactory getViewFactory() {
+        public @Nullable ViewFactory getViewFactory() {
             return null;
         }
 
         @Override
-        public Action[] getActions() {
+        public Action @Nullable [] getActions() {
             return null;
         }
 
         @Override
-        public Caret createCaret() {
+        public @Nullable Caret createCaret() {
             return null;
         }
 
@@ -244,7 +243,7 @@ class JEditorPaneOperatorTest {
     }
 
     static class HyperlinkListenerTest implements HyperlinkListener {
-        private HyperlinkEvent event;
+        private @Nullable HyperlinkEvent event;
 
         @Override
         public void hyperlinkUpdate(HyperlinkEvent event) {

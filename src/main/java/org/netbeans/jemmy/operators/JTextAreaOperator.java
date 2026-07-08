@@ -70,9 +70,6 @@ public class JTextAreaOperator extends JTextComponentOperator {
                 index));
     }
 
-    @Deprecated
-    public void usePageNavigationKeys(boolean yesOrNo) {}
-
     public void changeCaretRow(int row) {
         changeCaretPosition(row, getCaretPosition() - getLineStartOffset(getLineOfOffset(getCaretPosition())));
     }
@@ -80,8 +77,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     public void changeCaretPosition(int row, int column) {
         int startOffset = getLineStartOffset(row);
         int endOffset = getLineEndOffset(row);
-        super.changeCaretPosition(
-                getLineStartOffset(row) + ((column <= endOffset - startOffset) ? column : endOffset - startOffset));
+        super.changeCaretPosition(getLineStartOffset(row) + Math.min(column, endOffset - startOffset));
     }
 
     public void typeText(String text, int row, int column) {
@@ -232,14 +228,15 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public static @Nullable JTextArea findJTextArea(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJTextArea(
                 cont,
                 PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static @Nullable JTextArea findJTextArea(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JTextArea findJTextArea(
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return findJTextArea(cont, text, stringComparator, 0);
     }
 
@@ -251,14 +248,15 @@ public class JTextAreaOperator extends JTextComponentOperator {
         return waitJTextArea(cont, chooser, 0);
     }
 
-    public static JTextArea waitJTextArea(Container cont, String text, StringComparator stringComparator, int index) {
+    public static JTextArea waitJTextArea(
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJTextArea(
                 cont,
                 PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JTextArea waitJTextArea(Container cont, String text, StringComparator stringComparator) {
+    public static JTextArea waitJTextArea(Container cont, @Nullable String text, StringComparator stringComparator) {
         return waitJTextArea(cont, text, stringComparator, 0);
     }
 }

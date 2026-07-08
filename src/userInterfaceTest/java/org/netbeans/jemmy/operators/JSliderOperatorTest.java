@@ -36,39 +36,32 @@ import org.netbeans.jemmy.drivers.scrolling.JSliderAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JSliderOperatorTest {
 
     private JFrame frame;
     private JSlider slider;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                slider = new JSlider();
-                slider.setName("JSliderOperatorTest");
-                frame.getContentPane().add(slider);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            slider = new JSlider();
+            slider.setName("JSliderOperatorTest");
+            frame.getContentPane().add(slider);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -128,7 +121,7 @@ class JSliderOperatorTest {
     }
 
     @Test
-    void testApiDriverScrollsToNegativeValue() throws Exception {
+    void testApiDriverScrollsToNegativeValue() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             slider.setMinimum(-10);
             slider.setMaximum(10);

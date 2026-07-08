@@ -449,7 +449,7 @@ public class JTableOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).editCellAt(i, i1)));
     }
 
-    public boolean editCellAt(int i, int i1, EventObject eventObject) {
+    public boolean editCellAt(int i, int i1, @Nullable EventObject eventObject) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JTable) getSource()).editCellAt(i, i1, eventObject)));
     }
@@ -801,7 +801,7 @@ public class JTableOperator extends JComponentOperator {
         }));
     }
 
-    public void setDefaultRenderer(Class clss, TableCellRenderer tableCellRenderer) {
+    public void setDefaultRenderer(Class clss, @Nullable TableCellRenderer tableCellRenderer) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTable) getSource()).setDefaultRenderer(clss, tableCellRenderer);
 
@@ -969,7 +969,7 @@ public class JTableOperator extends JComponentOperator {
         }));
     }
 
-    public void tableChanged(TableModelEvent tableModelEvent) {
+    public void tableChanged(@Nullable TableModelEvent tableModelEvent) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTable) getSource()).tableChanged(tableModelEvent);
 
@@ -994,12 +994,12 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static @Nullable JTable findJTable(
-            Container cont, String text, StringComparator stringComparator, int row, int column, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int row, int column, int index) {
         return findJTable(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index);
     }
 
     public static @Nullable JTable findJTable(
-            Container cont, String text, StringComparator stringComparator, int row, int column) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int row, int column) {
         return findJTable(cont, text, stringComparator, row, column, 0);
     }
 
@@ -1012,12 +1012,12 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static JTable waitJTable(
-            Container cont, String text, StringComparator stringComparator, int row, int column, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int row, int column, int index) {
         return waitJTable(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index);
     }
 
     public static JTable waitJTable(
-            Container cont, String text, StringComparator stringComparator, int row, int column) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int row, int column) {
         return waitJTable(cont, text, stringComparator, row, column, 0);
     }
 

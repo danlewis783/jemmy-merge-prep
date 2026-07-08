@@ -29,6 +29,8 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JSplitPaneOperatorTest {
 
     private JFrame frame;
@@ -36,33 +38,24 @@ class JSplitPaneOperatorTest {
     private JSplitPane splitPane;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                splitPane = new JSplitPane();
-                splitPane.setName("JSplitPane");
-                frame.getContentPane().add(splitPane);
-                frame.setSize(400, 300);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            splitPane = new JSplitPane();
+            splitPane.setName("JSplitPane");
+            frame.getContentPane().add(splitPane);
+            frame.setSize(400, 300);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -180,17 +173,13 @@ class JSplitPaneOperatorTest {
     }
 
     @Test
-    void testGetBottomComponent() {
+    void testGetBottomComponent() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = new JSplitPaneOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> panel = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panel = new JPanel());
 
         operator1.setBottomComponent(panel);
         operator1.getBottomComponent();
@@ -328,7 +317,7 @@ class JSplitPaneOperatorTest {
 
     // formerly scenario test jemmy_019
     @Test
-    void moveDividerAndExpand() throws Exception {
+    void moveDividerAndExpand() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             // expandLeft/expandRight click the one-touch-expand arrows, and the divider
             // needs real components on both sides to move between

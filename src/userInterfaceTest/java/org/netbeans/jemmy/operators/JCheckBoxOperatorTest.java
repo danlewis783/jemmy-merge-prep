@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
@@ -27,13 +28,15 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JCheckBoxOperatorTest {
 
     private JCheckBox checkBox;
     private JFrame frame;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             checkBox = new JCheckBox("JCheckBoxOperatorTest");
@@ -46,11 +49,10 @@ class JCheckBoxOperatorTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 

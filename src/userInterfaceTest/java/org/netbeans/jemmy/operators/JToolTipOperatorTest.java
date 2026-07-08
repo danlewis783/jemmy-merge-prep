@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.Predicate;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,6 +42,8 @@ import org.netbeans.jemmy.util.StringComparators;
  * Exercises {@code JToolTipOperator}, ported from openjdk/jemmy-v2 (CODETOOLS-7902278, CODETOOLS-7902342).
  */
 @ExtendWith(DumpOnFailure.class)
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JToolTipOperatorTest {
 
     private static final String TOOLTIP_TEXT = "A simple Tooltip";
@@ -54,7 +57,7 @@ class JToolTipOperatorTest {
     private int savedDismissDelay;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             // keep the tooltip up for the whole constructor cascade; the default 4 s
             // dismiss delay is too tight on a loaded machine
@@ -71,7 +74,7 @@ class JToolTipOperatorTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             ToolTipManager.sharedInstance().setDismissDelay(savedDismissDelay);
             frame.setVisible(false);

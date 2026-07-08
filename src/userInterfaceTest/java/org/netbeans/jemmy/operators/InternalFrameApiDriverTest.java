@@ -38,6 +38,8 @@ import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
  * driver for this JVM only; the UI test suite forks one JVM per class, so the default drivers are unaffected
  * elsewhere.
  */
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class InternalFrameApiDriverTest {
 
     private JFrame frame;
@@ -53,36 +55,28 @@ class InternalFrameApiDriverTest {
     }
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                JDesktopPane desktop = new JDesktopPane();
-                frame.setContentPane(desktop);
-                internalFrame = new JInternalFrame("InternalFrameApiDriverTest", true, true, true, true);
-                internalFrame.setName("InternalFrameApiDriverTest");
-                internalFrame.setSize(100, 100);
-                internalFrame.setVisible(true);
-                desktop.add(internalFrame);
-                frame.setSize(300, 300);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            JDesktopPane desktop = new JDesktopPane();
+            frame.setContentPane(desktop);
+            internalFrame = new JInternalFrame("InternalFrameApiDriverTest", true, true, true, true);
+            internalFrame.setName("InternalFrameApiDriverTest");
+            internalFrame.setSize(100, 100);
+            internalFrame.setVisible(true);
+            desktop.add(internalFrame);
+            frame.setSize(300, 300);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test

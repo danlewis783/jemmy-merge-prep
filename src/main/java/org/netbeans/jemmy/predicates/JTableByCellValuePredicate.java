@@ -20,15 +20,16 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JTable;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTableByCellValuePredicate implements Predicate<Component> {
     private final int column;
     private final StringComparator comparator;
-    private final String label;
+    private final @Nullable String label;
     private final int row;
 
-    public JTableByCellValuePredicate(String label, int row, int column, StringComparator comparator) {
+    public JTableByCellValuePredicate(@Nullable String label, int row, int column, StringComparator comparator) {
         this.label = label;
         this.row = row;
         this.column = column;

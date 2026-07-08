@@ -43,6 +43,8 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JTableOperatorTest {
 
     private DefaultCellEditor editor;
@@ -50,52 +52,43 @@ class JTableOperatorTest {
     private JTable table;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                String[] columns = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
-                Object[][] data = {
-                    {"Mary", "Campione", "Snowboarding", 5, Boolean.FALSE},
-                    {"Alison", "Huml", "Rowing", 3, Boolean.TRUE},
-                    {"Kathy", "Walrath", "Knitting", 2, Boolean.FALSE},
-                    {"Sharon", "Zakhour", "Speed reading", 20, Boolean.TRUE},
-                    {"Philip", "Milne", "Pool", 10, Boolean.FALSE},
-                    {"Mary", "Campione", "Snowboarding", 5, Boolean.FALSE},
-                    {"Alison", "Huml", "Rowing", 3, Boolean.TRUE},
-                    {"Kathy", "Walrath", "Knitting", 2, Boolean.FALSE},
-                    {"Sharon", "Zakhour", "Speed reading", 20, Boolean.TRUE},
-                    {"Philip", "Milne", "Pool", 10, Boolean.FALSE},
-                    {"Mary", "Campione", "Snowboarding", 5, Boolean.FALSE},
-                    {"Alison", "Huml", "Rowing", 3, Boolean.TRUE},
-                    {"Kathy", "Walrath", "Knitting", 2, Boolean.FALSE},
-                    {"Sharon", "Zakhour", "Speed reading", 20, Boolean.TRUE},
-                    {"XXXXXX", "Milne", "Pool", 10, Boolean.FALSE}
-                };
-                table = new JTable(data, columns);
-                table.setName("JTableOperatorTest");
-                JScrollPane scrollPane = new JScrollPane(table);
-                frame.getContentPane().add(scrollPane);
-                frame.setSize(300, 200);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            String[] columns = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
+            Object[][] data = {
+                {"Mary", "Campione", "Snowboarding", 5, Boolean.FALSE},
+                {"Alison", "Huml", "Rowing", 3, Boolean.TRUE},
+                {"Kathy", "Walrath", "Knitting", 2, Boolean.FALSE},
+                {"Sharon", "Zakhour", "Speed reading", 20, Boolean.TRUE},
+                {"Philip", "Milne", "Pool", 10, Boolean.FALSE},
+                {"Mary", "Campione", "Snowboarding", 5, Boolean.FALSE},
+                {"Alison", "Huml", "Rowing", 3, Boolean.TRUE},
+                {"Kathy", "Walrath", "Knitting", 2, Boolean.FALSE},
+                {"Sharon", "Zakhour", "Speed reading", 20, Boolean.TRUE},
+                {"Philip", "Milne", "Pool", 10, Boolean.FALSE},
+                {"Mary", "Campione", "Snowboarding", 5, Boolean.FALSE},
+                {"Alison", "Huml", "Rowing", 3, Boolean.TRUE},
+                {"Kathy", "Walrath", "Knitting", 2, Boolean.FALSE},
+                {"Sharon", "Zakhour", "Speed reading", 20, Boolean.TRUE},
+                {"XXXXXX", "Milne", "Pool", 10, Boolean.FALSE}
+            };
+            table = new JTable(data, columns);
+            table.setName("JTableOperatorTest");
+            JScrollPane scrollPane = new JScrollPane(table);
+            frame.getContentPane().add(scrollPane);
+            frame.setSize(300, 200);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -460,17 +453,13 @@ class JTableOperatorTest {
     }
 
     @Test
-    void testGetCellEditor() {
+    void testGetCellEditor() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTableOperator operator1 = new JTableOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> editor = new DefaultCellEditor(new JTextField()));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> editor = new DefaultCellEditor(new JTextField()));
 
         operator1.setCellEditor(editor);
         assertThat(operator1.getCellEditor()).isEqualTo(editor);
@@ -819,17 +808,13 @@ class JTableOperatorTest {
     }
 
     @Test
-    void testPrepareEditor() {
+    void testPrepareEditor() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTableOperator operator1 = new JTableOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> editor = new DefaultCellEditor(new JTextField()));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> editor = new DefaultCellEditor(new JTextField()));
 
         operator1.prepareEditor(editor, 0, 0);
     }
@@ -966,7 +951,7 @@ class JTableOperatorTest {
         assertThat(operator).isNotNull();
         JTableOperator operator1 = new JTableOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.setPreferredScrollableViewportSize(null);
+        operator1.setPreferredScrollableViewportSize(new Dimension(300, 200));
     }
 
     @Test

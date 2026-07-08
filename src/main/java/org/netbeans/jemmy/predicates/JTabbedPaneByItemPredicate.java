@@ -20,15 +20,16 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JTabbedPane;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTabbedPaneByItemPredicate implements Predicate<Component> {
     private final StringComparator comparator;
     private final int itemIndex;
-    private final String title;
+    private final @Nullable String title;
 
-    public JTabbedPaneByItemPredicate(String title, int itemIndex, StringComparator comparator) {
+    public JTabbedPaneByItemPredicate(@Nullable String title, int itemIndex, StringComparator comparator) {
         this.title = title;
         this.itemIndex = itemIndex;
         this.comparator = comparator;

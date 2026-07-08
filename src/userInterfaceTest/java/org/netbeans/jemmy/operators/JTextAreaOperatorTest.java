@@ -28,35 +28,29 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JTextAreaOperatorTest {
 
     private JFrame frame;
     private JTextArea textArea;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                textArea = new JTextArea("JTextAreaOperatorTest");
-                textArea.setName("JTextAreaOperatorTest");
-                frame.getContentPane().add(textArea);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            textArea = new JTextArea("JTextAreaOperatorTest");
+            textArea.setName("JTextAreaOperatorTest");
+            frame.getContentPane().add(textArea);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> frame.setVisible(false));
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> frame.setVisible(false));
     }
 
     @Test
@@ -88,15 +82,6 @@ class JTextAreaOperatorTest {
         assertThat(textArea1).isNotNull();
         JTextArea textArea2 = JTextAreaOperator.waitJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
         assertThat(textArea2).isNotNull();
-    }
-
-    @Test
-    void testUsePageNavigationKeys() {
-        JFrameOperator operator = new JFrameOperator();
-        assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
-        assertThat(operator2).isNotNull();
-        operator2.usePageNavigationKeys(true);
     }
 
     @Test

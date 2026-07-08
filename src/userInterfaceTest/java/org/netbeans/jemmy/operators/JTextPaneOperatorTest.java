@@ -35,6 +35,8 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JTextPaneOperatorTest {
 
     private JButton button;
@@ -42,40 +44,31 @@ class JTextPaneOperatorTest {
     private JTextPane textPane;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                textPane = new JTextPane();
-                textPane.setName("JTextPaneOperatorTest");
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            textPane = new JTextPane();
+            textPane.setName("JTextPaneOperatorTest");
 
-                try {
-                    textPane.getStyledDocument().insertString(0, "JTextPaneOperatorTest", null);
-                } catch (BadLocationException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                textPane.getStyledDocument().insertString(0, "JTextPaneOperatorTest", null);
+            } catch (BadLocationException e) {
+                throw new RuntimeException(e);
+            }
 
-                frame.getContentPane().add(textPane);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+            frame.getContentPane().add(textPane);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -184,17 +177,13 @@ class JTextPaneOperatorTest {
     }
 
     @Test
-    void testInsertComponent() {
+    void testInsertComponent() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = new JTextPaneOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> button = new JButton());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> button = new JButton());
 
         operator1.insertComponent(button);
     }

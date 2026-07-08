@@ -235,7 +235,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public static @Nullable JEditorPane findJEditorPane(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJEditorPane(
                 cont,
                 PredicatesJ.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
@@ -243,7 +243,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public static @Nullable JEditorPane findJEditorPane(
-            Container cont, String text, StringComparator stringComparator) {
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return findJEditorPane(cont, text, stringComparator, 0);
     }
 
@@ -256,14 +256,15 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public static JEditorPane waitJEditorPane(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJEditorPane(
                 cont,
                 PredicatesJ.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JEditorPane waitJEditorPane(Container cont, String text, StringComparator stringComparator) {
+    public static JEditorPane waitJEditorPane(
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return waitJEditorPane(cont, text, stringComparator, 0);
     }
 }

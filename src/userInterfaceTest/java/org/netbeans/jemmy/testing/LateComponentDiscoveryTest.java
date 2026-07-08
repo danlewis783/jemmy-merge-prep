@@ -17,12 +17,14 @@
 package org.netbeans.jemmy.testing;
 
 import java.awt.EventQueue;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
@@ -48,14 +50,14 @@ class LateComponentDiscoveryTest {
         EventQueue.invokeAndWait(() -> {
             JLabel jLabel = new MyLabel();
             jLabel.setText("AAAAAAAAAAAAAA");
-            JFrame jFrame = jFrameRef.get();
+            JFrame jFrame = Objects.requireNonNull(jFrameRef.get());
             jFrame.getContentPane().add(jLabel);
             jFrame.pack();
         });
     }
 
     private static class MyLabel extends JLabel {
-        private String dummy;
+        private @Nullable String dummy;
 
         MyLabel() {
             SwingUtilities.invokeLater(() -> {
@@ -70,7 +72,7 @@ class LateComponentDiscoveryTest {
         }
 
         @Override
-        public String toString() {
+        public @Nullable String toString() {
             return dummy;
         }
     }

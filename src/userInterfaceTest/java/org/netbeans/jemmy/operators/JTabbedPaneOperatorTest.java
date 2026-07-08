@@ -37,6 +37,8 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JTabbedPaneOperatorTest {
 
     private JFrame frame;
@@ -46,40 +48,31 @@ class JTabbedPaneOperatorTest {
     private JTabbedPane tabbedPane;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                tabbedPane = new JTabbedPane();
-                tabbedPane.setName("JTabbedPaneOperatorTest");
-                tabbedPane.setToolTipText("JTabbedPaneOperatorTest");
-                JPanel panel1 = new JPanel();
-                panel1.setName("Tab1");
-                JPanel panel2 = new JPanel();
-                panel2.setName("Tab2");
-                tabbedPane.add(panel1);
-                tabbedPane.add(panel2);
-                frame.getContentPane().add(tabbedPane);
-                frame.setSize(400, 300);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            tabbedPane = new JTabbedPane();
+            tabbedPane.setName("JTabbedPaneOperatorTest");
+            tabbedPane.setToolTipText("JTabbedPaneOperatorTest");
+            JPanel panel1 = new JPanel();
+            panel1.setName("Tab1");
+            JPanel panel2 = new JPanel();
+            panel2.setName("Tab2");
+            tabbedPane.add(panel1);
+            tabbedPane.add(panel2);
+            frame.getContentPane().add(tabbedPane);
+            frame.setSize(400, 300);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -106,21 +99,13 @@ class JTabbedPaneOperatorTest {
     }
 
     @Test
-    void testFindJTabbedPaneUnder() {
-        try {
-            EventQueue.invokeAndWait(() -> panel1 = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void testFindJTabbedPaneUnder() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> panel1 = new JPanel());
 
         JTabbedPane tabbedPane1 = JTabbedPaneOperator.findJTabbedPaneUnder(panel1);
         assertThat(tabbedPane1).isNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> panel2 = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panel2 = new JPanel());
 
         JTabbedPane tabbedPane2 = JTabbedPaneOperator.findJTabbedPaneUnder(panel2, PredicatesJ.byName("Test"));
         assertThat(tabbedPane2).isNull();
@@ -187,21 +172,17 @@ class JTabbedPaneOperatorTest {
     }
 
     @Test
-    void testAddTab() {
+    void testAddTab() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> {
-                panel1 = new JPanel();
-                panel2 = new JPanel();
-                panel3 = new JPanel();
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> {
+            panel1 = new JPanel();
+            panel2 = new JPanel();
+            panel3 = new JPanel();
+        });
 
         operator1.addTab("Test", panel1);
         operator1.addTab("Tab1", new IconTest(), panel2);
@@ -228,17 +209,13 @@ class JTabbedPaneOperatorTest {
     }
 
     @Test
-    void testGetComponentAt() {
+    void testGetComponentAt() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> panel1 = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panel1 = new JPanel());
 
         operator1.setComponentAt(0, panel1);
         operator1.getComponentAt(0);
@@ -350,17 +327,13 @@ class JTabbedPaneOperatorTest {
     }
 
     @Test
-    void testIndexOfComponent() {
+    void testIndexOfComponent() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> panel1 = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panel1 = new JPanel());
 
         operator1.indexOfComponent(panel1);
     }
@@ -376,17 +349,13 @@ class JTabbedPaneOperatorTest {
     }
 
     @Test
-    void testInsertTab() {
+    void testInsertTab() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> panel1 = new JPanel());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> panel1 = new JPanel());
 
         operator1.insertTab("Insert", null, panel1, "Insert", 0);
     }

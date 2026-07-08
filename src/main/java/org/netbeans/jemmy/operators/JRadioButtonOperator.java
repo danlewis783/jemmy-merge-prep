@@ -74,7 +74,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
     }
 
     public static @Nullable JRadioButton findJRadioButton(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJRadioButton(
                 cont,
                 PredicatesJ.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
@@ -82,7 +82,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
     }
 
     public static @Nullable JRadioButton findJRadioButton(
-            Container cont, String text, StringComparator stringComparator) {
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return findJRadioButton(cont, text, stringComparator, 0);
     }
 
@@ -95,14 +95,15 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
     }
 
     public static JRadioButton waitJRadioButton(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJRadioButton(
                 cont,
                 PredicatesJ.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 
-    public static JRadioButton waitJRadioButton(Container cont, String text, StringComparator stringComparator) {
+    public static JRadioButton waitJRadioButton(
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return waitJRadioButton(cont, text, stringComparator, 0);
     }
 }

@@ -29,8 +29,8 @@ public final class Caller<T> implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Caller.class);
     private final Callable<T> callable;
     private final CountDownLatch endGate;
-    private final AtomicReference<Exception> exception;
-    private final AtomicReference<T> result;
+    private final AtomicReference<@Nullable Exception> exception;
+    private final AtomicReference<@Nullable T> result;
     private final CountDownLatch startGate;
     private final AtomicBoolean hasRun;
 

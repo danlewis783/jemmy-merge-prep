@@ -25,7 +25,7 @@
 
 package org.netbeans.jemmy.drivers.text;
 
-abstract class NavigationKey {
+public abstract class NavigationKey {
     private final int keyCode;
     private final int mods;
 

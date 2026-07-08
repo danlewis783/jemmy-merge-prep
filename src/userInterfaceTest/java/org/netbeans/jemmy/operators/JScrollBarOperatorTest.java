@@ -37,48 +37,41 @@ import org.netbeans.jemmy.drivers.scrolling.JScrollBarAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JScrollBarOperatorTest {
 
     private JFrame frame;
     private JScrollBar scrollBar;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                Container contentPane = frame.getContentPane();
-                contentPane.setLayout(new BorderLayout());
-                JPanel panel = new JPanel(new GridLayout(20, 1));
-                for (int i = 0; i < 20; i++) {
-                    panel.add(new JLabel("label #" + i));
-                }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            Container contentPane = frame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            JPanel panel = new JPanel(new GridLayout(20, 1));
+            for (int i = 0; i < 20; i++) {
+                panel.add(new JLabel("label #" + i));
+            }
 
-                JScrollPane sp = new JScrollPane(
-                        panel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                contentPane.add(sp, BorderLayout.CENTER);
-                scrollBar = sp.getVerticalScrollBar();
-                scrollBar.setName("JScrollBarOperatorTest");
-                frame.setSize(300, 200);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+            JScrollPane sp = new JScrollPane(
+                    panel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            contentPane.add(sp, BorderLayout.CENTER);
+            scrollBar = sp.getVerticalScrollBar();
+            scrollBar.setName("JScrollBarOperatorTest");
+            frame.setSize(300, 200);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -135,7 +128,7 @@ class JScrollBarOperatorTest {
     }
 
     @Test
-    void testApiDriverScrollsToNegativeValue() throws Exception {
+    void testApiDriverScrollsToNegativeValue() throws InterruptedException, InvocationTargetException {
         JScrollBar[] negativeRange = new JScrollBar[1];
         EventQueue.invokeAndWait(() -> {
             negativeRange[0] = new JScrollBar(JScrollBar.VERTICAL, 0, 2, -10, 10);

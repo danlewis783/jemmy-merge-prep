@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
@@ -36,16 +37,16 @@ class JSliderScrollModelsTest {
         JFrame win = JFrameOperator.waitJFrame("SlidersApp");
         JFrameOperator wino = new JFrameOperator(win);
         JSliderOperator[] ops = {
-            new JSliderOperator(JSliderOperator.findJSlider(win, 0)),
-            new JSliderOperator(JSliderOperator.findJSlider(win, 1)),
-            new JSliderOperator(JSliderOperator.findJSlider(win, 2)),
-            new JSliderOperator(JSliderOperator.findJSlider(win, 3))
+            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 0))),
+            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 1))),
+            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 2))),
+            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 3)))
         };
         for (int i = 0; i < ops.length; i++) {
             assertThat(new JSliderOperator(wino, i).getSource()).isSameAs(ops[i].getSource());
         }
 
-        JLabel label = JLabelOperator.findJLabel(win, "0", StringComparators.strict());
+        JLabel label = Objects.requireNonNull(JLabelOperator.findJLabel(win, "0", StringComparators.strict()));
         int value;
         for (JSliderOperator op : ops) {
             int min = op.getMinimum();

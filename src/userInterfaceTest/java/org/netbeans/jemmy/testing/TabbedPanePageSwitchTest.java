@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.EventQueue;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -48,7 +49,8 @@ class TabbedPanePageSwitchTest {
                     .isNotNull();
             assertThat(JButtonOperator.findJButton(win, "button2", StringComparators.strict()))
                     .isNull();
-            JButton btt1 = JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive());
+            JButton btt1 = Objects.requireNonNull(
+                    JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive()));
             JButtonOperator btt1o = new JButtonOperator(btt1);
             assertThat(btt1o.isVisible()).isTrue();
             assertThat(btt1o.isShowing()).isTrue();
@@ -69,7 +71,8 @@ class TabbedPanePageSwitchTest {
             assertThat(JButtonOperator.findJButton(win, "button1", StringComparators.strict()))
                     .isNull();
             assertThat(tpo.selectPage("List Page", StringComparators.strict())).isNotNull();
-            JListOperator lo = new JListOperator(JListOperator.findJList(win, null, StringComparators.strict(), 0));
+            JListOperator lo = new JListOperator(
+                    Objects.requireNonNull(JListOperator.findJList(win, null, StringComparators.strict(), 0)));
             assertThat(lo.clickOnItem(1, 1)).isNotNull();
             lo.waitItem("two", StringComparators.strict(), 1);
             lo.waitItem("two", StringComparators.strict(), -1);

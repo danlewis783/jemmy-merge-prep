@@ -37,6 +37,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JTableHeaderOperatorTest {
 
     private JFrame frame;
@@ -44,43 +46,34 @@ class JTableHeaderOperatorTest {
     private JTable table;
 
     @BeforeEach
-    void beforeEach() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame = new JFrame();
-                String[] columns = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
-                Object[][] data = {
-                    {"Mary", "Campione", "Snowboarding", 5, false},
-                    {"Alison", "Huml", "Rowing", 3, true},
-                    {"Kathy", "Walrath", "Knitting", 2, false},
-                    {"Sharon", "Zakhour", "Speed reading", 20, true},
-                    {"Philip", "Milne", "Pool", 10, false}
-                };
-                table = new JTable(data, columns);
-                JScrollPane scrollPane = new JScrollPane(table);
-                header = table.getTableHeader();
-                header.setName("JTableHeaderOperatorTest");
-                frame.getContentPane().add(scrollPane);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            String[] columns = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
+            Object[][] data = {
+                {"Mary", "Campione", "Snowboarding", 5, false},
+                {"Alison", "Huml", "Rowing", 3, true},
+                {"Kathy", "Walrath", "Knitting", 2, false},
+                {"Sharon", "Zakhour", "Speed reading", 20, true},
+                {"Philip", "Milne", "Pool", 10, false}
+            };
+            table = new JTable(data, columns);
+            JScrollPane scrollPane = new JScrollPane(table);
+            header = table.getTableHeader();
+            header.setName("JTableHeaderOperatorTest");
+            frame.getContentPane().add(scrollPane);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void after() {
-        try {
-            EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                frame = null;
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+    void after() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
@@ -134,17 +127,13 @@ class JTableHeaderOperatorTest {
     }
 
     @Test
-    void testSetTable() {
+    void testSetTable() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = new JFrameOperator();
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = new JTableHeaderOperator(operator);
         assertThat(operator1).isNotNull();
 
-        try {
-            EventQueue.invokeAndWait(() -> table = new JTable());
-        } catch (InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        EventQueue.invokeAndWait(() -> table = new JTable());
 
         operator1.setTable(table);
         assertThat(operator1.getTable()).isEqualTo(table);

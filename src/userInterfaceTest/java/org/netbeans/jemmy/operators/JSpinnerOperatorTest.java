@@ -21,10 +21,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
@@ -37,6 +39,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SpinnerUI;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,14 +57,16 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JSpinnerOperatorTest {
     private static final StringComparator STRICT = StringComparators.strict();
 
-    private final AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
+    private JFrame frame;
     private TimeoutOverride override;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3000L);
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
@@ -71,18 +76,16 @@ class JSpinnerOperatorTest {
             jFrame.pack();
             jFrame.setLocationRelativeTo(null);
             jFrame.setVisible(true);
-            jFrameRef.set(jFrame);
+            frame = jFrame;
         });
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() throws InterruptedException, InvocationTargetException {
         try {
             EventQueue.invokeAndWait(() -> {
-                JFrame jFrame = jFrameRef.get();
-                jFrame.setVisible(false);
-                jFrame.dispose();
-                jFrameRef.set(null);
+                frame.setVisible(false);
+                frame.dispose();
             });
         } finally {
             override.cancel();
@@ -102,15 +105,15 @@ class JSpinnerOperatorTest {
 
     @Test
     void findJSpinner() {
-        assertThat(JSpinnerOperator.findJSpinner(jFrameRef.get())).isNotNull();
-        assertThat(JSpinnerOperator.findJSpinner(jFrameRef.get(), PredicatesJ.byName("JSpinnerOperatorTest")))
+        assertThat(JSpinnerOperator.findJSpinner(frame)).isNotNull();
+        assertThat(JSpinnerOperator.findJSpinner(frame, PredicatesJ.byName("JSpinnerOperatorTest")))
                 .isNotNull();
     }
 
     @Test
     void waitJSpinner() {
-        assertThat(JSpinnerOperator.waitJSpinner(jFrameRef.get())).isNotNull();
-        assertThat(JSpinnerOperator.waitJSpinner(jFrameRef.get(), PredicatesJ.byName("JSpinnerOperatorTest")))
+        assertThat(JSpinnerOperator.waitJSpinner(frame)).isNotNull();
+        assertThat(JSpinnerOperator.waitJSpinner(frame, PredicatesJ.byName("JSpinnerOperatorTest")))
                 .isNotNull();
     }
 
@@ -128,7 +131,7 @@ class JSpinnerOperatorTest {
     }
 
     @Test
-    void listModel() throws Exception {
+    void listModel() throws InterruptedException, InvocationTargetException {
         JFrameOperator jFrameOp = new JFrameOperator();
         assertThat(jFrameOp).isNotNull();
         JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
@@ -316,14 +319,14 @@ class JSpinnerOperatorTest {
     }
 
     @Test
-    void setEditor() throws Exception {
+    void setEditor() throws InterruptedException, InvocationTargetException {
         JFrameOperator jFrameOp = new JFrameOperator();
         assertThat(jFrameOp).isNotNull();
         JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         AtomicReference<JTextField> textFieldRef = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> textFieldRef.set(new JTextField()));
-        jSpinnerOp.setEditor(textFieldRef.get());
+        jSpinnerOp.setEditor(Objects.requireNonNull(textFieldRef.get()));
         assertThat(jSpinnerOp.getEditor()).isEqualTo(textFieldRef.get());
     }
 
@@ -441,7 +444,7 @@ class JSpinnerOperatorTest {
 
     private static class NullSpinnerModel implements SpinnerModel {
         @Override
-        public Object getValue() {
+        public @Nullable Object getValue() {
             return null;
         }
 
@@ -449,12 +452,12 @@ class JSpinnerOperatorTest {
         public void setValue(Object value) {}
 
         @Override
-        public Object getNextValue() {
+        public @Nullable Object getNextValue() {
             return null;
         }
 
         @Override
-        public Object getPreviousValue() {
+        public @Nullable Object getPreviousValue() {
             return null;
         }
 

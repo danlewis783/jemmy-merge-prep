@@ -240,7 +240,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTabbedPane) getSource()).indexOfTab(icon)));
     }
 
-    public void insertTab(String string, Icon icon, Component component, String string1, int i) {
+    public void insertTab(String string, @Nullable Icon icon, Component component, @Nullable String string1, int i) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTabbedPane) getSource()).insertTab(string, icon, component, string1, i);
 
@@ -373,12 +373,12 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JTabbedPane findJTabbedPane(
-            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return findJTabbedPane(cont, new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
     public static @Nullable JTabbedPane findJTabbedPane(
-            Container cont, String text, StringComparator stringComparator, int itemIndex) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex) {
         return findJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 
@@ -399,12 +399,12 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public static JTabbedPane waitJTabbedPane(
-            Container cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return waitJTabbedPane(cont, new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator), index);
     }
 
     public static JTabbedPane waitJTabbedPane(
-            Container cont, String text, StringComparator stringComparator, int itemIndex) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex) {
         return waitJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 

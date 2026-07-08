@@ -23,12 +23,15 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
 import javax.swing.event.MenuDragMouseEvent;
 import javax.swing.event.MenuDragMouseListener;
 import javax.swing.event.MenuKeyEvent;
@@ -41,6 +44,8 @@ import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeLater
+@SuppressWarnings("NullAway.Init")
 class JMenuItemOperatorTest {
 
     private JFrame frame;
@@ -67,11 +72,10 @@ class JMenuItemOperatorTest {
     }
 
     @AfterEach
-    void after() throws Exception {
+    void after() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -148,7 +152,7 @@ class JMenuItemOperatorTest {
             jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a'));
         } catch (JemmyException e) {
             assertThat(e.getMessage()).isEqualTo("Throwable captured by invocation event");
-            assertThat(e.getCause().getMessage())
+            assertThat(Objects.requireNonNull(e.getCause()).getMessage())
                     .isEqualTo("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.");
         }
 
@@ -198,7 +202,8 @@ class JMenuItemOperatorTest {
         assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
         assertThat(operator1).isNotNull();
-        operator1.processKeyEvent(new KeyEvent(frame, 0, 0, 0, 0), null, null);
+        operator1.processKeyEvent(
+                new KeyEvent(frame, 0, 0, 0, 0), new MenuElement[0], MenuSelectionManager.defaultManager());
     }
 
     @Test
@@ -225,7 +230,10 @@ class JMenuItemOperatorTest {
         assertThat(jFrameOp).isNotNull();
         JMenuItemOperator operator1 = new JMenuItemOperator(jFrameOp);
         assertThat(operator1).isNotNull();
-        operator1.processMouseEvent(new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false), null, null);
+        operator1.processMouseEvent(
+                new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false),
+                new MenuElement[0],
+                MenuSelectionManager.defaultManager());
     }
 
     @Test

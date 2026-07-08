@@ -18,10 +18,12 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.JFrame;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
@@ -31,6 +33,8 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_006
+// fields are assigned at the start of the test before the checker reads them
+@SuppressWarnings("NullAway.Init")
 class JTreeExpandCollapseTest {
 
     private JTreeOperator to;
@@ -41,14 +45,14 @@ class JTreeExpandCollapseTest {
         TreeExpandApp.main(new String[] {});
         QueueTool.getInstance().waitEmpty(100);
         JFrame frm = JFrameOperator.waitJFrame("TreeExpandApp");
-        tree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
+        tree = Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1));
         to = new JTreeOperator(tree);
         TreeChecker checker = new TreeChecker();
         to.selectRow(0);
         to.waitSelected(0);
-        to.doExpandPath(to.findPath("node00", "|", StringComparators.strict()));
+        to.doExpandPath(Objects.requireNonNull(to.findPath("node00", "|", StringComparators.strict())));
         FunctionRepeater.on(checker).runUntilNotNull("first expanded");
-        to.doExpandPath(to.findPath("node00", "1", "|", StringComparators.strict()));
+        to.doExpandPath(Objects.requireNonNull(to.findPath("node00", "1", "|", StringComparators.strict())));
         FunctionRepeater.on(checker).runUntilNotNull("second expanded");
         to.collapsePath(to.findPath("node00", "|", StringComparators.strict()));
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
@@ -62,7 +66,7 @@ class JTreeExpandCollapseTest {
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
         to.collapseRow(2);
         FunctionRepeater.on(checker).runUntilNotNull("second collapsed");
-        TreePath pathy = to.findPath("node00", "1", "|", StringComparators.strict());
+        TreePath pathy = Objects.requireNonNull(to.findPath("node00", "1", "|", StringComparators.strict()));
         to.selectPath(pathy);
         to.selectPath(pathy);
         assertThat(to.isEditing())
@@ -73,7 +77,7 @@ class JTreeExpandCollapseTest {
 
     private class TreeChecker implements Function<String, Object> {
         @Override
-        public Object apply(String obj) {
+        public @Nullable Object apply(String obj) {
             TreePath path;
             try {
                 if (obj.startsWith("first")) {

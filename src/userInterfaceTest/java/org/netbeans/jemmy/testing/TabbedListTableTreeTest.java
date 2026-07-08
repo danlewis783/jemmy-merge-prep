@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import javax.swing.JFrame;
@@ -48,66 +49,57 @@ class TabbedListTableTreeTest {
         tabbedPaneOp.selectPage("List Page", StringComparators.strict());
 
         AtomicReference<Component> compRef = new AtomicReference<>();
-        AtomicReference<TreePath> lastPathRef = new AtomicReference<>();
-        AtomicReference<JListOperator> listOpRef = new AtomicReference<>();
-        AtomicReference<TreePath> rootPathRef = new AtomicReference<>();
-        AtomicReference<JTableOperator> tableOpRef = new AtomicReference<>();
-        AtomicReference<JTreeOperator> treeOpRef = new AtomicReference<>();
 
-        listOpRef.set(new JListOperator(
-                JListOperator.waitJList(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
-        listOpRef.get().clickOnItem("0", StringComparators.strict());
+        JListOperator listOp = new JListOperator(
+                JListOperator.waitJList(frame, null, StringComparators.caseInsensitiveSubstring(), -1));
+        listOp.clickOnItem("0", StringComparators.strict());
 
-        EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0)));
+        EventQueue.invokeAndWait(() -> compRef.set(listOp.getRenderedComponent(0)));
 
         assertThat(compRef.get()).isNotNull();
         assertThat(compRef.get() instanceof JPanel).isTrue();
 
-        EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(0, true, true)));
+        EventQueue.invokeAndWait(() -> compRef.set(listOp.getRenderedComponent(0, true, true)));
 
         Component comp0 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!0!"));
         assertThat(comp0).isNotNull();
-        EventQueue.invokeAndWait(() -> compRef.set(listOpRef.get().getRenderedComponent(1)));
+        EventQueue.invokeAndWait(() -> compRef.set(listOp.getRenderedComponent(1)));
         Component comp1 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("1"));
         assertThat(comp1).isNotNull();
         tabbedPaneOp.selectPage("Table Page", StringComparators.strict());
-        tableOpRef.set(new JTableOperator(
+        JTableOperator tableOp = new JTableOperator(Objects.requireNonNull(
                 JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
-        tableOpRef.get().getHeaderOperator().moveColumn(0, 1);
-        assertThat(tableOpRef.get().findCellRow("04", StringComparators.strict(), 0, 0))
-                .isEqualTo(4);
-        assertThat(tableOpRef.get().findCell("04", StringComparators.strict(), 0).x)
+        tableOp.getHeaderOperator().moveColumn(0, 1);
+        assertThat(tableOp.findCellRow("04", StringComparators.strict(), 0, 0)).isEqualTo(4);
+        assertThat(tableOp.findCell("04", StringComparators.strict(), 0).x).isEqualTo(0);
+        assertThat(tableOp.findCellColumn("04", StringComparators.strict(), 4, 0))
                 .isEqualTo(0);
-        assertThat(tableOpRef.get().findCellColumn("04", StringComparators.strict(), 4, 0))
-                .isEqualTo(0);
-        assertThat(tableOpRef.get().findColumn("1", StringComparators.strict())).isEqualTo(0);
-        tableOpRef.get().getHeaderOperator().moveColumn(1, 0);
-        assertThat(tableOpRef.get().findCellRow("14", StringComparators.strict(), 1, 0))
-                .isEqualTo(4);
-        assertThat(tableOpRef.get().findCell("14", StringComparators.strict(), 0).x)
+        assertThat(tableOp.findColumn("1", StringComparators.strict())).isEqualTo(0);
+        tableOp.getHeaderOperator().moveColumn(1, 0);
+        assertThat(tableOp.findCellRow("14", StringComparators.strict(), 1, 0)).isEqualTo(4);
+        assertThat(tableOp.findCell("14", StringComparators.strict(), 0).x).isEqualTo(1);
+        assertThat(tableOp.findCellColumn("14", StringComparators.strict(), 4, 0))
                 .isEqualTo(1);
-        assertThat(tableOpRef.get().findCellColumn("14", StringComparators.strict(), 4, 0))
-                .isEqualTo(1);
-        assertThat(tableOpRef.get().findColumn("0", StringComparators.strict())).isEqualTo(0);
-        tableOpRef.get().clickOnCell(0, 0);
-        EventQueue.invokeAndWait(() -> compRef.set(tableOpRef.get().getRenderedComponent(0, 0)));
+        assertThat(tableOp.findColumn("0", StringComparators.strict())).isEqualTo(0);
+        tableOp.clickOnCell(0, 0);
+        EventQueue.invokeAndWait(() -> compRef.set(tableOp.getRenderedComponent(0, 0)));
         Component comp00 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!00!"));
         assertThat(comp00).isNotNull();
-        EventQueue.invokeAndWait(() -> compRef.set(tableOpRef.get().getRenderedComponent(1, 1)));
+        EventQueue.invokeAndWait(() -> compRef.set(tableOp.getRenderedComponent(1, 1)));
         Component comp11 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("11"));
         assertThat(comp11).isNotNull();
-        tableOpRef.get().clickOnCell(2, 2, 1);
+        tableOp.clickOnCell(2, 2, 1);
         tabbedPaneOp.selectPage("Tree Page", StringComparators.strict());
-        treeOpRef.set(new JTreeOperator(
+        JTreeOperator treeOp = new JTreeOperator(Objects.requireNonNull(
                 JTreeOperator.findJTree(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
-        rootPathRef.set(treeOpRef.get().getPathForRow(treeOpRef.get().findRow("00", StringComparators.substring())));
-        treeOpRef.get().getPathForRow(treeOpRef.get().findRow("00", StringComparators.substring()));
-        lastPathRef.set(treeOpRef.get().findPath("40/44", "/", StringComparators.substring()));
-        treeOpRef.get().selectPath(lastPathRef.get());
-        EventQueue.invokeAndWait(() -> compRef.set(treeOpRef.get().getRenderedComponent(lastPathRef.get())));
+        TreePath rootPath = treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
+        treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
+        TreePath lastPath = Objects.requireNonNull(treeOp.findPath("40/44", "/", StringComparators.substring()));
+        treeOp.selectPath(lastPath);
+        EventQueue.invokeAndWait(() -> compRef.set(treeOp.getRenderedComponent(lastPath)));
         Component comp44 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!44!"));
         assertThat(comp44).isNotNull();
-        EventQueue.invokeAndWait(() -> compRef.set(treeOpRef.get().getRenderedComponent(rootPathRef.get())));
+        EventQueue.invokeAndWait(() -> compRef.set(treeOp.getRenderedComponent(rootPath)));
         Component compDoubleNaught =
                 new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("00"));
         assertThat(compDoubleNaught).isNotNull();

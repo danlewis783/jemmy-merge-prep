@@ -21,7 +21,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.io.File;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,27 +30,21 @@ final class FileChooserLaunchApp extends JFrame {
 
     private FileChooserLaunchApp() {
         super("FileChooserLaunchApp");
-        AtomicReference<JTextField> jTextFieldRef = new AtomicReference<>(new JTextField(""));
-        AtomicReference<JButton> jButtonRef = new AtomicReference<>(new JButton("..."));
+        JTextField jTextField = new JTextField("");
+        JButton jButton = new JButton("...");
 
-        AtomicReference<JFileChooser> jFileChooserRef = new AtomicReference<>();
-        {
-            JFileChooser jFileChooser = new JFileChooser();
-            String userDir = System.getProperty("user.dir");
-            jFileChooser.setCurrentDirectory(new File(userDir));
-            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            jFileChooserRef.set(jFileChooser);
-            jFileChooser.addChoosableFileFilter(new NoDirFilter());
-            jFileChooser.addChoosableFileFilter(new NothingFilter());
-            jFileChooser.addChoosableFileFilter(new NoFileFilter());
-            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        }
+        JFileChooser jFileChooser = new JFileChooser();
+        String userDir = System.getProperty("user.dir");
+        jFileChooser.setCurrentDirectory(new File(userDir));
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        jFileChooser.addChoosableFileFilter(new NoDirFilter());
+        jFileChooser.addChoosableFileFilter(new NothingFilter());
+        jFileChooser.addChoosableFileFilter(new NoFileFilter());
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-        jButtonRef.get().addActionListener(e -> {
-            JTextField jTextField = jTextFieldRef.get();
+        jButton.addActionListener(e -> {
             jTextField.setText("");
-            JFileChooser jFileChooser = jFileChooserRef.get();
-            int respond = jFileChooser.showDialog(jButtonRef.get(), "---");
+            int respond = jFileChooser.showDialog(jButton, "---");
             if (respond == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = jFileChooser.getSelectedFile();
                 if (selectedFile != null) {
@@ -64,8 +57,8 @@ final class FileChooserLaunchApp extends JFrame {
 
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-        contentPane.add(jButtonRef.get(), BorderLayout.EAST);
-        contentPane.add(jTextFieldRef.get(), BorderLayout.CENTER);
+        contentPane.add(jButton, BorderLayout.EAST);
+        contentPane.add(jTextField, BorderLayout.CENTER);
         setSize(400, 100);
         setLocationRelativeTo(null);
     }

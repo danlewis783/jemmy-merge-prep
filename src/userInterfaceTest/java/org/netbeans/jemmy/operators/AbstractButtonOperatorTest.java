@@ -19,22 +19,28 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.event.ChangeListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class AbstractButtonOperatorTest {
 
     private JButton button;
     private JFrame frame;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             button = new JButton("AbstractButtonOperatorTest");
@@ -46,11 +52,10 @@ class AbstractButtonOperatorTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -169,7 +174,8 @@ class AbstractButtonOperatorTest {
         assertThat(operator).isNotNull();
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addActionListener(null);
+        ActionListener listener = event -> {};
+        operator1.addActionListener(listener);
     }
 
     @Test
@@ -178,7 +184,8 @@ class AbstractButtonOperatorTest {
         assertThat(operator).isNotNull();
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addChangeListener(null);
+        ChangeListener listener = event -> {};
+        operator1.addChangeListener(listener);
     }
 
     @Test
@@ -187,7 +194,8 @@ class AbstractButtonOperatorTest {
         assertThat(operator).isNotNull();
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.addItemListener(null);
+        ItemListener listener = event -> {};
+        operator1.addItemListener(listener);
     }
 
     @Test
@@ -414,7 +422,7 @@ class AbstractButtonOperatorTest {
         assertThat(operator).isNotNull();
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeActionListener(null);
+        operator1.removeActionListener(event -> {});
     }
 
     @Test
@@ -423,7 +431,7 @@ class AbstractButtonOperatorTest {
         assertThat(operator).isNotNull();
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeChangeListener(null);
+        operator1.removeChangeListener(event -> {});
     }
 
     @Test
@@ -432,6 +440,6 @@ class AbstractButtonOperatorTest {
         assertThat(operator).isNotNull();
         AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
         assertThat(operator1).isNotNull();
-        operator1.removeItemListener(null);
+        operator1.removeItemListener(event -> {});
     }
 }

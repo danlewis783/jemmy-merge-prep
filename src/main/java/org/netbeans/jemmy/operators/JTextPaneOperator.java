@@ -73,7 +73,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
                 index));
     }
 
-    public Style addStyle(String string, Style style) {
+    public Style addStyle(String string, @Nullable Style style) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).addStyle(string, style)));
     }
@@ -136,7 +136,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
         }));
     }
 
-    public void setLogicalStyle(Style style) {
+    public void setLogicalStyle(@Nullable Style style) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).setLogicalStyle(style);
 

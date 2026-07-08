@@ -643,17 +643,17 @@ public class JFileChooserOperator extends JComponentOperator {
         }));
     }
 
-    public int showDialog(Component component, String string) {
+    public int showDialog(@Nullable Component component, String string) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showDialog(component, string)));
     }
 
-    public int showOpenDialog(Component component) {
+    public int showOpenDialog(@Nullable Component component) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showOpenDialog(component)));
     }
 
-    public int showSaveDialog(Component component) {
+    public int showSaveDialog(@Nullable Component component) {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JFileChooser) getSource()).showSaveDialog(component)));
     }

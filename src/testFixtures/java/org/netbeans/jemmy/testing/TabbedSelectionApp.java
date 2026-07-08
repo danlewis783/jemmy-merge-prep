@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -42,6 +43,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 
 public class TabbedSelectionApp extends JFrame {
 
@@ -150,7 +152,7 @@ public class TabbedSelectionApp extends JFrame {
         private final JPanel res;
         private int row, column;
         private final JComboBox sCombo;
-        private JTable tbl;
+        private @Nullable JTable tbl;
 
         TableDualComboEditor(String[] tableColumns) {
             res = new JPanel();
@@ -209,7 +211,7 @@ public class TabbedSelectionApp extends JFrame {
 
         @Override
         public boolean stopCellEditing() {
-            tbl.getModel().setValueAt(getCellEditorValue(), row, column);
+            Objects.requireNonNull(tbl).getModel().setValueAt(getCellEditorValue(), row, column);
 
             for (CellEditorListener list : listeners) {
                 list.editingStopped(new ChangeEvent(tbl));
@@ -222,9 +224,14 @@ public class TabbedSelectionApp extends JFrame {
     private static class TreeDualComboEditor implements TreeCellEditor {
         final JComboBox fCombo;
         final Vector lists;
+
+        @Nullable
         TreePath path;
+
         final JPanel res;
         final JComboBox sCombo;
+
+        @Nullable
         JTree tree;
 
         TreeDualComboEditor(String[] tableColumns) {
@@ -258,7 +265,8 @@ public class TabbedSelectionApp extends JFrame {
         @Override
         public void cancelCellEditing() {
             res.setVisible(false);
-            ((DefaultMutableTreeNode) path.getLastPathComponent()).setUserObject(getCellEditorValue());
+            ((DefaultMutableTreeNode) Objects.requireNonNull(path).getLastPathComponent())
+                    .setUserObject(getCellEditorValue());
 
             for (Object list : lists) {
                 ((CellEditorListener) list).editingCanceled(new ChangeEvent(tree));
@@ -287,7 +295,8 @@ public class TabbedSelectionApp extends JFrame {
 
         @Override
         public boolean stopCellEditing() {
-            ((DefaultMutableTreeNode) path.getLastPathComponent()).setUserObject(getCellEditorValue());
+            ((DefaultMutableTreeNode) Objects.requireNonNull(path).getLastPathComponent())
+                    .setUserObject(getCellEditorValue());
 
             for (Object list : lists) {
                 ((CellEditorListener) list).editingStopped(new ChangeEvent(tree));

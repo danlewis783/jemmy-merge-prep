@@ -211,8 +211,6 @@ public class JMenuItemOperator extends AbstractButtonOperator {
         }));
     }
 
-    protected void prepareToClick() {}
-
     public static @Nullable JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser, int index) {
         return (JMenuItem) findComponent(menu, PredicatesJ.of(JMenuItem.class, chooser), index);
     }

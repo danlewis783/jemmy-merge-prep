@@ -38,6 +38,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.QueueTool;
@@ -152,7 +153,7 @@ public class JTableHeaderOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getUpdateTableInRealTime()));
     }
 
-    public void setDefaultRenderer(TableCellRenderer tableCellRenderer) {
+    public void setDefaultRenderer(@Nullable TableCellRenderer tableCellRenderer) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setDefaultRenderer(tableCellRenderer);
 

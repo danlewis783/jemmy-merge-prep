@@ -83,7 +83,7 @@ final class TabbedComponentsApp extends JFrame {
             sb.append("\n");
         }
 
-        String text2 = sb.toString().substring(0, sb.length() - 1);
+        String text2 = sb.substring(0, sb.length() - 1);
         jTabbedPane.add("Text Page", new JScrollPane(new JTextArea(text2)));
         getContentPane().add(jTabbedPane);
         setSize(500, 500);

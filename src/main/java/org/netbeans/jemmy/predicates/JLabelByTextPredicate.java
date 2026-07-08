@@ -19,13 +19,14 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JLabel;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JLabelByTextPredicate implements Predicate<Component> {
     private final StringComparator comparator;
-    private final String text;
+    private final @Nullable String text;
 
-    public JLabelByTextPredicate(String text, StringComparator comparator) {
+    public JLabelByTextPredicate(@Nullable String text, StringComparator comparator) {
         this.text = text;
         this.comparator = comparator;
     }

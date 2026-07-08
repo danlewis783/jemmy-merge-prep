@@ -211,7 +211,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
         JButtonOperator more = findAButton(oper, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
         int width = oper.getWidth() - less.getWidth() - more.getWidth();
         int height = oper.getHeight() - less.getHeight() - more.getHeight();
-        int max = (width > height) ? width : height;
+        int max = Math.max(width, height);
         if (max >= RELATIVE_DRAG_STEP_LENGTH * 2) {
             return max / RELATIVE_DRAG_STEP_LENGTH;
         } else {

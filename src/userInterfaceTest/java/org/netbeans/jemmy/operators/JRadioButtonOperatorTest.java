@@ -44,7 +44,6 @@ class JRadioButtonOperatorTest {
     void afterEach() {
         frame.setVisible(false);
         frame.dispose();
-        frame = null;
     }
 
     @Test

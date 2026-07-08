@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,8 @@ class InternalFrameWorkflowTest {
     @Test
     void test() {
         InternalFramesApp.main(new String[] {});
-        JFrame frame = JFrameOperator.findJFrame("InternalFramesApp", StringComparators.substring());
+        JFrame frame =
+                Objects.requireNonNull(JFrameOperator.findJFrame("InternalFramesApp", StringComparators.substring()));
         JInternalFrameOperator frame1Op =
                 new JInternalFrameOperator(new JFrameOperator(frame), "Frame 1", StringComparators.strict());
         JInternalFrameOperator frame2Op =

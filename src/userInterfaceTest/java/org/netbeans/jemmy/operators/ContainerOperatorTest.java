@@ -24,18 +24,22 @@ import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Panel;
 import java.awt.Point;
+import java.awt.event.ContainerAdapter;
+import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class ContainerOperatorTest {
 
     private Frame frame;
     private Panel panel;
 
     @BeforeEach
-    void beforeEach() throws Exception {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new Frame();
             panel = new Panel();
@@ -47,11 +51,10 @@ class ContainerOperatorTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame.setVisible(false);
             frame.dispose();
-            frame = null;
         });
     }
 
@@ -126,7 +129,7 @@ class ContainerOperatorTest {
     void testAddContainerListener() {
         FrameOperator operator = new FrameOperator();
         assertThat(operator).isNotNull();
-        operator.addContainerListener(null);
+        operator.addContainerListener(new ContainerAdapter() {});
     }
 
     @Test
@@ -176,7 +179,7 @@ class ContainerOperatorTest {
     void testIsAncestorOf() {
         FrameOperator operator = new FrameOperator();
         assertThat(operator).isNotNull();
-        operator.isAncestorOf(null);
+        operator.isAncestorOf(panel);
     }
 
     @Test
@@ -213,7 +216,7 @@ class ContainerOperatorTest {
     void testRemoveContainerListener() {
         FrameOperator operator = new FrameOperator();
         assertThat(operator).isNotNull();
-        operator.removeContainerListener(null);
+        operator.removeContainerListener(new ContainerAdapter() {});
     }
 
     @Test

@@ -48,7 +48,7 @@ public final class FunctionRunner<F, T> {
         }
     });
     private final Function<F, T> function;
-    private final AtomicReference<Throwable> throwable;
+    private final AtomicReference<@Nullable Throwable> throwable;
 
     private FunctionRunner(Function<F, T> function) {
         this.function = function;

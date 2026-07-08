@@ -96,12 +96,13 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public static @Nullable JButton findJButton(
-            Container cont, String text, StringComparator stringComparator, int index) {
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJButton(
                 cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index);
     }
 
-    public static @Nullable JButton findJButton(Container cont, String text, StringComparator stringComparator) {
+    public static @Nullable JButton findJButton(
+            Container cont, @Nullable String text, StringComparator stringComparator) {
         return findJButton(cont, text, stringComparator, 0);
     }
 
@@ -113,12 +114,13 @@ public class JButtonOperator extends AbstractButtonOperator {
         return waitJButton(cont, chooser, 0);
     }
 
-    public static JButton waitJButton(Container cont, String text, StringComparator stringComparator, int index) {
+    public static JButton waitJButton(
+            Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJButton(
                 cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index);
     }
 
-    public static JButton waitJButton(Container cont, String text, StringComparator stringComparator) {
+    public static JButton waitJButton(Container cont, @Nullable String text, StringComparator stringComparator) {
         return waitJButton(cont, text, stringComparator, 0);
     }
 }
