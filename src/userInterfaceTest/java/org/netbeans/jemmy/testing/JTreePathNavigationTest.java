@@ -50,7 +50,7 @@ class JTreePathNavigationTest {
     void test() {
         TreePathApp.main();
         JFrame frm = JFrameOperator.waitJFrame("TreePathApp");
-        JTreeOperator to = new JTreeOperator(
+        JTreeOperator to = JTreeOperator.of(
                 Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1)));
         TreePath pth = Objects.requireNonNull(to.findPath("node00", "|", StringComparators.strict()));
         assertThat(to.getChildCount(pth)).isEqualTo(2);
@@ -63,15 +63,15 @@ class JTreePathNavigationTest {
                 .isSameAs(to.getChildren(pth.getLastPathComponent())[0]);
         assertThat(to.getChildPaths(pth)[1].getLastPathComponent())
                 .isSameAs(to.getChildren(pth.getLastPathComponent())[1]);
-        JListOperator jListOp = new JListOperator(
+        JListOperator jListOp = JListOperator.of(
                 Objects.requireNonNull(JListOperator.findJList(frm, null, StringComparators.strict(), -1)));
         JPopupMenuOperator pmo;
         String[] strPaths = {"", "node00", "node00|node000", "node00|node001", "node01"};
         TreePath[] paths = new TreePath[strPaths.length];
         JListOperatorTreePathChecker checker = new JListOperatorTreePathChecker(jListOp);
-        JSplitPaneOperator split = new JSplitPaneOperator(new JFrameOperator(frm));
+        JSplitPaneOperator split = JSplitPaneOperator.waitFor(JFrameOperator.of(frm));
         split.moveDivider(0.5);
-        new JCheckBoxOperator(new JFrameOperator(frm), "Huge Popup", StringComparators.substring())
+        JCheckBoxOperator.waitFor(JFrameOperator.of(frm), "Huge Popup", StringComparators.substring())
                 .changeSelection(true);
 
         for (int i = 0; i < strPaths.length; i++) {
@@ -109,7 +109,7 @@ class JTreePathNavigationTest {
         pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
         pmo.pushMenu("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict());
         FunctionRepeater.on(checker).runUntilNotNull(new TreePath[] {pth});
-        new JCheckBoxOperator(new JFrameOperator(frm), "Huge Popup", StringComparators.substring())
+        JCheckBoxOperator.waitFor(JFrameOperator.of(frm), "Huge Popup", StringComparators.substring())
                 .changeSelection(false);
 
         for (int i = 0; i < strPaths.length; i++) {
@@ -117,7 +117,7 @@ class JTreePathNavigationTest {
                 for (int k = j + 1; k < strPaths.length; k++) {
                     for (int l = k + 1; l < strPaths.length; l++) {
                         TreePath[] pths = {paths[i], paths[j], paths[k], paths[l]};
-                        pmo = new JPopupMenuOperator(to.callPopupOnPaths(pths));
+                        pmo = JPopupMenuOperator.of(to.callPopupOnPaths(pths));
                         pmo.pushMenu("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict());
                         FunctionRepeater.on(checker).runUntilNotNull(pths);
                     }

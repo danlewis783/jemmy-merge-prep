@@ -66,32 +66,32 @@ class DialogComboListWorkflowTest {
         EventQueue.invokeLater(() -> application001.setVisible(true));
         EventQueue.invokeAndWait(() -> {});
         JDialog jDialog = JDialogOperator.waitJDialog("DialogComboListApp", StringComparators.strict());
-        JDialogOperator jDialogOp1 = new JDialogOperator(jDialog);
-        JDialogOperator jDialogOp2 = new JDialogOperator();
-        DialogOperator dialogOp = new DialogOperator();
+        JDialogOperator jDialogOp1 = JDialogOperator.of(jDialog);
+        JDialogOperator jDialogOp2 = JDialogOperator.waitFor();
+        DialogOperator dialogOp = DialogOperator.waitFor();
         assertThat(jDialogOp2.getSource()).isSameAs(jDialogOp1.getSource());
         assertThat(dialogOp.getSource()).isSameAs(jDialogOp1.getSource());
-        Window window = new ComponentOperator(jDialog).getWindow();
+        Window window = ComponentOperator.of(jDialog).getWindow();
         assertThat(jDialog).isSameAs(window);
-        JScrollPaneOperator jScrollPaneOp = new JScrollPaneOperator(
+        JScrollPaneOperator jScrollPaneOp = JScrollPaneOperator.of(
                 Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jDialog, PredicatesJ.alwaysTrue())));
-        JComboBoxOperator jComboOp1 = new JComboBoxOperator(Objects.requireNonNull(
+        JComboBoxOperator jComboOp1 = JComboBoxOperator.of(Objects.requireNonNull(
                 JComboBoxOperator.findJComboBox(jDialog, "editable_one", StringComparators.strict(), 0)));
-        JComboBoxOperator jComboOp2 = new JComboBoxOperator(jDialogOp1);
-        JComboBoxOperator jComboOp3 = new JComboBoxOperator(jDialogOp1, "editable_one", StringComparators.strict());
-        JComboBoxOperator jComboOp4 = new JComboBoxOperator(jDialogOp1, PredicatesJ.byName("editable"));
+        JComboBoxOperator jComboOp2 = JComboBoxOperator.waitFor(jDialogOp1);
+        JComboBoxOperator jComboOp3 = JComboBoxOperator.waitFor(jDialogOp1, "editable_one", StringComparators.strict());
+        JComboBoxOperator jComboOp4 = JComboBoxOperator.waitFor(jDialogOp1, PredicatesJ.byName("editable"));
         assertThat(jComboOp2.getSource()).isSameAs(jComboOp1.getSource());
         assertThat(jComboOp3.getSource()).isSameAs(jComboOp1.getSource());
         assertThat(jComboOp4.getSource()).isSameAs(jComboOp1.getSource());
-        JComboBoxOperator jComboOp5 = new JComboBoxOperator(Objects.requireNonNull(
+        JComboBoxOperator jComboOp5 = JComboBoxOperator.of(Objects.requireNonNull(
                 JComboBoxOperator.findJComboBox(jDialog, "non_editable_one", StringComparators.strict(), 0)));
         assertThat(jComboOp1.getItemCount()).isEqualTo(4);
-        JListOperator jListOp1 = new JListOperator(jDialogOp1);
+        JListOperator jListOp1 = JListOperator.waitFor(jDialogOp1);
         jListOp1.clickOnItem("two", StringComparators.caseInsensitiveSubstring());
         JListOperator jListOp2 =
-                new JListOperator(jDialogOp1, "two", StringComparators.caseInsensitiveSubstring(), 1, 0);
-        JListOperator jListOp3 = new JListOperator(jDialogOp1, "two", StringComparators.caseInsensitiveSubstring());
-        JListOperator jListOp4 = new JListOperator(jDialogOp1, PredicatesJ.byName("list"));
+                JListOperator.waitFor(jDialogOp1, "two", StringComparators.caseInsensitiveSubstring(), 1, 0);
+        JListOperator jListOp3 = JListOperator.waitFor(jDialogOp1, "two", StringComparators.caseInsensitiveSubstring());
+        JListOperator jListOp4 = JListOperator.waitFor(jDialogOp1, PredicatesJ.byName("list"));
         assertThat(jListOp2.getSource()).isSameAs(jListOp1.getSource());
         assertThat(jListOp3.getSource()).isSameAs(jListOp1.getSource());
         assertThat(jListOp4.getSource()).isSameAs(jListOp1.getSource());
@@ -113,7 +113,7 @@ class DialogComboListWorkflowTest {
         JTextFieldOperator.waitJTextField(jDialog, "", StringComparators.strict());
         jComboOp1.typeText("editable_old");
         JTextFieldOperator.waitJTextField(jDialog, "editable_old", StringComparators.strict());
-        JTextFieldOperator jTextFieldOp = new JTextFieldOperator(jComboOp1.findJTextField());
+        JTextFieldOperator jTextFieldOp = JTextFieldOperator.of(jComboOp1.findJTextField());
         jTextFieldOp.selectText("old");
         jTextFieldOp.typeText("new");
         JTextFieldOperator.waitJTextField(jDialog, "editable_new", StringComparators.strict());
@@ -123,13 +123,13 @@ class DialogComboListWorkflowTest {
         jScrollPaneOp.scrollToBottom();
         jComboOp5.selectItem(2);
         JComboBoxOperator.waitJComboBox(jDialog, "non_editable_three", StringComparators.strict(), -1);
-        JComboBoxOperator jComboOp6 = new JComboBoxOperator(jDialogOp1, PredicatesJ.byName("non_editable"));
-        JComboBoxOperator jComboOp7 = new JComboBoxOperator(
+        JComboBoxOperator jComboOp6 = JComboBoxOperator.waitFor(jDialogOp1, PredicatesJ.byName("non_editable"));
+        JComboBoxOperator jComboOp7 = JComboBoxOperator.waitFor(
                 jDialogOp1, PredicatesJ.byName("on_e", StringComparators.caseInsensitiveSubstring()));
         assertThat(jComboOp7.getSource()).isSameAs(jComboOp6.getSource());
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
-                    .isThrownBy(() -> new JComboBoxOperator(jDialogOp1, PredicatesJ.byName("non_edit")));
+                    .isThrownBy(() -> JComboBoxOperator.waitFor(jDialogOp1, PredicatesJ.byName("non_edit")));
         }
 
         testComponent(jComboOp1);

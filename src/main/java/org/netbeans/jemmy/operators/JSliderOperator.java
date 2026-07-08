@@ -55,25 +55,29 @@ public class JSliderOperator extends JComponentOperator {
     private int scrollModel = CLICK_SCROLL_MODEL;
     private final ScrollDriver driver;
 
-    public JSliderOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JSliderOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JSliderOperator(JSlider b) {
+    JSliderOperator(JSlider b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
-    public JSliderOperator(ContainerOperator cont, int index) {
-        this((JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class), index));
+    public static JSliderOperator of(JSlider b) {
+        return new JSliderOperator(b);
     }
 
-    public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JSliderOperator waitFor(ContainerOperator cont, int index) {
+        return new JSliderOperator((JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class), index));
     }
 
-    public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSlider) cont.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
+    public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JSliderOperator((JSlider) cont.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     @Deprecated

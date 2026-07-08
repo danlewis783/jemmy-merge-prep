@@ -51,33 +51,41 @@ import org.netbeans.jemmy.util.StringComparator;
 public class AbstractButtonOperator extends JComponentOperator {
     private final ButtonDriver driver;
 
-    public AbstractButtonOperator(AbstractButton b) {
+    AbstractButtonOperator(AbstractButton b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
     }
 
-    public AbstractButtonOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static AbstractButtonOperator of(AbstractButton b) {
+        return new AbstractButtonOperator(b);
     }
 
-    public AbstractButtonOperator(ContainerOperator cont, int index) {
-        this((AbstractButton) waitComponent(cont, PredicatesJ.of(AbstractButton.class), index));
+    public static AbstractButtonOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public AbstractButtonOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static AbstractButtonOperator waitFor(ContainerOperator cont, int index) {
+        return new AbstractButtonOperator(
+                (AbstractButton) waitComponent(cont, PredicatesJ.of(AbstractButton.class), index));
     }
 
-    public AbstractButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static AbstractButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public AbstractButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((AbstractButton) cont.waitSubComponent(PredicatesJ.of(AbstractButton.class, chooser), index));
+    public static AbstractButtonOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public AbstractButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((AbstractButton) waitComponent(
+    public static AbstractButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new AbstractButtonOperator(
+                (AbstractButton) cont.waitSubComponent(PredicatesJ.of(AbstractButton.class, chooser), index));
+    }
+
+    public static AbstractButtonOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new AbstractButtonOperator((AbstractButton) waitComponent(
                 cont,
                 PredicatesJ.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));

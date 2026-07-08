@@ -53,18 +53,18 @@ class FrameOperatorTest {
     @Test
     void testConstructor() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        FrameOperator operator2 = new FrameOperator(PredicatesJ.byName("FrameOperatorTest"));
+        FrameOperator operator2 = FrameOperator.waitFor(PredicatesJ.byName("FrameOperatorTest"));
         assertThat(operator2).isNotNull();
-        FrameOperator operator3 = new FrameOperator("FrameOperatorTest");
+        FrameOperator operator3 = FrameOperator.waitFor("FrameOperatorTest");
         assertThat(operator3).isNotNull();
     }
 
     @Test
     void testWaitTitle() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setTitle("Title");
         operator.waitTitle("Title", StringComparators.strict());
@@ -73,7 +73,7 @@ class FrameOperatorTest {
     @Test
     void testIconify() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.iconify();
     }
@@ -81,7 +81,7 @@ class FrameOperatorTest {
     @Test
     void testDeiconify() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.deiconify();
     }
@@ -89,7 +89,7 @@ class FrameOperatorTest {
     @Test
     void testMaximize() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.maximize();
         assertThat(operator.getExtendedState()).isEqualTo(Frame.MAXIMIZED_BOTH);
@@ -98,7 +98,7 @@ class FrameOperatorTest {
     @Test
     void testDemaximize() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.maximize();
         operator.demaximize();
@@ -108,7 +108,7 @@ class FrameOperatorTest {
     @Test
     void testSetIconImage() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setIconImage(operator.getIconImage());
     }
@@ -116,7 +116,7 @@ class FrameOperatorTest {
     @Test
     void testSetMenuBar() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setMenuBar(operator.getMenuBar());
     }
@@ -124,7 +124,7 @@ class FrameOperatorTest {
     @Test
     void testSetResizable() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setResizable(operator.isResizable());
     }
@@ -132,7 +132,7 @@ class FrameOperatorTest {
     @Test
     void testSetState() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setState(operator.getState());
     }
@@ -140,7 +140,7 @@ class FrameOperatorTest {
     @Test
     void testSetTitle() {
         frame.setVisible(true);
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setTitle(operator.getTitle());
     }

@@ -54,15 +54,15 @@ final class RobotVsQueueDispatchTest {
 
     @AfterEach
     void after() {
-        new JFrameOperator("TypingFeedbackApp").setVisible(false);
+        JFrameOperator.waitFor("TypingFeedbackApp").setVisible(false);
     }
 
     @Test
     void robotVsQueue() {
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
-            JFrameOperator jFrameOp = new JFrameOperator("TypingFeedbackApp");
-            JTextAreaOperator jTextAreaOp = new JTextAreaOperator(jFrameOp);
-            JButtonOperator jButtonOp = new JButtonOperator(jFrameOp);
+            JFrameOperator jFrameOp = JFrameOperator.waitFor("TypingFeedbackApp");
+            JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
+            JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
 
             goQueueMode();
 
@@ -79,9 +79,9 @@ final class RobotVsQueueDispatchTest {
     @Test
     void queueVsRobot() {
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
-            JFrameOperator jFrameOp = new JFrameOperator("TypingFeedbackApp");
-            JTextAreaOperator jTextAreaOp = new JTextAreaOperator(jFrameOp);
-            JButtonOperator jButtonOp = new JButtonOperator(jFrameOp);
+            JFrameOperator jFrameOp = JFrameOperator.waitFor("TypingFeedbackApp");
+            JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
+            JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
 
             goRobotMode();
 

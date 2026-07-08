@@ -70,14 +70,18 @@ import org.netbeans.jemmy.util.StringComparators;
 public class JFileChooserOperator extends JComponentOperator {
     private final ComponentSearcher innerSearcher;
 
-    public JFileChooserOperator() {
-        this((JFileChooser) waitComponent(
+    public static JFileChooserOperator waitFor() {
+        return new JFileChooserOperator((JFileChooser) waitComponent(
                 JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()), PredicatesJ.of(JFileChooser.class)));
     }
 
-    public JFileChooserOperator(JFileChooser comp) {
+    JFileChooserOperator(JFileChooser comp) {
         super(comp);
         innerSearcher = new ComponentSearcher(comp);
+    }
+
+    public static JFileChooserOperator of(JFileChooser comp) {
+        return new JFileChooserOperator(comp);
     }
 
     public JComboBox<?> getPathCombo() {
@@ -148,17 +152,17 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public void approve() {
-        JButtonOperator approveOper = new JButtonOperator(getApproveButton());
+        JButtonOperator approveOper = JButtonOperator.of(getApproveButton());
         approveOper.push();
     }
 
     public void cancel() {
-        JButtonOperator cancelOper = new JButtonOperator(getCancelButton());
+        JButtonOperator cancelOper = JButtonOperator.of(getCancelButton());
         cancelOper.push();
     }
 
     public void chooseFile(String fileName) {
-        JTextFieldOperator fieldOper = new JTextFieldOperator(getPathField());
+        JTextFieldOperator fieldOper = JTextFieldOperator.of(getPathField());
         fieldOper.setText(fileName);
         approve();
     }
@@ -176,9 +180,9 @@ public class JFileChooserOperator extends JComponentOperator {
         // but there is a toggle button to go desktop. In Windows platform
         // 'Go Home' button usually navigates to Desktop only.
         if (LookAndFeel.isWindows() || LookAndFeel.isWindowsClassic()) {
-            homeOper = new JToggleButtonOperator(this, 1);
+            homeOper = JToggleButtonOperator.waitFor(this, 1);
         } else {
-            homeOper = new JButtonOperator(getHomeButton());
+            homeOper = JButtonOperator.of(getHomeButton());
         }
 
         homeOper.push();
@@ -191,9 +195,9 @@ public class JFileChooserOperator extends JComponentOperator {
         waitPainted(index);
         Component list = getFileList();
         if (list instanceof JList) {
-            new JListOperator((JList) list).clickOnItem(index, clickCount);
+            JListOperator.of((JList) list).clickOnItem(index, clickCount);
         } else if (list instanceof JTable) {
-            new JTableOperator((JTable) list).clickOnCell(index, 0, clickCount);
+            JTableOperator.of((JTable) list).clickOnCell(index, 0, clickCount);
         } else {
             throw new IllegalStateException("Wrong component type");
         }
@@ -238,22 +242,22 @@ public class JFileChooserOperator extends JComponentOperator {
         waitPainted(index);
         Component list = getFileList();
         if (list instanceof JList) {
-            new JListOperator((JList) list).setSelectedIndex(index);
+            JListOperator.of((JList) list).setSelectedIndex(index);
         } else if (list instanceof JTable) {
-            new JTableOperator((JTable) list).changeSelection(index, 0, false, false);
+            JTableOperator.of((JTable) list).changeSelection(index, 0, false, false);
         } else {
             throw new IllegalStateException("Wrong component type");
         }
     }
 
     public void selectPathDirectory(String dir, StringComparator comparator) {
-        JComboBoxOperator comboOper = new JComboBoxOperator(getPathCombo());
+        JComboBoxOperator comboOper = JComboBoxOperator.of(getPathCombo());
         comboOper.setSelectedIndex(findDirIndex(dir, comparator));
         waitPainted(-1);
     }
 
     public void selectFileType(String filter, StringComparator comparator) {
-        JComboBoxOperator comboOper = new JComboBoxOperator(getFileTypesCombo());
+        JComboBoxOperator comboOper = JComboBoxOperator.of(getFileTypesCombo());
         comboOper.setSelectedIndex(findFileTypeIndex(filter, comparator));
         waitPainted(-1);
     }

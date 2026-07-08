@@ -37,32 +37,37 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class LabelOperator extends ComponentOperator {
-    public LabelOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static LabelOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public LabelOperator(Label b) {
+    LabelOperator(Label b) {
         super(b);
     }
 
-    public LabelOperator(ContainerOperator cont, int index) {
-        this((Label) waitComponent(cont, PredicatesJ.of(Label.class), index));
+    public static LabelOperator of(Label b) {
+        return new LabelOperator(b);
     }
 
-    public LabelOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static LabelOperator waitFor(ContainerOperator cont, int index) {
+        return new LabelOperator((Label) waitComponent(cont, PredicatesJ.of(Label.class), index));
     }
 
-    public LabelOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Label) cont.waitSubComponent(PredicatesJ.of(Label.class, chooser), index));
+    public static LabelOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public LabelOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), 0));
+    public static LabelOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new LabelOperator((Label) cont.waitSubComponent(PredicatesJ.of(Label.class, chooser), index));
     }
 
-    public LabelOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), index));
+    public static LabelOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return new LabelOperator((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), 0));
+    }
+
+    public static LabelOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new LabelOperator((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), index));
     }
 
     public int getAlignment() {

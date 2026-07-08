@@ -44,14 +44,14 @@ class TabbedPanePageSwitchTest {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L)) {
             JFrame win = JFrameOperator.waitJFrame("TabbedPagesApp");
             JTabbedPaneOperator tpo =
-                    new JTabbedPaneOperator(new JFrameOperator(win), "Page1", StringComparators.strict());
+                    JTabbedPaneOperator.waitFor(JFrameOperator.of(win), "Page1", StringComparators.strict());
             assertThat(JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive()))
                     .isNotNull();
             assertThat(JButtonOperator.findJButton(win, "button2", StringComparators.strict()))
                     .isNull();
             JButton btt1 = Objects.requireNonNull(
                     JButtonOperator.findJButton(win, "BUTTON1", StringComparators.caseInsensitive()));
-            JButtonOperator btt1o = new JButtonOperator(btt1);
+            JButtonOperator btt1o = JButtonOperator.of(btt1);
             assertThat(btt1o.isVisible()).isTrue();
             assertThat(btt1o.isShowing()).isTrue();
             EventQueue.invokeAndWait(() -> {
@@ -71,7 +71,7 @@ class TabbedPanePageSwitchTest {
             assertThat(JButtonOperator.findJButton(win, "button1", StringComparators.strict()))
                     .isNull();
             assertThat(tpo.selectPage("List Page", StringComparators.strict())).isNotNull();
-            JListOperator lo = new JListOperator(
+            JListOperator lo = JListOperator.of(
                     Objects.requireNonNull(JListOperator.findJList(win, null, StringComparators.strict(), 0)));
             assertThat(lo.clickOnItem(1, 1)).isNotNull();
             lo.waitItem("two", StringComparators.strict(), 1);

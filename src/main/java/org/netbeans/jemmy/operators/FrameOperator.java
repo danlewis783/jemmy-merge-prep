@@ -47,33 +47,37 @@ import org.netbeans.jemmy.util.StringComparators;
 public class FrameOperator extends WindowOperator {
     private final FrameDriver driver;
 
-    public FrameOperator() {
-        this(0);
+    public static FrameOperator waitFor() {
+        return waitFor(0);
     }
 
-    public FrameOperator(Frame w) {
+    FrameOperator(Frame w) {
         super(w);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getFrameDriver(getClass());
     }
 
-    public FrameOperator(int index) {
-        this(waitFrame(PredicatesJ.of(Frame.class), index));
+    public static FrameOperator of(Frame w) {
+        return new FrameOperator(w);
     }
 
-    public FrameOperator(Predicate<Component> chooser) {
-        this(chooser, 0);
+    public static FrameOperator waitFor(int index) {
+        return new FrameOperator(waitFrame(PredicatesJ.of(Frame.class), index));
     }
 
-    public FrameOperator(String title) {
-        this(title, 0);
+    public static FrameOperator waitFor(Predicate<Component> chooser) {
+        return waitFor(chooser, 0);
     }
 
-    public FrameOperator(Predicate<Component> chooser, int index) {
-        this(waitFrame(PredicatesJ.of(Frame.class, chooser), index));
+    public static FrameOperator waitFor(String title) {
+        return waitFor(title, 0);
     }
 
-    public FrameOperator(String title, int index) {
-        this(waitFrame(new FrameShowingByTitlePredicate(title, StringComparators.strict()), index));
+    public static FrameOperator waitFor(Predicate<Component> chooser, int index) {
+        return new FrameOperator(waitFrame(PredicatesJ.of(Frame.class, chooser), index));
+    }
+
+    public static FrameOperator waitFor(String title, int index) {
+        return new FrameOperator(waitFrame(new FrameShowingByTitlePredicate(title, StringComparators.strict()), index));
     }
 
     public void waitTitle(String title, StringComparator stringComparator) {

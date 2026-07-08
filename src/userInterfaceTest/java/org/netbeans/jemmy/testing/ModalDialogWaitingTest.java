@@ -50,9 +50,9 @@ class ModalDialogWaitingTest {
         });
         EventQueue.invokeAndWait(() -> {});
         JDialog jDialog0 = JDialogOperator.waitJDialog(TITLE, StringComparators.substring());
-        JDialogOperator fo = new JDialogOperator(jDialog0);
-        JDialogOperator fo2 = new JDialogOperator();
-        DialogOperator fo3 = new DialogOperator();
+        JDialogOperator fo = JDialogOperator.of(jDialog0);
+        JDialogOperator fo2 = JDialogOperator.waitFor();
+        DialogOperator fo3 = DialogOperator.waitFor();
         assertThat(fo.getSource()).isSameAs(fo2.getSource());
         assertThat(fo.getSource()).isSameAs(fo3.getSource());
         assertThat(((StagedDialogsApp) jDialog0).getIndex()).isEqualTo(0);
@@ -60,15 +60,15 @@ class ModalDialogWaitingTest {
         assertThat(((StagedDialogsApp) jDialog1).getIndex()).isEqualTo(1);
         JDialog jDialog2 = JDialogOperator.waitJDialog(TITLE, StringComparators.substring(), 2);
         assertThat(((StagedDialogsApp) jDialog2).getIndex()).isEqualTo(2);
-        fo = new JDialogOperator(jDialog2);
-        fo2 = new JDialogOperator(2);
-        fo3 = new DialogOperator(2);
+        fo = JDialogOperator.of(jDialog2);
+        fo2 = JDialogOperator.waitFor(2);
+        fo3 = DialogOperator.waitFor(2);
         assertThat(fo.getSource()).isSameAs(fo2.getSource());
         assertThat(fo.getSource()).isSameAs(fo3.getSource());
         assertThat(((StagedDialogsApp) jDialog2).getIndex()).isEqualTo(2);
-        testDialog(new JDialogOperator(jDialog2));
-        testJDialog(new JDialogOperator(jDialog2));
-        JDialogOperator frm2o = new JDialogOperator(jDialog2);
+        testDialog(JDialogOperator.of(jDialog2));
+        testJDialog(JDialogOperator.of(jDialog2));
+        JDialogOperator frm2o = JDialogOperator.of(jDialog2);
         frm2o.setTitle("New Title");
         frm2o.waitTitle("New Title", StringComparators.strict());
     }

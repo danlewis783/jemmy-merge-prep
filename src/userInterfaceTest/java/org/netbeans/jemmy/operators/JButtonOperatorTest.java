@@ -59,12 +59,13 @@ class JButtonOperatorTest {
 
     @Test
     void constructor() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JButtonOperator operator2 = new JButtonOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JButtonOperator operator2 = JButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
-        JButtonOperator operator3 = new JButtonOperator(operator1, PredicatesJ.byName("JButtonOperatorTest"));
+        JButtonOperator operator3 = JButtonOperator.waitFor(operator1, PredicatesJ.byName("JButtonOperatorTest"));
         assertThat(operator3).isNotNull();
-        JButtonOperator operator4 = new JButtonOperator(operator1, "JButtonOperatorTest", StringComparators.strict());
+        JButtonOperator operator4 =
+                JButtonOperator.waitFor(operator1, "JButtonOperatorTest", StringComparators.strict());
         assertThat(operator4).isNotNull();
     }
 
@@ -88,9 +89,9 @@ class JButtonOperatorTest {
 
     @Test
     void isDefaultCapable() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JButtonOperator operator2 = new JButtonOperator(operator1);
+        JButtonOperator operator2 = JButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setDefaultCapable(true);
         assertThat(button.isDefaultCapable()).isTrue();
@@ -102,12 +103,12 @@ class JButtonOperatorTest {
 
     @Test
     void prepareToClick() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JButtonOperator operator2 = new JButtonOperator(operator1);
+        JButtonOperator operator2 = JButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.prepareToClick();
-        JButtonOperator operator3 = new JButtonOperator(operator1);
+        JButtonOperator operator3 = JButtonOperator.waitFor(operator1);
         assertThat(operator3).isNotNull();
         assertThat(operator3.isVisible()).isTrue();
     }
@@ -115,22 +116,22 @@ class JButtonOperatorTest {
     @Test
     void issue72187() throws InterruptedException, InvocationTargetException {
         button.addActionListener(event -> EventQueue.invokeLater(() -> button.setVisible(false)));
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JButtonOperator operator2 = new JButtonOperator(operator1);
+        JButtonOperator operator2 = JButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.press();
         operator2.release();
         operator2.waitState(new JComponentOperatorVisiblePredicate(false));
         assertThat(button.isVisible()).isFalse();
         EventQueue.invokeAndWait(() -> button.setVisible(true));
-        JButtonOperator operator3 = new JButtonOperator(operator1);
+        JButtonOperator operator3 = JButtonOperator.waitFor(operator1);
         assertThat(operator3).isNotNull();
         operator3.clickMouse();
         operator3.waitState(new JComponentOperatorVisiblePredicate(false));
         assertThat(button.isVisible()).isFalse();
         EventQueue.invokeAndWait(() -> button.setVisible(true));
-        JButtonOperator operator4 = new JButtonOperator(operator1);
+        JButtonOperator operator4 = JButtonOperator.waitFor(operator1);
         assertThat(operator4).isNotNull();
         operator4.push();
         assertThat(operator4.isVisible()).isFalse();

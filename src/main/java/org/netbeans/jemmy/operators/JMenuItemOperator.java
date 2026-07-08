@@ -54,32 +54,39 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuItemOperator extends AbstractButtonOperator {
 
-    public JMenuItemOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JMenuItemOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JMenuItemOperator(JMenuItem item) {
+    JMenuItemOperator(JMenuItem item) {
         super(item);
     }
 
-    public JMenuItemOperator(ContainerOperator cont, int index) {
-        this((JMenuItem) waitComponent(cont, PredicatesJ.of(JMenuItem.class), index));
+    public static JMenuItemOperator of(JMenuItem item) {
+        return new JMenuItemOperator(item);
     }
 
-    public JMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JMenuItemOperator waitFor(ContainerOperator cont, int index) {
+        return new JMenuItemOperator((JMenuItem) waitComponent(cont, PredicatesJ.of(JMenuItem.class), index));
     }
 
-    public JMenuItemOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JMenuItem) cont.waitSubComponent(PredicatesJ.of(JMenuItem.class, chooser), index));
+    public static JMenuItemOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JMenuItemOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JMenuItem) waitComponent(cont, new JMenuItemByTextPredicate(text, stringComparator), index));
+    public static JMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JMenuItemOperator(
+                (JMenuItem) cont.waitSubComponent(PredicatesJ.of(JMenuItem.class, chooser), index));
+    }
+
+    public static JMenuItemOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JMenuItemOperator(
+                (JMenuItem) waitComponent(cont, new JMenuItemByTextPredicate(text, stringComparator), index));
     }
 
     @Override

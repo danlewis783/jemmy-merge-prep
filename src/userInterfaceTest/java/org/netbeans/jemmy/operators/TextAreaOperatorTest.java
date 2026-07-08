@@ -63,13 +63,14 @@ class TextAreaOperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TextAreaOperator operator2 = new TextAreaOperator(operator, "TextAreaOperatorTest", StringComparators.strict());
+        TextAreaOperator operator2 =
+                TextAreaOperator.waitFor(operator, "TextAreaOperatorTest", StringComparators.strict());
         assertThat(operator2).isNotNull();
-        TextAreaOperator operator3 = new TextAreaOperator(operator, PredicatesJ.byName("TextAreaOperatorTest"));
+        TextAreaOperator operator3 = TextAreaOperator.waitFor(operator, PredicatesJ.byName("TextAreaOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -93,72 +94,72 @@ class TextAreaOperatorTest {
 
     @Test
     void testGetColumns() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getColumns();
     }
 
     @Test
     void testGetMinimumSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getMinimumSize(0, 0);
     }
 
     @Test
     void testGetPreferredSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getPreferredSize(0, 0);
     }
 
     @Test
     void testGetRows() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getRows();
     }
 
     @Test
     void testGetScrollbarVisibility() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getScrollbarVisibility();
     }
 
     @Test
     void testReplaceRange() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.replaceRange("Text", 0, 4);
     }
 
     @Test
     void testSetColumns() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setColumns(2);
     }
 
     @Test
     void testSetRows() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextAreaOperator operator1 = new TextAreaOperator(operator);
+        TextAreaOperator operator1 = TextAreaOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setRows(2);
     }

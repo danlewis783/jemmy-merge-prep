@@ -43,33 +43,39 @@ import org.netbeans.jemmy.util.StringComparator;
 public class ChoiceOperator extends ComponentOperator {
     private final ListDriver driver;
 
-    public ChoiceOperator(Choice b) {
+    ChoiceOperator(Choice b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
-    public ChoiceOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static ChoiceOperator of(Choice b) {
+        return new ChoiceOperator(b);
     }
 
-    public ChoiceOperator(ContainerOperator cont, int index) {
-        this((Choice) waitComponent(cont, PredicatesJ.of(Choice.class), index));
+    public static ChoiceOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public ChoiceOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static ChoiceOperator waitFor(ContainerOperator cont, int index) {
+        return new ChoiceOperator((Choice) waitComponent(cont, PredicatesJ.of(Choice.class), index));
     }
 
-    public ChoiceOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static ChoiceOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public ChoiceOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Choice) cont.waitSubComponent(PredicatesJ.of(Choice.class, chooser), index));
+    public static ChoiceOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public ChoiceOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((Choice) waitComponent(cont, new ChoiceBySelectedItemPredicate(text, stringComparator), index));
+    public static ChoiceOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new ChoiceOperator((Choice) cont.waitSubComponent(PredicatesJ.of(Choice.class, chooser), index));
+    }
+
+    public static ChoiceOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new ChoiceOperator(
+                (Choice) waitComponent(cont, new ChoiceBySelectedItemPredicate(text, stringComparator), index));
     }
 
     public int findItemIndex(String item, StringComparator stringComparator, int index) {

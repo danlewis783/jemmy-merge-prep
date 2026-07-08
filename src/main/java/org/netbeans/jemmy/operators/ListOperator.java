@@ -45,38 +45,44 @@ import org.netbeans.jemmy.util.StringComparator;
 public class ListOperator extends ComponentOperator {
     private final MultiSelListDriver driver;
 
-    public ListOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static ListOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public ListOperator(List b) {
+    ListOperator(List b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
 
-    public ListOperator(ContainerOperator cont, int index) {
-        this((List) waitComponent(cont, PredicatesJ.of(List.class), index));
+    public static ListOperator of(List b) {
+        return new ListOperator(b);
     }
 
-    public ListOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static ListOperator waitFor(ContainerOperator cont, int index) {
+        return new ListOperator((List) waitComponent(cont, PredicatesJ.of(List.class), index));
     }
 
-    public ListOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static ListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public ListOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((List) cont.waitSubComponent(PredicatesJ.of(List.class, chooser), index));
+    public static ListOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public ListOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
+    public static ListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new ListOperator((List) cont.waitSubComponent(PredicatesJ.of(List.class, chooser), index));
     }
 
-    public ListOperator(
+    public static ListOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return waitFor(cont, text, stringComparator, -1, index);
+    }
+
+    public static ListOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
-        this((List) waitComponent(cont, new ListByItemPredicate(text, itemIndex, stringComparator), index));
+        return new ListOperator(
+                (List) waitComponent(cont, new ListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
     public int findItemIndex(String item, StringComparator comparator, int index) {

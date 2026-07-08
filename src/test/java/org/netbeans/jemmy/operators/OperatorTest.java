@@ -27,7 +27,7 @@ class OperatorTest {
 
     @Test
     void waitStateOnQueueEvaluatesPredicateOnEventDispatchThread() {
-        ComponentOperator operator = new ComponentOperator(new JLabel());
+        ComponentOperator operator = ComponentOperator.of(new JLabel());
         AtomicBoolean ranOnQueue = new AtomicBoolean();
         operator.waitStateOnQueue(op -> {
             ranOnQueue.set(SwingUtilities.isEventDispatchThread());
@@ -41,7 +41,7 @@ class OperatorTest {
 
     @Test
     void waitStateEvaluatesPredicateOffEventDispatchThread() {
-        ComponentOperator operator = new ComponentOperator(new JLabel());
+        ComponentOperator operator = ComponentOperator.of(new JLabel());
         AtomicBoolean ranOnQueue = new AtomicBoolean(true);
         operator.waitState(op -> {
             ranOnQueue.set(SwingUtilities.isEventDispatchThread());

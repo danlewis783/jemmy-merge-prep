@@ -81,7 +81,7 @@ class InternalFrameApiDriverTest {
 
     @Test
     void maximizeAndDemaximize() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.maximize();
         assertThat(operator.isMaximum()).isTrue();
         operator.demaximize();
@@ -90,7 +90,7 @@ class InternalFrameApiDriverTest {
 
     @Test
     void iconifyAndDeiconify() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.iconify();
         assertThat(operator.isIcon()).isTrue();
         operator.deiconify();
@@ -99,14 +99,14 @@ class InternalFrameApiDriverTest {
 
     @Test
     void activateSelectsTheFrame() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.activate();
         assertThat(operator.isSelected()).isTrue();
     }
 
     @Test
     void moveAndResize() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.move(40, 30);
         assertThat(operator.getX()).isEqualTo(40);
         assertThat(operator.getY()).isEqualTo(30);
@@ -117,14 +117,14 @@ class InternalFrameApiDriverTest {
 
     @Test
     void closeClosesTheFrame() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.close();
         assertThat(operator.isClosed()).isTrue();
     }
 
     @Test
     void titleButtonsAreUnsupported() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         assertThatExceptionOfType(UnsupportedOperationException.class)
                 .isThrownBy(operator::getMinimizeButton)
                 .withMessageContaining("title pane");

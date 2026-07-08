@@ -76,7 +76,7 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
         Timeouts.sleep(TimeoutKey.JMenuOperator_WaitBeforePopupTimeout);
         JMenuItem item = waitItem(oper, waitPopupMenu(oper), predicates, depth);
         if (item instanceof JMenu) {
-            JMenuOperator mo = new JMenuOperator((JMenu) item);
+            JMenuOperator mo = JMenuOperator.of((JMenu) item);
             Object result = push(mo, null, predicates, depth + 1, false);
             if (result instanceof JMenu) {
                 if (!((JMenu) result).isPopupMenuVisible()) {
@@ -89,7 +89,7 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
 
             return result;
         } else {
-            JMenuItemOperator mio = new JMenuItemOperator(item);
+            JMenuItemOperator mio = JMenuItemOperator.of(item);
             mio.waitComponentEnabled();
 
             mio.doClick();

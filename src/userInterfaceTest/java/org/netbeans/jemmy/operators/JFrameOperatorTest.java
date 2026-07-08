@@ -61,11 +61,11 @@ class JFrameOperatorTest {
     @Test
     void constructor() {
         mainFrame.setVisible(true);
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JFrameOperator operator2 = new JFrameOperator("JFrameOperatorTest");
+        JFrameOperator operator2 = JFrameOperator.waitFor("JFrameOperatorTest");
         assertThat(operator2).isNotNull();
-        JFrameOperator operator3 = new JFrameOperator(PredicatesJ.byName("JFrameOperatorTest"));
+        JFrameOperator operator3 = JFrameOperator.waitFor(PredicatesJ.byName("JFrameOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -87,7 +87,7 @@ class JFrameOperatorTest {
         assertThat(frame2).isNotNull();
         WaitJFrameCallable callable = new WaitJFrameCallable();
         Future<JFrame> future = Executors.newSingleThreadExecutor().submit(callable);
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
 
         assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> future.get(1000, TimeUnit.MILLISECONDS));
@@ -96,7 +96,7 @@ class JFrameOperatorTest {
     @Test
     void getAccessibleContext() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         assertThat(operator.getAccessibleContext()).isNotNull();
     }
@@ -104,7 +104,7 @@ class JFrameOperatorTest {
     @Test
     void getContentPane() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPane scrollPane = new JScrollPane();
         operator.setContentPane(scrollPane);
@@ -115,7 +115,7 @@ class JFrameOperatorTest {
     @Test
     void getDefaultCloseOperation() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         assertThat(JFrame.EXIT_ON_CLOSE).isEqualTo(mainFrame.getDefaultCloseOperation());
@@ -125,7 +125,7 @@ class JFrameOperatorTest {
     @Test
     void getGlassPane() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPane scrollPane = new JScrollPane();
         operator.setGlassPane(scrollPane);
@@ -136,7 +136,7 @@ class JFrameOperatorTest {
     @Test
     void getJMenuBar() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JMenuBar menuBar = new JMenuBar();
         operator.setJMenuBar(menuBar);
@@ -147,7 +147,7 @@ class JFrameOperatorTest {
     @Test
     void getLayeredPane() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JLayeredPane layeredPane = new JLayeredPane();
         operator.setLayeredPane(layeredPane);
@@ -158,7 +158,7 @@ class JFrameOperatorTest {
     @Test
     void getRootPane() {
         mainFrame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         assertThat(mainFrame.getRootPane()).isEqualTo(operator.getRootPane());
     }
@@ -175,7 +175,7 @@ class JFrameOperatorTest {
             assertThat(((IndexedFramesApp) frm1).getIndex()).isEqualTo(1);
             JFrame frm2 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring(), 2);
             assertThat(((IndexedFramesApp) frm2).getIndex()).isEqualTo(2);
-            JFrameOperator frm2o = new JFrameOperator(frm2);
+            JFrameOperator frm2o = JFrameOperator.of(frm2);
             frm2o.setTitle("New Title");
             frm2o.waitTitle("New Title", StringComparators.strict());
         } finally {
@@ -189,7 +189,7 @@ class JFrameOperatorTest {
         MenuNavigationApp.main();
         try {
             JFrame win = JFrameOperator.waitJFrame("MenuNavigationApp");
-            JFrameOperator fo = new JFrameOperator(win);
+            JFrameOperator fo = JFrameOperator.of(win);
             fo.activate();
             fo.resize(400, 400);
             fo.move(200, 200);

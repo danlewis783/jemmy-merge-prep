@@ -48,25 +48,30 @@ public class JSplitPaneOperator extends JComponentOperator {
     private @Nullable ContainerOperator divider;
     private final ScrollDriver driver;
 
-    public JSplitPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JSplitPaneOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JSplitPaneOperator(JSplitPane b) {
+    JSplitPaneOperator(JSplitPane b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
-    public JSplitPaneOperator(ContainerOperator cont, int index) {
-        this((JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class), index));
+    public static JSplitPaneOperator of(JSplitPane b) {
+        return new JSplitPaneOperator(b);
     }
 
-    public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JSplitPaneOperator waitFor(ContainerOperator cont, int index) {
+        return new JSplitPaneOperator((JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class), index));
     }
 
-    public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSplitPane) cont.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
+    public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JSplitPaneOperator(
+                (JSplitPane) cont.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
     public BasicSplitPaneDivider findDivider() {
@@ -75,7 +80,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public ContainerOperator getDivider() {
         if (divider == null) {
-            divider = new ContainerOperator(findDivider());
+            divider = ContainerOperator.of(findDivider());
         }
 
         return divider;
@@ -293,7 +298,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     private void expandTo(int index) {
         makeComponentVisible();
-        JButtonOperator bo = new JButtonOperator((JButton)
+        JButtonOperator bo = JButtonOperator.of((JButton)
                 getDivider().waitSubComponent(PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         bo.setVisualizer(new EmptyVisualizer());
         bo.push();

@@ -66,37 +66,44 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JTreeOperator extends JComponentOperator {
     private final TreeDriver driver;
 
-    public JTreeOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JTreeOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JTreeOperator(JTree b) {
+    JTreeOperator(JTree b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getTreeDriver(getClass());
     }
 
-    public JTreeOperator(ContainerOperator cont, int index) {
-        this((JTree) waitComponent(cont, PredicatesJ.of(JTree.class), index));
+    public static JTreeOperator of(JTree b) {
+        return new JTreeOperator(b);
     }
 
-    public JTreeOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JTreeOperator waitFor(ContainerOperator cont, int index) {
+        return new JTreeOperator((JTree) waitComponent(cont, PredicatesJ.of(JTree.class), index));
     }
 
-    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JTreeOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JTreeOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTree) cont.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+    public static JTreeOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
+    public static JTreeOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JTreeOperator((JTree) cont.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
     }
 
-    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int index) {
-        this((JTree) waitComponent(cont, new JTreeByItemPredicate(text, row, stringComparator), index));
+    public static JTreeOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return waitFor(cont, text, stringComparator, -1, index);
+    }
+
+    public static JTreeOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int row, int index) {
+        return new JTreeOperator(
+                (JTree) waitComponent(cont, new JTreeByItemPredicate(text, row, stringComparator), index));
     }
 
     public void doExpandPath(TreePath path) {
@@ -413,7 +420,7 @@ public class JTreeOperator extends JComponentOperator {
                 return;
             }
 
-            JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+            JScrollPaneOperator scroller = JScrollPaneOperator.of(scroll);
             scroller.setVisualizer(new EmptyVisualizer());
             Rectangle rect = getPathBounds(path);
             if (rect != null) {

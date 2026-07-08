@@ -40,7 +40,7 @@ public class JTableCellIndexIsPaintedFunction implements Function<Integer, Boole
     @Override
     public @Nullable Boolean apply(Integer cellIdx) {
         JTable jTable = fileTableSupplier.get();
-        JTableOperator jTableOperator = new JTableOperator(jTable);
+        JTableOperator jTableOperator = JTableOperator.of(jTable);
         int rowIdxLast = jTableOperator.getModel().getRowCount() - 1;
         if (rowIdxLast == -1) {
             return true;

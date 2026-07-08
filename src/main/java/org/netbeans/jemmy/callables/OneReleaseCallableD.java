@@ -40,7 +40,7 @@ public class OneReleaseCallableD extends OneReleaseCallable {
     @Override
     public @Nullable MenuElement getMenuElement() {
         Window win = JPopupMenuOperator.findJPopupWindow(popupChooser);
-        if ((win != null) && new WindowOperator(win).isShowing()) {
+        if ((win != null) && WindowOperator.of(win).isShowing()) {
             return JPopupMenuOperator.findJPopupMenu(win, popupChooser);
         } else {
             return null;

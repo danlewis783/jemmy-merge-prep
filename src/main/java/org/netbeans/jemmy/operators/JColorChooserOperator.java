@@ -76,25 +76,31 @@ public class JColorChooserOperator extends JComponentOperator {
     private @Nullable JTextFieldOperator red;
     private final JTabbedPaneOperator tabbed;
 
-    public JColorChooserOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JColorChooserOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JColorChooserOperator(JColorChooser comp) {
+    JColorChooserOperator(JColorChooser comp) {
         super(comp);
-        tabbed = new JTabbedPaneOperator(this);
+        tabbed = JTabbedPaneOperator.waitFor(this);
     }
 
-    public JColorChooserOperator(ContainerOperator cont, int index) {
-        this((JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class), index));
+    public static JColorChooserOperator of(JColorChooser comp) {
+        return new JColorChooserOperator(comp);
     }
 
-    public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JColorChooserOperator waitFor(ContainerOperator cont, int index) {
+        return new JColorChooserOperator(
+                (JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class), index));
     }
 
-    public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JColorChooser) cont.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
+    public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JColorChooserOperator(
+                (JColorChooser) cont.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     public void switchToRGB() {
@@ -102,9 +108,9 @@ public class JColorChooserOperator extends JComponentOperator {
             tabbed.selectPage(RGB_TITLE, StringComparators.strict());
         }
 
-        blue = new JTextFieldOperator(this, 2);
-        green = new JTextFieldOperator(this, 1);
-        red = new JTextFieldOperator(this, 0);
+        blue = JTextFieldOperator.waitFor(this, 2);
+        green = JTextFieldOperator.waitFor(this, 1);
+        red = JTextFieldOperator.waitFor(this, 0);
     }
 
     public void enterRed(int value) {
@@ -247,7 +253,7 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public @Nullable JTextFieldOperator getColorCodeTextFieldOperator() {
         if (tabbed.getTitleAt(tabbed.getSelectedIndex()).equals(RGB_TITLE)) {
-            return new JTextFieldOperator(this, RGB_COLORCODE_TEXT_FIELD_INDEX);
+            return JTextFieldOperator.waitFor(this, RGB_COLORCODE_TEXT_FIELD_INDEX);
         }
 
         return null;
@@ -379,7 +385,7 @@ public class JColorChooserOperator extends JComponentOperator {
     private @Nullable JSliderOperator getSliderOperator(String[] tabs, int[] index) {
         int selectedTabIndex = getSelectedTabIndex(tabs);
         if (selectedTabIndex != -1) {
-            return new JSliderOperator(this, index[selectedTabIndex]);
+            return JSliderOperator.waitFor(this, index[selectedTabIndex]);
         }
 
         return null;
@@ -388,7 +394,7 @@ public class JColorChooserOperator extends JComponentOperator {
     private @Nullable JSpinnerOperator getSpinnerOperator(String[] tabs, int[] index) {
         int selectedTabIndex = getSelectedTabIndex(tabs);
         if (selectedTabIndex != -1) {
-            return new JSpinnerOperator(this, index[selectedTabIndex]);
+            return JSpinnerOperator.waitFor(this, index[selectedTabIndex]);
         }
 
         return null;

@@ -46,7 +46,7 @@ class JTreeExpandCollapseTest {
         QueueTool.getInstance().waitEmpty(100);
         JFrame frm = JFrameOperator.waitJFrame("TreeExpandApp");
         tree = Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1));
-        to = new JTreeOperator(tree);
+        to = JTreeOperator.of(tree);
         TreeChecker checker = new TreeChecker();
         to.selectRow(0);
         to.waitSelected(0);
@@ -81,9 +81,9 @@ class JTreeExpandCollapseTest {
             TreePath path;
             try {
                 if (obj.startsWith("first")) {
-                    path = new JTreeOperator(tree).findPath("node00", "0", "|", StringComparators.strict());
+                    path = JTreeOperator.of(tree).findPath("node00", "0", "|", StringComparators.strict());
                 } else {
-                    path = new JTreeOperator(tree).findPath("node00", "1", "|", StringComparators.strict());
+                    path = JTreeOperator.of(tree).findPath("node00", "1", "|", StringComparators.strict());
                 }
             } catch (TimeoutExpiredException e) {
                 return null;

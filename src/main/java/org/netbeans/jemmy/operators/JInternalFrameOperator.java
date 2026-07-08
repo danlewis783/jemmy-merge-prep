@@ -72,11 +72,11 @@ public class JInternalFrameOperator extends JComponentOperator {
     private @Nullable ContainerOperator titleOperator;
     private final WindowDriver wDriver;
 
-    public JInternalFrameOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JInternalFrameOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JInternalFrameOperator(JInternalFrame b) {
+    JInternalFrameOperator(JInternalFrame b) {
         super(b);
         DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         wDriver = driverManager.getWindowDriver(getClass());
@@ -84,24 +84,31 @@ public class JInternalFrameOperator extends JComponentOperator {
         iDriver = driverManager.getInternalFrameDriver(getClass());
     }
 
-    public JInternalFrameOperator(ContainerOperator cont, int index) {
-        this((JInternalFrame) waitComponent(cont, new JInternalFramePredicate(), index));
+    public static JInternalFrameOperator of(JInternalFrame b) {
+        return new JInternalFrameOperator(b);
     }
 
-    public JInternalFrameOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JInternalFrameOperator waitFor(ContainerOperator cont, int index) {
+        return new JInternalFrameOperator((JInternalFrame) waitComponent(cont, new JInternalFramePredicate(), index));
     }
 
-    public JInternalFrameOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JInternalFrameOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JInternalFrameOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JInternalFrame) cont.waitSubComponent(new JInternalFramePredicate(chooser), index));
+    public static JInternalFrameOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JInternalFrameOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(findOne(cont, text, stringComparator, index));
+    public static JInternalFrameOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JInternalFrameOperator(
+                (JInternalFrame) cont.waitSubComponent(new JInternalFramePredicate(chooser), index));
+    }
+
+    public static JInternalFrameOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JInternalFrameOperator(findOne(cont, text, stringComparator, index));
     }
 
     public void iconify() {
@@ -192,7 +199,7 @@ public class JInternalFrameOperator extends JComponentOperator {
             return;
         }
 
-        JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+        JScrollPaneOperator scroller = JScrollPaneOperator.of(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         scroller.scrollToComponentRectangle(
                 isIcon() ? getIconOperator().getSource() : getSource(), x, y, width, height);
@@ -566,12 +573,12 @@ public class JInternalFrameOperator extends JComponentOperator {
         Container titlePane = findTitlePane();
         if (!isIcon() && (titlePane != null)) {
             if (titleOperator == null) {
-                ContainerOperator title = new ContainerOperator(titlePane);
+                ContainerOperator title = ContainerOperator.of(titlePane);
                 titleOperator = title;
                 if (getContainer(PredicatesJ.of(JDesktopPane.class)) != null) {
                     if (LookAndFeel.isMotif()) {
                         // Motif keeps the title actions in a popup menu behind the sole title button
-                        popupButtonOper = new JButtonOperator(title, 0);
+                        popupButtonOper = JButtonOperator.waitFor(title, 0);
                     } else {
                         minOper = isIconifiable() ? findTitleButton(title, "InternalFrame.iconButtonToolTip") : null;
                         maxOper = isMaximizable() ? findTitleButton(title, "InternalFrame.maxButtonToolTip") : null;
@@ -595,7 +602,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     private static JButtonOperator findTitleButton(ContainerOperator title, String tooltipKey) {
-        return new JButtonOperator(
+        return JButtonOperator.waitFor(
                 title, new JComponentByToolTipPredicate(UIManager.getString(tooltipKey), StringComparators.strict()));
     }
 
@@ -687,7 +694,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         }
 
         public void pushButton() {
-            new JButtonOperator(this).push();
+            JButtonOperator.waitFor(this).push();
         }
     }
 

@@ -74,7 +74,7 @@ public abstract class Operator {
     private ComponentVisualizer visualizer;
     final QueueTool queueTool;
 
-    public Operator() {
+    Operator() {
         queueTool = QueueTool.getInstance();
         this.charBindingMap = JemmyContext.getInstance().getCharBindingMap();
         this.visualizer = getDefaultComponentVisualizer();

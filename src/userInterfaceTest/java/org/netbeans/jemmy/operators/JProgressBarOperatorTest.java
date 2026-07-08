@@ -65,14 +65,14 @@ class JProgressBarOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JProgressBarOperator operator2 =
-                new JProgressBarOperator(operator, PredicatesJ.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.waitFor(operator, PredicatesJ.byName("JProgressBarOperatorTest"));
         assertThat(operator2).isNotNull();
-        JProgressBarOperator operator3 = new JProgressBarOperator(progressBar);
+        JProgressBarOperator operator3 = JProgressBarOperator.of(progressBar);
         assertThat(operator3).isNotNull();
     }
 
@@ -96,9 +96,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testWaitValue() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValue(10);
         operator1.waitValue(10);
@@ -109,9 +109,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testAddChangeListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         NullChangeListener listener = new NullChangeListener();
         operator1.addChangeListener(listener);
@@ -122,9 +122,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetMaximum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMaximum(101);
         assertThat(operator1.getMaximum()).isEqualTo(101);
@@ -133,9 +133,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetMinimum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMinimum(7);
         assertThat(operator1.getMinimum()).isEqualTo(7);
@@ -144,9 +144,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         NullBoundedRangeModel model = new NullBoundedRangeModel();
         operator1.setModel(model);
@@ -156,9 +156,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetOrientation() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setOrientation(JProgressBar.VERTICAL);
         assertThat(operator1.getOrientation()).isEqualTo(JProgressBar.VERTICAL);
@@ -167,9 +167,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetPercentComplete() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMinimum(0);
         operator1.setMaximum(100);
@@ -180,9 +180,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetString() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setString("BLABLA");
         assertThat(operator1.getString()).isEqualTo("BLABLA");
@@ -191,9 +191,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testGetUI() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         NullProgressBarUI progressBarUI = new NullProgressBarUI();
         operator1.setUI(progressBarUI);
@@ -203,9 +203,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testIsBorderPainted() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBorderPainted(true);
         assertThat(operator1.isBorderPainted()).isTrue();
@@ -217,9 +217,9 @@ class JProgressBarOperatorTest {
 
     @Test
     void testIsStringPainted() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JProgressBarOperator operator1 = new JProgressBarOperator(operator);
+        JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setStringPainted(true);
         assertThat(operator1.isStringPainted()).isTrue();

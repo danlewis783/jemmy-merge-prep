@@ -59,33 +59,39 @@ public class JSpinnerOperator extends JComponentOperator {
     private @Nullable JButtonOperator increaseOperator = null;
     private final ScrollDriver driver;
 
-    public JSpinnerOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JSpinnerOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JSpinnerOperator(JSpinner b) {
+    JSpinnerOperator(JSpinner b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
-    public JSpinnerOperator(ContainerOperator cont, int index) {
-        this((JSpinner) waitComponent(cont, PredicatesJ.of(JSpinner.class), index));
+    public static JSpinnerOperator of(JSpinner b) {
+        return new JSpinnerOperator(b);
     }
 
-    public JSpinnerOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JSpinnerOperator waitFor(ContainerOperator cont, int index) {
+        return new JSpinnerOperator((JSpinner) waitComponent(cont, PredicatesJ.of(JSpinner.class), index));
     }
 
-    public JSpinnerOperator(ContainerOperator cont, String text, StringComparator comparator) {
-        this(cont, text, comparator, 0);
+    public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JSpinnerOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSpinner) cont.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+    public static JSpinnerOperator waitFor(ContainerOperator cont, String text, StringComparator comparator) {
+        return waitFor(cont, text, comparator, 0);
     }
 
-    public JSpinnerOperator(ContainerOperator cont, String text, StringComparator comparator, int index) {
-        this((JSpinner) waitComponent(cont, new JSpinnerByTextPredicate(text, comparator), index));
+    public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JSpinnerOperator((JSpinner) cont.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+    }
+
+    public static JSpinnerOperator waitFor(
+            ContainerOperator cont, String text, StringComparator comparator, int index) {
+        return new JSpinnerOperator(
+                (JSpinner) waitComponent(cont, new JSpinnerByTextPredicate(text, comparator), index));
     }
 
     public void scrollTo(ScrollAdjuster adj) {
@@ -131,7 +137,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getIncreaseOperator() {
         if (increaseOperator == null) {
-            increaseOperator = new JButtonOperator((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 0));
+            increaseOperator = JButtonOperator.of((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 0));
         }
 
         return increaseOperator;
@@ -139,7 +145,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getDecreaseOperator() {
         if (decreaseOperator == null) {
-            decreaseOperator = new JButtonOperator((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 1));
+            decreaseOperator = JButtonOperator.of((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 1));
         }
 
         return decreaseOperator;

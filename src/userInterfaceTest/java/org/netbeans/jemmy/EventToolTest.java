@@ -70,7 +70,7 @@ class EventToolTest {
             jFrame.setVisible(true);
             jFrameRef.set(jFrame);
         });
-        JFrameOperator jFrameOp = new JFrameOperator(Objects.requireNonNull(jFrameRef.get()));
+        JFrameOperator jFrameOp = JFrameOperator.of(Objects.requireNonNull(jFrameRef.get()));
         assertThat(eventTool.getLastEvent() instanceof ContainerEvent).isTrue();
         assertThat(eventTool.getCurrentEventMask()).isEqualTo(AWTEvent.CONTAINER_EVENT_MASK);
         assertThat(eventTool.getLastEvent(AWTEvent.WINDOW_EVENT_MASK))

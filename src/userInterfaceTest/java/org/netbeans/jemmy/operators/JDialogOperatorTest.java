@@ -78,12 +78,12 @@ class JDialogOperatorTest {
 
     @Test
     void constructor() {
-        new JDialogOperator(PredicatesJ.byName("JDialogOperatorTest"));
-        new JFrameOperator();
-        new JDialogOperator(new JFrameOperator());
-        new JFrameOperator();
-        new JDialogOperator(new JFrameOperator(), PredicatesJ.byName("JDialogOperatorTest"));
-        new JDialogOperator(new JFrameOperator(), "JDialogOperatorTest", StringComparators.strict());
+        JDialogOperator.waitFor(PredicatesJ.byName("JDialogOperatorTest"));
+        JFrameOperator.waitFor();
+        JDialogOperator.waitFor(JFrameOperator.waitFor());
+        JFrameOperator.waitFor();
+        JDialogOperator.waitFor(JFrameOperator.waitFor(), PredicatesJ.byName("JDialogOperatorTest"));
+        JDialogOperator.waitFor(JFrameOperator.waitFor(), "JDialogOperatorTest", StringComparators.strict());
     }
 
     @Test
@@ -109,13 +109,13 @@ class JDialogOperatorTest {
         assertThat(JDialogOperator.waitJDialog(frame, PredicatesJ.byName("JDialogOperatorTest")))
                 .isNotNull();
         Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
-        new JDialogOperator();
+        JDialogOperator.waitFor();
         assertThatExceptionOfType(TimeoutException.class)
                 .isThrownBy(() -> future1.get(1000L, TimeUnit.MILLISECONDS))
                 .withMessage(null);
 
         Future<JDialog> future2 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable2(frame));
-        new JDialogOperator();
+        JDialogOperator.waitFor();
         assertThatExceptionOfType(TimeoutException.class)
                 .isThrownBy(() -> future2.get(1000L, TimeUnit.MILLISECONDS))
                 .withMessage(null);
@@ -125,7 +125,7 @@ class JDialogOperatorTest {
     void waitJDialog_Timeout() {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 500L)) {
             Future<JDialog> laFutura = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
-            new JDialogOperator();
+            JDialogOperator.waitFor();
             assertThatExceptionOfType(ExecutionException.class)
                     .isThrownBy(laFutura::get)
                     .withMessageContaining("timeout \"DialogWaiter_WaitDialogTimeout\" (500 ms) exceeded after (");
@@ -134,7 +134,7 @@ class JDialogOperatorTest {
 
     @Test
     void getJMenuBar() throws InterruptedException, InvocationTargetException {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         AtomicReference<JMenuBar> jMenuBar = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> jMenuBar.set(new JMenuBar()));
         operator.setJMenuBar(Objects.requireNonNull(jMenuBar.get()));
@@ -144,7 +144,7 @@ class JDialogOperatorTest {
 
     @Test
     void getDefaultCloseOperation() {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         operator.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         assertThat(dialog.getDefaultCloseOperation()).isEqualTo(JDialog.DO_NOTHING_ON_CLOSE);
         assertThat(operator.getDefaultCloseOperation()).isEqualTo(JDialog.DO_NOTHING_ON_CLOSE);
@@ -152,7 +152,7 @@ class JDialogOperatorTest {
 
     @Test
     void getContentPane() throws InterruptedException, InvocationTargetException {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         AtomicReference<JScrollPane> jScrollPane = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> jScrollPane.set(new JScrollPane()));
         operator.setContentPane(Objects.requireNonNull(jScrollPane.get()));
@@ -162,7 +162,7 @@ class JDialogOperatorTest {
 
     @Test
     void getGlassPane() throws InterruptedException, InvocationTargetException {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         AtomicReference<JScrollPane> glassPane = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> glassPane.set(new JScrollPane()));
         operator.setGlassPane(Objects.requireNonNull(glassPane.get()));
@@ -172,7 +172,7 @@ class JDialogOperatorTest {
 
     @Test
     void getLayeredPane() {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         operator.setLayeredPane(new JLayeredPane());
         assertThat(dialog.getLayeredPane()).isNotNull();
         assertThat(operator.getLayeredPane()).isNotNull();
@@ -180,14 +180,14 @@ class JDialogOperatorTest {
 
     @Test
     void getRootPane() {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         assertThat(dialog.getRootPane()).isNotNull();
         assertThat(operator.getRootPane()).isNotNull();
     }
 
     @Test
     void getAccessibleContext() {
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         assertThat(dialog.getAccessibleContext()).isNotNull();
         assertThat(operator.getAccessibleContext()).isNotNull();
     }
@@ -196,14 +196,14 @@ class JDialogOperatorTest {
     void getTopModalDialog() throws InterruptedException, InvocationTargetException {
         GetTopModalDialogRunnable1 runnable1 = new GetTopModalDialogRunnable1(dialog);
         EventQueue.invokeAndWait(runnable1);
-        JDialogOperator operator1 = new JDialogOperator();
+        JDialogOperator operator1 = JDialogOperator.waitFor();
         assertThat(operator1).isNotNull();
         JDialog dialog1 = (JDialog) JDialogOperator.getTopModalDialog();
         assertThat(dialog1).isNotNull();
         AtomicReference<GetTopModalDialogRunnable2> runnable2 = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> runnable2.set(new GetTopModalDialogRunnable2(dialog)));
         EventQueue.invokeAndWait(runnable2.get());
-        JDialogOperator operator2 = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator2 = JDialogOperator.waitFor("JDialogOperatorTest");
         assertThat(operator2).isNotNull();
         JDialog dialog2 = (JDialog) JDialogOperator.getTopModalDialog();
         assertThat(dialog2).isNotNull();
@@ -216,7 +216,7 @@ class JDialogOperatorTest {
         dialog.pack();
         int x = dialog.getX();
         int y = dialog.getY();
-        JDialogOperator operator = new JDialogOperator("JDialogOperatorTest");
+        JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         operator.setLocationRelativeTo(null);
         assertThat(x != dialog.getX()).isTrue();
         assertThat(operator.getX()).isEqualTo(dialog.getX());

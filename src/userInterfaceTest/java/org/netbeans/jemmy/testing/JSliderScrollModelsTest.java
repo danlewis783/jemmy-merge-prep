@@ -35,15 +35,15 @@ class JSliderScrollModelsTest {
     void test() {
         SlidersApp.main();
         JFrame win = JFrameOperator.waitJFrame("SlidersApp");
-        JFrameOperator wino = new JFrameOperator(win);
+        JFrameOperator wino = JFrameOperator.of(win);
         JSliderOperator[] ops = {
-            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 0))),
-            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 1))),
-            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 2))),
-            new JSliderOperator(Objects.requireNonNull(JSliderOperator.findJSlider(win, 3)))
+            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 0))),
+            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 1))),
+            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 2))),
+            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 3)))
         };
         for (int i = 0; i < ops.length; i++) {
-            assertThat(new JSliderOperator(wino, i).getSource()).isSameAs(ops[i].getSource());
+            assertThat(JSliderOperator.waitFor(wino, i).getSource()).isSameAs(ops[i].getSource());
         }
 
         JLabel label = Objects.requireNonNull(JLabelOperator.findJLabel(win, "0", StringComparators.strict()));

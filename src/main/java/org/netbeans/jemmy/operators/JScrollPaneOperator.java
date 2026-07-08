@@ -50,24 +50,29 @@ public class JScrollPaneOperator extends JComponentOperator {
     private @Nullable JScrollBarOperator hScrollBarOper = null;
     private @Nullable JScrollBarOperator vScrollBarOper = null;
 
-    public JScrollPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JScrollPaneOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JScrollPaneOperator(JScrollPane b) {
+    JScrollPaneOperator(JScrollPane b) {
         super(b);
     }
 
-    public JScrollPaneOperator(ContainerOperator cont, int index) {
-        this((JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
+    public static JScrollPaneOperator of(JScrollPane b) {
+        return new JScrollPaneOperator(b);
     }
 
-    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JScrollPaneOperator waitFor(ContainerOperator cont, int index) {
+        return new JScrollPaneOperator((JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
     }
 
-    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
+    public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JScrollPaneOperator(
+                (JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     public void setValues(int hValue, int vValue) {
@@ -400,14 +405,14 @@ public class JScrollPaneOperator extends JComponentOperator {
         if ((hScrollBarOper == null)
                 && (getHorizontalScrollBar() != null)
                 && getHorizontalScrollBar().isVisible()) {
-            hScrollBarOper = new JScrollBarOperator(getHorizontalScrollBar());
+            hScrollBarOper = JScrollBarOperator.of(getHorizontalScrollBar());
             hScrollBarOper.setVisualizer(new EmptyVisualizer());
         }
 
         if ((vScrollBarOper == null)
                 && (getVerticalScrollBar() != null)
                 && getVerticalScrollBar().isVisible()) {
-            vScrollBarOper = new JScrollBarOperator(getVerticalScrollBar());
+            vScrollBarOper = JScrollBarOperator.of(getVerticalScrollBar());
             vScrollBarOper.setVisualizer(new EmptyVisualizer());
         }
     }

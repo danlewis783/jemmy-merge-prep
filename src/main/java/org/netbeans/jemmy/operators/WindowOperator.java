@@ -50,34 +50,38 @@ public class WindowOperator extends ContainerOperator {
     private static final Logger logger = LoggerFactory.getLogger(WindowOperator.class);
     private final WindowDriver driver;
 
-    public WindowOperator() {
-        this(0);
+    public static WindowOperator waitFor() {
+        return waitFor(0);
     }
 
-    public WindowOperator(int index) {
-        this(waitWindow(PredicatesJ.alwaysTrue(), index));
+    public static WindowOperator waitFor(int index) {
+        return new WindowOperator(waitWindow(PredicatesJ.alwaysTrue(), index));
     }
 
-    public WindowOperator(Window w) {
+    WindowOperator(Window w) {
         super(w);
         DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         driver = driverManager.getWindowDriver(getClass());
     }
 
-    public WindowOperator(WindowOperator owner) {
-        this(owner, 0);
+    public static WindowOperator of(Window w) {
+        return new WindowOperator(w);
     }
 
-    public WindowOperator(WindowOperator owner, int index) {
-        this(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
+    public static WindowOperator waitFor(WindowOperator owner) {
+        return waitFor(owner, 0);
     }
 
-    public WindowOperator(WindowOperator owner, Predicate<Component> predicate) {
-        this(owner, predicate, 0);
+    public static WindowOperator waitFor(WindowOperator owner, int index) {
+        return new WindowOperator(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
     }
 
-    public WindowOperator(WindowOperator owner, Predicate<Component> predicate, int index) {
-        this(owner.waitSubWindow(predicate, index));
+    public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {
+        return waitFor(owner, predicate, 0);
+    }
+
+    public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate, int index) {
+        return new WindowOperator(owner.waitSubWindow(predicate, index));
     }
 
     public void activate() {

@@ -58,14 +58,14 @@ class JCheckBoxOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JCheckBoxOperator operator2 = new JCheckBoxOperator(operator1);
+        JCheckBoxOperator operator2 = JCheckBoxOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
-        JCheckBoxOperator operator3 = new JCheckBoxOperator(operator1, PredicatesJ.byName("JCheckBoxOperatorTest"));
+        JCheckBoxOperator operator3 = JCheckBoxOperator.waitFor(operator1, PredicatesJ.byName("JCheckBoxOperatorTest"));
         assertThat(operator3).isNotNull();
         JCheckBoxOperator operator4 =
-                new JCheckBoxOperator(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
+                JCheckBoxOperator.waitFor(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
         assertThat(operator4).isNotNull();
     }
 

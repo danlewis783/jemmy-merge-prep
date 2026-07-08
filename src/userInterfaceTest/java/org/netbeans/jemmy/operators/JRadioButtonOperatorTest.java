@@ -49,17 +49,17 @@ class JRadioButtonOperatorTest {
     @Test
     void testConstructor() {
         frame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JRadioButtonOperator operator1 = new JRadioButtonOperator(operator);
+        JRadioButtonOperator operator1 = JRadioButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JRadioButtonOperator operator2 =
-                new JRadioButtonOperator(operator, "JRadioButtonOperatorTest", StringComparators.strict());
+                JRadioButtonOperator.waitFor(operator, "JRadioButtonOperatorTest", StringComparators.strict());
         assertThat(operator2).isNotNull();
         JRadioButtonOperator operator3 =
-                new JRadioButtonOperator(operator, PredicatesJ.byName("JRadioButtonOperatorTest"));
+                JRadioButtonOperator.waitFor(operator, PredicatesJ.byName("JRadioButtonOperatorTest"));
         assertThat(operator3).isNotNull();
-        JRadioButtonOperator operator4 = new JRadioButtonOperator(radioButton);
+        JRadioButtonOperator operator4 = JRadioButtonOperator.of(radioButton);
         assertThat(operator4).isNotNull();
     }
 

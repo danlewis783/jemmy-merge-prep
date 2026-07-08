@@ -68,11 +68,12 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ScrollPaneOperator operator2 = new ScrollPaneOperator(operator, PredicatesJ.byName("ScrollPaneOperatorTest"));
+        ScrollPaneOperator operator2 =
+                ScrollPaneOperator.waitFor(operator, PredicatesJ.byName("ScrollPaneOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -100,27 +101,27 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testSetValues() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValues(0, 0);
     }
 
     @Test
     void testScrollTo() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollTo(new ScrollAdjusterTest());
     }
 
     @Test
     void testScrollToHorizontalValue() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToHorizontalValue(0);
         operator1.scrollToHorizontalValue(0.0);
@@ -128,9 +129,9 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testScrollToVerticalValue() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToVerticalValue(0);
         operator1.scrollToVerticalValue(0.0);
@@ -138,9 +139,9 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testScrollToValues() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToValues(0, 0);
         operator1.scrollToValues(0.0, 0.0);
@@ -148,80 +149,80 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testScrollToTop() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToTop();
     }
 
     @Test
     void testScrollToBottom() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToBottom();
     }
 
     @Test
     void testScrollToLeft() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToLeft();
     }
 
     @Test
     void testScrollToRight() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToRight();
     }
 
     @Test
     void testScrollToComponentRectangle() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToComponentRectangle(panel, 1, 1, 10, 10);
     }
 
     @Test
     void testScrollToComponentPoint() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToComponentPoint(panel, 7, 5);
     }
 
     @Test
     void testScrollToComponent() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
     }
 
     @Test
     void testCheckInside() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.checkInside(panel);
     }
 
     @Test
     void testIsScrollbarVisible() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isScrollbarVisible(Scrollbar.HORIZONTAL);
         operator1.isScrollbarVisible(Scrollbar.VERTICAL);
@@ -229,27 +230,27 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testGetHAdjustable() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getHAdjustable();
     }
 
     @Test
     void testGetHScrollbarHeight() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getHScrollbarHeight();
     }
 
     @Test
     void testGetScrollPosition() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setScrollPosition(operator1.getScrollPosition());
         operator1.setScrollPosition(operator1.getScrollPosition().x, operator1.getScrollPosition().y);
@@ -257,45 +258,45 @@ class ScrollPaneOperatorTest {
 
     @Test
     void testGetScrollbarDisplayPolicy() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getScrollbarDisplayPolicy();
     }
 
     @Test
     void testGetVAdjustable() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getVAdjustable();
     }
 
     @Test
     void testGetVScrollbarWidth() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getVScrollbarWidth();
     }
 
     @Test
     void testGetViewportSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getViewportSize();
     }
 
     @Test
     void testParamString() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollPaneOperator operator1 = new ScrollPaneOperator(operator);
+        ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.paramString();
     }

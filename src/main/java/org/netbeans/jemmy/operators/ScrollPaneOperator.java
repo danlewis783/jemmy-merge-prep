@@ -59,25 +59,30 @@ public class ScrollPaneOperator extends ContainerOperator {
 
     private final ScrollDriver driver;
 
-    public ScrollPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static ScrollPaneOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public ScrollPaneOperator(ScrollPane b) {
+    ScrollPaneOperator(ScrollPane b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
-    public ScrollPaneOperator(ContainerOperator cont, int index) {
-        this((ScrollPane) waitComponent(cont, PredicatesJ.of(ScrollPane.class), index));
+    public static ScrollPaneOperator of(ScrollPane b) {
+        return new ScrollPaneOperator(b);
     }
 
-    public ScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static ScrollPaneOperator waitFor(ContainerOperator cont, int index) {
+        return new ScrollPaneOperator((ScrollPane) waitComponent(cont, PredicatesJ.of(ScrollPane.class), index));
     }
 
-    public ScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((ScrollPane) cont.waitSubComponent(PredicatesJ.of(ScrollPane.class, chooser), index));
+    public static ScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static ScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new ScrollPaneOperator(
+                (ScrollPane) cont.waitSubComponent(PredicatesJ.of(ScrollPane.class, chooser), index));
     }
 
     public void setValues(int x, int y) {

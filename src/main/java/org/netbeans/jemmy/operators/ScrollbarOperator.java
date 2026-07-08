@@ -44,25 +44,30 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 public class ScrollbarOperator extends ComponentOperator {
     private final ScrollDriver driver;
 
-    public ScrollbarOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static ScrollbarOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public ScrollbarOperator(Scrollbar b) {
+    ScrollbarOperator(Scrollbar b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
-    public ScrollbarOperator(ContainerOperator cont, int index) {
-        this((Scrollbar) waitComponent(cont, PredicatesJ.of(Scrollbar.class), index));
+    public static ScrollbarOperator of(Scrollbar b) {
+        return new ScrollbarOperator(b);
     }
 
-    public ScrollbarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static ScrollbarOperator waitFor(ContainerOperator cont, int index) {
+        return new ScrollbarOperator((Scrollbar) waitComponent(cont, PredicatesJ.of(Scrollbar.class), index));
     }
 
-    public ScrollbarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Scrollbar) cont.waitSubComponent(PredicatesJ.of(Scrollbar.class, chooser), index));
+    public static ScrollbarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static ScrollbarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new ScrollbarOperator(
+                (Scrollbar) cont.waitSubComponent(PredicatesJ.of(Scrollbar.class, chooser), index));
     }
 
     public void scrollTo(Function<Object, ?> w, @Nullable Object waiterParam, boolean increase) {

@@ -89,6 +89,6 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
         jTreeOperator.startEditingAtPath(jTreeOperator.getPathForRow(index));
         JTextComponent jTextComponent =
                 (JTextComponent) jTreeOperator.waitSubComponent(PredicatesJ.of(JTextComponent.class), waitEditorTime);
-        return new JTextComponentOperator(jTextComponent);
+        return JTextComponentOperator.of(jTextComponent);
     }
 }

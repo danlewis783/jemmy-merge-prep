@@ -36,8 +36,8 @@ class DeepMenuPushTest {
     void test() {
         DeepMenuApp.main();
         JFrame win = JFrameOperator.waitJFrame("DeepMenuApp");
-        assertThat(new JFrameOperator(win)).isNotNull();
-        JMenuBarOperator mbo = new JMenuBarOperator(Objects.requireNonNull(JMenuBarOperator.findJMenuBar(win)));
+        assertThat(JFrameOperator.of(win)).isNotNull();
+        JMenuBarOperator mbo = JMenuBarOperator.of(Objects.requireNonNull(JMenuBarOperator.findJMenuBar(win)));
 
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 15000L)) {
             StringBuilder sb = new StringBuilder();
@@ -50,7 +50,7 @@ class DeepMenuPushTest {
             sb.append("menuItem");
             assertThat(mbo.pushMenu(sb.toString(), "|", StringComparators.strict()))
                     .isNotNull();
-            assertThat(new JLabelOperator(
+            assertThat(JLabelOperator.of(
                             JLabelOperator.waitJLabel(win, "menu item has been pushed", StringComparators.strict())))
                     .isNotNull();
         }

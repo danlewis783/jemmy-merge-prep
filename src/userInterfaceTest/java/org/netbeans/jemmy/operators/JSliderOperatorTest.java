@@ -66,11 +66,11 @@ class JSliderOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        JSliderOperator operator3 = new JSliderOperator(operator, PredicatesJ.byName("JSliderOperatorTest"));
+        JSliderOperator operator3 = JSliderOperator.waitFor(operator, PredicatesJ.byName("JSliderOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -92,9 +92,9 @@ class JSliderOperatorTest {
 
     @Test
     void testSetScrollModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setScrollModel(JSliderOperator.CLICK_SCROLL_MODEL);
         assertThat(operator2.getScrollModel()).isEqualTo(JSliderOperator.CLICK_SCROLL_MODEL);
@@ -102,9 +102,9 @@ class JSliderOperatorTest {
 
     @Test
     void testScrollTo() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         ScrollAdjusterTest adjuster = new ScrollAdjusterTest();
         operator2.scrollTo(adjuster);
@@ -112,9 +112,9 @@ class JSliderOperatorTest {
 
     @Test
     void testScrollToValue() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.scrollToValue(10);
         assertThat(operator2.getValue()).isEqualTo(10);
@@ -127,7 +127,7 @@ class JSliderOperatorTest {
             slider.setMaximum(10);
             slider.setValue(0);
         });
-        JSliderOperator operator = new JSliderOperator(slider);
+        JSliderOperator operator = JSliderOperator.of(slider);
         JSliderAPIDriver driver = new JSliderAPIDriver();
         driver.scroll(operator, new ValueTargetAdjuster(operator, -1));
         assertThat(operator.getValue()).isEqualTo(-1);
@@ -135,9 +135,9 @@ class JSliderOperatorTest {
 
     @Test
     void testScrollToMaximum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMinimum(0);
         operator2.setMaximum(100);
@@ -147,18 +147,18 @@ class JSliderOperatorTest {
 
     @Test
     void testScrollToMinimum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.scrollToMinimum();
     }
 
     @Test
     void testAddChangeListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         IgnoreChangeListener listener = new IgnoreChangeListener();
         operator2.addChangeListener(listener);
@@ -169,9 +169,9 @@ class JSliderOperatorTest {
 
     @Test
     void testCreateStandardLabels() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.createStandardLabels(10, 10);
         operator2.createStandardLabels(10);
@@ -179,9 +179,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetExtent() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setExtent(10);
         assertThat(operator2.getExtent()).isEqualTo(10);
@@ -189,9 +189,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetInverted() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setInverted(true);
         assertThat(operator2.getInverted()).isTrue();
@@ -201,9 +201,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetLabelTable() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Dictionary<String, String> hashtable = new Hashtable<>();
         operator2.setLabelTable(hashtable);
@@ -212,9 +212,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetMajorTickSpacing() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMajorTickSpacing(11);
         assertThat(operator2.getMajorTickSpacing()).isEqualTo(11);
@@ -223,9 +223,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetMaximum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMaximum(111);
         assertThat(operator2.getMaximum()).isEqualTo(111);
@@ -234,9 +234,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetMinimum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMinimum(11);
         assertThat(operator2.getMinimum()).isEqualTo(11);
@@ -245,9 +245,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetMinorTickSpacing() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMinorTickSpacing(7);
         assertThat(operator2.getMinorTickSpacing()).isEqualTo(7);
@@ -256,9 +256,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         BoundedRangeModelTest model = new BoundedRangeModelTest();
         operator2.setModel(model);
@@ -267,9 +267,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetOrientation() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setOrientation(SwingConstants.VERTICAL);
         assertThat(operator2.getOrientation()).isEqualTo(SwingConstants.VERTICAL);
@@ -277,9 +277,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetPaintLabels() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setPaintLabels(true);
         assertThat(operator2.getPaintLabels()).isTrue();
@@ -289,9 +289,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetPaintTicks() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setPaintTicks(true);
         assertThat(operator2.getPaintTicks()).isTrue();
@@ -301,9 +301,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetPaintTrack() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setPaintTrack(true);
         assertThat(operator2.getPaintTrack()).isTrue();
@@ -313,9 +313,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetSnapToTicks() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSnapToTicks(true);
         assertThat(operator2.getSnapToTicks()).isTrue();
@@ -325,9 +325,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetUI() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         NoopSliderUI sliderUI = new NoopSliderUI();
         operator2.setUI(sliderUI);
@@ -336,9 +336,9 @@ class JSliderOperatorTest {
 
     @Test
     void testGetValueIsAdjusting() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setValueIsAdjusting(true);
         assertThat(operator2.getValueIsAdjusting()).isTrue();
@@ -348,9 +348,9 @@ class JSliderOperatorTest {
 
     @Test
     void testSetMaximum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMaximum(100);
         assertThat(operator2.getMaximum()).isEqualTo(100);
@@ -358,9 +358,9 @@ class JSliderOperatorTest {
 
     @Test
     void testSetMinimum() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JSliderOperator operator2 = new JSliderOperator(operator);
+        JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setMinimum(100);
         assertThat(operator2.getMinimum()).isEqualTo(100);

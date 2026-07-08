@@ -63,7 +63,7 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
             clickOnCell((JTableOperator) oper, row, column, 2);
         }
 
-        JTextComponentOperator textoper = new JTextComponentOperator(
+        JTextComponentOperator textoper = JTextComponentOperator.of(
                 (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));
         TextDriver text =
                 DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);

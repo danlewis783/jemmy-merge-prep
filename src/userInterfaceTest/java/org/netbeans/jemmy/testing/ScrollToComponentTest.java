@@ -42,30 +42,30 @@ class ScrollToComponentTest {
         ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         JFrame jFrame = JFrameOperator.waitJFrame("ButtonGridScrollApp");
         JButton butt00 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "00", StringComparators.strict()));
-        ComponentOperator butt00Op = new ComponentOperator(butt00);
+        ComponentOperator butt00Op = ComponentOperator.of(butt00);
         JButtonOperator.findJButton(jFrame, "04", StringComparators.strict());
         JButton butt11 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "11", StringComparators.strict()));
-        ComponentOperator butt11Op = new ComponentOperator(butt11);
+        ComponentOperator butt11Op = ComponentOperator.of(butt11);
         JButton butt22 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "22", StringComparators.strict()));
-        ComponentOperator butt22Op = new ComponentOperator(butt22);
+        ComponentOperator butt22Op = ComponentOperator.of(butt22);
         JButton butt24 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "24", StringComparators.strict()));
-        ComponentOperator butt24Op = new ComponentOperator(butt24);
+        ComponentOperator butt24Op = ComponentOperator.of(butt24);
         JButton butt33 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "33", StringComparators.strict()));
-        ComponentOperator butt33Op = new ComponentOperator(butt33);
+        ComponentOperator butt33Op = ComponentOperator.of(butt33);
         JButton butt44 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "44", StringComparators.strict()));
-        ComponentOperator butt44Op = new ComponentOperator(butt44);
+        ComponentOperator butt44Op = ComponentOperator.of(butt44);
         JButton butt42 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "42", StringComparators.strict()));
-        ComponentOperator butt42Op = new ComponentOperator(butt42);
+        ComponentOperator butt42Op = ComponentOperator.of(butt42);
         JButton butt40 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "40", StringComparators.strict()));
-        ComponentOperator butt40Op = new ComponentOperator(butt40);
+        ComponentOperator butt40Op = ComponentOperator.of(butt40);
         JScrollPane sp = Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jFrame, PredicatesJ.alwaysTrue()));
         assertThat(JScrollPaneOperator.findJScrollPaneUnder(butt00)).isSameAs(sp);
-        JScrollBarOperator hscroll = new JScrollBarOperator(new JFrameOperator(jFrame), 1);
+        JScrollBarOperator hscroll = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame), 1);
         assertThat(hscroll.getOrientation()).isEqualTo(JScrollBar.HORIZONTAL);
-        JScrollBarOperator vscroll = new JScrollBarOperator(new JFrameOperator(jFrame));
+        JScrollBarOperator vscroll = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame));
         assertThat(vscroll.getOrientation()).isEqualTo(JScrollBar.VERTICAL);
-        JScrollPaneOperator scroller = new JScrollPaneOperator(sp);
-        assertThat(new JScrollPaneOperator(new JFrameOperator(jFrame)).getSource())
+        JScrollPaneOperator scroller = JScrollPaneOperator.of(sp);
+        assertThat(JScrollPaneOperator.waitFor(JFrameOperator.of(jFrame)).getSource())
                 .isSameAs(scroller.getSource());
         scroller.setValues(
                 scroller.getHorizontalScrollBar().getMaximum(),

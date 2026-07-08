@@ -73,16 +73,16 @@ class JTextPaneOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JTextPaneOperator operator2 = new JTextPaneOperator(operator, PredicatesJ.byName("JTextPaneOperatorTest"));
+        JTextPaneOperator operator2 = JTextPaneOperator.waitFor(operator, PredicatesJ.byName("JTextPaneOperatorTest"));
         assertThat(operator2).isNotNull();
         JTextPaneOperator operator3 =
-                new JTextPaneOperator(operator, "JTextPaneOperatorTest", StringComparators.strict());
+                JTextPaneOperator.waitFor(operator, "JTextPaneOperatorTest", StringComparators.strict());
         assertThat(operator3).isNotNull();
-        JTextPaneOperator operator4 = new JTextPaneOperator(textPane);
+        JTextPaneOperator operator4 = JTextPaneOperator.of(textPane);
         assertThat(operator4).isNotNull();
     }
 
@@ -106,9 +106,9 @@ class JTextPaneOperatorTest {
 
     @Test
     void testAddStyle() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addStyle("1234", null);
         assertThat(operator1.getStyle("1234")).isNotNull();
@@ -116,9 +116,9 @@ class JTextPaneOperatorTest {
 
     @Test
     void testGetCharacterAttributes() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         operator1.setCharacterAttributes(attributes, true);
@@ -127,18 +127,18 @@ class JTextPaneOperatorTest {
 
     @Test
     void testGetInputAttributes() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         assertThat(operator1.getInputAttributes()).isNotNull();
     }
 
     @Test
     void testGetLogicalStyle() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Style style = null;
         operator1.setLogicalStyle(style);
@@ -147,9 +147,9 @@ class JTextPaneOperatorTest {
 
     @Test
     void testGetParagraphAttributes() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         operator1.setParagraphAttributes(attributes, true);
@@ -158,18 +158,18 @@ class JTextPaneOperatorTest {
 
     @Test
     void testGetStyle() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         assertThat(operator1.getStyle("BLABLA")).isNull();
     }
 
     @Test
     void testGetStyledDocument() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         StyledDocument document = new DefaultStyledDocument();
         operator1.setStyledDocument(document);
@@ -178,9 +178,9 @@ class JTextPaneOperatorTest {
 
     @Test
     void testInsertComponent() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
 
         EventQueue.invokeAndWait(() -> button = new JButton());
@@ -190,18 +190,18 @@ class JTextPaneOperatorTest {
 
     @Test
     void testInsertIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.insertIcon(new ImageIcon());
     }
 
     @Test
     void testRemoveStyle() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextPaneOperator operator1 = new JTextPaneOperator(operator);
+        JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeStyle("BLABLA");
     }

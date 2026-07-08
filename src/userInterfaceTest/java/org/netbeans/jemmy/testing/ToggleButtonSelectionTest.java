@@ -68,7 +68,7 @@ class ToggleButtonSelectionTest {
         QueueTool.getInstance().waitEmpty();
 
         JFrame frm0 = JFrameOperator.waitJFrame("ToggleButtonsApp");
-        JFrameOperator frmo = new JFrameOperator(frm0);
+        JFrameOperator frmo = JFrameOperator.of(frm0);
         JButton button = JButtonOperator.findJButton(
                 frm0,
                 new StringPropertyPredicate(
@@ -80,9 +80,9 @@ class ToggleButtonSelectionTest {
         Object[] results = {"JCheckBox"};
         JCheckBox box = Objects.requireNonNull(JCheckBoxOperator.findJCheckBox(
                 frm0, new PropertyPredicate(new String[] {"getClientProperty"}, params, classes, results)));
-        JCheckBoxOperator bo0 = new JCheckBoxOperator(box);
-        JCheckBoxOperator bo1 = new JCheckBoxOperator(frmo);
-        JCheckBoxOperator bo2 = new JCheckBoxOperator(frmo, "JCheckBox", StringComparators.strict());
+        JCheckBoxOperator bo0 = JCheckBoxOperator.of(box);
+        JCheckBoxOperator bo1 = JCheckBoxOperator.waitFor(frmo);
+        JCheckBoxOperator bo2 = JCheckBoxOperator.waitFor(frmo, "JCheckBox", StringComparators.strict());
         assertThat(bo0.getSource()).isSameAs(bo1.getSource());
         assertThat(bo0.getSource()).isSameAs(bo2.getSource());
         JRadioButton radioButton = Objects.requireNonNull(JRadioButtonOperator.findJRadioButton(
@@ -93,9 +93,9 @@ class ToggleButtonSelectionTest {
                 frm0,
                 new StringPropertyPredicate(
                         new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton1"})));
-        JRadioButtonOperator rb0 = new JRadioButtonOperator(radioButton1);
-        JRadioButtonOperator rb1 = new JRadioButtonOperator(frmo, 1);
-        JRadioButtonOperator rb2 = new JRadioButtonOperator(frmo, "JRadioButton", StringComparators.substring(), 1);
+        JRadioButtonOperator rb0 = JRadioButtonOperator.of(radioButton1);
+        JRadioButtonOperator rb1 = JRadioButtonOperator.waitFor(frmo, 1);
+        JRadioButtonOperator rb2 = JRadioButtonOperator.waitFor(frmo, "JRadioButton", StringComparators.substring(), 1);
         assertThat(rb0.getSource()).isSameAs(rb1.getSource());
         assertThat(rb0.getSource()).isSameAs(rb2.getSource());
         assertThat(JButtonOperator.findJButton(frm0, null, StringComparators.strict()))
@@ -106,9 +106,9 @@ class ToggleButtonSelectionTest {
                 .isSameAs(box);
         assertThat(JRadioButtonOperator.findJRadioButton(frm0, null, StringComparators.strict()))
                 .isSameAs(radioButton);
-        boxOper = new JCheckBoxOperator(box);
-        JRadioButtonOperator radioOper = new JRadioButtonOperator(radioButton);
-        radio1Oper = new JRadioButtonOperator(radioButton1);
+        boxOper = JCheckBoxOperator.of(box);
+        JRadioButtonOperator radioOper = JRadioButtonOperator.of(radioButton);
+        radio1Oper = JRadioButtonOperator.of(radioButton1);
         assertThat(boxOper.isSelected()).isFalse();
         assertThat(radioOper.isSelected()).isTrue();
         assertThat(radio1Oper.isSelected()).isFalse();

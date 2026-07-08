@@ -89,7 +89,7 @@ class JEditorPaneClickOnReferenceTest {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
-        JEditorPaneOperator operator = new JEditorPaneOperator(new JFrameOperator(frame));
+        JEditorPaneOperator operator = JEditorPaneOperator.waitFor(JFrameOperator.of(frame));
         checkPageLoaded(operator, PAGE1, PAGE1_TEXT);
 
         assertThatExceptionOfType(IllegalArgumentException.class)
@@ -119,7 +119,7 @@ class JEditorPaneClickOnReferenceTest {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
-        JEditorPaneOperator operator = new JEditorPaneOperator(new JFrameOperator(frame));
+        JEditorPaneOperator operator = JEditorPaneOperator.waitFor(JFrameOperator.of(frame));
         checkPageLoaded(operator, PAGE1, PAGE1_TEXT);
         operator.addHyperlinkListener(listener);
 

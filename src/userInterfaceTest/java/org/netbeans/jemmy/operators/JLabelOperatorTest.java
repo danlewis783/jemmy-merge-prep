@@ -60,11 +60,11 @@ class JLabelOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
-        JLabelOperator operator3 = new JLabelOperator(operator1, PredicatesJ.byName("JLabelOperatorTest"));
+        JLabelOperator operator3 = JLabelOperator.waitFor(operator1, PredicatesJ.byName("JLabelOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -88,9 +88,9 @@ class JLabelOperatorTest {
 
     @Test
     void testWaitText() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setText("JLabelOperatorTest-");
         assertThat(operator2.getText()).isEqualTo("JLabelOperatorTest-");
@@ -101,9 +101,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetDisabledIcon() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setDisabledIcon(null);
         assertThat(operator2.getDisabledIcon()).isNull();
@@ -111,9 +111,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetDisplayedMnemonic() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setDisplayedMnemonic('A');
         assertThat(operator2.getDisplayedMnemonic()).isEqualTo('A');
@@ -125,9 +125,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetHorizontalAlignment() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setHorizontalAlignment(SwingConstants.TRAILING);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.TRAILING);
@@ -135,9 +135,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetHorizontalTextPosition() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setHorizontalTextPosition(SwingConstants.LEFT);
         assertThat(operator2.getHorizontalTextPosition()).isEqualTo(SwingConstants.LEFT);
@@ -145,9 +145,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetIcon() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setIcon(null);
         assertThat(operator2.getIcon()).isNull();
@@ -155,9 +155,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetIconTextGap() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setIconTextGap(15);
         assertThat(operator2.getIconTextGap()).isEqualTo(15);
@@ -165,9 +165,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetLabelFor() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setLabelFor(frame);
         assertThat(frame).isEqualTo(operator2.getLabelFor());
@@ -176,9 +176,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetUI() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         JLabelOperatorTestUI ui = new JLabelOperatorTestUI();
         operator2.setUI(ui);
@@ -188,9 +188,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetVerticalAlignment() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setVerticalAlignment(SwingConstants.TOP);
         assertThat(operator2.getVerticalAlignment()).isEqualTo(SwingConstants.TOP);
@@ -198,9 +198,9 @@ class JLabelOperatorTest {
 
     @Test
     void testGetVerticalTextPosition() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JLabelOperator operator2 = new JLabelOperator(operator1);
+        JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setVerticalTextPosition(SwingConstants.TOP);
         assertThat(operator2.getVerticalTextPosition()).isEqualTo(SwingConstants.TOP);

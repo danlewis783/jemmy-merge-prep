@@ -61,15 +61,15 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         AbstractButtonOperator operator2 =
-                new AbstractButtonOperator(operator, PredicatesJ.byName("AbstractButtonOperatorTest"));
+                AbstractButtonOperator.waitFor(operator, PredicatesJ.byName("AbstractButtonOperatorTest"));
         assertThat(operator2).isNotNull();
         AbstractButtonOperator operator3 =
-                new AbstractButtonOperator(operator, "AbstractButtonOperatorTest", StringComparators.strict());
+                AbstractButtonOperator.waitFor(operator, "AbstractButtonOperatorTest", StringComparators.strict());
         assertThat(operator3).isNotNull();
     }
 
@@ -95,27 +95,27 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testPush() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.push();
     }
 
     @Test
     void testPushNoBlock() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.pushNoBlock();
     }
 
     @Test
     void testChangeSelection() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelected(true);
         operator1.changeSelection(true);
@@ -123,9 +123,9 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testChangeSelectionNoBlock() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelected(true);
         operator1.changeSelectionNoBlock(true);
@@ -133,27 +133,27 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testPress() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.press();
     }
 
     @Test
     void testRelease() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.release();
     }
 
     @Test
     void testWaitSelected() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelected(true);
         operator1.waitSelected(true);
@@ -161,18 +161,18 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testWaitText() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.waitText("AbstractButtonOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testAddActionListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ActionListener listener = event -> {};
         operator1.addActionListener(listener);
@@ -180,9 +180,9 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testAddChangeListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ChangeListener listener = event -> {};
         operator1.addChangeListener(listener);
@@ -190,9 +190,9 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testAddItemListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ItemListener listener = event -> {};
         operator1.addItemListener(listener);
@@ -200,9 +200,9 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testDoClick() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.doClick();
         operator1.doClick(2);
@@ -210,72 +210,72 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testGetActionCommand() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setActionCommand(operator1.getActionCommand());
     }
 
     @Test
     void testGetDisabledIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setDisabledIcon(operator1.getDisabledIcon());
     }
 
     @Test
     void testGetDisabledSelectedIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setDisabledSelectedIcon(operator1.getDisabledSelectedIcon());
     }
 
     @Test
     void testGetHorizontalAlignment() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setHorizontalAlignment(operator1.getHorizontalAlignment());
     }
 
     @Test
     void testGetHorizontalTextPosition() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setHorizontalTextPosition(operator1.getHorizontalTextPosition());
     }
 
     @Test
     void testGetIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setIcon(operator1.getIcon());
     }
 
     @Test
     void testGetMargin() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMargin(operator1.getMargin());
     }
 
     @Test
     void testGetMnemonic() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMnemonic(operator1.getMnemonic());
         operator1.setMnemonic('a');
@@ -283,162 +283,162 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testGetModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setModel(operator1.getModel());
     }
 
     @Test
     void testGetPressedIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setPressedIcon(operator1.getPressedIcon());
     }
 
     @Test
     void testGetRolloverIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setRolloverIcon(operator1.getRolloverIcon());
     }
 
     @Test
     void testGetRolloverSelectedIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setRolloverSelectedIcon(operator1.getRolloverSelectedIcon());
     }
 
     @Test
     void testGetSelectedIcon() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelectedIcon(operator1.getSelectedIcon());
     }
 
     @Test
     void testGetSelectedObjects() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSelectedObjects();
     }
 
     @Test
     void testGetText() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setText(operator1.getText());
     }
 
     @Test
     void testGetUI() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setUI(operator1.getUI());
     }
 
     @Test
     void testGetVerticalAlignment() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVerticalAlignment(operator1.getVerticalAlignment());
     }
 
     @Test
     void testGetVerticalTextPosition() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVerticalTextPosition(operator1.getVerticalTextPosition());
     }
 
     @Test
     void testIsBorderPainted() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBorderPainted(operator1.isBorderPainted());
     }
 
     @Test
     void testIsContentAreaFilled() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setContentAreaFilled(operator1.isContentAreaFilled());
     }
 
     @Test
     void testIsFocusPainted() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setFocusPainted(operator1.isFocusPainted());
     }
 
     @Test
     void testIsRolloverEnabled() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setRolloverEnabled(operator1.isRolloverEnabled());
     }
 
     @Test
     void testIsSelected() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelected(operator1.isSelected());
     }
 
     @Test
     void testRemoveActionListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeActionListener(event -> {});
     }
 
     @Test
     void testRemoveChangeListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeChangeListener(event -> {});
     }
 
     @Test
     void testRemoveItemListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        AbstractButtonOperator operator1 = new AbstractButtonOperator(operator);
+        AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeItemListener(event -> {});
     }

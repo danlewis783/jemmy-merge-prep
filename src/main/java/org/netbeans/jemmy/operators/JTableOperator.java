@@ -65,42 +65,49 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JTableOperator extends JComponentOperator {
     private final TableDriver driver;
 
-    public JTableOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JTableOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JTableOperator(JTable b) {
+    JTableOperator(JTable b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getTableDriver(getClass());
     }
 
-    public JTableOperator(ContainerOperator cont, int index) {
-        this((JTable) waitComponent(cont, PredicatesJ.of(JTable.class), index));
+    public static JTableOperator of(JTable b) {
+        return new JTableOperator(b);
     }
 
-    public JTableOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JTableOperator waitFor(ContainerOperator cont, int index) {
+        return new JTableOperator((JTable) waitComponent(cont, PredicatesJ.of(JTable.class), index));
     }
 
-    public JTableOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTable) cont.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
+    public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JTableOperator((JTable) cont.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
     }
 
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, -1, index);
+    public static JTableOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int column) {
-        this(cont, text, stringComparator, row, column, 0);
+    public static JTableOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return waitFor(cont, text, stringComparator, -1, -1, index);
     }
 
-    public JTableOperator(
+    public static JTableOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int row, int column) {
+        return waitFor(cont, text, stringComparator, row, column, 0);
+    }
+
+    public static JTableOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int row, int column, int index) {
-        this((JTable) waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
+        return new JTableOperator((JTable)
+                waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
     }
 
     public Point findCell(String text, StringComparator comparator, int index) {
@@ -282,7 +289,7 @@ public class JTableOperator extends JComponentOperator {
             return;
         }
 
-        JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+        JScrollPaneOperator scroller = JScrollPaneOperator.of(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         Rectangle rect = getCellRect(row, column, false);
         scroller.scrollToComponentRectangle(
@@ -328,7 +335,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public JTableHeaderOperator getHeaderOperator() {
-        return new JTableHeaderOperator(getTableHeader());
+        return JTableHeaderOperator.of(getTableHeader());
     }
 
     public Component waitCellComponent(Predicate<Component> chooser, int row, int column) {

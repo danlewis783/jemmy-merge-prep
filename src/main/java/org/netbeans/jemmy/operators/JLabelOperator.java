@@ -41,32 +41,38 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JLabelOperator extends JComponentOperator {
 
-    public JLabelOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JLabelOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JLabelOperator(JLabel b) {
+    JLabelOperator(JLabel b) {
         super(b);
     }
 
-    public JLabelOperator(ContainerOperator cont, int index) {
-        this((JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class), index));
+    public static JLabelOperator of(JLabel b) {
+        return new JLabelOperator(b);
     }
 
-    public JLabelOperator(ContainerOperator cont, Predicate<Component> predicate) {
-        this(cont, predicate, 0);
+    public static JLabelOperator waitFor(ContainerOperator cont, int index) {
+        return new JLabelOperator((JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class), index));
     }
 
-    public JLabelOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JLabelOperator waitFor(ContainerOperator cont, Predicate<Component> predicate) {
+        return waitFor(cont, predicate, 0);
     }
 
-    public JLabelOperator(ContainerOperator cont, Predicate<Component> predicate, int index) {
-        this((JLabel) cont.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
+    public static JLabelOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JLabelOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JLabel) waitComponent(cont, new JLabelByTextPredicate(text, stringComparator), index));
+    public static JLabelOperator waitFor(ContainerOperator cont, Predicate<Component> predicate, int index) {
+        return new JLabelOperator((JLabel) cont.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
+    }
+
+    public static JLabelOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JLabelOperator(
+                (JLabel) waitComponent(cont, new JLabelByTextPredicate(text, stringComparator), index));
     }
 
     public void waitText(String text, StringComparator stringComparator) {

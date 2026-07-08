@@ -44,7 +44,7 @@ class LateComponentDiscoveryTest {
             jFrameRef.set(jFrame);
         });
         Executors.newSingleThreadExecutor().submit((Callable<Void>) () -> {
-            new JLabelOperator(new JFrameOperator("Test Frame"));
+            JLabelOperator.waitFor(JFrameOperator.waitFor("Test Frame"));
             return null;
         });
         EventQueue.invokeAndWait(() -> {

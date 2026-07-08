@@ -30,11 +30,11 @@ class TreeSelectionUnderChangeTest {
     @Test
     void selectPath() throws Exception {
         GrowingTreeApp.main();
-        JFrameOperator frameOp = new JFrameOperator("GrowingTreeApp");
+        JFrameOperator frameOp = JFrameOperator.waitFor("GrowingTreeApp");
         frameOp.maximize();
-        long time = Long.parseLong(new JLabelOperator(frameOp).getText());
-        JButtonOperator start = new JButtonOperator(frameOp);
-        JTreeOperator tree = new JTreeOperator(frameOp);
+        long time = Long.parseLong(JLabelOperator.waitFor(frameOp).getText());
+        JButtonOperator start = JButtonOperator.waitFor(frameOp);
+        JTreeOperator tree = JTreeOperator.waitFor(frameOp);
         start.push();
 
         for (int i = 0; i < 20; i++) {

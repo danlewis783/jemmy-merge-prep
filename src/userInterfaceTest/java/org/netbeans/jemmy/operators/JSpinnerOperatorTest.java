@@ -94,13 +94,13 @@ class JSpinnerOperatorTest {
 
     @Test
     void constructor() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        assertThat(new JSpinnerOperator(jFrameOp)).isNotNull();
-        JSpinnerOperator operator2 = new JSpinnerOperator(jFrameOp, PredicatesJ.byName("JSpinnerOperatorTest"));
+        assertThat(JSpinnerOperator.waitFor(jFrameOp)).isNotNull();
+        JSpinnerOperator operator2 = JSpinnerOperator.waitFor(jFrameOp, PredicatesJ.byName("JSpinnerOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.setValue(1);
-        assertThat(new JSpinnerOperator(jFrameOp, "1", STRICT)).isNotNull();
+        assertThat(JSpinnerOperator.waitFor(jFrameOp, "1", STRICT)).isNotNull();
     }
 
     @Test
@@ -119,9 +119,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void numberModel() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
         assertThat(jSpinnerOpNumber).isNotNull();
@@ -132,9 +132,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void listModel() throws InterruptedException, InvocationTargetException {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerListModel());
         JSpinnerOperatorList jSpinnerOpList = new JSpinnerOperatorList(jSpinnerOp);
@@ -154,9 +154,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void dateModel() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerDateModel());
         JSpinnerOperatorDate jSpinnerOpDate = new JSpinnerOperatorDate(jSpinnerOp);
@@ -167,18 +167,18 @@ class JSpinnerOperatorTest {
 
     @Test
     void scrollTo() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.scrollTo(new NullScrollAdjuster());
     }
 
     @Test
     void scrollToMaximum() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 100, 1);
         jSpinnerOp.setModel(model);
@@ -187,9 +187,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void scrollToMinimum() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         SpinnerNumberModel model = new SpinnerNumberModel(100, 1, 100, 1);
         jSpinnerOp.setModel(model);
@@ -198,9 +198,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void scrollToObject() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
         jSpinnerOpNumber.scrollToObject(11, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
@@ -208,9 +208,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void scrollToString() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
         jSpinnerOpNumber.scrollToString("11", STRICT, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
@@ -218,9 +218,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void getIncreaseOperator() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         JButtonOperator jButtonOp = jSpinnerOp.getIncreaseOperator();
         assertThat(jButtonOp).isNotNull();
@@ -228,9 +228,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void getDecreaseOperator() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         JButtonOperator jButtonOp = jSpinnerOp.getDecreaseOperator();
         assertThat(jButtonOp).isNotNull();
@@ -238,9 +238,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void getMinimum() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         assertThat(jSpinnerOp.getMinimum()).isNull();
         jSpinnerOp.setModel(new SpinnerDateModel());
@@ -253,9 +253,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void getMaximum() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         assertThat(jSpinnerOp.getMaximum()).isNull();
         jSpinnerOp.setModel(new SpinnerDateModel());
@@ -268,9 +268,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void getValue() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setValue(1);
         assertThat(jSpinnerOp.getValue().toString()).isEqualTo("1");
@@ -278,9 +278,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void getUI() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         NullSpinnerUI spinnerUI = new NullSpinnerUI();
         jSpinnerOp.setUI(spinnerUI);
@@ -289,18 +289,18 @@ class JSpinnerOperatorTest {
 
     @Test
     void getNextValue() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         assertThat(jSpinnerOp.getNextValue()).isNotNull();
     }
 
     @Test
     void addChangeListener() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         NullChangeListener listener = new NullChangeListener();
         jSpinnerOp.addChangeListener(listener);
@@ -311,18 +311,18 @@ class JSpinnerOperatorTest {
 
     @Test
     void getPreviousValue() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         assertThat(jSpinnerOp.getPreviousValue()).isNotNull();
     }
 
     @Test
     void setEditor() throws InterruptedException, InvocationTargetException {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         AtomicReference<JTextField> textFieldRef = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> textFieldRef.set(new JTextField()));
@@ -332,18 +332,18 @@ class JSpinnerOperatorTest {
 
     @Test
     void commitEdit() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.commitEdit();
     }
 
     @Test
     void dateScrollAdjuster() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerDateModel());
         DateScrollAdjuster adjuster = new DateScrollAdjuster(jSpinnerOp, new Date(System.currentTimeMillis() + 1000));
@@ -369,9 +369,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void listScrollAdjuster() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerListModel());
         ListScrollAdjuster adjuster = new ListScrollAdjuster(jSpinnerOp, "1");
@@ -388,9 +388,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void toStringScrollAdjuster() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerListModel());
         ToStringScrollAdjuster adjuster =
@@ -401,9 +401,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void exactScrollAdjuster() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerListModel());
         ExactScrollAdjuster adjuster =
@@ -414,9 +414,9 @@ class JSpinnerOperatorTest {
 
     @Test
     void numberScrollAdjuster() {
-        JFrameOperator jFrameOp = new JFrameOperator();
+        JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
-        JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+        JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
         jSpinnerOp.setModel(new SpinnerNumberModel());
         NumberScrollAdjuster adjuster = new NumberScrollAdjuster(jSpinnerOp, -1);

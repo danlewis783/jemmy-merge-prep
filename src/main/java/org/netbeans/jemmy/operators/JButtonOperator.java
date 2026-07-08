@@ -38,32 +38,37 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JButtonOperator extends AbstractButtonOperator {
 
-    public JButtonOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JButtonOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JButtonOperator(JButton b) {
+    JButtonOperator(JButton b) {
         super(b);
     }
 
-    public JButtonOperator(ContainerOperator cont, int index) {
-        this((JButton) waitComponent(cont, PredicatesJ.of(JButton.class), index));
+    public static JButtonOperator of(JButton b) {
+        return new JButtonOperator(b);
     }
 
-    public JButtonOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JButtonOperator waitFor(ContainerOperator cont, int index) {
+        return new JButtonOperator((JButton) waitComponent(cont, PredicatesJ.of(JButton.class), index));
     }
 
-    public JButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JButton) cont.waitSubComponent(PredicatesJ.of(JButton.class, chooser), index));
+    public static JButtonOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JButton) waitComponent(
+    public static JButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JButtonOperator((JButton) cont.waitSubComponent(PredicatesJ.of(JButton.class, chooser), index));
+    }
+
+    public static JButtonOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JButtonOperator((JButton) waitComponent(
                 cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index));
     }
 

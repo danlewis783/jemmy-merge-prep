@@ -49,7 +49,7 @@ class AwtComponentsTest {
         Timeouts.resetToDefaults();
         override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L);
         AwtComponentsApp.main();
-        frameOp = new JFrameOperator("AwtComponentsApp");
+        frameOp = JFrameOperator.waitFor("AwtComponentsApp");
     }
 
     @AfterEach
@@ -60,7 +60,7 @@ class AwtComponentsTest {
 
     @Test
     void choiceOp() {
-        ChoiceOperator choiceOp = new ChoiceOperator(frameOp);
+        ChoiceOperator choiceOp = ChoiceOperator.waitFor(frameOp);
         assertThat(choiceOp).isNotNull();
         choiceOp.selectItem("One", STRICT);
         assertThat(choiceOp.getSelectedItem()).isEqualTo("One");
@@ -72,7 +72,7 @@ class AwtComponentsTest {
 
     @Test
     void checkBoxOp() {
-        CheckboxOperator checkboxOp = new CheckboxOperator(frameOp);
+        CheckboxOperator checkboxOp = CheckboxOperator.waitFor(frameOp);
         assertThat(checkboxOp).isNotNull();
         checkboxOp.changeSelection(true);
         assertThat(checkboxOp.getState()).isTrue();
@@ -82,36 +82,36 @@ class AwtComponentsTest {
 
     @Test
     void buttonOp() {
-        ButtonOperator buttonOp = new ButtonOperator(frameOp);
+        ButtonOperator buttonOp = ButtonOperator.waitFor(frameOp);
         buttonOp.push();
-        assertThat(new LabelOperator(frameOp, "button pushed", StringComparators.strict()))
+        assertThat(LabelOperator.waitFor(frameOp, "button pushed", StringComparators.strict()))
                 .isNotNull();
     }
 
     @Test
     void textFieldOp() {
-        TextFieldOperator textFieldOp = new TextFieldOperator(frameOp);
+        TextFieldOperator textFieldOp = TextFieldOperator.waitFor(frameOp);
         assertThat(textFieldOp).isNotNull();
         textFieldOp.clearText();
         textFieldOp.typeText("Old text");
         textFieldOp.enterText("New text");
-        assertThat(new TextFieldOperator(frameOp, "New text", StringComparators.strict()))
+        assertThat(TextFieldOperator.waitFor(frameOp, "New text", StringComparators.strict()))
                 .isNotNull();
     }
 
     @Test
     void textAreaOp() {
-        TextAreaOperator textAreaOp = new TextAreaOperator(frameOp);
+        TextAreaOperator textAreaOp = TextAreaOperator.waitFor(frameOp);
         assertThat(textAreaOp).isNotNull();
         textAreaOp.selectText(0, 10);
         textAreaOp.enterText("Very\nNew\nFew\nLines");
-        assertThat(new TextAreaOperator(frameOp, "Very\nNew\nFew\nLines\n", StringComparators.strict()))
+        assertThat(TextAreaOperator.waitFor(frameOp, "Very\nNew\nFew\nLines\n", StringComparators.strict()))
                 .isNotNull();
     }
 
     @Test
     void listOp() {
-        ListOperator listOp = new ListOperator(frameOp);
+        ListOperator listOp = ListOperator.waitFor(frameOp);
         assertThat(listOp).isNotNull();
         listOp.selectItem(0);
         assertThat(listOp.getSelectedIndex()).isEqualTo(0);

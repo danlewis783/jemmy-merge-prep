@@ -69,12 +69,12 @@ class JColorChooserOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         JColorChooserOperator operator3 =
-                new JColorChooserOperator(operator1, PredicatesJ.byName("JColorChooserOperatorTest"));
+                JColorChooserOperator.waitFor(operator1, PredicatesJ.byName("JColorChooserOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -98,52 +98,52 @@ class JColorChooserOperatorTest {
 
     @Test
     void testEnterRed() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.enterColor(0);
         operator2.enterRed(255);
-        JColorChooserOperator operator3 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor().getRed())
                 .isEqualTo(colorChooser.getColor().getRed());
     }
 
     @Test
     void testEnterGreen() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.enterColor(0);
         operator2.enterGreen(255);
-        JColorChooserOperator operator3 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor().getGreen())
                 .isEqualTo(colorChooser.getColor().getGreen());
     }
 
     @Test
     void testEnterBlue() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.enterColor(0);
         operator2.enterBlue(255);
-        JColorChooserOperator operator3 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor()).isEqualTo(colorChooser.getColor());
     }
 
     @Test
     void testEnterColor() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.enterColor(Color.GREEN);
-        JColorChooserOperator operator3 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor()).isEqualTo(colorChooser.getColor());
         operator3.enterColor(0, 0, 0);
-        JColorChooserOperator operator4 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator4 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator4.getColor()).isEqualTo(colorChooser.getColor());
     }
 
     @Test
     void testAddChooserPanel() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
 
         EventQueue.invokeAndWait(() -> panel = new ColorChooserTestPanel());
 
@@ -162,26 +162,26 @@ class JColorChooserOperatorTest {
 
     @Test
     void testGetColor() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.setColor(Color.GREEN);
-        JColorChooserOperator operator3 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor()).isEqualTo(colorChooser.getColor());
         assertThat(colorChooser.getColor()).isEqualTo(Color.GREEN);
         operator2.setColor(0);
-        JColorChooserOperator operator4 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator4 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator4.getColor()).isEqualTo(colorChooser.getColor());
         assertThat(colorChooser.getColor()).isEqualTo(Color.BLACK);
         operator2.setColor(255, 255, 255);
-        JColorChooserOperator operator5 = new JColorChooserOperator(operator1);
+        JColorChooserOperator operator5 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator5.getColor()).isEqualTo(colorChooser.getColor());
         assertThat(colorChooser.getColor()).isEqualTo(Color.WHITE);
     }
 
     @Test
     void testGetPreviewPanel() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
 
         EventQueue.invokeAndWait(() -> panelPreview = new JPanel());
 
@@ -192,8 +192,8 @@ class JColorChooserOperatorTest {
 
     @Test
     void testGetSelectionModel() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         ColorSelectionModelTest selectionModel = new ColorSelectionModelTest();
         operator2.setSelectionModel(selectionModel);
         assertThat(operator2.getSelectionModel()).isEqualTo(colorChooser.getSelectionModel());
@@ -202,8 +202,8 @@ class JColorChooserOperatorTest {
 
     @Test
     void testGetUI() {
-        JFrameOperator operator1 = new JFrameOperator();
-        JColorChooserOperator operator2 = new JColorChooserOperator(operator1);
+        JFrameOperator operator1 = JFrameOperator.waitFor();
+        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         ColorChooserUITest colorChooserUI = new ColorChooserUITest();
         operator2.setUI(colorChooserUI);
         assertThat(operator2.getUI()).isEqualTo(colorChooser.getUI());
@@ -213,7 +213,7 @@ class JColorChooserOperatorTest {
     @Test
     void testAccessorsOnDefaultTab() {
         // the swatches tab is selected by default, where none of the accessors apply
-        JColorChooserOperator operator = new JColorChooserOperator(new JFrameOperator());
+        JColorChooserOperator operator = JColorChooserOperator.waitFor(JFrameOperator.waitFor());
         assertThat(operator.getHueSpinnerOperator()).isNull();
         assertThat(operator.getSaturationSpinnerOperator()).isNull();
         assertThat(operator.getValueSpinnerOperator()).isNull();
@@ -235,9 +235,9 @@ class JColorChooserOperatorTest {
 
     @Test
     void testAccessorsOnRgbTab() {
-        JColorChooserOperator operator = new JColorChooserOperator(new JFrameOperator());
+        JColorChooserOperator operator = JColorChooserOperator.waitFor(JFrameOperator.waitFor());
         operator.setColor(new Color(10, 20, 30));
-        new JTabbedPaneOperator(operator).selectPage("RGB", StringComparators.strict());
+        JTabbedPaneOperator.waitFor(operator).selectPage("RGB", StringComparators.strict());
 
         assertThat(Objects.requireNonNull(operator.getRedSpinnerOperator()).getValue())
                 .isEqualTo(10);
@@ -265,8 +265,8 @@ class JColorChooserOperatorTest {
 
     @Test
     void testAccessorsOnHsvTab() {
-        JColorChooserOperator operator = new JColorChooserOperator(new JFrameOperator());
-        new JTabbedPaneOperator(operator).selectPage("HSV", StringComparators.strict());
+        JColorChooserOperator operator = JColorChooserOperator.waitFor(JFrameOperator.waitFor());
+        JTabbedPaneOperator.waitFor(operator).selectPage("HSV", StringComparators.strict());
 
         assertThat(operator.getHueSpinnerOperator()).isNotNull();
         assertThat(operator.getSaturationSpinnerOperator()).isNotNull();
@@ -284,8 +284,8 @@ class JColorChooserOperatorTest {
 
     @Test
     void testAccessorsOnHslTab() {
-        JColorChooserOperator operator = new JColorChooserOperator(new JFrameOperator());
-        new JTabbedPaneOperator(operator).selectPage("HSL", StringComparators.strict());
+        JColorChooserOperator operator = JColorChooserOperator.waitFor(JFrameOperator.waitFor());
+        JTabbedPaneOperator.waitFor(operator).selectPage("HSL", StringComparators.strict());
 
         assertThat(operator.getHueSpinnerOperator()).isNotNull();
         assertThat(operator.getSaturationSpinnerOperator()).isNotNull();
@@ -301,8 +301,8 @@ class JColorChooserOperatorTest {
 
     @Test
     void testAccessorsOnCmykTab() {
-        JColorChooserOperator operator = new JColorChooserOperator(new JFrameOperator());
-        new JTabbedPaneOperator(operator).selectPage("CMYK", StringComparators.strict());
+        JColorChooserOperator operator = JColorChooserOperator.waitFor(JFrameOperator.waitFor());
+        JTabbedPaneOperator.waitFor(operator).selectPage("CMYK", StringComparators.strict());
 
         assertThat(operator.getCyanSpinnerOperator()).isNotNull();
         assertThat(operator.getMagentaSpinnerOperator()).isNotNull();

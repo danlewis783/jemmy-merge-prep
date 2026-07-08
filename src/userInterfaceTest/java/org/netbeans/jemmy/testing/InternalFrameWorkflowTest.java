@@ -37,15 +37,15 @@ class InternalFrameWorkflowTest {
         JFrame frame =
                 Objects.requireNonNull(JFrameOperator.findJFrame("InternalFramesApp", StringComparators.substring()));
         JInternalFrameOperator frame1Op =
-                new JInternalFrameOperator(new JFrameOperator(frame), "Frame 1", StringComparators.strict());
+                JInternalFrameOperator.waitFor(JFrameOperator.of(frame), "Frame 1", StringComparators.strict());
         JInternalFrameOperator frame2Op =
-                new JInternalFrameOperator(new JFrameOperator(frame), "Frame 2", StringComparators.strict());
-        JInternalFrameOperator fo = new JInternalFrameOperator(new JFrameOperator(frame));
+                JInternalFrameOperator.waitFor(JFrameOperator.of(frame), "Frame 2", StringComparators.strict());
+        JInternalFrameOperator fo = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         assertThat((fo.getSource() == frame1Op.getSource()) || (fo.getSource() == frame2Op.getSource()))
                 .isTrue();
         frame1Op.deiconify();
-        new JButtonOperator(new ContainerOperator(frame2Op.getRootPane())).push();
-        new JButtonOperator(new ContainerOperator(frame1Op.getRootPane())).push();
+        JButtonOperator.waitFor(ContainerOperator.of(frame2Op.getRootPane())).push();
+        JButtonOperator.waitFor(ContainerOperator.of(frame1Op.getRootPane())).push();
         frame1Op.iconify();
         frame1Op.deiconify();
         frame1Op.maximize();

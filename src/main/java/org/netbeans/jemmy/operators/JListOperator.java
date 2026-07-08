@@ -62,38 +62,44 @@ public class JListOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JListOperator.class);
     private final MultiSelListDriver driver;
 
-    public JListOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JListOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JListOperator(JList<?> b) {
+    JListOperator(JList<?> b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
 
-    public JListOperator(ContainerOperator cont, int index) {
-        this((JList<?>) waitComponent(cont, PredicatesJ.of(JList.class), index));
+    public static JListOperator of(JList<?> b) {
+        return new JListOperator(b);
     }
 
-    public JListOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JListOperator waitFor(ContainerOperator cont, int index) {
+        return new JListOperator((JList<?>) waitComponent(cont, PredicatesJ.of(JList.class), index));
     }
 
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JListOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JList<?>) cont.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
+    public static JListOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
+    public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JListOperator((JList<?>) cont.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
     }
 
-    public JListOperator(
+    public static JListOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return waitFor(cont, text, stringComparator, -1, index);
+    }
+
+    public static JListOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
-        this((JList<?>) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
+        return new JListOperator(
+                (JList<?>) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
     @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
@@ -229,7 +235,7 @@ public class JListOperator extends JComponentOperator {
             return;
         }
 
-        JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+        JScrollPaneOperator scroller = JScrollPaneOperator.of(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         Rectangle rect = getCellBounds(itemIndex, itemIndex);
         scroller.scrollToComponentRectangle(

@@ -35,17 +35,20 @@ class ButtonGridLookupTest {
     void doit() {
         ButtonGridApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("ButtonGridApp");
-        JFrameOperator jFrameOp = new JFrameOperator(jFrame);
+        JFrameOperator jFrameOp = JFrameOperator.of(jFrame);
         JLabelOperator jLabelOp =
-                new JLabelOperator(jFrameOp, "Button has not been pushed yet", StringComparators.strict());
-        JProgressBarOperator progress = new JProgressBarOperator(jFrameOp);
+                JLabelOperator.waitFor(jFrameOp, "Button has not been pushed yet", StringComparators.strict());
+        JProgressBarOperator progress = JProgressBarOperator.waitFor(jFrameOp);
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 String bText = i + "-" + j;
-                JButtonOperator jButtonOp = new JButtonOperator(
+                JButtonOperator jButtonOp = JButtonOperator.waitFor(
                         jFrameOp, new AbstractButtonByTextPredicate(bText, StringComparators.substring()));
-                assertThat(jButtonOp.getSource()).isSameAs(new AbstractButtonOperator(jFrameOp, i * 4 + j).getSource());
-                assertThat(jButtonOp.getSource()).isSameAs(new JButtonOperator(jFrameOp, i * 4 + j).getSource());
+                assertThat(jButtonOp.getSource())
+                        .isSameAs(AbstractButtonOperator.waitFor(jFrameOp, i * 4 + j)
+                                .getSource());
+                assertThat(jButtonOp.getSource())
+                        .isSameAs(JButtonOperator.waitFor(jFrameOp, i * 4 + j).getSource());
                 assertThat(jButtonOp.showToolTip().getTipText()).isEqualTo(bText + " button");
                 jButtonOp.push();
                 jLabelOp.waitText("Button \"" + bText + "\" has been pushed", StringComparators.strict());
@@ -54,7 +57,7 @@ class ButtonGridLookupTest {
             }
         }
 
-        JButtonOperator buttonOp = new JButtonOperator(jFrameOp, "0-0", StringComparators.strict());
+        JButtonOperator buttonOp = JButtonOperator.waitFor(jFrameOp, "0-0", StringComparators.strict());
         buttonOp.getAccessibleContext().setAccessibleDescription("A button to check different finding approaches");
         buttonOp.setText("New Text");
         buttonOp.waitText("New Text", StringComparators.strict());

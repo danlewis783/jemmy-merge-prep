@@ -39,8 +39,8 @@ class JSpinnerScrollingTest {
     void doit() {
         assertTimeout(Duration.ofSeconds(10L), () -> {
             SpinnersApp.main();
-            JFrameOperator jFrameOp = new JFrameOperator("SpinnersApp");
-            JSpinnerOperator jSpinnerOp = new JSpinnerOperator(jFrameOp);
+            JFrameOperator jFrameOp = JFrameOperator.waitFor("SpinnersApp");
+            JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
             jSpinnerOp.scrollToObject(50, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
             jSpinnerOp.scrollToString("11", StringComparators.strict(), ScrollAdjuster.DECREASE_SCROLL_DIRECTION);
 
@@ -54,8 +54,9 @@ class JSpinnerScrollingTest {
                     .havingCause()
                     .withMessage("Impossible to get a minimum of JSpinner model");
 
-            JSpinnerOperatorDate jSpinnerOpDate = new JSpinnerOperatorDate(new JSpinnerOperator(jFrameOp, 1));
-            assertThat(new JSpinnerOperator(jFrameOp, jSpinnerOpDate.getValue().toString(), StringComparators.strict())
+            JSpinnerOperatorDate jSpinnerOpDate = new JSpinnerOperatorDate(JSpinnerOperator.waitFor(jFrameOp, 1));
+            assertThat(JSpinnerOperator.waitFor(
+                                    jFrameOp, jSpinnerOpDate.getValue().toString(), StringComparators.strict())
                             .getSource())
                     .isEqualTo(jSpinnerOpDate.getSource());
             Calendar today = Calendar.getInstance();
@@ -76,11 +77,11 @@ class JSpinnerScrollingTest {
                     .withMessage("JSpinner model is not a javax.swing.SpinnerNumberModel");
 
             JSpinnerOperatorList jSpinnerOpList =
-                    new JSpinnerOperatorList(new JSpinnerOperator(jFrameOp, "one", StringComparators.strict()));
+                    new JSpinnerOperatorList(JSpinnerOperator.waitFor(jFrameOp, "one", StringComparators.strict()));
             jSpinnerOpList.scrollToMaximum();
             jSpinnerOpList.scrollToMinimum();
             jSpinnerOpList.scrollToString("two", StringComparators.strict());
-            JSpinnerOperatorNumber fourth = new JSpinnerOperatorNumber(new JSpinnerOperator(jFrameOp, 3));
+            JSpinnerOperatorNumber fourth = new JSpinnerOperatorNumber(JSpinnerOperator.waitFor(jFrameOp, 3));
             fourth.scrollToMaximum();
             fourth.scrollToMinimum();
             fourth.scrollToValue(3.01);

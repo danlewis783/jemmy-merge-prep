@@ -63,9 +63,9 @@ class FileChooserDialogWorkflowTest {
         override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L);
         FileChooserLaunchApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("FileChooserLaunchApp");
-        frameOp = new JFrameOperator(jFrame);
+        frameOp = JFrameOperator.of(jFrame);
         launchFileChooserButtonOp =
-                new JButtonOperator(Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "...", STRICT)));
+                JButtonOperator.of(Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "...", STRICT)));
     }
 
     @AfterEach
@@ -78,7 +78,7 @@ class FileChooserDialogWorkflowTest {
         JDialog cont = JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
         JFileChooser jFileChooser =
                 (JFileChooser) JFileChooserOperator.waitComponent(cont, PredicatesJ.of(JFileChooser.class));
-        JFileChooserOperator toReturn = new JFileChooserOperator(jFileChooser);
+        JFileChooserOperator toReturn = JFileChooserOperator.of(jFileChooser);
         return toReturn;
     }
 
@@ -88,7 +88,7 @@ class FileChooserDialogWorkflowTest {
             JFileChooserOperator jFileChooserOp = launchFileChooser();
             assertThat(jFileChooserOp).as("jFileChooserOp is null").isNotNull();
             jFileChooserOp.cancel();
-            assertThat(new JTextFieldOperator(frameOp, "", STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, "", STRICT)).isNotNull();
         });
     }
 
@@ -102,7 +102,7 @@ class FileChooserDialogWorkflowTest {
             fcOp.selectFileType("No directory", STRICT);
             fcOp.selectFileType("Nothing", STRICT);
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -113,7 +113,7 @@ class FileChooserDialogWorkflowTest {
             JFileChooserOperator fcOp = launchFileChooser();
             assertThat(fcOp.getSource()).isSameAs(JFileChooserOperator.waitJFileChooser());
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -124,7 +124,7 @@ class FileChooserDialogWorkflowTest {
             JFileChooserOperator fcOp = launchFileChooser();
             assertThat(userDir).isEqualTo(fcOp.getCurrentDirectory());
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -134,7 +134,7 @@ class FileChooserDialogWorkflowTest {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -160,7 +160,7 @@ class FileChooserDialogWorkflowTest {
                         .isTrue();
                 String fn = userDir.listFiles()[0].getCanonicalPath();
                 fcOp.chooseFile(fn);
-                assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+                assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
             }
         });
     }
@@ -171,7 +171,7 @@ class FileChooserDialogWorkflowTest {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -194,7 +194,7 @@ class FileChooserDialogWorkflowTest {
                 fcOp.waitFileDisplayed(firstDirName, STRICT);
                 String fn = userDir.listFiles()[0].getCanonicalPath();
                 fcOp.chooseFile(fn);
-                assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+                assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
             }
         });
     }
@@ -217,7 +217,7 @@ class FileChooserDialogWorkflowTest {
             fcOp.enterSubDir(subDir, STRICT);
             assertThat(userDir).isEqualTo(fcOp.getCurrentDirectory());
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -230,7 +230,7 @@ class FileChooserDialogWorkflowTest {
             fcOp.selectPathDirectory(parentFile.getName(), STRICT);
             assertThat(fcOp.getCurrentDirectory()).isEqualTo(parentFile);
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 
@@ -240,7 +240,7 @@ class FileChooserDialogWorkflowTest {
             String fn = userDir.listFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
-            assertThat(new JTextFieldOperator(frameOp, fn, STRICT)).isNotNull();
+            assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
         });
     }
 

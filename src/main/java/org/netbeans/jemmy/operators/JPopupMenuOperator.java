@@ -65,26 +65,31 @@ import org.netbeans.jemmy.util.StringComparators;
 public class JPopupMenuOperator extends JComponentOperator {
     private final MenuDriver driver;
 
-    public JPopupMenuOperator() {
-        this((JPopupMenu) waitComponent(
+    public static JPopupMenuOperator waitFor() {
+        return new JPopupMenuOperator((JPopupMenu) waitComponent(
                 WindowOperator.waitWindow(new JPopupWindowPredicate(), 0), PredicatesJ.ofShowing(JPopupMenu.class), 0));
     }
 
-    public JPopupMenuOperator(ContainerOperator cont) {
-        this((JPopupMenu) waitComponent(cont, PredicatesJ.ofShowing(JPopupMenu.class), 0));
+    public static JPopupMenuOperator waitFor(ContainerOperator cont) {
+        return new JPopupMenuOperator((JPopupMenu) waitComponent(cont, PredicatesJ.ofShowing(JPopupMenu.class), 0));
     }
 
-    public JPopupMenuOperator(JPopupMenu popup) {
+    JPopupMenuOperator(JPopupMenu popup) {
         super(popup);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
 
-    public JPopupMenuOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JPopupMenuOperator of(JPopupMenu popup) {
+        return new JPopupMenuOperator(popup);
     }
 
-    public JPopupMenuOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JPopupMenu) cont.waitSubComponent(PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
+    public static JPopupMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JPopupMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JPopupMenuOperator(
+                (JPopupMenu) cont.waitSubComponent(PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
     }
 
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -151,12 +156,12 @@ public class JPopupMenuOperator extends JComponentOperator {
         ContainerOperator menuCont;
         if (!parentPath.isEmpty()) {
             menu = (JMenu) pushMenu(getParentPath(predicates));
-            menuCont = new ContainerOperator(menu.getPopupMenu());
+            menuCont = ContainerOperator.of(menu.getPopupMenu());
         } else {
             menuCont = this;
         }
 
-        return new JMenuItemOperator(menuCont, predicates.get(predicates.size() - 1));
+        return JMenuItemOperator.waitFor(menuCont, predicates.get(predicates.size() - 1));
     }
 
     public JMenuItemOperator showMenuItem(String[] path, StringComparator comparator) {
@@ -165,12 +170,12 @@ public class JPopupMenuOperator extends JComponentOperator {
         ContainerOperator menuCont;
         if (parentPath.length > 0) {
             menu = (JMenu) pushMenu(getParentPath(path), comparator);
-            menuCont = new ContainerOperator(menu.getPopupMenu());
+            menuCont = ContainerOperator.of(menu.getPopupMenu());
         } else {
             menuCont = this;
         }
 
-        return new JMenuItemOperator(menuCont, path[path.length - 1], comparator);
+        return JMenuItemOperator.waitFor(menuCont, path[path.length - 1], comparator);
     }
 
     public JMenuItemOperator showMenuItem(String path, String delim, StringComparator comparator) {
@@ -417,9 +422,9 @@ public class JPopupMenuOperator extends JComponentOperator {
                         new WindowFunction<>(0, null, new ContainerSearcherPredicate(popupChooser)),
                         TimeoutKey.WindowWaiter_WaitWindowTimeout)
                 .runUntilNotNull(null);
-        WindowOperator windowOperator = new WindowOperator(result);
+        WindowOperator windowOperator = WindowOperator.of(result);
 
-        return new JPopupMenuOperator(windowOperator);
+        return JPopupMenuOperator.waitFor(windowOperator);
     }
 
     public static JPopupMenuOperator waitJPopupMenu(String menuItemText) {
@@ -441,7 +446,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public static JPopupMenu callPopup(Component comp, int x, int y, int mouseButton) {
-        return callPopup(new ComponentOperator(comp), x, y, mouseButton);
+        return callPopup(ComponentOperator.of(comp), x, y, mouseButton);
     }
 
     public static JPopupMenu callPopup(Component comp, int x, int y) {
@@ -449,7 +454,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public static @Nullable JPopupMenu callPopup(Component comp, int mouseButton) {
-        ComponentOperator co = new ComponentOperator(comp);
+        ComponentOperator co = ComponentOperator.of(comp);
         co.makeComponentVisible();
         co.clickForPopup(mouseButton);
 

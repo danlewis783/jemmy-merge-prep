@@ -81,6 +81,16 @@ import org.netbeans.jemmy.predicates.ComponentOperatorLocationPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorSizePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
+/**
+ * Root of the operator hierarchy for AWT/Swing components.
+ * <p>
+ * Operators are obtained through static factories, never constructors: {@code of(component)} wraps a
+ * component the caller already holds, and the {@code waitFor(...)} overloads search for a matching
+ * component, blocking until one appears or the wait times out. Constructors are package-private and
+ * do no searching, so no operator is ever half-constructed while a wait is in progress. Subclasses
+ * must declare their own {@code waitFor}/{@code of} overload set: the factories are static, so an
+ * omitted overload silently resolves to the superclass variant and returns the supertype.
+ */
 public class ComponentOperator extends Operator {
     private final EventDispatcher dispatcher;
     private final FocusDriver fDriver;
@@ -88,7 +98,7 @@ public class ComponentOperator extends Operator {
     private final MouseDriver mDriver;
     private final Component source;
 
-    public ComponentOperator(Component source) {
+    ComponentOperator(Component source) {
         this.source = Objects.requireNonNull(source, "source");
         DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
         kDriver = driverManager.getKeyDriver(getClass());
@@ -98,20 +108,24 @@ public class ComponentOperator extends Operator {
         this.dispatcher.robotSetAutoDelay();
     }
 
-    public ComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static ComponentOperator of(Component source) {
+        return new ComponentOperator(source);
     }
 
-    public ComponentOperator(ContainerOperator cont, int index) {
-        this(cont, PredicatesJ.alwaysTrue(), index);
+    public static ComponentOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public ComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static ComponentOperator waitFor(ContainerOperator cont, int index) {
+        return waitFor(cont, PredicatesJ.alwaysTrue(), index);
     }
 
-    public ComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this(waitComponent((Container) cont.getSource(), chooser, index));
+    public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new ComponentOperator(waitComponent((Container) cont.getSource(), chooser, index));
     }
 
     @Override

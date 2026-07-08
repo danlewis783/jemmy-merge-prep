@@ -49,33 +49,38 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JMenuOperator extends JMenuItemOperator {
     private final MenuDriver driver;
 
-    public JMenuOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JMenuOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JMenuOperator(JMenu menu) {
+    JMenuOperator(JMenu menu) {
         super(menu);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(this);
     }
 
-    public JMenuOperator(ContainerOperator cont, int index) {
-        this((JMenu) waitComponent(cont, PredicatesJ.of(JMenu.class), index));
+    public static JMenuOperator of(JMenu menu) {
+        return new JMenuOperator(menu);
     }
 
-    public JMenuOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JMenuOperator waitFor(ContainerOperator cont, int index) {
+        return new JMenuOperator((JMenu) waitComponent(cont, PredicatesJ.of(JMenu.class), index));
     }
 
-    public JMenuOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JMenuOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JMenu) cont.waitSubComponent(PredicatesJ.of(JMenu.class, chooser), index));
+    public static JMenuOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JMenuOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JMenu) waitComponent(cont, new JMenuByLabelPredicate(text, stringComparator), index));
+    public static JMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JMenuOperator((JMenu) cont.waitSubComponent(PredicatesJ.of(JMenu.class, chooser), index));
+    }
+
+    public static JMenuOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JMenuOperator((JMenu) waitComponent(cont, new JMenuByLabelPredicate(text, stringComparator), index));
     }
 
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -139,9 +144,9 @@ public class JMenuOperator extends JMenuItemOperator {
             menu = (JMenu) pushMenu(parentPath);
         }
 
-        JPopupMenuOperator popup = new JPopupMenuOperator(menu.getPopupMenu());
+        JPopupMenuOperator popup = JPopupMenuOperator.of(menu.getPopupMenu());
 
-        return new JMenuItemOperator(popup, predicates.get(predicates.size() - 1));
+        return JMenuItemOperator.waitFor(popup, predicates.get(predicates.size() - 1));
     }
 
     public JMenuItemOperator showMenuItem(String[] path, StringComparator comparator) {
@@ -154,9 +159,9 @@ public class JMenuOperator extends JMenuItemOperator {
             menu = (JMenu) getSource();
         }
 
-        JPopupMenuOperator popup = new JPopupMenuOperator(menu.getPopupMenu());
+        JPopupMenuOperator popup = JPopupMenuOperator.of(menu.getPopupMenu());
 
-        return new JMenuItemOperator(popup, path[path.length - 1], comparator);
+        return JMenuItemOperator.waitFor(popup, path[path.length - 1], comparator);
     }
 
     public JMenuItemOperator showMenuItem(String path, String delim, StringComparator comparator) {

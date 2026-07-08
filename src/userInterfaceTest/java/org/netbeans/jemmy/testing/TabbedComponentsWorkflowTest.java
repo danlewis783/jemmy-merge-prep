@@ -73,22 +73,28 @@ final class TabbedComponentsWorkflowTest {
             TabbedComponentsApp.main();
             ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
             JFrame jFrame = JFrameOperator.waitJFrame("TabbedComponentsApp");
-            JFrameOperator jFrameOp = new JFrameOperator(jFrame);
-            JTabbedPaneOperator jTabbedPaneOp = new JTabbedPaneOperator(
+            JFrameOperator jFrameOp = JFrameOperator.of(jFrame);
+            JTabbedPaneOperator jTabbedPaneOp = JTabbedPaneOperator.of(
                     Objects.requireNonNull(JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0)));
             Component jTabbedPane = jTabbedPaneOp.getSource();
-            assertThat(jTabbedPane).isSameAs(new JTabbedPaneOperator(jFrameOp).getSource());
             assertThat(jTabbedPane)
-                    .isSameAs(new JTabbedPaneOperator(jFrameOp, "Table", StringComparators.substring()).getSource());
+                    .isSameAs(JTabbedPaneOperator.waitFor(jFrameOp).getSource());
             assertThat(jTabbedPane)
-                    .isSameAs(
-                            new JTabbedPaneOperator(jFrameOp, "Tree", StringComparators.substring(), 1, 0).getSource());
-            JTableOperator jTableOp = new JTableOperator(Objects.requireNonNull(
+                    .isSameAs(JTabbedPaneOperator.waitFor(jFrameOp, "Table", StringComparators.substring())
+                            .getSource());
+            assertThat(jTabbedPane)
+                    .isSameAs(JTabbedPaneOperator.waitFor(jFrameOp, "Tree", StringComparators.substring(), 1, 0)
+                            .getSource());
+            JTableOperator jTableOp = JTableOperator.of(Objects.requireNonNull(
                     JTableOperator.findJTable(jFrame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
             jTableOp.clickOnCell(0, 0);
-            assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp).getSource());
-            assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp, "00", STRICT).getSource());
-            assertThat(jTableOp.getSource()).isSameAs(new JTableOperator(jFrameOp, "4949", STRICT, 49, 49).getSource());
+            assertThat(jTableOp.getSource())
+                    .isSameAs(JTableOperator.waitFor(jFrameOp).getSource());
+            assertThat(jTableOp.getSource())
+                    .isSameAs(JTableOperator.waitFor(jFrameOp, "00", STRICT).getSource());
+            assertThat(jTableOp.getSource())
+                    .isSameAs(JTableOperator.waitFor(jFrameOp, "4949", STRICT, 49, 49)
+                            .getSource());
             jTableOp.changeCellObject(49, 49, "-1-1");
             jTableOp.waitCell("-1-1", STRICT, 49, 49);
             assertThat(jTableOp.getValueAt(49, 49).toString()).isEqualTo("-1-1");
@@ -101,13 +107,16 @@ final class TabbedComponentsWorkflowTest {
             jTableOp.waitCell("non null text", StringComparators.caseInsensitiveSubstring(), 1, 0);
             assertThat(jTableOp.findCellRow("-1-1", STRICT)).isEqualTo(-1);
             jTabbedPaneOp.selectPage("Tree Page", STRICT);
-            JTreeOperator jTreeOp = new JTreeOperator(new JFrameOperator(jFrame));
+            JTreeOperator jTreeOp = JTreeOperator.waitFor(JFrameOperator.of(jFrame));
             jTreeOp.clickOnPath(jTreeOp.getPathForRow(0));
-            assertThat(jTreeOp.getSource()).isSameAs(new JTreeOperator(jFrameOp).getSource());
             assertThat(jTreeOp.getSource())
-                    .isSameAs(new JTreeOperator(jFrameOp, "-1", StringComparators.regex()).getSource());
+                    .isSameAs(JTreeOperator.waitFor(jFrameOp).getSource());
             assertThat(jTreeOp.getSource())
-                    .isSameAs(new JTreeOperator(jFrameOp, "49", StringComparators.regex(), 50, 0).getSource());
+                    .isSameAs(JTreeOperator.waitFor(jFrameOp, "-1", StringComparators.regex())
+                            .getSource());
+            assertThat(jTreeOp.getSource())
+                    .isSameAs(JTreeOperator.waitFor(jFrameOp, "49", StringComparators.regex(), 50, 0)
+                            .getSource());
             TreePath path49 = Objects.requireNonNull(jTreeOp.findPath("49", "/", STRICT));
             jTreeOp.scrollToPath(path49);
             jTreeOp.doExpandPath(path49);
@@ -119,11 +128,11 @@ final class TabbedComponentsWorkflowTest {
             TreePath path0 = Objects.requireNonNull(jTreeOp.findPath("", "/", STRICT));
             jTreeOp.scrollToPath(path0);
             jTabbedPaneOp.selectPage("List Page", STRICT);
-            JListOperator listOper = new JListOperator(new JFrameOperator(jFrame));
+            JListOperator listOper = JListOperator.waitFor(JFrameOperator.of(jFrame));
             listOper.scrollToItem(49);
             listOper.scrollToItem(0);
             jTabbedPaneOp.selectPage("Text Page", STRICT);
-            JTextAreaOperator jTextAreaOp = new JTextAreaOperator(jFrameOp);
+            JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
             jTextAreaOp.scrollToPosition(jTextAreaOp.getText().length());
             jTextAreaOp.clearText();
             assertThat(jTextAreaOp.getText().length()).isEqualTo(0);

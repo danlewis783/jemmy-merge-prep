@@ -71,9 +71,9 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
 
             JMenuItemOperator itemOper;
             if (item instanceof JMenu) {
-                itemOper = new JMenuOperator((JMenu) item);
+                itemOper = JMenuOperator.of((JMenu) item);
             } else if (item instanceof JMenuItem) {
-                itemOper = new JMenuItemOperator(item);
+                itemOper = JMenuItemOperator.of(item);
             } else {
                 return null;
             }
@@ -128,10 +128,10 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
         mDriver.exitMouse(oper);
 
         if (item instanceof JMenu) {
-            JMenuOperator mo = new JMenuOperator((JMenu) item);
+            JMenuOperator mo = JMenuOperator.of((JMenu) item);
             return push(mo, oper, null, predicates, depth + 1, false);
         } else {
-            JMenuItemOperator mio = new JMenuItemOperator(item);
+            JMenuItemOperator mio = JMenuItemOperator.of(item);
             mio.waitComponentEnabled();
 
             smartMove(oper, mio);

@@ -38,32 +38,40 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JPasswordFieldOperator extends JTextFieldOperator {
 
-    public JPasswordFieldOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JPasswordFieldOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JPasswordFieldOperator(JPasswordField b) {
+    JPasswordFieldOperator(JPasswordField b) {
         super(b);
     }
 
-    public JPasswordFieldOperator(ContainerOperator cont, int index) {
-        this((JPasswordField) waitComponent(cont, PredicatesJ.of(JPasswordField.class), index));
+    public static JPasswordFieldOperator of(JPasswordField b) {
+        return new JPasswordFieldOperator(b);
     }
 
-    public JPasswordFieldOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JPasswordFieldOperator waitFor(ContainerOperator cont, int index) {
+        return new JPasswordFieldOperator(
+                (JPasswordField) waitComponent(cont, PredicatesJ.of(JPasswordField.class), index));
     }
 
-    public JPasswordFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JPasswordFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JPasswordFieldOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JPasswordField) cont.waitSubComponent(PredicatesJ.of(JPasswordField.class, chooser), index));
+    public static JPasswordFieldOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JPasswordFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JPasswordField) waitComponent(
+    public static JPasswordFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JPasswordFieldOperator(
+                (JPasswordField) cont.waitSubComponent(PredicatesJ.of(JPasswordField.class, chooser), index));
+    }
+
+    public static JPasswordFieldOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JPasswordFieldOperator((JPasswordField) waitComponent(
                 cont,
                 PredicatesJ.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));

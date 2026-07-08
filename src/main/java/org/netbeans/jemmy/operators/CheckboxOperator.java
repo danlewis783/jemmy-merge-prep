@@ -45,33 +45,39 @@ import org.netbeans.jemmy.util.StringComparator;
 public class CheckboxOperator extends ComponentOperator {
     private final ButtonDriver driver;
 
-    public CheckboxOperator(Checkbox b) {
+    CheckboxOperator(Checkbox b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
     }
 
-    public CheckboxOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static CheckboxOperator of(Checkbox b) {
+        return new CheckboxOperator(b);
     }
 
-    public CheckboxOperator(ContainerOperator cont, int index) {
-        this((Checkbox) waitComponent(cont, PredicatesJ.of(Checkbox.class), index));
+    public static CheckboxOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public CheckboxOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static CheckboxOperator waitFor(ContainerOperator cont, int index) {
+        return new CheckboxOperator((Checkbox) waitComponent(cont, PredicatesJ.of(Checkbox.class), index));
     }
 
-    public CheckboxOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static CheckboxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public CheckboxOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Checkbox) cont.waitSubComponent(PredicatesJ.of(Checkbox.class, chooser), index));
+    public static CheckboxOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public CheckboxOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((Checkbox) waitComponent(cont, new CheckboxByLabelPredicate(text, stringComparator), index));
+    public static CheckboxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new CheckboxOperator((Checkbox) cont.waitSubComponent(PredicatesJ.of(Checkbox.class, chooser), index));
+    }
+
+    public static CheckboxOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new CheckboxOperator(
+                (Checkbox) waitComponent(cont, new CheckboxByLabelPredicate(text, stringComparator), index));
     }
 
     public void changeSelection(boolean newValue) {

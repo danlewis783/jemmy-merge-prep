@@ -62,14 +62,14 @@ class TextFieldOperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TextFieldOperator operator2 = new TextFieldOperator(operator, PredicatesJ.byName("TextFieldOperatorTest"));
+        TextFieldOperator operator2 = TextFieldOperator.waitFor(operator, PredicatesJ.byName("TextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         TextFieldOperator operator3 =
-                new TextFieldOperator(operator, "TextFieldOperatorTest", StringComparators.strict());
+                TextFieldOperator.waitFor(operator, "TextFieldOperatorTest", StringComparators.strict());
         assertThat(operator3).isNotNull();
     }
 
@@ -93,9 +93,9 @@ class TextFieldOperatorTest {
 
     @Test
     void testAddActionListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ActionListener listener = event -> {};
         operator1.addActionListener(listener);
@@ -104,45 +104,45 @@ class TextFieldOperatorTest {
 
     @Test
     void testEchoCharIsSet() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.echoCharIsSet();
     }
 
     @Test
     void testGetColumns() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setColumns(operator1.getColumns());
     }
 
     @Test
     void testGetEchoChar() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getEchoChar();
     }
 
     @Test
     void testGetMinimumSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getMinimumSize(0);
     }
 
     @Test
     void testGetPreferredSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        TextFieldOperator operator1 = new TextFieldOperator(operator);
+        TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getPreferredSize(0);
     }

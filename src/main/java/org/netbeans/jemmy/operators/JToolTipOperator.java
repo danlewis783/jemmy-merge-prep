@@ -47,32 +47,51 @@ import org.netbeans.jemmy.util.StringComparator;
  */
 public class JToolTipOperator extends JComponentOperator {
 
-    public JToolTipOperator() {
-        this(PredicatesJ.alwaysTrue());
+    public static JToolTipOperator waitFor() {
+        return JToolTipOperator.waitFor(PredicatesJ.alwaysTrue());
     }
 
-    public JToolTipOperator(JToolTip toolTip) {
+    JToolTipOperator(JToolTip toolTip) {
         super(toolTip);
     }
 
-    public JToolTipOperator(String tipText, StringComparator comparator) {
-        this(waitJToolTip(new JToolTipByTipTextPredicate(tipText, comparator)));
+    public static JToolTipOperator of(JToolTip toolTip) {
+        return new JToolTipOperator(toolTip);
     }
 
-    public JToolTipOperator(ComponentOperator comp) {
-        this(comp, PredicatesJ.alwaysTrue());
+    public static JToolTipOperator waitFor(String tipText, StringComparator comparator) {
+        return new JToolTipOperator(waitJToolTip(new JToolTipByTipTextPredicate(tipText, comparator)));
     }
 
-    public JToolTipOperator(Predicate<Component> chooser) {
-        this(waitJToolTip(chooser));
+    public static JToolTipOperator waitFor(ComponentOperator comp) {
+        return waitFor(comp, PredicatesJ.alwaysTrue());
     }
 
-    public JToolTipOperator(ComponentOperator comp, Predicate<Component> chooser) {
-        this(waitJToolTip(comp, chooser));
+    // Tooltips are parentless, so the inherited "search inside this container" factories make no
+    // sense here — and worse, they win overload resolution whenever the argument is statically a
+    // ContainerOperator. These hide them, keeping the "component whose tooltip" semantics.
+    public static JToolTipOperator waitFor(ContainerOperator comp) {
+        return waitFor((ComponentOperator) comp);
     }
 
-    public JToolTipOperator(ComponentOperator comp, String tipText, StringComparator comparator) {
-        this(waitJToolTip(comp, new JToolTipByTipTextPredicate(tipText, comparator)));
+    public static JToolTipOperator waitFor(ContainerOperator comp, Predicate<Component> chooser) {
+        return waitFor((ComponentOperator) comp, chooser);
+    }
+
+    public static JToolTipOperator waitFor(ContainerOperator comp, String tipText, StringComparator comparator) {
+        return waitFor((ComponentOperator) comp, tipText, comparator);
+    }
+
+    public static JToolTipOperator waitFor(Predicate<Component> chooser) {
+        return new JToolTipOperator(waitJToolTip(chooser));
+    }
+
+    public static JToolTipOperator waitFor(ComponentOperator comp, Predicate<Component> chooser) {
+        return new JToolTipOperator(waitJToolTip(comp, chooser));
+    }
+
+    public static JToolTipOperator waitFor(ComponentOperator comp, String tipText, StringComparator comparator) {
+        return new JToolTipOperator(waitJToolTip(comp, new JToolTipByTipTextPredicate(tipText, comparator)));
     }
 
     /**

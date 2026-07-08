@@ -95,15 +95,15 @@ class WindowOperatorTest {
 
     @Test
     void constructor() {
-        assertThat(new WindowOperator()).isNotNull();
-        assertThat(new FrameOperator()).isNotNull();
-        WindowOperator operator2 = new WindowOperator(mainFrame);
+        assertThat(WindowOperator.waitFor()).isNotNull();
+        assertThat(FrameOperator.waitFor()).isNotNull();
+        WindowOperator operator2 = WindowOperator.of(mainFrame);
         assertThat(operator2).isNotNull();
         assertThat(operator2.getSource()).isSameAs(mainFrame);
-        WindowOperator sub1 = new WindowOperator(operator2);
+        WindowOperator sub1 = WindowOperator.waitFor(operator2);
         assertThat(sub1).isNotNull();
         assertThat(sub1.getSource()).isSameAs(subDialog);
-        WindowOperator sub2 = new WindowOperator(operator2, PredicatesJ.byName(subDialog.getName()));
+        WindowOperator sub2 = WindowOperator.waitFor(operator2, PredicatesJ.byName(subDialog.getName()));
         assertThat(sub2).isNotNull();
         assertThat(sub2.getSource()).isSameAs(subDialog);
     }
@@ -139,7 +139,7 @@ class WindowOperatorTest {
         };
         try {
             mainFrame.addWindowListener(windowListener);
-            FrameOperator frameOp = new FrameOperator(mainFrame);
+            FrameOperator frameOp = FrameOperator.of(mainFrame);
             frameOp.activate();
             sleepOneSec();
             assertLastEventReceived("activated");
@@ -151,7 +151,7 @@ class WindowOperatorTest {
             other.add(new Label("other"));
             other.pack();
             other.setLocationByPlatform(true);
-            FrameOperator otherOp = new FrameOperator(other);
+            FrameOperator otherOp = FrameOperator.of(other);
             other.setVisible(true);
             sleepOneSec();
             assertLastEventReceived("deactivated");
@@ -185,7 +185,7 @@ class WindowOperatorTest {
         };
         try {
             mainFrame.addWindowListener(windowListener);
-            FrameOperator frameOp = new FrameOperator();
+            FrameOperator frameOp = FrameOperator.waitFor();
             frameOp.requestClose();
             sleepOneSec();
             assertEventsReceived("closing", "closed");
@@ -204,7 +204,7 @@ class WindowOperatorTest {
         };
         try {
             mainFrame.addWindowListener(windowListener);
-            FrameOperator frameOp = new FrameOperator();
+            FrameOperator frameOp = FrameOperator.waitFor();
             frameOp.requestCloseAndThenHide();
             sleepOneSec();
             assertThat(mainFrame.isVisible()).isFalse();
@@ -240,9 +240,9 @@ class WindowOperatorTest {
         try {
             this.mainFrame.addWindowListener(windowListener);
             frame2.addWindowListener(windowListener2);
-            FrameOperator frameOp = new FrameOperator();
+            FrameOperator frameOp = FrameOperator.waitFor();
             frameOp.requestClose();
-            FrameOperator frame2Op = new FrameOperator(frame2);
+            FrameOperator frame2Op = FrameOperator.of(frame2);
             frame2Op.waitHasFocus();
             assertEventsReceived("closing");
             assertThat(frameOp.isShowing())
@@ -261,7 +261,7 @@ class WindowOperatorTest {
 
     @Test
     void move() throws InterruptedException {
-        FrameOperator frameOp = new FrameOperator(mainFrame);
+        FrameOperator frameOp = FrameOperator.of(mainFrame);
         frameOp.requestFocus();
         frameOp.waitHasFocus();
         AtomicBoolean wasComponentResizedCalled = new AtomicBoolean(false);
@@ -295,7 +295,7 @@ class WindowOperatorTest {
 
     @Test
     void resize() throws InterruptedException {
-        FrameOperator frameOp = new FrameOperator(mainFrame);
+        FrameOperator frameOp = FrameOperator.of(mainFrame);
         frameOp.requestFocus();
         frameOp.waitHasFocus();
         AtomicBoolean wasComponentMovedCalled = new AtomicBoolean(false);
@@ -330,14 +330,14 @@ class WindowOperatorTest {
 
     @Test
     void gindSubWindow() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         Window window = frameOp.findSubWindow(PredicatesJ.byName("Sub_WindowOperatorTest"));
         assertThat(window).isSameAs(subDialog);
     }
 
     @Test
     void waitSubWindow() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         Window window = frameOp.waitSubWindow(PredicatesJ.byName("Sub_WindowOperatorTest"));
         assertThat(window).isSameAs(subDialog);
     }
@@ -358,7 +358,7 @@ class WindowOperatorTest {
             }
         };
         mainFrame.addWindowListener(windowListener);
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.requestClose();
         frameOp.waitClosed();
         sleepOneSec();
@@ -369,7 +369,7 @@ class WindowOperatorTest {
     @Test
     void addWindowListener() throws InterruptedException {
         WindowListener windowListener = new WindowAdapter() {};
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.addWindowListener(windowListener);
         sleepOneSec();
         frameOp.removeWindowListener(windowListener);
@@ -377,7 +377,7 @@ class WindowOperatorTest {
 
     @Test
     void applyResourceBundle() throws InterruptedException {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.applyResourceBundle(new NullResourceBundle());
         sleepOneSec();
     }
@@ -385,14 +385,14 @@ class WindowOperatorTest {
     @Test
     void dispose() throws InterruptedException {
         mainFrame.addWindowListener(new WindowAdapter() {});
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.dispose();
         sleepOneSec();
     }
 
     @Test
     void getFocusOwner() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         assertThat(frameOp.getFocusOwner()).isSameAs(null);
         frameOp.requestFocus();
         frameOp.waitHasFocus();
@@ -401,7 +401,7 @@ class WindowOperatorTest {
 
     @Test
     void getOwnedWindows() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         Window[] w = frameOp.getOwnedWindows();
         assertThat(w.length).isEqualTo(1);
         assertThat(w[0]).isSameAs(subDialog);
@@ -409,32 +409,32 @@ class WindowOperatorTest {
 
     @Test
     void getOwner() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         assertThat(frameOp.getOwner()).isSameAs(null);
-        assertThat(new WindowOperator(subDialog).getOwner()).isSameAs(mainFrame);
+        assertThat(WindowOperator.of(subDialog).getOwner()).isSameAs(mainFrame);
     }
 
     @Test
     void getWarningString() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         assertThat(frameOp.getWarningString()).isNull();
     }
 
     @Test
     void pack() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.pack();
     }
 
     @Test
     void removeWindowListener() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.removeWindowListener(new WindowAdapter() {});
     }
 
     @Test
     void toFrontAndBack() {
-        FrameOperator frameOp = new FrameOperator();
+        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.requestFocus();
         frameOp.waitHasFocus();
         Frame other = new Frame();
@@ -443,7 +443,7 @@ class WindowOperatorTest {
         other.add(new Label("other"));
         other.pack();
         other.setLocationByPlatform(true);
-        FrameOperator otherOp = new FrameOperator(other);
+        FrameOperator otherOp = FrameOperator.of(other);
         other.setVisible(true);
         otherOp.waitHasFocus();
         frameOp.toFront();

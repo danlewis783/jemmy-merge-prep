@@ -47,71 +47,77 @@ class OperatorConstructorsSmokeTest {
     @Test
     void doit() {
         ManyComponentsApp.main();
-        WindowOperator winOper = new WindowOperator();
-        JFrameOperator frameOper = new JFrameOperator("ManyComponentsApp");
-        ComponentOperator cmpo = new ComponentOperator(frameOper, 3);
-        ContainerOperator cnto = new ContainerOperator(frameOper, 3);
-        JComponentOperator jcmpo = new JComponentOperator(frameOper, 3);
+        WindowOperator winOper = WindowOperator.waitFor();
+        JFrameOperator frameOper = JFrameOperator.waitFor("ManyComponentsApp");
+        ComponentOperator cmpo = ComponentOperator.waitFor(frameOper, 3);
+        ContainerOperator cnto = ContainerOperator.waitFor(frameOper, 3);
+        JComponentOperator jcmpo = JComponentOperator.waitFor(frameOper, 3);
         assertThat(cnto.getSource()).isSameAs(cmpo.getSource());
         assertThat(jcmpo.getSource()).isSameAs(cmpo.getSource());
         assertThat(frameOper.getSource()).isSameAs(winOper.getSource());
-        new JButtonOperator(frameOper, "TtON", StringComparators.caseInsensitiveSubstring()).push();
-        JFrameOperator bttFrameOper = new JFrameOperator("ManyComponentsApp.ButtonsFrame");
-        AbstractButtonOperator abo = new AbstractButtonOperator(
+        JButtonOperator.waitFor(frameOper, "TtON", StringComparators.caseInsensitiveSubstring())
+                .push();
+        JFrameOperator bttFrameOper = JFrameOperator.waitFor("ManyComponentsApp.ButtonsFrame");
+        AbstractButtonOperator abo = AbstractButtonOperator.waitFor(
                 bttFrameOper, "javax.swing.JButton", StringComparators.caseInsensitiveSubstring());
-        AbstractButtonOperator bo = new JButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
+        AbstractButtonOperator bo =
+                JButtonOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(bo.getSource()).isSameAs(abo.getSource());
-        abo = new AbstractButtonOperator(
+        abo = AbstractButtonOperator.waitFor(
                 bttFrameOper, "javax.swing.JCheckBox", StringComparators.caseInsensitiveSubstring());
         AbstractButtonOperator tbo =
-                new JToggleButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
-        bo = new JCheckBoxOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
+                JToggleButtonOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
+        bo = JCheckBoxOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(bo.getSource()).isSameAs(abo.getSource());
         assertThat(bo.getSource()).isSameAs(tbo.getSource());
-        abo = new AbstractButtonOperator(bttFrameOper, "javax.swing.JRadioButton", StringComparators.strict());
-        tbo = new JToggleButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 1);
-        bo = new JRadioButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
+        abo = AbstractButtonOperator.waitFor(bttFrameOper, "javax.swing.JRadioButton", StringComparators.strict());
+        tbo = JToggleButtonOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 1);
+        bo = JRadioButtonOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(bo.getSource()).isSameAs(abo.getSource());
         assertThat(bo.getSource()).isSameAs(tbo.getSource());
-        abo = new AbstractButtonOperator(bttFrameOper, "javax.swing.JToggleButton", StringComparators.strict());
-        tbo = new JToggleButtonOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 2);
-        bo = new JToggleButtonOperator(bttFrameOper, "toggle", StringComparators.caseInsensitiveSubstring(), 0);
+        abo = AbstractButtonOperator.waitFor(bttFrameOper, "javax.swing.JToggleButton", StringComparators.strict());
+        tbo = JToggleButtonOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring(), 2);
+        bo = JToggleButtonOperator.waitFor(bttFrameOper, "toggle", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(bo.getSource()).isSameAs(abo.getSource());
         assertThat(bo.getSource()).isSameAs(tbo.getSource());
-        abo = new AbstractButtonOperator(bttFrameOper, "javax.swing.JMenuItem", StringComparators.strict());
-        bo = new JMenuItemOperator(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
+        abo = AbstractButtonOperator.waitFor(bttFrameOper, "javax.swing.JMenuItem", StringComparators.strict());
+        bo = JMenuItemOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(bo.getSource()).isSameAs(abo.getSource());
         bttFrameOper.getSource().setVisible(false);
-        new JButtonOperator(frameOper, "menus", StringComparators.caseInsensitiveSubstring()).push();
-        JFrameOperator mnFrameOper = new JFrameOperator("ManyComponentsApp.MenusFrame");
-        JMenuOperator mo = new JMenuOperator(mnFrameOper, "", StringComparators.caseInsensitiveSubstring());
-        JMenuOperator mo1 = new JMenuOperator(mnFrameOper);
+        JButtonOperator.waitFor(frameOper, "menus", StringComparators.caseInsensitiveSubstring())
+                .push();
+        JFrameOperator mnFrameOper = JFrameOperator.waitFor("ManyComponentsApp.MenusFrame");
+        JMenuOperator mo = JMenuOperator.waitFor(mnFrameOper, "", StringComparators.caseInsensitiveSubstring());
+        JMenuOperator mo1 = JMenuOperator.waitFor(mnFrameOper);
         assertThat(mo.getSource()).isSameAs(mo1.getSource());
         testJMenuItem(mo);
         testJMenu(mo);
         mo.pushMenu("", "|", StringComparators.caseInsensitiveSubstring());
-        JPopupMenuOperator pmo = new JPopupMenuOperator();
-        JMenuItemOperator mio = new JMenuItemOperator(pmo, "", StringComparators.caseInsensitiveSubstring());
-        JMenuItemOperator mio1 = new JMenuItemOperator(pmo);
+        JPopupMenuOperator pmo = JPopupMenuOperator.waitFor();
+        JMenuItemOperator mio = JMenuItemOperator.waitFor(pmo, "", StringComparators.caseInsensitiveSubstring());
+        JMenuItemOperator mio1 = JMenuItemOperator.waitFor(pmo);
         assertThat(mio.getSource()).isSameAs(mio1.getSource());
         mnFrameOper.getSource().setVisible(false);
-        new JButtonOperator(frameOper, "li", StringComparators.caseInsensitiveSubstring()).push();
-        JFrameOperator lstFrameOper = new JFrameOperator("ManyComponentsApp.ListsFrame");
+        JButtonOperator.waitFor(frameOper, "li", StringComparators.caseInsensitiveSubstring())
+                .push();
+        JFrameOperator lstFrameOper = JFrameOperator.waitFor("ManyComponentsApp.ListsFrame");
         lstFrameOper.getSource().setVisible(false);
-        new JButtonOperator(frameOper, "xts", StringComparators.caseInsensitiveSubstring()).push();
-        JFrameOperator txtFrameOper = new JFrameOperator("ManyComponentsApp.TextsFrame");
+        JButtonOperator.waitFor(frameOper, "xts", StringComparators.caseInsensitiveSubstring())
+                .push();
+        JFrameOperator txtFrameOper = JFrameOperator.waitFor("ManyComponentsApp.TextsFrame");
         JTextComponentOperator atco;
         JTextComponentOperator ctco;
-        atco = new JTextComponentOperator(txtFrameOper, "JTextField", StringComparators.caseInsensitiveSubstring());
-        ctco = new JTextFieldOperator(txtFrameOper, "", StringComparators.caseInsensitiveSubstring());
+        atco = JTextComponentOperator.waitFor(txtFrameOper, "JTextField", StringComparators.caseInsensitiveSubstring());
+        ctco = JTextFieldOperator.waitFor(txtFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(ctco.getSource()).isSameAs(atco.getSource());
-        atco = new JTextComponentOperator(txtFrameOper, "JTextArea", StringComparators.caseInsensitiveSubstring());
-        ctco = new JTextAreaOperator(txtFrameOper, "", StringComparators.caseInsensitiveSubstring());
+        atco = JTextComponentOperator.waitFor(txtFrameOper, "JTextArea", StringComparators.caseInsensitiveSubstring());
+        ctco = JTextAreaOperator.waitFor(txtFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(ctco.getSource()).isSameAs(atco.getSource());
-        atco = new JTextComponentOperator(txtFrameOper, "JEditorPane", StringComparators.caseInsensitiveSubstring());
-        ctco = new JEditorPaneOperator(txtFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
+        atco = JTextComponentOperator.waitFor(
+                txtFrameOper, "JEditorPane", StringComparators.caseInsensitiveSubstring());
+        ctco = JEditorPaneOperator.waitFor(txtFrameOper, "", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(ctco.getSource()).isSameAs(atco.getSource());
-        JLabelOperator lbo = new JLabelOperator(txtFrameOper, "", StringComparators.caseInsensitiveSubstring());
+        JLabelOperator lbo = JLabelOperator.waitFor(txtFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(lbo.getSource()).isNotNull();
     }
 

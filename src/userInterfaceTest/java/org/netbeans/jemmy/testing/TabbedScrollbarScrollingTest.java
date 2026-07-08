@@ -31,20 +31,20 @@ class TabbedScrollbarScrollingTest {
     void test() {
         TabbedScrollbarsApp.main();
         JFrame win = JFrameOperator.waitJFrame("TabbedScrollbarsApp");
-        JFrameOperator fro = new JFrameOperator(win);
-        JTabbedPaneOperator tb = new JTabbedPaneOperator(fro);
+        JFrameOperator fro = JFrameOperator.of(win);
+        JTabbedPaneOperator tb = JTabbedPaneOperator.waitFor(fro);
         tb.selectPage("Swing", StringComparators.strict());
-        JScrollBarOperator scroll0 = new JScrollBarOperator(fro);
+        JScrollBarOperator scroll0 = JScrollBarOperator.waitFor(fro);
         scroll0.scrollToMaximum();
         scroll0.scrollToMinimum();
-        JScrollBarOperator scroll1 = new JScrollBarOperator(fro, 1);
+        JScrollBarOperator scroll1 = JScrollBarOperator.waitFor(fro, 1);
         scroll1.scrollToMaximum();
         scroll1.scrollToMinimum();
         tb.selectPage("AWT", StringComparators.strict());
-        ScrollbarOperator awscroll0 = new ScrollbarOperator(fro);
+        ScrollbarOperator awscroll0 = ScrollbarOperator.waitFor(fro);
         awscroll0.scrollToMaximum();
         awscroll0.scrollToMinimum();
-        ScrollbarOperator awscroll1 = new ScrollbarOperator(fro, 1);
+        ScrollbarOperator awscroll1 = ScrollbarOperator.waitFor(fro, 1);
         awscroll1.scrollToMaximum();
         awscroll1.scrollToMinimum();
     }

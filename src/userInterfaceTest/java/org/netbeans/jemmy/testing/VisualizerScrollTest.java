@@ -35,7 +35,7 @@ class VisualizerScrollTest {
         ObscuredFieldApp.main();
         JFrame win = JFrameOperator.waitJFrame("Right one");
         JTextField trg = ((ObscuredFieldApp) win).getTarget();
-        JTextFieldOperator trgo = new JTextFieldOperator(trg);
+        JTextFieldOperator trgo = JTextFieldOperator.of(trg);
         trgo.clearText();
         trgo.typeText("Text supposed to be typed");
         JTextFieldOperator.waitJTextField(win, "Text supposed to be typed", StringComparators.strict());

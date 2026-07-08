@@ -40,24 +40,29 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JProgressBarOperator extends JComponentOperator {
 
-    public JProgressBarOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JProgressBarOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JProgressBarOperator(JProgressBar b) {
+    JProgressBarOperator(JProgressBar b) {
         super(b);
     }
 
-    public JProgressBarOperator(ContainerOperator cont, int index) {
-        this((JProgressBar) waitComponent(cont, PredicatesJ.of(JProgressBar.class), index));
+    public static JProgressBarOperator of(JProgressBar b) {
+        return new JProgressBarOperator(b);
     }
 
-    public JProgressBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JProgressBarOperator waitFor(ContainerOperator cont, int index) {
+        return new JProgressBarOperator((JProgressBar) waitComponent(cont, PredicatesJ.of(JProgressBar.class), index));
     }
 
-    public JProgressBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JProgressBar) cont.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
+    public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JProgressBarOperator(
+                (JProgressBar) cont.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
     }
 
     public void waitValue(int value) {

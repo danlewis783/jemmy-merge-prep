@@ -84,20 +84,20 @@ class JToolTipOperatorTest {
 
     @Test
     void showAndFindToolTip() {
-        JLabelOperator labelOperator = new JLabelOperator(label);
-        JToolTipOperator toolTipOperator = new JToolTipOperator(labelOperator.showToolTip());
+        JLabelOperator labelOperator = JLabelOperator.of(label);
+        JToolTipOperator toolTipOperator = JToolTipOperator.of(labelOperator.showToolTip());
         toolTipOperator.waitTipText(TOOLTIP_TEXT, StringComparators.strict());
         assertThat(toolTipOperator.getTipText()).isEqualTo(TOOLTIP_TEXT);
         assertThat(toolTipOperator.getComponent()).isSameAs(label);
         assertThat(toolTipOperator.getUI()).isNotNull();
 
         // every constructor flavor finds the currently showing tooltip
-        new JToolTipOperator();
-        new JToolTipOperator(labelOperator);
-        new JToolTipOperator(TOOLTIP_TEXT, StringComparators.strict());
-        new JToolTipOperator(byLabelText);
-        new JToolTipOperator(labelOperator, TOOLTIP_TEXT, StringComparators.strict());
-        new JToolTipOperator(labelOperator, byLabelText);
+        JToolTipOperator.waitFor();
+        JToolTipOperator.waitFor(labelOperator);
+        JToolTipOperator.waitFor(TOOLTIP_TEXT, StringComparators.strict());
+        JToolTipOperator.waitFor(byLabelText);
+        JToolTipOperator.waitFor(labelOperator, TOOLTIP_TEXT, StringComparators.strict());
+        JToolTipOperator.waitFor(labelOperator, byLabelText);
 
         // clicking dismisses the tooltip
         labelOperator.clickMouse();
@@ -113,18 +113,18 @@ class JToolTipOperatorTest {
         // and the constructors below would find it instead of timing out
         EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(false));
         try {
-            JLabelOperator dummyLabel = new JLabelOperator(new JLabel());
+            JLabelOperator dummyLabel = JLabelOperator.of(new JLabel());
             try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
-                        .isThrownBy(() -> new JToolTipOperator(dummyLabel));
+                        .isThrownBy(() -> JToolTipOperator.waitFor(dummyLabel));
                 assertThatExceptionOfType(TimeoutExpiredException.class)
-                        .isThrownBy(() -> new JToolTipOperator(LABEL_TEXT, StringComparators.strict()));
+                        .isThrownBy(() -> JToolTipOperator.waitFor(LABEL_TEXT, StringComparators.strict()));
                 assertThatExceptionOfType(TimeoutExpiredException.class)
-                        .isThrownBy(() -> new JToolTipOperator(byLabelText));
+                        .isThrownBy(() -> JToolTipOperator.waitFor(byLabelText));
                 assertThatExceptionOfType(TimeoutExpiredException.class)
-                        .isThrownBy(() -> new JToolTipOperator(dummyLabel, LABEL_TEXT, StringComparators.strict()));
+                        .isThrownBy(() -> JToolTipOperator.waitFor(dummyLabel, LABEL_TEXT, StringComparators.strict()));
                 assertThatExceptionOfType(TimeoutExpiredException.class)
-                        .isThrownBy(() -> new JToolTipOperator(dummyLabel, byLabelText));
+                        .isThrownBy(() -> JToolTipOperator.waitFor(dummyLabel, byLabelText));
             }
         } finally {
             EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(true));

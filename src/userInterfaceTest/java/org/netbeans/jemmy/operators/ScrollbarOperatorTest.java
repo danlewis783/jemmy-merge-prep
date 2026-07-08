@@ -65,11 +65,11 @@ class ScrollbarOperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ScrollbarOperator operator2 = new ScrollbarOperator(operator, PredicatesJ.byName("ScrollbarOperatorTest"));
+        ScrollbarOperator operator2 = ScrollbarOperator.waitFor(operator, PredicatesJ.byName("ScrollbarOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -91,9 +91,9 @@ class ScrollbarOperatorTest {
 
     @Test
     void testScrollTo() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollTo(new ScrollAdjusterTest());
         operator1.scrollTo(o -> Boolean.TRUE, null, false);
@@ -102,9 +102,9 @@ class ScrollbarOperatorTest {
     @Test
     @Disabled("FIXME")
     void testScrollToValue() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToValue(1.0);
         operator1.scrollToValue(1);
@@ -113,9 +113,9 @@ class ScrollbarOperatorTest {
     @Test
     @Disabled("FIXME")
     void testScrollToMinimum() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToMinimum();
     }
@@ -123,18 +123,18 @@ class ScrollbarOperatorTest {
     @Test
     @Disabled("FIXME")
     void testScrollToMaximum() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToMaximum();
     }
 
     @Test
     void testAddAdjustmentListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         AdjustmentListenerTest listener = new AdjustmentListenerTest();
         operator1.addAdjustmentListener(listener);
@@ -143,72 +143,72 @@ class ScrollbarOperatorTest {
 
     @Test
     void testGetBlockIncrement() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBlockIncrement(operator1.getBlockIncrement());
     }
 
     @Test
     void testGetMaximum() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMaximum(operator1.getMaximum());
     }
 
     @Test
     void testGetMinimum() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMinimum(operator1.getMinimum());
     }
 
     @Test
     void testGetOrientation() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setOrientation(operator1.getOrientation());
     }
 
     @Test
     void testGetUnitIncrement() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setUnitIncrement(operator1.getUnitIncrement());
     }
 
     @Test
     void testGetValue() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValue(operator1.getValue());
     }
 
     @Test
     void testGetVisibleAmount() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVisibleAmount(operator1.getVisibleAmount());
     }
 
     @Test
     void testSetValues() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ScrollbarOperator operator1 = new ScrollbarOperator(operator);
+        ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValues(0, 1, 0, 1);
     }

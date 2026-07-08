@@ -76,11 +76,12 @@ class JScrollBarOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JScrollBarOperator operator2 = new JScrollBarOperator(operator, PredicatesJ.byName("JScrollBarOperatorTest"));
+        JScrollBarOperator operator2 =
+                JScrollBarOperator.waitFor(operator, PredicatesJ.byName("JScrollBarOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -102,27 +103,27 @@ class JScrollBarOperatorTest {
 
     @Test
     void testScroll() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scroll(true);
     }
 
     @Test
     void testScrollTo() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollTo(o -> JScrollBarOperatorTest.this, null, true);
     }
 
     @Test
     void testScrollToValue() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToValue(1.0);
     }
@@ -135,7 +136,7 @@ class JScrollBarOperatorTest {
             frame.getContentPane().add(negativeRange[0], BorderLayout.EAST);
             frame.getContentPane().revalidate();
         });
-        JScrollBarOperator operator = new JScrollBarOperator(negativeRange[0]);
+        JScrollBarOperator operator = JScrollBarOperator.of(negativeRange[0]);
         JScrollBarAPIDriver driver = new JScrollBarAPIDriver();
         driver.scroll(operator, new ValueTargetAdjuster(operator, -1));
         assertThat(operator.getValue()).isEqualTo(-1);
@@ -143,45 +144,45 @@ class JScrollBarOperatorTest {
 
     @Test
     void testScrollToMinimum() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToMinimum();
     }
 
     @Test
     void testScrollToMaximum() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToMaximum();
     }
 
     @Test
     void testGetDecreaseButton() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getDecreaseButton();
     }
 
     @Test
     void testGetIncreaseButton() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getIncreaseButton();
     }
 
     @Test
     void testAddAdjustmentListener() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         AdjustmentListenerTest listener = new AdjustmentListenerTest();
         operator1.addAdjustmentListener(listener);
@@ -190,9 +191,9 @@ class JScrollBarOperatorTest {
 
     @Test
     void testGetBlockIncrement() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBlockIncrement(operator1.getBlockIncrement());
         operator1.getBlockIncrement(0);
@@ -200,90 +201,90 @@ class JScrollBarOperatorTest {
 
     @Test
     void testGetMaximum() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMaximum(operator1.getMaximum());
     }
 
     @Test
     void testGetMinimum() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMinimum(operator1.getMinimum());
     }
 
     @Test
     void testGetModel() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setModel(operator1.getModel());
     }
 
     @Test
     void testGetOrientation() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setOrientation(operator1.getOrientation());
     }
 
     @Test
     void testGetUI() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getUI();
     }
 
     @Test
     void testGetUnitIncrement() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setUnitIncrement(operator1.getUnitIncrement());
     }
 
     @Test
     void testGetValue() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValue(operator1.getValue());
     }
 
     @Test
     void testGetValueIsAdjusting() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValueIsAdjusting(operator1.getValueIsAdjusting());
     }
 
     @Test
     void testGetVisibleAmount() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVisibleAmount(operator1.getVisibleAmount());
     }
 
     @Test
     void testSetValues() {
-        JFrameOperator operator = new JFrameOperator(frame);
+        JFrameOperator operator = JFrameOperator.of(frame);
         assertThat(operator).isNotNull();
-        JScrollBarOperator operator1 = new JScrollBarOperator(operator);
+        JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setValues(0, 0, 0, 0);
     }

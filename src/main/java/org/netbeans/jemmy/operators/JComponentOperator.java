@@ -54,24 +54,30 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JComponentOperator extends ContainerOperator {
-    public JComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JComponentOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JComponentOperator(JComponent b) {
+    JComponentOperator(JComponent b) {
         super(b);
     }
 
-    public JComponentOperator(ContainerOperator cont, int index) {
-        this((JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
+    public static JComponentOperator of(JComponent b) {
+        return new JComponentOperator(b);
     }
 
-    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JComponentOperator waitFor(ContainerOperator cont, int index) {
+        return new JComponentOperator(
+                (JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
     }
 
-    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
+    public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JComponentOperator(
+                (JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     @Override
@@ -110,9 +116,9 @@ public class JComponentOperator extends ContainerOperator {
 
         ContainerOperator result;
         if (resultComp instanceof Window) {
-            result = new WindowOperator((Window) resultComp);
+            result = WindowOperator.of((Window) resultComp);
         } else {
-            result = new ContainerOperator((Container) Objects.requireNonNull(resultComp, "container not found"));
+            result = ContainerOperator.of((Container) Objects.requireNonNull(resultComp, "container not found"));
         }
 
         return result;

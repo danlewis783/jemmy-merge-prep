@@ -42,32 +42,38 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTextPaneOperator extends JEditorPaneOperator {
-    public JTextPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JTextPaneOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JTextPaneOperator(JTextPane b) {
+    JTextPaneOperator(JTextPane b) {
         super(b);
     }
 
-    public JTextPaneOperator(ContainerOperator cont, int index) {
-        this((JTextPane) waitComponent(cont, PredicatesJ.of(JTextPane.class), index));
+    public static JTextPaneOperator of(JTextPane b) {
+        return new JTextPaneOperator(b);
     }
 
-    public JTextPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JTextPaneOperator waitFor(ContainerOperator cont, int index) {
+        return new JTextPaneOperator((JTextPane) waitComponent(cont, PredicatesJ.of(JTextPane.class), index));
     }
 
-    public JTextPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTextPane) cont.waitSubComponent(PredicatesJ.of(JTextPane.class, chooser), index));
+    public static JTextPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JTextPaneOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JTextPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JTextPaneOperator(
+                (JTextPane) cont.waitSubComponent(PredicatesJ.of(JTextPane.class, chooser), index));
     }
 
-    public JTextPaneOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JTextPane) waitComponent(
+    public static JTextPaneOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
+    }
+
+    public static JTextPaneOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JTextPaneOperator((JTextPane) waitComponent(
                 cont,
                 PredicatesJ.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));

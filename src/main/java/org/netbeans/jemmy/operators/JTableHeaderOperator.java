@@ -49,25 +49,30 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 public class JTableHeaderOperator extends JComponentOperator {
     private final OrderedListDriver driver;
 
-    public JTableHeaderOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JTableHeaderOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JTableHeaderOperator(JTableHeader b) {
+    JTableHeaderOperator(JTableHeader b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getOrderedListDriver(getClass());
     }
 
-    public JTableHeaderOperator(ContainerOperator cont, int index) {
-        this((JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
+    public static JTableHeaderOperator of(JTableHeader b) {
+        return new JTableHeaderOperator(b);
     }
 
-    public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JTableHeaderOperator waitFor(ContainerOperator cont, int index) {
+        return new JTableHeaderOperator((JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
     }
 
-    public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
+    public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JTableHeaderOperator(
+                (JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
     }
 
     public void selectColumn(int columnIndex) {

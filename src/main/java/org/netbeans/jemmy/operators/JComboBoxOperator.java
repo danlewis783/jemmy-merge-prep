@@ -61,33 +61,40 @@ public class JComboBoxOperator extends JComponentOperator {
     private final ListDriver driver;
     private @Nullable JTextFieldOperator text;
 
-    public JComboBoxOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JComboBoxOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JComboBoxOperator(JComboBox<?> b) {
+    JComboBoxOperator(JComboBox<?> b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
-    public JComboBoxOperator(ContainerOperator cont, int index) {
-        this((JComboBox<?>) waitComponent(cont, PredicatesJ.of(JComboBox.class), index));
+    public static JComboBoxOperator of(JComboBox<?> b) {
+        return new JComboBoxOperator(b);
     }
 
-    public JComboBoxOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JComboBoxOperator waitFor(ContainerOperator cont, int index) {
+        return new JComboBoxOperator((JComboBox<?>) waitComponent(cont, PredicatesJ.of(JComboBox.class), index));
     }
 
-    public JComboBoxOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JComboBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JComboBoxOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JComboBox<?>) cont.waitSubComponent(PredicatesJ.of(JComboBox.class, chooser), index));
+    public static JComboBoxOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JComboBoxOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JComboBox<?>) waitComponent(cont, new JComboBoxByItemPredicate(text, -1, stringComparator), index));
+    public static JComboBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JComboBoxOperator(
+                (JComboBox<?>) cont.waitSubComponent(PredicatesJ.of(JComboBox.class, chooser), index));
+    }
+
+    public static JComboBoxOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JComboBoxOperator(
+                (JComboBox<?>) waitComponent(cont, new JComboBoxByItemPredicate(text, -1, stringComparator), index));
     }
 
     @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
@@ -105,7 +112,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public JButtonOperator getButton() {
         if (button == null) {
-            button = new JButtonOperator(findJButton());
+            button = JButtonOperator.of(findJButton());
         }
 
         return button;
@@ -113,7 +120,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public @Nullable JTextFieldOperator getTextField() {
         if (getJComboBox().isEditable()) {
-            text = new JTextFieldOperator(findJTextField());
+            text = JTextFieldOperator.of(findJTextField());
         }
 
         return text;

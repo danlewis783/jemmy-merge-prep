@@ -87,17 +87,17 @@ class ComponentOperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ComponentOperator operator2 = new ComponentOperator(operator, PredicatesJ.byName("ComponentOperatorTest"));
+        ComponentOperator operator2 = ComponentOperator.waitFor(operator, PredicatesJ.byName("ComponentOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
     @Test
     void testWaitComponentSize() throws InterruptedException, InvocationTargetException {
-        ComponentOperator operator = new ComponentOperator(frame);
+        ComponentOperator operator = ComponentOperator.of(frame);
         EventQueue.invokeAndWait(() -> frame.setSize(400, 300));
         operator.waitComponentSize(new Dimension(400, 300));
         operator.waitComponentSize(new Dimension(300, 200), new Dimension(500, 400));
@@ -105,7 +105,7 @@ class ComponentOperatorTest {
 
     @Test
     void testWaitComponentLocation() throws InterruptedException, InvocationTargetException {
-        ComponentOperator operator = new ComponentOperator(frame);
+        ComponentOperator operator = ComponentOperator.of(frame);
         EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
         operator.waitComponentLocation(new Point(200, 150));
         operator.waitComponentLocation(new Point(100, 100), new Point(300, 250));
@@ -113,7 +113,7 @@ class ComponentOperatorTest {
 
     @Test
     void testWaitComponentLocationOnScreen() throws InterruptedException, InvocationTargetException {
-        ComponentOperator operator = new ComponentOperator(frame);
+        ComponentOperator operator = ComponentOperator.of(frame);
         EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
         operator.waitComponentLocationOnScreen(new Point(200, 150));
         operator.waitComponentLocationOnScreen(new Point(100, 100), new Point(300, 250));
@@ -133,72 +133,72 @@ class ComponentOperatorTest {
 
     @Test
     void testGetSource() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSource();
     }
 
     @Test
     void testGetEventDispatcher() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getEventDispatcher();
     }
 
     @Test
     void testClickMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.clickMouse();
     }
 
     @Test
     void testPressMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.pressMouse();
     }
 
     @Test
     void testReleaseMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.releaseMouse();
     }
 
     @Test
     void testMoveMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.moveMouse(100, 100);
     }
 
     @Test
     void testDragMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.dragMouse(100, 100);
     }
 
     @Test
     void testDragNDrop() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.dragNDrop(100, 100, 200, 200);
         operator1.dragNDrop(100, 100, 100, 100, 1);
@@ -207,9 +207,9 @@ class ComponentOperatorTest {
 
     @Test
     void testClickForPopup() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.clickForPopup();
         operator1.clickForPopup(100, 100);
@@ -217,126 +217,126 @@ class ComponentOperatorTest {
 
     @Test
     void testEnterMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.enterMouse();
     }
 
     @Test
     void testExitMouse() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.exitMouse();
     }
 
     @Test
     void testPressKey() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.pressKey(KeyEvent.VK_0);
     }
 
     @Test
     void testReleaseKey() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.releaseKey(KeyEvent.VK_0);
     }
 
     @Test
     void testPushKey() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.pushKey(KeyEvent.VK_0);
     }
 
     @Test
     void testTypeKey() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.typeKey('a');
     }
 
     @Test
     void testActivateWindow() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.activateWindow();
     }
 
     @Test
     void testMakeComponentVisible() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.makeComponentVisible();
     }
 
     @Test
     void testGetFocus() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getFocus();
     }
 
     @Test
     void testGetCenterX() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getCenterX();
     }
 
     @Test
     void testGetCenterY() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getCenterY();
     }
 
     @Test
     void testGetCenterXForClick() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getCenterXForClick();
     }
 
     @Test
     void testGetCenterYForClick() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getCenterYForClick();
     }
 
     @Test
     void testWaitComponentEnabled() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setEnabled(true);
         operator1.waitComponentEnabled();
@@ -344,9 +344,9 @@ class ComponentOperatorTest {
 
     @Test
     void testWtComponentEnabled() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setEnabled(true);
         operator1.wtComponentEnabled();
@@ -354,18 +354,18 @@ class ComponentOperatorTest {
 
     @Test
     void testGetContainers() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getContainers();
     }
 
     @Test
     void testGetContainer() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Container container = operator1.getContainer(PredicatesJ.byName("FrameOperatorTest"));
         assertThat(container).isNotNull();
@@ -373,18 +373,18 @@ class ComponentOperatorTest {
 
     @Test
     void testGetWindow() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getWindow();
     }
 
     @Test
     void testWaitHasFocus() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getFocus();
         operator1.waitHasFocus();
@@ -392,9 +392,9 @@ class ComponentOperatorTest {
 
     @Test
     void testWaitComponentVisible() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVisible(true);
         operator1.waitComponentVisible(true);
@@ -402,9 +402,9 @@ class ComponentOperatorTest {
 
     @Test
     void testWaitComponentShowing() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVisible(true);
         operator1.waitComponentShowing(true);
@@ -412,81 +412,81 @@ class ComponentOperatorTest {
 
     @Test
     void testAdd() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.add(new PopupMenu());
     }
 
     @Test
     void testAddComponentListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addComponentListener(new ComponentAdapter() {});
     }
 
     @Test
     void testAddFocusListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addFocusListener(new FocusAdapter() {});
     }
 
     @Test
     void testAddInputMethodListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addInputMethodListener(new NullInputMethodListener());
     }
 
     @Test
     void testAddKeyListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addKeyListener(new KeyAdapter() {});
     }
 
     @Test
     void testAddMouseListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addMouseListener(new MouseAdapter() {});
     }
 
     @Test
     void testAddMouseMotionListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addMouseMotionListener(new MouseMotionAdapter() {});
     }
 
     @Test
     void testAddNotify() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addNotify();
     }
 
     @Test
     void testAddPropertyChangeListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addPropertyChangeListener(event -> {});
         operator1.addPropertyChangeListener("enabled", event -> {});
@@ -494,9 +494,9 @@ class ComponentOperatorTest {
 
     @Test
     void testCheckImage() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Image image = operator1.createImage(100, 100);
         operator1.checkImage(image, null);
@@ -505,9 +505,9 @@ class ComponentOperatorTest {
 
     @Test
     void testContains() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.contains(100, 100);
         operator1.contains(new Point(100, 100));
@@ -515,9 +515,9 @@ class ComponentOperatorTest {
 
     @Test
     void testCreateImage() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.createImage(new MemoryImageSource(100, 100, new int[100 * 100], 0, 100));
         operator1.createImage(100, 100);
@@ -525,63 +525,63 @@ class ComponentOperatorTest {
 
     @Test
     void testDispatchEvent() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.dispatchEvent(new ActionEvent(frame, 1, "BOOH"));
     }
 
     @Test
     void testDoLayout() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.doLayout();
     }
 
     @Test
     void testEnableInputMethods() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.enableInputMethods(true);
     }
 
     @Test
     void testGetAlignmentX() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getAlignmentX();
     }
 
     @Test
     void testGetAlignmentY() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getAlignmentY();
     }
 
     @Test
     void testGetBackground() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBackground(operator1.getBackground());
     }
 
     @Test
     void testGetBounds() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBounds(operator1.getBounds());
         operator1.setBounds(100, 100, 200, 200);
@@ -590,18 +590,18 @@ class ComponentOperatorTest {
 
     @Test
     void testGetColorModel() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getColorModel();
     }
 
     @Test
     void testGetComponentAt() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getComponentAt(100, 100);
         operator1.getComponentAt(new Point(100, 100));
@@ -609,108 +609,108 @@ class ComponentOperatorTest {
 
     @Test
     void testGetComponentOrientation() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setComponentOrientation(operator1.getComponentOrientation());
     }
 
     @Test
     void testGetCursor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setCursor(operator1.getCursor());
     }
 
     @Test
     void testGetDropTarget() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setDropTarget(operator1.getDropTarget());
     }
 
     @Test
     void testGetFont() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setFont(operator1.getFont());
     }
 
     @Test
     void testGetFontMetrics() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getFontMetrics(new Font("Times New Roman", Font.BOLD, 12));
     }
 
     @Test
     void testGetForeground() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setForeground(operator1.getForeground());
     }
 
     @Test
     void testGetGraphics() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getGraphics();
     }
 
     @Test
     void testGetHeight() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getHeight();
     }
 
     @Test
     void testGetInputContext() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getInputContext();
     }
 
     @Test
     void testGetInputMethodRequests() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getInputMethodRequests();
     }
 
     @Test
     void testGetLocale() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setLocale(operator1.getLocale());
     }
 
     @Test
     void testGetLocation() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setLocation(operator1.getLocation());
         operator1.getLocation(new Point(100, 100));
@@ -718,63 +718,63 @@ class ComponentOperatorTest {
 
     @Test
     void testGetLocationOnScreen() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator.getLocationOnScreen();
     }
 
     @Test
     void testGetMaximumSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getMaximumSize();
     }
 
     @Test
     void testGetMinimumSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getMinimumSize();
     }
 
     @Test
     void testGetName() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setName(operator1.getName());
     }
 
     @Test
     void testGetParent() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getParent();
     }
 
     @Test
     void testGetPreferredSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getPreferredSize();
     }
 
     @Test
     void testGetSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSize(operator1.getSize());
         operator1.getSize(new Dimension(100, 100));
@@ -782,162 +782,162 @@ class ComponentOperatorTest {
 
     @Test
     void testGetToolkit() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getToolkit();
     }
 
     @Test
     void testGetTreeLock() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getTreeLock();
     }
 
     @Test
     void testGetWidth() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getWidth();
     }
 
     @Test
     void testGetX() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getX();
     }
 
     @Test
     void testGetY() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getY();
     }
 
     @Test
     void testHasFocus() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.hasFocus();
     }
 
     @Test
     void testImageUpdate() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.imageUpdate(operator1.createImage(100, 100), 100, 100, 100, 100, 100);
     }
 
     @Test
     void testInvalidate() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.invalidate();
     }
 
     @Test
     void testIsDisplayable() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator.isDisplayable();
     }
 
     @Test
     void testIsDoubleBuffered() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isDoubleBuffered();
     }
 
     @Test
     void testIsEnabled() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator.setEnabled(operator1.isEnabled());
     }
 
     @Test
     void testIsFocusTraversable() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isFocusTraversable();
     }
 
     @Test
     void testIsLightweight() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isLightweight();
     }
 
     @Test
     void testIsOpaque() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isOpaque();
     }
 
     @Test
     void testIsShowing() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isShowing();
     }
 
     @Test
     void testIsValid() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isValid();
     }
 
     @Test
     void testIsVisible() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setVisible(operator1.isVisible());
     }
 
     @Test
     void testList() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.list();
         operator1.list(new PrintWriter(new StringWriter()));
@@ -948,27 +948,27 @@ class ComponentOperatorTest {
 
     @Test
     void testPaint() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.paint(operator1.getGraphics());
     }
 
     @Test
     void testPaintAll() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.paintAll(operator1.getGraphics());
     }
 
     @Test
     void testPrepareImage() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Image image = operator1.createImage(100, 100);
         operator1.prepareImage(image, null);
@@ -977,27 +977,27 @@ class ComponentOperatorTest {
 
     @Test
     void testPrint() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.print(operator1.getGraphics());
     }
 
     @Test
     void testPrintAll() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.printAll(operator1.getGraphics());
     }
 
     @Test
     void testRemove() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         PopupMenu popupMenu = new PopupMenu();
         operator1.add(popupMenu);
@@ -1006,72 +1006,72 @@ class ComponentOperatorTest {
 
     @Test
     void testRemoveComponentListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeComponentListener(new ComponentAdapter() {});
     }
 
     @Test
     void testRemoveFocusListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeFocusListener(new FocusAdapter() {});
     }
 
     @Test
     void testRemoveInputMethodListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeInputMethodListener(new NullInputMethodListener());
     }
 
     @Test
     void testRemoveKeyListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeKeyListener(new KeyAdapter() {});
     }
 
     @Test
     void testRemoveMouseListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeMouseListener(new MouseAdapter() {});
     }
 
     @Test
     void testRemoveMouseMotionListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeMouseMotionListener(new MouseMotionAdapter() {});
     }
 
     @Test
     void testRemoveNotify() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeNotify();
     }
 
     @Test
     void testRemovePropertyChangeListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removePropertyChangeListener(event -> {});
         operator1.removePropertyChangeListener("enabled", event -> {});
@@ -1079,9 +1079,9 @@ class ComponentOperatorTest {
 
     @Test
     void testRepaint() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.repaint();
         operator1.repaint(1L);
@@ -1091,36 +1091,36 @@ class ComponentOperatorTest {
 
     @Test
     void testRequestFocus() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.requestFocus();
     }
 
     @Test
     void testTransferFocus() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.transferFocus();
     }
 
     @Test
     void testUpdate() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.update(operator1.getGraphics());
     }
 
     @Test
     void testValidate() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ComponentOperator operator1 = new ComponentOperator(operator);
+        ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.validate();
     }

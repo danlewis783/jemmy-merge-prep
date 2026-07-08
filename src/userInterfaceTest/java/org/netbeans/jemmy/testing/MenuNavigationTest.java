@@ -52,14 +52,15 @@ class MenuNavigationTest {
     void test() {
         MenuNavigationApp.main();
         try (TimeoutOverride override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
-            JFrameOperator win0 = new JFrameOperator("MenuNavigationApp");
-            JTextFieldOperator tf0 = new JTextFieldOperator(win0, "Text", StringComparators.caseInsensitiveSubstring());
-            JTextFieldOperator tf1 = new JTextFieldOperator(win0);
+            JFrameOperator win0 = JFrameOperator.waitFor("MenuNavigationApp");
+            JTextFieldOperator tf0 =
+                    JTextFieldOperator.waitFor(win0, "Text", StringComparators.caseInsensitiveSubstring());
+            JTextFieldOperator tf1 = JTextFieldOperator.waitFor(win0);
             assertThat(tf0.getSource()).isSameAs(tf1.getSource());
             tf0.clearText();
             tf0.typeText("Text has been typed");
-            new JTextFieldOperator(win0, "has been typed", StringComparators.caseInsensitiveSubstring());
-            JMenuBarOperator mb0 = new JMenuBarOperator(win0);
+            JTextFieldOperator.waitFor(win0, "has been typed", StringComparators.caseInsensitiveSubstring());
+            JMenuBarOperator mb0 = JMenuBarOperator.waitFor(win0);
             assertThat(mb0.showMenuItems("menu|submenu", StringComparators.strict()).length)
                     .isEqualTo(3);
             mb0.closeSubmenus();
@@ -79,7 +80,7 @@ class MenuNavigationTest {
                     .isEqualTo("menuItem");
             JMenuItemOperator radioItem = mb0.showMenuItem("menu|submenu|radio", StringComparators.strict());
             JRadioButtonMenuItemOperator radio =
-                    new JRadioButtonMenuItemOperator((JRadioButtonMenuItem) radioItem.getSource());
+                    JRadioButtonMenuItemOperator.of((JRadioButtonMenuItem) radioItem.getSource());
             mb0.showMenuItems("menu|submenu", StringComparators.strict());
             assertThat(radio.isSelected()).isFalse();
             mb0.pushMenu("menu|submenu|radio", StringComparators.strict());
@@ -90,12 +91,12 @@ class MenuNavigationTest {
                     .isEqualTo("subsubmenu");
             assertThat(mb0.pushMenu("menu|submenu|subsubmenu|menuItem", StringComparators.strict()))
                     .isNotNull();
-            new JLabelOperator(win0, "Menu \"menu/menuItem\" has been pushed", StringComparators.strict());
+            JLabelOperator.waitFor(win0, "Menu \"menu/menuItem\" has been pushed", StringComparators.strict());
             mb0.pushMenu("menu0", StringComparators.strict());
             mb0.pushMenu("menu1Item", StringComparators.strict());
-            new JLabelOperator(win0, "Menu \"menu1Item\" has been pushed", StringComparators.strict());
-            new JButtonOperator(win0, "button", StringComparators.strict()).push();
-            new JLabelOperator(win0, "Button has been pushed", StringComparators.strict());
+            JLabelOperator.waitFor(win0, "Menu \"menu1Item\" has been pushed", StringComparators.strict());
+            JButtonOperator.waitFor(win0, "button", StringComparators.strict()).push();
+            JLabelOperator.waitFor(win0, "Button has been pushed", StringComparators.strict());
             try (TimeoutOverride override3 =
                             Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout, 1000L);
                     TimeoutOverride override4 =
@@ -105,7 +106,7 @@ class MenuNavigationTest {
                         .isThrownBy(() -> mb0.pushMenu("menu|submenu|subsubmenu2", StringComparators.strict()));
             }
 
-            AbstractButtonOperator absButtonOp = new JButtonOperator(win0, "button", StringComparators.strict());
+            AbstractButtonOperator absButtonOp = JButtonOperator.waitFor(win0, "button", StringComparators.strict());
             AbstractButton button = (AbstractButton) absButtonOp.getSource();
             assertThat(((button.getActionCommand() == null) && (absButtonOp.getActionCommand() == null))
                             || button.getActionCommand().equals(absButtonOp.getActionCommand()))
@@ -153,7 +154,7 @@ class MenuNavigationTest {
             assertThat(absButtonOp.isFocusPainted()).isEqualTo(button.isFocusPainted());
             assertThat(absButtonOp.isRolloverEnabled()).isEqualTo(button.isRolloverEnabled());
             assertThat(absButtonOp.isSelected()).isEqualTo(button.isSelected());
-            JButtonOperator jButtonOp = new JButtonOperator(win0, "button", StringComparators.strict());
+            JButtonOperator jButtonOp = JButtonOperator.waitFor(win0, "button", StringComparators.strict());
             JButton source = (JButton) jButtonOp.getSource();
             assertThat(jButtonOp.isDefaultButton()).isEqualTo(source.isDefaultButton());
             assertThat(jButtonOp.isDefaultCapable()).isEqualTo(source.isDefaultCapable());
@@ -173,7 +174,7 @@ class MenuNavigationTest {
             assertThat(mb0.pushMenu("menu|submenu|subsubmenu|menuItem", StringComparators.strict()))
                     .isNotNull();
             JLabelOperator jLabelOp =
-                    new JLabelOperator(win0, "Menu \"menu/menuItem\" has been pushed", StringComparators.strict());
+                    JLabelOperator.waitFor(win0, "Menu \"menu/menuItem\" has been pushed", StringComparators.strict());
             JLabel label = (JLabel) jLabelOp.getSource();
             assertThat(((label.getDisabledIcon() == null) && (jLabelOp.getDisabledIcon() == null))
                             || label.getDisabledIcon().equals(jLabelOp.getDisabledIcon()))

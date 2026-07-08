@@ -52,25 +52,30 @@ public class JScrollBarOperator extends JComponentOperator {
     private @Nullable JButtonOperator maxButtOperator;
     private @Nullable JButtonOperator minButtOperator;
 
-    public JScrollBarOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JScrollBarOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JScrollBarOperator(JScrollBar b) {
+    JScrollBarOperator(JScrollBar b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
-    public JScrollBarOperator(ContainerOperator cont, int index) {
-        this((JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class), index));
+    public static JScrollBarOperator of(JScrollBar b) {
+        return new JScrollBarOperator(b);
     }
 
-    public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JScrollBarOperator waitFor(ContainerOperator cont, int index) {
+        return new JScrollBarOperator((JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class), index));
     }
 
-    public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollBar) cont.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
+    public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JScrollBarOperator(
+                (JScrollBar) cont.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     @Deprecated
@@ -323,8 +328,8 @@ public class JScrollBarOperator extends JComponentOperator {
             }
         }
 
-        minButtOperator = new JButtonOperator(minButt);
-        maxButtOperator = new JButtonOperator(maxButt);
+        minButtOperator = JButtonOperator.of(minButt);
+        maxButtOperator = JButtonOperator.of(maxButt);
         minButtOperator.setVisualizer(new EmptyVisualizer());
         maxButtOperator.setVisualizer(new EmptyVisualizer());
     }

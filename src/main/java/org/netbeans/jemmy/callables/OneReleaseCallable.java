@@ -71,7 +71,7 @@ public abstract class OneReleaseCallable implements Callable<MenuElement> {
 
     protected void process(MenuElement element) {
         if (depth == predicates.size() - 1) {
-            JMenuItemOperator subMenuOper = new JMenuItemOperator((JMenuItem) element);
+            JMenuItemOperator subMenuOper = JMenuItemOperator.of((JMenuItem) element);
             if (depth == 0) {
                 pushAlone(subMenuOper);
             } else {
@@ -79,7 +79,7 @@ public abstract class OneReleaseCallable implements Callable<MenuElement> {
             }
         } else {
             if (element instanceof JMenu) {
-                JMenuOperator subMenuOper = new JMenuOperator((JMenu) element);
+                JMenuOperator subMenuOper = JMenuOperator.of((JMenu) element);
                 mousePressed.set(inTheMiddle(subMenuOper, mousePressed.get()));
             } else {
                 throw new JemmyException("Menu path too long");

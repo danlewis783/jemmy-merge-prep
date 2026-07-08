@@ -55,14 +55,14 @@ class JTextAreaOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        JTextAreaOperator operator3 = new JTextAreaOperator(operator, PredicatesJ.byName("JTextAreaOperatorTest"));
+        JTextAreaOperator operator3 = JTextAreaOperator.waitFor(operator, PredicatesJ.byName("JTextAreaOperatorTest"));
         assertThat(operator3).isNotNull();
         JTextAreaOperator operator4 =
-                new JTextAreaOperator(operator, "JTextAreaOperatorTest", StringComparators.strict());
+                JTextAreaOperator.waitFor(operator, "JTextAreaOperatorTest", StringComparators.strict());
         assertThat(operator4).isNotNull();
     }
 
@@ -86,63 +86,63 @@ class JTextAreaOperatorTest {
 
     @Test
     void testChangeCaretRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.changeCaretRow(0);
     }
 
     @Test
     void testChangeCaretPosition() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.changeCaretPosition(0, 0);
     }
 
     @Test
     void testTypeText() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.typeText("Booh!", 0, 0);
     }
 
     @Test
     void testSelectText() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.selectText("JTextAreaOperatorTest");
     }
 
     @Test
     void testSelectLines() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.selectLines(0, 0);
     }
 
     @Test
     void testAppend() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.append("Booh!");
     }
 
     @Test
     void testGetColumns() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setColumns(2);
         assertThat(operator2.getColumns()).isEqualTo(2);
@@ -150,18 +150,18 @@ class JTextAreaOperatorTest {
 
     @Test
     void testGetLineCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getLineCount();
     }
 
     @Test
     void testGetLineWrap() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setLineWrap(true);
         assertThat(operator2.getLineWrap()).isTrue();
@@ -171,9 +171,9 @@ class JTextAreaOperatorTest {
 
     @Test
     void testGetRows() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setRows(1);
         assertThat(operator2.getRows()).isEqualTo(1);
@@ -181,9 +181,9 @@ class JTextAreaOperatorTest {
 
     @Test
     void testGetTabSize() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setTabSize(11);
         assertThat(operator2.getTabSize()).isEqualTo(11);
@@ -191,9 +191,9 @@ class JTextAreaOperatorTest {
 
     @Test
     void testGetWrapStyleWord() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setWrapStyleWord(true);
         assertThat(operator2.getWrapStyleWord()).isTrue();
@@ -203,18 +203,18 @@ class JTextAreaOperatorTest {
 
     @Test
     void testInsert() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.insert("Booh!", 0);
     }
 
     @Test
     void testReplaceRange() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTextAreaOperator operator2 = new JTextAreaOperator(operator);
+        JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.replaceRange("Booh!", 0, 0);
     }
@@ -222,7 +222,7 @@ class JTextAreaOperatorTest {
     // formerly scenario test jemmy_020
     @Test
     void typeAllPrintableCharacters() {
-        JTextAreaOperator to = new JTextAreaOperator(new JFrameOperator(frame));
+        JTextAreaOperator to = JTextAreaOperator.waitFor(JFrameOperator.of(frame));
         String allChars =
                 " !\"#$%&'()*,-./0123456789:;<>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         to.clearText();

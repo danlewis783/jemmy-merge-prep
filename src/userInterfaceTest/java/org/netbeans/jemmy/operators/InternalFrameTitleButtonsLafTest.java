@@ -77,7 +77,7 @@ class InternalFrameTitleButtonsLafTest {
         });
         assumeFalse(LookAndFeel.isMotif(), "Motif keeps title actions in a popup menu, not title buttons");
 
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.getMaximizeButton().push();
         operator.waitMaximum(true);
         operator.getCloseButton().push();

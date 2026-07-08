@@ -203,3 +203,10 @@ tests) must stay green — it is the behavioral contract.
   2026-07-08 as an intentional omission: naming-convention reflection no
   typed caller needed, and it pinned the `(Component)` constructor to
   public, blocking the factory-method construction redesign.
+- Operator construction is factory-based as of 2026-07-08: `X.of(component)`
+  wraps a component you already have; `X.waitFor(...)` searches and waits
+  (these were the searching constructors, which blocked for up to 60 s
+  inside `this(...)` chains). Direct-hit constructors are package-private, so operator subclasses live in org.netbeans.jemmy.operators.
+  When adding an operator subclass, declare its full `waitFor`/`of`
+  overload set — statics don't override, so a missing overload silently
+  resolves to the superclass variant and returns the supertype.

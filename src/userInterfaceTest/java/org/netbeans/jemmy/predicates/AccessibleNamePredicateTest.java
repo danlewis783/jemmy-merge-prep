@@ -54,9 +54,9 @@ class AccessibleNamePredicateTest {
     @Test
     void testCheckContext() {
         frame.setVisible(true);
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JButtonOperator operator1 = new JButtonOperator(operator, new AccessibleNamePredicate("Accessible"));
+        JButtonOperator operator1 = JButtonOperator.waitFor(operator, new AccessibleNamePredicate("Accessible"));
         assertThat(operator1).isNotNull();
     }
 }

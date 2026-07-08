@@ -63,37 +63,46 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JTextComponentOperator extends JComponentOperator {
     private final TextDriver driver;
 
-    public JTextComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JTextComponentOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JTextComponentOperator(JTextComponent b) {
+    JTextComponentOperator(JTextComponent b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
     }
 
-    public JTextComponentOperator(ContainerOperator cont, int index) {
-        this((JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class), index));
+    public static JTextComponentOperator of(JTextComponent b) {
+        return new JTextComponentOperator(b);
     }
 
-    public JTextComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JTextComponentOperator waitFor(ContainerOperator cont, int index) {
+        return new JTextComponentOperator(
+                (JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class), index));
     }
 
-    public JTextComponentOperator(ContainerOperator cont, StringComparator stringComparator, String text) {
-        this(cont, text, stringComparator, 0);
+    public static JTextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JTextComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTextComponent) cont.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
+    public static JTextComponentOperator waitFor(
+            ContainerOperator cont, StringComparator stringComparator, String text) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static JTextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JTextComponentOperator(
+                (JTextComponent) cont.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
     }
 
-    public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JTextComponent) waitComponent(
+    public static JTextComponentOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
+    }
+
+    public static JTextComponentOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new JTextComponentOperator((JTextComponent) waitComponent(
                 cont,
                 PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
@@ -240,7 +249,7 @@ public class JTextComponentOperator extends JComponentOperator {
             return;
         }
 
-        JScrollPaneOperator scroller = new JScrollPaneOperator(scroll);
+        JScrollPaneOperator scroller = JScrollPaneOperator.of(scroll);
         scroller.setVisualizer(new EmptyVisualizer());
         Rectangle rect = modelToView(position);
         scroller.scrollToComponentRectangle(

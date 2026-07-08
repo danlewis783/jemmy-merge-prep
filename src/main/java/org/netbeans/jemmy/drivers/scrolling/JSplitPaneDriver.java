@@ -144,7 +144,7 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
 
     private void expandTo(JSplitPaneOperator oper, int index) {
         ContainerOperator divOper = oper.getDivider();
-        JButtonOperator bo = new JButtonOperator(
+        JButtonOperator bo = JButtonOperator.of(
                 (JButton) divOper.waitSubComponent(PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         ButtonDriver bdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(bo);

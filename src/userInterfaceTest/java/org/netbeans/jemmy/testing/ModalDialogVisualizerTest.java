@@ -44,20 +44,21 @@ class ModalDialogVisualizerTest {
         ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).checkForModal(true);
         ModalDialogsApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("Right one");
-        JFrameOperator jFrameOperator = new JFrameOperator(jFrame);
+        JFrameOperator jFrameOperator = JFrameOperator.of(jFrame);
         assertThat(JDialogOperator.getTopModalDialog()).isNull();
         JButtonOperator bttOper =
-                new JButtonOperator(JButtonOperator.waitJButton(jFrame, "Button", StringComparators.strict()));
+                JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "Button", StringComparators.strict()));
         bttOper.push();
         JLabelOperator.waitJLabel(jFrame, PredicatesJ.alwaysTrue());
-        new JButtonOperator(new ContainerOperator(jFrame), "Show", StringComparators.substring()).pushNoBlock();
+        JButtonOperator.waitFor(ContainerOperator.of(jFrame), "Show", StringComparators.substring())
+                .pushNoBlock();
         JDialog d = JDialogOperator.waitJDialog("Modal dialog", StringComparators.strict());
         JDialog d1 = (JDialog) jFrameOperator.findSubWindow(new DialogShowingByTitlePredicate("Modal dialog"));
         JDialog d2 = (JDialog) jFrameOperator.waitSubWindow(new AccessibleNamePredicate("Modal dialog"));
 
-        JDialogOperator do1 = new JDialogOperator("Modal dialog");
-        JDialogOperator do2 = new JDialogOperator(jFrameOperator, "Modal dialog", StringComparators.strict());
-        JDialogOperator do3 = new JDialogOperator(new AccessibleNamePredicate("Modal dialog"));
+        JDialogOperator do1 = JDialogOperator.waitFor("Modal dialog");
+        JDialogOperator do2 = JDialogOperator.waitFor(jFrameOperator, "Modal dialog", StringComparators.strict());
+        JDialogOperator do3 = JDialogOperator.waitFor(new AccessibleNamePredicate("Modal dialog"));
 
         assertThat((d != d1) || (d != d2) || (d != do1.getSource()) || (d != do2.getSource()) || (d != do3.getSource()))
                 .isFalse();
@@ -67,24 +68,24 @@ class ModalDialogVisualizerTest {
                 .withMessage("Component is not on top modal dialog.");
         assertThat(JLabelOperator.findJLabel(jFrame, PredicatesJ.alwaysTrue(), 1))
                 .isNull();
-        new JButtonOperator(do1, "", StringComparators.substring()).push();
-        JMenuBarOperator mbo = new JMenuBarOperator(new ContainerOperator(jFrame));
+        JButtonOperator.waitFor(do1, "", StringComparators.substring()).push();
+        JMenuBarOperator mbo = JMenuBarOperator.waitFor(ContainerOperator.of(jFrame));
         mbo.pushMenuNoBlock("Menu|MenuItem", "|", StringComparators.caseInsensitiveSubstring());
-        JDialogOperator modal = new JDialogOperator("Modal dialog");
-        new JButtonOperator(modal, "", StringComparators.substring()).push();
+        JDialogOperator modal = JDialogOperator.waitFor("Modal dialog");
+        JButtonOperator.waitFor(modal, "", StringComparators.substring()).push();
         modal.waitClosed();
         mbo.pushMenuNoBlock("Menu|MenuItem", "|", StringComparators.strict());
-        modal = new JDialogOperator("Modal dialog");
-        new JButtonOperator(modal, "", StringComparators.substring()).push();
+        modal = JDialogOperator.waitFor("Modal dialog");
+        JButtonOperator.waitFor(modal, "", StringComparators.substring()).push();
         modal.waitClosed();
         String[] path = {"Menu", "MenuItem"};
         mbo.pushMenuNoBlock(path, StringComparators.caseInsensitiveSubstring());
-        modal = new JDialogOperator("Modal dialog");
-        new JButtonOperator(modal, "", StringComparators.substring()).push();
+        modal = JDialogOperator.waitFor("Modal dialog");
+        JButtonOperator.waitFor(modal, "", StringComparators.substring()).push();
         modal.waitClosed();
         mbo.pushMenuNoBlock(path, StringComparators.strict());
-        modal = new JDialogOperator("Modal dialog");
-        new JButtonOperator(modal, "", StringComparators.substring()).push();
+        modal = JDialogOperator.waitFor("Modal dialog");
+        JButtonOperator.waitFor(modal, "", StringComparators.substring()).push();
         modal.waitClosed();
     }
 }

@@ -41,8 +41,8 @@ class MenuInDialogTest {
     void test() {
         assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
             DialogMenuApp.main();
-            JDialogOperator jDialogOp = new JDialogOperator("DialogMenuApp");
-            JMenuBarOperator jMenuBarOp = new JMenuBarOperator(jDialogOp);
+            JDialogOperator jDialogOp = JDialogOperator.waitFor("DialogMenuApp");
+            JMenuBarOperator jMenuBarOp = JMenuBarOperator.waitFor(jDialogOp);
             checkItems(jMenuBarOp, "", new String[] {"menu0", "menu1"});
             checkItems(jMenuBarOp, "menu0", new String[] {"submenu00", "submenu01"});
             checkItems(jMenuBarOp, "menu0|submenu00", new String[] {"item00"});
@@ -55,8 +55,8 @@ class MenuInDialogTest {
             jMenuBarOp.showMenuItem("menu0|submenu01|item01", "|", StringComparators.strict());
             jMenuBarOp.showMenuItem("menu1|submenu11|item11", "|", StringComparators.strict());
             jMenuBarOp.closeSubmenus();
-            new JComboBoxOperator(jDialogOp, 0).selectItem(3);
-            new JComboBoxOperator(jDialogOp, 1).selectItem(3);
+            JComboBoxOperator.waitFor(jDialogOp, 0).selectItem(3);
+            JComboBoxOperator.waitFor(jDialogOp, 1).selectItem(3);
         });
     }
 

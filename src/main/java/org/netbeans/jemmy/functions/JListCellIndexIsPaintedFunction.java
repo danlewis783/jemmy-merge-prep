@@ -36,7 +36,7 @@ public class JListCellIndexIsPaintedFunction implements Function<Integer, Boolea
     @Override
     public @Nullable Boolean apply(Integer cellIdx) {
         JList<?> jList = fileListSupplier.get();
-        JListOperator jListOperator = new JListOperator(jList);
+        JListOperator jListOperator = JListOperator.of(jList);
         int cellIdxLast = jListOperator.getModel().getSize() - 1;
         if (cellIdxLast == -1) {
             return true;

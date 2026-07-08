@@ -45,25 +45,30 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 public class ContainerOperator extends ComponentOperator {
     private final ComponentSearcher searcher;
 
-    public ContainerOperator(Container b) {
+    ContainerOperator(Container b) {
         super(b);
         searcher = new ComponentSearcher(b);
     }
 
-    public ContainerOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static ContainerOperator of(Container b) {
+        return new ContainerOperator(b);
     }
 
-    public ContainerOperator(ContainerOperator cont, int index) {
-        this((Container) waitComponent(cont, PredicatesJ.of(Container.class), index));
+    public static ContainerOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public ContainerOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static ContainerOperator waitFor(ContainerOperator cont, int index) {
+        return new ContainerOperator((Container) waitComponent(cont, PredicatesJ.of(Container.class), index));
     }
 
-    public ContainerOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Container) cont.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
+    public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new ContainerOperator(
+                (Container) cont.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
     }
 
     public @Nullable Component findSubComponent(Predicate<Component> chooser, int index) {
@@ -237,7 +242,7 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public static @Nullable Container findContainerUnder(Component comp, Predicate<Component> chooser) {
-        return new ComponentOperator(comp).getContainer(PredicatesJ.of(Container.class, chooser));
+        return ComponentOperator.of(comp).getContainer(PredicatesJ.of(Container.class, chooser));
     }
 
     public static @Nullable Container findContainerUnder(Component comp) {

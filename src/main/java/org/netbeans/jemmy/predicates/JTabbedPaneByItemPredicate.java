@@ -42,7 +42,7 @@ public final class JTabbedPaneByItemPredicate implements Predicate<Component> {
                 return true;
             }
 
-            JTabbedPaneOperator tpo = new JTabbedPaneOperator((JTabbedPane) comp);
+            JTabbedPaneOperator tpo = JTabbedPaneOperator.of((JTabbedPane) comp);
             if (tpo.getTabCount() > itemIndex) {
                 int ii = itemIndex;
                 if (ii == -1) {

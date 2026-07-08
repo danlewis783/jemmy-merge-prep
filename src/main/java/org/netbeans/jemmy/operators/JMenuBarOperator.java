@@ -59,21 +59,25 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JMenuBarOperator extends JComponentOperator {
     private final MenuDriver driver;
 
-    public JMenuBarOperator(ContainerOperator cont) {
-        this((JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class), 0));
+    public static JMenuBarOperator waitFor(ContainerOperator cont) {
+        return new JMenuBarOperator((JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class), 0));
     }
 
-    public JMenuBarOperator(JMenuBar b) {
+    JMenuBarOperator(JMenuBar b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
 
-    public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JMenuBarOperator of(JMenuBar b) {
+        return new JMenuBarOperator(b);
     }
 
-    public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JMenuBar) cont.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
+    public static JMenuBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
+    }
+
+    public static JMenuBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JMenuBarOperator((JMenuBar) cont.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -146,10 +150,10 @@ public class JMenuBarOperator extends JComponentOperator {
             menuCont = this;
         } else {
             menu = (JMenu) pushMenu(getParentPath(predicates));
-            menuCont = new ContainerOperator(menu.getPopupMenu());
+            menuCont = ContainerOperator.of(menu.getPopupMenu());
         }
 
-        return new JMenuItemOperator(menuCont, predicates.get(predicates.size() - 1));
+        return JMenuItemOperator.waitFor(menuCont, predicates.get(predicates.size() - 1));
     }
 
     public JMenuItemOperator showMenuItem(String[] path, StringComparator comparator) {
@@ -158,7 +162,7 @@ public class JMenuBarOperator extends JComponentOperator {
         ContainerOperator menuCont;
         if (parentPath.length > 0) {
             menu = (JMenu) pushMenu(getParentPath(path), comparator);
-            menuCont = new ContainerOperator(menu.getPopupMenu());
+            menuCont = ContainerOperator.of(menu.getPopupMenu());
         } else {
             menuCont = this;
         }
@@ -167,9 +171,9 @@ public class JMenuBarOperator extends JComponentOperator {
         if (Platform.isOSX()) {
             ComponentSearcher searcher = new ComponentSearcher((Container) menuCont.getSource());
             Component c = searcher.findComponent(new JMenuItemByTextPredicate(path[path.length - 1], comparator));
-            result = new JMenuItemOperator((JMenuItem) Objects.requireNonNull(c, "menu item not found"));
+            result = JMenuItemOperator.of((JMenuItem) Objects.requireNonNull(c, "menu item not found"));
         } else {
-            result = new JMenuItemOperator(menuCont, path[path.length - 1], comparator);
+            result = JMenuItemOperator.waitFor(menuCont, path[path.length - 1], comparator);
         }
 
         return result;
@@ -186,7 +190,7 @@ public class JMenuBarOperator extends JComponentOperator {
     public void closeSubmenus() {
         JMenu menu = (JMenu) findSubComponent(new IsJMenuAndPopupIsVisiblePredicate());
         if (menu != null) {
-            JMenuOperator oper = new JMenuOperator(menu);
+            JMenuOperator oper = JMenuOperator.of(menu);
             oper.push();
         }
     }

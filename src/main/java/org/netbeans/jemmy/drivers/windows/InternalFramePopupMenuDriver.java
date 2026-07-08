@@ -76,7 +76,8 @@ public class InternalFramePopupMenuDriver extends DefaultInternalFrameDriver {
 
     private static void pushMenuItem(ComponentOperator oper, String menuText) {
         ((JInternalFrameOperator) oper).getPopupButton().push();
-        JPopupMenuOperator popupMenu = new JPopupMenuOperator();
-        new JMenuItemOperator(popupMenu, menuText, StringComparators.strict()).push();
+        JPopupMenuOperator popupMenu = JPopupMenuOperator.waitFor();
+        JMenuItemOperator.waitFor(popupMenu, menuText, StringComparators.strict())
+                .push();
     }
 }

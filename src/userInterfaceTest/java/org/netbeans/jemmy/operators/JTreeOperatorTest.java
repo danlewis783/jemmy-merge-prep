@@ -69,14 +69,14 @@ class JTreeOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        JTreeOperator operator3 = new JTreeOperator(operator, PredicatesJ.byName("JTreeOperatorTest"));
+        JTreeOperator operator3 = JTreeOperator.waitFor(operator, PredicatesJ.byName("JTreeOperatorTest"));
         assertThat(operator3).isNotNull();
         operator3.selectRow(0);
-        JTreeOperator operator4 = new JTreeOperator(operator, "JTree", StringComparators.strict());
+        JTreeOperator operator4 = JTreeOperator.waitFor(operator, "JTree", StringComparators.strict());
         assertThat(operator4).isNotNull();
     }
 
@@ -98,9 +98,9 @@ class JTreeOperatorTest {
 
     @Test
     void testDoExpandPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -109,18 +109,18 @@ class JTreeOperatorTest {
 
     @Test
     void testDoExpandRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.expandRow(0);
     }
 
     @Test
     void testDoMakeVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -129,9 +129,9 @@ class JTreeOperatorTest {
 
     @Test
     void testGetChildCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         assertThat(operator2.getChildCount(node)).isEqualTo(3);
@@ -139,9 +139,9 @@ class JTreeOperatorTest {
 
     @Test
     void testGetChildren() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         assertThat(operator2.getChildren(node)).isNotNull();
@@ -149,9 +149,9 @@ class JTreeOperatorTest {
 
     @Test
     void testGetChild() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         assertThat(operator2.getChild(node, 0)).isNotNull();
@@ -159,9 +159,9 @@ class JTreeOperatorTest {
 
     @Test
     void testGetChildPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -170,9 +170,9 @@ class JTreeOperatorTest {
 
     @Test
     void testGetChildPaths() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -181,27 +181,27 @@ class JTreeOperatorTest {
 
     @Test
     void testGetRoot() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         assertThat(operator2.getRoot()).isNotNull();
     }
 
     @Test
     void testFindPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         assertThat(operator2.findPath("colors", StringComparators.strict())).isNotNull();
     }
 
     @Test
     void testFindRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         assertThat(operator2.findRow(PredicatesJ.byName("colors"))).isEqualTo(-1);
         operator2.findRow("1", new StringComparatorTest(), 0);
@@ -209,9 +209,9 @@ class JTreeOperatorTest {
 
     @Test
     void testDoCollapsePath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -222,18 +222,18 @@ class JTreeOperatorTest {
 
     @Test
     void testDoCollapseRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.doCollapseRow(0);
     }
 
     @Test
     void testSelectPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -242,18 +242,18 @@ class JTreeOperatorTest {
 
     @Test
     void testSelectRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.selectRow(0);
     }
 
     @Test
     void testSelectPaths() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath[] paths = new TreePath[1];
@@ -263,18 +263,18 @@ class JTreeOperatorTest {
 
     @Test
     void testGetPointToClick() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getPointToClick(0);
     }
 
     @Test
     void testClickOnPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -289,9 +289,9 @@ class JTreeOperatorTest {
 
     @Test
     void testScrollToPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -300,26 +300,26 @@ class JTreeOperatorTest {
 
     @Test
     void testScrollToRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.scrollToRow(0);
     }
 
     @Test
     void testClickForEdit() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
     }
 
     @Test
     void testGetRenderedComponent() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -328,25 +328,25 @@ class JTreeOperatorTest {
 
     @Test
     void testChangePathText() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
     }
 
     @Test
     void testChangePathObject() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
     }
 
     @Test
     void testWaitExpanded() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -356,9 +356,9 @@ class JTreeOperatorTest {
 
     @Test
     void testWaitCollapsed() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -368,9 +368,9 @@ class JTreeOperatorTest {
 
     @Test
     void testWaitVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -379,9 +379,9 @@ class JTreeOperatorTest {
 
     @Test
     void testWaitSelected() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         Object node = tree.getModel().getRoot();
         TreePath path = new TreePath(node);
@@ -391,26 +391,26 @@ class JTreeOperatorTest {
 
     @Test
     void testWaitRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.waitRow("colors", StringComparators.strict(), 1);
     }
 
     @Test
     void testChooseSubnode() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
     }
 
     @Test
     void testAddSelectionInterval() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.addSelectionInterval(0, 0);
         operator2.removeSelectionInterval(0, 0);
@@ -418,9 +418,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddSelectionPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.addSelectionPath(null);
         operator2.removeSelectionPath(null);
@@ -428,9 +428,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddSelectionPaths() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.addSelectionPaths(null);
         operator2.removeSelectionPaths(null);
@@ -438,9 +438,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddSelectionRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.addSelectionRow(0);
         operator2.removeSelectionRow(0);
@@ -448,9 +448,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddSelectionRows() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.addSelectionRows(null);
         operator2.removeSelectionRows(null);
@@ -458,9 +458,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddTreeExpansionListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         TreeExpansionListenerTest listener = new TreeExpansionListenerTest();
         operator2.addTreeExpansionListener(listener);
@@ -469,9 +469,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddTreeSelectionListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         TreeSelectionListenerTest listener = new TreeSelectionListenerTest();
         operator2.addTreeSelectionListener(listener);
@@ -480,9 +480,9 @@ class JTreeOperatorTest {
 
     @Test
     void testAddTreeWillExpandListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         TreeWillExpandListenerTest listener = new TreeWillExpandListenerTest();
         operator2.addTreeWillExpandListener(listener);
@@ -491,45 +491,45 @@ class JTreeOperatorTest {
 
     @Test
     void testCancelEditing() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.cancelEditing();
     }
 
     @Test
     void testClearSelection() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.clearSelection();
     }
 
     @Test
     void testCollapsePath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.collapsePath(null);
     }
 
     @Test
     void testCollapseRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.collapseRow(0);
     }
 
     @Test
     void testConvertValueToText() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
 
         assertThat(operator2.convertValueToText(null, true, true, true, 0, true))
@@ -538,387 +538,387 @@ class JTreeOperatorTest {
 
     @Test
     void testExpandPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.expandPath(null);
     }
 
     @Test
     void testExpandRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.expandRow(0);
     }
 
     @Test
     void testFireTreeCollapsed() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.fireTreeCollapsed(null);
     }
 
     @Test
     void testFireTreeExpanded() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.fireTreeExpanded(null);
     }
 
     @Test
     void testFireTreeWillCollapse() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.fireTreeWillCollapse(null);
     }
 
     @Test
     void testFireTreeWillExpand() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.fireTreeWillExpand(null);
     }
 
     @Test
     void testGetCellEditor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setCellEditor(operator2.getCellEditor());
     }
 
     @Test
     void testGetCellRenderer() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setCellRenderer(operator2.getCellRenderer());
     }
 
     @Test
     void testGetClosestPathForLocation() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getClosestPathForLocation(0, 0);
     }
 
     @Test
     void testGetClosestRowForLocation() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getClosestRowForLocation(0, 0);
     }
 
     @Test
     void testGetEditingPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getEditingPath();
     }
 
     @Test
     void testGetExpandedDescendants() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getExpandedDescendants(null);
     }
 
     @Test
     void testGetInvokesStopCellEditing() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setInvokesStopCellEditing(operator2.getInvokesStopCellEditing());
     }
 
     @Test
     void testGetLastSelectedPathComponent() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getLastSelectedPathComponent();
     }
 
     @Test
     void testGetLeadSelectionPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getLeadSelectionPath();
     }
 
     @Test
     void testGetLeadSelectionRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getLeadSelectionRow();
     }
 
     @Test
     void testGetMaxSelectionRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getMaxSelectionRow();
     }
 
     @Test
     void testGetMinSelectionRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getMinSelectionRow();
     }
 
     @Test
     void testGetModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setModel(operator2.getModel());
     }
 
     @Test
     void testGetPathBounds() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getPathBounds(null);
     }
 
     @Test
     void testGetPathForLocation() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getPathForLocation(0, 0);
     }
 
     @Test
     void testGetPathForRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getPathForRow(0);
     }
 
     @Test
     void testGetPreferredScrollableViewportSize() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getPreferredScrollableViewportSize();
     }
 
     @Test
     void testGetRowBounds() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getRowBounds(0);
     }
 
     @Test
     void testGetRowCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getRowCount();
     }
 
     @Test
     void testGetRowForLocation() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getRowForLocation(0, 0);
     }
 
     @Test
     void testGetRowForPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getRowForPath(null);
     }
 
     @Test
     void testGetRowHeight() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setRowHeight(operator2.getRowHeight());
     }
 
     @Test
     void testGetScrollableBlockIncrement() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getScrollableBlockIncrement(new Rectangle(0, 0), 0, 0);
     }
 
     @Test
     void testGetScrollableTracksViewportHeight() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getScrollableTracksViewportHeight();
     }
 
     @Test
     void testGetScrollableTracksViewportWidth() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getScrollableTracksViewportWidth();
     }
 
     @Test
     void testGetScrollableUnitIncrement() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getScrollableUnitIncrement(new Rectangle(0, 0), 0, 0);
     }
 
     @Test
     void testGetScrollsOnExpand() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setScrollsOnExpand(operator2.getScrollsOnExpand());
     }
 
     @Test
     void testGetSelectionCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getSelectionCount();
     }
 
     @Test
     void testGetSelectionModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelectionModel(operator2.getSelectionModel());
     }
 
     @Test
     void testGetSelectionPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelectionPath(operator2.getSelectionPath());
     }
 
     @Test
     void testGetSelectionPaths() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelectionPaths(operator2.getSelectionPaths());
     }
 
     @Test
     void testGetSelectionRows() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelectionRows(operator2.getSelectionRows());
     }
 
     @Test
     void testGetShowsRootHandles() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getShowsRootHandles();
     }
 
     @Test
     void testGetUI() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getUI();
     }
 
     @Test
     void testGetVisibleRowCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.getVisibleRowCount();
     }
 
     @Test
     void testHasBeenExpanded() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.hasBeenExpanded(null);
     }
 
     @Test
     void testIsCollapsed() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isCollapsed(0);
         operator2.isCollapsed(null);
@@ -926,27 +926,27 @@ class JTreeOperatorTest {
 
     @Test
     void testIsEditable() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setEditable(operator2.isEditable());
     }
 
     @Test
     void testIsEditing() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isEditing();
     }
 
     @Test
     void testIsExpanded() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isExpanded(null);
         operator2.isExpanded(0);
@@ -954,72 +954,72 @@ class JTreeOperatorTest {
 
     @Test
     void testIsFixedRowHeight() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isFixedRowHeight();
     }
 
     @Test
     void testIsLargeModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isLargeModel();
     }
 
     @Test
     void testIsPathEditable() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isPathEditable(null);
     }
 
     @Test
     void testIsPathSelected() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isPathSelected(null);
     }
 
     @Test
     void testIsRootVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setRootVisible(operator2.isRootVisible());
     }
 
     @Test
     void testIsRowSelected() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isRowSelected(0);
     }
 
     @Test
     void testIsSelectionEmpty() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isSelectionEmpty();
     }
 
     @Test
     void testIsVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.isVisible();
         operator2.isVisible(null);
@@ -1027,108 +1027,108 @@ class JTreeOperatorTest {
 
     @Test
     void testMakeVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.makeVisible(null);
     }
 
     @Test
     void testScrollPathToVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.scrollPathToVisible(null);
     }
 
     @Test
     void testScrollRowToVisible() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.scrollRowToVisible(0);
     }
 
     @Test
     void testSetLargeModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setLargeModel(true);
     }
 
     @Test
     void testSetSelectionInterval() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelectionInterval(0, 0);
     }
 
     @Test
     void testSetSelectionRow() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelectionRow(0);
     }
 
     @Test
     void testSetShowsRootHandles() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setShowsRootHandles(false);
     }
 
     @Test
     void testSetUI() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setUI(operator2.getUI());
     }
 
     @Test
     void testSetVisibleRowCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setVisibleRowCount(1);
     }
 
     @Test
     void testStartEditingAtPath() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.startEditingAtPath(null);
     }
 
     @Test
     void testStopEditing() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.stopEditing();
     }
 
     @Test
     void testTreeDidChange() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTreeOperator operator2 = new JTreeOperator(operator);
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.treeDidChange();
     }

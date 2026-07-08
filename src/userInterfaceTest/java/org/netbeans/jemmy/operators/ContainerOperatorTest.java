@@ -60,11 +60,11 @@ class ContainerOperatorTest {
 
     @Test
     void testConstructor() {
-        ContainerOperator operator = new ContainerOperator(frame);
+        ContainerOperator operator = ContainerOperator.of(frame);
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ContainerOperator operator2 = new ContainerOperator(operator, PredicatesJ.byName("ContainerOperatorTest"));
+        ContainerOperator operator2 = ContainerOperator.waitFor(operator, PredicatesJ.byName("ContainerOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -92,7 +92,7 @@ class ContainerOperatorTest {
 
     @Test
     void testFindSubComponent() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         Component component = operator.findSubComponent(PredicatesJ.byName("ContainerOperatorTest"));
         assertThat(component).isNotNull();
@@ -100,7 +100,7 @@ class ContainerOperatorTest {
 
     @Test
     void testWaitSubComponent() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         Component component = operator.waitSubComponent(PredicatesJ.byName("ContainerOperatorTest"));
         assertThat(component).isNotNull();
@@ -108,7 +108,7 @@ class ContainerOperatorTest {
 
     @Test
     void testAdd() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.add(new Panel());
         operator.add("South", new Panel());
@@ -119,14 +119,14 @@ class ContainerOperatorTest {
 
     @Test
     void testAddContainerListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.addContainerListener(new ContainerAdapter() {});
     }
 
     @Test
     void testFindComponentAt() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.findComponentAt(100, 100);
         operator.findComponentAt(new Point(100, 100));
@@ -134,63 +134,63 @@ class ContainerOperatorTest {
 
     @Test
     void testGetComponent() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.getComponent(0);
     }
 
     @Test
     void testGetComponentCount() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.getComponentCount();
     }
 
     @Test
     void testGetComponents() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.getComponents();
     }
 
     @Test
     void testGetInsets() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.getInsets();
     }
 
     @Test
     void testGetLayout() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.getLayout();
     }
 
     @Test
     void testIsAncestorOf() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.isAncestorOf(panel);
     }
 
     @Test
     void testPaintComponents() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.paintComponents(operator.getGraphics());
     }
 
     @Test
     void testPrintComponents() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.printComponents(operator.getGraphics());
     }
 
     @Test
     void testRemove() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.remove(panel);
         operator.add(new Panel());
@@ -199,21 +199,21 @@ class ContainerOperatorTest {
 
     @Test
     void testRemoveAll() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.removeAll();
     }
 
     @Test
     void testRemoveContainerListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.removeContainerListener(new ContainerAdapter() {});
     }
 
     @Test
     void testSetLayout() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setLayout(operator.getLayout());
     }

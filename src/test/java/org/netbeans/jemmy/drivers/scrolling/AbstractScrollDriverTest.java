@@ -39,7 +39,7 @@ class AbstractScrollDriverTest {
     @Test
     void scrollFailsWhenPositionStopsChanging() {
         StubScrollDriver driver = new StubScrollDriver(() -> 5);
-        ComponentOperator oper = new ComponentOperator(new JLabel());
+        ComponentOperator oper = ComponentOperator.of(new JLabel());
         try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.AbstractScrollDriver_FreezeTimeout, 200L)) {
             assertThatExceptionOfType(JemmyException.class)
                     .isThrownBy(() -> driver.scroll(oper, alwaysIncrease()))
@@ -55,7 +55,7 @@ class AbstractScrollDriverTest {
     void scrollCompletesWhilePositionKeepsChanging() {
         AtomicInteger position = new AtomicInteger();
         StubScrollDriver driver = new StubScrollDriver(position::incrementAndGet);
-        ComponentOperator oper = new ComponentOperator(new JLabel());
+        ComponentOperator oper = ComponentOperator.of(new JLabel());
         ScrollAdjuster untilTen = new ScrollAdjuster() {
             @Override
             public int getScrollDirection() {

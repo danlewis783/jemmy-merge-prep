@@ -41,56 +41,61 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class DialogOperator extends WindowOperator {
 
-    public DialogOperator() {
-        this(0);
+    public static DialogOperator waitFor() {
+        return waitFor(0);
     }
 
-    public DialogOperator(Dialog w) {
+    DialogOperator(Dialog w) {
         super(w);
     }
 
-    public DialogOperator(int index) {
-        this(waitDialog(PredicatesJ.of(Dialog.class), index));
+    public static DialogOperator of(Dialog w) {
+        return new DialogOperator(w);
     }
 
-    public DialogOperator(Predicate<Component> chooser) {
-        this(chooser, 0);
+    public static DialogOperator waitFor(int index) {
+        return new DialogOperator(waitDialog(PredicatesJ.of(Dialog.class), index));
     }
 
-    public DialogOperator(String title) {
-        this(title, 0);
+    public static DialogOperator waitFor(Predicate<Component> chooser) {
+        return waitFor(chooser, 0);
     }
 
-    public DialogOperator(WindowOperator owner) {
-        this(owner, 0);
+    public static DialogOperator waitFor(String title) {
+        return waitFor(title, 0);
     }
 
-    public DialogOperator(Predicate<Component> chooser, int index) {
-        this(waitDialog(PredicatesJ.of(Dialog.class, chooser), index));
+    public static DialogOperator waitFor(WindowOperator owner) {
+        return waitFor(owner, 0);
     }
 
-    public DialogOperator(String title, int index) {
-        this(new DialogShowingByTitlePredicate(title), index);
+    public static DialogOperator waitFor(Predicate<Component> chooser, int index) {
+        return new DialogOperator(waitDialog(PredicatesJ.of(Dialog.class, chooser), index));
     }
 
-    public DialogOperator(WindowOperator owner, int index) {
-        this(waitDialog(owner, PredicatesJ.of(Dialog.class), index));
+    public static DialogOperator waitFor(String title, int index) {
+        return waitFor(new DialogShowingByTitlePredicate(title), index);
     }
 
-    public DialogOperator(WindowOperator owner, Predicate<Component> chooser) {
-        this(owner, chooser, 0);
+    public static DialogOperator waitFor(WindowOperator owner, int index) {
+        return new DialogOperator(waitDialog(owner, PredicatesJ.of(Dialog.class), index));
     }
 
-    public DialogOperator(WindowOperator owner, String title, StringComparator stringComparator) {
-        this(owner, title, stringComparator, 0);
+    public static DialogOperator waitFor(WindowOperator owner, Predicate<Component> chooser) {
+        return waitFor(owner, chooser, 0);
     }
 
-    public DialogOperator(WindowOperator owner, Predicate<Component> chooser, int index) {
-        this((Dialog) owner.waitSubWindow(PredicatesJ.of(Dialog.class, chooser), index));
+    public static DialogOperator waitFor(WindowOperator owner, String title, StringComparator stringComparator) {
+        return waitFor(owner, title, stringComparator, 0);
     }
 
-    public DialogOperator(WindowOperator owner, String title, StringComparator stringComparator, int index) {
-        this(waitDialog(owner, new DialogShowingByTitlePredicate(title, stringComparator), index));
+    public static DialogOperator waitFor(WindowOperator owner, Predicate<Component> chooser, int index) {
+        return new DialogOperator((Dialog) owner.waitSubWindow(PredicatesJ.of(Dialog.class, chooser), index));
+    }
+
+    public static DialogOperator waitFor(
+            WindowOperator owner, String title, StringComparator stringComparator, int index) {
+        return new DialogOperator(waitDialog(owner, new DialogShowingByTitlePredicate(title, stringComparator), index));
     }
 
     public void waitTitle(String title, StringComparator stringComparator) {

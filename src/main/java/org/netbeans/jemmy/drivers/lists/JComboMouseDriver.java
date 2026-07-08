@@ -57,7 +57,7 @@ public final class JComboMouseDriver extends LightSupportiveDriver implements Li
             }
         }
 
-        JListOperator list = new JListOperator(coper.waitList());
+        JListOperator list = JListOperator.of(coper.waitList());
         list.setVisualizer(new EmptyVisualizer());
         Timeouts.sleep(TimeoutKey.JComboBoxOperator_BeforeSelectingTimeout);
         DriverManager.newInstance(JemmyContext.getInstance())

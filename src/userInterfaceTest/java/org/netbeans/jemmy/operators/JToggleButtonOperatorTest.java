@@ -58,15 +58,15 @@ class JToggleButtonOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JToggleButtonOperator operator2 = new JToggleButtonOperator(operator1);
+        JToggleButtonOperator operator2 = JToggleButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         JToggleButtonOperator operator3 =
-                new JToggleButtonOperator(operator1, PredicatesJ.byName("JToggleButtonOperatorTest"));
+                JToggleButtonOperator.waitFor(operator1, PredicatesJ.byName("JToggleButtonOperatorTest"));
         assertThat(operator3).isNotNull();
         JToggleButtonOperator operator4 =
-                new JToggleButtonOperator(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
+                JToggleButtonOperator.waitFor(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
         assertThat(operator4).isNotNull();
     }
 
@@ -92,9 +92,9 @@ class JToggleButtonOperatorTest {
 
     @Test
     void testPrepareToClick() {
-        JFrameOperator operator1 = new JFrameOperator();
+        JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
-        JToggleButtonOperator operator2 = new JToggleButtonOperator(operator1);
+        JToggleButtonOperator operator2 = JToggleButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.prepareToClick();
         assertThat(toggleButton.isVisible()).isTrue();

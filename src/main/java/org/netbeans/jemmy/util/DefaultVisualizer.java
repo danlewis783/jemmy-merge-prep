@@ -115,7 +115,7 @@ public class DefaultVisualizer implements ComponentVisualizer {
                 }
             }
 
-            WindowOperator winOp = new WindowOperator(compOp.getWindow());
+            WindowOperator winOp = WindowOperator.of(compOp.getWindow());
             winOp.setVisualizer(new EmptyVisualizer());
             activate(winOp);
 
@@ -127,15 +127,15 @@ public class DefaultVisualizer implements ComponentVisualizer {
             for (int i = conts.length - 1; i >= 0; i--) {
                 Container cont = conts[i];
                 if (cont instanceof JInternalFrame) {
-                    JInternalFrameOperator jifOp = new JInternalFrameOperator((JInternalFrame) cont);
+                    JInternalFrameOperator jifOp = JInternalFrameOperator.of((JInternalFrame) cont);
                     jifOp.setVisualizer(new EmptyVisualizer());
                     initInternalFrame(jifOp);
                 } else if (scroll && (cont instanceof JScrollPane)) {
-                    JScrollPaneOperator jspOp = new JScrollPaneOperator((JScrollPane) cont);
+                    JScrollPaneOperator jspOp = JScrollPaneOperator.of((JScrollPane) cont);
                     jspOp.setVisualizer(new EmptyVisualizer());
                     scroll(jspOp, compOp.getSource());
                 } else if (switchTab && (cont instanceof JTabbedPane)) {
-                    JTabbedPaneOperator jtpOp = new JTabbedPaneOperator((JTabbedPane) cont);
+                    JTabbedPaneOperator jtpOp = JTabbedPaneOperator.of((JTabbedPane) cont);
                     jtpOp.setVisualizer(new EmptyVisualizer());
                     switchTab(jtpOp, (i == 0) ? compOp.getSource() : conts[i - 1]);
                 }

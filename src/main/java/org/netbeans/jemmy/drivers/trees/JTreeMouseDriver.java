@@ -181,7 +181,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
                     TimeoutKey.ComponentOperator_MouseClickTimeout);
             return null;
         }));
-        return new JTextComponentOperator(
+        return JTextComponentOperator.of(
                 (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class), waitEditorTime));
     }
 }

@@ -83,7 +83,7 @@ class WindowManagerJobsTest {
         @Override
         public Void apply(JFrame jFrame) {
             try {
-                new JButtonOperator(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring()))
+                JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring()))
                         .push();
                 processed.add(jFrame);
             } catch (TimeoutExpiredException e) {

@@ -45,33 +45,42 @@ import org.netbeans.jemmy.util.StringComparator;
 public class TextComponentOperator extends ComponentOperator {
     private final TextDriver driver;
 
-    public TextComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static TextComponentOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public TextComponentOperator(TextComponent b) {
+    TextComponentOperator(TextComponent b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
     }
 
-    public TextComponentOperator(ContainerOperator cont, int index) {
-        this((TextComponent) waitComponent(cont, PredicatesJ.of(TextComponent.class), index));
+    public static TextComponentOperator of(TextComponent b) {
+        return new TextComponentOperator(b);
     }
 
-    public TextComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static TextComponentOperator waitFor(ContainerOperator cont, int index) {
+        return new TextComponentOperator(
+                (TextComponent) waitComponent(cont, PredicatesJ.of(TextComponent.class), index));
     }
 
-    public TextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public static TextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public TextComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((TextComponent) cont.waitSubComponent(PredicatesJ.of(TextComponent.class, chooser), index));
+    public static TextComponentOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator) {
+        return waitFor(cont, text, stringComparator, 0);
     }
 
-    public TextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((TextComponent) waitComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index));
+    public static TextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new TextComponentOperator(
+                (TextComponent) cont.waitSubComponent(PredicatesJ.of(TextComponent.class, chooser), index));
+    }
+
+    public static TextComponentOperator waitFor(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        return new TextComponentOperator(
+                (TextComponent) waitComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index));
     }
 
     public void changeCaretPosition(int position) {

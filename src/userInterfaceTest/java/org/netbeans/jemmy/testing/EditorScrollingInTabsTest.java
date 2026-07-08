@@ -52,16 +52,16 @@ class EditorScrollingInTabsTest {
         String allChars = "0123456789\n0123456789\n0123456789\n0123456789";
         QueueTool.getInstance().waitEmpty();
         JFrame frm = JFrameOperator.waitJFrame("EditorTabsApp");
-        JFrameOperator frmo = new JFrameOperator(frm);
-        assertThat(new JFrameOperator(frm).getContainers().length)
+        JFrameOperator frmo = JFrameOperator.of(frm);
+        assertThat(JFrameOperator.of(frm).getContainers().length)
                 .as("Jemmy issue #4420394")
                 .isEqualTo(0);
-        JTabbedPaneOperator tp = new JTabbedPaneOperator(Objects.requireNonNull(
+        JTabbedPaneOperator tp = JTabbedPaneOperator.of(Objects.requireNonNull(
                 JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1)));
         tp.selectPage("JEditorPane", StringComparators.substring());
-        JEditorPaneOperator to = new JEditorPaneOperator(Objects.requireNonNull(
+        JEditorPaneOperator to = JEditorPaneOperator.of(Objects.requireNonNull(
                 JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring())));
-        JEditorPaneOperator t1 = new JEditorPaneOperator(frmo);
+        JEditorPaneOperator t1 = JEditorPaneOperator.waitFor(frmo);
         assertThat(to.getSource()).isSameAs(t1.getSource());
         assertThat(JEditorPaneOperator.findJEditorPane(frm, PredicatesJ.alwaysTrue()))
                 .as("Jemmy issue #4420389")
@@ -91,7 +91,7 @@ class EditorScrollingInTabsTest {
                 .isNotNull();
         assertThat(testJEditorPane(to)).isTrue();
         tp.selectPage("JTextArea", StringComparators.substring());
-        JTextAreaOperator tao = new JTextAreaOperator(Objects.requireNonNull(
+        JTextAreaOperator tao = JTextAreaOperator.of(Objects.requireNonNull(
                 JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring())));
         tao.typeText(allChars);
         assertThat(tao.getText()).isEqualTo(allChars);

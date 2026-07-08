@@ -77,14 +77,14 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testConstructor() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JTabbedPaneOperator operator2 = new JTabbedPaneOperator(operator, "Tab1", StringComparators.strict());
+        JTabbedPaneOperator operator2 = JTabbedPaneOperator.waitFor(operator, "Tab1", StringComparators.strict());
         assertThat(operator2).isNotNull();
         JTabbedPaneOperator operator3 =
-                new JTabbedPaneOperator(operator, PredicatesJ.byName("JTabbedPaneOperatorTest"));
+                JTabbedPaneOperator.waitFor(operator, PredicatesJ.byName("JTabbedPaneOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -123,9 +123,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testFindPage() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.findPage("Tab1", StringComparators.strict());
         operator1.findPage("Tab1", StringComparators.caseInsensitiveSubstring());
@@ -133,9 +133,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testSelectPage() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectPage("Tab1", StringComparators.strict());
         operator1.selectPage("Tab1", StringComparators.caseInsensitiveSubstring());
@@ -143,18 +143,18 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testWaitPage() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.waitPage("Tab1", StringComparators.strict());
     }
 
     @Test
     void testWaitSelected() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectPage("Tab1", StringComparators.strict());
         operator1.waitSelected("Tab1", StringComparators.strict());
@@ -162,9 +162,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testAddChangeListener() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ChangeListenerTest listener = new ChangeListenerTest();
         operator1.addChangeListener(listener);
@@ -173,9 +173,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testAddTab() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
 
         EventQueue.invokeAndWait(() -> {
@@ -191,9 +191,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetBackgroundAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setBackgroundAt(0, Color.black);
         operator1.getBackgroundAt(0);
@@ -201,18 +201,18 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetBoundsAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getBoundsAt(0);
     }
 
     @Test
     void testGetComponentAt() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
 
         EventQueue.invokeAndWait(() -> panel1 = new JPanel());
@@ -223,9 +223,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetDisabledIconAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setDisabledIconAt(0, new ImageIcon());
         operator1.getDisabledIconAt(0);
@@ -233,9 +233,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetForegroundAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setForegroundAt(0, Color.white);
         operator1.getForegroundAt(0);
@@ -243,9 +243,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetIconAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setIconAt(0, new ImageIcon());
         operator1.getIconAt(0);
@@ -253,9 +253,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetModel() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setModel(new DefaultSingleSelectionModel());
         operator1.getModel();
@@ -263,18 +263,18 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetSelectedComponent() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelectedComponent(operator1.getSelectedComponent());
     }
 
     @Test
     void testGetSelectedIndex() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setSelectedIndex(0);
         operator1.getSelectedIndex();
@@ -282,36 +282,36 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetTabCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getTabCount();
     }
 
     @Test
     void testGetTabPlacement() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setTabPlacement(operator1.getTabPlacement());
     }
 
     @Test
     void testGetTabRunCount() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getTabRunCount();
     }
 
     @Test
     void testGetTitleAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setTitleAt(0, "Title");
         operator1.getTitleAt(0);
@@ -319,18 +319,18 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testGetUI() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setUI(operator1.getUI());
     }
 
     @Test
     void testIndexOfComponent() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
 
         EventQueue.invokeAndWait(() -> panel1 = new JPanel());
@@ -340,9 +340,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testIndexOfTab() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.indexOfTab("Tab1");
         operator1.indexOfTab(new ImageIcon());
@@ -350,9 +350,9 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testInsertTab() throws InterruptedException, InvocationTargetException {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
 
         EventQueue.invokeAndWait(() -> panel1 = new JPanel());
@@ -362,27 +362,27 @@ class JTabbedPaneOperatorTest {
 
     @Test
     void testIsEnabledAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isEnabledAt(0);
     }
 
     @Test
     void testRemoveTabAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeTabAt(0);
     }
 
     @Test
     void testSetEnabledAt() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JTabbedPaneOperator operator1 = new JTabbedPaneOperator(operator);
+        JTabbedPaneOperator operator1 = JTabbedPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setEnabledAt(0, true);
     }

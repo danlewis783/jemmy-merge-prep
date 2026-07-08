@@ -47,32 +47,38 @@ import org.netbeans.jemmy.util.StringComparators;
 
 public class JFrameOperator extends FrameOperator {
 
-    public JFrameOperator() {
-        this(0);
+    public static JFrameOperator waitFor() {
+        return waitFor(0);
     }
 
-    public JFrameOperator(int index) {
-        this((JFrame) waitFrame(PredicatesJ.of(JFrame.class), index));
+    public static JFrameOperator waitFor(int index) {
+        return new JFrameOperator((JFrame) waitFrame(PredicatesJ.of(JFrame.class), index));
     }
 
-    public JFrameOperator(JFrame w) {
+    JFrameOperator(JFrame w) {
         super(w);
     }
 
-    public JFrameOperator(Predicate<Component> chooser) {
-        this(chooser, 0);
+    public static JFrameOperator of(JFrame w) {
+        return new JFrameOperator(w);
     }
 
-    public JFrameOperator(String title) {
-        this(title, 0);
+    public static JFrameOperator waitFor(Predicate<Component> chooser) {
+        return waitFor(chooser, 0);
     }
 
-    public JFrameOperator(Predicate<Component> chooser, int index) {
-        this((JFrame) waitFrame(PredicatesJ.of(JFrame.class, chooser), index));
+    public static JFrameOperator waitFor(String title) {
+        return waitFor(title, 0);
     }
 
-    public JFrameOperator(String title, int index) {
-        this(PredicatesJ.of(JFrame.class, new FrameShowingByTitlePredicate(title, StringComparators.strict())), index);
+    public static JFrameOperator waitFor(Predicate<Component> chooser, int index) {
+        return new JFrameOperator((JFrame) waitFrame(PredicatesJ.of(JFrame.class, chooser), index));
+    }
+
+    public static JFrameOperator waitFor(String title, int index) {
+        return waitFor(
+                PredicatesJ.of(JFrame.class, new FrameShowingByTitlePredicate(title, StringComparators.strict())),
+                index);
     }
 
     public AccessibleContext getAccessibleContext() {

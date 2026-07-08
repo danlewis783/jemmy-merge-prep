@@ -63,17 +63,17 @@ class OperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
     }
 
     @Test
     void testIsCaptionEqual() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Operator.isCaptionEqual("", "", StringComparators.strict());
         Operator.isCaptionEqual("", "", StringComparators.caseInsensitiveSubstring());
@@ -82,18 +82,18 @@ class OperatorTest {
 
     @Test
     void testGetParentPath() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getParentPath(Collections.singletonList(PredicatesJ.byName("1")));
     }
 
     @Test
     void testGetCharsKeys() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getCharsKeys("");
         operator1.getCharsKeys(new char[] {'a', 'b'});
@@ -101,9 +101,9 @@ class OperatorTest {
 
     @Test
     void testGetCharsModifiers() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getCharsModifiers("");
         operator1.getCharsModifiers(new char[] {'b', 'b'});
@@ -111,9 +111,9 @@ class OperatorTest {
 
     @Test
     void testRunMapping() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ContainerOperator operator1 = new ContainerOperator(operator);
+        ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
     }
 }

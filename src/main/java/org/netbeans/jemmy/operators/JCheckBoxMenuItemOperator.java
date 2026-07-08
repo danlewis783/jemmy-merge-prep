@@ -35,33 +35,39 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
-    public JCheckBoxMenuItemOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont) {
+        return waitFor(cont, 0);
     }
 
-    public JCheckBoxMenuItemOperator(JCheckBoxMenuItem item) {
+    JCheckBoxMenuItemOperator(JCheckBoxMenuItem item) {
         super(item);
     }
 
-    public JCheckBoxMenuItemOperator(ContainerOperator cont, int index) {
-        this((JCheckBoxMenuItem) waitComponent(cont, PredicatesJ.of(JCheckBoxMenuItem.class), index));
+    public static JCheckBoxMenuItemOperator of(JCheckBoxMenuItem item) {
+        return new JCheckBoxMenuItemOperator(item);
     }
 
-    public JCheckBoxMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, int index) {
+        return new JCheckBoxMenuItemOperator(
+                (JCheckBoxMenuItem) waitComponent(cont, PredicatesJ.of(JCheckBoxMenuItem.class), index));
     }
 
-    public JCheckBoxMenuItemOperator(ContainerOperator cont, String text, StringComparator comparator) {
-        this(cont, text, comparator, 0);
+    public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
+        return waitFor(cont, chooser, 0);
     }
 
-    public JCheckBoxMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JCheckBoxMenuItem) cont.waitSubComponent(PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
+    public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, String text, StringComparator comparator) {
+        return waitFor(cont, text, comparator, 0);
     }
 
-    public JCheckBoxMenuItemOperator(
+    public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        return new JCheckBoxMenuItemOperator(
+                (JCheckBoxMenuItem) cont.waitSubComponent(PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
+    }
+
+    public static JCheckBoxMenuItemOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JCheckBoxMenuItem)
+        return new JCheckBoxMenuItemOperator((JCheckBoxMenuItem)
                 waitComponent(cont, new JCheckBoxMenuItemByLabelPredicate(text, stringComparator), index));
     }
 

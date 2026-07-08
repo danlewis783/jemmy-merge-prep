@@ -73,15 +73,15 @@ class AccessibleDescriptionPredicateTest {
 
     @Test
     void testCheckContext() {
-        JFrameOperator operator = new JFrameOperator();
+        JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JButtonOperator operator1 = new JButtonOperator(operator, new AccessibleDescriptionPredicate("Accessible"));
+        JButtonOperator operator1 = JButtonOperator.waitFor(operator, new AccessibleDescriptionPredicate("Accessible"));
         assertThat(operator1).isNotNull();
-        JDialogOperator operator2 = new JDialogOperator(new AccessibleDescriptionPredicate("Dialog"));
+        JDialogOperator operator2 = JDialogOperator.waitFor(new AccessibleDescriptionPredicate("Dialog"));
         assertThat(operator2).isNotNull();
-        JFrameOperator operator3 = new JFrameOperator(new AccessibleDescriptionPredicate("Frame"));
+        JFrameOperator operator3 = JFrameOperator.waitFor(new AccessibleDescriptionPredicate("Frame"));
         assertThat(operator3).isNotNull();
-        WindowOperator operator4 = new WindowOperator(operator, new AccessibleDescriptionPredicate("Window"));
+        WindowOperator operator4 = WindowOperator.waitFor(operator, new AccessibleDescriptionPredicate("Window"));
         assertThat(operator4).isNotNull();
     }
 }

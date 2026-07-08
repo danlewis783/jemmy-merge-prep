@@ -68,13 +68,13 @@ class ListOperatorTest {
 
     @Test
     void testConstructor() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ListOperator operator2 = new ListOperator(operator, PredicatesJ.byName("ListOperatorTest"));
+        ListOperator operator2 = ListOperator.waitFor(operator, PredicatesJ.byName("ListOperatorTest"));
         assertThat(operator2).isNotNull();
-        ListOperator operator3 = new ListOperator(operator, "Item 1", StringComparators.strict());
+        ListOperator operator3 = ListOperator.waitFor(operator, "Item 1", StringComparators.strict());
         assertThat(operator3).isNotNull();
     }
 
@@ -86,18 +86,18 @@ class ListOperatorTest {
 
     @Test
     void testFindItemIndex() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.findItemIndex("Item 1", StringComparators.strict(), 0);
     }
 
     @Test
     void testSelectItem() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectItem("Item 1", StringComparators.strict(), 0);
         operator1.selectItem(0);
@@ -105,18 +105,18 @@ class ListOperatorTest {
 
     @Test
     void testSelectItems() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectItems(0, 0);
     }
 
     @Test
     void testWaitItemsSelection() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectItem(0);
         operator1.waitItemsSelection(0, 0, true);
@@ -124,9 +124,9 @@ class ListOperatorTest {
 
     @Test
     void testWaitItemSelection() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectItem(0);
         operator1.waitItemSelection(0, true);
@@ -134,9 +134,9 @@ class ListOperatorTest {
 
     @Test
     void testAddActionListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ActionListenerTest listener = new ActionListenerTest();
         operator1.addActionListener(listener);
@@ -145,9 +145,9 @@ class ListOperatorTest {
 
     @Test
     void testAddItemListener() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ItemListenerTest listener = new ItemListenerTest();
         operator1.addItemListener(listener);
@@ -156,153 +156,153 @@ class ListOperatorTest {
 
     @Test
     void testDeselect() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.deselect(0);
     }
 
     @Test
     void testGetItem() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getItem(0);
     }
 
     @Test
     void testGetItemCount() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getItemCount();
     }
 
     @Test
     void testGetItems() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getItems();
     }
 
     @Test
     void testGetMinimumSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getMinimumSize(0);
     }
 
     @Test
     void testGetPreferredSize() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getPreferredSize(0);
     }
 
     @Test
     void testGetRows() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getRows();
     }
 
     @Test
     void testGetSelectedIndex() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSelectedIndex();
     }
 
     @Test
     void testGetSelectedIndexes() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSelectedIndexes();
     }
 
     @Test
     void testGetSelectedItem() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSelectedItem();
     }
 
     @Test
     void testGetSelectedItems() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSelectedItems();
     }
 
     @Test
     void testGetSelectedObjects() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getSelectedObjects();
     }
 
     @Test
     void testGetVisibleIndex() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.getVisibleIndex();
     }
 
     @Test
     void testIsIndexSelected() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isIndexSelected(0);
     }
 
     @Test
     void testIsMultipleMode() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.isMultipleMode();
     }
 
     @Test
     void testMakeVisible() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.makeVisible(0);
     }
 
     @Test
     void testRemove() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.remove(0);
         list.add("Item 1");
@@ -311,36 +311,36 @@ class ListOperatorTest {
 
     @Test
     void testRemoveAll() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.removeAll();
     }
 
     @Test
     void testReplaceItem() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.replaceItem("Item 2", 0);
     }
 
     @Test
     void testSelect() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.select(0);
     }
 
     @Test
     void testSetMultipleMode() {
-        FrameOperator operator = new FrameOperator();
+        FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        ListOperator operator1 = new ListOperator(operator);
+        ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.setMultipleMode(true);
     }

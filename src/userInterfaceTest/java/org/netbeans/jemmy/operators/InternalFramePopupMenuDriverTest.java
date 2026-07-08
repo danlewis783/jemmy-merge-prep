@@ -92,7 +92,7 @@ class InternalFramePopupMenuDriverTest {
 
     @Test
     void maximizeAndDemaximizeThroughPopupMenu() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.maximize();
         assertThat(operator.isMaximum()).isTrue();
         operator.demaximize();
@@ -101,21 +101,21 @@ class InternalFramePopupMenuDriverTest {
 
     @Test
     void iconifyThroughPopupMenu() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.iconify();
         assertThat(operator.isIcon()).isTrue();
     }
 
     @Test
     void closeThroughPopupMenu() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         operator.close();
         assertThat(operator.isClosed()).isTrue();
     }
 
     @Test
     void popupButtonIsTheOnlyTitleControl() {
-        JInternalFrameOperator operator = new JInternalFrameOperator(new JFrameOperator(frame));
+        JInternalFrameOperator operator = JInternalFrameOperator.waitFor(JFrameOperator.of(frame));
         assertThat(operator.getPopupButton().getSource()).isNotNull();
     }
 }

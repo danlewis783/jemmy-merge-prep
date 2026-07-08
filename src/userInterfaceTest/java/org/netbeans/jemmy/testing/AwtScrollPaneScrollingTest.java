@@ -47,25 +47,25 @@ class AwtScrollPaneScrollingTest {
         Button butt44 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "44", StringComparators.strict()));
         Button butt42 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "42", StringComparators.strict()));
         Button butt40 = Objects.requireNonNull(ButtonOperator.findButton(jFrame, "40", StringComparators.strict()));
-        ScrollPaneOperator scrollPaneOp = new ScrollPaneOperator(new JFrameOperator(jFrame));
+        ScrollPaneOperator scrollPaneOp = ScrollPaneOperator.waitFor(JFrameOperator.of(jFrame));
         assertThat(ScrollPaneOperator.findScrollPaneUnder(butt00)).isSameAs(scrollPaneOp.getSource());
         scrollPaneOp.setValues(
                 scrollPaneOp.getHAdjustable().getMaximum(),
                 scrollPaneOp.getVAdjustable().getMaximum());
-        ComponentOperator butt44Op = new ComponentOperator(butt44);
+        ComponentOperator butt44Op = ComponentOperator.of(butt44);
         assertThat(CheckInside.isInside(butt44Op, scrollPaneOp, 0, 0, butt44Op.getWidth(), butt44Op.getHeight()))
                 .isTrue();
         scrollPaneOp.setValues(0, 0);
-        ComponentOperator butt00Op = new ComponentOperator(butt00);
+        ComponentOperator butt00Op = ComponentOperator.of(butt00);
         assertThat(CheckInside.isInside(butt00Op, scrollPaneOp, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
                 .isTrue();
-        ComponentOperator butt22Op = new ComponentOperator(butt22);
+        ComponentOperator butt22Op = ComponentOperator.of(butt22);
         scrollPaneOp.scrollToComponentPoint(butt22, butt22Op.getWidth() / 2, butt22Op.getHeight() / 2);
         assertThat(CheckInside.isInside(
                         butt22Op, scrollPaneOp, butt22Op.getWidth() / 2 - 1, butt22Op.getHeight() / 2 - 1, 2, 2))
                 .isTrue();
         scrollPaneOp.scrollToRight();
-        ComponentOperator butt24Op = new ComponentOperator(butt24);
+        ComponentOperator butt24Op = ComponentOperator.of(butt24);
         assertThat(CheckInside.isInside(
                         butt24Op, scrollPaneOp, butt24Op.getWidth() / 2 - 1, butt24Op.getHeight() / 2 - 1, 2, 2))
                 .isTrue();
@@ -79,13 +79,13 @@ class AwtScrollPaneScrollingTest {
         scrollPaneOp.scrollToBottom();
         int x42 = 10;
         int y42 = 10;
-        ComponentOperator butt42Op = new ComponentOperator(butt42);
+        ComponentOperator butt42Op = ComponentOperator.of(butt42);
         int w42 = butt42Op.getWidth() - 20;
         int h42 = butt42Op.getHeight() - 20;
         assertThat(CheckInside.isInside(butt42Op, scrollPaneOp, x42, y42, w42, h42))
                 .isTrue();
         scrollPaneOp.scrollToLeft();
-        ComponentOperator butt40Op = new ComponentOperator(butt40);
+        ComponentOperator butt40Op = ComponentOperator.of(butt40);
         assertThat(CheckInside.isInside(butt40Op, scrollPaneOp, 0, 0, butt40Op.getWidth(), butt40Op.getHeight()))
                 .isTrue();
         scrollPaneOp.scrollToTop();
@@ -96,11 +96,11 @@ class AwtScrollPaneScrollingTest {
                         butt22Op, scrollPaneOp, butt22Op.getWidth() / 2 - 1, butt22Op.getHeight() / 2 - 1, 1, 1))
                 .isTrue();
         scrollPaneOp.scrollToComponent(butt11);
-        ComponentOperator butt11Op = new ComponentOperator(butt11);
+        ComponentOperator butt11Op = ComponentOperator.of(butt11);
         assertThat(CheckInside.isInside(butt11Op, scrollPaneOp, 0, 0, butt11Op.getWidth(), butt11Op.getHeight()))
                 .isTrue();
         scrollPaneOp.scrollToComponent(butt33);
-        ComponentOperator butt33Op = new ComponentOperator(butt33);
+        ComponentOperator butt33Op = ComponentOperator.of(butt33);
         assertThat(CheckInside.isInside(butt33Op, scrollPaneOp, 0, 0, butt33Op.getWidth(), butt33Op.getHeight()))
                 .isTrue();
         scrollPaneOp.scrollToHorizontalValue(0.5);

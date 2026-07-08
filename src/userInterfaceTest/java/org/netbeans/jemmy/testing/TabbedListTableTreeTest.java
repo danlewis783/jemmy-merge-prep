@@ -44,13 +44,13 @@ class TabbedListTableTreeTest {
     void doit() throws Exception {
         TabbedSelectionApp.main();
         JFrame frame = JFrameOperator.waitJFrame("TabbedSelectionApp");
-        JTabbedPaneOperator tabbedPaneOp = new JTabbedPaneOperator(
+        JTabbedPaneOperator tabbedPaneOp = JTabbedPaneOperator.of(
                 JTabbedPaneOperator.waitJTabbedPane(frame, "Table Page", StringComparators.strict(), 0));
         tabbedPaneOp.selectPage("List Page", StringComparators.strict());
 
         AtomicReference<Component> compRef = new AtomicReference<>();
 
-        JListOperator listOp = new JListOperator(
+        JListOperator listOp = JListOperator.of(
                 JListOperator.waitJList(frame, null, StringComparators.caseInsensitiveSubstring(), -1));
         listOp.clickOnItem("0", StringComparators.strict());
 
@@ -67,7 +67,7 @@ class TabbedListTableTreeTest {
         Component comp1 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("1"));
         assertThat(comp1).isNotNull();
         tabbedPaneOp.selectPage("Table Page", StringComparators.strict());
-        JTableOperator tableOp = new JTableOperator(Objects.requireNonNull(
+        JTableOperator tableOp = JTableOperator.of(Objects.requireNonNull(
                 JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
         tableOp.getHeaderOperator().moveColumn(0, 1);
         assertThat(tableOp.findCellRow("04", StringComparators.strict(), 0, 0)).isEqualTo(4);
@@ -90,7 +90,7 @@ class TabbedListTableTreeTest {
         assertThat(comp11).isNotNull();
         tableOp.clickOnCell(2, 2, 1);
         tabbedPaneOp.selectPage("Tree Page", StringComparators.strict());
-        JTreeOperator treeOp = new JTreeOperator(Objects.requireNonNull(
+        JTreeOperator treeOp = JTreeOperator.of(Objects.requireNonNull(
                 JTreeOperator.findJTree(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
         TreePath rootPath = treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
         treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
