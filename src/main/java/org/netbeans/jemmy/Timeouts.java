@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Global timeout registry, keyed by {@link TimeoutKey}.
- *
- * <p>Unlike upstream Jemmy, this fork intentionally omits the global timeout scaling feature (the
+ * <p>
+ * Unlike upstream Jemmy, this fork intentionally omits the global timeout scaling feature (the
  * {@code jemmy.timeouts.scale} system property). A process-wide multiplier silently distorts every wait —
  * including explicit {@link #override(TimeoutKey, long)} values — which makes timing behavior
  * environment-dependent and failures hard to reproduce. Adjust the specific timeout with

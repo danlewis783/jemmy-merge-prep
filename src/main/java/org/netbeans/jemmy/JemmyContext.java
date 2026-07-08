@@ -42,12 +42,12 @@ import org.netbeans.jemmy.util.Platform;
  * Process-wide harness state: the active input {@link DispatchingModel dispatching model}, the driver
  * registry backing {@link org.netbeans.jemmy.drivers.DriverManager}, and the keyboard
  * {@link CharBindingMap character bindings}.
- *
- * <p>Changing the dispatching model through {@link #installDriversAndSetDispatchingModel(EnumSet)}
- * reinstalls the input and component drivers to match, so the registry always reflects the current
+ * <p>
+ * Changing the dispatching model through {@link #installDriversAndSetDispatchingModel(EnumSet)}
+ * installs the input and component drivers to match, so the registry always reflects the current
  * model. There is one instance per JVM, obtained with {@link #getInstance()}.
- *
- * <p>Upstream Jemmy's counterpart, {@code JemmyProperties}, backs this state with a string-keyed
+ * <p>
+ * Upstream Jemmy's counterpart, {@code JemmyProperties}, backs this state with a string-keyed
  * property map fed by {@code jemmy.*} system properties, plus per-thread stacks of such maps. This
  * fork keeps only the typed state above — no property map, no system properties, no thread-locality —
  * and renamed the class to match.

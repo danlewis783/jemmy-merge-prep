@@ -31,8 +31,8 @@ import org.netbeans.jemmy.functions.NoEventFunction;
 
 /**
  * Tracks AWT events through global listeners, supporting the wait-for-event and wait-for-quiet functions.
- *
- * <p>Unlike upstream Jemmy, this fork intentionally omits the {@code jemmy.event_listening} system property
+ * <p>
+ * Unlike upstream Jemmy, this fork intentionally omits the {@code jemmy.event_listening} system property
  * that suppressed listener registration: it was a read-once negative option that silently degraded the event
  * waits relying on the listeners. Use {@link #addListeners()} and {@link #removeListeners()} for explicit
  * control instead.
