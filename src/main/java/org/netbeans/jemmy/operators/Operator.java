@@ -177,11 +177,11 @@ public abstract class Operator {
     // the result's nullness follows the function's type argument, which pre-generics
     // NullAway cannot express
     @SuppressWarnings("NullAway")
-    <F, T> T produceTimeRestricted(Function<F, T> function, @Nullable F f, TimeoutKey timeoutKey) {
-        FunctionRunner<F, T> functionRunner = FunctionRunner.on(function);
-        T ret;
+    <T, R> R produceTimeRestricted(Function<T, R> function, @Nullable T t, TimeoutKey timeoutKey) {
+        FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
+        R result;
         try {
-            ret = functionRunner.submitAndGet(f, timeoutKey);
+            result = functionRunner.submitAndGet(t, timeoutKey);
         } catch (InterruptedException e) {
             throw new JemmyException("interrupted waiting for function", e);
         }
@@ -195,15 +195,15 @@ public abstract class Operator {
             }
         }
 
-        return ret;
+        return result;
     }
 
-    protected <F, T> void produceNoBlocking(Function<F, T> function, @Nullable F f) {
-        FunctionRunner<F, T> functionRunner = FunctionRunner.on(function);
-        functionRunner.run(f);
+    protected <T, R> void produceNoBlocking(Function<T, R> function, @Nullable T t) {
+        FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
+        functionRunner.run(t);
 
-        Throwable t = functionRunner.getThrowable();
-        if (t != null) {
+        Throwable throwable = functionRunner.getThrowable();
+        if (throwable != null) {
             throw new JemmyException(
                     String.format("throwable encountered during exception of function \"%s\"", function));
         }

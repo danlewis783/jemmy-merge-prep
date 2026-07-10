@@ -16,7 +16,6 @@
  */
 package org.netbeans.jemmy;
 
-import java.awt.Component;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,12 +26,11 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class FunctionRunner<F, T> {
+public final class FunctionRunner<T, R> {
     private static final Logger logger = LoggerFactory.getLogger(FunctionRunner.class);
     private static final ExecutorService JEMMY_ACTION_SERVICE = Executors.newSingleThreadExecutor(new ThreadFactory() {
         final AtomicLong count = new AtomicLong(0);
@@ -46,32 +44,28 @@ public final class FunctionRunner<F, T> {
             return thread;
         }
     });
-    private final Function<F, T> function;
+    private final Function<T, R> function;
     private final AtomicReference<@Nullable Throwable> throwable;
 
-    private FunctionRunner(Function<F, T> function) {
+    private FunctionRunner(Function<T, R> function) {
         this.function = function;
         this.throwable = new AtomicReference<>();
     }
 
-    public static <F, T> FunctionRunner<F, T> on(Function<F, T> function) {
+    public static <T, R> FunctionRunner<T, R> on(Function<T, R> function) {
         return new FunctionRunner<>(function);
-    }
-
-    public static <F extends Component> FunctionRunner<F, Boolean> on(Predicate<F> predicate) {
-        return FunctionRunner.on(predicate::test);
     }
 
     public @Nullable Throwable getThrowable() {
         return throwable.get();
     }
 
-    public @Nullable T submitAndGetDefaultTimeout(@Nullable F f) throws InterruptedException {
-        return submitAndGet(f, TimeoutKey.ActionProducer_MaxActionTime);
+    public @Nullable R submitAndGetDefaultTimeout(@Nullable T t) throws InterruptedException {
+        return submitAndGet(t, TimeoutKey.ActionProducer_MaxActionTime);
     }
 
-    public @Nullable T submitAndGet(@Nullable F f, TimeoutKey timeoutKey) throws InterruptedException {
-        Future<T> future = JEMMY_ACTION_SERVICE.submit(() -> function.apply(f));
+    public @Nullable R submitAndGet(@Nullable T t, TimeoutKey timeoutKey) throws InterruptedException {
+        Future<R> future = JEMMY_ACTION_SERVICE.submit(() -> function.apply(t));
         long timeout = Timeouts.get(timeoutKey);
         long startTime = System.currentTimeMillis();
         try {
@@ -95,7 +89,7 @@ public final class FunctionRunner<F, T> {
         return null;
     }
 
-    public void run(@Nullable F f) {
-        JEMMY_ACTION_SERVICE.execute(() -> function.apply(f));
+    public void run(@Nullable T t) {
+        JEMMY_ACTION_SERVICE.execute(() -> function.apply(t));
     }
 }
