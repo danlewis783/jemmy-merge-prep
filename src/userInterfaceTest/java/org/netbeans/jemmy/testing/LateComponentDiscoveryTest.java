@@ -16,10 +16,15 @@
  */
 package org.netbeans.jemmy.testing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.awt.EventQueue;
 import java.util.Objects;
-import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,17 +48,34 @@ class LateComponentDiscoveryTest {
             jFrame.setVisible(true);
             jFrameRef.set(jFrame);
         });
-        Executors.newSingleThreadExecutor().submit((Callable<Void>) () -> {
-            JLabelOperator.waitFor(JFrameOperator.waitFor("Test Frame"));
-            return null;
-        });
-        EventQueue.invokeAndWait(() -> {
-            JLabel jLabel = new MyLabel();
-            jLabel.setText("AAAAAAAAAAAAAA");
-            JFrame jFrame = Objects.requireNonNull(jFrameRef.get());
-            jFrame.getContentPane().add(jLabel);
-            jFrame.pack();
-        });
+        CountDownLatch frameFound = new CountDownLatch(1);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            Future<JLabelOperator> discovery = executor.submit(() -> {
+                JFrameOperator frameOp = JFrameOperator.waitFor("Test Frame");
+                frameFound.countDown();
+                return JLabelOperator.waitFor(frameOp);
+            });
+            assertThat(frameFound.await(30, TimeUnit.SECONDS))
+                    .as("check that the background search got underway")
+                    .isTrue();
+
+            AtomicReference<JLabel> jLabelRef = new AtomicReference<>();
+            EventQueue.invokeAndWait(() -> {
+                JLabel jLabel = new MyLabel();
+                jLabel.setText("AAAAAAAAAAAAAA");
+                JFrame jFrame = Objects.requireNonNull(jFrameRef.get());
+                jFrame.getContentPane().add(jLabel);
+                jFrame.pack();
+                jLabelRef.set(jLabel);
+            });
+
+            assertThat(discovery.get(30, TimeUnit.SECONDS).getSource())
+                    .as("check that the label added after the search began was discovered")
+                    .isSameAs(jLabelRef.get());
+        } finally {
+            executor.shutdown();
+        }
     }
 
     private static class MyLabel extends JLabel {

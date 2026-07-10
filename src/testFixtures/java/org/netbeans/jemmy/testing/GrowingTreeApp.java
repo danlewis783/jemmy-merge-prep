@@ -19,61 +19,63 @@ package org.netbeans.jemmy.testing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.Timer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import org.netbeans.jemmy.DispatchingModel;
 import org.netbeans.jemmy.JemmyContext;
 
+/**
+ * Shows a tree that, once Start is pushed, grows a new top row ("node0" .. "node29", newest first)
+ * at a fixed cadence, so operations on the tree run while its rows keep shifting.
+ */
 public class GrowingTreeApp extends JFrame {
-    private DefaultTreeModel model;
-    private DefaultMutableTreeNode root;
-    private long time;
-    private JTree tree;
+    static final int NODE_COUNT = 30;
+
+    private final DefaultTreeModel model;
+    private final DefaultMutableTreeNode root;
+    private final JTree tree;
 
     private GrowingTreeApp() {
         super("GrowingTreeApp");
-        JButton start = new JButton("Start");
-        start.addActionListener(e -> Executors.newSingleThreadExecutor().submit((Callable<Void>) () -> {
-            TreePath path = new TreePath(new Object[] {root});
-            for (int i = 0; i < 30; i++) {
-                int index = i;
-                Thread.sleep(time * 2);
-
-                EventQueue.invokeAndWait(() -> {
-                    if (!tree.isExpanded(path)) {
-                        tree.expandPath(path);
-                    }
-                });
-
-                EventQueue.invokeAndWait(
-                        () -> model.insertNodeInto(new DefaultMutableTreeNode("node" + index), root, 0));
-            }
-            return null;
-        }));
-        Container container = getContentPane();
-        container.setLayout(new BorderLayout());
-        container.add(start, BorderLayout.SOUTH);
-        time = System.currentTimeMillis() % 100;
-
-        if (JemmyContext.getInstance().getDispatchingModel().contains(DispatchingModel.Robot)) {
-            time = time * 10;
-        }
-
-        container.add(new JLabel(Long.toString(time)), BorderLayout.NORTH);
         root = new DefaultMutableTreeNode("Root");
         model = new DefaultTreeModel(root);
         tree = new JTree(root);
         tree.setModel(model);
+        JButton start = new JButton("Start");
+        start.addActionListener(e -> startGrowing());
+        Container container = getContentPane();
+        container.setLayout(new BorderLayout());
+        container.add(start, BorderLayout.SOUTH);
         container.add(new JScrollPane(tree), BorderLayout.CENTER);
         setSize(300, 300);
+    }
+
+    private void startGrowing() {
+        // robot dispatching clicks real screen coordinates, so grow more calmly than
+        // under queue dispatching to leave a click a fighting chance at a stable row
+        int interval = JemmyContext.getInstance().getDispatchingModel().contains(DispatchingModel.Robot) ? 250 : 50;
+        TreePath rootPath = new TreePath(root);
+        Timer growth = new Timer(interval, e -> {
+            int grown = root.getChildCount();
+            model.insertNodeInto(new DefaultMutableTreeNode("node" + grown), root, 0);
+
+            // expand after inserting: expanding a childless root is a no-op, so doing it
+            // first would leave the freshly inserted node hidden until the next tick
+            if (!tree.isExpanded(rootPath)) {
+                tree.expandPath(rootPath);
+            }
+
+            if (grown + 1 >= NODE_COUNT) {
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        growth.start();
     }
 
     public static void main(String... args) {

@@ -142,12 +142,11 @@ class TimeoutsTest {
     }
 
     @Test
-    void checkHappyExpired() throws InterruptedException {
+    void checkHappyExpired() {
         TimeoutKey key = TimeoutKey.Testing_A;
         assumeThat(key.getDefaultValue()).isEqualTo(0L);
-        long startTime = System.currentTimeMillis();
-
-        Thread.sleep(100L);
+        // backdated start: the 0 ms timeout is already expired, no need to actually sleep
+        long startTime = System.currentTimeMillis() - 100L;
 
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(() -> Timeouts.check(key, startTime))
@@ -155,13 +154,13 @@ class TimeoutsTest {
     }
 
     @Test
-    void checkHappyNotExpired() throws InterruptedException {
+    void checkHappyNotExpired() {
         TimeoutKey key = TimeoutKey.Testing_A;
         assumeThat(key.getDefaultValue()).isEqualTo(0L);
-        long startTime = System.currentTimeMillis();
+        // backdated start: well within the 1000 ms timeout, no need to actually sleep
+        long startTime = System.currentTimeMillis() - 100L;
 
         try (TimeoutOverride a = Timeouts.override(key, 1_000L)) {
-            Thread.sleep(100L);
             assertThatNoException().isThrownBy(() -> Timeouts.check(key, startTime));
         }
     }
@@ -197,7 +196,7 @@ class TimeoutsTest {
     void sleepHappy() {
         TimeoutKey key = TimeoutKey.Testing_A;
         assumeThat(key.getDefaultValue()).isEqualTo(0L);
-        long timeout = 1_000L;
+        long timeout = 400L;
         try (TimeoutOverride t = Timeouts.override(key, timeout)) {
             long start = System.currentTimeMillis();
             Timeouts.sleep(TimeoutKey.Testing_A);
@@ -212,7 +211,7 @@ class TimeoutsTest {
         TimeoutKey key = TimeoutKey.Testing_A;
         assumeThat(key.getDefaultValue()).isEqualTo(0L);
 
-        final long timeout = 1_000L;
+        final long timeout = 400L;
         final long timeoutSlackMs = 500L;
 
         AtomicReference<Exception> caught = new AtomicReference<>();
@@ -263,7 +262,7 @@ class TimeoutsTest {
         TimeoutKey key = TimeoutKey.Testing_A;
         assumeThat(key.getDefaultValue()).isEqualTo(0L);
 
-        long timeout = 1_000L;
+        long timeout = 400L;
 
         AtomicReference<Exception> caught = new AtomicReference<>();
 

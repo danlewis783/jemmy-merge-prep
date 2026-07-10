@@ -31,11 +31,14 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.ListModel;
+import javax.swing.Timer;
 import javax.swing.event.ListDataListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 public class TreePathApp extends JFrame {
+    private static final int WRONG_POPUP_SHOW_TIME_MS = 500;
+
     private final JList<TreePath> list;
     private final JPopupMenu popup;
     private final JCheckBox showWrong;
@@ -139,16 +142,18 @@ public class TreePathApp extends JFrame {
 
         private void maybeShowPopup(MouseEvent e) {
             if (e.isPopupTrigger()) {
-                try {
-                    if (showWrong.isSelected()) {
-                        wrongPopup.show(e.getComponent(), e.getX(), e.getY());
-                        Thread.sleep(2000);
+                if (showWrong.isSelected()) {
+                    // show the wrong popup first, then swap in the real one without blocking
+                    // the EDT; a waiter looking for the real popup must skip past the wrong one
+                    wrongPopup.show(e.getComponent(), e.getX(), e.getY());
+                    Timer showRealPopup = new Timer(WRONG_POPUP_SHOW_TIME_MS, unused -> {
                         wrongPopup.setVisible(false);
-                    }
-
+                        popup.show(e.getComponent(), e.getX(), e.getY());
+                    });
+                    showRealPopup.setRepeats(false);
+                    showRealPopup.start();
+                } else {
                     popup.show(e.getComponent(), e.getX(), e.getY());
-                } catch (InterruptedException e1) {
-                    throw new RuntimeException(e1);
                 }
             }
         }

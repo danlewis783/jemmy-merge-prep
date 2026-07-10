@@ -16,11 +16,13 @@
  */
 package org.netbeans.jemmy.testing;
 
-import java.util.Objects;
+import java.util.function.Function;
+import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
-import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -28,18 +30,31 @@ import org.netbeans.jemmy.util.StringComparators;
 class TreeSelectionUnderChangeTest {
 
     @Test
-    void selectPath() throws Exception {
+    void selectPath() {
         GrowingTreeApp.main();
         JFrameOperator frameOp = JFrameOperator.waitFor("GrowingTreeApp");
         frameOp.maximize();
-        long time = Long.parseLong(JLabelOperator.waitFor(frameOp).getText());
         JButtonOperator start = JButtonOperator.waitFor(frameOp);
         JTreeOperator tree = JTreeOperator.waitFor(frameOp);
         start.push();
 
+        PathAppeared pathAppeared = new PathAppeared(tree);
         for (int i = 0; i < 20; i++) {
-            Thread.sleep((int) (time * 3));
-            tree.selectPath(Objects.requireNonNull(tree.findPath("node" + i, "|", StringComparators.strict())));
+            // wait for the node to grow in, then select it while the tree keeps changing
+            tree.selectPath(FunctionRepeater.on(pathAppeared).runUntilNotNull("node" + i));
+        }
+    }
+
+    private static class PathAppeared implements Function<String, TreePath> {
+        private final JTreeOperator tree;
+
+        private PathAppeared(JTreeOperator tree) {
+            this.tree = tree;
+        }
+
+        @Override
+        public @Nullable TreePath apply(String node) {
+            return tree.findPath(node, "|", StringComparators.strict());
         }
     }
 }

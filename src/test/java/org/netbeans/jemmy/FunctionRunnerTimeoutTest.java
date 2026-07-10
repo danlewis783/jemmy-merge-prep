@@ -20,6 +20,8 @@ package org.netbeans.jemmy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import org.junit.jupiter.api.AfterEach;
@@ -33,10 +35,10 @@ class FunctionRunnerTimeoutTest {
 
     private static final long ACTION_TIME = 700L;
     private static final long MAX_ACTION_TIME = 300L;
-    private static final long VERIFY_TIME = 1000L;
-    private static final long SLEEP_TIME = 100L;
+    private static final long EXIT_WAIT_TIME = 5_000L;
 
-    private final AtomicBoolean abort = new AtomicBoolean(false);
+    private final CountDownLatch abort = new CountDownLatch(1);
+    private final CountDownLatch functionExited = new CountDownLatch(1);
     private final AtomicBoolean completedWithoutInterruption = new AtomicBoolean(false);
     private TimeoutOverride override;
 
@@ -52,40 +54,41 @@ class FunctionRunnerTimeoutTest {
 
     @Test
     void test() throws Exception {
+        // FunctionRunner abandons (does not cancel) the function when the timeout expires, so it
+        // keeps occupying the shared worker thread until ACTION_TIME elapses or the abort latch opens
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(() -> FunctionRunner.on((Function<Void, Boolean>) v -> {
-                            long startTime = System.currentTimeMillis();
-                            //noinspection unused
-                            long elapsed;
-                            while ((elapsed = (System.currentTimeMillis() - startTime)) < ACTION_TIME) {
-                                try {
-                                    Thread.sleep(SLEEP_TIME);
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
+                            try {
+                                long deadline = System.currentTimeMillis() + ACTION_TIME;
+                                long remaining;
+                                while ((remaining = deadline - System.currentTimeMillis()) > 0) {
+                                    try {
+                                        if (abort.await(remaining, TimeUnit.MILLISECONDS)) {
+                                            return null;
+                                        }
+                                    } catch (InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
 
-                                if (abort.get()) {
-                                    return null;
-                                }
-                            }
+                                completedWithoutInterruption.set(true);
 
-                            if (!completedWithoutInterruption.compareAndSet(false, true)) {
-                                // don't care
+                                return true;
+                            } finally {
+                                functionExited.countDown();
                             }
-
-                            return true;
                         })
                         .submitAndGet(null, TimeoutKey.Testing_A))
                 .withMessageContaining(String.format(
                         "timeout \"%s\" (%d ms) exceeded after (", TimeoutKey.Testing_A, MAX_ACTION_TIME));
 
-        if (!abort.compareAndSet(false, true)) {
-            // don't care
-        }
+        abort.countDown();
 
-        Thread.sleep(VERIFY_TIME);
-
-        assertThat(completedWithoutInterruption).isFalse();
-        assertThat(abort).isTrue();
+        assertThat(functionExited.await(EXIT_WAIT_TIME, TimeUnit.MILLISECONDS))
+                .as("check that the abandoned function exited once released")
+                .isTrue();
+        assertThat(completedWithoutInterruption)
+                .as("check that the function was released before completing on its own")
+                .isFalse();
     }
 }
