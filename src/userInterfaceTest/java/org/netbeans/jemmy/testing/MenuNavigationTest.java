@@ -69,7 +69,7 @@ class MenuNavigationTest {
                     new JMenuItemByTextPredicate("submenu", StringComparators.strict());
             List<Predicate<Component>> predicates =
                     Collections.unmodifiableList(Arrays.asList(menuPredicate1, menuPredicate2));
-            assertThat(mb0.showMenuItems(predicates).length).isEqualTo(3);
+            assertThat(mb0.showMenuItems(predicates)).hasSize(3);
             mb0.closeSubmenus();
             assertThat(mb0.showMenuItem(predicates).getText()).isEqualTo("submenu");
             mb0.pushMenu("menu", StringComparators.strict());

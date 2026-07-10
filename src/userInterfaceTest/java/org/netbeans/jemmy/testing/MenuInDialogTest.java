@@ -62,10 +62,6 @@ class MenuInDialogTest {
 
     private void checkItems(JMenuBarOperator jMenuBarOp, String path, String[] itemTexts) {
         JMenuItemOperator[] items = jMenuBarOp.showMenuItems(path, "|", StringComparators.strict());
-        assertThat(itemTexts.length).isEqualTo(items.length);
-
-        for (int i = 0; i < itemTexts.length; i++) {
-            assertThat(itemTexts[i]).isEqualTo(items[i].getText());
-        }
+        assertThat(items).extracting(JMenuItemOperator::getText).containsExactly(itemTexts);
     }
 }

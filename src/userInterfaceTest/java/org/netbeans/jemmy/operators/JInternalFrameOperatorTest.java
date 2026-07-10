@@ -376,9 +376,9 @@ class JInternalFrameOperatorTest {
         assertThat(operator2).isNotNull();
         InternalFrameListenerTest listener = new InternalFrameListenerTest();
         operator2.addInternalFrameListener(listener);
-        assertThat(internalFrame.getInternalFrameListeners().length).isEqualTo(2);
+        assertThat(internalFrame.getInternalFrameListeners()).hasSize(2);
         operator2.removeInternalFrameListener(listener);
-        assertThat(internalFrame.getInternalFrameListeners().length).isEqualTo(1);
+        assertThat(internalFrame.getInternalFrameListeners()).hasSize(1);
     }
 
     @Test

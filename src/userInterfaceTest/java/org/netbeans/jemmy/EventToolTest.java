@@ -71,14 +71,14 @@ class EventToolTest {
             jFrameRef.set(jFrame);
         });
         JFrameOperator jFrameOp = JFrameOperator.of(Objects.requireNonNull(jFrameRef.get()));
-        assertThat(eventTool.getLastEvent() instanceof ContainerEvent).isTrue();
+        assertThat(eventTool.getLastEvent()).isInstanceOf(ContainerEvent.class);
         assertThat(eventTool.getCurrentEventMask()).isEqualTo(AWTEvent.CONTAINER_EVENT_MASK);
         assertThat(eventTool.getLastEvent(AWTEvent.WINDOW_EVENT_MASK))
                 .as("Window event was somehow caught")
                 .isNull();
-        assertThat(eventTool.getLastEventTime(AWTEvent.WINDOW_EVENT_MASK) > 0)
+        assertThat(eventTool.getLastEventTime(AWTEvent.WINDOW_EVENT_MASK))
                 .as("Window event was somehow caught")
-                .isFalse();
+                .isNotPositive();
         eventTool.addListeners();
         AtomicBoolean finished = new AtomicBoolean(false);
         ExecutorService executorService = Executors.newSingleThreadExecutor();

@@ -72,7 +72,7 @@ final class RobotVsQueueDispatchTest {
 
             List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-            compareEvents(linesQueue, linesRobot);
+            assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
         });
     }
 
@@ -91,18 +91,8 @@ final class RobotVsQueueDispatchTest {
 
             List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-            compareEvents(linesQueue, linesRobot);
+            assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
         });
-    }
-
-    private void compareEvents(List<String> eventListA, List<String> eventListB) {
-        int listASize = eventListA.size();
-        int listBSize = eventListB.size();
-        assertThat(listBSize).isEqualTo(listASize);
-        int iMax = Math.min(listASize, listBSize);
-        for (int i = 0; i < iMax; i++) {
-            assertThat(eventListA.get(i)).as("message # %d", (i + 1)).isEqualTo(eventListB.get(i));
-        }
     }
 
     private List<String> recordEvents(

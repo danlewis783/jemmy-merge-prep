@@ -304,9 +304,9 @@ class JSpinnerOperatorTest {
         assertThat(jSpinnerOp).isNotNull();
         NullChangeListener listener = new NullChangeListener();
         jSpinnerOp.addChangeListener(listener);
-        assertThat(jSpinnerOp.getChangeListeners().length).isEqualTo(2);
+        assertThat(jSpinnerOp.getChangeListeners()).hasSize(2);
         jSpinnerOp.removeChangeListener(listener);
-        assertThat(jSpinnerOp.getChangeListeners().length).isEqualTo(1);
+        assertThat(jSpinnerOp.getChangeListeners()).hasSize(1);
     }
 
     @Test

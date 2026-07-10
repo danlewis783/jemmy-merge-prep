@@ -85,7 +85,7 @@ class FunctionRunnerTimeoutTest {
 
         Thread.sleep(VERIFY_TIME);
 
-        assertThat(completedWithoutInterruption.get()).isFalse();
-        assertThat(abort.get()).isTrue();
+        assertThat(completedWithoutInterruption).isFalse();
+        assertThat(abort).isTrue();
     }
 }

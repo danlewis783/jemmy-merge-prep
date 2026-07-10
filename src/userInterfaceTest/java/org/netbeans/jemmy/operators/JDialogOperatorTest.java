@@ -218,9 +218,9 @@ class JDialogOperatorTest {
         int y = dialog.getY();
         JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
         operator.setLocationRelativeTo(null);
-        assertThat(x != dialog.getX()).isTrue();
+        assertThat(dialog.getX()).isNotEqualTo(x);
         assertThat(operator.getX()).isEqualTo(dialog.getX());
-        assertThat(y != dialog.getY()).isTrue();
+        assertThat(dialog.getY()).isNotEqualTo(y);
         assertThat(operator.getY()).isEqualTo(dialog.getY());
     }
 

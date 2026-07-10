@@ -56,8 +56,7 @@ class TabbedListTableTreeTest {
 
         EventQueue.invokeAndWait(() -> compRef.set(listOp.getRenderedComponent(0)));
 
-        assertThat(compRef.get()).isNotNull();
-        assertThat(compRef.get() instanceof JPanel).isTrue();
+        assertThat(compRef.get()).isInstanceOf(JPanel.class);
 
         EventQueue.invokeAndWait(() -> compRef.set(listOp.getRenderedComponent(0, true, true)));
 

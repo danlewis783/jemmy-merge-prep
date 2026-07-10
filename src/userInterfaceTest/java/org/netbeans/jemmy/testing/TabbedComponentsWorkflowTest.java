@@ -135,7 +135,7 @@ final class TabbedComponentsWorkflowTest {
             JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
             jTextAreaOp.scrollToPosition(jTextAreaOp.getText().length());
             jTextAreaOp.clearText();
-            assertThat(jTextAreaOp.getText().length()).isEqualTo(0);
+            assertThat(jTextAreaOp.getText()).isEmpty();
             JTree treeOpSource = (JTree) jTreeOp.getSource();
             assertThat(treeOpSource.getCellEditor()).isEqualTo(jTreeOp.getCellEditor());
             assertThat(treeOpSource.getCellRenderer()).isEqualTo(jTreeOp.getCellRenderer());

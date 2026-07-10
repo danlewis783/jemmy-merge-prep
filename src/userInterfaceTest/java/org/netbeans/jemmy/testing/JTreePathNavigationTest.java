@@ -88,7 +88,7 @@ class JTreePathNavigationTest {
             List<Predicate<Component>> predicates = Collections.unmodifiableList(Arrays.asList(
                     new JMenuItemByTextPredicate("XXX", StringComparators.strict()),
                     new JMenuItemByTextPredicate("submenu", StringComparators.strict())));
-            assertThat(pmo.showMenuItems(predicates).length).isEqualTo(2);
+            assertThat(pmo.showMenuItems(predicates)).hasSize(2);
             assertThat(pmo.showMenuItem(predicates).getText()).isEqualTo("submenu");
             assertThat(pmo.showMenuItem("XXX", "|", StringComparators.strict()).getText())
                     .isEqualTo("XXX");

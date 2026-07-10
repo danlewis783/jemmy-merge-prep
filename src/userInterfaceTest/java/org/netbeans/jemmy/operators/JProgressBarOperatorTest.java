@@ -115,9 +115,9 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         NullChangeListener listener = new NullChangeListener();
         operator1.addChangeListener(listener);
-        assertThat(progressBar.getChangeListeners().length).isEqualTo(2);
+        assertThat(progressBar.getChangeListeners()).hasSize(2);
         operator1.removeChangeListener(listener);
-        assertThat(progressBar.getChangeListeners().length).isEqualTo(1);
+        assertThat(progressBar.getChangeListeners()).hasSize(1);
     }
 
     @Test

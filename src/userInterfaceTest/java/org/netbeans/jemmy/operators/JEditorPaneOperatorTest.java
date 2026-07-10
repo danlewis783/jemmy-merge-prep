@@ -130,11 +130,11 @@ class JEditorPaneOperatorTest {
         assertThat(operator2).isNotNull();
         HyperlinkListenerTest listener = new HyperlinkListenerTest();
         operator2.addHyperlinkListener(listener);
-        assertThat(editorPane.getHyperlinkListeners().length).isEqualTo(1);
+        assertThat(editorPane.getHyperlinkListeners()).hasSize(1);
         operator2.fireHyperlinkUpdate(new HyperlinkEvent("", null, null));
         assertThat(listener.event).isNotNull();
         operator2.removeHyperlinkListener(listener);
-        assertThat(editorPane.getHyperlinkListeners().length).isEqualTo(0);
+        assertThat(editorPane.getHyperlinkListeners()).isEmpty();
     }
 
     @Test
@@ -200,7 +200,7 @@ class JEditorPaneOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setContentType("text/html");
         operator2.read(new ByteArrayInputStream("<html></html>".getBytes()), HTMLDocument.class);
-        assertThat(editorPane.getText().startsWith("<html>")).isTrue();
+        assertThat(editorPane.getText()).startsWith("<html>");
     }
 
     private static class EditorKitTest extends EditorKit {

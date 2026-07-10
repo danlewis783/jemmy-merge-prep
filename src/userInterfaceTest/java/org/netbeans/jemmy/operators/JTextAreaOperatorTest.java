@@ -229,10 +229,10 @@ class JTextAreaOperatorTest {
         to.typeText(allChars);
         assertThat(to.getText()).isEqualTo(allChars);
         to.setText("");
-        assertThat(to.getText()).isEqualTo("");
+        assertThat(to.getText()).isEmpty();
         to.setText(allChars);
         assertThat(to.getText()).isEqualTo(allChars);
         to.clearText();
-        assertThat(to.getText()).isEqualTo("");
+        assertThat(to.getText()).isEmpty();
     }
 }

@@ -533,7 +533,7 @@ class JTreeOperatorTest {
         assertThat(operator2).isNotNull();
 
         assertThat(operator2.convertValueToText(null, true, true, true, 0, true))
-                .isEqualTo("");
+                .isEmpty();
     }
 
     @Test

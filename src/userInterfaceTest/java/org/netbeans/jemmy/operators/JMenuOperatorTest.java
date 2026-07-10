@@ -211,9 +211,9 @@ class JMenuOperatorTest {
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuOp.addMenuListener(listener);
-        assertThat(menu.getMenuListeners().length).isEqualTo(1);
+        assertThat(menu.getMenuListeners()).hasSize(1);
         jMenuOp.removeMenuListener(listener);
-        assertThat(menu.getMenuListeners().length).isEqualTo(0);
+        assertThat(menu.getMenuListeners()).isEmpty();
     }
 
     @Test

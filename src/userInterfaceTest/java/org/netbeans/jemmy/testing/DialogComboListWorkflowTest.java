@@ -192,32 +192,16 @@ class DialogComboListWorkflowTest {
     private void testJComponent(JComponentOperator op) {
         Component comp = op.getSource();
         JComponent jComp = (JComponent) comp;
-        assertThat(((comp.getAccessibleContext() == null) && (op.getAccessibleContext() == null))
-                        || comp.getAccessibleContext().equals(op.getAccessibleContext()))
-                .isTrue();
+        assertThat(op.getAccessibleContext()).isEqualTo(comp.getAccessibleContext());
         assertThat(op.getAutoscrolls()).isEqualTo(jComp.getAutoscrolls());
-        assertThat(((jComp.getBorder() == null) && (op.getBorder() == null))
-                        || jComp.getBorder().equals(op.getBorder()))
-                .isTrue();
+        assertThat(op.getBorder()).isEqualTo(jComp.getBorder());
         assertThat(op.getDebugGraphicsOptions()).isEqualTo(jComp.getDebugGraphicsOptions());
-        assertThat(((jComp.getNextFocusableComponent() == null) && (op.getNextFocusableComponent() == null))
-                        || jComp.getNextFocusableComponent().equals(op.getNextFocusableComponent()))
-                .isTrue();
-        assertThat(((jComp.getRootPane() == null) && (op.getRootPane() == null))
-                        || jComp.getRootPane().equals(op.getRootPane()))
-                .isTrue();
-        assertThat(((jComp.getToolTipText() == null) && (op.getToolTipText() == null))
-                        || jComp.getToolTipText().equals(op.getToolTipText()))
-                .isTrue();
-        assertThat(((jComp.getTopLevelAncestor() == null) && (op.getTopLevelAncestor() == null))
-                        || jComp.getTopLevelAncestor().equals(op.getTopLevelAncestor()))
-                .isTrue();
-        assertThat(((jComp.getUIClassID() == null) && (op.getUIClassID() == null))
-                        || jComp.getUIClassID().equals(op.getUIClassID()))
-                .isTrue();
-        assertThat(((jComp.getVisibleRect() == null) && (op.getVisibleRect() == null))
-                        || jComp.getVisibleRect().equals(op.getVisibleRect()))
-                .isTrue();
+        assertThat(op.getNextFocusableComponent()).isEqualTo(jComp.getNextFocusableComponent());
+        assertThat(op.getRootPane()).isEqualTo(jComp.getRootPane());
+        assertThat(op.getToolTipText()).isEqualTo(jComp.getToolTipText());
+        assertThat(op.getTopLevelAncestor()).isEqualTo(jComp.getTopLevelAncestor());
+        assertThat(op.getUIClassID()).isEqualTo(jComp.getUIClassID());
+        assertThat(op.getVisibleRect()).isEqualTo(jComp.getVisibleRect());
         assertThat(op.isFocusCycleRoot()).isEqualTo(jComp.isFocusCycleRoot());
         assertThat(op.isManagingFocus()).isEqualTo(jComp.isManagingFocus());
         assertThat(op.isOptimizedDrawingEnabled()).isEqualTo(jComp.isOptimizedDrawingEnabled());
@@ -229,52 +213,25 @@ class DialogComboListWorkflowTest {
 
     private void testJTextComponent(JTextComponentOperator op) {
         JTextComponent src = (JTextComponent) op.getSource();
-        assertThat(((src.getCaret() == null) && (op.getCaret() == null))
-                        || src.getCaret().equals(op.getCaret()))
-                .isTrue();
-        assertThat(((src.getCaretColor() == null) && (op.getCaretColor() == null))
-                        || src.getCaretColor().equals(op.getCaretColor()))
-                .isTrue();
+        assertThat(op.getCaret()).isEqualTo(src.getCaret());
+        assertThat(op.getCaretColor()).isEqualTo(src.getCaretColor());
         assertThat(op.getCaretPosition()).isEqualTo(src.getCaretPosition());
-        assertThat(((src.getDisabledTextColor() == null) && (op.getDisabledTextColor() == null))
-                        || src.getDisabledTextColor().equals(op.getDisabledTextColor()))
-                .isTrue();
-        assertThat(((src.getDocument() == null) && (op.getDocument() == null))
-                        || src.getDocument().equals(op.getDocument()))
-                .isTrue();
+        assertThat(op.getDisabledTextColor()).isEqualTo(src.getDisabledTextColor());
+        assertThat(op.getDocument()).isEqualTo(src.getDocument());
         assertThat(op.getFocusAccelerator()).isEqualTo(src.getFocusAccelerator());
-        assertThat(((src.getHighlighter() == null) && (op.getHighlighter() == null))
-                        || src.getHighlighter().equals(op.getHighlighter()))
-                .isTrue();
-        assertThat(((src.getKeymap() == null) && (op.getKeymap() == null))
-                        || src.getKeymap().equals(op.getKeymap()))
-                .isTrue();
-        assertThat(((src.getMargin() == null) && (op.getMargin() == null))
-                        || src.getMargin().equals(op.getMargin()))
-                .isTrue();
-        assertThat(((src.getPreferredScrollableViewportSize() == null)
-                                && (op.getPreferredScrollableViewportSize() == null))
-                        || src.getPreferredScrollableViewportSize().equals(op.getPreferredScrollableViewportSize()))
-                .isTrue();
+        assertThat(op.getHighlighter()).isEqualTo(src.getHighlighter());
+        assertThat(op.getKeymap()).isEqualTo(src.getKeymap());
+        assertThat(op.getMargin()).isEqualTo(src.getMargin());
+        assertThat(op.getPreferredScrollableViewportSize()).isEqualTo(src.getPreferredScrollableViewportSize());
         assertThat(op.getScrollableTracksViewportHeight()).isEqualTo(src.getScrollableTracksViewportHeight());
         assertThat(op.getScrollableTracksViewportWidth()).isEqualTo(src.getScrollableTracksViewportWidth());
-        assertThat(((src.getSelectedText() == null) && (op.getSelectedText() == null))
-                        || src.getSelectedText().equals(op.getSelectedText()))
-                .isTrue();
-        assertThat(((src.getSelectedTextColor() == null) && (op.getSelectedTextColor() == null))
-                        || src.getSelectedTextColor().equals(op.getSelectedTextColor()))
-                .isTrue();
-        assertThat(((src.getSelectionColor() == null) && (op.getSelectionColor() == null))
-                        || src.getSelectionColor().equals(op.getSelectionColor()))
-                .isTrue();
+        assertThat(op.getSelectedText()).isEqualTo(src.getSelectedText());
+        assertThat(op.getSelectedTextColor()).isEqualTo(src.getSelectedTextColor());
+        assertThat(op.getSelectionColor()).isEqualTo(src.getSelectionColor());
         assertThat(op.getSelectionEnd()).isEqualTo(src.getSelectionEnd());
         assertThat(op.getSelectionStart()).isEqualTo(src.getSelectionStart());
-        assertThat(((src.getText() == null) && (op.getText() == null))
-                        || src.getText().equals(op.getText()))
-                .isTrue();
-        assertThat(((src.getUI() == null) && (op.getUI() == null))
-                        || src.getUI().equals(op.getUI()))
-                .isTrue();
+        assertThat(op.getText()).isEqualTo(src.getText());
+        assertThat(op.getUI()).isEqualTo(src.getUI());
         assertThat(op.isEditable()).isEqualTo(src.isEditable());
     }
 
@@ -282,89 +239,49 @@ class DialogComboListWorkflowTest {
         JTextField src = (JTextField) op.getSource();
         assertThat(op.getColumns()).isEqualTo(src.getColumns());
         assertThat(op.getHorizontalAlignment()).isEqualTo(src.getHorizontalAlignment());
-        assertThat(((src.getHorizontalVisibility() == null) && (op.getHorizontalVisibility() == null))
-                        || src.getHorizontalVisibility().equals(op.getHorizontalVisibility()))
-                .isTrue();
+        assertThat(op.getHorizontalVisibility()).isEqualTo(src.getHorizontalVisibility());
         assertThat(op.getScrollOffset()).isEqualTo(src.getScrollOffset());
     }
 
     private void testWindow(WindowOperator op) {
         Window src = (Window) op.getSource();
-        assertThat(((src.getFocusOwner() == null) && (op.getFocusOwner() == null))
-                        || src.getFocusOwner().equals(op.getFocusOwner()))
-                .isTrue();
-        assertThat(((src.getOwner() == null) && (op.getOwner() == null))
-                        || src.getOwner().equals(op.getOwner()))
-                .isTrue();
-        assertThat(((src.getWarningString() == null) && (op.getWarningString() == null))
-                        || src.getWarningString().equals(op.getWarningString()))
-                .isTrue();
+        assertThat(op.getFocusOwner()).isEqualTo(src.getFocusOwner());
+        assertThat(op.getOwner()).isEqualTo(src.getOwner());
+        assertThat(op.getWarningString()).isEqualTo(src.getWarningString());
     }
 
     void testFrame(FrameOperator op) {
         Frame src = (Frame) op.getSource();
-        assertThat(((src.getIconImage() == null) && (op.getIconImage() == null))
-                        || src.getIconImage().equals(op.getIconImage()))
-                .isTrue();
-        assertThat(((src.getMenuBar() == null) && (op.getMenuBar() == null))
-                        || src.getMenuBar().equals(op.getMenuBar()))
-                .isTrue();
+        assertThat(op.getIconImage()).isEqualTo(src.getIconImage());
+        assertThat(op.getMenuBar()).isEqualTo(src.getMenuBar());
         assertThat(op.getState()).isEqualTo(src.getState());
-        assertThat(((src.getTitle() == null) && (op.getTitle() == null))
-                        || src.getTitle().equals(op.getTitle()))
-                .isTrue();
+        assertThat(op.getTitle()).isEqualTo(src.getTitle());
         assertThat(op.isResizable()).isEqualTo(src.isResizable());
     }
 
     void testJFrame(JFrameOperator op) {
         JFrame src = (JFrame) op.getSource();
-        assertThat(((src.getAccessibleContext() == null) && (op.getAccessibleContext() == null))
-                        || src.getAccessibleContext().equals(op.getAccessibleContext()))
-                .isTrue();
-        assertThat(((src.getContentPane() == null) && (op.getContentPane() == null))
-                        || src.getContentPane().equals(op.getContentPane()))
-                .isTrue();
+        assertThat(op.getAccessibleContext()).isEqualTo(src.getAccessibleContext());
+        assertThat(op.getContentPane()).isEqualTo(src.getContentPane());
         assertThat(op.getDefaultCloseOperation()).isEqualTo(src.getDefaultCloseOperation());
-        assertThat(((src.getGlassPane() == null) && (op.getGlassPane() == null))
-                        || src.getGlassPane().equals(op.getGlassPane()))
-                .isTrue();
-        assertThat(((src.getJMenuBar() == null) && (op.getJMenuBar() == null))
-                        || src.getJMenuBar().equals(op.getJMenuBar()))
-                .isTrue();
-        assertThat(((src.getLayeredPane() == null) && (op.getLayeredPane() == null))
-                        || src.getLayeredPane().equals(op.getLayeredPane()))
-                .isTrue();
-        assertThat(((src.getRootPane() == null) && (op.getRootPane() == null))
-                        || src.getRootPane().equals(op.getRootPane()))
-                .isTrue();
+        assertThat(op.getGlassPane()).isEqualTo(src.getGlassPane());
+        assertThat(op.getJMenuBar()).isEqualTo(src.getJMenuBar());
+        assertThat(op.getLayeredPane()).isEqualTo(src.getLayeredPane());
+        assertThat(op.getRootPane()).isEqualTo(src.getRootPane());
     }
 
     private void testJComboBox(JComboBoxOperator op) {
         JComboBox<?> src = (JComboBox<?>) op.getSource();
-        assertThat(((src.getActionCommand() == null) && (op.getActionCommand() == null))
-                        || src.getActionCommand().equals(op.getActionCommand()))
-                .isTrue();
-        assertThat(((src.getEditor() == null) && (op.getEditor() == null))
-                        || src.getEditor().equals(op.getEditor()))
-                .isTrue();
+        assertThat(op.getActionCommand()).isEqualTo(src.getActionCommand());
+        assertThat(op.getEditor()).isEqualTo(src.getEditor());
         assertThat(op.getItemCount()).isEqualTo(src.getItemCount());
-        assertThat(((src.getKeySelectionManager() == null) && (op.getKeySelectionManager() == null))
-                        || src.getKeySelectionManager().equals(op.getKeySelectionManager()))
-                .isTrue();
+        assertThat(op.getKeySelectionManager()).isEqualTo(src.getKeySelectionManager());
         assertThat(op.getMaximumRowCount()).isEqualTo(src.getMaximumRowCount());
-        assertThat(((src.getModel() == null) && (op.getModel() == null))
-                        || src.getModel().equals(op.getModel()))
-                .isTrue();
-        assertThat(((src.getRenderer() == null) && (op.getRenderer() == null))
-                        || src.getRenderer().equals(op.getRenderer()))
-                .isTrue();
+        assertThat(op.getModel()).isEqualTo(src.getModel());
+        assertThat(op.getRenderer()).isEqualTo(src.getRenderer());
         assertThat(op.getSelectedIndex()).isEqualTo(src.getSelectedIndex());
-        assertThat(((src.getSelectedItem() == null) && (op.getSelectedItem() == null))
-                        || src.getSelectedItem().equals(op.getSelectedItem()))
-                .isTrue();
-        assertThat(((src.getUI() == null) && (op.getUI() == null))
-                        || src.getUI().equals(op.getUI()))
-                .isTrue();
+        assertThat(op.getSelectedItem()).isEqualTo(src.getSelectedItem());
+        assertThat(op.getUI()).isEqualTo(src.getUI());
         assertThat(op.isEditable()).isEqualTo(src.isEditable());
         assertThat(op.isLightWeightPopupEnabled()).isEqualTo(src.isLightWeightPopupEnabled());
         assertThat(op.isPopupVisible()).isEqualTo(src.isPopupVisible());

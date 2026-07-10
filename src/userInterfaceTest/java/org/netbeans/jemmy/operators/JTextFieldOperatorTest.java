@@ -115,7 +115,7 @@ class JTextFieldOperatorTest {
         operator2.addActionListener(listener);
         assertThat(textField.getActionListeners()[0]).isEqualTo(listener);
         operator2.removeActionListener(listener);
-        assertThat(textField.getActionListeners().length).isEqualTo(0);
+        assertThat(textField.getActionListeners()).isEmpty();
     }
 
     @Test

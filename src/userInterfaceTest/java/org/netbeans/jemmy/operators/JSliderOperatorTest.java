@@ -162,9 +162,9 @@ class JSliderOperatorTest {
         assertThat(operator2).isNotNull();
         IgnoreChangeListener listener = new IgnoreChangeListener();
         operator2.addChangeListener(listener);
-        assertThat(slider.getChangeListeners().length).isEqualTo(1);
+        assertThat(slider.getChangeListeners()).hasSize(1);
         operator2.removeChangeListener(listener);
-        assertThat(slider.getChangeListeners().length).isEqualTo(0);
+        assertThat(slider.getChangeListeners()).isEmpty();
     }
 
     @Test

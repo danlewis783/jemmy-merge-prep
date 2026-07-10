@@ -115,9 +115,9 @@ class ButtonOperatorTest {
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addActionListener(event -> {});
-        assertThat(button.getActionListeners().length).isEqualTo(1);
+        assertThat(button.getActionListeners()).hasSize(1);
         operator1.removeActionListener(button.getActionListeners()[0]);
-        assertThat(button.getActionListeners().length).isEqualTo(0);
+        assertThat(button.getActionListeners()).isEmpty();
     }
 
     @Test

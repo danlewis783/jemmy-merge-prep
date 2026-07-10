@@ -207,9 +207,9 @@ final class JPopupMenuOperatorTest {
         assertThat(operator).isNotNull();
         NullPopupMenuListener listener = new NullPopupMenuListener();
         operator.addPopupMenuListener(listener);
-        assertThat(popup.getPopupMenuListeners().length).isEqualTo(2);
+        assertThat(popup.getPopupMenuListeners()).hasSize(2);
         operator.removePopupMenuListener(listener);
-        assertThat(popup.getPopupMenuListeners().length).isEqualTo(1);
+        assertThat(popup.getPopupMenuListeners()).hasSize(1);
     }
 
     @Test
