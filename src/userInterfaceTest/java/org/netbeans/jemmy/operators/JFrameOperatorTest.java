@@ -36,7 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.IndexedFramesApp;
 import org.netbeans.jemmy.testing.MenuNavigationApp;
 import org.netbeans.jemmy.util.StringComparators;
@@ -65,14 +65,14 @@ class JFrameOperatorTest {
         assertThat(operator1).isNotNull();
         JFrameOperator operator2 = JFrameOperator.waitFor("JFrameOperatorTest");
         assertThat(operator2).isNotNull();
-        JFrameOperator operator3 = JFrameOperator.waitFor(PredicatesJ.byName("JFrameOperatorTest"));
+        JFrameOperator operator3 = JFrameOperator.waitFor(ComponentPredicates.byName("JFrameOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
     @Test
     void gindJFrame() {
         mainFrame.setVisible(true);
-        JFrame frame1 = JFrameOperator.findJFrame(PredicatesJ.byName("JFrameOperatorTest"));
+        JFrame frame1 = JFrameOperator.findJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();
         JFrame frame2 = JFrameOperator.findJFrame("JFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(frame2).isNotNull();
@@ -81,7 +81,7 @@ class JFrameOperatorTest {
     @Test
     void waitJFrame() {
         mainFrame.setVisible(true);
-        JFrame frame1 = JFrameOperator.waitJFrame(PredicatesJ.byName("JFrameOperatorTest"));
+        JFrame frame1 = JFrameOperator.waitJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();
         JFrame frame2 = JFrameOperator.waitJFrame("JFrameOperatorTest");
         assertThat(frame2).isNotNull();

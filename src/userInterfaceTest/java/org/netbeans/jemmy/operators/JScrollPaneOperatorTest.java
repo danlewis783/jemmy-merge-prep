@@ -28,7 +28,7 @@ import javax.swing.plaf.ScrollPaneUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 class JScrollPaneOperatorTest {
     private JFrame frame;
@@ -63,7 +63,7 @@ class JScrollPaneOperatorTest {
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JScrollPaneOperator operator2 =
-                JScrollPaneOperator.waitFor(operator, PredicatesJ.byName("JScrollPaneOperatorTest"));
+                JScrollPaneOperator.waitFor(operator, ComponentPredicates.byName("JScrollPaneOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -73,7 +73,7 @@ class JScrollPaneOperatorTest {
         JScrollPane scrollPane1 = JScrollPaneOperator.findJScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
-                JScrollPaneOperator.findJScrollPane(frame, PredicatesJ.byName("JScrollPaneOperatorTest"));
+                JScrollPaneOperator.findJScrollPane(frame, ComponentPredicates.byName("JScrollPaneOperatorTest"));
         assertThat(scrollPane2).isNotNull();
     }
 
@@ -86,7 +86,7 @@ class JScrollPaneOperatorTest {
         JScrollPane scrollPane1 = JScrollPaneOperator.waitJScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
-                JScrollPaneOperator.waitJScrollPane(frame, PredicatesJ.byName("JScrollPaneOperatorTest"));
+                JScrollPaneOperator.waitJScrollPane(frame, ComponentPredicates.byName("JScrollPaneOperatorTest"));
         assertThat(scrollPane2).isNotNull();
     }
 

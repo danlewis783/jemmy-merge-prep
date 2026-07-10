@@ -47,8 +47,8 @@ import javax.swing.plaf.MenuItemUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -67,7 +67,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
     }
 
     public static JMenuItemOperator waitFor(ContainerOperator cont, int index) {
-        return new JMenuItemOperator((JMenuItem) waitComponent(cont, PredicatesJ.of(JMenuItem.class), index));
+        return new JMenuItemOperator((JMenuItem) waitComponent(cont, ComponentPredicates.of(JMenuItem.class), index));
     }
 
     public static JMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -80,7 +80,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
 
     public static JMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JMenuItemOperator(
-                (JMenuItem) cont.waitSubComponent(PredicatesJ.of(JMenuItem.class, chooser), index));
+                (JMenuItem) cont.waitSubComponent(ComponentPredicates.of(JMenuItem.class, chooser), index));
     }
 
     public static JMenuItemOperator waitFor(
@@ -216,7 +216,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
     }
 
     public static @Nullable JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser, int index) {
-        return (JMenuItem) findComponent(menu, PredicatesJ.of(JMenuItem.class, chooser), index);
+        return (JMenuItem) findComponent(menu, ComponentPredicates.of(JMenuItem.class, chooser), index);
     }
 
     public static @Nullable JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser) {
@@ -233,7 +233,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
     }
 
     public static JMenuItem waitJMenuItem(Container menu, Predicate<Component> chooser, int index) {
-        return (JMenuItem) waitComponent(menu, PredicatesJ.of(JMenuItem.class, chooser), index);
+        return (JMenuItem) waitComponent(menu, ComponentPredicates.of(JMenuItem.class, chooser), index);
     }
 
     public static JMenuItem waitJMenuItem(Container menu, Predicate<Component> chooser) {

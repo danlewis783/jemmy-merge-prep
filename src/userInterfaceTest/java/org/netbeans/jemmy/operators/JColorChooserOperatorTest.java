@@ -34,7 +34,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
@@ -74,7 +74,7 @@ class JColorChooserOperatorTest {
         JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         JColorChooserOperator operator3 =
-                JColorChooserOperator.waitFor(operator1, PredicatesJ.byName("JColorChooserOperatorTest"));
+                JColorChooserOperator.waitFor(operator1, ComponentPredicates.byName("JColorChooserOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -83,7 +83,7 @@ class JColorChooserOperatorTest {
         JColorChooser colorChooser1 = JColorChooserOperator.findJColorChooser(frame);
         assertThat(colorChooser1).isNotNull();
         JColorChooser colorChooser2 =
-                JColorChooserOperator.findJColorChooser(frame, PredicatesJ.byName("JColorChooserOperatorTest"));
+                JColorChooserOperator.findJColorChooser(frame, ComponentPredicates.byName("JColorChooserOperatorTest"));
         assertThat(colorChooser2).isNotNull();
     }
 
@@ -92,7 +92,7 @@ class JColorChooserOperatorTest {
         JColorChooser colorChooser1 = JColorChooserOperator.waitJColorChooser(frame);
         assertThat(colorChooser1).isNotNull();
         JColorChooser colorChooser2 =
-                JColorChooserOperator.waitJColorChooser(frame, PredicatesJ.byName("JColorChooserOperatorTest"));
+                JColorChooserOperator.waitJColorChooser(frame, ComponentPredicates.byName("JColorChooserOperatorTest"));
         assertThat(colorChooser2).isNotNull();
     }
 

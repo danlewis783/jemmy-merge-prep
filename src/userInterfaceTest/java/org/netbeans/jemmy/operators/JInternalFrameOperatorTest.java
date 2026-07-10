@@ -47,7 +47,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JInternalFrameOperator.JDesktopIconOperator;
 import org.netbeans.jemmy.operators.JInternalFrameOperator.WrongInternalFrameStateException;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
@@ -94,7 +94,7 @@ class JInternalFrameOperatorTest {
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         JInternalFrameOperator operator3 =
-                JInternalFrameOperator.waitFor(operator, PredicatesJ.byName("JInternalFrameOperatorTest"));
+                JInternalFrameOperator.waitFor(operator, ComponentPredicates.byName("JInternalFrameOperatorTest"));
         assertThat(operator3).isNotNull();
         JInternalFrameOperator operator4 =
                 JInternalFrameOperator.waitFor(operator, "JInternalFrameOperatorTest", StringComparators.strict());
@@ -103,8 +103,8 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testFindJInternalFrame() throws InterruptedException, InvocationTargetException {
-        JInternalFrame internalFrame1 =
-                JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame1 = JInternalFrameOperator.findJInternalFrame(
+                frame, ComponentPredicates.byName("JInternalFrameOperatorTest"));
         assertThat(internalFrame1).isNotNull();
         JInternalFrame internalFrame2 = JInternalFrameOperator.findJInternalFrame(
                 frame, "JInternalFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -118,8 +118,8 @@ class JInternalFrameOperatorTest {
             }
         });
 
-        JInternalFrame internalFrame3 =
-                JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame3 = JInternalFrameOperator.findJInternalFrame(
+                frame, ComponentPredicates.byName("JInternalFrameOperatorTest"));
         assertThat(internalFrame3).isNull();
 
         EventQueue.invokeAndWait(() -> {
@@ -127,8 +127,8 @@ class JInternalFrameOperatorTest {
             internalFrame.setDesktopIcon(desktopIcon);
         });
 
-        JInternalFrame internalFrame4 =
-                JInternalFrameOperator.findJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame4 = JInternalFrameOperator.findJInternalFrame(
+                frame, ComponentPredicates.byName("JInternalFrameOperatorTest"));
         assertThat(internalFrame4).isNull();
     }
 
@@ -137,8 +137,8 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testWaitJInternalFrame() {
-        JInternalFrame internalFrame1 =
-                JInternalFrameOperator.waitJInternalFrame(frame, PredicatesJ.byName("JInternalFrameOperatorTest"));
+        JInternalFrame internalFrame1 = JInternalFrameOperator.waitJInternalFrame(
+                frame, ComponentPredicates.byName("JInternalFrameOperatorTest"));
         assertThat(internalFrame1).isNotNull();
         JInternalFrame internalFrame2 = JInternalFrameOperator.waitJInternalFrame(
                 frame, "JInternalFrameOperatorTest", StringComparators.caseInsensitiveSubstring());

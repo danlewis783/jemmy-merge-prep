@@ -40,7 +40,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -78,7 +78,7 @@ class JListOperatorTest {
         assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JListOperator operator2 = JListOperator.waitFor(operator, PredicatesJ.byName("JListOperatorTest"));
+        JListOperator operator2 = JListOperator.waitFor(operator, ComponentPredicates.byName("JListOperatorTest"));
         assertThat(operator2).isNotNull();
         JListOperator operator3 = JListOperator.waitFor(operator, "one", StringComparators.strict());
         assertThat(operator3).isNotNull();
@@ -86,7 +86,7 @@ class JListOperatorTest {
 
     @Test
     void testFindJList() {
-        JList<?> list1 = JListOperator.findJList(frame, PredicatesJ.byName("JListOperatorTest"));
+        JList<?> list1 = JListOperator.findJList(frame, ComponentPredicates.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
         JList<?> list2 = JListOperator.findJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();
@@ -94,7 +94,7 @@ class JListOperatorTest {
 
     @Test
     void testWaitJList() {
-        JList<?> list1 = JListOperator.waitJList(frame, PredicatesJ.byName("JListOperatorTest"));
+        JList<?> list1 = JListOperator.waitJList(frame, ComponentPredicates.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
         JList<?> list2 = JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();

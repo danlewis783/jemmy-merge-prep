@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -55,7 +55,7 @@ class FrameOperatorTest {
         frame.setVisible(true);
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        FrameOperator operator2 = FrameOperator.waitFor(PredicatesJ.byName("FrameOperatorTest"));
+        FrameOperator operator2 = FrameOperator.waitFor(ComponentPredicates.byName("FrameOperatorTest"));
         assertThat(operator2).isNotNull();
         FrameOperator operator3 = FrameOperator.waitFor("FrameOperatorTest");
         assertThat(operator3).isNotNull();

@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -64,7 +64,7 @@ class LabelOperatorTest {
         assertThat(operator).isNotNull();
         LabelOperator operator1 = LabelOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        LabelOperator operator2 = LabelOperator.waitFor(operator, PredicatesJ.byName("LabelOperatorTest"));
+        LabelOperator operator2 = LabelOperator.waitFor(operator, ComponentPredicates.byName("LabelOperatorTest"));
         assertThat(operator2).isNotNull();
         LabelOperator operator3 = LabelOperator.waitFor(operator, "LabelOperatorTest", StringComparators.strict(), 0);
         assertThat(operator3).isNotNull();
@@ -74,7 +74,7 @@ class LabelOperatorTest {
     void testFindLabel() {
         Label label = LabelOperator.findLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(label).isNotNull();
-        Label label2 = LabelOperator.findLabel(frame, PredicatesJ.byName("LabelOperatorTest"));
+        Label label2 = LabelOperator.findLabel(frame, ComponentPredicates.byName("LabelOperatorTest"));
         assertThat(label2).isNotNull();
     }
 
@@ -82,7 +82,7 @@ class LabelOperatorTest {
     void testWaitLabel() {
         Label label = LabelOperator.waitLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(label).isNotNull();
-        Label label2 = LabelOperator.waitLabel(frame, PredicatesJ.byName("LabelOperatorTest"));
+        Label label2 = LabelOperator.waitLabel(frame, ComponentPredicates.byName("LabelOperatorTest"));
         assertThat(label2).isNotNull();
     }
 

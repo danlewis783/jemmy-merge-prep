@@ -38,9 +38,9 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.functions.FrameFunction;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.FrameOperatorShowingByTitlePredicate;
 import org.netbeans.jemmy.predicates.FrameShowingByTitlePredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -61,7 +61,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public static FrameOperator waitFor(int index) {
-        return new FrameOperator(waitFrame(PredicatesJ.of(Frame.class), index));
+        return new FrameOperator(waitFrame(ComponentPredicates.of(Frame.class), index));
     }
 
     public static FrameOperator waitFor(Predicate<Component> chooser) {
@@ -73,7 +73,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public static FrameOperator waitFor(Predicate<Component> chooser, int index) {
-        return new FrameOperator(waitFrame(PredicatesJ.of(Frame.class, chooser), index));
+        return new FrameOperator(waitFrame(ComponentPredicates.of(Frame.class, chooser), index));
     }
 
     public static FrameOperator waitFor(String title, int index) {
@@ -199,7 +199,9 @@ public class FrameOperator extends WindowOperator {
     protected static Frame waitFrame(Predicate<Component> predicate, int index) {
         return FunctionRepeater.on(
                         new FrameFunction(
-                                index, null, PredicatesJ.of(Frame.class, PredicatesJ.of(Frame.class, predicate))),
+                                index,
+                                null,
+                                ComponentPredicates.of(Frame.class, ComponentPredicates.of(Frame.class, predicate))),
                         TimeoutKey.FrameWaiter_WaitFrameTimeout,
                         TimeoutKey.Waiter_TimeDelta)
                 .runUntilNotNull(null);

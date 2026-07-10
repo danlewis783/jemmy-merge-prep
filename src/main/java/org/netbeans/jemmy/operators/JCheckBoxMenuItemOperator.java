@@ -30,8 +30,8 @@ import java.util.function.Predicate;
 import javax.swing.JCheckBoxMenuItem;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JCheckBoxMenuItemByLabelPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
@@ -49,7 +49,7 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
 
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, int index) {
         return new JCheckBoxMenuItemOperator(
-                (JCheckBoxMenuItem) waitComponent(cont, PredicatesJ.of(JCheckBoxMenuItem.class), index));
+                (JCheckBoxMenuItem) waitComponent(cont, ComponentPredicates.of(JCheckBoxMenuItem.class), index));
     }
 
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -61,8 +61,8 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
     }
 
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JCheckBoxMenuItemOperator(
-                (JCheckBoxMenuItem) cont.waitSubComponent(PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
+        return new JCheckBoxMenuItemOperator((JCheckBoxMenuItem)
+                cont.waitSubComponent(ComponentPredicates.of(JCheckBoxMenuItem.class, chooser), index));
     }
 
     public static JCheckBoxMenuItemOperator waitFor(

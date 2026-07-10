@@ -35,7 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.drivers.scrolling.JScrollBarAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -81,7 +81,7 @@ class JScrollBarOperatorTest {
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JScrollBarOperator operator2 =
-                JScrollBarOperator.waitFor(operator, PredicatesJ.byName("JScrollBarOperatorTest"));
+                JScrollBarOperator.waitFor(operator, ComponentPredicates.byName("JScrollBarOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -89,7 +89,8 @@ class JScrollBarOperatorTest {
     void testFindJScrollBar() {
         JScrollBar scrollBar1 = JScrollBarOperator.findJScrollBar(frame);
         assertThat(scrollBar1).isNotNull();
-        JScrollBar scrollBar2 = JScrollBarOperator.findJScrollBar(frame, PredicatesJ.byName("JScrollBarOperatorTest"));
+        JScrollBar scrollBar2 =
+                JScrollBarOperator.findJScrollBar(frame, ComponentPredicates.byName("JScrollBarOperatorTest"));
         assertThat(scrollBar2).isNotNull();
     }
 
@@ -97,7 +98,8 @@ class JScrollBarOperatorTest {
     void testWaitJScrollBar() {
         JScrollBar scrollBar1 = JScrollBarOperator.waitJScrollBar(frame);
         assertThat(scrollBar1).isNotNull();
-        JScrollBar scrollBar2 = JScrollBarOperator.waitJScrollBar(frame, PredicatesJ.byName("JScrollBarOperatorTest"));
+        JScrollBar scrollBar2 =
+                JScrollBarOperator.waitJScrollBar(frame, ComponentPredicates.byName("JScrollBarOperatorTest"));
         assertThat(scrollBar2).isNotNull();
     }
 

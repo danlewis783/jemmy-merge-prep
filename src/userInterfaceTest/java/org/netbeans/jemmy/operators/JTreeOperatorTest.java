@@ -35,7 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JTreeOperator.NoSuchPathException;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -73,7 +73,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        JTreeOperator operator3 = JTreeOperator.waitFor(operator, PredicatesJ.byName("JTreeOperatorTest"));
+        JTreeOperator operator3 = JTreeOperator.waitFor(operator, ComponentPredicates.byName("JTreeOperatorTest"));
         assertThat(operator3).isNotNull();
         operator3.selectRow(0);
         JTreeOperator operator4 = JTreeOperator.waitFor(operator, "JTree", StringComparators.strict());
@@ -84,7 +84,7 @@ class JTreeOperatorTest {
     void testFindJTree() {
         JTree tree1 = JTreeOperator.findJTree(frame, "JTree", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(tree1).isNotNull();
-        JTree tree2 = JTreeOperator.findJTree(frame, PredicatesJ.byName("JTreeOperatorTest"));
+        JTree tree2 = JTreeOperator.findJTree(frame, ComponentPredicates.byName("JTreeOperatorTest"));
         assertThat(tree2).isNotNull();
     }
 
@@ -92,7 +92,7 @@ class JTreeOperatorTest {
     void testWaitJTree() {
         JTree tree1 = JTreeOperator.waitJTree(frame, "JTree", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(tree1).isNotNull();
-        JTree tree2 = JTreeOperator.waitJTree(frame, PredicatesJ.byName("JTreeOperatorTest"));
+        JTree tree2 = JTreeOperator.waitJTree(frame, ComponentPredicates.byName("JTreeOperatorTest"));
         assertThat(tree2).isNotNull();
     }
 
@@ -203,7 +203,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        assertThat(operator2.findRow(PredicatesJ.byName("colors"))).isEqualTo(-1);
+        assertThat(operator2.findRow(ComponentPredicates.byName("colors"))).isEqualTo(-1);
         operator2.findRow("1", new StringComparatorTest(), 0);
     }
 

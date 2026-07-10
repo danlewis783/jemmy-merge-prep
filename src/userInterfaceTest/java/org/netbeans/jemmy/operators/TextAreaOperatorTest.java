@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -70,7 +70,8 @@ class TextAreaOperatorTest {
         TextAreaOperator operator2 =
                 TextAreaOperator.waitFor(operator, "TextAreaOperatorTest", StringComparators.strict());
         assertThat(operator2).isNotNull();
-        TextAreaOperator operator3 = TextAreaOperator.waitFor(operator, PredicatesJ.byName("TextAreaOperatorTest"));
+        TextAreaOperator operator3 =
+                TextAreaOperator.waitFor(operator, ComponentPredicates.byName("TextAreaOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -79,7 +80,7 @@ class TextAreaOperatorTest {
         TextArea textArea1 = TextAreaOperator.findTextArea(
                 frame, "TextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textArea1).isNotNull();
-        TextArea textArea2 = TextAreaOperator.findTextArea(frame, PredicatesJ.byName("TextAreaOperatorTest"));
+        TextArea textArea2 = TextAreaOperator.findTextArea(frame, ComponentPredicates.byName("TextAreaOperatorTest"));
         assertThat(textArea2).isNotNull();
     }
 
@@ -88,7 +89,7 @@ class TextAreaOperatorTest {
         TextArea textArea1 = TextAreaOperator.waitTextArea(
                 frame, "TextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textArea1).isNotNull();
-        TextArea textArea2 = TextAreaOperator.waitTextArea(frame, PredicatesJ.byName("TextAreaOperatorTest"));
+        TextArea textArea2 = TextAreaOperator.waitTextArea(frame, ComponentPredicates.byName("TextAreaOperatorTest"));
         assertThat(textArea2).isNotNull();
     }
 

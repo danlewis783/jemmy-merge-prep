@@ -41,8 +41,8 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTabbedPaneByItemPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTabbedPaneOperator extends JComponentOperator {
@@ -62,7 +62,8 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public static JTabbedPaneOperator waitFor(ContainerOperator cont, int index) {
-        return new JTabbedPaneOperator((JTabbedPane) waitComponent(cont, PredicatesJ.of(JTabbedPane.class), index));
+        return new JTabbedPaneOperator(
+                (JTabbedPane) waitComponent(cont, ComponentPredicates.of(JTabbedPane.class), index));
     }
 
     public static JTabbedPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -75,7 +76,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
 
     public static JTabbedPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTabbedPaneOperator(
-                (JTabbedPane) cont.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
+                (JTabbedPane) cont.waitSubComponent(ComponentPredicates.of(JTabbedPane.class, chooser), index));
     }
 
     public static JTabbedPaneOperator waitFor(
@@ -368,7 +369,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JTabbedPane) findComponent(cont, PredicatesJ.of(JTabbedPane.class, chooser), index);
+        return (JTabbedPane) findComponent(cont, ComponentPredicates.of(JTabbedPane.class, chooser), index);
     }
 
     public static @Nullable JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser) {
@@ -386,15 +387,15 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JTabbedPane findJTabbedPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (JTabbedPane) findContainerUnder(comp, PredicatesJ.of(JTabbedPane.class, chooser));
+        return (JTabbedPane) findContainerUnder(comp, ComponentPredicates.of(JTabbedPane.class, chooser));
     }
 
     public static @Nullable JTabbedPane findJTabbedPaneUnder(Component comp) {
-        return findJTabbedPaneUnder(comp, PredicatesJ.of(JTabbedPane.class));
+        return findJTabbedPaneUnder(comp, ComponentPredicates.of(JTabbedPane.class));
     }
 
     public static JTabbedPane waitJTabbedPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JTabbedPane) waitComponent(cont, PredicatesJ.of(JTabbedPane.class, chooser), index);
+        return (JTabbedPane) waitComponent(cont, ComponentPredicates.of(JTabbedPane.class, chooser), index);
     }
 
     public static JTabbedPane waitJTabbedPane(Container cont, Predicate<Component> chooser) {

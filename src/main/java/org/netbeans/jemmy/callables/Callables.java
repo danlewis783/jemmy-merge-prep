@@ -20,8 +20,8 @@ package org.netbeans.jemmy.callables;
 import java.util.concurrent.Callable;
 import org.netbeans.jemmy.operators.Operator;
 
-public final class CallablesJ {
-    private CallablesJ() {}
+public final class Callables {
+    private Callables() {}
 
     public static Callable<Void> forRunnable(Runnable runnable) {
         return new RunnableCallable(runnable);

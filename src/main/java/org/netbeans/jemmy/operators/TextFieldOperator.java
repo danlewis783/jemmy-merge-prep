@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class TextFieldOperator extends TextComponentOperator {
@@ -51,7 +51,7 @@ public class TextFieldOperator extends TextComponentOperator {
     }
 
     public static TextFieldOperator waitFor(ContainerOperator cont, int index) {
-        return new TextFieldOperator((TextField) waitComponent(cont, PredicatesJ.of(TextField.class), index));
+        return new TextFieldOperator((TextField) waitComponent(cont, ComponentPredicates.of(TextField.class), index));
     }
 
     public static TextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -64,7 +64,7 @@ public class TextFieldOperator extends TextComponentOperator {
 
     public static TextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new TextFieldOperator(
-                (TextField) cont.waitSubComponent(PredicatesJ.of(TextField.class, chooser), index));
+                (TextField) cont.waitSubComponent(ComponentPredicates.of(TextField.class, chooser), index));
     }
 
     public static TextFieldOperator waitFor(
@@ -118,7 +118,7 @@ public class TextFieldOperator extends TextComponentOperator {
     }
 
     public static @Nullable TextField findTextField(Container cont, Predicate<Component> chooser, int index) {
-        return (TextField) findComponent(cont, PredicatesJ.of(TextField.class, chooser), index);
+        return (TextField) findComponent(cont, ComponentPredicates.of(TextField.class, chooser), index);
     }
 
     public static @Nullable TextField findTextField(Container cont, Predicate<Component> chooser) {
@@ -135,7 +135,7 @@ public class TextFieldOperator extends TextComponentOperator {
     }
 
     public static TextField waitTextField(Container cont, Predicate<Component> chooser, int index) {
-        return (TextField) waitComponent(cont, PredicatesJ.of(TextField.class, chooser), index);
+        return (TextField) waitComponent(cont, ComponentPredicates.of(TextField.class, chooser), index);
     }
 
     public static TextField waitTextField(Container cont, Predicate<Component> chooser) {

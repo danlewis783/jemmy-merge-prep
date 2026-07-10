@@ -57,9 +57,9 @@ import org.netbeans.jemmy.TreePathChooserAndTreePath;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TreeDriver;
 import org.netbeans.jemmy.functions.LoadedFunction;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTreeByItemPredicate;
 import org.netbeans.jemmy.predicates.JTreeOperatorByItemPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -80,7 +80,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public static JTreeOperator waitFor(ContainerOperator cont, int index) {
-        return new JTreeOperator((JTree) waitComponent(cont, PredicatesJ.of(JTree.class), index));
+        return new JTreeOperator((JTree) waitComponent(cont, ComponentPredicates.of(JTree.class), index));
     }
 
     public static JTreeOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -92,7 +92,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public static JTreeOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JTreeOperator((JTree) cont.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+        return new JTreeOperator((JTree) cont.waitSubComponent(ComponentPredicates.of(JTree.class, chooser), index));
     }
 
     public static JTreeOperator waitFor(
@@ -415,7 +415,7 @@ public class JTreeOperator extends JComponentOperator {
     public void scrollToPath(TreePath path) {
         if (path != null) {
             makeComponentVisible();
-            JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+            JScrollPane scroll = (JScrollPane) getContainer(ComponentPredicates.of(JScrollPane.class));
             if (scroll == null) {
                 return;
             }
@@ -1199,7 +1199,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public static @Nullable JTree findJTree(Container cont, Predicate<Component> chooser, int index) {
-        return (JTree) findComponent(cont, PredicatesJ.of(JTree.class, chooser), index);
+        return (JTree) findComponent(cont, ComponentPredicates.of(JTree.class, chooser), index);
     }
 
     public static @Nullable JTree findJTree(Container cont, Predicate<Component> chooser) {
@@ -1216,7 +1216,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public static JTree waitJTree(Container cont, Predicate<Component> chooser, int index) {
-        return (JTree) waitComponent(cont, PredicatesJ.of(JTree.class, chooser), index);
+        return (JTree) waitComponent(cont, ComponentPredicates.of(JTree.class, chooser), index);
     }
 
     public static JTree waitJTree(Container cont, Predicate<Component> chooser) {

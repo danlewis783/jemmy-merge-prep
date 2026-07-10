@@ -34,8 +34,8 @@ import javax.swing.JTextField;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTextFieldOperator extends JTextComponentOperator {
@@ -52,7 +52,8 @@ public class JTextFieldOperator extends JTextComponentOperator {
     }
 
     public static JTextFieldOperator waitFor(ContainerOperator cont, int index) {
-        return new JTextFieldOperator((JTextField) waitComponent(cont, PredicatesJ.of(JTextField.class), index));
+        return new JTextFieldOperator(
+                (JTextField) waitComponent(cont, ComponentPredicates.of(JTextField.class), index));
     }
 
     public static JTextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -65,14 +66,14 @@ public class JTextFieldOperator extends JTextComponentOperator {
 
     public static JTextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTextFieldOperator(
-                (JTextField) cont.waitSubComponent(PredicatesJ.of(JTextField.class, chooser), index));
+                (JTextField) cont.waitSubComponent(ComponentPredicates.of(JTextField.class, chooser), index));
     }
 
     public static JTextFieldOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JTextFieldOperator((JTextField) waitComponent(
                 cont,
-                PredicatesJ.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -175,7 +176,7 @@ public class JTextFieldOperator extends JTextComponentOperator {
     }
 
     public static @Nullable JTextField findJTextField(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextField) findJTextComponent(cont, PredicatesJ.of(JTextField.class, chooser), index);
+        return (JTextField) findJTextComponent(cont, ComponentPredicates.of(JTextField.class, chooser), index);
     }
 
     public static @Nullable JTextField findJTextField(Container cont, Predicate<Component> chooser) {
@@ -186,7 +187,7 @@ public class JTextFieldOperator extends JTextComponentOperator {
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextField(
                 cont,
-                PredicatesJ.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -195,7 +196,7 @@ public class JTextFieldOperator extends JTextComponentOperator {
     }
 
     public static JTextField waitJTextField(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextField) waitJTextComponent(cont, PredicatesJ.of(JTextField.class, chooser), index);
+        return (JTextField) waitJTextComponent(cont, ComponentPredicates.of(JTextField.class, chooser), index);
     }
 
     public static JTextField waitJTextField(Container cont, Predicate<Component> chooser) {
@@ -205,7 +206,7 @@ public class JTextFieldOperator extends JTextComponentOperator {
     public static JTextField waitJTextField(Container cont, String text, StringComparator stringComparator, int index) {
         return waitJTextField(
                 cont,
-                PredicatesJ.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 

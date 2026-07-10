@@ -26,7 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -66,7 +66,8 @@ class TextFieldOperatorTest {
         assertThat(operator).isNotNull();
         TextFieldOperator operator1 = TextFieldOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TextFieldOperator operator2 = TextFieldOperator.waitFor(operator, PredicatesJ.byName("TextFieldOperatorTest"));
+        TextFieldOperator operator2 =
+                TextFieldOperator.waitFor(operator, ComponentPredicates.byName("TextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         TextFieldOperator operator3 =
                 TextFieldOperator.waitFor(operator, "TextFieldOperatorTest", StringComparators.strict());
@@ -75,7 +76,8 @@ class TextFieldOperatorTest {
 
     @Test
     void testFindTextField() {
-        TextField textField1 = TextFieldOperator.findTextField(frame, PredicatesJ.byName("TextFieldOperatorTest"));
+        TextField textField1 =
+                TextFieldOperator.findTextField(frame, ComponentPredicates.byName("TextFieldOperatorTest"));
         assertThat(textField1).isNotNull();
         TextField textField2 = TextFieldOperator.findTextField(
                 frame, "TextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -84,7 +86,8 @@ class TextFieldOperatorTest {
 
     @Test
     void testWaitTextField() {
-        TextField textField1 = TextFieldOperator.waitTextField(frame, PredicatesJ.byName("TextFieldOperatorTest"));
+        TextField textField1 =
+                TextFieldOperator.waitTextField(frame, ComponentPredicates.byName("TextFieldOperatorTest"));
         assertThat(textField1).isNotNull();
         TextField textField2 = TextFieldOperator.waitTextField(
                 frame, "TextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());

@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -64,7 +64,7 @@ class ButtonOperatorTest {
         assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ButtonOperator operator2 = ButtonOperator.waitFor(operator, PredicatesJ.byName("ButtonOperatorTest"));
+        ButtonOperator operator2 = ButtonOperator.waitFor(operator, ComponentPredicates.byName("ButtonOperatorTest"));
         assertThat(operator2).isNotNull();
         ButtonOperator operator3 = ButtonOperator.waitFor(operator, "ButtonOperatorTest", StringComparators.strict());
         assertThat(operator3).isNotNull();
@@ -75,7 +75,7 @@ class ButtonOperatorTest {
         Button button1 =
                 ButtonOperator.findButton(frame, "ButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(button1).isNotNull();
-        Button button2 = ButtonOperator.findButton(frame, PredicatesJ.byName("ButtonOperatorTest"));
+        Button button2 = ButtonOperator.findButton(frame, ComponentPredicates.byName("ButtonOperatorTest"));
         assertThat(button2).isNotNull();
     }
 
@@ -84,7 +84,7 @@ class ButtonOperatorTest {
         Button button1 =
                 ButtonOperator.waitButton(frame, "ButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(button1).isNotNull();
-        Button button2 = ButtonOperator.waitButton(frame, PredicatesJ.byName("ButtonOperatorTest"));
+        Button button2 = ButtonOperator.waitButton(frame, ComponentPredicates.byName("ButtonOperatorTest"));
         assertThat(button2).isNotNull();
     }
 

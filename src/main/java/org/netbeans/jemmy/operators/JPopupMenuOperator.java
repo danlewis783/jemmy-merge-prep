@@ -53,11 +53,11 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.functions.JPopupMenuPushFunction;
 import org.netbeans.jemmy.functions.WindowFunction;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.ContainerSearcherPredicate;
 import org.netbeans.jemmy.predicates.JPopupMenuContainsComponentWithTextPredicate;
 import org.netbeans.jemmy.predicates.JPopupMenuInvokerIsInsideOperatorPredicate;
 import org.netbeans.jemmy.predicates.JPopupWindowPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -66,11 +66,14 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public static JPopupMenuOperator waitFor() {
         return new JPopupMenuOperator((JPopupMenu) waitComponent(
-                WindowOperator.waitWindow(new JPopupWindowPredicate(), 0), PredicatesJ.ofShowing(JPopupMenu.class), 0));
+                WindowOperator.waitWindow(new JPopupWindowPredicate(), 0),
+                ComponentPredicates.ofShowing(JPopupMenu.class),
+                0));
     }
 
     public static JPopupMenuOperator waitFor(ContainerOperator cont) {
-        return new JPopupMenuOperator((JPopupMenu) waitComponent(cont, PredicatesJ.ofShowing(JPopupMenu.class), 0));
+        return new JPopupMenuOperator(
+                (JPopupMenu) waitComponent(cont, ComponentPredicates.ofShowing(JPopupMenu.class), 0));
     }
 
     JPopupMenuOperator(JPopupMenu popup) {
@@ -88,7 +91,7 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public static JPopupMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JPopupMenuOperator(
-                (JPopupMenu) cont.waitSubComponent(PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
+                (JPopupMenu) cont.waitSubComponent(ComponentPredicates.ofShowing(JPopupMenu.class, chooser), index));
     }
 
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -390,7 +393,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public static @Nullable JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser, int index) {
-        return (JPopupMenu) findComponent(cont, PredicatesJ.ofShowing(JPopupMenu.class, chooser), index);
+        return (JPopupMenu) findComponent(cont, ComponentPredicates.ofShowing(JPopupMenu.class, chooser), index);
     }
 
     public static @Nullable JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser) {
@@ -398,7 +401,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public static JPopupMenu waitJPopupMenu(Container cont, Predicate<Component> chooser, int index) {
-        return (JPopupMenu) waitComponent(cont, PredicatesJ.ofShowing(JPopupMenu.class, chooser), index);
+        return (JPopupMenu) waitComponent(cont, ComponentPredicates.ofShowing(JPopupMenu.class, chooser), index);
     }
 
     public static JPopupMenu waitJPopupMenu(Container cont, Predicate<Component> chooser) {
@@ -436,7 +439,8 @@ public class JPopupMenuOperator extends JComponentOperator {
         oper.clickForPopup(x, y, mouseButton);
 
         return waitJPopupMenu(
-                waitJPopupWindow(new JPopupMenuInvokerIsInsideOperatorPredicate(oper)), PredicatesJ.alwaysTrue());
+                waitJPopupWindow(new JPopupMenuInvokerIsInsideOperatorPredicate(oper)),
+                ComponentPredicates.alwaysTrue());
     }
 
     public static JPopupMenu callPopup(ComponentOperator oper, int x, int y) {
@@ -456,7 +460,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         co.makeComponentVisible();
         co.clickForPopup(mouseButton);
 
-        return findJPopupMenu(waitJPopupWindow(PredicatesJ.alwaysTrue()), PredicatesJ.alwaysTrue());
+        return findJPopupMenu(waitJPopupWindow(ComponentPredicates.alwaysTrue()), ComponentPredicates.alwaysTrue());
     }
 
     public static @Nullable JPopupMenu callPopup(Component comp) {

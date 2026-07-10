@@ -25,7 +25,7 @@ import javax.swing.JTextArea;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -59,7 +59,8 @@ class JTextAreaOperatorTest {
         assertThat(operator).isNotNull();
         JTextAreaOperator operator2 = JTextAreaOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        JTextAreaOperator operator3 = JTextAreaOperator.waitFor(operator, PredicatesJ.byName("JTextAreaOperatorTest"));
+        JTextAreaOperator operator3 =
+                JTextAreaOperator.waitFor(operator, ComponentPredicates.byName("JTextAreaOperatorTest"));
         assertThat(operator3).isNotNull();
         JTextAreaOperator operator4 =
                 JTextAreaOperator.waitFor(operator, "JTextAreaOperatorTest", StringComparators.strict());
@@ -71,7 +72,8 @@ class JTextAreaOperatorTest {
         JTextArea textArea1 = JTextAreaOperator.findJTextArea(
                 frame, "JTextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textArea1).isNotNull();
-        JTextArea textArea2 = JTextAreaOperator.findJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
+        JTextArea textArea2 =
+                JTextAreaOperator.findJTextArea(frame, ComponentPredicates.byName("JTextAreaOperatorTest"));
         assertThat(textArea2).isNotNull();
     }
 
@@ -80,7 +82,8 @@ class JTextAreaOperatorTest {
         JTextArea textArea1 = JTextAreaOperator.waitJTextArea(
                 frame, "JTextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textArea1).isNotNull();
-        JTextArea textArea2 = JTextAreaOperator.waitJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
+        JTextArea textArea2 =
+                JTextAreaOperator.waitJTextArea(frame, ComponentPredicates.byName("JTextAreaOperatorTest"));
         assertThat(textArea2).isNotNull();
     }
 

@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -70,7 +70,8 @@ class CheckboxOperatorTest {
         CheckboxOperator operator2 =
                 CheckboxOperator.waitFor(operator, "CheckboxOperatorTest", StringComparators.strict());
         assertThat(operator2).isNotNull();
-        CheckboxOperator operator3 = CheckboxOperator.waitFor(operator, PredicatesJ.byName("CheckboxOperatorTest"));
+        CheckboxOperator operator3 =
+                CheckboxOperator.waitFor(operator, ComponentPredicates.byName("CheckboxOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -79,7 +80,7 @@ class CheckboxOperatorTest {
         Checkbox checkbox1 = CheckboxOperator.findCheckbox(
                 frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(checkbox1).isNotNull();
-        Checkbox checkbox2 = CheckboxOperator.findCheckbox(frame, PredicatesJ.byName("CheckboxOperatorTest"));
+        Checkbox checkbox2 = CheckboxOperator.findCheckbox(frame, ComponentPredicates.byName("CheckboxOperatorTest"));
         assertThat(checkbox2).isNotNull();
     }
 
@@ -88,7 +89,7 @@ class CheckboxOperatorTest {
         Checkbox checkbox1 = CheckboxOperator.waitCheckbox(
                 frame, "CheckboxOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(checkbox1).isNotNull();
-        Checkbox checkbox2 = CheckboxOperator.waitCheckbox(frame, PredicatesJ.byName("CheckboxOperatorTest"));
+        Checkbox checkbox2 = CheckboxOperator.waitCheckbox(frame, ComponentPredicates.byName("CheckboxOperatorTest"));
         assertThat(checkbox2).isNotNull();
     }
 

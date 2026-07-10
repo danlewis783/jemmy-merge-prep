@@ -34,7 +34,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.drivers.scrolling.JSliderAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -70,7 +70,8 @@ class JSliderOperatorTest {
         assertThat(operator).isNotNull();
         JSliderOperator operator2 = JSliderOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        JSliderOperator operator3 = JSliderOperator.waitFor(operator, PredicatesJ.byName("JSliderOperatorTest"));
+        JSliderOperator operator3 =
+                JSliderOperator.waitFor(operator, ComponentPredicates.byName("JSliderOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -78,7 +79,7 @@ class JSliderOperatorTest {
     void testFindJSlider() {
         JSlider slider1 = JSliderOperator.findJSlider(frame);
         assertThat(slider1).isNotNull();
-        JSlider slider2 = JSliderOperator.findJSlider(frame, PredicatesJ.byName("JSliderOperatorTest"));
+        JSlider slider2 = JSliderOperator.findJSlider(frame, ComponentPredicates.byName("JSliderOperatorTest"));
         assertThat(slider2).isNotNull();
     }
 
@@ -86,7 +87,7 @@ class JSliderOperatorTest {
     void testWaitJSlider() {
         JSlider slider1 = JSliderOperator.waitJSlider(frame);
         assertThat(slider1).isNotNull();
-        JSlider slider2 = JSliderOperator.waitJSlider(frame, PredicatesJ.byName("JSliderOperatorTest"));
+        JSlider slider2 = JSliderOperator.waitJSlider(frame, ComponentPredicates.byName("JSliderOperatorTest"));
         assertThat(slider2).isNotNull();
     }
 

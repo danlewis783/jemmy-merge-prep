@@ -32,7 +32,7 @@ import javax.swing.text.StyledDocument;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
@@ -77,7 +77,8 @@ class JTextPaneOperatorTest {
         assertThat(operator).isNotNull();
         JTextPaneOperator operator1 = JTextPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JTextPaneOperator operator2 = JTextPaneOperator.waitFor(operator, PredicatesJ.byName("JTextPaneOperatorTest"));
+        JTextPaneOperator operator2 =
+                JTextPaneOperator.waitFor(operator, ComponentPredicates.byName("JTextPaneOperatorTest"));
         assertThat(operator2).isNotNull();
         JTextPaneOperator operator3 =
                 JTextPaneOperator.waitFor(operator, "JTextPaneOperatorTest", StringComparators.strict());
@@ -91,7 +92,8 @@ class JTextPaneOperatorTest {
         JTextPane textPane1 = JTextPaneOperator.findJTextPane(
                 frame, "JTextPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textPane1).isNotNull();
-        JTextPane textPane2 = JTextPaneOperator.findJTextPane(frame, PredicatesJ.byName("JTextPaneOperatorTest"));
+        JTextPane textPane2 =
+                JTextPaneOperator.findJTextPane(frame, ComponentPredicates.byName("JTextPaneOperatorTest"));
         assertThat(textPane2).isNotNull();
     }
 
@@ -100,7 +102,8 @@ class JTextPaneOperatorTest {
         JTextPane textPane1 = JTextPaneOperator.waitJTextPane(
                 frame, "JTextPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textPane1).isNotNull();
-        JTextPane textPane2 = JTextPaneOperator.waitJTextPane(frame, PredicatesJ.byName("JTextPaneOperatorTest"));
+        JTextPane textPane2 =
+                JTextPaneOperator.waitJTextPane(frame, ComponentPredicates.byName("JTextPaneOperatorTest"));
         assertThat(textPane2).isNotNull();
     }
 

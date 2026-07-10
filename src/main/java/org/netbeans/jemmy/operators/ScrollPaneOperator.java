@@ -43,7 +43,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public class ScrollPaneOperator extends ContainerOperator {
     private static final int X_POINT_RECT_SIZE = 6;
@@ -73,7 +73,8 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public static ScrollPaneOperator waitFor(ContainerOperator cont, int index) {
-        return new ScrollPaneOperator((ScrollPane) waitComponent(cont, PredicatesJ.of(ScrollPane.class), index));
+        return new ScrollPaneOperator(
+                (ScrollPane) waitComponent(cont, ComponentPredicates.of(ScrollPane.class), index));
     }
 
     public static ScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -82,7 +83,7 @@ public class ScrollPaneOperator extends ContainerOperator {
 
     public static ScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ScrollPaneOperator(
-                (ScrollPane) cont.waitSubComponent(PredicatesJ.of(ScrollPane.class, chooser), index));
+                (ScrollPane) cont.waitSubComponent(ComponentPredicates.of(ScrollPane.class, chooser), index));
     }
 
     public void setValues(int x, int y) {
@@ -295,7 +296,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public static @Nullable ScrollPane findScrollPane(Container cont, Predicate<Component> chooser, int index) {
-        return (ScrollPane) findComponent(cont, PredicatesJ.of(ScrollPane.class, chooser), index);
+        return (ScrollPane) findComponent(cont, ComponentPredicates.of(ScrollPane.class, chooser), index);
     }
 
     public static @Nullable ScrollPane findScrollPane(Container cont, Predicate<Component> chooser) {
@@ -303,7 +304,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public static @Nullable ScrollPane findScrollPane(Container cont, int index) {
-        return findScrollPane(cont, PredicatesJ.alwaysTrue(), index);
+        return findScrollPane(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static @Nullable ScrollPane findScrollPane(Container cont) {
@@ -311,15 +312,15 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public static @Nullable ScrollPane findScrollPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (ScrollPane) findContainerUnder(comp, PredicatesJ.of(ScrollPane.class, chooser));
+        return (ScrollPane) findContainerUnder(comp, ComponentPredicates.of(ScrollPane.class, chooser));
     }
 
     public static @Nullable ScrollPane findScrollPaneUnder(Component comp) {
-        return findScrollPaneUnder(comp, PredicatesJ.of(ScrollPane.class));
+        return findScrollPaneUnder(comp, ComponentPredicates.of(ScrollPane.class));
     }
 
     public static ScrollPane waitScrollPane(Container cont, Predicate<Component> chooser, int index) {
-        return (ScrollPane) waitComponent(cont, PredicatesJ.of(ScrollPane.class, chooser), index);
+        return (ScrollPane) waitComponent(cont, ComponentPredicates.of(ScrollPane.class, chooser), index);
     }
 
     public static ScrollPane waitScrollPane(Container cont, Predicate<Component> chooser) {
@@ -327,7 +328,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public static ScrollPane waitScrollPane(Container cont, int index) {
-        return waitScrollPane(cont, PredicatesJ.alwaysTrue(), index);
+        return waitScrollPane(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static ScrollPane waitScrollPane(Container cont) {

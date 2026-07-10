@@ -37,7 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -80,7 +80,7 @@ class TextComponentOperatorTest {
         TextComponentOperator operator1 = TextComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         TextComponentOperator operator2 =
-                TextComponentOperator.waitFor(operator, PredicatesJ.byName("TextComponentOperatorTest"));
+                TextComponentOperator.waitFor(operator, ComponentPredicates.byName("TextComponentOperatorTest"));
         assertThat(operator2).isNotNull();
         TextComponentOperator operator3 =
                 TextComponentOperator.waitFor(operator, "TextComponentOperatorTest", StringComparators.strict());
@@ -93,7 +93,7 @@ class TextComponentOperatorTest {
                 frame, "TextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(component1).isNotNull();
         TextComponent component2 =
-                TextComponentOperator.findTextComponent(frame, PredicatesJ.byName("TextComponentOperatorTest"));
+                TextComponentOperator.findTextComponent(frame, ComponentPredicates.byName("TextComponentOperatorTest"));
         assertThat(component2).isNotNull();
     }
 
@@ -103,7 +103,7 @@ class TextComponentOperatorTest {
                 frame, "TextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(component1).isNotNull();
         TextComponent component2 =
-                TextComponentOperator.waitTextComponent(frame, PredicatesJ.byName("TextComponentOperatorTest"));
+                TextComponentOperator.waitTextComponent(frame, ComponentPredicates.byName("TextComponentOperatorTest"));
         assertThat(component2).isNotNull();
     }
 

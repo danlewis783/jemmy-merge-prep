@@ -29,7 +29,7 @@ import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
 import org.netbeans.jemmy.operators.JScrollPaneOperator;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -58,7 +58,8 @@ class ScrollToComponentTest {
         ComponentOperator butt42Op = ComponentOperator.of(butt42);
         JButton butt40 = Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "40", StringComparators.strict()));
         ComponentOperator butt40Op = ComponentOperator.of(butt40);
-        JScrollPane sp = Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jFrame, PredicatesJ.alwaysTrue()));
+        JScrollPane sp =
+                Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jFrame, ComponentPredicates.alwaysTrue()));
         assertThat(JScrollPaneOperator.findJScrollPaneUnder(butt00)).isSameAs(sp);
         JScrollBarOperator hscroll = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame), 1);
         assertThat(hscroll.getOrientation()).isEqualTo(JScrollBar.HORIZONTAL);

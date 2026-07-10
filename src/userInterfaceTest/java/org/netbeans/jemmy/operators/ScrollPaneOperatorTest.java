@@ -28,7 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -73,7 +73,7 @@ class ScrollPaneOperatorTest {
         ScrollPaneOperator operator1 = ScrollPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         ScrollPaneOperator operator2 =
-                ScrollPaneOperator.waitFor(operator, PredicatesJ.byName("ScrollPaneOperatorTest"));
+                ScrollPaneOperator.waitFor(operator, ComponentPredicates.byName("ScrollPaneOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -81,7 +81,8 @@ class ScrollPaneOperatorTest {
     void testFindScrollPane() {
         ScrollPane scrollPane1 = ScrollPaneOperator.findScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
-        ScrollPane scrollPane2 = ScrollPaneOperator.findScrollPane(frame, PredicatesJ.byName("ScrollPaneOperatorTest"));
+        ScrollPane scrollPane2 =
+                ScrollPaneOperator.findScrollPane(frame, ComponentPredicates.byName("ScrollPaneOperatorTest"));
         assertThat(scrollPane2).isNotNull();
     }
 
@@ -95,7 +96,8 @@ class ScrollPaneOperatorTest {
     void testWaitScrollPane() {
         ScrollPane scrollPane1 = ScrollPaneOperator.waitScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
-        ScrollPane scrollPane2 = ScrollPaneOperator.waitScrollPane(frame, PredicatesJ.byName("ScrollPaneOperatorTest"));
+        ScrollPane scrollPane2 =
+                ScrollPaneOperator.waitScrollPane(frame, ComponentPredicates.byName("ScrollPaneOperatorTest"));
         assertThat(scrollPane2).isNotNull();
     }
 

@@ -39,7 +39,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public class ScrollbarOperator extends ComponentOperator {
     private final ScrollDriver driver;
@@ -58,7 +58,7 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public static ScrollbarOperator waitFor(ContainerOperator cont, int index) {
-        return new ScrollbarOperator((Scrollbar) waitComponent(cont, PredicatesJ.of(Scrollbar.class), index));
+        return new ScrollbarOperator((Scrollbar) waitComponent(cont, ComponentPredicates.of(Scrollbar.class), index));
     }
 
     public static ScrollbarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -67,7 +67,7 @@ public class ScrollbarOperator extends ComponentOperator {
 
     public static ScrollbarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ScrollbarOperator(
-                (Scrollbar) cont.waitSubComponent(PredicatesJ.of(Scrollbar.class, chooser), index));
+                (Scrollbar) cont.waitSubComponent(ComponentPredicates.of(Scrollbar.class, chooser), index));
     }
 
     public void scrollTo(Function<Object, ?> w, @Nullable Object waiterParam, boolean increase) {
@@ -225,7 +225,7 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public static @Nullable Scrollbar findScrollbar(Container cont, Predicate<Component> chooser, int index) {
-        return (Scrollbar) findComponent(cont, PredicatesJ.of(Scrollbar.class, chooser), index);
+        return (Scrollbar) findComponent(cont, ComponentPredicates.of(Scrollbar.class, chooser), index);
     }
 
     public static @Nullable Scrollbar findScrollbar(Container cont, Predicate<Component> chooser) {
@@ -233,7 +233,7 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public static @Nullable Scrollbar findScrollbar(Container cont, int index) {
-        return findScrollbar(cont, PredicatesJ.alwaysTrue(), index);
+        return findScrollbar(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static @Nullable Scrollbar findScrollbar(Container cont) {
@@ -241,7 +241,7 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public static Scrollbar waitScrollbar(Container cont, Predicate<Component> chooser, int index) {
-        return (Scrollbar) waitComponent(cont, PredicatesJ.of(Scrollbar.class, chooser), index);
+        return (Scrollbar) waitComponent(cont, ComponentPredicates.of(Scrollbar.class, chooser), index);
     }
 
     public static Scrollbar waitScrollbar(Container cont, Predicate<Component> chooser) {
@@ -249,7 +249,7 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public static Scrollbar waitScrollbar(Container cont, int index) {
-        return waitScrollbar(cont, PredicatesJ.alwaysTrue(), index);
+        return waitScrollbar(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static Scrollbar waitScrollbar(Container cont) {

@@ -43,7 +43,7 @@ import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -107,7 +107,7 @@ class JMenuOperatorTest {
         JMenuBarOperator jMenuBarOp = JMenuBarOperator.waitFor(jFrameOp);
         assertThat(jMenuBarOp).isNotNull();
         assertThat(JMenuOperator.waitFor(jMenuBarOp)).isNotNull();
-        assertThat(JMenuOperator.waitFor(jMenuBarOp, PredicatesJ.byName("JMenuOperatorTest")))
+        assertThat(JMenuOperator.waitFor(jMenuBarOp, ComponentPredicates.byName("JMenuOperatorTest")))
                 .isNotNull();
         assertThat(JMenuOperator.waitFor(jMenuBarOp, "JMenuOperatorTest", StringComparators.strict()))
                 .isNotNull();
@@ -118,7 +118,7 @@ class JMenuOperatorTest {
     void findJMenu() {
         assertThat(JMenuOperator.findJMenu(frame, "JMenuOperatorTest", StringComparators.strict()))
                 .isNotNull();
-        assertThat(JMenuOperator.findJMenu(frame, PredicatesJ.byName("JMenuOperatorTest")))
+        assertThat(JMenuOperator.findJMenu(frame, ComponentPredicates.byName("JMenuOperatorTest")))
                 .isNotNull();
     }
 
@@ -126,7 +126,7 @@ class JMenuOperatorTest {
     void waitJMenu() {
         assertThat(JMenuOperator.waitJMenu(frame, "JMenuOperatorTest", StringComparators.strict()))
                 .isNotNull();
-        assertThat(JMenuOperator.waitJMenu(frame, PredicatesJ.byName("JMenuOperatorTest")))
+        assertThat(JMenuOperator.waitJMenu(frame, ComponentPredicates.byName("JMenuOperatorTest")))
                 .isNotNull();
     }
 
@@ -179,7 +179,7 @@ class JMenuOperatorTest {
         menu.addMenuListener(listener);
         assertThat(jMenuOp.showMenuItem("Item1", "/", StringComparators.strict()))
                 .isNotNull();
-        assertThat(jMenuOp.showMenuItem(Collections.singletonList(PredicatesJ.byName("Item1"))))
+        assertThat(jMenuOp.showMenuItem(Collections.singletonList(ComponentPredicates.byName("Item1"))))
                 .isNotNull();
         assertThat(jMenuOp.showMenuItem(new String[] {"Item1"}, StringComparators.strict()))
                 .isNotNull();

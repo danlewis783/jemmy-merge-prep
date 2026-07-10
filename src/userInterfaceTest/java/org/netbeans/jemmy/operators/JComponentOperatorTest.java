@@ -38,7 +38,7 @@ import javax.swing.event.AncestorListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
@@ -79,13 +79,14 @@ class JComponentOperatorTest {
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JComponentOperator operator2 =
-                JComponentOperator.waitFor(operator, PredicatesJ.byName("JComponentOperatorTest"));
+                JComponentOperator.waitFor(operator, ComponentPredicates.byName("JComponentOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
     @Test
     void testFindJComponent() {
-        JComponent component1 = JComponentOperator.findJComponent(frame, PredicatesJ.byName("JComponentOperatorTest"));
+        JComponent component1 =
+                JComponentOperator.findJComponent(frame, ComponentPredicates.byName("JComponentOperatorTest"));
         assertThat(component1).isNotNull();
         JComponent component2 = JComponentOperator.findJComponent(
                 frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -94,7 +95,8 @@ class JComponentOperatorTest {
 
     @Test
     void testWaitJComponent() {
-        JComponent component1 = JComponentOperator.waitJComponent(frame, PredicatesJ.byName("JComponentOperatorTest"));
+        JComponent component1 =
+                JComponentOperator.waitJComponent(frame, ComponentPredicates.byName("JComponentOperatorTest"));
         assertThat(component1).isNotNull();
         JComponent component2 = JComponentOperator.waitJComponent(
                 frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());

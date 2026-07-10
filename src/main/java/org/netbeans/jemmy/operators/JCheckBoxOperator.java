@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 import javax.swing.JCheckBox;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JCheckBoxOperator extends JToggleButtonOperator {
@@ -47,7 +47,7 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
     }
 
     public static JCheckBoxOperator waitFor(ContainerOperator cont, int index) {
-        return new JCheckBoxOperator((JCheckBox) waitComponent(cont, PredicatesJ.of(JCheckBox.class), index));
+        return new JCheckBoxOperator((JCheckBox) waitComponent(cont, ComponentPredicates.of(JCheckBox.class), index));
     }
 
     public static JCheckBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -60,19 +60,19 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
 
     public static JCheckBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JCheckBoxOperator(
-                (JCheckBox) cont.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
+                (JCheckBox) cont.waitSubComponent(ComponentPredicates.of(JCheckBox.class, chooser), index));
     }
 
     public static JCheckBoxOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JCheckBoxOperator((JCheckBox) waitComponent(
                 cont,
-                PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
 
     public static @Nullable JCheckBox findJCheckBox(Container cont, Predicate<Component> chooser, int index) {
-        return (JCheckBox) findJToggleButton(cont, PredicatesJ.of(JCheckBox.class, chooser), index);
+        return (JCheckBox) findJToggleButton(cont, ComponentPredicates.of(JCheckBox.class, chooser), index);
     }
 
     public static @Nullable JCheckBox findJCheckBox(Container cont, Predicate<Component> chooser) {
@@ -83,7 +83,7 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJCheckBox(
                 cont,
-                PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -93,7 +93,7 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
     }
 
     public static JCheckBox waitJCheckBox(Container cont, Predicate<Component> chooser, int index) {
-        return (JCheckBox) waitJToggleButton(cont, PredicatesJ.of(JCheckBox.class, chooser), index);
+        return (JCheckBox) waitJToggleButton(cont, ComponentPredicates.of(JCheckBox.class, chooser), index);
     }
 
     public static JCheckBox waitJCheckBox(Container cont, Predicate<Component> chooser) {
@@ -104,7 +104,7 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJCheckBox(
                 cont,
-                PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 

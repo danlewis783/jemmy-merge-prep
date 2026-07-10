@@ -38,8 +38,8 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MultiSelListDriver;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.ListByItemPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class ListOperator extends ComponentOperator {
@@ -59,7 +59,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public static ListOperator waitFor(ContainerOperator cont, int index) {
-        return new ListOperator((List) waitComponent(cont, PredicatesJ.of(List.class), index));
+        return new ListOperator((List) waitComponent(cont, ComponentPredicates.of(List.class), index));
     }
 
     public static ListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -71,7 +71,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public static ListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new ListOperator((List) cont.waitSubComponent(PredicatesJ.of(List.class, chooser), index));
+        return new ListOperator((List) cont.waitSubComponent(ComponentPredicates.of(List.class, chooser), index));
     }
 
     public static ListOperator waitFor(
@@ -281,7 +281,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public static @Nullable List findList(Container cont, Predicate<Component> chooser, int index) {
-        return (List) findComponent(cont, PredicatesJ.of(List.class, chooser), index);
+        return (List) findComponent(cont, ComponentPredicates.of(List.class, chooser), index);
     }
 
     public static @Nullable List findList(Container cont, Predicate<Component> chooser) {

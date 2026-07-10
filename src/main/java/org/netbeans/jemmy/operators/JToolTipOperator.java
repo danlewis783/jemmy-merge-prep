@@ -34,9 +34,9 @@ import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JToolTipByTipTextPredicate;
 import org.netbeans.jemmy.predicates.JToolTipOperatorByTipTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 /**
@@ -48,7 +48,7 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JToolTipOperator extends JComponentOperator {
 
     public static JToolTipOperator waitFor() {
-        return JToolTipOperator.waitFor(PredicatesJ.alwaysTrue());
+        return JToolTipOperator.waitFor(ComponentPredicates.alwaysTrue());
     }
 
     JToolTipOperator(JToolTip toolTip) {
@@ -64,7 +64,7 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public static JToolTipOperator waitFor(ComponentOperator comp) {
-        return waitFor(comp, PredicatesJ.alwaysTrue());
+        return waitFor(comp, ComponentPredicates.alwaysTrue());
     }
 
     // Tooltips are parentless, so the inherited "search inside this container" factories make no
@@ -109,7 +109,7 @@ public class JToolTipOperator extends JComponentOperator {
             windowList = Arrays.asList(Window.getWindows());
         }
 
-        Predicate<Component> toolTipChooser = PredicatesJ.ofShowing(JToolTip.class, chooser);
+        Predicate<Component> toolTipChooser = ComponentPredicates.ofShowing(JToolTip.class, chooser);
         for (Window window : windowList) {
             Component found = new ComponentSearcher(window).findComponent(toolTipChooser);
             if (found != null) {
@@ -127,11 +127,11 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public static @Nullable JToolTip findJToolTip() {
-        return findJToolTip(null, PredicatesJ.alwaysTrue());
+        return findJToolTip(null, ComponentPredicates.alwaysTrue());
     }
 
     public static @Nullable JToolTip findJToolTip(@Nullable ComponentOperator comp) {
-        return findJToolTip(comp, PredicatesJ.alwaysTrue());
+        return findJToolTip(comp, ComponentPredicates.alwaysTrue());
     }
 
     public static @Nullable JToolTip findJToolTip(ComponentOperator comp, String tipText, StringComparator comparator) {
@@ -139,11 +139,11 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public static JToolTip waitJToolTip() {
-        return waitJToolTip(null, PredicatesJ.alwaysTrue());
+        return waitJToolTip(null, ComponentPredicates.alwaysTrue());
     }
 
     public static JToolTip waitJToolTip(ComponentOperator comp) {
-        return waitJToolTip(comp, PredicatesJ.alwaysTrue());
+        return waitJToolTip(comp, ComponentPredicates.alwaysTrue());
     }
 
     public static JToolTip waitJToolTip(Predicate<Component> chooser) {

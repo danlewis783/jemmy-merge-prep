@@ -32,8 +32,8 @@ import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.LabelByLabelPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class LabelOperator extends ComponentOperator {
@@ -50,7 +50,7 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public static LabelOperator waitFor(ContainerOperator cont, int index) {
-        return new LabelOperator((Label) waitComponent(cont, PredicatesJ.of(Label.class), index));
+        return new LabelOperator((Label) waitComponent(cont, ComponentPredicates.of(Label.class), index));
     }
 
     public static LabelOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -58,7 +58,7 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public static LabelOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new LabelOperator((Label) cont.waitSubComponent(PredicatesJ.of(Label.class, chooser), index));
+        return new LabelOperator((Label) cont.waitSubComponent(ComponentPredicates.of(Label.class, chooser), index));
     }
 
     public static LabelOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
@@ -95,7 +95,7 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public static @Nullable Label findLabel(Container cont, Predicate<Component> chooser, int index) {
-        return (Label) findComponent(cont, PredicatesJ.of(Label.class, chooser), index);
+        return (Label) findComponent(cont, ComponentPredicates.of(Label.class, chooser), index);
     }
 
     public static @Nullable Label findLabel(Container cont, Predicate<Component> chooser) {
@@ -111,7 +111,7 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public static Label waitLabel(Container cont, Predicate<Component> chooser, int index) {
-        return (Label) waitComponent(cont, PredicatesJ.of(Label.class, chooser), index);
+        return (Label) waitComponent(cont, ComponentPredicates.of(Label.class, chooser), index);
     }
 
     public static Label waitLabel(Container cont, Predicate<Component> chooser) {

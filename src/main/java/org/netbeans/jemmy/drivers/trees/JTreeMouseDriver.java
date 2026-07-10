@@ -46,7 +46,7 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.operators.Operator;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public final class JTreeMouseDriver extends LightSupportiveDriver implements TreeDriver {
     private final QueueTool queueTool;
@@ -182,6 +182,6 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
             return null;
         }));
         return JTextComponentOperator.of(
-                (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class), waitEditorTime));
+                (JTextComponent) toper.waitSubComponent(ComponentPredicates.of(JTextComponent.class), waitEditorTime));
     }
 }

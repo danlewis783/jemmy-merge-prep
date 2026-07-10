@@ -39,7 +39,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.predicates.CheckboxByLabelPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class CheckboxOperator extends ComponentOperator {
@@ -59,7 +59,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public static CheckboxOperator waitFor(ContainerOperator cont, int index) {
-        return new CheckboxOperator((Checkbox) waitComponent(cont, PredicatesJ.of(Checkbox.class), index));
+        return new CheckboxOperator((Checkbox) waitComponent(cont, ComponentPredicates.of(Checkbox.class), index));
     }
 
     public static CheckboxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -71,7 +71,8 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public static CheckboxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new CheckboxOperator((Checkbox) cont.waitSubComponent(PredicatesJ.of(Checkbox.class, chooser), index));
+        return new CheckboxOperator(
+                (Checkbox) cont.waitSubComponent(ComponentPredicates.of(Checkbox.class, chooser), index));
     }
 
     public static CheckboxOperator waitFor(
@@ -161,7 +162,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public static @Nullable Checkbox findCheckbox(Container cont, Predicate<Component> chooser, int index) {
-        return (Checkbox) findComponent(cont, PredicatesJ.of(Checkbox.class, chooser), index);
+        return (Checkbox) findComponent(cont, ComponentPredicates.of(Checkbox.class, chooser), index);
     }
 
     public static @Nullable Checkbox findCheckbox(Container cont, Predicate<Component> chooser) {
@@ -178,7 +179,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public static Checkbox waitCheckbox(Container cont, Predicate<Component> chooser, int index) {
-        return (Checkbox) waitComponent(cont, PredicatesJ.of(Checkbox.class, chooser), index);
+        return (Checkbox) waitComponent(cont, ComponentPredicates.of(Checkbox.class, chooser), index);
     }
 
     public static Checkbox waitCheckbox(Container cont, Predicate<Component> chooser) {

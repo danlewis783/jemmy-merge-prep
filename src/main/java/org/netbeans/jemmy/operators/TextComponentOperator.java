@@ -38,7 +38,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TextDriver;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.TextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -60,7 +60,7 @@ public class TextComponentOperator extends ComponentOperator {
 
     public static TextComponentOperator waitFor(ContainerOperator cont, int index) {
         return new TextComponentOperator(
-                (TextComponent) waitComponent(cont, PredicatesJ.of(TextComponent.class), index));
+                (TextComponent) waitComponent(cont, ComponentPredicates.of(TextComponent.class), index));
     }
 
     public static TextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -74,7 +74,7 @@ public class TextComponentOperator extends ComponentOperator {
 
     public static TextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new TextComponentOperator(
-                (TextComponent) cont.waitSubComponent(PredicatesJ.of(TextComponent.class, chooser), index));
+                (TextComponent) cont.waitSubComponent(ComponentPredicates.of(TextComponent.class, chooser), index));
     }
 
     public static TextComponentOperator waitFor(
@@ -271,7 +271,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public static @Nullable TextComponent findTextComponent(Container cont, Predicate<Component> chooser, int index) {
-        return (TextComponent) findComponent(cont, PredicatesJ.of(TextComponent.class, chooser), index);
+        return (TextComponent) findComponent(cont, ComponentPredicates.of(TextComponent.class, chooser), index);
     }
 
     public static @Nullable TextComponent findTextComponent(Container cont, Predicate<Component> chooser) {
@@ -289,7 +289,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public static TextComponent waitTextComponent(Container cont, Predicate<Component> chooser, int index) {
-        return (TextComponent) waitComponent(cont, PredicatesJ.of(TextComponent.class, chooser), index);
+        return (TextComponent) waitComponent(cont, ComponentPredicates.of(TextComponent.class, chooser), index);
     }
 
     public static TextComponent waitTextComponent(Container cont, Predicate<Component> chooser) {

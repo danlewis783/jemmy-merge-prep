@@ -25,7 +25,7 @@ import javax.swing.JToggleButton;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -63,7 +63,7 @@ class JToggleButtonOperatorTest {
         JToggleButtonOperator operator2 = JToggleButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         JToggleButtonOperator operator3 =
-                JToggleButtonOperator.waitFor(operator1, PredicatesJ.byName("JToggleButtonOperatorTest"));
+                JToggleButtonOperator.waitFor(operator1, ComponentPredicates.byName("JToggleButtonOperatorTest"));
         assertThat(operator3).isNotNull();
         JToggleButtonOperator operator4 =
                 JToggleButtonOperator.waitFor(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
@@ -76,7 +76,7 @@ class JToggleButtonOperatorTest {
                 frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(toggleButton1).isNotNull();
         JToggleButton toggleButton2 =
-                JToggleButtonOperator.findJToggleButton(frame, PredicatesJ.byName("JToggleButtonOperatorTest"));
+                JToggleButtonOperator.findJToggleButton(frame, ComponentPredicates.byName("JToggleButtonOperatorTest"));
         assertThat(toggleButton2).isNotNull();
     }
 
@@ -86,7 +86,7 @@ class JToggleButtonOperatorTest {
                 frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(toggleButton1).isNotNull();
         JToggleButton toggleButton2 =
-                JToggleButtonOperator.waitJToggleButton(frame, PredicatesJ.byName("JToggleButtonOperatorTest"));
+                JToggleButtonOperator.waitJToggleButton(frame, ComponentPredicates.byName("JToggleButtonOperatorTest"));
         assertThat(toggleButton2).isNotNull();
     }
 

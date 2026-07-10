@@ -40,7 +40,7 @@ import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 import org.netbeans.jemmy.operators.JTextAreaOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator.NoSuchTextException;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_021
@@ -63,7 +63,7 @@ class EditorScrollingInTabsTest {
                 JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring())));
         JEditorPaneOperator t1 = JEditorPaneOperator.waitFor(frmo);
         assertThat(to.getSource()).isSameAs(t1.getSource());
-        assertThat(JEditorPaneOperator.findJEditorPane(frm, PredicatesJ.alwaysTrue()))
+        assertThat(JEditorPaneOperator.findJEditorPane(frm, ComponentPredicates.alwaysTrue()))
                 .as("Jemmy issue #4420389")
                 .isSameAs(to.getSource());
         to.typeText(allChars);

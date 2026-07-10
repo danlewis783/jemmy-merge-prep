@@ -61,8 +61,8 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.functions.JListCellIndexIsPaintedFunction;
 import org.netbeans.jemmy.functions.JTableCellIndexIsPaintedFunction;
 import org.netbeans.jemmy.predicates.ButtonByTextPredicate;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JFileChooserJDialogPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
@@ -72,7 +72,8 @@ public class JFileChooserOperator extends JComponentOperator {
 
     public static JFileChooserOperator waitFor() {
         return new JFileChooserOperator((JFileChooser) waitComponent(
-                JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()), PredicatesJ.of(JFileChooser.class)));
+                JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()),
+                ComponentPredicates.of(JFileChooser.class)));
     }
 
     JFileChooserOperator(JFileChooser comp) {
@@ -131,7 +132,7 @@ public class JFileChooserOperator extends JComponentOperator {
 
     public JTextField getPathField() {
         return (JTextField) Objects.requireNonNull(
-                innerSearcher.findComponent(PredicatesJ.of(JTextField.class)), "path field not found");
+                innerSearcher.findComponent(ComponentPredicates.of(JTextField.class)), "path field not found");
     }
 
     /**
@@ -674,7 +675,7 @@ public class JFileChooserOperator extends JComponentOperator {
 
     private JComboBox<?> getCombo(int index) {
         return (JComboBox<?>) Objects.requireNonNull(
-                innerSearcher.findComponent(PredicatesJ.of(JComboBox.class), index), "combo box not found");
+                innerSearcher.findComponent(ComponentPredicates.of(JComboBox.class), index), "combo box not found");
     }
 
     private JButton getNoTextButton(int index) {
@@ -684,7 +685,8 @@ public class JFileChooserOperator extends JComponentOperator {
 
     private JToggleButton getToggleButton(int index) {
         return (JToggleButton) Objects.requireNonNull(
-                innerSearcher.findComponent(PredicatesJ.of(JToggleButton.class), index), "toggle button not found");
+                innerSearcher.findComponent(ComponentPredicates.of(JToggleButton.class), index),
+                "toggle button not found");
     }
 
     private int findFileIndex(String file, StringComparator comparator) {
@@ -734,11 +736,11 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public static @Nullable JFileChooser findJFileChooser(Container cont) {
-        return (JFileChooser) findComponent(cont, PredicatesJ.of(JFileChooser.class));
+        return (JFileChooser) findComponent(cont, ComponentPredicates.of(JFileChooser.class));
     }
 
     public static JFileChooser waitJFileChooser(Container cont) {
-        return (JFileChooser) waitComponent(cont, PredicatesJ.of(JFileChooser.class));
+        return (JFileChooser) waitComponent(cont, ComponentPredicates.of(JFileChooser.class));
     }
 
     public static @Nullable JFileChooser findJFileChooser() {
@@ -748,13 +750,13 @@ public class JFileChooserOperator extends JComponentOperator {
 
     public static JFileChooser waitJFileChooser2() {
         JFrame jFrame = JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate());
-        JFileChooser jFileChooser = (JFileChooser) waitComponent(jFrame, PredicatesJ.of(JFileChooser.class));
+        JFileChooser jFileChooser = (JFileChooser) waitComponent(jFrame, ComponentPredicates.of(JFileChooser.class));
         return jFileChooser;
     }
 
     public static JFileChooser waitJFileChooser() {
         JDialog jDialog = JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
-        JFileChooser jFileChooser = (JFileChooser) waitComponent(jDialog, PredicatesJ.of(JFileChooser.class));
+        JFileChooser jFileChooser = (JFileChooser) waitComponent(jDialog, ComponentPredicates.of(JFileChooser.class));
         return jFileChooser;
     }
 

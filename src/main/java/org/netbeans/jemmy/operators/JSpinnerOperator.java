@@ -50,8 +50,8 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JSpinnerByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JSpinnerOperator extends JComponentOperator {
@@ -73,7 +73,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static JSpinnerOperator waitFor(ContainerOperator cont, int index) {
-        return new JSpinnerOperator((JSpinner) waitComponent(cont, PredicatesJ.of(JSpinner.class), index));
+        return new JSpinnerOperator((JSpinner) waitComponent(cont, ComponentPredicates.of(JSpinner.class), index));
     }
 
     public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -85,7 +85,8 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JSpinnerOperator((JSpinner) cont.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+        return new JSpinnerOperator(
+                (JSpinner) cont.waitSubComponent(ComponentPredicates.of(JSpinner.class, chooser), index));
     }
 
     public static JSpinnerOperator waitFor(
@@ -137,7 +138,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getIncreaseOperator() {
         if (increaseOperator == null) {
-            increaseOperator = JButtonOperator.of((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 0));
+            increaseOperator = JButtonOperator.of((JButton) waitSubComponent(ComponentPredicates.of(JButton.class), 0));
         }
 
         return increaseOperator;
@@ -145,7 +146,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public JButtonOperator getDecreaseOperator() {
         if (decreaseOperator == null) {
-            decreaseOperator = JButtonOperator.of((JButton) waitSubComponent(PredicatesJ.of(JButton.class), 1));
+            decreaseOperator = JButtonOperator.of((JButton) waitSubComponent(ComponentPredicates.of(JButton.class), 1));
         }
 
         return decreaseOperator;
@@ -266,7 +267,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static @Nullable JSpinner findJSpinner(Container cont, Predicate<Component> chooser, int index) {
-        return (JSpinner) findComponent(cont, PredicatesJ.of(JSpinner.class, chooser), index);
+        return (JSpinner) findComponent(cont, ComponentPredicates.of(JSpinner.class, chooser), index);
     }
 
     public static @Nullable JSpinner findJSpinner(Container cont, Predicate<Component> chooser) {
@@ -274,7 +275,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static @Nullable JSpinner findJSpinner(Container cont, int index) {
-        return findJSpinner(cont, PredicatesJ.alwaysTrue(), index);
+        return findJSpinner(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static @Nullable JSpinner findJSpinner(Container cont) {
@@ -282,7 +283,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static JSpinner waitJSpinner(Container cont, Predicate<Component> chooser, int index) {
-        return (JSpinner) waitComponent(cont, PredicatesJ.of(JSpinner.class, chooser), index);
+        return (JSpinner) waitComponent(cont, ComponentPredicates.of(JSpinner.class, chooser), index);
     }
 
     public static JSpinner waitJSpinner(Container cont, Predicate<Component> chooser) {
@@ -290,7 +291,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public static JSpinner waitJSpinner(Container cont, int index) {
-        return waitJSpinner(cont, PredicatesJ.alwaysTrue(), index);
+        return waitJSpinner(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static JSpinner waitJSpinner(Container cont) {

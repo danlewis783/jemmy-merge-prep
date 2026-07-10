@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -67,7 +67,7 @@ class ChoiceOperatorTest {
         assertThat(operator).isNotNull();
         ChoiceOperator operator1 = ChoiceOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ChoiceOperator operator2 = ChoiceOperator.waitFor(operator, PredicatesJ.byName("ChoiceOperatorTest"));
+        ChoiceOperator operator2 = ChoiceOperator.waitFor(operator, ComponentPredicates.byName("ChoiceOperatorTest"));
         assertThat(operator2).isNotNull();
         ChoiceOperator operator3 = ChoiceOperator.waitFor(operator, "ChoiceOperatorTest", StringComparators.strict());
         assertThat(operator3).isNotNull();
@@ -78,7 +78,7 @@ class ChoiceOperatorTest {
         Choice choice1 =
                 ChoiceOperator.findChoice(frame, "ChoiceOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(choice1).isNotNull();
-        Choice choice2 = ChoiceOperator.findChoice(frame, PredicatesJ.byName("ChoiceOperatorTest"));
+        Choice choice2 = ChoiceOperator.findChoice(frame, ComponentPredicates.byName("ChoiceOperatorTest"));
         assertThat(choice2).isNotNull();
     }
 
@@ -87,7 +87,7 @@ class ChoiceOperatorTest {
         Choice choice1 =
                 ChoiceOperator.waitChoice(frame, "ChoiceOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(choice1).isNotNull();
-        Choice choice2 = ChoiceOperator.waitChoice(frame, PredicatesJ.byName("ChoiceOperatorTest"));
+        Choice choice2 = ChoiceOperator.waitChoice(frame, ComponentPredicates.byName("ChoiceOperatorTest"));
         assertThat(choice2).isNotNull();
     }
 

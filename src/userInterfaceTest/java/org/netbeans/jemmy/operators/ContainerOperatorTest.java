@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -64,7 +64,8 @@ class ContainerOperatorTest {
         assertThat(operator).isNotNull();
         ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ContainerOperator operator2 = ContainerOperator.waitFor(operator, PredicatesJ.byName("ContainerOperatorTest"));
+        ContainerOperator operator2 =
+                ContainerOperator.waitFor(operator, ComponentPredicates.byName("ContainerOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -72,7 +73,8 @@ class ContainerOperatorTest {
     void testFindContainer() {
         Container container = ContainerOperator.findContainer(frame);
         assertThat(container).isNotNull();
-        Container container1 = ContainerOperator.findContainer(frame, PredicatesJ.byName("ContainerOperatorTest"));
+        Container container1 =
+                ContainerOperator.findContainer(frame, ComponentPredicates.byName("ContainerOperatorTest"));
         assertThat(container1).isNotNull();
     }
 
@@ -86,7 +88,8 @@ class ContainerOperatorTest {
     void testWaitContainer() {
         Container container = ContainerOperator.waitContainer(frame);
         assertThat(container).isNotNull();
-        Container container1 = ContainerOperator.waitContainer(frame, PredicatesJ.byName("ContainerOperatorTest"));
+        Container container1 =
+                ContainerOperator.waitContainer(frame, ComponentPredicates.byName("ContainerOperatorTest"));
         assertThat(container1).isNotNull();
     }
 
@@ -94,7 +97,7 @@ class ContainerOperatorTest {
     void testFindSubComponent() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        Component component = operator.findSubComponent(PredicatesJ.byName("ContainerOperatorTest"));
+        Component component = operator.findSubComponent(ComponentPredicates.byName("ContainerOperatorTest"));
         assertThat(component).isNotNull();
     }
 
@@ -102,7 +105,7 @@ class ContainerOperatorTest {
     void testWaitSubComponent() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        Component component = operator.waitSubComponent(PredicatesJ.byName("ContainerOperatorTest"));
+        Component component = operator.waitSubComponent(ComponentPredicates.byName("ContainerOperatorTest"));
         assertThat(component).isNotNull();
     }
 

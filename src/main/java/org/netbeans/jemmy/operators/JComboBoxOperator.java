@@ -50,9 +50,9 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JComboBoxByItemPredicate;
 import org.netbeans.jemmy.predicates.JComboBoxOperatorByItemIndexPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -75,7 +75,8 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public static JComboBoxOperator waitFor(ContainerOperator cont, int index) {
-        return new JComboBoxOperator((JComboBox<?>) waitComponent(cont, PredicatesJ.of(JComboBox.class), index));
+        return new JComboBoxOperator(
+                (JComboBox<?>) waitComponent(cont, ComponentPredicates.of(JComboBox.class), index));
     }
 
     public static JComboBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -88,7 +89,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public static JComboBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JComboBoxOperator(
-                (JComboBox<?>) cont.waitSubComponent(PredicatesJ.of(JComboBox.class, chooser), index));
+                (JComboBox<?>) cont.waitSubComponent(ComponentPredicates.of(JComboBox.class, chooser), index));
     }
 
     public static JComboBoxOperator waitFor(
@@ -103,11 +104,11 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public JButton findJButton() {
-        return (JButton) waitSubComponent(PredicatesJ.of(JButton.class));
+        return (JButton) waitSubComponent(ComponentPredicates.of(JButton.class));
     }
 
     public JTextField findJTextField() {
-        return (JTextField) waitSubComponent(PredicatesJ.of(JTextField.class));
+        return (JTextField) waitSubComponent(ComponentPredicates.of(JTextField.class));
     }
 
     public JButtonOperator getButton() {
@@ -519,7 +520,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public static @Nullable JComboBox<?> findJComboBox(Container cont, Predicate<Component> chooser, int index) {
-        return (JComboBox<?>) findComponent(cont, PredicatesJ.of(JComboBox.class, chooser), index);
+        return (JComboBox<?>) findComponent(cont, ComponentPredicates.of(JComboBox.class, chooser), index);
     }
 
     public static @Nullable JComboBox<?> findJComboBox(Container cont, Predicate<Component> chooser) {
@@ -537,7 +538,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public static JComboBox<?> waitJComboBox(Container cont, Predicate<Component> chooser, int index) {
-        return (JComboBox<?>) waitComponent(cont, PredicatesJ.of(JComboBox.class, chooser), index);
+        return (JComboBox<?>) waitComponent(cont, ComponentPredicates.of(JComboBox.class, chooser), index);
     }
 
     public static JComboBox<?> waitJComboBox(Container cont, Predicate<Component> chooser) {

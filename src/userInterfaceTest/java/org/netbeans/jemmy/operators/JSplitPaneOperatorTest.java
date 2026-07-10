@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -64,7 +64,7 @@ class JSplitPaneOperatorTest {
         assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JSplitPaneOperator operator2 = JSplitPaneOperator.waitFor(operator, PredicatesJ.byName("JSplitPane"));
+        JSplitPaneOperator operator2 = JSplitPaneOperator.waitFor(operator, ComponentPredicates.byName("JSplitPane"));
         assertThat(operator2).isNotNull();
         JSplitPaneOperator operator3 = JSplitPaneOperator.of(splitPane);
         assertThat(operator3).isNotNull();
@@ -74,7 +74,7 @@ class JSplitPaneOperatorTest {
     void testFindJSplitPane() {
         JSplitPane pane1 = JSplitPaneOperator.findJSplitPane(frame);
         assertThat(pane1).isNotNull();
-        JSplitPane pane2 = JSplitPaneOperator.findJSplitPane(frame, PredicatesJ.byName("JSplitPane"));
+        JSplitPane pane2 = JSplitPaneOperator.findJSplitPane(frame, ComponentPredicates.byName("JSplitPane"));
         assertThat(pane2).isNotNull();
     }
 
@@ -82,7 +82,7 @@ class JSplitPaneOperatorTest {
     void testFindJSplitPaneUnder() {
         JSplitPane pane1 = JSplitPaneOperator.findJSplitPaneUnder(frame);
         assertThat(pane1).isNull();
-        JSplitPane pane2 = JSplitPaneOperator.findJSplitPaneUnder(frame, PredicatesJ.byName("JSplitPane"));
+        JSplitPane pane2 = JSplitPaneOperator.findJSplitPaneUnder(frame, ComponentPredicates.byName("JSplitPane"));
         assertThat(pane2).isNull();
     }
 
@@ -90,7 +90,7 @@ class JSplitPaneOperatorTest {
     void testWaitJSplitPane() {
         JSplitPane pane1 = JSplitPaneOperator.waitJSplitPane(frame);
         assertThat(pane1).isNotNull();
-        JSplitPane pane2 = JSplitPaneOperator.waitJSplitPane(frame, PredicatesJ.byName("JSplitPane"));
+        JSplitPane pane2 = JSplitPaneOperator.waitJSplitPane(frame, ComponentPredicates.byName("JSplitPane"));
         assertThat(pane2).isNotNull();
     }
 

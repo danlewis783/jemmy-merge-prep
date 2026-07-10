@@ -38,7 +38,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.predicates.ButtonByLabelPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class ButtonOperator extends ComponentOperator {
@@ -58,7 +58,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public static ButtonOperator waitFor(ContainerOperator cont, int index) {
-        return new ButtonOperator((Button) waitComponent(cont, PredicatesJ.of(Button.class), index));
+        return new ButtonOperator((Button) waitComponent(cont, ComponentPredicates.of(Button.class), index));
     }
 
     public static ButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -70,7 +70,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public static ButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new ButtonOperator((Button) cont.waitSubComponent(PredicatesJ.of(Button.class, chooser), index));
+        return new ButtonOperator((Button) cont.waitSubComponent(ComponentPredicates.of(Button.class, chooser), index));
     }
 
     public static ButtonOperator waitFor(
@@ -142,7 +142,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public static @Nullable Button findButton(Container cont, Predicate<Component> chooser, int index) {
-        return (Button) findComponent(cont, PredicatesJ.of(Button.class, chooser), index);
+        return (Button) findComponent(cont, ComponentPredicates.of(Button.class, chooser), index);
     }
 
     public static @Nullable Button findButton(Container cont, Predicate<Component> chooser) {
@@ -159,7 +159,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public static Button waitButton(Container cont, Predicate<Component> chooser, int index) {
-        return (Button) waitComponent(cont, PredicatesJ.of(Button.class, chooser), index);
+        return (Button) waitComponent(cont, ComponentPredicates.of(Button.class, chooser), index);
     }
 
     public static Button waitButton(Container cont, Predicate<Component> chooser) {

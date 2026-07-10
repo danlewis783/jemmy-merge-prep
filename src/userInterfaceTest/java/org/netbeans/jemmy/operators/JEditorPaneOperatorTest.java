@@ -50,7 +50,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -89,7 +89,7 @@ class JEditorPaneOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JEditorPaneOperator operator3 =
-                JEditorPaneOperator.waitFor(operator1, PredicatesJ.byName("JEditorPaneOperatorTest"));
+                JEditorPaneOperator.waitFor(operator1, ComponentPredicates.byName("JEditorPaneOperatorTest"));
         assertThat(operator3).isNotNull();
         JEditorPaneOperator operator4 = JEditorPaneOperator.waitFor(operator1);
         assertThat(operator4).isNotNull();
@@ -103,7 +103,7 @@ class JEditorPaneOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JEditorPane editorPane1 =
-                JEditorPaneOperator.findJEditorPane(frame, PredicatesJ.byName("JEditorPaneOperatorTest"));
+                JEditorPaneOperator.findJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
         assertThat(editorPane1).isNotNull();
         JEditorPane editorPane2 = JEditorPaneOperator.findJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -115,7 +115,7 @@ class JEditorPaneOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JEditorPane editorPane1 =
-                JEditorPaneOperator.waitJEditorPane(frame, PredicatesJ.byName("JEditorPaneOperatorTest"));
+                JEditorPaneOperator.waitJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
         assertThat(editorPane1).isNotNull();
         JEditorPane editorPane2 = JEditorPaneOperator.waitJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());

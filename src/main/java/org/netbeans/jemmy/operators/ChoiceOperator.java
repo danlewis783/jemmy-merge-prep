@@ -37,7 +37,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
 import org.netbeans.jemmy.predicates.ChoiceBySelectedItemPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class ChoiceOperator extends ComponentOperator {
@@ -57,7 +57,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public static ChoiceOperator waitFor(ContainerOperator cont, int index) {
-        return new ChoiceOperator((Choice) waitComponent(cont, PredicatesJ.of(Choice.class), index));
+        return new ChoiceOperator((Choice) waitComponent(cont, ComponentPredicates.of(Choice.class), index));
     }
 
     public static ChoiceOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -69,7 +69,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public static ChoiceOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new ChoiceOperator((Choice) cont.waitSubComponent(PredicatesJ.of(Choice.class, chooser), index));
+        return new ChoiceOperator((Choice) cont.waitSubComponent(ComponentPredicates.of(Choice.class, chooser), index));
     }
 
     public static ChoiceOperator waitFor(
@@ -227,7 +227,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public static @Nullable Choice findChoice(Container cont, Predicate<Component> chooser, int index) {
-        return (Choice) findComponent(cont, PredicatesJ.of(Choice.class, chooser), index);
+        return (Choice) findComponent(cont, ComponentPredicates.of(Choice.class, chooser), index);
     }
 
     public static @Nullable Choice findChoice(Container cont, Predicate<Component> chooser) {
@@ -244,7 +244,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public static Choice waitChoice(Container cont, Predicate<Component> chooser, int index) {
-        return (Choice) waitComponent(cont, PredicatesJ.of(Choice.class, chooser), index);
+        return (Choice) waitComponent(cont, ComponentPredicates.of(Choice.class, chooser), index);
     }
 
     public static Choice waitChoice(Container cont, Predicate<Component> chooser) {

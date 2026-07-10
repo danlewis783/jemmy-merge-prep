@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -72,7 +72,7 @@ class ListOperatorTest {
         assertThat(operator).isNotNull();
         ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ListOperator operator2 = ListOperator.waitFor(operator, PredicatesJ.byName("ListOperatorTest"));
+        ListOperator operator2 = ListOperator.waitFor(operator, ComponentPredicates.byName("ListOperatorTest"));
         assertThat(operator2).isNotNull();
         ListOperator operator3 = ListOperator.waitFor(operator, "Item 1", StringComparators.strict());
         assertThat(operator3).isNotNull();
@@ -80,7 +80,7 @@ class ListOperatorTest {
 
     @Test
     void testFindList() {
-        List list1 = ListOperator.findList(frame, PredicatesJ.byName("ListOperatorTest"));
+        List list1 = ListOperator.findList(frame, ComponentPredicates.byName("ListOperatorTest"));
         assertThat(list1).isNotNull();
     }
 

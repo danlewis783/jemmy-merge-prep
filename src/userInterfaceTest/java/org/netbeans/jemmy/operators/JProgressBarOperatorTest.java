@@ -30,7 +30,7 @@ import javax.swing.plaf.ProgressBarUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -70,7 +70,7 @@ class JProgressBarOperatorTest {
         JProgressBarOperator operator1 = JProgressBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JProgressBarOperator operator2 =
-                JProgressBarOperator.waitFor(operator, PredicatesJ.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.waitFor(operator, ComponentPredicates.byName("JProgressBarOperatorTest"));
         assertThat(operator2).isNotNull();
         JProgressBarOperator operator3 = JProgressBarOperator.of(progressBar);
         assertThat(operator3).isNotNull();
@@ -81,7 +81,7 @@ class JProgressBarOperatorTest {
         JProgressBar progressBar1 = JProgressBarOperator.findJProgressBar(frame);
         assertThat(progressBar1).isNotNull();
         JProgressBar progressBar2 =
-                JProgressBarOperator.findJProgressBar(frame, PredicatesJ.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.findJProgressBar(frame, ComponentPredicates.byName("JProgressBarOperatorTest"));
         assertThat(progressBar2).isNotNull();
     }
 
@@ -90,7 +90,7 @@ class JProgressBarOperatorTest {
         JProgressBar progressBar1 = JProgressBarOperator.waitJProgressBar(frame);
         assertThat(progressBar1).isNotNull();
         JProgressBar progressBar2 =
-                JProgressBarOperator.waitJProgressBar(frame, PredicatesJ.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.waitJProgressBar(frame, ComponentPredicates.byName("JProgressBarOperatorTest"));
         assertThat(progressBar2).isNotNull();
     }
 

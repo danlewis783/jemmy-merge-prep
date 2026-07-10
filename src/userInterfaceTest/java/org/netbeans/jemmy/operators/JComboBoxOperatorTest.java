@@ -33,7 +33,7 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
@@ -73,7 +73,8 @@ class JComboBoxOperatorTest {
         assertThat(operator).isNotNull();
         JComboBoxOperator operator1 = JComboBoxOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JComboBoxOperator operator2 = JComboBoxOperator.waitFor(operator, PredicatesJ.byName("JComboBoxOperatorTest"));
+        JComboBoxOperator operator2 =
+                JComboBoxOperator.waitFor(operator, ComponentPredicates.byName("JComboBoxOperatorTest"));
         assertThat(operator2).isNotNull();
         JComboBoxOperator operator3 =
                 JComboBoxOperator.waitFor(operator, "JComboBoxOperatorTest", StringComparators.strict());
@@ -85,7 +86,8 @@ class JComboBoxOperatorTest {
         JComboBox<?> comboBox1 = JComboBoxOperator.findJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(comboBox1).isNotNull();
-        JComboBox<?> comboBox2 = JComboBoxOperator.findJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
+        JComboBox<?> comboBox2 =
+                JComboBoxOperator.findJComboBox(frame, ComponentPredicates.byName("JComboBoxOperatorTest"));
         assertThat(comboBox2).isNotNull();
     }
 
@@ -94,7 +96,8 @@ class JComboBoxOperatorTest {
         JComboBox<?> comboBox1 = JComboBoxOperator.waitJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(comboBox1).isNotNull();
-        JComboBox<?> comboBox2 = JComboBoxOperator.waitJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
+        JComboBox<?> comboBox2 =
+                JComboBoxOperator.waitJComboBox(frame, ComponentPredicates.byName("JComboBoxOperatorTest"));
         assertThat(comboBox2).isNotNull();
     }
 

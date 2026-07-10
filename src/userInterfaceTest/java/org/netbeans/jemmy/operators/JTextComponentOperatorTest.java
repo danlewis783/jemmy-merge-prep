@@ -47,7 +47,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JTextComponentOperator.NoSuchTextException;
 import org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 class JTextComponentOperatorTest {
@@ -80,7 +80,7 @@ class JTextComponentOperatorTest {
                 JTextComponentOperator.waitFor(operator, StringComparators.strict(), "JTextComponentOperatorTest");
         assertThat(operator2).isNotNull();
         JTextComponentOperator operator3 =
-                JTextComponentOperator.waitFor(operator, PredicatesJ.byName("JTextComponentOperatorTest"));
+                JTextComponentOperator.waitFor(operator, ComponentPredicates.byName("JTextComponentOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
@@ -90,8 +90,8 @@ class JTextComponentOperatorTest {
         JTextComponent textComponent = JTextComponentOperator.findJTextComponent(
                 frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textComponent).isNotNull();
-        JTextComponent textComponent2 =
-                JTextComponentOperator.findJTextComponent(frame, PredicatesJ.byName("JTextComponentOperatorTest"));
+        JTextComponent textComponent2 = JTextComponentOperator.findJTextComponent(
+                frame, ComponentPredicates.byName("JTextComponentOperatorTest"));
         assertThat(textComponent2).isNotNull();
     }
 
@@ -101,8 +101,8 @@ class JTextComponentOperatorTest {
         JTextComponent textComponent = JTextComponentOperator.waitJTextComponent(
                 frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textComponent).isNotNull();
-        JTextComponent textComponent2 =
-                JTextComponentOperator.waitJTextComponent(frame, PredicatesJ.byName("JTextComponentOperatorTest"));
+        JTextComponent textComponent2 = JTextComponentOperator.waitJTextComponent(
+                frame, ComponentPredicates.byName("JTextComponentOperatorTest"));
         assertThat(textComponent2).isNotNull();
     }
 

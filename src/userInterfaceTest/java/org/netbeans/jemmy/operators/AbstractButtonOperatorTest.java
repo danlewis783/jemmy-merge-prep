@@ -29,7 +29,7 @@ import javax.swing.event.ChangeListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -66,7 +66,7 @@ class AbstractButtonOperatorTest {
         AbstractButtonOperator operator1 = AbstractButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         AbstractButtonOperator operator2 =
-                AbstractButtonOperator.waitFor(operator, PredicatesJ.byName("AbstractButtonOperatorTest"));
+                AbstractButtonOperator.waitFor(operator, ComponentPredicates.byName("AbstractButtonOperatorTest"));
         assertThat(operator2).isNotNull();
         AbstractButtonOperator operator3 =
                 AbstractButtonOperator.waitFor(operator, "AbstractButtonOperatorTest", StringComparators.strict());
@@ -75,8 +75,8 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testFindAbstractButton() {
-        AbstractButton button1 =
-                AbstractButtonOperator.findAbstractButton(frame, PredicatesJ.byName("AbstractButtonOperatorTest"));
+        AbstractButton button1 = AbstractButtonOperator.findAbstractButton(
+                frame, ComponentPredicates.byName("AbstractButtonOperatorTest"));
         assertThat(button1).isNotNull();
         AbstractButton button2 = AbstractButtonOperator.findAbstractButton(
                 frame, "AbstractButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -85,8 +85,8 @@ class AbstractButtonOperatorTest {
 
     @Test
     void testWaitAbstractButton() {
-        AbstractButton button1 =
-                AbstractButtonOperator.waitAbstractButton(frame, PredicatesJ.byName("AbstractButtonOperatorTest"));
+        AbstractButton button1 = AbstractButtonOperator.waitAbstractButton(
+                frame, ComponentPredicates.byName("AbstractButtonOperatorTest"));
         assertThat(button1).isNotNull();
         AbstractButton button2 = AbstractButtonOperator.waitAbstractButton(
                 frame, "AbstractButtonOperatorTest", StringComparators.caseInsensitiveSubstring());

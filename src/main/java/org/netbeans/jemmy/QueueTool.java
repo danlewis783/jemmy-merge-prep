@@ -29,7 +29,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.InvocationEvent;
 import java.util.concurrent.TimeUnit;
-import org.netbeans.jemmy.callables.CallablesJ;
+import org.netbeans.jemmy.callables.Callables;
 import org.netbeans.jemmy.functions.StayingEmptyFunction;
 import org.netbeans.jemmy.functions.SystemEventQueueEmptyFunction;
 import org.slf4j.Logger;
@@ -64,7 +64,7 @@ public final class QueueTool {
                         e);
             } else {
                 if (logger.isWarnEnabled()) {
-                    final String eventAtFrontOfQueue = invokeSmoothly(Caller.of(CallablesJ.toStringOf(event)));
+                    final String eventAtFrontOfQueue = invokeSmoothly(Caller.of(Callables.toStringOf(event)));
                     logger.warn(
                             "Timeout expired waiting for event queue to stay empty.  Event at front of event queue: <{}>",
                             eventAtFrontOfQueue,

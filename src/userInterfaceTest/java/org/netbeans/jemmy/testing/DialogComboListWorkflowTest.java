@@ -50,7 +50,7 @@ import org.netbeans.jemmy.operators.JScrollPaneOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
 import org.netbeans.jemmy.operators.WindowOperator;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_001
@@ -74,12 +74,12 @@ class DialogComboListWorkflowTest {
         Window window = ComponentOperator.of(jDialog).getWindow();
         assertThat(jDialog).isSameAs(window);
         JScrollPaneOperator jScrollPaneOp = JScrollPaneOperator.of(
-                Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jDialog, PredicatesJ.alwaysTrue())));
+                Objects.requireNonNull(JScrollPaneOperator.findJScrollPane(jDialog, ComponentPredicates.alwaysTrue())));
         JComboBoxOperator jComboOp1 = JComboBoxOperator.of(Objects.requireNonNull(
                 JComboBoxOperator.findJComboBox(jDialog, "editable_one", StringComparators.strict(), 0)));
         JComboBoxOperator jComboOp2 = JComboBoxOperator.waitFor(jDialogOp1);
         JComboBoxOperator jComboOp3 = JComboBoxOperator.waitFor(jDialogOp1, "editable_one", StringComparators.strict());
-        JComboBoxOperator jComboOp4 = JComboBoxOperator.waitFor(jDialogOp1, PredicatesJ.byName("editable"));
+        JComboBoxOperator jComboOp4 = JComboBoxOperator.waitFor(jDialogOp1, ComponentPredicates.byName("editable"));
         assertThat(jComboOp2.getSource()).isSameAs(jComboOp1.getSource());
         assertThat(jComboOp3.getSource()).isSameAs(jComboOp1.getSource());
         assertThat(jComboOp4.getSource()).isSameAs(jComboOp1.getSource());
@@ -91,7 +91,7 @@ class DialogComboListWorkflowTest {
         JListOperator jListOp2 =
                 JListOperator.waitFor(jDialogOp1, "two", StringComparators.caseInsensitiveSubstring(), 1, 0);
         JListOperator jListOp3 = JListOperator.waitFor(jDialogOp1, "two", StringComparators.caseInsensitiveSubstring());
-        JListOperator jListOp4 = JListOperator.waitFor(jDialogOp1, PredicatesJ.byName("list"));
+        JListOperator jListOp4 = JListOperator.waitFor(jDialogOp1, ComponentPredicates.byName("list"));
         assertThat(jListOp2.getSource()).isSameAs(jListOp1.getSource());
         assertThat(jListOp3.getSource()).isSameAs(jListOp1.getSource());
         assertThat(jListOp4.getSource()).isSameAs(jListOp1.getSource());
@@ -123,13 +123,13 @@ class DialogComboListWorkflowTest {
         jScrollPaneOp.scrollToBottom();
         jComboOp5.selectItem(2);
         JComboBoxOperator.waitJComboBox(jDialog, "non_editable_three", StringComparators.strict(), -1);
-        JComboBoxOperator jComboOp6 = JComboBoxOperator.waitFor(jDialogOp1, PredicatesJ.byName("non_editable"));
+        JComboBoxOperator jComboOp6 = JComboBoxOperator.waitFor(jDialogOp1, ComponentPredicates.byName("non_editable"));
         JComboBoxOperator jComboOp7 = JComboBoxOperator.waitFor(
-                jDialogOp1, PredicatesJ.byName("on_e", StringComparators.caseInsensitiveSubstring()));
+                jDialogOp1, ComponentPredicates.byName("on_e", StringComparators.caseInsensitiveSubstring()));
         assertThat(jComboOp7.getSource()).isSameAs(jComboOp6.getSource());
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
-                    .isThrownBy(() -> JComboBoxOperator.waitFor(jDialogOp1, PredicatesJ.byName("non_edit")));
+                    .isThrownBy(() -> JComboBoxOperator.waitFor(jDialogOp1, ComponentPredicates.byName("non_edit")));
         }
 
         testComponent(jComboOp1);

@@ -55,7 +55,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -91,7 +91,8 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        ComponentOperator operator2 = ComponentOperator.waitFor(operator, PredicatesJ.byName("ComponentOperatorTest"));
+        ComponentOperator operator2 =
+                ComponentOperator.waitFor(operator, ComponentPredicates.byName("ComponentOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -121,13 +122,15 @@ class ComponentOperatorTest {
 
     @Test
     void testFindComponent() {
-        Component component = ComponentOperator.findComponent(frame, PredicatesJ.byName("ComponentOperatorTest"));
+        Component component =
+                ComponentOperator.findComponent(frame, ComponentPredicates.byName("ComponentOperatorTest"));
         assertThat(component).isNotNull();
     }
 
     @Test
     void testWaitComponent() {
-        Component component = ComponentOperator.waitComponent(frame, PredicatesJ.byName("ComponentOperatorTest"));
+        Component component =
+                ComponentOperator.waitComponent(frame, ComponentPredicates.byName("ComponentOperatorTest"));
         assertThat(component).isNotNull();
     }
 
@@ -367,7 +370,7 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        Container container = operator1.getContainer(PredicatesJ.byName("FrameOperatorTest"));
+        Container container = operator1.getContainer(ComponentPredicates.byName("FrameOperatorTest"));
         assertThat(container).isNotNull();
     }
 

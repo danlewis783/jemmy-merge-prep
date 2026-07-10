@@ -42,7 +42,7 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.WindowDriver;
 import org.netbeans.jemmy.functions.WindowFunction;
 import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static WindowOperator waitFor(int index) {
-        return new WindowOperator(waitWindow(PredicatesJ.alwaysTrue(), index));
+        return new WindowOperator(waitWindow(ComponentPredicates.alwaysTrue(), index));
     }
 
     WindowOperator(Window w) {
@@ -73,7 +73,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static WindowOperator waitFor(WindowOperator owner, int index) {
-        return new WindowOperator(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
+        return new WindowOperator(waitWindow(owner, ComponentPredicates.alwaysTrue(), index));
     }
 
     public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {

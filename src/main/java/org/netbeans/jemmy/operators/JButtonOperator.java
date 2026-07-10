@@ -33,7 +33,7 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JButtonOperator extends AbstractButtonOperator {
@@ -51,7 +51,7 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public static JButtonOperator waitFor(ContainerOperator cont, int index) {
-        return new JButtonOperator((JButton) waitComponent(cont, PredicatesJ.of(JButton.class), index));
+        return new JButtonOperator((JButton) waitComponent(cont, ComponentPredicates.of(JButton.class), index));
     }
 
     public static JButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -63,13 +63,16 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public static JButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JButtonOperator((JButton) cont.waitSubComponent(PredicatesJ.of(JButton.class, chooser), index));
+        return new JButtonOperator(
+                (JButton) cont.waitSubComponent(ComponentPredicates.of(JButton.class, chooser), index));
     }
 
     public static JButtonOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JButtonOperator((JButton) waitComponent(
-                cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index));
+                cont,
+                ComponentPredicates.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                index));
     }
 
     public boolean isDefaultButton() {
@@ -93,7 +96,7 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public static @Nullable JButton findJButton(Container cont, Predicate<Component> chooser, int index) {
-        return (JButton) findAbstractButton(cont, PredicatesJ.of(JButton.class, chooser), index);
+        return (JButton) findAbstractButton(cont, ComponentPredicates.of(JButton.class, chooser), index);
     }
 
     public static @Nullable JButton findJButton(Container cont, Predicate<Component> chooser) {
@@ -103,7 +106,9 @@ public class JButtonOperator extends AbstractButtonOperator {
     public static @Nullable JButton findJButton(
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJButton(
-                cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index);
+                cont,
+                ComponentPredicates.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                index);
     }
 
     public static @Nullable JButton findJButton(
@@ -112,7 +117,7 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public static JButton waitJButton(Container cont, Predicate<Component> chooser, int index) {
-        return (JButton) waitAbstractButton(cont, PredicatesJ.of(JButton.class, chooser), index);
+        return (JButton) waitAbstractButton(cont, ComponentPredicates.of(JButton.class, chooser), index);
     }
 
     public static JButton waitJButton(Container cont, Predicate<Component> chooser) {
@@ -122,7 +127,9 @@ public class JButtonOperator extends AbstractButtonOperator {
     public static JButton waitJButton(
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJButton(
-                cont, PredicatesJ.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)), index);
+                cont,
+                ComponentPredicates.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                index);
     }
 
     public static JButton waitJButton(Container cont, @Nullable String text, StringComparator stringComparator) {

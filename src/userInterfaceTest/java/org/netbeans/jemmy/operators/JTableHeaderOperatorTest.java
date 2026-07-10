@@ -35,7 +35,7 @@ import javax.swing.table.TableColumnModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -83,7 +83,7 @@ class JTableHeaderOperatorTest {
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         JTableHeaderOperator operator2 =
-                JTableHeaderOperator.waitFor(operator, PredicatesJ.byName("JTableHeaderOperatorTest"));
+                JTableHeaderOperator.waitFor(operator, ComponentPredicates.byName("JTableHeaderOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 

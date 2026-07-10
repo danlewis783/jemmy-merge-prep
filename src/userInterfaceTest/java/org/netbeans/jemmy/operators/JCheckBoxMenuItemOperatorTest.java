@@ -26,7 +26,7 @@ import javax.swing.JMenuBar;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -68,8 +68,8 @@ class JCheckBoxMenuItemOperatorTest {
         assertThat(menuBarOp).isNotNull();
         JCheckBoxMenuItemOperator operator3 = JCheckBoxMenuItemOperator.waitFor(menuBarOp);
         assertThat(operator3).isNotNull();
-        JCheckBoxMenuItemOperator operator4 =
-                JCheckBoxMenuItemOperator.waitFor(menuBarOp, PredicatesJ.byName("JCheckBoxMenuItemOperatorTest"));
+        JCheckBoxMenuItemOperator operator4 = JCheckBoxMenuItemOperator.waitFor(
+                menuBarOp, ComponentPredicates.byName("JCheckBoxMenuItemOperatorTest"));
         assertThat(operator4).isNotNull();
         JCheckBoxMenuItemOperator operator5 = JCheckBoxMenuItemOperator.waitFor(
                 menuBarOp, "JCheckBoxMenuItemOperatorTest", StringComparators.strict());

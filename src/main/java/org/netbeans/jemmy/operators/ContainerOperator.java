@@ -40,7 +40,7 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.ComponentSearcherFunction;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public class ContainerOperator extends ComponentOperator {
     private final ComponentSearcher searcher;
@@ -59,7 +59,7 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public static ContainerOperator waitFor(ContainerOperator cont, int index) {
-        return new ContainerOperator((Container) waitComponent(cont, PredicatesJ.of(Container.class), index));
+        return new ContainerOperator((Container) waitComponent(cont, ComponentPredicates.of(Container.class), index));
     }
 
     public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -68,7 +68,7 @@ public class ContainerOperator extends ComponentOperator {
 
     public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ContainerOperator(
-                (Container) cont.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
+                (Container) cont.waitSubComponent(ComponentPredicates.of(Container.class, chooser), index));
     }
 
     public @Nullable Component findSubComponent(Predicate<Component> chooser, int index) {
@@ -226,7 +226,7 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public static @Nullable Container findContainer(Container cont, Predicate<Component> chooser, int index) {
-        return (Container) findComponent(cont, PredicatesJ.of(Container.class, chooser), index);
+        return (Container) findComponent(cont, ComponentPredicates.of(Container.class, chooser), index);
     }
 
     public static @Nullable Container findContainer(Container cont, Predicate<Component> chooser) {
@@ -234,7 +234,7 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public static @Nullable Container findContainer(Container cont, int index) {
-        return findContainer(cont, PredicatesJ.alwaysTrue(), index);
+        return findContainer(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static @Nullable Container findContainer(Container cont) {
@@ -242,15 +242,15 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public static @Nullable Container findContainerUnder(Component comp, Predicate<Component> chooser) {
-        return ComponentOperator.of(comp).getContainer(PredicatesJ.of(Container.class, chooser));
+        return ComponentOperator.of(comp).getContainer(ComponentPredicates.of(Container.class, chooser));
     }
 
     public static @Nullable Container findContainerUnder(Component comp) {
-        return findContainerUnder(comp, PredicatesJ.alwaysTrue());
+        return findContainerUnder(comp, ComponentPredicates.alwaysTrue());
     }
 
     public static Container waitContainer(Container cont, Predicate<Component> chooser, int index) {
-        return (Container) waitComponent(cont, PredicatesJ.of(Container.class, chooser), index);
+        return (Container) waitComponent(cont, ComponentPredicates.of(Container.class, chooser), index);
     }
 
     public static Container waitContainer(Container cont, Predicate<Component> chooser) {
@@ -258,7 +258,7 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public static Container waitContainer(Container cont, int index) {
-        return waitContainer(cont, PredicatesJ.alwaysTrue(), index);
+        return waitContainer(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static Container waitContainer(Container cont) {

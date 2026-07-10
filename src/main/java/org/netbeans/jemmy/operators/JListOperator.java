@@ -50,9 +50,9 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MultiSelListDriver;
 import org.netbeans.jemmy.predicates.ByListItemElementChooser;
 import org.netbeans.jemmy.predicates.ByRenderedComponentPredicateListItemChooser;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JListByItemPredicate;
 import org.netbeans.jemmy.predicates.JListOperatorByItemPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 import org.slf4j.Logger;
@@ -76,7 +76,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static JListOperator waitFor(ContainerOperator cont, int index) {
-        return new JListOperator((JList<?>) waitComponent(cont, PredicatesJ.of(JList.class), index));
+        return new JListOperator((JList<?>) waitComponent(cont, ComponentPredicates.of(JList.class), index));
     }
 
     public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -88,7 +88,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JListOperator((JList<?>) cont.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
+        return new JListOperator((JList<?>) cont.waitSubComponent(ComponentPredicates.of(JList.class, chooser), index));
     }
 
     public static JListOperator waitFor(
@@ -230,7 +230,7 @@ public class JListOperator extends JComponentOperator {
     public void scrollToItem(int itemIndex) {
         checkIndex(itemIndex);
         makeComponentVisible();
-        JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+        JScrollPane scroll = (JScrollPane) getContainer(ComponentPredicates.of(JScrollPane.class));
         if (scroll == null) {
             return;
         }
@@ -633,7 +633,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static @Nullable JList<?> findJList(Container cont, Predicate<Component> chooser, int index) {
-        return (JList<?>) findComponent(cont, PredicatesJ.of(JList.class, chooser), index);
+        return (JList<?>) findComponent(cont, ComponentPredicates.of(JList.class, chooser), index);
     }
 
     public static @Nullable JList<?> findJList(Container cont, Predicate<Component> chooser) {
@@ -651,7 +651,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static JList<?> waitJList(Container cont, Predicate<Component> chooser, int index) {
-        return (JList<?>) waitComponent(cont, PredicatesJ.of(JList.class, chooser), index);
+        return (JList<?>) waitComponent(cont, ComponentPredicates.of(JList.class, chooser), index);
     }
 
     public static JList<?> waitJList(Container cont, Predicate<Component> chooser) {

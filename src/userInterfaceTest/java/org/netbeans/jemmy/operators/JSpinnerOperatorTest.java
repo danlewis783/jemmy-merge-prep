@@ -53,7 +53,7 @@ import org.netbeans.jemmy.operators.JSpinnerOperator.ExactScrollAdjuster;
 import org.netbeans.jemmy.operators.JSpinnerOperator.ListScrollAdjuster;
 import org.netbeans.jemmy.operators.JSpinnerOperator.NumberScrollAdjuster;
 import org.netbeans.jemmy.operators.JSpinnerOperator.ToStringScrollAdjuster;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -97,7 +97,8 @@ class JSpinnerOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         assertThat(jFrameOp).isNotNull();
         assertThat(JSpinnerOperator.waitFor(jFrameOp)).isNotNull();
-        JSpinnerOperator operator2 = JSpinnerOperator.waitFor(jFrameOp, PredicatesJ.byName("JSpinnerOperatorTest"));
+        JSpinnerOperator operator2 =
+                JSpinnerOperator.waitFor(jFrameOp, ComponentPredicates.byName("JSpinnerOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.setValue(1);
         assertThat(JSpinnerOperator.waitFor(jFrameOp, "1", STRICT)).isNotNull();
@@ -106,14 +107,14 @@ class JSpinnerOperatorTest {
     @Test
     void findJSpinner() {
         assertThat(JSpinnerOperator.findJSpinner(frame)).isNotNull();
-        assertThat(JSpinnerOperator.findJSpinner(frame, PredicatesJ.byName("JSpinnerOperatorTest")))
+        assertThat(JSpinnerOperator.findJSpinner(frame, ComponentPredicates.byName("JSpinnerOperatorTest")))
                 .isNotNull();
     }
 
     @Test
     void waitJSpinner() {
         assertThat(JSpinnerOperator.waitJSpinner(frame)).isNotNull();
-        assertThat(JSpinnerOperator.waitJSpinner(frame, PredicatesJ.byName("JSpinnerOperatorTest")))
+        assertThat(JSpinnerOperator.waitJSpinner(frame, ComponentPredicates.byName("JSpinnerOperatorTest")))
                 .isNotNull();
     }
 

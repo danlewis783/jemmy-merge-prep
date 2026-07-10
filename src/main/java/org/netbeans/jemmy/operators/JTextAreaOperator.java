@@ -34,8 +34,8 @@ import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTextAreaOperator extends JTextComponentOperator {
@@ -52,7 +52,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public static JTextAreaOperator waitFor(ContainerOperator cont, int index) {
-        return new JTextAreaOperator((JTextArea) waitComponent(cont, PredicatesJ.of(JTextArea.class), index));
+        return new JTextAreaOperator((JTextArea) waitComponent(cont, ComponentPredicates.of(JTextArea.class), index));
     }
 
     public static JTextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> predicate) {
@@ -61,7 +61,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
 
     public static JTextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTextAreaOperator(
-                (JTextArea) cont.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
+                (JTextArea) cont.waitSubComponent(ComponentPredicates.of(JTextArea.class, chooser), index));
     }
 
     public static JTextAreaOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
@@ -72,7 +72,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JTextAreaOperator((JTextArea) waitComponent(
                 cont,
-                PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -226,7 +226,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public static @Nullable JTextArea findJTextArea(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextArea) findJTextComponent(cont, PredicatesJ.of(JTextArea.class, chooser), index);
+        return (JTextArea) findJTextComponent(cont, ComponentPredicates.of(JTextArea.class, chooser), index);
     }
 
     public static @Nullable JTextArea findJTextArea(Container cont, Predicate<Component> chooser) {
@@ -237,7 +237,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJTextArea(
                 cont,
-                PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -247,7 +247,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public static JTextArea waitJTextArea(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextArea) waitJTextComponent(cont, PredicatesJ.of(JTextArea.class, chooser), index);
+        return (JTextArea) waitJTextComponent(cont, ComponentPredicates.of(JTextArea.class, chooser), index);
     }
 
     public static JTextArea waitJTextArea(Container cont, Predicate<Component> chooser) {
@@ -258,7 +258,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJTextArea(
                 cont,
-                PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 

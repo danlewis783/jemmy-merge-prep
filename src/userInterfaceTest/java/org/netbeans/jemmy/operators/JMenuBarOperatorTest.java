@@ -37,7 +37,7 @@ import javax.swing.plaf.MenuBarUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
@@ -82,7 +82,8 @@ class JMenuBarOperatorTest {
         assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        JMenuBarOperator operator2 = JMenuBarOperator.waitFor(operator, PredicatesJ.byName("JMenuBarOperatorTest"));
+        JMenuBarOperator operator2 =
+                JMenuBarOperator.waitFor(operator, ComponentPredicates.byName("JMenuBarOperatorTest"));
         assertThat(operator2).isNotNull();
     }
 
@@ -146,7 +147,7 @@ class JMenuBarOperatorTest {
         assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        PredicatesJ.byName("JMenuItem1");
+        ComponentPredicates.byName("JMenuItem1");
     }
 
     @Test
@@ -158,7 +159,7 @@ class JMenuBarOperatorTest {
         operator1.showMenuItem("JMenu1", StringComparators.strict());
         operator1.showMenuItem("JMenu1", "/", StringComparators.strict());
         operator1.showMenuItem(new String[] {"JMenu1"}, StringComparators.strict());
-        operator1.showMenuItem(Collections.singletonList(PredicatesJ.byName("JMenu1")));
+        operator1.showMenuItem(Collections.singletonList(ComponentPredicates.byName("JMenu1")));
     }
 
     @Test

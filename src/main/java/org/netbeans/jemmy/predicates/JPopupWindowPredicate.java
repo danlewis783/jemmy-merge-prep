@@ -29,11 +29,11 @@ public final class JPopupWindowPredicate implements Predicate<Component> {
     final Predicate<Component> subFinder;
 
     public JPopupWindowPredicate() {
-        this(PredicatesJ.alwaysTrue());
+        this(ComponentPredicates.alwaysTrue());
     }
 
     public JPopupWindowPredicate(Predicate<Component> componentChooser) {
-        subFinder = PredicatesJ.ofShowing(JPopupMenu.class, componentChooser);
+        subFinder = ComponentPredicates.ofShowing(JPopupMenu.class, componentChooser);
         ppFinder = new ShowingAndVisibleSubPredicateCallingPredicate(subFinder);
     }
 

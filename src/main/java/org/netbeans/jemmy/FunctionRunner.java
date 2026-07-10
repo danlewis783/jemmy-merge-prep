@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.functions.FunctionsJ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,7 @@ public final class FunctionRunner<F, T> {
     }
 
     public static <F extends Component> FunctionRunner<F, Boolean> on(Predicate<F> predicate) {
-        return FunctionRunner.on(FunctionsJ.forPredicate(predicate));
+        return FunctionRunner.on(predicate::test);
     }
 
     public @Nullable Throwable getThrowable() {

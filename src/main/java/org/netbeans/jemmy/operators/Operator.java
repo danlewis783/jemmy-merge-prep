@@ -42,7 +42,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.callables.CallablesJ;
+import org.netbeans.jemmy.callables.Callables;
 import org.netbeans.jemmy.functions.OperatorPredicateFunction;
 import org.netbeans.jemmy.util.ComponentVisualizer;
 import org.netbeans.jemmy.util.DefaultPathParser;
@@ -210,7 +210,7 @@ public abstract class Operator {
     }
 
     public String getSourceToString() {
-        return queueTool.invokeSmoothly(Caller.of(CallablesJ.toStringOfOperatorSource(this)));
+        return queueTool.invokeSmoothly(Caller.of(Callables.toStringOfOperatorSource(this)));
     }
 
     public void setVisualizer(ComponentVisualizer visualizer) {

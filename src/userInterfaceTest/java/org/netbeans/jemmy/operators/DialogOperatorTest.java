@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -64,11 +64,11 @@ class DialogOperatorTest {
         assertThat(operator1).isNotNull();
         DialogOperator operator2 = DialogOperator.waitFor();
         assertThat(operator2).isNotNull();
-        DialogOperator operator3 = DialogOperator.waitFor(PredicatesJ.byName("DialogOperatorTest"));
+        DialogOperator operator3 = DialogOperator.waitFor(ComponentPredicates.byName("DialogOperatorTest"));
         assertThat(operator3).isNotNull();
         DialogOperator operator4 = DialogOperator.waitFor("DialogOperatorTest");
         assertThat(operator4).isNotNull();
-        DialogOperator operator5 = DialogOperator.waitFor(operator, PredicatesJ.byName("DialogOperatorTest"));
+        DialogOperator operator5 = DialogOperator.waitFor(operator, ComponentPredicates.byName("DialogOperatorTest"));
         assertThat(operator5).isNotNull();
         DialogOperator operator6 = DialogOperator.waitFor(operator, "DialogOperatorTest", StringComparators.strict());
         assertThat(operator6).isNotNull();

@@ -56,9 +56,9 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TableDriver;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTableByCellValuePredicate;
 import org.netbeans.jemmy.predicates.JTableOperatorByCellValuePredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -79,7 +79,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static JTableOperator waitFor(ContainerOperator cont, int index) {
-        return new JTableOperator((JTable) waitComponent(cont, PredicatesJ.of(JTable.class), index));
+        return new JTableOperator((JTable) waitComponent(cont, ComponentPredicates.of(JTable.class), index));
     }
 
     public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -87,7 +87,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JTableOperator((JTable) cont.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
+        return new JTableOperator((JTable) cont.waitSubComponent(ComponentPredicates.of(JTable.class, chooser), index));
     }
 
     public static JTableOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
@@ -284,7 +284,7 @@ public class JTableOperator extends JComponentOperator {
 
     public void scrollToCell(int row, int column) {
         makeComponentVisible();
-        JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+        JScrollPane scroll = (JScrollPane) getContainer(ComponentPredicates.of(JScrollPane.class));
         if (scroll == null) {
             return;
         }
@@ -990,7 +990,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static @Nullable JTable findJTable(Container cont, Predicate<Component> chooser, int index) {
-        return (JTable) findComponent(cont, PredicatesJ.of(JTable.class, chooser), index);
+        return (JTable) findComponent(cont, ComponentPredicates.of(JTable.class, chooser), index);
     }
 
     public static @Nullable JTable findJTable(Container cont, Predicate<Component> chooser) {
@@ -1008,7 +1008,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static JTable waitJTable(Container cont, Predicate<Component> chooser, int index) {
-        return (JTable) waitComponent(cont, PredicatesJ.of(JTable.class, chooser), index);
+        return (JTable) waitComponent(cont, ComponentPredicates.of(JTable.class, chooser), index);
     }
 
     public static JTable waitJTable(Container cont, Predicate<Component> chooser) {

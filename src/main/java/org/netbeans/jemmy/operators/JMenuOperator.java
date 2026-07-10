@@ -42,8 +42,8 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MenuDriver;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JMenuByLabelPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuOperator extends JMenuItemOperator {
@@ -63,7 +63,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public static JMenuOperator waitFor(ContainerOperator cont, int index) {
-        return new JMenuOperator((JMenu) waitComponent(cont, PredicatesJ.of(JMenu.class), index));
+        return new JMenuOperator((JMenu) waitComponent(cont, ComponentPredicates.of(JMenu.class), index));
     }
 
     public static JMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -75,7 +75,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public static JMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JMenuOperator((JMenu) cont.waitSubComponent(PredicatesJ.of(JMenu.class, chooser), index));
+        return new JMenuOperator((JMenu) cont.waitSubComponent(ComponentPredicates.of(JMenu.class, chooser), index));
     }
 
     public static JMenuOperator waitFor(
@@ -310,7 +310,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public static @Nullable JMenu findJMenu(Container cont, Predicate<Component> chooser, int index) {
-        return (JMenu) findComponent(cont, PredicatesJ.of(JMenu.class, chooser), index);
+        return (JMenu) findComponent(cont, ComponentPredicates.of(JMenu.class, chooser), index);
     }
 
     public static @Nullable JMenu findJMenu(Container cont, Predicate<Component> chooser) {
@@ -326,7 +326,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public static JMenu waitJMenu(Container cont, Predicate<Component> chooser, int index) {
-        return (JMenu) waitComponent(cont, PredicatesJ.of(JMenu.class, chooser), index);
+        return (JMenu) waitComponent(cont, ComponentPredicates.of(JMenu.class, chooser), index);
     }
 
     public static JMenu waitJMenu(Container cont, Predicate<Component> chooser) {

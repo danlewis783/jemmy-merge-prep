@@ -35,7 +35,7 @@ import javax.swing.plaf.ProgressBarUI;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JProgressBarOperator extends JComponentOperator {
@@ -53,7 +53,8 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public static JProgressBarOperator waitFor(ContainerOperator cont, int index) {
-        return new JProgressBarOperator((JProgressBar) waitComponent(cont, PredicatesJ.of(JProgressBar.class), index));
+        return new JProgressBarOperator(
+                (JProgressBar) waitComponent(cont, ComponentPredicates.of(JProgressBar.class), index));
     }
 
     public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -62,7 +63,7 @@ public class JProgressBarOperator extends JComponentOperator {
 
     public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JProgressBarOperator(
-                (JProgressBar) cont.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
+                (JProgressBar) cont.waitSubComponent(ComponentPredicates.of(JProgressBar.class, chooser), index));
     }
 
     public void waitValue(int value) {
@@ -203,7 +204,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public static @Nullable JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser, int index) {
-        return (JProgressBar) findComponent(cont, PredicatesJ.of(JProgressBar.class, chooser), index);
+        return (JProgressBar) findComponent(cont, ComponentPredicates.of(JProgressBar.class, chooser), index);
     }
 
     public static @Nullable JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser) {
@@ -211,7 +212,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public static @Nullable JProgressBar findJProgressBar(Container cont, int index) {
-        return findJProgressBar(cont, PredicatesJ.alwaysTrue(), index);
+        return findJProgressBar(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static @Nullable JProgressBar findJProgressBar(Container cont) {
@@ -219,7 +220,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public static JProgressBar waitJProgressBar(Container cont, Predicate<Component> chooser, int index) {
-        return (JProgressBar) waitComponent(cont, PredicatesJ.of(JProgressBar.class, chooser), index);
+        return (JProgressBar) waitComponent(cont, ComponentPredicates.of(JProgressBar.class, chooser), index);
     }
 
     public static JProgressBar waitJProgressBar(Container cont, Predicate<Component> chooser) {
@@ -227,7 +228,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public static JProgressBar waitJProgressBar(Container cont, int index) {
-        return waitJProgressBar(cont, PredicatesJ.alwaysTrue(), index);
+        return waitJProgressBar(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static JProgressBar waitJProgressBar(Container cont) {

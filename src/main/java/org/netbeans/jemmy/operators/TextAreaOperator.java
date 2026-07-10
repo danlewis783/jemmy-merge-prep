@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.TextAreaByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -51,7 +51,7 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public static TextAreaOperator waitFor(ContainerOperator cont, int index) {
-        return new TextAreaOperator((TextArea) waitComponent(cont, PredicatesJ.of(TextArea.class), index));
+        return new TextAreaOperator((TextArea) waitComponent(cont, ComponentPredicates.of(TextArea.class), index));
     }
 
     public static TextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -63,7 +63,8 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public static TextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new TextAreaOperator((TextArea) cont.waitSubComponent(PredicatesJ.of(TextArea.class, chooser), index));
+        return new TextAreaOperator(
+                (TextArea) cont.waitSubComponent(ComponentPredicates.of(TextArea.class, chooser), index));
     }
 
     public static TextAreaOperator waitFor(
@@ -119,7 +120,7 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public static @Nullable TextArea findTextArea(Container cont, Predicate<Component> chooser, int index) {
-        return (TextArea) findComponent(cont, PredicatesJ.of(TextArea.class, chooser), index);
+        return (TextArea) findComponent(cont, ComponentPredicates.of(TextArea.class, chooser), index);
     }
 
     public static @Nullable TextArea findTextArea(Container cont, Predicate<Component> chooser) {
@@ -136,7 +137,7 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public static TextArea waitTextArea(Container cont, Predicate<Component> chooser, int index) {
-        return (TextArea) waitComponent(cont, PredicatesJ.of(TextArea.class, chooser), index);
+        return (TextArea) waitComponent(cont, ComponentPredicates.of(TextArea.class, chooser), index);
     }
 
     public static TextArea waitTextArea(Container cont, Predicate<Component> chooser) {

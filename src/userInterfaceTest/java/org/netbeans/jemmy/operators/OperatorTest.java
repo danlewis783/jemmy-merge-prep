@@ -34,7 +34,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -86,7 +86,7 @@ class OperatorTest {
         assertThat(operator).isNotNull();
         ContainerOperator operator1 = ContainerOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.getParentPath(Collections.singletonList(PredicatesJ.byName("1")));
+        operator1.getParentPath(Collections.singletonList(ComponentPredicates.byName("1")));
     }
 
     @Test

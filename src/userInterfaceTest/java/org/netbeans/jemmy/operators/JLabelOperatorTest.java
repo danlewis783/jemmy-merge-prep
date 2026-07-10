@@ -27,7 +27,7 @@ import javax.swing.plaf.LabelUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -64,13 +64,13 @@ class JLabelOperatorTest {
         assertThat(operator1).isNotNull();
         JLabelOperator operator2 = JLabelOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
-        JLabelOperator operator3 = JLabelOperator.waitFor(operator1, PredicatesJ.byName("JLabelOperatorTest"));
+        JLabelOperator operator3 = JLabelOperator.waitFor(operator1, ComponentPredicates.byName("JLabelOperatorTest"));
         assertThat(operator3).isNotNull();
     }
 
     @Test
     void testFindJLabel() {
-        JLabel label1 = JLabelOperator.findJLabel(frame, PredicatesJ.byName("JLabelOperatorTest"));
+        JLabel label1 = JLabelOperator.findJLabel(frame, ComponentPredicates.byName("JLabelOperatorTest"));
         assertThat(label1).isNotNull();
         JLabel label2 =
                 JLabelOperator.findJLabel(frame, "JLabelOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -79,7 +79,7 @@ class JLabelOperatorTest {
 
     @Test
     void testWaitJLabel() {
-        JLabel label1 = JLabelOperator.waitJLabel(frame, PredicatesJ.byName("JLabelOperatorTest"));
+        JLabel label1 = JLabelOperator.waitJLabel(frame, ComponentPredicates.byName("JLabelOperatorTest"));
         assertThat(label1).isNotNull();
         JLabel label2 =
                 JLabelOperator.waitJLabel(frame, "JLabelOperatorTest", StringComparators.caseInsensitiveSubstring());

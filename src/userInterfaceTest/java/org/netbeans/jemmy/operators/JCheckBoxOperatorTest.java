@@ -25,7 +25,7 @@ import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -62,7 +62,8 @@ class JCheckBoxOperatorTest {
         assertThat(operator1).isNotNull();
         JCheckBoxOperator operator2 = JCheckBoxOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
-        JCheckBoxOperator operator3 = JCheckBoxOperator.waitFor(operator1, PredicatesJ.byName("JCheckBoxOperatorTest"));
+        JCheckBoxOperator operator3 =
+                JCheckBoxOperator.waitFor(operator1, ComponentPredicates.byName("JCheckBoxOperatorTest"));
         assertThat(operator3).isNotNull();
         JCheckBoxOperator operator4 =
                 JCheckBoxOperator.waitFor(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
@@ -71,7 +72,8 @@ class JCheckBoxOperatorTest {
 
     @Test
     void testFindJCheckBox() {
-        JCheckBox checkBox1 = JCheckBoxOperator.findJCheckBox(frame, PredicatesJ.byName("JCheckBoxOperatorTest"));
+        JCheckBox checkBox1 =
+                JCheckBoxOperator.findJCheckBox(frame, ComponentPredicates.byName("JCheckBoxOperatorTest"));
         assertThat(checkBox1).isNotNull();
         JCheckBox checkBox2 = JCheckBoxOperator.findJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -80,7 +82,8 @@ class JCheckBoxOperatorTest {
 
     @Test
     void testWaitJCheckBox() {
-        JCheckBox checkBox1 = JCheckBoxOperator.waitJCheckBox(frame, PredicatesJ.byName("JCheckBoxOperatorTest"));
+        JCheckBox checkBox1 =
+                JCheckBoxOperator.waitJCheckBox(frame, ComponentPredicates.byName("JCheckBoxOperatorTest"));
         assertThat(checkBox1).isNotNull();
         JCheckBox checkBox2 = JCheckBoxOperator.waitJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());

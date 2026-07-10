@@ -49,7 +49,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings("NullAway.Init")
@@ -107,24 +107,24 @@ class WindowOperatorTest {
         WindowOperator sub1 = WindowOperator.waitFor(operator2);
         assertThat(sub1).isNotNull();
         assertThat(sub1.getSource()).isSameAs(subDialog);
-        WindowOperator sub2 = WindowOperator.waitFor(operator2, PredicatesJ.byName(subDialog.getName()));
+        WindowOperator sub2 = WindowOperator.waitFor(operator2, ComponentPredicates.byName(subDialog.getName()));
         assertThat(sub2).isNotNull();
         assertThat(sub2.getSource()).isSameAs(subDialog);
     }
 
     @Test
     void findWindow() {
-        Window window1 = WindowOperator.findWindow(PredicatesJ.byName(mainFrame.getName()));
+        Window window1 = WindowOperator.findWindow(ComponentPredicates.byName(mainFrame.getName()));
         assertThat(window1).isSameAs(mainFrame);
-        Window window2 = WindowOperator.findWindow(mainFrame, PredicatesJ.byName(subDialog.getName()));
+        Window window2 = WindowOperator.findWindow(mainFrame, ComponentPredicates.byName(subDialog.getName()));
         assertThat(window2).isSameAs(subDialog);
     }
 
     @Test
     void waitWindow() {
-        Window window1 = WindowOperator.waitWindow(PredicatesJ.byName(mainFrame.getName()));
+        Window window1 = WindowOperator.waitWindow(ComponentPredicates.byName(mainFrame.getName()));
         assertThat(window1).isSameAs(mainFrame);
-        Window window2 = WindowOperator.waitWindow(mainFrame, PredicatesJ.byName(subDialog.getName()));
+        Window window2 = WindowOperator.waitWindow(mainFrame, ComponentPredicates.byName(subDialog.getName()));
         assertThat(window2).isSameAs(subDialog);
     }
 
@@ -341,14 +341,14 @@ class WindowOperatorTest {
     @Test
     void gindSubWindow() {
         FrameOperator frameOp = FrameOperator.waitFor();
-        Window window = frameOp.findSubWindow(PredicatesJ.byName("Sub_WindowOperatorTest"));
+        Window window = frameOp.findSubWindow(ComponentPredicates.byName("Sub_WindowOperatorTest"));
         assertThat(window).isSameAs(subDialog);
     }
 
     @Test
     void waitSubWindow() {
         FrameOperator frameOp = FrameOperator.waitFor();
-        Window window = frameOp.waitSubWindow(PredicatesJ.byName("Sub_WindowOperatorTest"));
+        Window window = frameOp.waitSubWindow(ComponentPredicates.byName("Sub_WindowOperatorTest"));
         assertThat(window).isSameAs(subDialog);
     }
 

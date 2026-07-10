@@ -25,8 +25,8 @@ import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JComponentOperatorVisiblePredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -62,7 +62,8 @@ class JButtonOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JButtonOperator operator2 = JButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
-        JButtonOperator operator3 = JButtonOperator.waitFor(operator1, PredicatesJ.byName("JButtonOperatorTest"));
+        JButtonOperator operator3 =
+                JButtonOperator.waitFor(operator1, ComponentPredicates.byName("JButtonOperatorTest"));
         assertThat(operator3).isNotNull();
         JButtonOperator operator4 =
                 JButtonOperator.waitFor(operator1, "JButtonOperatorTest", StringComparators.strict());
@@ -71,7 +72,7 @@ class JButtonOperatorTest {
 
     @Test
     void findJButton() {
-        JButton button1 = JButtonOperator.findJButton(frame, PredicatesJ.byName("JButtonOperatorTest"));
+        JButton button1 = JButtonOperator.findJButton(frame, ComponentPredicates.byName("JButtonOperatorTest"));
         assertThat(button1).isNotNull();
         JButton button2 =
                 JButtonOperator.findJButton(frame, "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -80,7 +81,7 @@ class JButtonOperatorTest {
 
     @Test
     void waitJButton() {
-        JButton button1 = JButtonOperator.waitJButton(frame, PredicatesJ.byName("JButtonOperatorTest"));
+        JButton button1 = JButtonOperator.waitJButton(frame, ComponentPredicates.byName("JButtonOperatorTest"));
         assertThat(button1).isNotNull();
         JButton button2 =
                 JButtonOperator.waitJButton(frame, "JButtonOperatorTest", StringComparators.caseInsensitiveSubstring());

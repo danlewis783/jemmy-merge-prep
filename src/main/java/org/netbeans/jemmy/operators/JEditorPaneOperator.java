@@ -45,8 +45,8 @@ import javax.swing.text.html.HTMLDocument;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
-import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -64,7 +64,8 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public static JEditorPaneOperator waitFor(ContainerOperator cont, int index) {
-        return new JEditorPaneOperator((JEditorPane) waitComponent(cont, PredicatesJ.of(JEditorPane.class), index));
+        return new JEditorPaneOperator(
+                (JEditorPane) waitComponent(cont, ComponentPredicates.of(JEditorPane.class), index));
     }
 
     public static JEditorPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -77,14 +78,14 @@ public class JEditorPaneOperator extends JTextComponentOperator {
 
     public static JEditorPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JEditorPaneOperator(
-                (JEditorPane) cont.waitSubComponent(PredicatesJ.of(JEditorPane.class, chooser), index));
+                (JEditorPane) cont.waitSubComponent(ComponentPredicates.of(JEditorPane.class, chooser), index));
     }
 
     public static JEditorPaneOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JEditorPaneOperator((JEditorPane) waitComponent(
                 cont,
-                PredicatesJ.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -100,7 +101,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
         int expectedCaretPos = getCaretPositionOfReference(reference);
         Rectangle viewBounds = modelToView(expectedCaretPos);
         Point expectedCaretPosLoc = new Point(viewBounds.x, viewBounds.y);
-        JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
+        JScrollPane scroll = (JScrollPane) getContainer(ComponentPredicates.of(JScrollPane.class));
         if (scroll != null) {
             JScrollPaneOperator scroller = JScrollPaneOperator.of(scroll);
             scroller.setVisualizer(new EmptyVisualizer());
@@ -233,7 +234,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public static @Nullable JEditorPane findJEditorPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JEditorPane) findJTextComponent(cont, PredicatesJ.of(JEditorPane.class, chooser), index);
+        return (JEditorPane) findJTextComponent(cont, ComponentPredicates.of(JEditorPane.class, chooser), index);
     }
 
     public static @Nullable JEditorPane findJEditorPane(Container cont, Predicate<Component> chooser) {
@@ -244,7 +245,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJEditorPane(
                 cont,
-                PredicatesJ.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -254,7 +255,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public static JEditorPane waitJEditorPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JEditorPane) waitJTextComponent(cont, PredicatesJ.of(JEditorPane.class, chooser), index);
+        return (JEditorPane) waitJTextComponent(cont, ComponentPredicates.of(JEditorPane.class, chooser), index);
     }
 
     public static JEditorPane waitJEditorPane(Container cont, Predicate<Component> chooser) {
@@ -265,7 +266,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJEditorPane(
                 cont,
-                PredicatesJ.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                ComponentPredicates.of(JEditorPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 

@@ -41,7 +41,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeLater
@@ -94,7 +94,7 @@ class JMenuItemOperatorTest {
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         JPopupMenuOperator popup = JPopupMenuOperator.waitFor();
         JMenuItem menuItem1 = JMenuItemOperator.findJMenuItem(
-                (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
+                (Container) popup.getSource(), ComponentPredicates.byName("JMenuItemOperatorTest"));
         assertThat(menuItem1).isNotNull();
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         popup = JPopupMenuOperator.waitFor();
@@ -110,7 +110,7 @@ class JMenuItemOperatorTest {
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         JPopupMenuOperator popup = JPopupMenuOperator.waitFor();
         JMenuItem menuItem1 = JMenuItemOperator.waitJMenuItem(
-                (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
+                (Container) popup.getSource(), ComponentPredicates.byName("JMenuItemOperatorTest"));
         assertThat(menuItem1).isNotNull();
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         popup = JPopupMenuOperator.waitFor();

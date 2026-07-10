@@ -27,7 +27,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -72,7 +72,7 @@ class JRadioButtonMenuItemOperatorTest {
         JRadioButtonMenuItemOperator operator2 = JRadioButtonMenuItemOperator.waitFor(popup);
         assertThat(operator2).isNotNull();
         JRadioButtonMenuItemOperator operator3 =
-                JRadioButtonMenuItemOperator.waitFor(popup, PredicatesJ.byName("Radio Button 1"));
+                JRadioButtonMenuItemOperator.waitFor(popup, ComponentPredicates.byName("Radio Button 1"));
         assertThat(operator3).isNotNull();
         JRadioButtonMenuItemOperator operator4 =
                 JRadioButtonMenuItemOperator.waitFor(popup, "Radio Button 1", StringComparators.strict());

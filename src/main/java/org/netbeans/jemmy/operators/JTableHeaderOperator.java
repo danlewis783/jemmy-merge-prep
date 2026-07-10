@@ -44,7 +44,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.OrderedListDriver;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public class JTableHeaderOperator extends JComponentOperator {
     private final OrderedListDriver driver;
@@ -63,7 +63,8 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, int index) {
-        return new JTableHeaderOperator((JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
+        return new JTableHeaderOperator(
+                (JTableHeader) waitComponent(cont, ComponentPredicates.of(JTableHeader.class), index));
     }
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -72,7 +73,7 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTableHeaderOperator(
-                (JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
+                (JTableHeader) cont.waitSubComponent(ComponentPredicates.of(JTableHeader.class, chooser), index));
     }
 
     public void selectColumn(int columnIndex) {

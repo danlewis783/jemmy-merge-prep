@@ -28,7 +28,7 @@ import javax.swing.SwingConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
@@ -66,7 +66,7 @@ class JTextFieldOperatorTest {
         JTextFieldOperator operator2 = JTextFieldOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         JTextFieldOperator operator3 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator3).isNotNull();
         JTextFieldOperator operator4 =
                 JTextFieldOperator.waitFor(operator1, "JTextFieldOperatorTest", StringComparators.strict());
@@ -75,7 +75,8 @@ class JTextFieldOperatorTest {
 
     @Test
     void testFindJTextField() {
-        JTextField textField1 = JTextFieldOperator.findJTextField(frame, PredicatesJ.byName("JTextFieldOperatorTest"));
+        JTextField textField1 =
+                JTextFieldOperator.findJTextField(frame, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(textField1).isNotNull();
         JTextField textField2 = JTextFieldOperator.findJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -84,7 +85,8 @@ class JTextFieldOperatorTest {
 
     @Test
     void testWaitJTextField() {
-        JTextField textField1 = JTextFieldOperator.waitJTextField(frame, PredicatesJ.byName("JTextFieldOperatorTest"));
+        JTextField textField1 =
+                JTextFieldOperator.waitJTextField(frame, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(textField1).isNotNull();
         JTextField textField2 = JTextFieldOperator.waitJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -96,7 +98,7 @@ class JTextFieldOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.waitText("JTextFieldOperatorTest", StringComparators.strict());
         assertThat(textField.getText()).isEqualTo("JTextFieldOperatorTest");
@@ -109,7 +111,7 @@ class JTextFieldOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         ActionListener listener = event -> {};
         operator2.addActionListener(listener);
@@ -123,7 +125,7 @@ class JTextFieldOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.setColumns(10);
         assertThat(operator2.getColumns()).isEqualTo(10);
@@ -135,7 +137,7 @@ class JTextFieldOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.setHorizontalAlignment(SwingConstants.RIGHT);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.RIGHT);
@@ -147,7 +149,7 @@ class JTextFieldOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.setScrollOffset(operator2.getScrollOffset());
     }
@@ -157,7 +159,7 @@ class JTextFieldOperatorTest {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.setActionCommand("ACTION_COMMAND");
         ActionListener1 listener = new ActionListener1();
