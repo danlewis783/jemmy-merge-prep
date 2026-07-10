@@ -16,86 +16,172 @@
  */
 package org.netbeans.jemmy;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
+import java.awt.EventQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.SwingUtilities;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
-@Disabled // TODO test too flaky for CI
-// formerly scenario test jemmy_026
+// formerly scenario test jemmy_026; mutates the Timeouts singleton, never run in parallel
+@Isolated
 class QueueToolWaitEmptyTest {
+
+    /** Overall bound on both waitEmpty flavors, via QueueTool_WaitQueueEmptyTimeout. */
+    private static final long QUEUE_EMPTY_BOUND = 2_000L;
+
+    /** How long the queue must stay empty in the quiet-period cases. */
+    private static final long QUIET_PERIOD = 500L;
+
+    /** When the releaser lets the blocked event queue drain in the happy paths. */
+    private static final long RELEASE_DELAY = 300L;
+
+    /** Slack for clock granularity when asserting elapsed-time lower bounds. */
+    private static final long CLOCK_SLACK = 100L;
+
+    /** Safety net so a broken test gives the EDT back instead of wedging the suite. */
+    private static final long LATCH_WAIT_TIME = 30_000L;
+
     private TimeoutOverride override;
+    private ScheduledExecutorService releaser;
+    private @Nullable BlockedQueue blockedQueue;
 
     @BeforeEach
     void beforeEach() {
-        override = Timeouts.override(TimeoutKey.QueueTool_WaitQueueEmptyTimeout, 3000L);
+        override = Timeouts.override(TimeoutKey.QueueTool_WaitQueueEmptyTimeout, QUEUE_EMPTY_BOUND);
+        releaser = Executors.newSingleThreadScheduledExecutor();
     }
 
     @AfterEach
-    void after() {
+    void afterEach() throws Exception {
+        if (blockedQueue != null) {
+            blockedQueue.releaseEdt();
+        }
+
+        releaser.shutdownNow();
         override.cancel();
+
+        // leave the next test a drained queue, even when an assertion failed mid-phase
+        EventQueue.invokeAndWait(() -> {});
     }
 
     @Test
-    void doit() throws Exception {
+    void waitEmptyHappyIdleQueue() {
         QueueTool qt = QueueTool.getInstance();
+        assertThatNoException().isThrownBy(qt::waitEmpty);
+        assertThatNoException().isThrownBy(() -> qt.waitEmpty(QUIET_PERIOD));
+    }
 
-        qt.waitEmpty(1000);
-        SwingUtilities.invokeLater(new Sleeper("A", 1000));
-        SwingUtilities.invokeLater(new Sleeper("B", 1000));
-        Thread.sleep(500);
-        qt.waitEmpty();
-        qt.waitEmpty(1000);
-        SwingUtilities.invokeLater(new Sleeper("C", 1000));
-        SwingUtilities.invokeLater(new Sleeper("D", 1000));
-        SwingUtilities.invokeLater(new Sleeper("E", 1000));
-        SwingUtilities.invokeLater(new Sleeper("F", 1000));
+    @Test
+    void waitEmptyHappyOnceQueueDrains() throws Exception {
+        QueueTool qt = QueueTool.getInstance();
+        BlockedQueue blocked = postBlockedQueue();
+        long start = System.currentTimeMillis();
+        releaser.schedule(blocked::releaseEdt, RELEASE_DELAY, TimeUnit.MILLISECONDS);
+
+        assertThatNoException().isThrownBy(qt::waitEmpty);
+
+        assertThat(System.currentTimeMillis() - start)
+                .as("check that waitEmpty did not return before the queue could have drained")
+                .isGreaterThanOrEqualTo(RELEASE_DELAY - CLOCK_SLACK);
+    }
+
+    @Test
+    void waitEmptySadQueueStaysBusy() throws Exception {
+        QueueTool qt = QueueTool.getInstance();
+        postBlockedQueue();
 
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(qt::waitEmpty)
-                .withMessageContaining("timeout \"QueueTool_WaitQueueEmptyTimeout\" (3000 ms) exceeded after (");
-
-        qt.waitEmpty(1000);
-        SwingUtilities.invokeLater(new Sleeper("G", 2000));
-        SwingUtilities.invokeLater(new Sleeper("H", 1000));
-        qt.waitEmpty(500L);
-        qt.waitEmpty(1000);
-        SwingUtilities.invokeLater(new Sleeper("I", 1000));
-        SwingUtilities.invokeLater(new Sleeper("J", 1000));
-        SwingUtilities.invokeLater(new Sleeper("K", 1000));
-        SwingUtilities.invokeLater(new Sleeper("L", 1000));
-        SwingUtilities.invokeLater(new Sleeper("M", 500));
-
-        assertThatExceptionOfType(TimeoutExpiredException.class)
-                .isThrownBy(() -> qt.waitEmpty(600L))
-                .withMessageContaining("timeout \"QueueTool_WaitQueueEmptyTimeout\" (3000 ms) exceeded after (");
+                .withMessageContaining(String.format(
+                        "timeout \"%s\" (%d ms) exceeded after (",
+                        TimeoutKey.QueueTool_WaitQueueEmptyTimeout, QUEUE_EMPTY_BOUND));
     }
 
-    private static class Sleeper implements Runnable {
-        private final String name;
-        private final long timeToSleep;
+    @Test
+    void waitEmptyQuietPeriodHappyOnceQueueDrains() throws Exception {
+        QueueTool qt = QueueTool.getInstance();
+        BlockedQueue blocked = postBlockedQueue();
+        long start = System.currentTimeMillis();
+        releaser.schedule(blocked::releaseEdt, RELEASE_DELAY, TimeUnit.MILLISECONDS);
 
-        Sleeper(String name, long timeToSleep) {
-            this.timeToSleep = timeToSleep;
-            this.name = name;
+        assertThatNoException().isThrownBy(() -> qt.waitEmpty(QUIET_PERIOD));
+
+        assertThat(System.currentTimeMillis() - start)
+                .as("check that the quiet period did not elapse before the queue could have drained")
+                .isGreaterThanOrEqualTo(RELEASE_DELAY + QUIET_PERIOD - CLOCK_SLACK);
+    }
+
+    @Test
+    void waitEmptyQuietPeriodSadQueueStaysBusy() throws Exception {
+        QueueTool qt = QueueTool.getInstance();
+        BlockedQueue blocked = postBlockedQueue();
+
+        // on timeout, waitEmpty(long) logs the event stuck at the front of the queue via an
+        // EDT round-trip, so the EDT must free itself shortly after the bound expires - the
+        // test thread is still inside waitEmpty then and cannot be the one to release it
+        releaser.schedule(blocked::releaseEdt, QUEUE_EMPTY_BOUND + 1_000L, TimeUnit.MILLISECONDS);
+
+        assertThatExceptionOfType(TimeoutExpiredException.class)
+                .isThrownBy(() -> qt.waitEmpty(QUIET_PERIOD))
+                .withMessageContaining(String.format(
+                        "timeout \"%s\" (%d ms) exceeded after (",
+                        TimeoutKey.QueueTool_WaitQueueEmptyTimeout, QUEUE_EMPTY_BOUND));
+    }
+
+    private BlockedQueue postBlockedQueue() throws InterruptedException {
+        BlockedQueue blocked = BlockedQueue.post();
+        blockedQueue = blocked;
+        blocked.awaitStarted();
+
+        return blocked;
+    }
+
+    /**
+     * Keeps the system event queue verifiably non-empty for as long as the test wants: the first
+     * posted runnable parks the EDT on a latch while the second stays pending behind it, so
+     * {@code peekEvent()} sees an event until {@link #releaseEdt()} lets both run.
+     */
+    private static final class BlockedQueue {
+        private final CountDownLatch parked = new CountDownLatch(1);
+        private final CountDownLatch releaseGate = new CountDownLatch(1);
+
+        static BlockedQueue post() {
+            BlockedQueue blocked = new BlockedQueue();
+            SwingUtilities.invokeLater(blocked::parkEdt);
+            SwingUtilities.invokeLater(() -> {});
+
+            return blocked;
         }
 
-        @Override
-        public void run() {
-            boolean success = false;
+        private void parkEdt() {
+            parked.countDown();
             try {
-                Thread.sleep(timeToSleep);
-                success = true;
+                // bounded so a broken test gives the EDT back instead of wedging the suite;
+                // the test's own assertions will have failed long before this trips
+                releaseGate.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
-                // don't care
-            } finally {
-                if (success) {
-                    // good for you
-                }
+                Thread.currentThread().interrupt();
             }
+        }
+
+        void awaitStarted() throws InterruptedException {
+            assertThat(parked.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS))
+                    .as("check that the EDT parked inside the blocker")
+                    .isTrue();
+        }
+
+        void releaseEdt() {
+            releaseGate.countDown();
         }
     }
 }
