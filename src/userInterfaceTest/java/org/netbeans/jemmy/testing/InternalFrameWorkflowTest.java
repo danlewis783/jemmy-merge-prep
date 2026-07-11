@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import org.junit.jupiter.api.Test;
@@ -34,8 +33,9 @@ class InternalFrameWorkflowTest {
     @Test
     void test() {
         InternalFramesApp.main();
-        JFrame frame =
-                Objects.requireNonNull(JFrameOperator.findJFrame("InternalFramesApp", StringComparators.substring()));
+
+        // main() shows the frame via invokeLater, so a non-waiting find races the EDT
+        JFrame frame = JFrameOperator.waitJFrame("InternalFramesApp", StringComparators.substring());
         JInternalFrameOperator frame1Op =
                 JInternalFrameOperator.waitFor(JFrameOperator.of(frame), "Frame 1", StringComparators.strict());
         JInternalFrameOperator frame2Op =
