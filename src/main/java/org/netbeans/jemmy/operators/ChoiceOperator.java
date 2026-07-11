@@ -43,7 +43,11 @@ import org.netbeans.jemmy.util.StringComparator;
 public class ChoiceOperator extends ComponentOperator {
     private final ListDriver driver;
 
-    ChoiceOperator(Choice b) {
+    /**
+     * @deprecated Use {@link #of(Choice)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(Choice b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
@@ -56,26 +60,74 @@ public class ChoiceOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
     public static ChoiceOperator waitFor(ContainerOperator cont, int index) {
         return new ChoiceOperator((Choice) waitComponent(cont, ComponentPredicates.of(Choice.class), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(ContainerOperator cont, int index) {
+        this((Choice) waitComponent(cont, ComponentPredicates.of(Choice.class), index));
     }
 
     public static ChoiceOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static ChoiceOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static ChoiceOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ChoiceOperator((Choice) cont.waitSubComponent(ComponentPredicates.of(Choice.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((Choice) cont.waitSubComponent(ComponentPredicates.of(Choice.class, chooser), index));
+    }
+
     public static ChoiceOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new ChoiceOperator(
                 (Choice) waitComponent(cont, new ChoiceBySelectedItemPredicate(text, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public ChoiceOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((Choice) waitComponent(cont, new ChoiceBySelectedItemPredicate(text, stringComparator), index));
     }
 
     public int findItemIndex(String item, StringComparator stringComparator, int index) {

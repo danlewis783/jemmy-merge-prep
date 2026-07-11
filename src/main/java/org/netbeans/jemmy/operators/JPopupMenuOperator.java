@@ -71,12 +71,35 @@ public class JPopupMenuOperator extends JComponentOperator {
                 0));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor()} instead.
+     */
+    @Deprecated
+    public JPopupMenuOperator() {
+        this((JPopupMenu) waitComponent(
+                WindowOperator.waitWindow(new JPopupWindowPredicate(), 0),
+                ComponentPredicates.ofShowing(JPopupMenu.class),
+                0));
+    }
+
     public static JPopupMenuOperator waitFor(ContainerOperator cont) {
         return new JPopupMenuOperator(
                 (JPopupMenu) waitComponent(cont, ComponentPredicates.ofShowing(JPopupMenu.class), 0));
     }
 
-    JPopupMenuOperator(JPopupMenu popup) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JPopupMenuOperator(ContainerOperator cont) {
+        this((JPopupMenu) waitComponent(cont, ComponentPredicates.ofShowing(JPopupMenu.class), 0));
+    }
+
+    /**
+     * @deprecated Use {@link #of(JPopupMenu)} instead.
+     */
+    @Deprecated
+    public JPopupMenuOperator(JPopupMenu popup) {
         super(popup);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
@@ -89,9 +112,25 @@ public class JPopupMenuOperator extends JComponentOperator {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JPopupMenuOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static JPopupMenuOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JPopupMenuOperator(
                 (JPopupMenu) cont.waitSubComponent(ComponentPredicates.ofShowing(JPopupMenu.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JPopupMenuOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JPopupMenu) cont.waitSubComponent(ComponentPredicates.ofShowing(JPopupMenu.class, chooser), index));
     }
 
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {

@@ -42,7 +42,19 @@ public class TextAreaOperator extends TextComponentOperator {
         return waitFor(cont, 0);
     }
 
-    TextAreaOperator(TextArea b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(TextArea)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(TextArea b) {
         super(b);
     }
 
@@ -54,12 +66,36 @@ public class TextAreaOperator extends TextComponentOperator {
         return new TextAreaOperator((TextArea) waitComponent(cont, ComponentPredicates.of(TextArea.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(ContainerOperator cont, int index) {
+        this((TextArea) waitComponent(cont, ComponentPredicates.of(TextArea.class), index));
+    }
+
     public static TextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static TextAreaOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static TextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -67,10 +103,26 @@ public class TextAreaOperator extends TextComponentOperator {
                 (TextArea) cont.waitSubComponent(ComponentPredicates.of(TextArea.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((TextArea) cont.waitSubComponent(ComponentPredicates.of(TextArea.class, chooser), index));
+    }
+
     public static TextAreaOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new TextAreaOperator(
                 (TextArea) waitComponent(cont, new TextAreaByTextPredicate(text, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public TextAreaOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((TextArea) waitComponent(cont, new TextAreaByTextPredicate(text, stringComparator), index));
     }
 
     public int getColumns() {

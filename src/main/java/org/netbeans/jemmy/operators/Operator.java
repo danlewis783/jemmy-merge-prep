@@ -74,7 +74,12 @@ public abstract class Operator {
     private ComponentVisualizer visualizer;
     final QueueTool queueTool;
 
-    Operator() {
+    /**
+     * @deprecated Construct operators via the {@code of}/{@code waitFor} factory methods on the
+     *     concrete operator classes instead.
+     */
+    @Deprecated
+    public Operator() {
         queueTool = QueueTool.getInstance();
         this.charBindingMap = JemmyContext.getInstance().getCharBindingMap();
         this.visualizer = getDefaultComponentVisualizer();

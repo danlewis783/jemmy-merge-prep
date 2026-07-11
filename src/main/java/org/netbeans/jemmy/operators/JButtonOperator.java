@@ -42,7 +42,19 @@ public class JButtonOperator extends AbstractButtonOperator {
         return waitFor(cont, 0);
     }
 
-    JButtonOperator(JButton b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JButton)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(JButton b) {
         super(b);
     }
 
@@ -54,12 +66,36 @@ public class JButtonOperator extends AbstractButtonOperator {
         return new JButtonOperator((JButton) waitComponent(cont, ComponentPredicates.of(JButton.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(ContainerOperator cont, int index) {
+        this((JButton) waitComponent(cont, ComponentPredicates.of(JButton.class), index));
+    }
+
     public static JButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static JButtonOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static JButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -67,9 +103,28 @@ public class JButtonOperator extends AbstractButtonOperator {
                 (JButton) cont.waitSubComponent(ComponentPredicates.of(JButton.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JButton) cont.waitSubComponent(ComponentPredicates.of(JButton.class, chooser), index));
+    }
+
     public static JButtonOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JButtonOperator((JButton) waitComponent(
+                cont,
+                ComponentPredicates.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public JButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((JButton) waitComponent(
                 cont,
                 ComponentPredicates.of(JButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));

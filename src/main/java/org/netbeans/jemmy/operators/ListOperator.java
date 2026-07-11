@@ -49,7 +49,19 @@ public class ListOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
-    ListOperator(List b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public ListOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(List)} instead.
+     */
+    @Deprecated
+    public ListOperator(List b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
@@ -62,16 +74,48 @@ public class ListOperator extends ComponentOperator {
         return new ListOperator((List) waitComponent(cont, ComponentPredicates.of(List.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public ListOperator(ContainerOperator cont, int index) {
+        this((List) waitComponent(cont, ComponentPredicates.of(List.class), index));
+    }
+
     public static ListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public ListOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
     }
 
     public static ListOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public ListOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
+    }
+
     public static ListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ListOperator((List) cont.waitSubComponent(ComponentPredicates.of(List.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public ListOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((List) cont.waitSubComponent(ComponentPredicates.of(List.class, chooser), index));
     }
 
     public static ListOperator waitFor(
@@ -79,10 +123,27 @@ public class ListOperator extends ComponentOperator {
         return waitFor(cont, text, stringComparator, -1, index);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public ListOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this(cont, text, stringComparator, -1, index);
+    }
+
     public static ListOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return new ListOperator(
                 (List) waitComponent(cont, new ListByItemPredicate(text, itemIndex, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int, int)} instead.
+     */
+    @Deprecated
+    public ListOperator(
+            ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+        this((List) waitComponent(cont, new ListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
     public int findItemIndex(String item, StringComparator comparator, int index) {

@@ -42,7 +42,19 @@ public class TextFieldOperator extends TextComponentOperator {
         return waitFor(cont, 0);
     }
 
-    TextFieldOperator(TextField b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(TextField)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(TextField b) {
         super(b);
     }
 
@@ -54,12 +66,36 @@ public class TextFieldOperator extends TextComponentOperator {
         return new TextFieldOperator((TextField) waitComponent(cont, ComponentPredicates.of(TextField.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(ContainerOperator cont, int index) {
+        this((TextField) waitComponent(cont, ComponentPredicates.of(TextField.class), index));
+    }
+
     public static TextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static TextFieldOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static TextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -67,10 +103,26 @@ public class TextFieldOperator extends TextComponentOperator {
                 (TextField) cont.waitSubComponent(ComponentPredicates.of(TextField.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((TextField) cont.waitSubComponent(ComponentPredicates.of(TextField.class, chooser), index));
+    }
+
     public static TextFieldOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new TextFieldOperator(
                 (TextField) waitComponent(cont, new TextFieldByTextPredicate(text, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public TextFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((TextField) waitComponent(cont, new TextFieldByTextPredicate(text, stringComparator), index));
     }
 
     public void addActionListener(ActionListener actionListener) {

@@ -69,7 +69,19 @@ public class JTableOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    JTableOperator(JTable b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JTable)} instead.
+     */
+    @Deprecated
+    public JTableOperator(JTable b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getTableDriver(getClass());
     }
@@ -82,16 +94,48 @@ public class JTableOperator extends JComponentOperator {
         return new JTableOperator((JTable) waitComponent(cont, ComponentPredicates.of(JTable.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont, int index) {
+        this((JTable) waitComponent(cont, ComponentPredicates.of(JTable.class), index));
+    }
+
     public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
     }
 
     public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTableOperator((JTable) cont.waitSubComponent(ComponentPredicates.of(JTable.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JTable) cont.waitSubComponent(ComponentPredicates.of(JTable.class, chooser), index));
+    }
+
     public static JTableOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static JTableOperator waitFor(
@@ -99,15 +143,40 @@ public class JTableOperator extends JComponentOperator {
         return waitFor(cont, text, stringComparator, -1, -1, index);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this(cont, text, stringComparator, -1, -1, index);
+    }
+
     public static JTableOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int row, int column) {
         return waitFor(cont, text, stringComparator, row, column, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int, int)} instead.
+     */
+    @Deprecated
+    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int column) {
+        this(cont, text, stringComparator, row, column, 0);
     }
 
     public static JTableOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int row, int column, int index) {
         return new JTableOperator((JTable)
                 waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int, int, int)} instead.
+     */
+    @Deprecated
+    public JTableOperator(
+            ContainerOperator cont, String text, StringComparator stringComparator, int row, int column, int index) {
+        this((JTable) waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
     }
 
     public Point findCell(String text, StringComparator comparator, int index) {

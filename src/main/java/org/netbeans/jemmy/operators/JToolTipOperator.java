@@ -51,7 +51,19 @@ public class JToolTipOperator extends JComponentOperator {
         return JToolTipOperator.waitFor(ComponentPredicates.alwaysTrue());
     }
 
-    JToolTipOperator(JToolTip toolTip) {
+    /**
+     * @deprecated Use {@link #waitFor()} instead.
+     */
+    @Deprecated
+    public JToolTipOperator() {
+        this(ComponentPredicates.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #of(JToolTip)} instead.
+     */
+    @Deprecated
+    public JToolTipOperator(JToolTip toolTip) {
         super(toolTip);
     }
 
@@ -63,8 +75,24 @@ public class JToolTipOperator extends JComponentOperator {
         return new JToolTipOperator(waitJToolTip(new JToolTipByTipTextPredicate(tipText, comparator)));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JToolTipOperator(String tipText, StringComparator comparator) {
+        this(waitJToolTip(new JToolTipByTipTextPredicate(tipText, comparator)));
+    }
+
     public static JToolTipOperator waitFor(ComponentOperator comp) {
         return waitFor(comp, ComponentPredicates.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ComponentOperator)} instead.
+     */
+    @Deprecated
+    public JToolTipOperator(ComponentOperator comp) {
+        this(comp, ComponentPredicates.alwaysTrue());
     }
 
     // Tooltips are parentless, so the inherited "search inside this container" factories make no
@@ -86,12 +114,36 @@ public class JToolTipOperator extends JComponentOperator {
         return new JToolTipOperator(waitJToolTip(chooser));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(Predicate)} instead.
+     */
+    @Deprecated
+    public JToolTipOperator(Predicate<Component> chooser) {
+        this(waitJToolTip(chooser));
+    }
+
     public static JToolTipOperator waitFor(ComponentOperator comp, Predicate<Component> chooser) {
         return new JToolTipOperator(waitJToolTip(comp, chooser));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ComponentOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JToolTipOperator(ComponentOperator comp, Predicate<Component> chooser) {
+        this(waitJToolTip(comp, chooser));
+    }
+
     public static JToolTipOperator waitFor(ComponentOperator comp, String tipText, StringComparator comparator) {
         return new JToolTipOperator(waitJToolTip(comp, new JToolTipByTipTextPredicate(tipText, comparator)));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ComponentOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JToolTipOperator(ComponentOperator comp, String tipText, StringComparator comparator) {
+        this(waitJToolTip(comp, new JToolTipByTipTextPredicate(tipText, comparator)));
     }
 
     /**

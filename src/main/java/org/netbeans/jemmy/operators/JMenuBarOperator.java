@@ -63,7 +63,19 @@ public class JMenuBarOperator extends JComponentOperator {
         return new JMenuBarOperator((JMenuBar) waitComponent(cont, ComponentPredicates.of(JMenuBar.class), 0));
     }
 
-    JMenuBarOperator(JMenuBar b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JMenuBarOperator(ContainerOperator cont) {
+        this((JMenuBar) waitComponent(cont, ComponentPredicates.of(JMenuBar.class), 0));
+    }
+
+    /**
+     * @deprecated Use {@link #of(JMenuBar)} instead.
+     */
+    @Deprecated
+    public JMenuBarOperator(JMenuBar b) {
         super(b);
         driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
@@ -76,9 +88,25 @@ public class JMenuBarOperator extends JComponentOperator {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static JMenuBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JMenuBarOperator(
                 (JMenuBar) cont.waitSubComponent(ComponentPredicates.of(JMenuBar.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JMenuBar) cont.waitSubComponent(ComponentPredicates.of(JMenuBar.class, chooser), index));
     }
 
     public JMenuItem pushMenu(List<Predicate<Component>> predicates) {

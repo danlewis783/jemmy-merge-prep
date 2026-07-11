@@ -76,7 +76,21 @@ public class JFileChooserOperator extends JComponentOperator {
                 ComponentPredicates.of(JFileChooser.class)));
     }
 
-    JFileChooserOperator(JFileChooser comp) {
+    /**
+     * @deprecated Use {@link #waitFor()} instead.
+     */
+    @Deprecated
+    public JFileChooserOperator() {
+        this((JFileChooser) waitComponent(
+                JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()),
+                ComponentPredicates.of(JFileChooser.class)));
+    }
+
+    /**
+     * @deprecated Use {@link #of(JFileChooser)} instead.
+     */
+    @Deprecated
+    public JFileChooserOperator(JFileChooser comp) {
         super(comp);
         innerSearcher = new ComponentSearcher(comp);
     }

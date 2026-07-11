@@ -39,7 +39,19 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
         return waitFor(cont, 0);
     }
 
-    JCheckBoxMenuItemOperator(JCheckBoxMenuItem item) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JCheckBoxMenuItem)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(JCheckBoxMenuItem item) {
         super(item);
     }
 
@@ -52,12 +64,36 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
                 (JCheckBoxMenuItem) waitComponent(cont, ComponentPredicates.of(JCheckBoxMenuItem.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(ContainerOperator cont, int index) {
+        this((JCheckBoxMenuItem) waitComponent(cont, ComponentPredicates.of(JCheckBoxMenuItem.class), index));
+    }
+
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, String text, StringComparator comparator) {
         return waitFor(cont, text, comparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(ContainerOperator cont, String text, StringComparator comparator) {
+        this(cont, text, comparator, 0);
     }
 
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -65,9 +101,28 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
                 cont.waitSubComponent(ComponentPredicates.of(JCheckBoxMenuItem.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JCheckBoxMenuItem)
+                cont.waitSubComponent(ComponentPredicates.of(JCheckBoxMenuItem.class, chooser), index));
+    }
+
     public static JCheckBoxMenuItemOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JCheckBoxMenuItemOperator((JCheckBoxMenuItem)
+                waitComponent(cont, new JCheckBoxMenuItemByLabelPredicate(text, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public JCheckBoxMenuItemOperator(
+            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((JCheckBoxMenuItem)
                 waitComponent(cont, new JCheckBoxMenuItemByLabelPredicate(text, stringComparator), index));
     }
 

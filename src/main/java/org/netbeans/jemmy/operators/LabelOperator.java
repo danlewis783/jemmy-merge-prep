@@ -41,7 +41,19 @@ public class LabelOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
-    LabelOperator(Label b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public LabelOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(Label)} instead.
+     */
+    @Deprecated
+    public LabelOperator(Label b) {
         super(b);
     }
 
@@ -53,21 +65,61 @@ public class LabelOperator extends ComponentOperator {
         return new LabelOperator((Label) waitComponent(cont, ComponentPredicates.of(Label.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public LabelOperator(ContainerOperator cont, int index) {
+        this((Label) waitComponent(cont, ComponentPredicates.of(Label.class), index));
+    }
+
     public static LabelOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public LabelOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
     }
 
     public static LabelOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new LabelOperator((Label) cont.waitSubComponent(ComponentPredicates.of(Label.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public LabelOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((Label) cont.waitSubComponent(ComponentPredicates.of(Label.class, chooser), index));
+    }
+
     public static LabelOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return new LabelOperator((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), 0));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public LabelOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), 0));
     }
 
     public static LabelOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new LabelOperator((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public LabelOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((Label) waitComponent(cont, new LabelByLabelPredicate(text, stringComparator), index));
     }
 
     public int getAlignment() {

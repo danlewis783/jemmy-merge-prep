@@ -45,7 +45,11 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 public class ContainerOperator extends ComponentOperator {
     private final ComponentSearcher searcher;
 
-    ContainerOperator(Container b) {
+    /**
+     * @deprecated Use {@link #of(Container)} instead.
+     */
+    @Deprecated
+    public ContainerOperator(Container b) {
         super(b);
         searcher = new ComponentSearcher(b);
     }
@@ -58,17 +62,49 @@ public class ContainerOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public ContainerOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
     public static ContainerOperator waitFor(ContainerOperator cont, int index) {
         return new ContainerOperator((Container) waitComponent(cont, ComponentPredicates.of(Container.class), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public ContainerOperator(ContainerOperator cont, int index) {
+        this((Container) waitComponent(cont, ComponentPredicates.of(Container.class), index));
     }
 
     public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public ContainerOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ContainerOperator(
                 (Container) cont.waitSubComponent(ComponentPredicates.of(Container.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public ContainerOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((Container) cont.waitSubComponent(ComponentPredicates.of(Container.class, chooser), index));
     }
 
     public @Nullable Component findSubComponent(Predicate<Component> chooser, int index) {
