@@ -26,6 +26,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.awt.Rectangle;
@@ -155,22 +156,22 @@ class JInternalFrameOperatorTest {
         operator2.waitComponentShowing(true);
         operator2.iconify();
         assertThat(operator2.isIcon()).isTrue();
-        assertThat(internalFrame.isIcon()).isTrue();
+        assertThat(onQueue(internalFrame::isIcon)).isTrue();
         operator2.deiconify();
         assertThat(operator2.isIcon()).isFalse();
-        assertThat(internalFrame.isIcon()).isFalse();
+        assertThat(onQueue(internalFrame::isIcon)).isFalse();
         operator2.iconify();
 
         assertThatExceptionOfType(WrongInternalFrameStateException.class).isThrownBy(operator2::iconify);
 
         assertThat(operator2.isIcon()).isTrue();
-        assertThat(internalFrame.isIcon()).isTrue();
+        assertThat(onQueue(internalFrame::isIcon)).isTrue();
         operator2.deiconify();
 
         assertThatExceptionOfType(WrongInternalFrameStateException.class).isThrownBy(operator2::deiconify);
 
         assertThat(operator2.isIcon()).isFalse();
-        assertThat(internalFrame.isIcon()).isFalse();
+        assertThat(onQueue(internalFrame::isIcon)).isFalse();
     }
 
     @Test
@@ -181,10 +182,10 @@ class JInternalFrameOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.maximize();
         assertThat(operator2.isMaximum()).isTrue();
-        assertThat(internalFrame.isMaximum()).isTrue();
+        assertThat(onQueue(internalFrame::isMaximum)).isTrue();
         operator2.demaximize();
         assertThat(operator2.isMaximum()).isFalse();
-        assertThat(internalFrame.isMaximum()).isFalse();
+        assertThat(onQueue(internalFrame::isMaximum)).isFalse();
     }
 
     @Test
@@ -205,8 +206,8 @@ class JInternalFrameOperatorTest {
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.resize(127, 129);
-        assertThat(internalFrame.getWidth()).isEqualTo(127);
-        assertThat(internalFrame.getHeight()).isEqualTo(129);
+        assertThat(onQueue(internalFrame::getWidth)).isEqualTo(127);
+        assertThat(onQueue(internalFrame::getHeight)).isEqualTo(129);
     }
 
     @Test
@@ -216,7 +217,7 @@ class JInternalFrameOperatorTest {
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.activate();
-        assertThat(operator2.isSelected()).isEqualTo(internalFrame.isSelected());
+        assertThat(operator2.isSelected()).isEqualTo(onQueue(internalFrame::isSelected));
     }
 
     @Test
@@ -227,7 +228,7 @@ class JInternalFrameOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.close();
         assertThat(operator2.isClosed()).isTrue();
-        assertThat(internalFrame.isVisible()).isFalse();
+        assertThat(onQueue(internalFrame::isVisible)).isFalse();
     }
 
     @Test
@@ -349,10 +350,10 @@ class JInternalFrameOperatorTest {
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.waitIcon(false);
-        assertThat(internalFrame.isIcon()).isFalse();
+        assertThat(onQueue(internalFrame::isIcon)).isFalse();
         operator2.iconify();
         operator2.waitIcon(true);
-        assertThat(internalFrame.isIcon()).isTrue();
+        assertThat(onQueue(internalFrame::isIcon)).isTrue();
     }
 
     @Test
@@ -376,9 +377,9 @@ class JInternalFrameOperatorTest {
         assertThat(operator2).isNotNull();
         InternalFrameListenerTest listener = new InternalFrameListenerTest();
         operator2.addInternalFrameListener(listener);
-        assertThat(internalFrame.getInternalFrameListeners()).hasSize(2);
+        assertThat(onQueue(internalFrame::getInternalFrameListeners)).hasSize(2);
         operator2.removeInternalFrameListener(listener);
-        assertThat(internalFrame.getInternalFrameListeners()).hasSize(1);
+        assertThat(onQueue(internalFrame::getInternalFrameListeners)).hasSize(1);
     }
 
     @Test
@@ -411,7 +412,7 @@ class JInternalFrameOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         assertThat(operator2.getDefaultCloseOperation()).isEqualTo(JInternalFrame.DISPOSE_ON_CLOSE);
-        assertThat(internalFrame.getDefaultCloseOperation()).isEqualTo(JInternalFrame.DISPOSE_ON_CLOSE);
+        assertThat(onQueue(internalFrame::getDefaultCloseOperation)).isEqualTo(JInternalFrame.DISPOSE_ON_CLOSE);
     }
 
     @Test
@@ -471,7 +472,7 @@ class JInternalFrameOperatorTest {
 
         operator2.setJMenuBar(menuBar);
         assertThat(operator2.getJMenuBar()).isEqualTo(menuBar);
-        assertThat(internalFrame.getJMenuBar()).isEqualTo(menuBar);
+        assertThat(onQueue(internalFrame::getJMenuBar)).isEqualTo(menuBar);
     }
 
     @Test
@@ -480,7 +481,7 @@ class JInternalFrameOperatorTest {
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        assertThat(internalFrame.getLayer()).isEqualTo(operator2.getLayer());
+        assertThat(onQueue(internalFrame::getLayer)).isEqualTo(operator2.getLayer());
     }
 
     @Test
@@ -542,9 +543,9 @@ class JInternalFrameOperatorTest {
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
         operator2.setSelected(true);
-        assertThat(internalFrame.isSelected()).isTrue();
+        assertThat(onQueue(internalFrame::isSelected)).isTrue();
         operator2.setSelected(false);
-        assertThat(internalFrame.isSelected()).isFalse();
+        assertThat(onQueue(internalFrame::isSelected)).isFalse();
     }
 
     @Test

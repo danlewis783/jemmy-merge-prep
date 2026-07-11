@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.util.Arrays;
@@ -131,59 +132,59 @@ class JTreePathNavigationTest {
 
     private static void assertMirrorsSource(JListOperator operator) {
         JList<?> source = (JList<?>) operator.getSource();
-        assertThat(operator.getAnchorSelectionIndex()).isEqualTo(source.getAnchorSelectionIndex());
-        assertThat(operator.getCellRenderer()).isEqualTo(source.getCellRenderer());
-        assertThat(operator.getFirstVisibleIndex()).isEqualTo(source.getFirstVisibleIndex());
-        assertThat(operator.getFixedCellHeight()).isEqualTo(source.getFixedCellHeight());
-        assertThat(operator.getFixedCellWidth()).isEqualTo(source.getFixedCellWidth());
-        assertThat(operator.getLastVisibleIndex()).isEqualTo(source.getLastVisibleIndex());
-        assertThat(operator.getLeadSelectionIndex()).isEqualTo(source.getLeadSelectionIndex());
-        assertThat(operator.getMaxSelectionIndex()).isEqualTo(source.getMaxSelectionIndex());
-        assertThat(operator.getMinSelectionIndex()).isEqualTo(source.getMinSelectionIndex());
-        assertThat(operator.getModel()).isEqualTo(source.getModel());
+        assertThat(operator.getAnchorSelectionIndex()).isEqualTo(onQueue(source::getAnchorSelectionIndex));
+        assertThat(operator.getCellRenderer()).isEqualTo(onQueue(source::getCellRenderer));
+        assertThat(operator.getFirstVisibleIndex()).isEqualTo(onQueue(source::getFirstVisibleIndex));
+        assertThat(operator.getFixedCellHeight()).isEqualTo(onQueue(source::getFixedCellHeight));
+        assertThat(operator.getFixedCellWidth()).isEqualTo(onQueue(source::getFixedCellWidth));
+        assertThat(operator.getLastVisibleIndex()).isEqualTo(onQueue(source::getLastVisibleIndex));
+        assertThat(operator.getLeadSelectionIndex()).isEqualTo(onQueue(source::getLeadSelectionIndex));
+        assertThat(operator.getMaxSelectionIndex()).isEqualTo(onQueue(source::getMaxSelectionIndex));
+        assertThat(operator.getMinSelectionIndex()).isEqualTo(onQueue(source::getMinSelectionIndex));
+        assertThat(operator.getModel()).isEqualTo(onQueue(source::getModel));
         assertThat(operator.getPreferredScrollableViewportSize())
-                .isEqualTo(source.getPreferredScrollableViewportSize());
-        assertThat(operator.getPrototypeCellValue()).isEqualTo(source.getPrototypeCellValue());
-        assertThat(operator.getScrollableTracksViewportHeight()).isEqualTo(source.getScrollableTracksViewportHeight());
-        assertThat(operator.getScrollableTracksViewportWidth()).isEqualTo(source.getScrollableTracksViewportWidth());
-        assertThat(operator.getSelectedIndex()).isEqualTo(source.getSelectedIndex());
-        assertThat(operator.getSelectedValue()).isEqualTo(source.getSelectedValue());
-        assertThat(operator.getSelectionBackground()).isEqualTo(source.getSelectionBackground());
-        assertThat(operator.getSelectionForeground()).isEqualTo(source.getSelectionForeground());
-        assertThat(operator.getSelectionMode()).isEqualTo(source.getSelectionMode());
-        assertThat(operator.getSelectionModel()).isEqualTo(source.getSelectionModel());
-        assertThat(operator.getUI()).isEqualTo(source.getUI());
-        assertThat(operator.getValueIsAdjusting()).isEqualTo(source.getValueIsAdjusting());
-        assertThat(operator.getVisibleRowCount()).isEqualTo(source.getVisibleRowCount());
-        assertThat(operator.isSelectionEmpty()).isEqualTo(source.isSelectionEmpty());
+                .isEqualTo(onQueue(source::getPreferredScrollableViewportSize));
+        assertThat(operator.getPrototypeCellValue()).isEqualTo(onQueue(source::getPrototypeCellValue));
+        assertThat(operator.getScrollableTracksViewportHeight()).isEqualTo(onQueue(source::getScrollableTracksViewportHeight));
+        assertThat(operator.getScrollableTracksViewportWidth()).isEqualTo(onQueue(source::getScrollableTracksViewportWidth));
+        assertThat(operator.getSelectedIndex()).isEqualTo(onQueue(source::getSelectedIndex));
+        assertThat(operator.getSelectedValue()).isEqualTo(onQueue(source::getSelectedValue));
+        assertThat(operator.getSelectionBackground()).isEqualTo(onQueue(source::getSelectionBackground));
+        assertThat(operator.getSelectionForeground()).isEqualTo(onQueue(source::getSelectionForeground));
+        assertThat(operator.getSelectionMode()).isEqualTo(onQueue(source::getSelectionMode));
+        assertThat(operator.getSelectionModel()).isEqualTo(onQueue(source::getSelectionModel));
+        assertThat(operator.getUI()).isEqualTo(onQueue(source::getUI));
+        assertThat(operator.getValueIsAdjusting()).isEqualTo(onQueue(source::getValueIsAdjusting));
+        assertThat(operator.getVisibleRowCount()).isEqualTo(onQueue(source::getVisibleRowCount));
+        assertThat(operator.isSelectionEmpty()).isEqualTo(onQueue(source::isSelectionEmpty));
     }
 
     private static void assertMirrorsSource(JSplitPaneOperator operator) {
         JSplitPane source = (JSplitPane) operator.getSource();
-        assertThat(operator.getBottomComponent()).isEqualTo(source.getBottomComponent());
-        assertThat(operator.getDividerLocation()).isEqualTo(source.getDividerLocation());
-        assertThat(operator.getDividerSize()).isEqualTo(source.getDividerSize());
-        assertThat(operator.getLastDividerLocation()).isEqualTo(source.getLastDividerLocation());
-        assertThat(operator.getLeftComponent()).isEqualTo(source.getLeftComponent());
-        assertThat(operator.getMaximumDividerLocation()).isEqualTo(source.getMaximumDividerLocation());
-        assertThat(operator.getMinimumDividerLocation()).isEqualTo(source.getMinimumDividerLocation());
-        assertThat(operator.getOrientation()).isEqualTo(source.getOrientation());
-        assertThat(operator.getRightComponent()).isEqualTo(source.getRightComponent());
-        assertThat(operator.getTopComponent()).isEqualTo(source.getTopComponent());
-        assertThat(operator.getUI()).isEqualTo(source.getUI());
-        assertThat(operator.isContinuousLayout()).isEqualTo(source.isContinuousLayout());
-        assertThat(operator.isOneTouchExpandable()).isEqualTo(source.isOneTouchExpandable());
+        assertThat(operator.getBottomComponent()).isEqualTo(onQueue(source::getBottomComponent));
+        assertThat(operator.getDividerLocation()).isEqualTo(onQueue(source::getDividerLocation));
+        assertThat(operator.getDividerSize()).isEqualTo(onQueue(source::getDividerSize));
+        assertThat(operator.getLastDividerLocation()).isEqualTo(onQueue(source::getLastDividerLocation));
+        assertThat(operator.getLeftComponent()).isEqualTo(onQueue(source::getLeftComponent));
+        assertThat(operator.getMaximumDividerLocation()).isEqualTo(onQueue(source::getMaximumDividerLocation));
+        assertThat(operator.getMinimumDividerLocation()).isEqualTo(onQueue(source::getMinimumDividerLocation));
+        assertThat(operator.getOrientation()).isEqualTo(onQueue(source::getOrientation));
+        assertThat(operator.getRightComponent()).isEqualTo(onQueue(source::getRightComponent));
+        assertThat(operator.getTopComponent()).isEqualTo(onQueue(source::getTopComponent));
+        assertThat(operator.getUI()).isEqualTo(onQueue(source::getUI));
+        assertThat(operator.isContinuousLayout()).isEqualTo(onQueue(source::isContinuousLayout));
+        assertThat(operator.isOneTouchExpandable()).isEqualTo(onQueue(source::isOneTouchExpandable));
     }
 
     private static void assertMirrorsSource(JPopupMenuOperator operator) {
         JPopupMenu source = (JPopupMenu) operator.getSource();
-        assertThat(operator.getInvoker()).isEqualTo(source.getInvoker());
-        assertThat(operator.getLabel()).isEqualTo(source.getLabel());
-        assertThat(operator.getMargin()).isEqualTo(source.getMargin());
-        assertThat(operator.getSelectionModel()).isEqualTo(source.getSelectionModel());
-        assertThat(operator.getUI()).isEqualTo(source.getUI());
-        assertThat(operator.isBorderPainted()).isEqualTo(source.isBorderPainted());
-        assertThat(operator.isLightWeightPopupEnabled()).isEqualTo(source.isLightWeightPopupEnabled());
+        assertThat(operator.getInvoker()).isEqualTo(onQueue(source::getInvoker));
+        assertThat(operator.getLabel()).isEqualTo(onQueue(source::getLabel));
+        assertThat(operator.getMargin()).isEqualTo(onQueue(source::getMargin));
+        assertThat(operator.getSelectionModel()).isEqualTo(onQueue(source::getSelectionModel));
+        assertThat(operator.getUI()).isEqualTo(onQueue(source::getUI));
+        assertThat(operator.isBorderPainted()).isEqualTo(onQueue(source::isBorderPainted));
+        assertThat(operator.isLightWeightPopupEnabled()).isEqualTo(onQueue(source::isLightWeightPopupEnabled));
     }
 
     private static class JListOperatorTreePathChecker implements Function<TreePath[], Boolean> {

@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -139,13 +140,13 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
-        menu.addMenuListener(listener);
+        jMenuOp.addMenuListener(listener);
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.strict());
         jMenuOp.pushMenu("JMenuOperatorTest", "/", StringComparators.strict());
         jMenuOp.pushMenu("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenu(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenu("JMenuOperatorTest", StringComparators.regex());
-        menu.removeMenuListener(listener);
+        jMenuOp.removeMenuListener(listener);
     }
 
     @Test
@@ -157,14 +158,14 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
-        menu.addMenuListener(listener);
+        jMenuOp.addMenuListener(listener);
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.strict());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.strict());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenuNoBlock(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", ",", StringComparators.regex());
         jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.regex());
-        menu.removeMenuListener(listener);
+        jMenuOp.removeMenuListener(listener);
     }
 
     @Test
@@ -176,14 +177,14 @@ class JMenuOperatorTest {
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
-        menu.addMenuListener(listener);
+        jMenuOp.addMenuListener(listener);
         assertThat(jMenuOp.showMenuItem("Item1", "/", StringComparators.strict()))
                 .isNotNull();
         assertThat(jMenuOp.showMenuItem(Collections.singletonList(ComponentPredicates.byName("Item1"))))
                 .isNotNull();
         assertThat(jMenuOp.showMenuItem(new String[] {"Item1"}, StringComparators.strict()))
                 .isNotNull();
-        menu.removeMenuListener(listener);
+        jMenuOp.removeMenuListener(listener);
     }
 
     @Test
@@ -211,9 +212,9 @@ class JMenuOperatorTest {
         assertThat(jMenuOp).isNotNull();
         NullMenuListener listener = new NullMenuListener();
         jMenuOp.addMenuListener(listener);
-        assertThat(menu.getMenuListeners()).hasSize(1);
+        assertThat(onQueue(menu::getMenuListeners)).hasSize(1);
         jMenuOp.removeMenuListener(listener);
-        assertThat(menu.getMenuListeners()).isEmpty();
+        assertThat(onQueue(menu::getMenuListeners)).isEmpty();
     }
 
     @Test

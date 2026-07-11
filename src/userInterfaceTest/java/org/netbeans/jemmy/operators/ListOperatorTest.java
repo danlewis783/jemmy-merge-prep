@@ -299,13 +299,13 @@ class ListOperatorTest {
     }
 
     @Test
-    void testRemove() {
+    void testRemove() throws InterruptedException, InvocationTargetException {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         ListOperator operator1 = ListOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.remove(0);
-        list.add("Item 1");
+        EventQueue.invokeAndWait(() -> list.add("Item 1"));
         operator1.remove("Item 1");
     }
 

@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.util.Objects;
 import javax.swing.JFrame;
@@ -70,22 +71,22 @@ class JSliderScrollModelsTest {
 
         JSliderOperator op = ops[0];
         JSlider src = (JSlider) op.getSource();
-        assertThat(op.getExtent()).isEqualTo(src.getExtent());
-        assertThat(op.getInverted()).isEqualTo(src.getInverted());
-        assertThat(op.getLabelTable()).isEqualTo(src.getLabelTable());
-        assertThat(op.getMajorTickSpacing()).isEqualTo(src.getMajorTickSpacing());
-        assertThat(op.getMaximum()).isEqualTo(src.getMaximum());
-        assertThat(op.getMinimum()).isEqualTo(src.getMinimum());
-        assertThat(op.getMinorTickSpacing()).isEqualTo(src.getMinorTickSpacing());
-        assertThat(op.getModel()).isEqualTo(src.getModel());
-        assertThat(op.getOrientation()).isEqualTo(src.getOrientation());
-        assertThat(op.getPaintLabels()).isEqualTo(src.getPaintLabels());
-        assertThat(op.getPaintTicks()).isEqualTo(src.getPaintTicks());
-        assertThat(op.getPaintTrack()).isEqualTo(src.getPaintTrack());
-        assertThat(op.getSnapToTicks()).isEqualTo(src.getSnapToTicks());
-        assertThat(op.getUI()).isEqualTo(src.getUI());
-        assertThat(op.getValue()).isEqualTo(src.getValue());
-        assertThat(op.getValueIsAdjusting()).isEqualTo(src.getValueIsAdjusting());
+        assertThat(op.getExtent()).isEqualTo(onQueue(src::getExtent));
+        assertThat(op.getInverted()).isEqualTo(onQueue(src::getInverted));
+        assertThat(op.getLabelTable()).isEqualTo(onQueue(src::getLabelTable));
+        assertThat(op.getMajorTickSpacing()).isEqualTo(onQueue(src::getMajorTickSpacing));
+        assertThat(op.getMaximum()).isEqualTo(onQueue(src::getMaximum));
+        assertThat(op.getMinimum()).isEqualTo(onQueue(src::getMinimum));
+        assertThat(op.getMinorTickSpacing()).isEqualTo(onQueue(src::getMinorTickSpacing));
+        assertThat(op.getModel()).isEqualTo(onQueue(src::getModel));
+        assertThat(op.getOrientation()).isEqualTo(onQueue(src::getOrientation));
+        assertThat(op.getPaintLabels()).isEqualTo(onQueue(src::getPaintLabels));
+        assertThat(op.getPaintTicks()).isEqualTo(onQueue(src::getPaintTicks));
+        assertThat(op.getPaintTrack()).isEqualTo(onQueue(src::getPaintTrack));
+        assertThat(op.getSnapToTicks()).isEqualTo(onQueue(src::getSnapToTicks));
+        assertThat(op.getUI()).isEqualTo(onQueue(src::getUI));
+        assertThat(op.getValue()).isEqualTo(onQueue(src::getValue));
+        assertThat(op.getValueIsAdjusting()).isEqualTo(onQueue(src::getValueIsAdjusting));
     }
 
     private int div10(double range) {

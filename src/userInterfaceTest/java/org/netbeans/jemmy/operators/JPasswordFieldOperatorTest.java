@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -102,10 +103,10 @@ class JPasswordFieldOperatorTest {
                 JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
         assertThat(operator3).isNotNull();
         assertThat(operator3.echoCharIsSet()).isTrue();
-        assertThat(passwordField.echoCharIsSet()).isTrue();
+        assertThat(onQueue(passwordField::echoCharIsSet)).isTrue();
         operator3.setEchoChar('a');
         assertThat(operator3.getEchoChar()).isEqualTo('a');
-        assertThat(passwordField.getEchoChar()).isEqualTo(operator3.getEchoChar());
+        assertThat(onQueue(passwordField::getEchoChar)).isEqualTo(operator3.getEchoChar());
     }
 
     @Test

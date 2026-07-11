@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.awt.Rectangle;
@@ -102,7 +103,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.doExpandPath(path);
     }
@@ -122,7 +123,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.doMakeVisible(path);
     }
@@ -133,7 +134,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         assertThat(operator2.getChildCount(node)).isEqualTo(3);
     }
 
@@ -143,7 +144,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         assertThat(operator2.getChildren(node)).isNotNull();
     }
 
@@ -153,7 +154,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         assertThat(operator2.getChild(node, 0)).isNotNull();
     }
 
@@ -163,7 +164,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         assertThat(operator2.getChildPath(path, 0)).isNotNull();
     }
@@ -174,7 +175,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         assertThat(operator2.getChildPaths(path)).isNotNull();
     }
@@ -213,7 +214,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.doCollapsePath(path);
 
@@ -235,7 +236,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.selectPath(path);
     }
@@ -255,7 +256,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath[] paths = new TreePath[1];
         paths[0] = new TreePath(node);
         operator2.selectPaths(paths);
@@ -276,7 +277,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.clickOnPath(path);
     }
@@ -293,7 +294,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.scrollToPath(path);
     }
@@ -321,7 +322,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.getRenderedComponent(path);
     }
@@ -348,7 +349,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.waitExpanded(path);
         operator2.waitExpanded(0);
@@ -360,7 +361,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.collapsePath(path);
         operator2.waitCollapsed(path);
@@ -372,7 +373,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.waitVisible(path);
     }
@@ -383,7 +384,7 @@ class JTreeOperatorTest {
         assertThat(operator).isNotNull();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
         assertThat(operator2).isNotNull();
-        Object node = tree.getModel().getRoot();
+        Object node = onQueue(() -> tree.getModel().getRoot());
         TreePath path = new TreePath(node);
         operator2.selectPath(path);
         operator2.waitSelected(path);

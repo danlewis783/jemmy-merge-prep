@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -115,9 +116,9 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         NullChangeListener listener = new NullChangeListener();
         operator1.addChangeListener(listener);
-        assertThat(progressBar.getChangeListeners()).hasSize(2);
+        assertThat(onQueue(progressBar::getChangeListeners)).hasSize(2);
         operator1.removeChangeListener(listener);
-        assertThat(progressBar.getChangeListeners()).hasSize(1);
+        assertThat(onQueue(progressBar::getChangeListeners)).hasSize(1);
     }
 
     @Test
@@ -128,7 +129,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setMaximum(101);
         assertThat(operator1.getMaximum()).isEqualTo(101);
-        assertThat(progressBar.getMaximum()).isEqualTo(101);
+        assertThat(onQueue(progressBar::getMaximum)).isEqualTo(101);
     }
 
     @Test
@@ -139,7 +140,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setMinimum(7);
         assertThat(operator1.getMinimum()).isEqualTo(7);
-        assertThat(progressBar.getMinimum()).isEqualTo(7);
+        assertThat(onQueue(progressBar::getMinimum)).isEqualTo(7);
     }
 
     @Test
@@ -151,7 +152,7 @@ class JProgressBarOperatorTest {
         NullBoundedRangeModel model = new NullBoundedRangeModel();
         operator1.setModel(model);
         assertThat(operator1.getModel()).isEqualTo(model);
-        assertThat(progressBar.getModel()).isEqualTo(model);
+        assertThat(onQueue(progressBar::getModel)).isEqualTo(model);
     }
 
     @Test
@@ -162,7 +163,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setOrientation(JProgressBar.VERTICAL);
         assertThat(operator1.getOrientation()).isEqualTo(JProgressBar.VERTICAL);
-        assertThat(progressBar.getOrientation()).isEqualTo(JProgressBar.VERTICAL);
+        assertThat(onQueue(progressBar::getOrientation)).isEqualTo(JProgressBar.VERTICAL);
     }
 
     @Test
@@ -175,7 +176,7 @@ class JProgressBarOperatorTest {
         operator1.setMaximum(100);
         operator1.setValue(50);
         assertThat(operator1.getPercentComplete()).isCloseTo(0.5, within(1.0e-5));
-        assertThat(progressBar.getPercentComplete()).isCloseTo(0.5, within(1.0e-5));
+        assertThat(onQueue(progressBar::getPercentComplete)).isCloseTo(0.5, within(1.0e-5));
     }
 
     @Test
@@ -186,7 +187,7 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setString("BLABLA");
         assertThat(operator1.getString()).isEqualTo("BLABLA");
-        assertThat(progressBar.getString()).isEqualTo("BLABLA");
+        assertThat(onQueue(progressBar::getString)).isEqualTo("BLABLA");
     }
 
     @Test
@@ -198,7 +199,7 @@ class JProgressBarOperatorTest {
         NullProgressBarUI progressBarUI = new NullProgressBarUI();
         operator1.setUI(progressBarUI);
         assertThat(operator1.getUI()).isEqualTo(progressBarUI);
-        assertThat(progressBar.getUI()).isEqualTo(progressBarUI);
+        assertThat(onQueue(progressBar::getUI)).isEqualTo(progressBarUI);
     }
 
     @Test
@@ -209,10 +210,10 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setBorderPainted(true);
         assertThat(operator1.isBorderPainted()).isTrue();
-        assertThat(progressBar.isBorderPainted()).isTrue();
+        assertThat(onQueue(progressBar::isBorderPainted)).isTrue();
         operator1.setBorderPainted(false);
         assertThat(operator1.isBorderPainted()).isFalse();
-        assertThat(progressBar.isBorderPainted()).isFalse();
+        assertThat(onQueue(progressBar::isBorderPainted)).isFalse();
     }
 
     @Test
@@ -223,9 +224,9 @@ class JProgressBarOperatorTest {
         assertThat(operator1).isNotNull();
         operator1.setStringPainted(true);
         assertThat(operator1.isStringPainted()).isTrue();
-        assertThat(progressBar.isStringPainted()).isTrue();
+        assertThat(onQueue(progressBar::isStringPainted)).isTrue();
         operator1.setStringPainted(false);
-        assertThat(progressBar.isStringPainted()).isFalse();
+        assertThat(onQueue(progressBar::isStringPainted)).isFalse();
     }
 
     private static class NullBoundedRangeModel implements BoundedRangeModel {

@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -317,7 +318,7 @@ class JTableOperatorTest {
         assertThat(operator).isNotNull();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumnModel model = table.getColumnModel();
+        TableColumnModel model = onQueue(table::getColumnModel);
         operator1.columnAdded(new TableColumnModelEvent(model, 0, 0));
     }
 
@@ -347,7 +348,7 @@ class JTableOperatorTest {
         assertThat(operator).isNotNull();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumnModel model = table.getColumnModel();
+        TableColumnModel model = onQueue(table::getColumnModel);
         operator1.columnMoved(new TableColumnModelEvent(model, 0, 0));
     }
 
@@ -357,7 +358,7 @@ class JTableOperatorTest {
         assertThat(operator).isNotNull();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumnModel model = table.getColumnModel();
+        TableColumnModel model = onQueue(table::getColumnModel);
         operator1.columnRemoved(new TableColumnModelEvent(model, 0, 0));
     }
 

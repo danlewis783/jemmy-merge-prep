@@ -17,10 +17,12 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Button;
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,9 +117,10 @@ class ButtonOperatorTest {
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.addActionListener(event -> {});
-        assertThat(button.getActionListeners()).hasSize(1);
-        operator1.removeActionListener(button.getActionListeners()[0]);
-        assertThat(button.getActionListeners()).isEmpty();
+        assertThat(onQueue(button::getActionListeners)).hasSize(1);
+        ActionListener[] listeners = onQueue(button::getActionListeners);
+        operator1.removeActionListener(listeners[0]);
+        assertThat(onQueue(button::getActionListeners)).isEmpty();
     }
 
     @Test

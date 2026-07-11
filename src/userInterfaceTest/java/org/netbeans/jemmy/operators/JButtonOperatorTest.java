@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -95,11 +96,11 @@ class JButtonOperatorTest {
         JButtonOperator operator2 = JButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.setDefaultCapable(true);
-        assertThat(button.isDefaultCapable()).isTrue();
-        assertThat(button.isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
+        assertThat(onQueue(button::isDefaultCapable)).isTrue();
+        assertThat(onQueue(button::isDefaultCapable)).isEqualTo(operator2.isDefaultCapable());
         operator2.setDefaultCapable(false);
-        assertThat(button.isDefaultCapable()).isFalse();
-        assertThat(button.isDefaultCapable()).isEqualTo(operator2.isDefaultCapable());
+        assertThat(onQueue(button::isDefaultCapable)).isFalse();
+        assertThat(onQueue(button::isDefaultCapable)).isEqualTo(operator2.isDefaultCapable());
     }
 
     @Test
@@ -124,18 +125,18 @@ class JButtonOperatorTest {
         operator2.press();
         operator2.release();
         operator2.waitState(new JComponentOperatorVisiblePredicate(false));
-        assertThat(button.isVisible()).isFalse();
+        assertThat(onQueue(button::isVisible)).isFalse();
         EventQueue.invokeAndWait(() -> button.setVisible(true));
         JButtonOperator operator3 = JButtonOperator.waitFor(operator1);
         assertThat(operator3).isNotNull();
         operator3.clickMouse();
         operator3.waitState(new JComponentOperatorVisiblePredicate(false));
-        assertThat(button.isVisible()).isFalse();
+        assertThat(onQueue(button::isVisible)).isFalse();
         EventQueue.invokeAndWait(() -> button.setVisible(true));
         JButtonOperator operator4 = JButtonOperator.waitFor(operator1);
         assertThat(operator4).isNotNull();
         operator4.push();
         assertThat(operator4.isVisible()).isFalse();
-        assertThat(button.isVisible()).isFalse();
+        assertThat(onQueue(button::isVisible)).isFalse();
     }
 }

@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -101,9 +102,9 @@ class JTextFieldOperatorTest {
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
         assertThat(operator2).isNotNull();
         operator2.waitText("JTextFieldOperatorTest", StringComparators.strict());
-        assertThat(textField.getText()).isEqualTo("JTextFieldOperatorTest");
+        assertThat(onQueue(() -> textField.getText())).isEqualTo("JTextFieldOperatorTest");
         operator2.waitText("JTextFieldOperatorTest\n", StringComparators.strict());
-        assertThat(textField.getText()).isEqualTo("JTextFieldOperatorTest");
+        assertThat(onQueue(() -> textField.getText())).isEqualTo("JTextFieldOperatorTest");
     }
 
     @Test
@@ -115,9 +116,10 @@ class JTextFieldOperatorTest {
         assertThat(operator2).isNotNull();
         ActionListener listener = event -> {};
         operator2.addActionListener(listener);
-        assertThat(textField.getActionListeners()[0]).isEqualTo(listener);
+        ActionListener[] listeners = onQueue(textField::getActionListeners);
+        assertThat(listeners[0]).isEqualTo(listener);
         operator2.removeActionListener(listener);
-        assertThat(textField.getActionListeners()).isEmpty();
+        assertThat(onQueue(textField::getActionListeners)).isEmpty();
     }
 
     @Test
@@ -129,7 +131,7 @@ class JTextFieldOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setColumns(10);
         assertThat(operator2.getColumns()).isEqualTo(10);
-        assertThat(operator2.getColumns()).isEqualTo(textField.getColumns());
+        assertThat(operator2.getColumns()).isEqualTo(onQueue(textField::getColumns));
     }
 
     @Test
@@ -141,7 +143,7 @@ class JTextFieldOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setHorizontalAlignment(SwingConstants.RIGHT);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.RIGHT);
-        assertThat(operator2.getHorizontalAlignment()).isEqualTo(textField.getHorizontalAlignment());
+        assertThat(operator2.getHorizontalAlignment()).isEqualTo(onQueue(textField::getHorizontalAlignment));
     }
 
     @Test

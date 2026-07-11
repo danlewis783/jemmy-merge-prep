@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -84,9 +85,9 @@ class JCheckBoxMenuItemOperatorTest {
         assertThat(checkBoxMenuItemOp).isNotNull();
         checkBoxMenuItemOp.setState(true);
         assertThat(checkBoxMenuItemOp.getState()).isTrue();
-        assertThat(checkBoxMenuItem.getState()).isEqualTo(checkBoxMenuItemOp.getState());
+        assertThat(onQueue(checkBoxMenuItem::getState)).isEqualTo(checkBoxMenuItemOp.getState());
         checkBoxMenuItemOp.setState(false);
         assertThat(checkBoxMenuItemOp.getState()).isFalse();
-        assertThat(checkBoxMenuItem.getState()).isEqualTo(checkBoxMenuItemOp.getState());
+        assertThat(onQueue(checkBoxMenuItem::getState)).isEqualTo(checkBoxMenuItemOp.getState());
     }
 }

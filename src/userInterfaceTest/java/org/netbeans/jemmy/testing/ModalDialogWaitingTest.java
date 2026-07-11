@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Dialog;
 import java.awt.EventQueue;
@@ -75,19 +76,19 @@ class ModalDialogWaitingTest {
 
     private void testDialog(DialogOperator op) {
         Dialog src = (Dialog) op.getSource();
-        assertThat(op.getTitle()).isEqualTo(src.getTitle());
-        assertThat(op.isModal()).isEqualTo(src.isModal());
-        assertThat(op.isResizable()).isEqualTo(src.isResizable());
+        assertThat(op.getTitle()).isEqualTo(onQueue(src::getTitle));
+        assertThat(op.isModal()).isEqualTo(onQueue(src::isModal));
+        assertThat(op.isResizable()).isEqualTo(onQueue(src::isResizable));
     }
 
     private void testJDialog(JDialogOperator op) {
         JDialog src = (JDialog) op.getSource();
-        assertThat(op.getAccessibleContext()).isEqualTo(src.getAccessibleContext());
-        assertThat(op.getContentPane()).isEqualTo(src.getContentPane());
-        assertThat(op.getDefaultCloseOperation()).isEqualTo(src.getDefaultCloseOperation());
-        assertThat(op.getGlassPane()).isEqualTo(src.getGlassPane());
-        assertThat(op.getJMenuBar()).isEqualTo(src.getJMenuBar());
-        assertThat(op.getLayeredPane()).isEqualTo(src.getLayeredPane());
-        assertThat(op.getRootPane()).isEqualTo(src.getRootPane());
+        assertThat(op.getAccessibleContext()).isEqualTo(onQueue(src::getAccessibleContext));
+        assertThat(op.getContentPane()).isEqualTo(onQueue(src::getContentPane));
+        assertThat(op.getDefaultCloseOperation()).isEqualTo(onQueue(src::getDefaultCloseOperation));
+        assertThat(op.getGlassPane()).isEqualTo(onQueue(src::getGlassPane));
+        assertThat(op.getJMenuBar()).isEqualTo(onQueue(src::getJMenuBar));
+        assertThat(op.getLayeredPane()).isEqualTo(onQueue(src::getLayeredPane));
+        assertThat(op.getRootPane()).isEqualTo(onQueue(src::getRootPane));
     }
 }

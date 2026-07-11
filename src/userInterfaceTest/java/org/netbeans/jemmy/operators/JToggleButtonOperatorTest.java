@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -97,6 +98,6 @@ class JToggleButtonOperatorTest {
         JToggleButtonOperator operator2 = JToggleButtonOperator.waitFor(operator1);
         assertThat(operator2).isNotNull();
         operator2.prepareToClick();
-        assertThat(toggleButton.isVisible()).isTrue();
+        assertThat(onQueue(toggleButton::isVisible)).isTrue();
     }
 }

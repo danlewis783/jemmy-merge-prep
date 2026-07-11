@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -169,7 +170,7 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumn column = table.getTableHeader().getColumnModel().getColumn(1);
+        TableColumn column = onQueue(() -> table.getTableHeader().getColumnModel().getColumn(1));
         operator1.setDraggedColumn(column);
         assertThat(operator1.getDraggedColumn()).isEqualTo(column);
     }
@@ -190,7 +191,7 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumn column = table.getTableHeader().getColumnModel().getColumn(1);
+        TableColumn column = onQueue(() -> table.getTableHeader().getColumnModel().getColumn(1));
         operator1.setResizingColumn(column);
         assertThat(operator1.getResizingColumn()).isEqualTo(column);
     }
@@ -261,7 +262,7 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumnModel model = table.getColumnModel();
+        TableColumnModel model = onQueue(table::getColumnModel);
         operator1.columnAdded(new TableColumnModelEvent(model, 0, 1));
     }
 
@@ -271,7 +272,7 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumnModel model = table.getColumnModel();
+        TableColumnModel model = onQueue(table::getColumnModel);
         operator1.columnRemoved(new TableColumnModelEvent(model, 0, 1));
     }
 
@@ -281,7 +282,7 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumnModel model = table.getColumnModel();
+        TableColumnModel model = onQueue(table::getColumnModel);
         operator1.columnMoved(new TableColumnModelEvent(model, 0, 1));
     }
 

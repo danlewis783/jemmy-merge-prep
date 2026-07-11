@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.util.Objects;
 import javax.swing.JButton;
@@ -118,154 +119,37 @@ class ScrollToComponentTest {
         assertThat(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
                 .isTrue();
 
-        assertThat(testJScrollBar(hscroll))
-                .as("scroll bar block scrolling reached the target value")
-                .isTrue();
-        assertThat(testJScrollPane(scroller))
-                .as("scroll pane block scrolling reached the target value")
-                .isTrue();
+        testJScrollBar(hscroll);
+        testJScrollPane(scroller);
     }
 
-    private boolean testJScrollBar(JScrollBarOperator jScrollBarOperator) {
-        if (((JScrollBar) jScrollBarOperator.getSource()).getBlockIncrement()
-                == jScrollBarOperator.getBlockIncrement()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getMaximum() == jScrollBarOperator.getMaximum()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getMinimum() == jScrollBarOperator.getMinimum()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getModel() == null && (jScrollBarOperator.getModel() == null)
-                || ((JScrollBar) jScrollBarOperator.getSource()).getModel().equals(jScrollBarOperator.getModel())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getOrientation() == jScrollBarOperator.getOrientation()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getUI() == null && (jScrollBarOperator.getUI() == null)
-                || ((JScrollBar) jScrollBarOperator.getSource()).getUI().equals(jScrollBarOperator.getUI())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getUnitIncrement() == jScrollBarOperator.getUnitIncrement()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getValue() == jScrollBarOperator.getValue()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getValueIsAdjusting()
-                == jScrollBarOperator.getValueIsAdjusting()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollBar) jScrollBarOperator.getSource()).getVisibleAmount() == jScrollBarOperator.getVisibleAmount()) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private void testJScrollBar(JScrollBarOperator jScrollBarOperator) {
+        JScrollBar src = (JScrollBar) jScrollBarOperator.getSource();
+        assertThat(jScrollBarOperator.getBlockIncrement()).isEqualTo(onQueue(src::getBlockIncrement));
+        assertThat(jScrollBarOperator.getMaximum()).isEqualTo(onQueue(src::getMaximum));
+        assertThat(jScrollBarOperator.getMinimum()).isEqualTo(onQueue(src::getMinimum));
+        assertThat(jScrollBarOperator.getModel()).isEqualTo(onQueue(src::getModel));
+        assertThat(jScrollBarOperator.getOrientation()).isEqualTo(onQueue(src::getOrientation));
+        assertThat(jScrollBarOperator.getUI()).isEqualTo(onQueue(src::getUI));
+        assertThat(jScrollBarOperator.getUnitIncrement()).isEqualTo(onQueue(src::getUnitIncrement));
+        assertThat(jScrollBarOperator.getValue()).isEqualTo(onQueue(src::getValue));
+        assertThat(jScrollBarOperator.getValueIsAdjusting()).isEqualTo(onQueue(src::getValueIsAdjusting));
+        assertThat(jScrollBarOperator.getVisibleAmount()).isEqualTo(onQueue(src::getVisibleAmount));
     }
 
-    private boolean testJScrollPane(JScrollPaneOperator jScrollPaneOperator) {
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getColumnHeader() == null
-                        && (jScrollPaneOperator.getColumnHeader() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getColumnHeader()
-                        .equals(jScrollPaneOperator.getColumnHeader())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getHorizontalScrollBar() == null
-                        && (jScrollPaneOperator.getHorizontalScrollBar() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getHorizontalScrollBar()
-                        .equals(jScrollPaneOperator.getHorizontalScrollBar())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getHorizontalScrollBarPolicy()
-                == jScrollPaneOperator.getHorizontalScrollBarPolicy()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getRowHeader() == null
-                        && (jScrollPaneOperator.getRowHeader() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getRowHeader()
-                        .equals(jScrollPaneOperator.getRowHeader())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getUI() == null && (jScrollPaneOperator.getUI() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource()).getUI().equals(jScrollPaneOperator.getUI())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getVerticalScrollBar() == null
-                        && (jScrollPaneOperator.getVerticalScrollBar() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getVerticalScrollBar()
-                        .equals(jScrollPaneOperator.getVerticalScrollBar())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getVerticalScrollBarPolicy()
-                == jScrollPaneOperator.getVerticalScrollBarPolicy()) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getViewport() == null
-                        && (jScrollPaneOperator.getViewport() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getViewport()
-                        .equals(jScrollPaneOperator.getViewport())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getViewportBorder() == null
-                        && (jScrollPaneOperator.getViewportBorder() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getViewportBorder()
-                        .equals(jScrollPaneOperator.getViewportBorder())) {
-        } else {
-            return false;
-        }
-
-        if (((JScrollPane) jScrollPaneOperator.getSource()).getViewportBorderBounds() == null
-                        && (jScrollPaneOperator.getViewportBorderBounds() == null)
-                || ((JScrollPane) jScrollPaneOperator.getSource())
-                        .getViewportBorderBounds()
-                        .equals(jScrollPaneOperator.getViewportBorderBounds())) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private void testJScrollPane(JScrollPaneOperator jScrollPaneOperator) {
+        JScrollPane src = (JScrollPane) jScrollPaneOperator.getSource();
+        assertThat(jScrollPaneOperator.getColumnHeader()).isEqualTo(onQueue(src::getColumnHeader));
+        assertThat(jScrollPaneOperator.getHorizontalScrollBar()).isEqualTo(onQueue(src::getHorizontalScrollBar));
+        assertThat(jScrollPaneOperator.getHorizontalScrollBarPolicy())
+                .isEqualTo(onQueue(src::getHorizontalScrollBarPolicy));
+        assertThat(jScrollPaneOperator.getRowHeader()).isEqualTo(onQueue(src::getRowHeader));
+        assertThat(jScrollPaneOperator.getUI()).isEqualTo(onQueue(src::getUI));
+        assertThat(jScrollPaneOperator.getVerticalScrollBar()).isEqualTo(onQueue(src::getVerticalScrollBar));
+        assertThat(jScrollPaneOperator.getVerticalScrollBarPolicy())
+                .isEqualTo(onQueue(src::getVerticalScrollBarPolicy));
+        assertThat(jScrollPaneOperator.getViewport()).isEqualTo(onQueue(src::getViewport));
+        assertThat(jScrollPaneOperator.getViewportBorder()).isEqualTo(onQueue(src::getViewportBorder));
+        assertThat(jScrollPaneOperator.getViewportBorderBounds()).isEqualTo(onQueue(src::getViewportBorderBounds));
     }
 }

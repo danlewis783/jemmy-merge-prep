@@ -19,6 +19,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.io.File;
 import java.time.Duration;
@@ -249,45 +250,24 @@ class FileChooserDialogWorkflowTest {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             JFileChooserOperator fcOp = launchFileChooser();
             JFileChooser fc = (JFileChooser) fcOp.getSource();
-            assertThat(fc.getAcceptAllFileFilter() == null && fcOp.getAcceptAllFileFilter() == null
-                            || fc.getAcceptAllFileFilter().equals(fcOp.getAcceptAllFileFilter()))
-                    .isTrue();
-            assertThat(fc.getAccessory() == null && fcOp.getAccessory() == null
-                            || fc.getAccessory().equals(fcOp.getAccessory()))
-                    .isTrue();
-            assertThat(fcOp.getApproveButtonMnemonic()).isEqualTo(fc.getApproveButtonMnemonic());
-            assertThat(fc.getApproveButtonText() == null && fcOp.getApproveButtonText() == null
-                            || fc.getApproveButtonText().equals(fcOp.getApproveButtonText()))
-                    .isTrue();
-            assertThat(fc.getApproveButtonToolTipText() == null && fcOp.getApproveButtonToolTipText() == null
-                            || fc.getApproveButtonToolTipText().equals(fcOp.getApproveButtonToolTipText()))
-                    .isTrue();
-            assertThat(fc.getCurrentDirectory() == null && fcOp.getCurrentDirectory() == null
-                            || fc.getCurrentDirectory().equals(fcOp.getCurrentDirectory()))
-                    .isTrue();
-            assertThat(fc.getDialogTitle() == null && fcOp.getDialogTitle() == null
-                            || fc.getDialogTitle().equals(fcOp.getDialogTitle()))
-                    .isTrue();
-            assertThat(fcOp.getDialogType()).isEqualTo(fc.getDialogType());
-            assertThat(fc.getFileFilter() == null && fcOp.getFileFilter() == null
-                            || fc.getFileFilter().equals(fcOp.getFileFilter()))
-                    .isTrue();
-            assertThat(fcOp.getFileSelectionMode()).isEqualTo(fc.getFileSelectionMode());
-            assertThat(fc.getFileSystemView() == null && fcOp.getFileSystemView() == null
-                            || fc.getFileSystemView().equals(fcOp.getFileSystemView()))
-                    .isTrue();
-            assertThat(fc.getFileView() == null && fcOp.getFileView() == null
-                            || fc.getFileView().equals(fcOp.getFileView()))
-                    .isTrue();
-            assertThat(fc.getSelectedFile() == null && fcOp.getSelectedFile() == null
-                            || fc.getSelectedFile().equals(fcOp.getSelectedFile()))
-                    .isTrue();
-            assertThat(fc.getUI() == null && fcOp.getUI() == null || fc.getUI().equals(fcOp.getUI()))
-                    .isTrue();
-            assertThat(fcOp.isDirectorySelectionEnabled()).isEqualTo(fc.isDirectorySelectionEnabled());
-            assertThat(fcOp.isFileHidingEnabled()).isEqualTo(fc.isFileHidingEnabled());
-            assertThat(fcOp.isFileSelectionEnabled()).isEqualTo(fc.isFileSelectionEnabled());
-            assertThat(fcOp.isMultiSelectionEnabled()).isEqualTo(fc.isMultiSelectionEnabled());
+            assertThat(fcOp.getAcceptAllFileFilter()).isEqualTo(onQueue(fc::getAcceptAllFileFilter));
+            assertThat(fcOp.getAccessory()).isEqualTo(onQueue(fc::getAccessory));
+            assertThat(fcOp.getApproveButtonMnemonic()).isEqualTo(onQueue(fc::getApproveButtonMnemonic));
+            assertThat(fcOp.getApproveButtonText()).isEqualTo(onQueue(fc::getApproveButtonText));
+            assertThat(fcOp.getApproveButtonToolTipText()).isEqualTo(onQueue(fc::getApproveButtonToolTipText));
+            assertThat(fcOp.getCurrentDirectory()).isEqualTo(onQueue(fc::getCurrentDirectory));
+            assertThat(fcOp.getDialogTitle()).isEqualTo(onQueue(fc::getDialogTitle));
+            assertThat(fcOp.getDialogType()).isEqualTo(onQueue(fc::getDialogType));
+            assertThat(fcOp.getFileFilter()).isEqualTo(onQueue(fc::getFileFilter));
+            assertThat(fcOp.getFileSelectionMode()).isEqualTo(onQueue(fc::getFileSelectionMode));
+            assertThat(fcOp.getFileSystemView()).isEqualTo(onQueue(fc::getFileSystemView));
+            assertThat(fcOp.getFileView()).isEqualTo(onQueue(fc::getFileView));
+            assertThat(fcOp.getSelectedFile()).isEqualTo(onQueue(fc::getSelectedFile));
+            assertThat(fcOp.getUI()).isEqualTo(onQueue(fc::getUI));
+            assertThat(fcOp.isDirectorySelectionEnabled()).isEqualTo(onQueue(fc::isDirectorySelectionEnabled));
+            assertThat(fcOp.isFileHidingEnabled()).isEqualTo(onQueue(fc::isFileHidingEnabled));
+            assertThat(fcOp.isFileSelectionEnabled()).isEqualTo(onQueue(fc::isFileSelectionEnabled));
+            assertThat(fcOp.isMultiSelectionEnabled()).isEqualTo(onQueue(fc::isMultiSelectionEnabled));
         });
     }
 }

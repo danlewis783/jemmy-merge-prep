@@ -25,6 +25,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.io.ByteArrayInputStream;
@@ -130,11 +131,11 @@ class JEditorPaneOperatorTest {
         assertThat(operator2).isNotNull();
         HyperlinkListenerTest listener = new HyperlinkListenerTest();
         operator2.addHyperlinkListener(listener);
-        assertThat(editorPane.getHyperlinkListeners()).hasSize(1);
+        assertThat(onQueue(editorPane::getHyperlinkListeners)).hasSize(1);
         operator2.fireHyperlinkUpdate(new HyperlinkEvent("", null, null));
         assertThat(listener.event).isNotNull();
         operator2.removeHyperlinkListener(listener);
-        assertThat(editorPane.getHyperlinkListeners()).isEmpty();
+        assertThat(onQueue(editorPane::getHyperlinkListeners)).isEmpty();
     }
 
     @Test
@@ -146,7 +147,7 @@ class JEditorPaneOperatorTest {
         assertThat(operator4.getContentType()).isEqualTo("text/plain");
         operator4.setContentType("text/html");
         assertThat(operator4.getContentType()).isEqualTo("text/html");
-        assertThat(editorPane.getContentType()).isEqualTo(operator4.getContentType());
+        assertThat(onQueue(editorPane::getContentType)).isEqualTo(operator4.getContentType());
     }
 
     @Test
@@ -158,7 +159,7 @@ class JEditorPaneOperatorTest {
         EditorKitTest editorKit = new EditorKitTest();
         operator2.setEditorKit(editorKit);
         assertThat(operator2.getEditorKit()).isEqualTo(editorKit);
-        assertThat(operator2.getEditorKit()).isEqualTo(editorPane.getEditorKit());
+        assertThat(operator2.getEditorKit()).isEqualTo(onQueue(editorPane::getEditorKit));
     }
 
     @Test
@@ -171,7 +172,7 @@ class JEditorPaneOperatorTest {
         operator2.setEditorKitForContentType("text/plain", editorKit);
         assertThat(operator2.getEditorKitForContentType("text/plain")).isEqualTo(editorKit);
         assertThat(operator2.getEditorKitForContentType("text/plain"))
-                .isEqualTo(editorPane.getEditorKitForContentType("text/plain"));
+                .isEqualTo(onQueue(() -> editorPane.getEditorKitForContentType("text/plain")));
     }
 
     @Test
@@ -185,11 +186,11 @@ class JEditorPaneOperatorTest {
         String urlB = "https://www.google.com/";
         operator4.setPage(new URL(urlA));
         assertThat(operator4.getPage().toString()).isEqualTo(urlA);
-        assertThat(editorPane.getPage().toString()).isEqualTo(urlA);
+        assertThat(onQueue(() -> editorPane.getPage().toString())).isEqualTo(urlA);
         operator4.setPage(urlB);
         JEditorPaneOperator operator5 = JEditorPaneOperator.waitFor(operator1);
         assertThat(operator5.getPage().toString()).isEqualTo(urlB);
-        assertThat(editorPane.getPage().toString()).isEqualTo(urlB);
+        assertThat(onQueue(() -> editorPane.getPage().toString())).isEqualTo(urlB);
     }
 
     @Test
@@ -200,7 +201,8 @@ class JEditorPaneOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setContentType("text/html");
         operator2.read(new ByteArrayInputStream("<html></html>".getBytes()), HTMLDocument.class);
-        assertThat(editorPane.getText()).startsWith("<html>");
+        String text = onQueue(editorPane::getText);
+        assertThat(text).startsWith("<html>");
     }
 
     private static class EditorKitTest extends EditorKit {

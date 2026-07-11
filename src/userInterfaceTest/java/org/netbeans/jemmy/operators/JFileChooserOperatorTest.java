@@ -18,6 +18,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -220,7 +221,7 @@ final class JFileChooserOperatorTest {
         // in list view the file list is the JList carrying the look and feel's accessible name
         Component list = op.getFileList();
         assertThat(list).isInstanceOf(JList.class);
-        assertThat(list.getAccessibleContext().getAccessibleName())
+        assertThat(onQueue(() -> list.getAccessibleContext().getAccessibleName()))
                 .isEqualTo(UIManager.getString("FileChooser.filesListAccessibleName", op.getLocale()));
     }
 

@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -104,7 +105,7 @@ class JColorChooserOperatorTest {
         operator2.enterRed(255);
         JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor().getRed())
-                .isEqualTo(colorChooser.getColor().getRed());
+                .isEqualTo(onQueue(() -> colorChooser.getColor().getRed()));
     }
 
     @Test
@@ -115,7 +116,7 @@ class JColorChooserOperatorTest {
         operator2.enterGreen(255);
         JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
         assertThat(operator3.getColor().getGreen())
-                .isEqualTo(colorChooser.getColor().getGreen());
+                .isEqualTo(onQueue(() -> colorChooser.getColor().getGreen()));
     }
 
     @Test
@@ -125,7 +126,7 @@ class JColorChooserOperatorTest {
         operator2.enterColor(0);
         operator2.enterBlue(255);
         JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator3.getColor()).isEqualTo(colorChooser.getColor());
+        assertThat(operator3.getColor()).isEqualTo(onQueue(colorChooser::getColor));
     }
 
     @Test
@@ -134,10 +135,10 @@ class JColorChooserOperatorTest {
         JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.enterColor(Color.GREEN);
         JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator3.getColor()).isEqualTo(colorChooser.getColor());
+        assertThat(operator3.getColor()).isEqualTo(onQueue(colorChooser::getColor));
         operator3.enterColor(0, 0, 0);
         JColorChooserOperator operator4 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator4.getColor()).isEqualTo(colorChooser.getColor());
+        assertThat(operator4.getColor()).isEqualTo(onQueue(colorChooser::getColor));
     }
 
     @Test
@@ -149,15 +150,15 @@ class JColorChooserOperatorTest {
 
         operator2.addChooserPanel(panel);
         assertThat(operator2.getChooserPanels()).hasSize(6);
-        assertThat(colorChooser.getChooserPanels()).hasSize(6);
+        assertThat(onQueue(colorChooser::getChooserPanels)).hasSize(6);
         operator2.removeChooserPanel(panel);
         assertThat(operator2.getChooserPanels()).hasSize(5);
-        assertThat(colorChooser.getChooserPanels()).hasSize(5);
+        assertThat(onQueue(colorChooser::getChooserPanels)).hasSize(5);
         AbstractColorChooserPanel[] panels = new AbstractColorChooserPanel[1];
         panels[0] = panel;
         operator2.setChooserPanels(panels);
         assertThat(operator2.getChooserPanels()).hasSize(1);
-        assertThat(colorChooser.getChooserPanels()).hasSize(1);
+        assertThat(onQueue(colorChooser::getChooserPanels)).hasSize(1);
     }
 
     @Test
@@ -166,16 +167,16 @@ class JColorChooserOperatorTest {
         JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         operator2.setColor(Color.GREEN);
         JColorChooserOperator operator3 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator3.getColor()).isEqualTo(colorChooser.getColor());
-        assertThat(colorChooser.getColor()).isEqualTo(Color.GREEN);
+        assertThat(operator3.getColor()).isEqualTo(onQueue(colorChooser::getColor));
+        assertThat(onQueue(colorChooser::getColor)).isEqualTo(Color.GREEN);
         operator2.setColor(0);
         JColorChooserOperator operator4 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator4.getColor()).isEqualTo(colorChooser.getColor());
-        assertThat(colorChooser.getColor()).isEqualTo(Color.BLACK);
+        assertThat(operator4.getColor()).isEqualTo(onQueue(colorChooser::getColor));
+        assertThat(onQueue(colorChooser::getColor)).isEqualTo(Color.BLACK);
         operator2.setColor(255, 255, 255);
         JColorChooserOperator operator5 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator5.getColor()).isEqualTo(colorChooser.getColor());
-        assertThat(colorChooser.getColor()).isEqualTo(Color.WHITE);
+        assertThat(operator5.getColor()).isEqualTo(onQueue(colorChooser::getColor));
+        assertThat(onQueue(colorChooser::getColor)).isEqualTo(Color.WHITE);
     }
 
     @Test
@@ -186,8 +187,8 @@ class JColorChooserOperatorTest {
         EventQueue.invokeAndWait(() -> panelPreview = new JPanel());
 
         operator2.setPreviewPanel(panelPreview);
-        assertThat(operator2.getPreviewPanel()).isEqualTo(colorChooser.getPreviewPanel());
-        assertThat(colorChooser.getPreviewPanel()).isEqualTo(panelPreview);
+        assertThat(operator2.getPreviewPanel()).isEqualTo(onQueue(colorChooser::getPreviewPanel));
+        assertThat(onQueue(colorChooser::getPreviewPanel)).isEqualTo(panelPreview);
     }
 
     @Test
@@ -196,8 +197,8 @@ class JColorChooserOperatorTest {
         JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         ColorSelectionModelTest selectionModel = new ColorSelectionModelTest();
         operator2.setSelectionModel(selectionModel);
-        assertThat(operator2.getSelectionModel()).isEqualTo(colorChooser.getSelectionModel());
-        assertThat(colorChooser.getSelectionModel()).isEqualTo(selectionModel);
+        assertThat(operator2.getSelectionModel()).isEqualTo(onQueue(colorChooser::getSelectionModel));
+        assertThat(onQueue(colorChooser::getSelectionModel)).isEqualTo(selectionModel);
     }
 
     @Test
@@ -206,8 +207,8 @@ class JColorChooserOperatorTest {
         JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
         ColorChooserUITest colorChooserUI = new ColorChooserUITest();
         operator2.setUI(colorChooserUI);
-        assertThat(operator2.getUI()).isEqualTo(colorChooser.getUI());
-        assertThat(colorChooser.getUI()).isEqualTo(colorChooserUI);
+        assertThat(operator2.getUI()).isEqualTo(onQueue(colorChooser::getUI));
+        assertThat(onQueue(colorChooser::getUI)).isEqualTo(colorChooserUI);
     }
 
     @Test

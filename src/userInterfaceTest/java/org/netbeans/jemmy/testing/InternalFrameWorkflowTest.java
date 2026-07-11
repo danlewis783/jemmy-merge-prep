@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -63,45 +64,25 @@ class InternalFrameWorkflowTest {
 
     private void testJInternalFrame(JInternalFrameOperator op) {
         JInternalFrame src = (JInternalFrame) op.getSource();
-        assertThat(((src.getContentPane() == null) && (op.getContentPane() == null))
-                        || src.getContentPane().equals(op.getContentPane()))
-                .isTrue();
-        assertThat(op.getDefaultCloseOperation()).isEqualTo(src.getDefaultCloseOperation());
-        assertThat(((src.getDesktopIcon() == null) && (op.getDesktopIcon() == null))
-                        || src.getDesktopIcon().equals(op.getDesktopIcon()))
-                .isTrue();
-        assertThat(((src.getDesktopPane() == null) && (op.getDesktopPane() == null))
-                        || src.getDesktopPane().equals(op.getDesktopPane()))
-                .isTrue();
-        assertThat(((src.getFrameIcon() == null) && (op.getFrameIcon() == null))
-                        || src.getFrameIcon().equals(op.getFrameIcon()))
-                .isTrue();
-        assertThat(((src.getGlassPane() == null) && (op.getGlassPane() == null))
-                        || src.getGlassPane().equals(op.getGlassPane()))
-                .isTrue();
-        assertThat(((src.getJMenuBar() == null) && (op.getJMenuBar() == null))
-                        || src.getJMenuBar().equals(op.getJMenuBar()))
-                .isTrue();
-        assertThat(op.getLayer()).isEqualTo(src.getLayer());
-        assertThat(((src.getLayeredPane() == null) && (op.getLayeredPane() == null))
-                        || src.getLayeredPane().equals(op.getLayeredPane()))
-                .isTrue();
-        assertThat(((src.getTitle() == null) && (op.getTitle() == null))
-                        || src.getTitle().equals(op.getTitle()))
-                .isTrue();
-        assertThat(((src.getUI() == null) && (op.getUI() == null))
-                        || src.getUI().equals(op.getUI()))
-                .isTrue();
-        assertThat(((src.getWarningString() == null) && (op.getWarningString() == null))
-                        || src.getWarningString().equals(op.getWarningString()))
-                .isTrue();
-        assertThat(op.isClosable()).isEqualTo(src.isClosable());
-        assertThat(op.isClosed()).isEqualTo(src.isClosed());
-        assertThat(op.isIcon()).isEqualTo(src.isIcon());
-        assertThat(op.isIconifiable()).isEqualTo(src.isIconifiable());
-        assertThat(op.isMaximizable()).isEqualTo(src.isMaximizable());
-        assertThat(op.isMaximum()).isEqualTo(src.isMaximum());
-        assertThat(op.isResizable()).isEqualTo(src.isResizable());
-        assertThat(op.isSelected()).isEqualTo(src.isSelected());
+        assertThat(op.getContentPane()).isEqualTo(onQueue(src::getContentPane));
+        assertThat(op.getDefaultCloseOperation()).isEqualTo(onQueue(src::getDefaultCloseOperation));
+        assertThat(op.getDesktopIcon()).isEqualTo(onQueue(src::getDesktopIcon));
+        assertThat(op.getDesktopPane()).isEqualTo(onQueue(src::getDesktopPane));
+        assertThat(op.getFrameIcon()).isEqualTo(onQueue(src::getFrameIcon));
+        assertThat(op.getGlassPane()).isEqualTo(onQueue(src::getGlassPane));
+        assertThat(op.getJMenuBar()).isEqualTo(onQueue(src::getJMenuBar));
+        assertThat(op.getLayer()).isEqualTo(onQueue(src::getLayer));
+        assertThat(op.getLayeredPane()).isEqualTo(onQueue(src::getLayeredPane));
+        assertThat(op.getTitle()).isEqualTo(onQueue(src::getTitle));
+        assertThat(op.getUI()).isEqualTo(onQueue(src::getUI));
+        assertThat(op.getWarningString()).isEqualTo(onQueue(src::getWarningString));
+        assertThat(op.isClosable()).isEqualTo(onQueue(src::isClosable));
+        assertThat(op.isClosed()).isEqualTo(onQueue(src::isClosed));
+        assertThat(op.isIcon()).isEqualTo(onQueue(src::isIcon));
+        assertThat(op.isIconifiable()).isEqualTo(onQueue(src::isIconifiable));
+        assertThat(op.isMaximizable()).isEqualTo(onQueue(src::isMaximizable));
+        assertThat(op.isMaximum()).isEqualTo(onQueue(src::isMaximum));
+        assertThat(op.isResizable()).isEqualTo(onQueue(src::isResizable));
+        assertThat(op.isSelected()).isEqualTo(onQueue(src::isSelected));
     }
 }

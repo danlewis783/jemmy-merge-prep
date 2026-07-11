@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -163,9 +164,9 @@ class JSliderOperatorTest {
         assertThat(operator2).isNotNull();
         IgnoreChangeListener listener = new IgnoreChangeListener();
         operator2.addChangeListener(listener);
-        assertThat(slider.getChangeListeners()).hasSize(1);
+        assertThat(onQueue(slider::getChangeListeners)).hasSize(1);
         operator2.removeChangeListener(listener);
-        assertThat(slider.getChangeListeners()).isEmpty();
+        assertThat(onQueue(slider::getChangeListeners)).isEmpty();
     }
 
     @Test
@@ -219,7 +220,7 @@ class JSliderOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setMajorTickSpacing(11);
         assertThat(operator2.getMajorTickSpacing()).isEqualTo(11);
-        assertThat(slider.getMajorTickSpacing()).isEqualTo(11);
+        assertThat(onQueue(slider::getMajorTickSpacing)).isEqualTo(11);
     }
 
     @Test
@@ -230,7 +231,7 @@ class JSliderOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setMaximum(111);
         assertThat(operator2.getMaximum()).isEqualTo(111);
-        assertThat(slider.getMaximum()).isEqualTo(111);
+        assertThat(onQueue(slider::getMaximum)).isEqualTo(111);
     }
 
     @Test
@@ -241,7 +242,7 @@ class JSliderOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setMinimum(11);
         assertThat(operator2.getMinimum()).isEqualTo(11);
-        assertThat(slider.getMinimum()).isEqualTo(11);
+        assertThat(onQueue(slider::getMinimum)).isEqualTo(11);
     }
 
     @Test
@@ -252,7 +253,7 @@ class JSliderOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setMinorTickSpacing(7);
         assertThat(operator2.getMinorTickSpacing()).isEqualTo(7);
-        assertThat(slider.getMinorTickSpacing()).isEqualTo(7);
+        assertThat(onQueue(slider::getMinorTickSpacing)).isEqualTo(7);
     }
 
     @Test

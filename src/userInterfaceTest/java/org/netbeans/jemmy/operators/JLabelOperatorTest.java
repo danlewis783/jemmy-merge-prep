@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -117,10 +118,10 @@ class JLabelOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setDisplayedMnemonic('A');
         assertThat(operator2.getDisplayedMnemonic()).isEqualTo('A');
-        assertThat(operator2.getDisplayedMnemonic()).isEqualTo(label.getDisplayedMnemonic());
+        assertThat(operator2.getDisplayedMnemonic()).isEqualTo(onQueue(label::getDisplayedMnemonic));
         operator2.setDisplayedMnemonic((int) 'A');
         assertThat(operator2.getDisplayedMnemonic()).isEqualTo('A');
-        assertThat(operator2.getDisplayedMnemonic()).isEqualTo(label.getDisplayedMnemonic());
+        assertThat(operator2.getDisplayedMnemonic()).isEqualTo(onQueue(label::getDisplayedMnemonic));
     }
 
     @Test
@@ -171,7 +172,7 @@ class JLabelOperatorTest {
         assertThat(operator2).isNotNull();
         operator2.setLabelFor(frame);
         assertThat(frame).isEqualTo(operator2.getLabelFor());
-        assertThat(label.getLabelFor()).isEqualTo(operator2.getLabelFor());
+        assertThat(onQueue(label::getLabelFor)).isEqualTo(operator2.getLabelFor());
     }
 
     @Test
@@ -183,7 +184,7 @@ class JLabelOperatorTest {
         JLabelOperatorTestUI ui = new JLabelOperatorTestUI();
         operator2.setUI(ui);
         assertThat(ui).isEqualTo(operator2.getUI());
-        assertThat(ui).isEqualTo(label.getUI());
+        assertThat(ui).isEqualTo(onQueue(label::getUI));
     }
 
     @Test

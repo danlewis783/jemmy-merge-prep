@@ -19,6 +19,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.within;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -143,147 +144,147 @@ class DialogComboListWorkflowTest {
 
     private void testComponent(ComponentOperator op) {
         Component src = op.getSource();
-        assertThat(op.getAlignmentX()).isCloseTo(src.getAlignmentX(), within(1.0E-10f));
-        assertThat(op.getAlignmentY()).isCloseTo(src.getAlignmentY(), within(1.0E-10f));
-        assertThat(op.getBackground()).isEqualTo(src.getBackground());
-        assertThat(op.getBounds()).isEqualTo(src.getBounds());
-        assertThat(op.getColorModel()).isEqualTo(src.getColorModel());
-        assertThat(op.getComponentOrientation()).isEqualTo(src.getComponentOrientation());
-        assertThat(op.getCursor()).isEqualTo(src.getCursor());
-        assertThat(op.getDropTarget()).isEqualTo(src.getDropTarget());
-        assertThat(op.getFont()).isEqualTo(src.getFont());
-        assertThat(op.getForeground()).isEqualTo(src.getForeground());
-        assertThat(op.getInputContext()).isEqualTo(src.getInputContext());
-        assertThat(op.getInputMethodRequests()).isEqualTo(src.getInputMethodRequests());
-        assertThat(op.getLocale()).isEqualTo(src.getLocale());
-        assertThat(op.getLocation()).isEqualTo(src.getLocation());
-        assertThat(op.getLocationOnScreen()).isEqualTo(src.getLocationOnScreen());
-        assertThat(op.getMaximumSize()).isEqualTo(src.getMaximumSize());
-        assertThat(op.getMinimumSize()).isEqualTo(src.getMinimumSize());
-        assertThat(op.getName()).isEqualTo(src.getName());
-        assertThat(op.getParent()).isEqualTo(src.getParent());
-        assertThat(op.getPreferredSize()).isEqualTo(src.getPreferredSize());
-        assertThat(op.getSize()).isEqualTo(src.getSize());
-        assertThat(op.getToolkit()).isEqualTo(src.getToolkit());
-        assertThat(op.getTreeLock()).isEqualTo(src.getTreeLock());
-        assertThat(op.getHeight()).isEqualTo(src.getHeight());
-        assertThat(op.getWidth()).isEqualTo(src.getWidth());
-        assertThat(op.getX()).isEqualTo(src.getX());
-        assertThat(op.getY()).isEqualTo(src.getY());
-        assertThat(op.hasFocus()).isEqualTo(src.hasFocus());
-        assertThat(op.isDisplayable()).isEqualTo(src.isDisplayable());
-        assertThat(op.isDoubleBuffered()).isEqualTo(src.isDoubleBuffered());
-        assertThat(op.isEnabled()).isEqualTo(src.isEnabled());
-        assertThat(op.isFocusTraversable()).isEqualTo(src.isFocusTraversable());
-        assertThat(op.isLightweight()).isEqualTo(src.isLightweight());
-        assertThat(op.isOpaque()).isEqualTo(src.isOpaque());
-        assertThat(op.isShowing()).isEqualTo(src.isShowing());
-        assertThat(op.isValid()).isEqualTo(src.isValid());
-        assertThat(op.isVisible()).isEqualTo(src.isVisible());
+        assertThat(op.getAlignmentX()).isCloseTo(onQueue(src::getAlignmentX), within(1.0E-10f));
+        assertThat(op.getAlignmentY()).isCloseTo(onQueue(src::getAlignmentY), within(1.0E-10f));
+        assertThat(op.getBackground()).isEqualTo(onQueue(src::getBackground));
+        assertThat(op.getBounds()).isEqualTo(onQueue(src::getBounds));
+        assertThat(op.getColorModel()).isEqualTo(onQueue(src::getColorModel));
+        assertThat(op.getComponentOrientation()).isEqualTo(onQueue(src::getComponentOrientation));
+        assertThat(op.getCursor()).isEqualTo(onQueue(src::getCursor));
+        assertThat(op.getDropTarget()).isEqualTo(onQueue(src::getDropTarget));
+        assertThat(op.getFont()).isEqualTo(onQueue(src::getFont));
+        assertThat(op.getForeground()).isEqualTo(onQueue(src::getForeground));
+        assertThat(op.getInputContext()).isEqualTo(onQueue(src::getInputContext));
+        assertThat(op.getInputMethodRequests()).isEqualTo(onQueue(src::getInputMethodRequests));
+        assertThat(op.getLocale()).isEqualTo(onQueue(src::getLocale));
+        assertThat(op.getLocation()).isEqualTo(onQueue(src::getLocation));
+        assertThat(op.getLocationOnScreen()).isEqualTo(onQueue(src::getLocationOnScreen));
+        assertThat(op.getMaximumSize()).isEqualTo(onQueue(src::getMaximumSize));
+        assertThat(op.getMinimumSize()).isEqualTo(onQueue(src::getMinimumSize));
+        assertThat(op.getName()).isEqualTo(onQueue(src::getName));
+        assertThat(op.getParent()).isEqualTo(onQueue(src::getParent));
+        assertThat(op.getPreferredSize()).isEqualTo(onQueue(src::getPreferredSize));
+        assertThat(op.getSize()).isEqualTo(onQueue(src::getSize));
+        assertThat(op.getToolkit()).isEqualTo(onQueue(src::getToolkit));
+        assertThat(op.getTreeLock()).isEqualTo(onQueue(src::getTreeLock));
+        assertThat(op.getHeight()).isEqualTo(onQueue(src::getHeight));
+        assertThat(op.getWidth()).isEqualTo(onQueue(src::getWidth));
+        assertThat(op.getX()).isEqualTo(onQueue(src::getX));
+        assertThat(op.getY()).isEqualTo(onQueue(src::getY));
+        assertThat(op.hasFocus()).isEqualTo(onQueue(src::hasFocus));
+        assertThat(op.isDisplayable()).isEqualTo(onQueue(src::isDisplayable));
+        assertThat(op.isDoubleBuffered()).isEqualTo(onQueue(src::isDoubleBuffered));
+        assertThat(op.isEnabled()).isEqualTo(onQueue(src::isEnabled));
+        assertThat(op.isFocusTraversable()).isEqualTo(onQueue(src::isFocusTraversable));
+        assertThat(op.isLightweight()).isEqualTo(onQueue(src::isLightweight));
+        assertThat(op.isOpaque()).isEqualTo(onQueue(src::isOpaque));
+        assertThat(op.isShowing()).isEqualTo(onQueue(src::isShowing));
+        assertThat(op.isValid()).isEqualTo(onQueue(src::isValid));
+        assertThat(op.isVisible()).isEqualTo(onQueue(src::isVisible));
     }
 
     private void testContainer(ContainerOperator op) {
         Container src = (Container) op.getSource();
-        assertThat(op.getComponentCount()).isEqualTo(src.getComponentCount());
-        assertThat(op.getInsets()).isEqualTo(src.getInsets());
-        assertThat(op.getLayout()).isEqualTo(src.getLayout());
+        assertThat(op.getComponentCount()).isEqualTo(onQueue(src::getComponentCount));
+        assertThat(op.getInsets()).isEqualTo(onQueue(src::getInsets));
+        assertThat(op.getLayout()).isEqualTo(onQueue(src::getLayout));
     }
 
     private void testJComponent(JComponentOperator op) {
         Component comp = op.getSource();
         JComponent jComp = (JComponent) comp;
-        assertThat(op.getAccessibleContext()).isEqualTo(comp.getAccessibleContext());
-        assertThat(op.getAutoscrolls()).isEqualTo(jComp.getAutoscrolls());
-        assertThat(op.getBorder()).isEqualTo(jComp.getBorder());
-        assertThat(op.getDebugGraphicsOptions()).isEqualTo(jComp.getDebugGraphicsOptions());
-        assertThat(op.getNextFocusableComponent()).isEqualTo(jComp.getNextFocusableComponent());
-        assertThat(op.getRootPane()).isEqualTo(jComp.getRootPane());
-        assertThat(op.getToolTipText()).isEqualTo(jComp.getToolTipText());
-        assertThat(op.getTopLevelAncestor()).isEqualTo(jComp.getTopLevelAncestor());
-        assertThat(op.getUIClassID()).isEqualTo(jComp.getUIClassID());
-        assertThat(op.getVisibleRect()).isEqualTo(jComp.getVisibleRect());
-        assertThat(op.isFocusCycleRoot()).isEqualTo(jComp.isFocusCycleRoot());
-        assertThat(op.isManagingFocus()).isEqualTo(jComp.isManagingFocus());
-        assertThat(op.isOptimizedDrawingEnabled()).isEqualTo(jComp.isOptimizedDrawingEnabled());
-        assertThat(op.isPaintingTile()).isEqualTo(jComp.isPaintingTile());
-        assertThat(op.isRequestFocusEnabled()).isEqualTo(jComp.isRequestFocusEnabled());
-        assertThat(op.isValidateRoot()).isEqualTo(jComp.isValidateRoot());
-        assertThat(op.requestDefaultFocus()).isEqualTo(jComp.requestDefaultFocus());
+        assertThat(op.getAccessibleContext()).isEqualTo(onQueue(comp::getAccessibleContext));
+        assertThat(op.getAutoscrolls()).isEqualTo(onQueue(jComp::getAutoscrolls));
+        assertThat(op.getBorder()).isEqualTo(onQueue(jComp::getBorder));
+        assertThat(op.getDebugGraphicsOptions()).isEqualTo(onQueue(jComp::getDebugGraphicsOptions));
+        assertThat(op.getNextFocusableComponent()).isEqualTo(onQueue(jComp::getNextFocusableComponent));
+        assertThat(op.getRootPane()).isEqualTo(onQueue(jComp::getRootPane));
+        assertThat(op.getToolTipText()).isEqualTo(onQueue(jComp::getToolTipText));
+        assertThat(op.getTopLevelAncestor()).isEqualTo(onQueue(jComp::getTopLevelAncestor));
+        assertThat(op.getUIClassID()).isEqualTo(onQueue(jComp::getUIClassID));
+        assertThat(op.getVisibleRect()).isEqualTo(onQueue(jComp::getVisibleRect));
+        assertThat(op.isFocusCycleRoot()).isEqualTo(onQueue(jComp::isFocusCycleRoot));
+        assertThat(op.isManagingFocus()).isEqualTo(onQueue(jComp::isManagingFocus));
+        assertThat(op.isOptimizedDrawingEnabled()).isEqualTo(onQueue(jComp::isOptimizedDrawingEnabled));
+        assertThat(op.isPaintingTile()).isEqualTo(onQueue(jComp::isPaintingTile));
+        assertThat(op.isRequestFocusEnabled()).isEqualTo(onQueue(jComp::isRequestFocusEnabled));
+        assertThat(op.isValidateRoot()).isEqualTo(onQueue(jComp::isValidateRoot));
+        assertThat(op.requestDefaultFocus()).isEqualTo(onQueue(jComp::requestDefaultFocus));
     }
 
     private void testJTextComponent(JTextComponentOperator op) {
         JTextComponent src = (JTextComponent) op.getSource();
-        assertThat(op.getCaret()).isEqualTo(src.getCaret());
-        assertThat(op.getCaretColor()).isEqualTo(src.getCaretColor());
-        assertThat(op.getCaretPosition()).isEqualTo(src.getCaretPosition());
-        assertThat(op.getDisabledTextColor()).isEqualTo(src.getDisabledTextColor());
-        assertThat(op.getDocument()).isEqualTo(src.getDocument());
-        assertThat(op.getFocusAccelerator()).isEqualTo(src.getFocusAccelerator());
-        assertThat(op.getHighlighter()).isEqualTo(src.getHighlighter());
-        assertThat(op.getKeymap()).isEqualTo(src.getKeymap());
-        assertThat(op.getMargin()).isEqualTo(src.getMargin());
-        assertThat(op.getPreferredScrollableViewportSize()).isEqualTo(src.getPreferredScrollableViewportSize());
-        assertThat(op.getScrollableTracksViewportHeight()).isEqualTo(src.getScrollableTracksViewportHeight());
-        assertThat(op.getScrollableTracksViewportWidth()).isEqualTo(src.getScrollableTracksViewportWidth());
-        assertThat(op.getSelectedText()).isEqualTo(src.getSelectedText());
-        assertThat(op.getSelectedTextColor()).isEqualTo(src.getSelectedTextColor());
-        assertThat(op.getSelectionColor()).isEqualTo(src.getSelectionColor());
-        assertThat(op.getSelectionEnd()).isEqualTo(src.getSelectionEnd());
-        assertThat(op.getSelectionStart()).isEqualTo(src.getSelectionStart());
-        assertThat(op.getText()).isEqualTo(src.getText());
-        assertThat(op.getUI()).isEqualTo(src.getUI());
-        assertThat(op.isEditable()).isEqualTo(src.isEditable());
+        assertThat(op.getCaret()).isEqualTo(onQueue(src::getCaret));
+        assertThat(op.getCaretColor()).isEqualTo(onQueue(src::getCaretColor));
+        assertThat(op.getCaretPosition()).isEqualTo(onQueue(src::getCaretPosition));
+        assertThat(op.getDisabledTextColor()).isEqualTo(onQueue(src::getDisabledTextColor));
+        assertThat(op.getDocument()).isEqualTo(onQueue(src::getDocument));
+        assertThat(op.getFocusAccelerator()).isEqualTo(onQueue(src::getFocusAccelerator));
+        assertThat(op.getHighlighter()).isEqualTo(onQueue(src::getHighlighter));
+        assertThat(op.getKeymap()).isEqualTo(onQueue(src::getKeymap));
+        assertThat(op.getMargin()).isEqualTo(onQueue(src::getMargin));
+        assertThat(op.getPreferredScrollableViewportSize()).isEqualTo(onQueue(src::getPreferredScrollableViewportSize));
+        assertThat(op.getScrollableTracksViewportHeight()).isEqualTo(onQueue(src::getScrollableTracksViewportHeight));
+        assertThat(op.getScrollableTracksViewportWidth()).isEqualTo(onQueue(src::getScrollableTracksViewportWidth));
+        assertThat(op.getSelectedText()).isEqualTo(onQueue(src::getSelectedText));
+        assertThat(op.getSelectedTextColor()).isEqualTo(onQueue(src::getSelectedTextColor));
+        assertThat(op.getSelectionColor()).isEqualTo(onQueue(src::getSelectionColor));
+        assertThat(op.getSelectionEnd()).isEqualTo(onQueue(src::getSelectionEnd));
+        assertThat(op.getSelectionStart()).isEqualTo(onQueue(src::getSelectionStart));
+        assertThat(op.getText()).isEqualTo(onQueue(src::getText));
+        assertThat(op.getUI()).isEqualTo(onQueue(src::getUI));
+        assertThat(op.isEditable()).isEqualTo(onQueue(src::isEditable));
     }
 
     private void testJTextField(JTextFieldOperator op) {
         JTextField src = (JTextField) op.getSource();
-        assertThat(op.getColumns()).isEqualTo(src.getColumns());
-        assertThat(op.getHorizontalAlignment()).isEqualTo(src.getHorizontalAlignment());
-        assertThat(op.getHorizontalVisibility()).isEqualTo(src.getHorizontalVisibility());
-        assertThat(op.getScrollOffset()).isEqualTo(src.getScrollOffset());
+        assertThat(op.getColumns()).isEqualTo(onQueue(src::getColumns));
+        assertThat(op.getHorizontalAlignment()).isEqualTo(onQueue(src::getHorizontalAlignment));
+        assertThat(op.getHorizontalVisibility()).isEqualTo(onQueue(src::getHorizontalVisibility));
+        assertThat(op.getScrollOffset()).isEqualTo(onQueue(src::getScrollOffset));
     }
 
     private void testWindow(WindowOperator op) {
         Window src = (Window) op.getSource();
-        assertThat(op.getFocusOwner()).isEqualTo(src.getFocusOwner());
-        assertThat(op.getOwner()).isEqualTo(src.getOwner());
-        assertThat(op.getWarningString()).isEqualTo(src.getWarningString());
+        assertThat(op.getFocusOwner()).isEqualTo(onQueue(src::getFocusOwner));
+        assertThat(op.getOwner()).isEqualTo(onQueue(src::getOwner));
+        assertThat(op.getWarningString()).isEqualTo(onQueue(src::getWarningString));
     }
 
     void testFrame(FrameOperator op) {
         Frame src = (Frame) op.getSource();
-        assertThat(op.getIconImage()).isEqualTo(src.getIconImage());
-        assertThat(op.getMenuBar()).isEqualTo(src.getMenuBar());
-        assertThat(op.getState()).isEqualTo(src.getState());
-        assertThat(op.getTitle()).isEqualTo(src.getTitle());
-        assertThat(op.isResizable()).isEqualTo(src.isResizable());
+        assertThat(op.getIconImage()).isEqualTo(onQueue(src::getIconImage));
+        assertThat(op.getMenuBar()).isEqualTo(onQueue(src::getMenuBar));
+        assertThat(op.getState()).isEqualTo(onQueue(src::getState));
+        assertThat(op.getTitle()).isEqualTo(onQueue(src::getTitle));
+        assertThat(op.isResizable()).isEqualTo(onQueue(src::isResizable));
     }
 
     void testJFrame(JFrameOperator op) {
         JFrame src = (JFrame) op.getSource();
-        assertThat(op.getAccessibleContext()).isEqualTo(src.getAccessibleContext());
-        assertThat(op.getContentPane()).isEqualTo(src.getContentPane());
-        assertThat(op.getDefaultCloseOperation()).isEqualTo(src.getDefaultCloseOperation());
-        assertThat(op.getGlassPane()).isEqualTo(src.getGlassPane());
-        assertThat(op.getJMenuBar()).isEqualTo(src.getJMenuBar());
-        assertThat(op.getLayeredPane()).isEqualTo(src.getLayeredPane());
-        assertThat(op.getRootPane()).isEqualTo(src.getRootPane());
+        assertThat(op.getAccessibleContext()).isEqualTo(onQueue(src::getAccessibleContext));
+        assertThat(op.getContentPane()).isEqualTo(onQueue(src::getContentPane));
+        assertThat(op.getDefaultCloseOperation()).isEqualTo(onQueue(src::getDefaultCloseOperation));
+        assertThat(op.getGlassPane()).isEqualTo(onQueue(src::getGlassPane));
+        assertThat(op.getJMenuBar()).isEqualTo(onQueue(src::getJMenuBar));
+        assertThat(op.getLayeredPane()).isEqualTo(onQueue(src::getLayeredPane));
+        assertThat(op.getRootPane()).isEqualTo(onQueue(src::getRootPane));
     }
 
     private void testJComboBox(JComboBoxOperator op) {
         JComboBox<?> src = (JComboBox<?>) op.getSource();
-        assertThat(op.getActionCommand()).isEqualTo(src.getActionCommand());
-        assertThat(op.getEditor()).isEqualTo(src.getEditor());
-        assertThat(op.getItemCount()).isEqualTo(src.getItemCount());
-        assertThat(op.getKeySelectionManager()).isEqualTo(src.getKeySelectionManager());
-        assertThat(op.getMaximumRowCount()).isEqualTo(src.getMaximumRowCount());
-        assertThat(op.getModel()).isEqualTo(src.getModel());
-        assertThat(op.getRenderer()).isEqualTo(src.getRenderer());
-        assertThat(op.getSelectedIndex()).isEqualTo(src.getSelectedIndex());
-        assertThat(op.getSelectedItem()).isEqualTo(src.getSelectedItem());
-        assertThat(op.getUI()).isEqualTo(src.getUI());
-        assertThat(op.isEditable()).isEqualTo(src.isEditable());
-        assertThat(op.isLightWeightPopupEnabled()).isEqualTo(src.isLightWeightPopupEnabled());
-        assertThat(op.isPopupVisible()).isEqualTo(src.isPopupVisible());
+        assertThat(op.getActionCommand()).isEqualTo(onQueue(src::getActionCommand));
+        assertThat(op.getEditor()).isEqualTo(onQueue(src::getEditor));
+        assertThat(op.getItemCount()).isEqualTo(onQueue(src::getItemCount));
+        assertThat(op.getKeySelectionManager()).isEqualTo(onQueue(src::getKeySelectionManager));
+        assertThat(op.getMaximumRowCount()).isEqualTo(onQueue(src::getMaximumRowCount));
+        assertThat(op.getModel()).isEqualTo(onQueue(src::getModel));
+        assertThat(op.getRenderer()).isEqualTo(onQueue(src::getRenderer));
+        assertThat(op.getSelectedIndex()).isEqualTo(onQueue(src::getSelectedIndex));
+        assertThat(op.getSelectedItem()).isEqualTo(onQueue(src::getSelectedItem));
+        assertThat(op.getUI()).isEqualTo(onQueue(src::getUI));
+        assertThat(op.isEditable()).isEqualTo(onQueue(src::isEditable));
+        assertThat(op.isLightWeightPopupEnabled()).isEqualTo(onQueue(src::isLightWeightPopupEnabled));
+        assertThat(op.isPopupVisible()).isEqualTo(onQueue(src::isPopupVisible));
     }
 }

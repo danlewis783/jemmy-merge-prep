@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -123,18 +124,18 @@ class OperatorConstructorsSmokeTest {
 
     private void testJMenu(JMenuOperator op) {
         JMenu src = (JMenu) op.getSource();
-        assertThat(op.getDelay()).isEqualTo(src.getDelay());
-        assertThat(op.getItemCount()).isEqualTo(src.getItemCount());
-        assertThat(op.getMenuComponentCount()).isEqualTo(src.getMenuComponentCount());
-        assertThat(op.getPopupMenu()).isEqualTo(src.getPopupMenu());
-        assertThat(op.isPopupMenuVisible()).isEqualTo(src.isPopupMenuVisible());
-        assertThat(op.isTopLevelMenu()).isEqualTo(src.isTopLevelMenu());
+        assertThat(op.getDelay()).isEqualTo(onQueue(src::getDelay));
+        assertThat(op.getItemCount()).isEqualTo(onQueue(src::getItemCount));
+        assertThat(op.getMenuComponentCount()).isEqualTo(onQueue(src::getMenuComponentCount));
+        assertThat(op.getPopupMenu()).isEqualTo(onQueue(src::getPopupMenu));
+        assertThat(op.isPopupMenuVisible()).isEqualTo(onQueue(src::isPopupMenuVisible));
+        assertThat(op.isTopLevelMenu()).isEqualTo(onQueue(src::isTopLevelMenu));
     }
 
     private void testJMenuItem(JMenuItemOperator op) {
         JMenuItem src = (JMenuItem) op.getSource();
-        assertThat(op.getAccelerator()).isEqualTo(src.getAccelerator());
-        assertThat(op.getComponent()).isEqualTo(src.getComponent());
-        assertThat(op.isArmed()).isEqualTo(src.isArmed());
+        assertThat(op.getAccelerator()).isEqualTo(onQueue(src::getAccelerator));
+        assertThat(op.getComponent()).isEqualTo(onQueue(src::getComponent));
+        assertThat(op.isArmed()).isEqualTo(onQueue(src::isArmed));
     }
 }

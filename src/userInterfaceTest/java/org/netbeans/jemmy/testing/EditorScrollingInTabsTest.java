@@ -19,6 +19,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -89,7 +90,7 @@ class EditorScrollingInTabsTest {
         to.clearText();
         assertThat(JEditorPaneOperator.waitJEditorPane(frm, "", StringComparators.strict()))
                 .isNotNull();
-        assertThat(testJEditorPane(to)).isTrue();
+        testJEditorPane(to);
         tp.selectPage("JTextArea", StringComparators.substring());
         JTextAreaOperator tao = JTextAreaOperator.of(Objects.requireNonNull(
                 JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring())));
@@ -112,8 +113,8 @@ class EditorScrollingInTabsTest {
         tao.clearText();
         assertThat(JTextAreaOperator.waitJTextArea(frm, "", StringComparators.strict()))
                 .isNotNull();
-        assertThat(testJTabbedPane(tp)).isTrue();
-        assertThat(testJTextArea(tao)).isTrue();
+        testJTabbedPane(tp);
+        testJTextArea(tao);
     }
 
     private void checkSelectedText(JTextComponentOperator tco, String eta) {
@@ -124,116 +125,33 @@ class EditorScrollingInTabsTest {
         }
     }
 
-    private boolean testJEditorPane(JEditorPaneOperator jEditorPaneOperator) {
-        if (((JEditorPane) jEditorPaneOperator.getSource()).getContentType() == null
-                        && (jEditorPaneOperator.getContentType() == null)
-                || ((JEditorPane) jEditorPaneOperator.getSource())
-                        .getContentType()
-                        .equals(jEditorPaneOperator.getContentType())) {
-        } else {
-            return false;
-        }
-
-        if (((JEditorPane) jEditorPaneOperator.getSource()).getEditorKit() == null
-                        && (jEditorPaneOperator.getEditorKit() == null)
-                || ((JEditorPane) jEditorPaneOperator.getSource())
-                        .getEditorKit()
-                        .equals(jEditorPaneOperator.getEditorKit())) {
-        } else {
-            return false;
-        }
-
-        if (((JEditorPane) jEditorPaneOperator.getSource()).getPage() == null && (jEditorPaneOperator.getPage() == null)
-                || ((JEditorPane) jEditorPaneOperator.getSource()).getPage().equals(jEditorPaneOperator.getPage())) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private void testJEditorPane(JEditorPaneOperator jEditorPaneOperator) {
+        JEditorPane src = (JEditorPane) jEditorPaneOperator.getSource();
+        assertThat(jEditorPaneOperator.getContentType()).isEqualTo(onQueue(src::getContentType));
+        assertThat(jEditorPaneOperator.getEditorKit()).isEqualTo(onQueue(src::getEditorKit));
+        assertThat(jEditorPaneOperator.getPage()).isEqualTo(onQueue(src::getPage));
     }
 
-    private boolean testJTabbedPane(JTabbedPaneOperator jTabbedPaneOperator) {
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getModel() == null
-                        && (jTabbedPaneOperator.getModel() == null)
-                || ((JTabbedPane) jTabbedPaneOperator.getSource()).getModel().equals(jTabbedPaneOperator.getModel())) {
-        } else {
-            return false;
-        }
-
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getSelectedComponent() == null
-                        && (jTabbedPaneOperator.getSelectedComponent() == null)
-                || ((JTabbedPane) jTabbedPaneOperator.getSource())
-                        .getSelectedComponent()
-                        .equals(jTabbedPaneOperator.getSelectedComponent())) {
-        } else {
-            return false;
-        }
-
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getSelectedIndex()
-                == jTabbedPaneOperator.getSelectedIndex()) {
-        } else {
-            return false;
-        }
-
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getTabCount() == jTabbedPaneOperator.getTabCount()) {
-        } else {
-            return false;
-        }
-
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getTabPlacement()
-                == jTabbedPaneOperator.getTabPlacement()) {
-        } else {
-            return false;
-        }
-
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getTabRunCount() == jTabbedPaneOperator.getTabRunCount()) {
-        } else {
-            return false;
-        }
-
-        if (((JTabbedPane) jTabbedPaneOperator.getSource()).getUI() == null && (jTabbedPaneOperator.getUI() == null)
-                || ((JTabbedPane) jTabbedPaneOperator.getSource()).getUI().equals(jTabbedPaneOperator.getUI())) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private void testJTabbedPane(JTabbedPaneOperator jTabbedPaneOperator) {
+        JTabbedPane src = (JTabbedPane) jTabbedPaneOperator.getSource();
+        assertThat(jTabbedPaneOperator.getModel()).isEqualTo(onQueue(src::getModel));
+        assertThat(jTabbedPaneOperator.getSelectedComponent()).isEqualTo(onQueue(src::getSelectedComponent));
+        assertThat(jTabbedPaneOperator.getSelectedIndex()).isEqualTo(onQueue(src::getSelectedIndex));
+        assertThat(jTabbedPaneOperator.getTabCount()).isEqualTo(onQueue(src::getTabCount));
+        assertThat(jTabbedPaneOperator.getTabPlacement()).isEqualTo(onQueue(src::getTabPlacement));
+        assertThat(jTabbedPaneOperator.getTabRunCount()).isEqualTo(onQueue(src::getTabRunCount));
+        assertThat(jTabbedPaneOperator.getUI()).isEqualTo(onQueue(src::getUI));
     }
 
-    private boolean testJTextArea(JTextAreaOperator jTextAreaOperator) {
-        if (((JTextArea) jTextAreaOperator.getSource()).getColumns() == jTextAreaOperator.getColumns()) {
-        } else {
-            return false;
-        }
-
-        if (((JTextArea) jTextAreaOperator.getSource()).getLineCount() == jTextAreaOperator.getLineCount()) {
-        } else {
-            return false;
-        }
-
-        if (((JTextArea) jTextAreaOperator.getSource()).getLineWrap() == jTextAreaOperator.getLineWrap()) {
-        } else {
-            return false;
-        }
-
-        if (((JTextArea) jTextAreaOperator.getSource()).getRows() == jTextAreaOperator.getRows()) {
-        } else {
-            return false;
-        }
-
-        if (((JTextArea) jTextAreaOperator.getSource()).getTabSize() == jTextAreaOperator.getTabSize()) {
-        } else {
-            return false;
-        }
-
-        if (((JTextArea) jTextAreaOperator.getSource()).getWrapStyleWord() == jTextAreaOperator.getWrapStyleWord()) {
-        } else {
-            return false;
-        }
-
-        return true;
+    private void testJTextArea(JTextAreaOperator jTextAreaOperator) {
+        JTextArea src = (JTextArea) jTextAreaOperator.getSource();
+        assertThat(jTextAreaOperator.getColumns()).isEqualTo(onQueue(src::getColumns));
+        assertThat(jTextAreaOperator.getLineCount()).isEqualTo(onQueue(src::getLineCount));
+        assertThat(jTextAreaOperator.getLineWrap()).isEqualTo(onQueue(src::getLineWrap));
+        assertThat(jTextAreaOperator.getRows()).isEqualTo(onQueue(src::getRows));
+        assertThat(jTextAreaOperator.getTabSize()).isEqualTo(onQueue(src::getTabSize));
+        assertThat(jTextAreaOperator.getWrapStyleWord()).isEqualTo(onQueue(src::getWrapStyleWord));
     }
-
     private static class SelectedTextChecker implements Function<Void, Boolean> {
         private final String eta;
         private final JTextComponentOperator tco;
