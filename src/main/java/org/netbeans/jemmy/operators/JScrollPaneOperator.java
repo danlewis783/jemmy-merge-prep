@@ -285,7 +285,7 @@ public class JScrollPaneOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createVerticalScrollBar()));
     }
 
-    public JViewport getColumnHeader() {
+    public @Nullable JViewport getColumnHeader() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getColumnHeader()));
     }
 

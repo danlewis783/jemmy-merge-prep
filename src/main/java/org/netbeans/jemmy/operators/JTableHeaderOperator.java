@@ -203,7 +203,7 @@ public class JTableHeaderOperator extends JComponentOperator {
         }));
     }
 
-    public TableCellRenderer getDefaultRenderer() {
+    public @Nullable TableCellRenderer getDefaultRenderer() {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDefaultRenderer()));
     }

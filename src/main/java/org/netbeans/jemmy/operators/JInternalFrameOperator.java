@@ -387,7 +387,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getUI()));
     }
 
-    public String getWarningString() {
+    public @Nullable String getWarningString() {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getWarningString()));
     }

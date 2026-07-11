@@ -251,7 +251,7 @@ public class AbstractButtonOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getActionCommand()));
     }
 
-    public Icon getDisabledIcon() {
+    public @Nullable Icon getDisabledIcon() {
         return QueueTool.getInstance()
                 .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledIcon()));
     }
@@ -271,7 +271,7 @@ public class AbstractButtonOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalTextPosition()));
     }
 
-    public Icon getIcon() {
+    public @Nullable Icon getIcon() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getIcon()));
     }
 
@@ -400,7 +400,7 @@ public class AbstractButtonOperator extends JComponentOperator {
         }));
     }
 
-    public void setDisabledIcon(Icon icon) {
+    public void setDisabledIcon(@Nullable Icon icon) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setDisabledIcon(icon);
 
@@ -440,7 +440,7 @@ public class AbstractButtonOperator extends JComponentOperator {
         }));
     }
 
-    public void setIcon(Icon icon) {
+    public void setIcon(@Nullable Icon icon) {
         QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setIcon(icon);
 

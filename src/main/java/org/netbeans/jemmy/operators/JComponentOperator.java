@@ -267,7 +267,7 @@ public class JComponentOperator extends ContainerOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getAutoscrolls()));
     }
 
-    public Border getBorder() {
+    public @Nullable Border getBorder() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JComponent) getSource()).getBorder()));
     }
 

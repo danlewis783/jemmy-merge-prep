@@ -132,7 +132,7 @@ public class JLabelOperator extends JComponentOperator {
         waitState(new JLabelOperatorByLabelPredicate(text, stringComparator));
     }
 
-    public Icon getDisabledIcon() {
+    public @Nullable Icon getDisabledIcon() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JLabel) getSource()).getDisabledIcon()));
     }
 
@@ -149,7 +149,7 @@ public class JLabelOperator extends JComponentOperator {
                 .invokeSmoothly(Caller.of(() -> ((JLabel) getSource()).getHorizontalTextPosition()));
     }
 
-    public Icon getIcon() {
+    public @Nullable Icon getIcon() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JLabel) getSource()).getIcon()));
     }
 

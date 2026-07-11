@@ -157,7 +157,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
                 .invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getParagraphAttributes()));
     }
 
-    public Style getStyle(String string) {
+    public @Nullable Style getStyle(String string) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getStyle(string)));
     }
 

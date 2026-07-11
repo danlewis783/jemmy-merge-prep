@@ -603,7 +603,7 @@ public class JTableOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getDefaultEditor(clss)));
     }
 
-    public TableCellRenderer getDefaultRenderer(Class<?> clss) {
+    public @Nullable TableCellRenderer getDefaultRenderer(Class<?> clss) {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getDefaultRenderer(clss)));
     }
 
@@ -615,7 +615,7 @@ public class JTableOperator extends JComponentOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getEditingRow()));
     }
 
-    public Component getEditorComponent() {
+    public @Nullable Component getEditorComponent() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTable) getSource()).getEditorComponent()));
     }
 

@@ -251,7 +251,7 @@ public class WindowOperator extends ContainerOperator {
         }));
     }
 
-    public Component getFocusOwner() {
+    public @Nullable Component getFocusOwner() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getFocusOwner()));
     }
 
@@ -259,11 +259,11 @@ public class WindowOperator extends ContainerOperator {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getOwnedWindows()));
     }
 
-    public Window getOwner() {
+    public @Nullable Window getOwner() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getOwner()));
     }
 
-    public String getWarningString() {
+    public @Nullable String getWarningString() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getWarningString()));
     }
 

@@ -169,7 +169,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
         }));
     }
 
-    public KeyStroke getAccelerator() {
+    public @Nullable KeyStroke getAccelerator() {
         return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuItem) getSource()).getAccelerator()));
     }
 
