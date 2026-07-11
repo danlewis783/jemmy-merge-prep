@@ -165,9 +165,13 @@ public abstract class Operator {
         return getCharsModifiers(s.toCharArray());
     }
 
-    @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
     public <T extends Operator> void waitState(Predicate<T> predicate) {
-        FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this))
+        waitState(predicate, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
+    public <T extends Operator> void waitState(Predicate<T> predicate, TimeoutKey timeoutKey) {
+        FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this), timeoutKey)
                 .runUntilNotNull(null);
     }
 
@@ -177,6 +181,14 @@ public abstract class Operator {
      */
     public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate) {
         waitState(new OnQueuePredicate<>(predicate));
+    }
+
+    /**
+     * Like {@link #waitState(Predicate, TimeoutKey)}, but evaluates the predicate on the event dispatch thread, so it
+     * can safely read Swing component state.
+     */
+    public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate, TimeoutKey timeoutKey) {
+        waitState(new OnQueuePredicate<>(predicate), timeoutKey);
     }
 
     // the result's nullness follows the function's type argument, which pre-generics

@@ -368,7 +368,9 @@ public class ComponentOperator extends Operator {
     }
 
     public void waitComponentEnabled() {
-        waitState(new ComponentOperatorIsEnabledPredicate<>());
+        waitState(
+                new ComponentOperatorIsEnabledPredicate<>(),
+                TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout);
     }
 
     public void wtComponentEnabled() {
@@ -431,7 +433,8 @@ public class ComponentOperator extends Operator {
     }
 
     public void waitHasFocus() {
-        FunctionRepeater<Void, Boolean> focusWaiter = FunctionRepeater.on(obj -> hasFocus() ? true : null);
+        FunctionRepeater<Void, Boolean> focusWaiter =
+                FunctionRepeater.on(obj -> hasFocus() ? true : null, TimeoutKey.ComponentOperator_WaitFocusTimeout);
         focusWaiter.runUntilNotNull(null);
     }
 
