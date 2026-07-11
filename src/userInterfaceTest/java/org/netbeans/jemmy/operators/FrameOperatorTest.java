@@ -50,9 +50,13 @@ class FrameOperatorTest {
         });
     }
 
+    private void showFrame() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> frame.setVisible(true));
+    }
+
     @Test
-    void testConstructor() {
-        frame.setVisible(true);
+    void testConstructor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         FrameOperator operator2 = FrameOperator.waitFor(ComponentPredicates.byName("FrameOperatorTest"));
@@ -62,8 +66,8 @@ class FrameOperatorTest {
     }
 
     @Test
-    void testWaitTitle() {
-        frame.setVisible(true);
+    void testWaitTitle() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setTitle("Title");
@@ -71,24 +75,24 @@ class FrameOperatorTest {
     }
 
     @Test
-    void testIconify() {
-        frame.setVisible(true);
+    void testIconify() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.iconify();
     }
 
     @Test
-    void testDeiconify() {
-        frame.setVisible(true);
+    void testDeiconify() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.deiconify();
     }
 
     @Test
-    void testMaximize() {
-        frame.setVisible(true);
+    void testMaximize() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.maximize();
@@ -96,8 +100,8 @@ class FrameOperatorTest {
     }
 
     @Test
-    void testDemaximize() {
-        frame.setVisible(true);
+    void testDemaximize() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.maximize();
@@ -106,40 +110,40 @@ class FrameOperatorTest {
     }
 
     @Test
-    void testSetIconImage() {
-        frame.setVisible(true);
+    void testSetIconImage() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setIconImage(operator.getIconImage());
     }
 
     @Test
-    void testSetMenuBar() {
-        frame.setVisible(true);
+    void testSetMenuBar() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setMenuBar(operator.getMenuBar());
     }
 
     @Test
-    void testSetResizable() {
-        frame.setVisible(true);
+    void testSetResizable() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setResizable(operator.isResizable());
     }
 
     @Test
-    void testSetState() {
-        frame.setVisible(true);
+    void testSetState() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setState(operator.getState());
     }
 
     @Test
-    void testSetTitle() {
-        frame.setVisible(true);
+    void testSetTitle() throws InterruptedException, InvocationTargetException {
+        showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setTitle(operator.getTitle());

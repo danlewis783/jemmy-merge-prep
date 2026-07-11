@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,6 +49,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.Caller;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 
@@ -107,24 +110,24 @@ class WindowOperatorTest {
         WindowOperator sub1 = WindowOperator.waitFor(operator2);
         assertThat(sub1).isNotNull();
         assertThat(sub1.getSource()).isSameAs(subDialog);
-        WindowOperator sub2 = WindowOperator.waitFor(operator2, ComponentPredicates.byName(subDialog.getName()));
+        WindowOperator sub2 = WindowOperator.waitFor(operator2, ComponentPredicates.byName("Sub_WindowOperatorTest"));
         assertThat(sub2).isNotNull();
         assertThat(sub2.getSource()).isSameAs(subDialog);
     }
 
     @Test
     void findWindow() {
-        Window window1 = WindowOperator.findWindow(ComponentPredicates.byName(mainFrame.getName()));
+        Window window1 = WindowOperator.findWindow(ComponentPredicates.byName("Main_WindowOperatorTest"));
         assertThat(window1).isSameAs(mainFrame);
-        Window window2 = WindowOperator.findWindow(mainFrame, ComponentPredicates.byName(subDialog.getName()));
+        Window window2 = WindowOperator.findWindow(mainFrame, ComponentPredicates.byName("Sub_WindowOperatorTest"));
         assertThat(window2).isSameAs(subDialog);
     }
 
     @Test
     void waitWindow() {
-        Window window1 = WindowOperator.waitWindow(ComponentPredicates.byName(mainFrame.getName()));
+        Window window1 = WindowOperator.waitWindow(ComponentPredicates.byName("Main_WindowOperatorTest"));
         assertThat(window1).isSameAs(mainFrame);
-        Window window2 = WindowOperator.waitWindow(mainFrame, ComponentPredicates.byName(subDialog.getName()));
+        Window window2 = WindowOperator.waitWindow(mainFrame, ComponentPredicates.byName("Sub_WindowOperatorTest"));
         assertThat(window2).isSameAs(subDialog);
     }
 
@@ -148,38 +151,33 @@ class WindowOperatorTest {
         }
         LatchedWindowListener windowListener1 = new LatchedWindowListener();
         LatchedWindowListener windowListener2 = new LatchedWindowListener();
+        FrameOperator frameOp = FrameOperator.of(mainFrame);
         try {
-            mainFrame.addWindowListener(windowListener1);
-            FrameOperator frameOp = FrameOperator.of(mainFrame);
+            frameOp.addWindowListener(windowListener1);
             frameOp.activate();
             awaitLatch(windowListener1.activatedLatch);
             assertThat(events).contains("activated");
             assertThat(frameOp.isActive()).isTrue();
             assertThat(frameOp.isFocused()).isTrue();
-            Frame other = new Frame();
-            other.setTitle("other");
-            other.setName("other" + "_" + "WindowOperatorTest");
-            other.add(new Label("other"));
-            other.pack();
-            other.setLocationByPlatform(true);
+            Frame other = createOtherFrame();
             FrameOperator otherOp = FrameOperator.of(other);
-            other.setVisible(true);
+            otherOp.setVisible(true);
             awaitLatch(windowListener1.deactivatedLatch);
             assertThat(events).containsSequence("activated", "deactivated");
             assertThat(frameOp.isActive()).isFalse();
             assertThat(frameOp.isFocused()).isFalse();
-            mainFrame.removeWindowListener(windowListener1);
-            mainFrame.addWindowListener(windowListener2);
+            frameOp.removeWindowListener(windowListener1);
+            frameOp.addWindowListener(windowListener2);
             frameOp.activate();
             awaitLatch(windowListener2.activatedLatch);
             assertThat(events).containsSequence("activated", "deactivated", "activated");
             otherOp.activate();
             awaitLatch(windowListener2.deactivatedLatch);
             assertThat(events).containsSequence("activated", "deactivated", "activated", "deactivated");
-            other.dispose();
+            otherOp.dispose();
         } finally {
-            mainFrame.removeWindowListener(windowListener1);
-            mainFrame.removeWindowListener(windowListener2);
+            frameOp.removeWindowListener(windowListener1);
+            frameOp.removeWindowListener(windowListener2);
         }
     }
 
@@ -201,15 +199,15 @@ class WindowOperatorTest {
                 closedLatch.countDown();
             }
         };
+        FrameOperator frameOp = FrameOperator.waitFor();
         try {
-            mainFrame.addWindowListener(windowListener);
-            FrameOperator frameOp = FrameOperator.waitFor();
+            frameOp.addWindowListener(windowListener);
             frameOp.requestClose();
             awaitLatch(closingLatch);
             awaitLatch(closedLatch);
             assertThat(events).containsSequence("closing", "closed");
         } finally {
-            mainFrame.removeWindowListener(windowListener);
+            frameOp.removeWindowListener(windowListener);
         }
     }
 
@@ -223,15 +221,15 @@ class WindowOperatorTest {
                 closingLatch.countDown();
             }
         };
+        FrameOperator frameOp = FrameOperator.waitFor();
         try {
-            mainFrame.addWindowListener(windowListener);
-            FrameOperator frameOp = FrameOperator.waitFor();
+            frameOp.addWindowListener(windowListener);
             frameOp.requestCloseAndThenHide();
             awaitLatch(closingLatch);
-            assertThat(mainFrame.isVisible()).isFalse();
+            assertThat(frameOp.isVisible()).isFalse();
             assertThat(events).containsSequence("closing");
         } finally {
-            mainFrame.removeWindowListener(windowListener);
+            frameOp.removeWindowListener(windowListener);
         }
     }
 
@@ -250,9 +248,9 @@ class WindowOperatorTest {
                 events.add("closed");
             }
         };
+        FrameOperator frameOp = FrameOperator.waitFor();
         try {
-            mainFrame.addWindowListener(windowListener);
-            FrameOperator frameOp = FrameOperator.waitFor();
+            frameOp.addWindowListener(windowListener);
             frameOp.requestClose();
             awaitLatch(closingLatch);
             assertThat(frameOp.isShowing())
@@ -260,7 +258,7 @@ class WindowOperatorTest {
                     .isTrue();
             assertThat(events).containsExactly("closing");
         } finally {
-            mainFrame.removeWindowListener(windowListener);
+            frameOp.removeWindowListener(windowListener);
         }
     }
 
@@ -274,7 +272,7 @@ class WindowOperatorTest {
         AtomicInteger componentMovedX = new AtomicInteger(0);
         AtomicInteger componentMovedY = new AtomicInteger(0);
         CountDownLatch movedLatch = new CountDownLatch(1);
-        mainFrame.addComponentListener(new ComponentAdapter() {
+        frameOp.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
                 Rectangle bounds = ((Component) e.getSource()).getBounds();
@@ -289,12 +287,12 @@ class WindowOperatorTest {
                 wasComponentResizedCalled.set(true);
             }
         });
-        assertThat(mainFrame.getX()).isNotEqualTo(100);
-        assertThat(mainFrame.getY()).isNotEqualTo(200);
+        assertThat(frameOp.getX()).isNotEqualTo(100);
+        assertThat(frameOp.getY()).isNotEqualTo(200);
         frameOp.move(100, 200);
         awaitLatch(movedLatch);
-        assertThat(mainFrame.getX()).isEqualTo(100);
-        assertThat(mainFrame.getY()).isEqualTo(200);
+        assertThat(frameOp.getX()).isEqualTo(100);
+        assertThat(frameOp.getY()).isEqualTo(200);
         assertThat(wasComponentResizedCalled).isFalse();
         assertThat(componentMovedX).hasValue(100);
         assertThat(componentMovedY).hasValue(200);
@@ -311,7 +309,7 @@ class WindowOperatorTest {
         AtomicInteger componentResizedHeight = new AtomicInteger(0);
         // the frame delivers two componentResized events for one resize; wait for both
         CountDownLatch resizedLatch = new CountDownLatch(2);
-        mainFrame.addComponentListener(new ComponentAdapter() {
+        frameOp.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
                 wasComponentMovedCalled.set(true);
@@ -326,8 +324,8 @@ class WindowOperatorTest {
                 resizedLatch.countDown();
             }
         });
-        assertThat(mainFrame.getWidth()).isNotEqualTo(100);
-        assertThat(mainFrame.getHeight()).isNotEqualTo(200);
+        assertThat(frameOp.getWidth()).isNotEqualTo(100);
+        assertThat(frameOp.getHeight()).isNotEqualTo(200);
         frameOp.resize(100, 200);
         awaitLatch(resizedLatch);
         assertThat(wasComponentMovedCalled).isFalse();
@@ -339,7 +337,7 @@ class WindowOperatorTest {
     }
 
     @Test
-    void gindSubWindow() {
+    void findSubWindow() {
         FrameOperator frameOp = FrameOperator.waitFor();
         Window window = frameOp.findSubWindow(ComponentPredicates.byName("Sub_WindowOperatorTest"));
         assertThat(window).isSameAs(subDialog);
@@ -369,13 +367,13 @@ class WindowOperatorTest {
                 closedLatch.countDown();
             }
         };
-        mainFrame.addWindowListener(windowListener);
         FrameOperator frameOp = FrameOperator.waitFor();
+        frameOp.addWindowListener(windowListener);
         frameOp.requestClose();
         frameOp.waitClosed();
         awaitLatch(closedLatch);
         assertThat(events).containsSequence("closing", "disposing", "closed");
-        mainFrame.removeWindowListener(windowListener);
+        frameOp.removeWindowListener(windowListener);
     }
 
     @Test
@@ -424,13 +422,13 @@ class WindowOperatorTest {
     @Test
     void dispose() throws InterruptedException {
         CountDownLatch closedLatch = new CountDownLatch(1);
-        mainFrame.addWindowListener(new WindowAdapter() {
+        FrameOperator frameOp = FrameOperator.waitFor();
+        frameOp.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 closedLatch.countDown();
             }
         });
-        FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.dispose();
         awaitLatch(closedLatch);
     }
@@ -480,18 +478,32 @@ class WindowOperatorTest {
         FrameOperator frameOp = FrameOperator.waitFor();
         frameOp.requestFocus();
         frameOp.waitHasFocus();
-        Frame other = new Frame();
-        other.setTitle("other");
-        other.setName("other" + "_" + "WindowOperatorTest");
-        other.add(new Label("other"));
-        other.pack();
-        other.setLocationByPlatform(true);
+        Frame other = createOtherFrame();
         FrameOperator otherOp = FrameOperator.of(other);
-        other.setVisible(true);
+        otherOp.setVisible(true);
         otherOp.waitHasFocus();
         frameOp.toFront();
         frameOp.toBack();
-        other.dispose();
+        otherOp.dispose();
+    }
+
+    /** Runs the callable on the event dispatch thread so component state is only touched there. */
+    private static <T> T onQueue(Callable<T> callable) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(callable));
+    }
+
+    /** Builds (but does not show) a second frame, on the EDT. */
+    private static Frame createOtherFrame() {
+        return onQueue(() -> {
+            Frame other = new Frame();
+            other.setTitle("other");
+            other.setName("other" + "_" + "WindowOperatorTest");
+            other.add(new Label("other"));
+            other.pack();
+            other.setLocationByPlatform(true);
+
+            return other;
+        });
     }
 
     // generous ceiling: only costs time when the awaited event never arrives
@@ -505,8 +517,8 @@ class WindowOperatorTest {
     @Test
     void testWaitWindowCount() throws InterruptedException, InvocationTargetException {
         Predicate<Component> countable = comp -> "CountMe".equals(comp.getName()) && comp.isShowing();
-        Frame extra1 = new Frame("CountMe one");
-        Frame extra2 = new Frame("CountMe two");
+        Frame extra1 = onQueue(() -> new Frame("CountMe one"));
+        Frame extra2 = onQueue(() -> new Frame("CountMe two"));
         try {
             EventQueue.invokeAndWait(() -> {
                 extra1.setName("CountMe");
