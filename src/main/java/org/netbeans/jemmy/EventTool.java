@@ -96,10 +96,14 @@ public final class EventTool {
         return checkNoEvent(listenerSet.getTheWholeMask(), waitTime);
     }
 
+    /**
+     * Waits until no event matching {@code eventMask} has been observed for the {@code waitTime}
+     * quiet period, giving up after {@link TimeoutKey#EventTool_WaitNoEventTimeout}.
+     */
     public void waitNoEvent(long eventMask, TimeoutKey waitTime) {
         FunctionRepeater.on(
                         new NoEventFunction(eventMask, waitTime, this),
-                        waitTime,
+                        TimeoutKey.EventTool_WaitNoEventTimeout,
                         TimeoutKey.EventTool_EventCheckingDelta)
                 .runUntilNotNull(null);
     }

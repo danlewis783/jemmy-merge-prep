@@ -20,20 +20,30 @@ import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.Timeouts;
 
+/**
+ * Reports success once no event matching {@code eventMask} has been observed for the {@code waitTime}
+ * quiet period. Only events observed since construction count: quiet time accumulated before the wait
+ * started does not shorten it.
+ */
 public final class NoEventFunction implements Function<Void, Boolean> {
     private final long eventMask;
     private final EventTool eventTool;
     private final TimeoutKey waitTime;
+    private final long startTime;
 
     public NoEventFunction(long eventMask, TimeoutKey waitTime, EventTool eventTool) {
         this.eventMask = eventMask;
         this.waitTime = waitTime;
         this.eventTool = eventTool;
+        this.startTime = System.currentTimeMillis();
     }
 
     @Override
     public @Nullable Boolean apply(Void obj) {
-        return eventTool.checkNoEvent(eventMask, waitTime) ? true : null;
+        long quietSince = Math.max(startTime, eventTool.getLastEventTime(eventMask));
+
+        return ((System.currentTimeMillis() - quietSince) >= Timeouts.get(waitTime)) ? true : null;
     }
 }

@@ -49,13 +49,12 @@ public final class QueueTool {
     }
 
     public void waitEmpty(long emptyTime) {
-        StayingEmptyFunction waitable = new StayingEmptyFunction(emptyTime);
         FunctionRepeater<Void, Boolean> functionRepeater = FunctionRepeater.on(
-                waitable, TimeoutKey.QueueTool_WaitQueueEmptyTimeout, TimeoutKey.QueueTool_QueueCheckingDelta);
+                new StayingEmptyFunction(emptyTime),
+                TimeoutKey.QueueTool_WaitQueueEmptyTimeout,
+                TimeoutKey.QueueTool_QueueCheckingDelta);
         try {
-            if (!functionRepeater.runUntilNotNull(null)) {
-                logger.warn("functionRepeater did not return true");
-            }
+            functionRepeater.runUntilNotNull(null);
         } catch (TimeoutExpiredException e) {
             AWTEvent event = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent();
             if (event == null) {

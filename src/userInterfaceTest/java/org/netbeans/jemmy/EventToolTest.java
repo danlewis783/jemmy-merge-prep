@@ -125,12 +125,13 @@ class EventToolTest {
             awaitQuiet(mover);
             mover = executorService.submit(new MouseMover(jFrameOp, 1000, 2));
 
-            // mouse events keep arriving less than 1500 ms apart for longer than the
-            // 1500 ms bound, so no quiet window is found and the wait must give up
-            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L)) {
+            // mouse events keep arriving less than 1500 ms apart for the whole 3000 ms budget,
+            // so no 1500 ms quiet window is found and the wait must give up
+            try (TimeoutOverride quietPeriod = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L);
+                    TimeoutOverride budget = Timeouts.override(TimeoutKey.EventTool_WaitNoEventTimeout, 3000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK))
-                        .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (1500 ms) exceeded after (");
+                        .withMessageContaining("timeout \"EventTool_WaitNoEventTimeout\" (3000 ms) exceeded after (");
             }
 
             awaitQuiet(mover);
