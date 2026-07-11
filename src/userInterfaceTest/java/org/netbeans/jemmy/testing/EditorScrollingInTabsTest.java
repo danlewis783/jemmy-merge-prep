@@ -152,6 +152,7 @@ class EditorScrollingInTabsTest {
         assertThat(jTextAreaOperator.getTabSize()).isEqualTo(onQueue(src::getTabSize));
         assertThat(jTextAreaOperator.getWrapStyleWord()).isEqualTo(onQueue(src::getWrapStyleWord));
     }
+
     private static class SelectedTextChecker implements Function<Void, Boolean> {
         private final String eta;
         private final JTextComponentOperator tco;

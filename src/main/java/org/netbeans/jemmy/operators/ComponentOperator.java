@@ -369,8 +369,7 @@ public class ComponentOperator extends Operator {
 
     public void waitComponentEnabled() {
         waitState(
-                new ComponentOperatorIsEnabledPredicate<>(),
-                TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout);
+                new ComponentOperatorIsEnabledPredicate<>(), TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout);
     }
 
     public void wtComponentEnabled() {

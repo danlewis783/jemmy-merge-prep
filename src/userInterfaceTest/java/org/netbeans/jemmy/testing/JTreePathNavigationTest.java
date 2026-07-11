@@ -145,8 +145,10 @@ class JTreePathNavigationTest {
         assertThat(operator.getPreferredScrollableViewportSize())
                 .isEqualTo(onQueue(source::getPreferredScrollableViewportSize));
         assertThat(operator.getPrototypeCellValue()).isEqualTo(onQueue(source::getPrototypeCellValue));
-        assertThat(operator.getScrollableTracksViewportHeight()).isEqualTo(onQueue(source::getScrollableTracksViewportHeight));
-        assertThat(operator.getScrollableTracksViewportWidth()).isEqualTo(onQueue(source::getScrollableTracksViewportWidth));
+        assertThat(operator.getScrollableTracksViewportHeight())
+                .isEqualTo(onQueue(source::getScrollableTracksViewportHeight));
+        assertThat(operator.getScrollableTracksViewportWidth())
+                .isEqualTo(onQueue(source::getScrollableTracksViewportWidth));
         assertThat(operator.getSelectedIndex()).isEqualTo(onQueue(source::getSelectedIndex));
         assertThat(operator.getSelectedValue()).isEqualTo(onQueue(source::getSelectedValue));
         assertThat(operator.getSelectionBackground()).isEqualTo(onQueue(source::getSelectionBackground));

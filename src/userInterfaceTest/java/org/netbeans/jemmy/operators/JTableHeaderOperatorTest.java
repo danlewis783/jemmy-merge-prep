@@ -170,7 +170,8 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumn column = onQueue(() -> table.getTableHeader().getColumnModel().getColumn(1));
+        TableColumn column =
+                onQueue(() -> table.getTableHeader().getColumnModel().getColumn(1));
         operator1.setDraggedColumn(column);
         assertThat(operator1.getDraggedColumn()).isEqualTo(column);
     }
@@ -191,7 +192,8 @@ class JTableHeaderOperatorTest {
         assertThat(operator).isNotNull();
         JTableHeaderOperator operator1 = JTableHeaderOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        TableColumn column = onQueue(() -> table.getTableHeader().getColumnModel().getColumn(1));
+        TableColumn column =
+                onQueue(() -> table.getTableHeader().getColumnModel().getColumn(1));
         operator1.setResizingColumn(column);
         assertThat(operator1.getResizingColumn()).isEqualTo(column);
     }

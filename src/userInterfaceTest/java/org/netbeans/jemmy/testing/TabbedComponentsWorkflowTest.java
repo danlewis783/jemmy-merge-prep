@@ -142,7 +142,8 @@ final class TabbedComponentsWorkflowTest {
             assertThat(onQueue(treeOpSource::getCellRenderer)).isEqualTo(jTreeOp.getCellRenderer());
             assertThat(onQueue(treeOpSource::getEditingPath)).isEqualTo(jTreeOp.getEditingPath());
             assertThat(onQueue(treeOpSource::getInvokesStopCellEditing)).isEqualTo(jTreeOp.getInvokesStopCellEditing());
-            assertThat(onQueue(treeOpSource::getLastSelectedPathComponent)).isEqualTo(jTreeOp.getLastSelectedPathComponent());
+            assertThat(onQueue(treeOpSource::getLastSelectedPathComponent))
+                    .isEqualTo(jTreeOp.getLastSelectedPathComponent());
             assertThat(onQueue(treeOpSource::getLeadSelectionPath)).isEqualTo(jTreeOp.getLeadSelectionPath());
             assertThat(onQueue(treeOpSource::getLeadSelectionRow)).isEqualTo(jTreeOp.getLeadSelectionRow());
             assertThat(onQueue(treeOpSource::getMaxSelectionRow)).isEqualTo(jTreeOp.getMaxSelectionRow());
@@ -171,7 +172,8 @@ final class TabbedComponentsWorkflowTest {
             assertThat(onQueue(treeOpSource::isSelectionEmpty)).isEqualTo(jTreeOp.isSelectionEmpty());
             assertThat(onQueue(treeOpSource::stopEditing)).isEqualTo(jTreeOp.stopEditing());
             JTable tabOpSource = (JTable) jTableOp.getSource();
-            assertThat(onQueue(tabOpSource::getAutoCreateColumnsFromModel)).isEqualTo(jTableOp.getAutoCreateColumnsFromModel());
+            assertThat(onQueue(tabOpSource::getAutoCreateColumnsFromModel))
+                    .isEqualTo(jTableOp.getAutoCreateColumnsFromModel());
             assertThat(onQueue(tabOpSource::getAutoResizeMode)).isEqualTo(jTableOp.getAutoResizeMode());
             assertThat(jTableOp.getCellEditor()).isEqualTo(onQueue(tabOpSource::getCellEditor));
             assertThat(onQueue(tabOpSource::getCellSelectionEnabled)).isEqualTo(jTableOp.getCellSelectionEnabled());
