@@ -18,6 +18,8 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JRadioButton;
 import org.junit.jupiter.api.AfterEach;
@@ -26,29 +28,39 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JRadioButtonOperatorTest {
     private JFrame frame;
     private JRadioButton radioButton;
 
     @BeforeEach
-    void beforeEach() {
-        frame = new JFrame();
-        radioButton = new JRadioButton("JRadioButtonOperatorTest");
-        radioButton.setName("JRadioButtonOperatorTest");
-        frame.getContentPane().add(radioButton);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            radioButton = new JRadioButton("JRadioButtonOperatorTest");
+            radioButton.setName("JRadioButtonOperatorTest");
+            frame.getContentPane().add(radioButton);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        frame.setVisible(false);
-        frame.dispose();
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
+    }
+
+    private void showFrame() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> frame.setVisible(true));
     }
 
     @Test
-    void testConstructor() {
-        frame.setVisible(true);
+    void testConstructor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JRadioButtonOperator operator1 = JRadioButtonOperator.waitFor(operator);
@@ -64,8 +76,8 @@ class JRadioButtonOperatorTest {
     }
 
     @Test
-    void testFindJRadioButton() {
-        frame.setVisible(true);
+    void testFindJRadioButton() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JRadioButton radioButton1 = JRadioButtonOperator.findJRadioButton(
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(radioButton1).isNotNull();
@@ -75,8 +87,8 @@ class JRadioButtonOperatorTest {
     }
 
     @Test
-    void testWaitJRadioButton() {
-        frame.setVisible(true);
+    void testWaitJRadioButton() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JRadioButton radioButton1 = JRadioButtonOperator.waitJRadioButton(
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(radioButton1).isNotNull();

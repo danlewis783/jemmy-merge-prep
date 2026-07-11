@@ -19,6 +19,8 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -30,34 +32,45 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JScrollPaneOperatorTest {
     private JFrame frame;
     private JTextArea textArea;
 
     @BeforeEach
-    void beforeEach() {
-        frame = new JFrame();
-        textArea = new JTextArea("JTextArea");
-        textArea.setSize(1000, 1000);
-        textArea.setMaximumSize(new Dimension(1000, 1000));
-        textArea.setMinimumSize(new Dimension(1000, 1000));
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setName("JScrollPaneOperatorTest");
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        frame.getContentPane().add(scrollPane);
-        frame.setSize(200, 200);
-        frame.setLocationRelativeTo(null);
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            textArea = new JTextArea("JTextArea");
+            textArea.setSize(1000, 1000);
+            textArea.setMaximumSize(new Dimension(1000, 1000));
+            textArea.setMinimumSize(new Dimension(1000, 1000));
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setName("JScrollPaneOperatorTest");
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            frame.getContentPane().add(scrollPane);
+            frame.setSize(200, 200);
+            frame.setLocationRelativeTo(null);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        frame.setVisible(false);
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
+    }
+
+    private void showFrame() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> frame.setVisible(true));
     }
 
     @Test
-    void testConstructor() {
-        frame.setVisible(true);
+    void testConstructor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -68,8 +81,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testFindJScrollPane() {
-        frame.setVisible(true);
+    void testFindJScrollPane() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JScrollPane scrollPane1 = JScrollPaneOperator.findJScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
@@ -81,8 +94,8 @@ class JScrollPaneOperatorTest {
     void testFindJScrollPaneUnder() {}
 
     @Test
-    void testWaitJScrollPane() {
-        frame.setVisible(true);
+    void testWaitJScrollPane() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JScrollPane scrollPane1 = JScrollPaneOperator.waitJScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
@@ -91,8 +104,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testSetValues() {
-        frame.setVisible(true);
+    void testSetValues() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -101,8 +114,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToHorizontalValue() {
-        frame.setVisible(true);
+    void testScrollToHorizontalValue() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -112,8 +125,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToVerticalValue() {
-        frame.setVisible(true);
+    void testScrollToVerticalValue() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -123,8 +136,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToValues() {
-        frame.setVisible(true);
+    void testScrollToValues() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -134,8 +147,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToTop() {
-        frame.setVisible(true);
+    void testScrollToTop() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -144,8 +157,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToBottom() {
-        frame.setVisible(true);
+    void testScrollToBottom() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -154,8 +167,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToLeft() {
-        frame.setVisible(true);
+    void testScrollToLeft() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -164,8 +177,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToRight() {
-        frame.setVisible(true);
+    void testScrollToRight() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -174,8 +187,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToComponentRectangle() {
-        frame.setVisible(true);
+    void testScrollToComponentRectangle() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -184,8 +197,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToComponentPoint() {
-        frame.setVisible(true);
+    void testScrollToComponentPoint() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -194,8 +207,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testScrollToComponent() {
-        frame.setVisible(true);
+    void testScrollToComponent() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -204,8 +217,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetHScrollBarOperator() {
-        frame.setVisible(true);
+    void testGetHScrollBarOperator() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -214,8 +227,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetVScrollBarOperator() {
-        frame.setVisible(true);
+    void testGetVScrollBarOperator() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -224,8 +237,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testCheckInside() {
-        frame.setVisible(true);
+    void testCheckInside() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -234,8 +247,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testCreateHorizontalScrollBar() {
-        frame.setVisible(true);
+    void testCreateHorizontalScrollBar() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -244,8 +257,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testCreateVerticalScrollBar() {
-        frame.setVisible(true);
+    void testCreateVerticalScrollBar() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -254,8 +267,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetColumnHeader() {
-        frame.setVisible(true);
+    void testGetColumnHeader() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -265,8 +278,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetCorner() {
-        frame.setVisible(true);
+    void testGetCorner() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -276,8 +289,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetHorizontalScrollBar() {
-        frame.setVisible(true);
+    void testGetHorizontalScrollBar() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -287,8 +300,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetHorizontalScrollBarPolicy() {
-        frame.setVisible(true);
+    void testGetHorizontalScrollBarPolicy() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -298,8 +311,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetRowHeader() {
-        frame.setVisible(true);
+    void testGetRowHeader() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -309,8 +322,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetUI() {
-        frame.setVisible(true);
+    void testGetUI() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -321,8 +334,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetVerticalScrollBar() {
-        frame.setVisible(true);
+    void testGetVerticalScrollBar() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -332,8 +345,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetVerticalScrollBarPolicy() {
-        frame.setVisible(true);
+    void testGetVerticalScrollBarPolicy() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -343,8 +356,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetViewport() {
-        frame.setVisible(true);
+    void testGetViewport() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -354,8 +367,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetViewportBorder() {
-        frame.setVisible(true);
+    void testGetViewportBorder() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -365,8 +378,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testGetViewportBorderBounds() {
-        frame.setVisible(true);
+    void testGetViewportBorderBounds() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -375,8 +388,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testSetColumnHeaderView() {
-        frame.setVisible(true);
+    void testSetColumnHeaderView() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -385,8 +398,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testSetRowHeaderView() {
-        frame.setVisible(true);
+    void testSetRowHeaderView() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
@@ -395,8 +408,8 @@ class JScrollPaneOperatorTest {
     }
 
     @Test
-    void testSetViewportView() {
-        frame.setVisible(true);
+    void testSetViewportView() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);

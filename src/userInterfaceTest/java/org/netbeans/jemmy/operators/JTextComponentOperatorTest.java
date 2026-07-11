@@ -28,11 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
@@ -50,28 +52,38 @@ import org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
+// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
+@SuppressWarnings("NullAway.Init")
 class JTextComponentOperatorTest {
     private JFrame frame;
 
     @BeforeEach
-    void beforeEach() {
-        frame = new JFrame();
-        JTextComponent textComponent = new JTextField("JTextComponentOperatorTest");
-        textComponent.setName("JTextComponentOperatorTest");
-        frame.getContentPane().add(textComponent);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame = new JFrame();
+            JTextComponent textComponent = new JTextField("JTextComponentOperatorTest");
+            textComponent.setName("JTextComponentOperatorTest");
+            frame.getContentPane().add(textComponent);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+        });
     }
 
     @AfterEach
-    void afterEach() {
-        frame.setVisible(false);
-        frame.dispose();
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
+    }
+
+    private void showFrame() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> frame.setVisible(true));
     }
 
     @Test
-    void testConstructor() {
-        frame.setVisible(true);
+    void testConstructor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -85,8 +97,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testFindJTextComponent() {
-        frame.setVisible(true);
+    void testFindJTextComponent() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JTextComponent textComponent = JTextComponentOperator.findJTextComponent(
                 frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textComponent).isNotNull();
@@ -96,8 +108,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testWaitJTextComponent() {
-        frame.setVisible(true);
+    void testWaitJTextComponent() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JTextComponent textComponent = JTextComponentOperator.waitJTextComponent(
                 frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textComponent).isNotNull();
@@ -107,8 +119,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetPositionByText() {
-        frame.setVisible(true);
+    void testGetPositionByText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -118,8 +130,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testEnterText() {
-        frame.setVisible(true);
+    void testEnterText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -128,8 +140,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testChangeCaretPosition() {
-        frame.setVisible(true);
+    void testChangeCaretPosition() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -144,8 +156,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testTypeText() {
-        frame.setVisible(true);
+    void testTypeText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -154,8 +166,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testSelectText() {
-        frame.setVisible(true);
+    void testSelectText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -165,8 +177,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testClearText() {
-        frame.setVisible(true);
+    void testClearText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -175,8 +187,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testScrollToPosition() {
-        frame.setVisible(true);
+    void testScrollToPosition() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -185,8 +197,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetDisplayedText() {
-        frame.setVisible(true);
+    void testGetDisplayedText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -195,8 +207,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testWaitText() {
-        frame.setVisible(true);
+    void testWaitText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -206,8 +218,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testWaitCaretPosition() {
-        frame.setVisible(true);
+    void testWaitCaretPosition() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -217,8 +229,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testAddCaretListener() {
-        frame.setVisible(true);
+    void testAddCaretListener() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -229,8 +241,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testCopy() {
-        frame.setVisible(true);
+    void testCopy() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -239,8 +251,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testCut() {
-        frame.setVisible(true);
+    void testCut() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -249,8 +261,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetActions() {
-        frame.setVisible(true);
+    void testGetActions() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -259,8 +271,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetCaret() {
-        frame.setVisible(true);
+    void testGetCaret() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -270,8 +282,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetCaretColor() {
-        frame.setVisible(true);
+    void testGetCaretColor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -281,8 +293,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetCaretPosition() {
-        frame.setVisible(true);
+    void testGetCaretPosition() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -292,8 +304,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetDisabledTextColor() {
-        frame.setVisible(true);
+    void testGetDisabledTextColor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -303,8 +315,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetDocument() {
-        frame.setVisible(true);
+    void testGetDocument() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -314,8 +326,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetFocusAccelerator() {
-        frame.setVisible(true);
+    void testGetFocusAccelerator() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -325,8 +337,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetHighlighter() {
-        frame.setVisible(true);
+    void testGetHighlighter() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -336,8 +348,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetKeymap() {
-        frame.setVisible(true);
+    void testGetKeymap() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -346,8 +358,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetMargin() {
-        frame.setVisible(true);
+    void testGetMargin() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -357,8 +369,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetPreferredScrollableViewportSize() {
-        frame.setVisible(true);
+    void testGetPreferredScrollableViewportSize() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -367,8 +379,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetScrollableBlockIncrement() {
-        frame.setVisible(true);
+    void testGetScrollableBlockIncrement() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -377,8 +389,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetScrollableTracksViewportHeight() {
-        frame.setVisible(true);
+    void testGetScrollableTracksViewportHeight() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -387,8 +399,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetScrollableTracksViewportWidth() {
-        frame.setVisible(true);
+    void testGetScrollableTracksViewportWidth() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -397,8 +409,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetScrollableUnitIncrement() {
-        frame.setVisible(true);
+    void testGetScrollableUnitIncrement() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -407,8 +419,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetSelectedText() {
-        frame.setVisible(true);
+    void testGetSelectedText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -417,8 +429,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetSelectedTextColor() {
-        frame.setVisible(true);
+    void testGetSelectedTextColor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -428,8 +440,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetSelectionColor() {
-        frame.setVisible(true);
+    void testGetSelectionColor() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -439,8 +451,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetSelectionEnd() {
-        frame.setVisible(true);
+    void testGetSelectionEnd() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -450,8 +462,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetSelectionStart() {
-        frame.setVisible(true);
+    void testGetSelectionStart() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -461,8 +473,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetText() {
-        frame.setVisible(true);
+    void testGetText() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -473,8 +485,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testGetUI() {
-        frame.setVisible(true);
+    void testGetUI() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -483,8 +495,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testIsEditable() {
-        frame.setVisible(true);
+    void testIsEditable() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -494,8 +506,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testModelToView() {
-        frame.setVisible(true);
+    void testModelToView() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -504,8 +516,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testMoveCaretPosition() {
-        frame.setVisible(true);
+    void testMoveCaretPosition() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -514,8 +526,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testPaste() {
-        frame.setVisible(true);
+    void testPaste() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -524,8 +536,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testRead() {
-        frame.setVisible(true);
+    void testRead() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -534,8 +546,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testReplaceSelection() {
-        frame.setVisible(true);
+    void testReplaceSelection() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -544,8 +556,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testSelect() {
-        frame.setVisible(true);
+    void testSelect() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -554,8 +566,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testSelectAll() {
-        frame.setVisible(true);
+    void testSelectAll() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -564,8 +576,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testViewToModel() {
-        frame.setVisible(true);
+    void testViewToModel() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
@@ -574,8 +586,8 @@ class JTextComponentOperatorTest {
     }
 
     @Test
-    void testWrite() {
-        frame.setVisible(true);
+    void testWrite() throws InterruptedException, InvocationTargetException {
+        showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JTextComponentOperator operator1 = JTextComponentOperator.waitFor(operator);
