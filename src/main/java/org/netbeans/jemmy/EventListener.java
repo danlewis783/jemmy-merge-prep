@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
 
 public final class EventListener implements AWTEventListener {
     private final long eventMask;
-    private Reference<AWTEvent> eventRef;
+    private Reference<@Nullable AWTEvent> eventRef;
     private final AtomicLong eventTime;
 
     public EventListener(long eventMask) {

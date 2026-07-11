@@ -29,7 +29,6 @@ import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -58,7 +57,9 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
         activateMenu(bar);
         MenuElement menuObject;
         long startTime = System.currentTimeMillis();
-        while (!predicates.get(0).test((Component) (menuObject = getSelectedElement(bar)))) {
+        // nothing may be selected yet; keep stepping right until the predicate accepts a selection
+        while ((menuObject = getSelectedElement(bar)) == null
+                || !predicates.get(0).test((Component) menuObject)) {
             pressKey(KeyEvent.VK_RIGHT, 0);
             releaseKey(KeyEvent.VK_RIGHT, 0);
 
@@ -67,8 +68,7 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
             }
         }
 
-        // the while loop above only exits once the predicate accepted the selected element
-        MenuElement selected = Objects.requireNonNull(menuObject, "no menu selected");
+        MenuElement selected = menuObject;
         for (int depth = 1; depth < predicates.size(); depth++) {
             int elementIndex = getDesiredElementIndex(selected, predicates, depth);
             if (elementIndex == -1) {

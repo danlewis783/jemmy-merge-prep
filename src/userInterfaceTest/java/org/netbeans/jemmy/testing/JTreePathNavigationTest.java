@@ -79,8 +79,10 @@ class JTreePathNavigationTest {
                 .changeSelection(true);
 
         for (int i = 0; i < strPaths.length; i++) {
-            paths[i] = to.findPath(strPaths[i], "|", StringComparators.strict());
-            to.callPopupOnPath(paths[i]);
+            TreePath path = to.findPath(strPaths[i], "|", StringComparators.strict());
+            assertThat(path).isNotNull();
+            paths[i] = path;
+            to.callPopupOnPath(path);
             pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
 
             if (i == 0) {

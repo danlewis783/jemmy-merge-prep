@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -74,7 +75,7 @@ public class TreePathApp extends JFrame {
         popup = new JPopupMenu();
         JMenuItem itm = new JMenuItem("menuItem");
         itm.addActionListener(e -> {
-            list.setModel(new MyModel(tree.getSelectionPaths()));
+            list.setModel(new MyModel(Objects.requireNonNull(tree.getSelectionPaths())));
             popup.setVisible(false);
         });
         JMenu sbsbm = new JMenu("subsubmenu");

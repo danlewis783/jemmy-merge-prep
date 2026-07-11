@@ -180,7 +180,7 @@ public class TabbedSelectionApp extends JFrame {
             res.setVisible(false);
 
             for (CellEditorListener list : listeners) {
-                list.editingCanceled(new ChangeEvent(tbl));
+                list.editingCanceled(new ChangeEvent(Objects.requireNonNull(tbl)));
             }
         }
 
@@ -264,7 +264,7 @@ public class TabbedSelectionApp extends JFrame {
                     .setUserObject(getCellEditorValue());
 
             for (CellEditorListener list : lists) {
-                list.editingCanceled(new ChangeEvent(tree));
+                list.editingCanceled(new ChangeEvent(Objects.requireNonNull(tree)));
             }
         }
 
@@ -294,7 +294,7 @@ public class TabbedSelectionApp extends JFrame {
                     .setUserObject(getCellEditorValue());
 
             for (CellEditorListener list : lists) {
-                list.editingStopped(new ChangeEvent(tree));
+                list.editingStopped(new ChangeEvent(Objects.requireNonNull(tree)));
             }
 
             return true;
