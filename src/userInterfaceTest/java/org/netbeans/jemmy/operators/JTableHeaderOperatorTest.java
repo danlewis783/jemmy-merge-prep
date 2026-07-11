@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JTableHeaderOperatorTest {
 
     private JFrame frame;

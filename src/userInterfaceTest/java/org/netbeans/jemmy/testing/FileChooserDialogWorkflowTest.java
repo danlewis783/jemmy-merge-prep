@@ -23,6 +23,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -84,6 +85,10 @@ class FileChooserDialogWorkflowTest {
         return toReturn;
     }
 
+    private static File[] userFiles() {
+        return Objects.requireNonNull(userDir.listFiles(), "user.dir is not listable");
+    }
+
     @Test
     void test01() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
@@ -97,7 +102,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test02() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.selectFileType("All Files", STRICT);
             fcOp.selectFileType("No file", STRICT);
@@ -111,7 +116,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test03() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             assertThat(fcOp.getSource()).isSameAs(JFileChooserOperator.waitJFileChooser());
             fcOp.chooseFile(fn);
@@ -122,7 +127,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test04() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             assertThat(userDir).isEqualTo(fcOp.getCurrentDirectory());
             fcOp.chooseFile(fn);
@@ -133,7 +138,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test05() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
             assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
@@ -144,7 +149,7 @@ class FileChooserDialogWorkflowTest {
     void test06() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             File firstFile = null;
-            for (File file : userDir.listFiles()) {
+            for (File file : userFiles()) {
                 if (!file.isDirectory()) {
                     firstFile = file;
 
@@ -160,7 +165,7 @@ class FileChooserDialogWorkflowTest {
                 assertThat(isFirstFileDisplayed)
                         .as("expected first file (non-directory) " + firstFileName + " to be selected")
                         .isTrue();
-                String fn = userDir.listFiles()[0].getCanonicalPath();
+                String fn = userFiles()[0].getCanonicalPath();
                 fcOp.chooseFile(fn);
                 assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
             }
@@ -170,7 +175,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test07() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
             assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
@@ -181,7 +186,7 @@ class FileChooserDialogWorkflowTest {
     void test08() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             File firstDir = null;
-            for (File file : userDir.listFiles()) {
+            for (File file : userFiles()) {
                 if (file.isDirectory()) {
                     firstDir = file;
 
@@ -194,7 +199,7 @@ class FileChooserDialogWorkflowTest {
                 fcOp.selectFileType("No file", STRICT);
                 String firstDirName = firstDir.getName();
                 fcOp.waitFileDisplayed(firstDirName, STRICT);
-                String fn = userDir.listFiles()[0].getCanonicalPath();
+                String fn = userFiles()[0].getCanonicalPath();
                 fcOp.chooseFile(fn);
                 assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();
             }
@@ -204,7 +209,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test09() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.selectFileType("Nothing", STRICT);
             fcOp.waitFileCount(0);
@@ -226,7 +231,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test10() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             File parentFile = userDir.getParentFile();
             fcOp.selectPathDirectory(parentFile.getName(), STRICT);
@@ -239,7 +244,7 @@ class FileChooserDialogWorkflowTest {
     @Test
     void test11() {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userDir.listFiles()[0].getCanonicalPath();
+            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
             fcOp.chooseFile(fn);
             assertThat(JTextFieldOperator.waitFor(frameOp, fn, STRICT)).isNotNull();

@@ -58,7 +58,7 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JSpinnerOperatorTest {
     private static final StringComparator STRICT = StringComparators.strict();
 
@@ -325,7 +325,7 @@ class JSpinnerOperatorTest {
         assertThat(jFrameOp).isNotNull();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         assertThat(jSpinnerOp).isNotNull();
-        AtomicReference<JTextField> textFieldRef = new AtomicReference<>();
+        AtomicReference<@Nullable JTextField> textFieldRef = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> textFieldRef.set(new JTextField()));
         jSpinnerOp.setEditor(Objects.requireNonNull(textFieldRef.get()));
         assertThat(jSpinnerOp.getEditor()).isEqualTo(textFieldRef.get());

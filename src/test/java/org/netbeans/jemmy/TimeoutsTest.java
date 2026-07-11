@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
@@ -214,7 +215,7 @@ class TimeoutsTest {
         final long timeout = 400L;
         final long timeoutSlackMs = 500L;
 
-        AtomicReference<Exception> caught = new AtomicReference<>();
+        AtomicReference<@Nullable Exception> caught = new AtomicReference<>();
 
         try (TimeoutOverride t = Timeouts.override(key, timeout)) {
 
@@ -264,7 +265,7 @@ class TimeoutsTest {
 
         long timeout = 400L;
 
-        AtomicReference<Exception> caught = new AtomicReference<>();
+        AtomicReference<@Nullable Exception> caught = new AtomicReference<>();
 
         try (TimeoutOverride t = Timeouts.override(key, timeout)) {
 

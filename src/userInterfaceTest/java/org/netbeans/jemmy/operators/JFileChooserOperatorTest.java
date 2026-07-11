@@ -37,6 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.UIManager;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +52,7 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 final class JFileChooserOperatorTest {
 
     private static final String FN2 = "showit.txt";
@@ -125,7 +126,7 @@ final class JFileChooserOperatorTest {
     @Test
     void testFindJFileChooser() throws InterruptedException, InvocationTargetException {
         assertThat(JFileChooserOperator.findJFileChooser(frame)).isNotNull();
-        AtomicReference<JDialog> dialogRef = new AtomicReference<>();
+        AtomicReference<@Nullable JDialog> dialogRef = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> {
             JDialog dialog = new JDialog();
             dialog.setModal(false);

@@ -29,7 +29,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_010
 // UI fixtures are created on the EDT in the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class ModalDialogWaitingTest {
     private static final String TITLE = "StagedDialogsApp";
 

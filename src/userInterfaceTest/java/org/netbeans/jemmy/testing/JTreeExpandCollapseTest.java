@@ -33,7 +33,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_006
 // fields are assigned at the start of the test before the checker reads them
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JTreeExpandCollapseTest {
 
     private JTreeOperator to;

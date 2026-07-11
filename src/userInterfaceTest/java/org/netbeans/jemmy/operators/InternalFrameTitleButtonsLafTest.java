@@ -34,7 +34,7 @@ import org.netbeans.jemmy.util.LookAndFeel;
  * {@link InternalFramePopupMenuDriverTest}).
  */
 // UI fixtures are created on the EDT inside each test; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class InternalFrameTitleButtonsLafTest {
 
     private JFrame frame;

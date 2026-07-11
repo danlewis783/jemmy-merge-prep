@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -46,7 +47,7 @@ public class RobotDriver extends LightSupportiveDriver {
     private static final double CONSTANT1 = 0.75;
     private static final double CONSTANT2 = 12.0;
     private final TimeoutKey robotAutoDelay;
-    private final AtomicReference<Robot> robotRef = new AtomicReference<>();
+    private final AtomicReference<@Nullable Robot> robotRef = new AtomicReference<>();
     private final boolean smooth;
     private boolean haveOldPos;
     private double oldX;

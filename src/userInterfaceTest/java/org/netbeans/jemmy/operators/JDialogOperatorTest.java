@@ -36,6 +36,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JDialogOperatorTest {
 
     private JDialog dialog;
@@ -137,7 +138,7 @@ class JDialogOperatorTest {
     @Test
     void getJMenuBar() throws InterruptedException, InvocationTargetException {
         JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
-        AtomicReference<JMenuBar> jMenuBar = new AtomicReference<>();
+        AtomicReference<@Nullable JMenuBar> jMenuBar = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> jMenuBar.set(new JMenuBar()));
         operator.setJMenuBar(Objects.requireNonNull(jMenuBar.get()));
         assertThat(onQueue(dialog::getJMenuBar)).isNotNull();
@@ -155,7 +156,7 @@ class JDialogOperatorTest {
     @Test
     void getContentPane() throws InterruptedException, InvocationTargetException {
         JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
-        AtomicReference<JScrollPane> jScrollPane = new AtomicReference<>();
+        AtomicReference<@Nullable JScrollPane> jScrollPane = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> jScrollPane.set(new JScrollPane()));
         operator.setContentPane(Objects.requireNonNull(jScrollPane.get()));
         assertThat(onQueue(dialog::getContentPane)).isNotNull();
@@ -165,7 +166,7 @@ class JDialogOperatorTest {
     @Test
     void getGlassPane() throws InterruptedException, InvocationTargetException {
         JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
-        AtomicReference<JScrollPane> glassPane = new AtomicReference<>();
+        AtomicReference<@Nullable JScrollPane> glassPane = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> glassPane.set(new JScrollPane()));
         operator.setGlassPane(Objects.requireNonNull(glassPane.get()));
         assertThat(onQueue(dialog::getGlassPane)).isNotNull();
@@ -202,7 +203,7 @@ class JDialogOperatorTest {
         assertThat(operator1).isNotNull();
         JDialog dialog1 = (JDialog) JDialogOperator.getTopModalDialog();
         assertThat(dialog1).isNotNull();
-        AtomicReference<GetTopModalDialogRunnable2> runnable2 = new AtomicReference<>();
+        AtomicReference<@Nullable GetTopModalDialogRunnable2> runnable2 = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> runnable2.set(new GetTopModalDialogRunnable2(dialog)));
         EventQueue.invokeAndWait(runnable2.get());
         JDialogOperator operator2 = JDialogOperator.waitFor("JDialogOperatorTest");

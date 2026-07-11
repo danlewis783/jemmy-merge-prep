@@ -32,7 +32,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.WindowOperator;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class AccessibleDescriptionPredicateTest {
 
     private JButton button;

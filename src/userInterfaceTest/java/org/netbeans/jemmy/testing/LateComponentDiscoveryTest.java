@@ -37,7 +37,7 @@ import org.netbeans.jemmy.operators.JLabelOperator;
 // formerly scenario test jemmy_048
 class LateComponentDiscoveryTest {
 
-    private final AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
+    private final AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();
 
     @Test
     void doit() throws Exception {
@@ -60,7 +60,7 @@ class LateComponentDiscoveryTest {
                     .as("check that the background search got underway")
                     .isTrue();
 
-            AtomicReference<JLabel> jLabelRef = new AtomicReference<>();
+            AtomicReference<@Nullable JLabel> jLabelRef = new AtomicReference<>();
             EventQueue.invokeAndWait(() -> {
                 JLabel jLabel = new MyLabel();
                 jLabel.setText("AAAAAAAAAAAAAA");

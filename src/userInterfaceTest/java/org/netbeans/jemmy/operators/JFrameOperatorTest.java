@@ -43,7 +43,7 @@ import org.netbeans.jemmy.testing.MenuNavigationApp;
 import org.netbeans.jemmy.util.StringComparators;
 
 // mainFrame is assigned inside the EDT lambda in beforeEach, which NullAway cannot trace
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JFrameOperatorTest {
     private JFrame mainFrame;
 

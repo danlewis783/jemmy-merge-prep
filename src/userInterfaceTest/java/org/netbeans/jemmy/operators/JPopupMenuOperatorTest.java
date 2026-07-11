@@ -58,7 +58,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 @ExtendWith(DumpOnFailure.class)
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 final class JPopupMenuOperatorTest {
 
     private JFrame frame;
@@ -197,7 +197,7 @@ final class JPopupMenuOperatorTest {
         EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
         JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
         assertThat(operator).isNotNull();
-        AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
+        AtomicReference<@Nullable JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("4")));
         operator.add(Objects.requireNonNull(menuItem.get()));
         operator.add("12345");
@@ -291,7 +291,7 @@ final class JPopupMenuOperatorTest {
         EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
         JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
         assertThat(operator).isNotNull();
-        AtomicReference<JButton> button = new AtomicReference<>();
+        AtomicReference<@Nullable JButton> button = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> button.set(new JButton("Hello")));
         operator.insert(Objects.requireNonNull(button.get()), 0);
         operator.insert(new NullAction(), 0);

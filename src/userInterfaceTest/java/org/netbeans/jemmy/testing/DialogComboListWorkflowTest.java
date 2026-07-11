@@ -56,7 +56,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_001
 // UI fixtures are created on the EDT in the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class DialogComboListWorkflowTest {
 
     private DialogComboListApp application001;

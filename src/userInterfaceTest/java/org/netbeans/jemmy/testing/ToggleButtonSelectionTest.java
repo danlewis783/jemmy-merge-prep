@@ -44,7 +44,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_011
 // operator fields are assigned mid-test before the checker lambdas read them
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class ToggleButtonSelectionTest {
 
     private JCheckBoxOperator boxOper;

@@ -31,6 +31,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JFrame;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -47,7 +48,7 @@ class EventToolTest {
     void doit() throws Exception {
         EventTool eventTool = EventTool.getInstance();
         eventTool.addListeners(AWTEvent.CONTAINER_EVENT_MASK);
-        AtomicReference<JFrame> jFrameRef = new AtomicReference<>();
+        AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame("EventToolTest");
             jFrame.setLocationRelativeTo(null);

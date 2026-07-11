@@ -28,13 +28,13 @@ public final class MethodInvokeCallable implements Callable<Object> {
     private final ClassReference<?> classReference;
     private final Component component;
     private final String methodName;
-    private final @Nullable Class<?>[] paramClasses;
-    private final @Nullable Object[] params;
+    private final Class<?> @Nullable [] paramClasses;
+    private final Object @Nullable [] params;
 
     public MethodInvokeCallable(
             String methodName,
-            @Nullable Object[] params,
-            @Nullable Class<?>[] paramClasses,
+            Object @Nullable [] params,
+            Class<?> @Nullable [] paramClasses,
             Component component,
             ClassReference<?> classReference) {
         this.methodName = methodName;

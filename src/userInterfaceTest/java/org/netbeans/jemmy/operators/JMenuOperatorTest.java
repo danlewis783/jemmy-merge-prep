@@ -48,7 +48,7 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JMenuOperatorTest {
 
     @BeforeAll
@@ -195,7 +195,7 @@ class JMenuOperatorTest {
         assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
-        AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
+        AtomicReference<@Nullable JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("JMenuOperatorTest1")));
         jMenuOp.add(Objects.requireNonNull(menuItem.get()));
         jMenuOp.add("JMenuOperatorTest2");
@@ -314,7 +314,7 @@ class JMenuOperatorTest {
         assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
-        AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
+        AtomicReference<@Nullable JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
         jMenuOp.insert(Objects.requireNonNull(menuItem.get()), 0);
         jMenuOp.insert("Testing", 0);
@@ -392,7 +392,7 @@ class JMenuOperatorTest {
         assertThat(jMenuBarOp).isNotNull();
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
         assertThat(jMenuOp).isNotNull();
-        AtomicReference<JMenuItem> menuItem = new AtomicReference<>();
+        AtomicReference<@Nullable JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("Test")));
         jMenuOp.remove(Objects.requireNonNull(menuItem.get()));
     }

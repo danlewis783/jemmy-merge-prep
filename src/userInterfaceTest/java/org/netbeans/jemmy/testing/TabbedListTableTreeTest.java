@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -49,7 +50,7 @@ class TabbedListTableTreeTest {
                 JTabbedPaneOperator.waitJTabbedPane(frame, "Table Page", StringComparators.strict(), 0));
         tabbedPaneOp.selectPage("List Page", StringComparators.strict());
 
-        AtomicReference<Component> compRef = new AtomicReference<>();
+        AtomicReference<@Nullable Component> compRef = new AtomicReference<>();
 
         JListOperator listOp = JListOperator.of(
                 JListOperator.waitJList(frame, null, StringComparators.caseInsensitiveSubstring(), -1));

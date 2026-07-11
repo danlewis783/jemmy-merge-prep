@@ -89,14 +89,14 @@ public final class EventDispatcher {
         robotReleaseModifiers(modifiers);
     }
 
-    public Object invokeMethod(String methodName, @Nullable Object[] params, @Nullable Class<?>[] paramClasses) {
+    public Object invokeMethod(String methodName, Object @Nullable [] params, Class<?> @Nullable [] paramClasses) {
         return QueueTool.getInstance()
                 .invokeSmoothly(
                         Caller.of(new MethodInvokeCallable(methodName, params, paramClasses, component, reference)));
     }
 
     public Object invokeExistingMethod(
-            String methodName, @Nullable Object[] params, @Nullable Class<?>[] paramClasses) {
+            String methodName, Object @Nullable [] params, Class<?> @Nullable [] paramClasses) {
         return invokeMethod(methodName, params, paramClasses);
     }
 

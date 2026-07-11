@@ -40,7 +40,7 @@ import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
  */
 @ExtendWith(DumpOnFailure.class)
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class InternalFramePopupMenuDriverTest {
 
     private JFrame frame;

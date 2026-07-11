@@ -40,7 +40,7 @@ import org.junit.jupiter.api.Test;
  * and without an enclosing scroll pane. The HTML fixtures link to each other by named anchors.
  */
 // UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JEditorPaneClickOnReferenceTest {
 
     private static final String PAGE1 = "page1";

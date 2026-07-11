@@ -43,7 +43,7 @@ import org.netbeans.jemmy.util.StringComparators;
  */
 @ExtendWith(DumpOnFailure.class)
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings("NullAway.Init")
+@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
 class JToolTipOperatorTest {
 
     private static final String TOOLTIP_TEXT = "A simple Tooltip";
