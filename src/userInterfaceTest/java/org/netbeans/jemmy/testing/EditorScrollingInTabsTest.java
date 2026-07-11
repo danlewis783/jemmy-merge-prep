@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.fail;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.util.function.Function;
@@ -125,7 +124,8 @@ class EditorScrollingInTabsTest {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
             FunctionRepeater.on(new SelectedTextChecker(tco, eta)).runUntilNotNull(null);
         } catch (TimeoutExpiredException e) {
-            fail("\nWrong text selected: " + tco.getSelectedText() + "\n" + "Expected           : " + eta);
+            // the wait gave up; assert the end state so the failure shows actual vs expected
+            assertThat(tco.getSelectedText()).as("selected text").isEqualTo(eta);
         }
     }
 

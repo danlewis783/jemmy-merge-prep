@@ -18,6 +18,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.Container;
 import java.awt.EventQueue;
@@ -147,15 +148,11 @@ class JMenuItemOperatorTest {
         JMenuItemOperator jMenuItemOp = JMenuItemOperator.waitFor(jFrameOp);
         assertThat(jMenuItemOp).isNotNull();
 
-        try {
-            jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a'));
-        } catch (JemmyException e) {
-            assertThat(e.getMessage()).isEqualTo("Throwable captured by invocation event");
-            Throwable cause = e.getCause();
-            assertThat(cause).isNotNull();
-            assertThat(cause.getMessage())
-                    .isEqualTo("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.");
-        }
+        assertThatExceptionOfType(JemmyException.class)
+                .isThrownBy(() -> jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a')))
+                .withMessage("Throwable captured by invocation event")
+                .havingCause()
+                .withMessage("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.");
 
         assertThat(jMenuItemOp.getAccelerator()).isNull();
     }
