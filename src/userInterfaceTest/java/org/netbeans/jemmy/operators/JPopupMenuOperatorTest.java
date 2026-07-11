@@ -18,6 +18,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -78,6 +79,9 @@ final class JPopupMenuOperatorTest {
             popup = jPopupMenu;
             jFrame.setSize(400, 300);
             jFrame.setLocationRelativeTo(null);
+            // the popup tests drive real Robot clicks at screen coordinates; if another window
+            // overlaps this frame the click lands on that window and the menu push times out
+            jFrame.setAlwaysOnTop(true);
             jFrame.setVisible(true);
             frame = jFrame;
         });
@@ -207,9 +211,9 @@ final class JPopupMenuOperatorTest {
         assertThat(operator).isNotNull();
         NullPopupMenuListener listener = new NullPopupMenuListener();
         operator.addPopupMenuListener(listener);
-        assertThat(popup.getPopupMenuListeners()).hasSize(2);
+        assertThat(onQueue(popup::getPopupMenuListeners)).hasSize(2);
         operator.removePopupMenuListener(listener);
-        assertThat(popup.getPopupMenuListeners()).hasSize(1);
+        assertThat(onQueue(popup::getPopupMenuListeners)).hasSize(1);
     }
 
     @Test
