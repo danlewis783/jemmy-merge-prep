@@ -84,6 +84,14 @@ public final class FunctionRunner<T, R> {
                             "timeout \"%s\" (%d ms) exceeded after (%d ms)",
                             timeoutKey, timeout, (System.currentTimeMillis() - startTime)),
                     e);
+        } finally {
+            // cancel on timeout or caller interrupt; an abandoned function would otherwise
+            // occupy the single worker thread and starve every later submission
+            if (!future.isDone()) {
+                if (!future.cancel(true)) {
+                    logger.warn("abandoned function could not be cancelled");
+                }
+            }
         }
 
         return null;

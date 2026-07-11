@@ -33,13 +33,13 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Isolated
 class FunctionRunnerTimeoutTest {
 
-    private static final long ACTION_TIME = 700L;
+    private static final long ACTION_TIME = 2_000L;
     private static final long MAX_ACTION_TIME = 300L;
     private static final long EXIT_WAIT_TIME = 5_000L;
 
-    private final CountDownLatch abort = new CountDownLatch(1);
+    private final CountDownLatch neverOpened = new CountDownLatch(1);
     private final CountDownLatch functionExited = new CountDownLatch(1);
-    private final AtomicBoolean completedWithoutInterruption = new AtomicBoolean(false);
+    private final AtomicBoolean interrupted = new AtomicBoolean(false);
     private TimeoutOverride override;
 
     @BeforeEach
@@ -54,26 +54,21 @@ class FunctionRunnerTimeoutTest {
 
     @Test
     void test() throws Exception {
-        // FunctionRunner abandons (does not cancel) the function when the timeout expires, so it
-        // keeps occupying the shared worker thread until ACTION_TIME elapses or the abort latch opens
+        // when the timeout expires, FunctionRunner cancels the function, interrupting it so the
+        // shared worker thread is freed for subsequent submissions
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(() -> FunctionRunner.on((Function<Void, Boolean>) v -> {
                             try {
-                                long deadline = System.currentTimeMillis() + ACTION_TIME;
-                                long remaining;
-                                while ((remaining = deadline - System.currentTimeMillis()) > 0) {
-                                    try {
-                                        if (abort.await(remaining, TimeUnit.MILLISECONDS)) {
-                                            return null;
-                                        }
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-
-                                completedWithoutInterruption.set(true);
+                                // blocks until interrupted by cancellation; the timed await is a
+                                // safety valve so a cancellation regression cannot hang the test
+                                neverOpened.await(ACTION_TIME, TimeUnit.MILLISECONDS);
 
                                 return true;
+                            } catch (InterruptedException e) {
+                                interrupted.set(true);
+                                Thread.currentThread().interrupt();
+
+                                return null;
                             } finally {
                                 functionExited.countDown();
                             }
@@ -82,13 +77,15 @@ class FunctionRunnerTimeoutTest {
                 .withMessageContaining(String.format(
                         "timeout \"%s\" (%d ms) exceeded after (", TimeoutKey.Testing_A, MAX_ACTION_TIME));
 
-        abort.countDown();
-
         assertThat(functionExited.await(EXIT_WAIT_TIME, TimeUnit.MILLISECONDS))
-                .as("check that the abandoned function exited once released")
+                .as("check that the timed-out function exited")
                 .isTrue();
-        assertThat(completedWithoutInterruption)
-                .as("check that the function was released before completing on its own")
-                .isFalse();
+        assertThat(interrupted)
+                .as("check that the function was interrupted by cancellation rather than finishing on its own")
+                .isTrue();
+
+        assertThat(FunctionRunner.on((Function<Void, String>) v -> "done").submitAndGetDefaultTimeout(null))
+                .as("check that the worker thread accepts new work after the cancellation")
+                .isEqualTo("done");
     }
 }
