@@ -433,9 +433,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void waitHasFocus() {
-        FunctionRepeater<Void, Boolean> focusWaiter =
-                FunctionRepeater.on(obj -> hasFocus() ? true : null, TimeoutKey.ComponentOperator_WaitFocusTimeout);
-        focusWaiter.runUntilNotNull(null);
+        FunctionRepeater.waitFor(this::hasFocus, TimeoutKey.ComponentOperator_WaitFocusTimeout);
     }
 
     public void waitComponentVisible(boolean visibility) {

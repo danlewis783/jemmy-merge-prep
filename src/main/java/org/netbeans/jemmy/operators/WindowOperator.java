@@ -193,11 +193,8 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static void waitWindowCount(@Nullable Window owner, Predicate<Component> chooser, int count) {
-        FunctionRepeater.on(
-                        (java.util.function.Function<Void, Boolean>)
-                                unused -> (countWindows(owner, chooser) == count) ? true : null,
-                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                .runUntilNotNull(null);
+        FunctionRepeater.waitFor(
+                () -> countWindows(owner, chooser) == count, TimeoutKey.WindowWaiter_WaitWindowTimeout);
     }
 
     public static int countWindows(Predicate<Component> chooser) {

@@ -28,7 +28,6 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.util.Collections;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 import javax.swing.JScrollBar;
 import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
@@ -58,11 +57,9 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
         Point pnt = new Point(0, 0);
         drag(oper, pnt);
         try {
-            FunctionRepeater.on(
-                            (Function<Void, Boolean>)
-                                    unused -> (scrollBar.getValue() <= scrollBar.getMinimum()) ? Boolean.TRUE : null,
-                            TimeoutKey.JScrollBarOperator_WholeScrollTimeout)
-                    .runUntilNotNull(null);
+            FunctionRepeater.waitFor(
+                    () -> scrollBar.getValue() <= scrollBar.getMinimum(),
+                    TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
         } finally {
             drop(oper, pnt);
         }
@@ -75,13 +72,9 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
         Point pnt = new Point(oper.getWidth() - 1, oper.getHeight() - 1);
         drag(oper, pnt);
         try {
-            FunctionRepeater.on(
-                            (Function<Void, Boolean>) unused ->
-                                    (scrollBar.getValue() <= scrollBar.getMaximum() - scrollBar.getVisibleAmount())
-                                            ? Boolean.TRUE
-                                            : null,
-                            TimeoutKey.JScrollBarOperator_WholeScrollTimeout)
-                    .runUntilNotNull(null);
+            FunctionRepeater.waitFor(
+                    () -> scrollBar.getValue() <= scrollBar.getMaximum() - scrollBar.getVisibleAmount(),
+                    TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
         } finally {
             drop(oper, pnt);
         }
