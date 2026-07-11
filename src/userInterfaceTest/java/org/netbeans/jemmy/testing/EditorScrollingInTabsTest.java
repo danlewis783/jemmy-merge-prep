@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.fail;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
-import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -57,11 +56,15 @@ class EditorScrollingInTabsTest {
         assertThat(JFrameOperator.of(frm).getContainers().length)
                 .as("Jemmy issue #4420394")
                 .isEqualTo(0);
-        JTabbedPaneOperator tp = JTabbedPaneOperator.of(Objects.requireNonNull(
-                JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1)));
+        JTabbedPane tabbedPane =
+                JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1);
+        assertThat(tabbedPane).isNotNull();
+        JTabbedPaneOperator tp = JTabbedPaneOperator.of(tabbedPane);
         tp.selectPage("JEditorPane", StringComparators.substring());
-        JEditorPaneOperator to = JEditorPaneOperator.of(Objects.requireNonNull(
-                JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring())));
+        JEditorPane editorPane =
+                JEditorPaneOperator.findJEditorPane(frm, null, StringComparators.caseInsensitiveSubstring());
+        assertThat(editorPane).isNotNull();
+        JEditorPaneOperator to = JEditorPaneOperator.of(editorPane);
         JEditorPaneOperator t1 = JEditorPaneOperator.waitFor(frmo);
         assertThat(to.getSource()).isSameAs(t1.getSource());
         assertThat(JEditorPaneOperator.findJEditorPane(frm, ComponentPredicates.alwaysTrue()))
@@ -92,8 +95,9 @@ class EditorScrollingInTabsTest {
                 .isNotNull();
         testJEditorPane(to);
         tp.selectPage("JTextArea", StringComparators.substring());
-        JTextAreaOperator tao = JTextAreaOperator.of(Objects.requireNonNull(
-                JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring())));
+        JTextArea textArea = JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring());
+        assertThat(textArea).isNotNull();
+        JTextAreaOperator tao = JTextAreaOperator.of(textArea);
         tao.typeText(allChars);
         assertThat(tao.getText()).isEqualTo(allChars);
         tao.selectText(0, 20);

@@ -24,7 +24,6 @@ import java.awt.EventQueue;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -152,7 +151,9 @@ class JMenuItemOperatorTest {
             jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a'));
         } catch (JemmyException e) {
             assertThat(e.getMessage()).isEqualTo("Throwable captured by invocation event");
-            assertThat(Objects.requireNonNull(e.getCause()).getMessage())
+            Throwable cause = e.getCause();
+            assertThat(cause).isNotNull();
+            assertThat(cause.getMessage())
                     .isEqualTo("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.");
         }
 

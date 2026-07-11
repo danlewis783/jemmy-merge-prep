@@ -23,7 +23,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.io.File;
 import java.time.Duration;
-import java.util.Objects;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -65,8 +65,9 @@ class FileChooserDialogWorkflowTest {
         FileChooserLaunchApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("FileChooserLaunchApp");
         frameOp = JFrameOperator.of(jFrame);
-        launchFileChooserButtonOp =
-                JButtonOperator.of(Objects.requireNonNull(JButtonOperator.findJButton(jFrame, "...", STRICT)));
+        JButton launchButton = JButtonOperator.findJButton(jFrame, "...", STRICT);
+        assertThat(launchButton).isNotNull();
+        launchFileChooserButtonOp = JButtonOperator.of(launchButton);
     }
 
     @AfterEach

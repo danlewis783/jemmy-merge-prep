@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.JFrame;
 import javax.swing.JTree;
@@ -45,14 +44,20 @@ class JTreeExpandCollapseTest {
         TreeExpandApp.main();
         QueueTool.getInstance().waitEmpty(100);
         JFrame frm = JFrameOperator.waitJFrame("TreeExpandApp");
-        tree = Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1));
+        JTree foundTree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
+        assertThat(foundTree).isNotNull();
+        tree = foundTree;
         to = JTreeOperator.of(tree);
         TreeChecker checker = new TreeChecker();
         to.selectRow(0);
         to.waitSelected(0);
-        to.doExpandPath(Objects.requireNonNull(to.findPath("node00", "|", StringComparators.strict())));
+        TreePath firstPath = to.findPath("node00", "|", StringComparators.strict());
+        assertThat(firstPath).isNotNull();
+        to.doExpandPath(firstPath);
         FunctionRepeater.on(checker).runUntilNotNull("first expanded");
-        to.doExpandPath(Objects.requireNonNull(to.findPath("node00", "1", "|", StringComparators.strict())));
+        TreePath secondPath = to.findPath("node00", "1", "|", StringComparators.strict());
+        assertThat(secondPath).isNotNull();
+        to.doExpandPath(secondPath);
         FunctionRepeater.on(checker).runUntilNotNull("second expanded");
         to.collapsePath(to.findPath("node00", "|", StringComparators.strict()));
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
@@ -66,7 +71,8 @@ class JTreeExpandCollapseTest {
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
         to.collapseRow(2);
         FunctionRepeater.on(checker).runUntilNotNull("second collapsed");
-        TreePath pathy = Objects.requireNonNull(to.findPath("node00", "1", "|", StringComparators.strict()));
+        TreePath pathy = to.findPath("node00", "1", "|", StringComparators.strict());
+        assertThat(pathy).isNotNull();
         to.selectPath(pathy);
         to.selectPath(pathy);
         assertThat(to.isEditing())

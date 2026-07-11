@@ -18,7 +18,6 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -78,21 +77,24 @@ class ToggleButtonSelectionTest {
         Object[][] params = {{"classname"}};
         Class<?>[][] classes = {{Object.class}};
         Object[] results = {"JCheckBox"};
-        JCheckBox box = Objects.requireNonNull(JCheckBoxOperator.findJCheckBox(
-                frm0, new PropertyPredicate(new String[] {"getClientProperty"}, params, classes, results)));
+        JCheckBox box = JCheckBoxOperator.findJCheckBox(
+                frm0, new PropertyPredicate(new String[] {"getClientProperty"}, params, classes, results));
+        assertThat(box).isNotNull();
         JCheckBoxOperator bo0 = JCheckBoxOperator.of(box);
         JCheckBoxOperator bo1 = JCheckBoxOperator.waitFor(frmo);
         JCheckBoxOperator bo2 = JCheckBoxOperator.waitFor(frmo, "JCheckBox", StringComparators.strict());
         assertThat(bo0.getSource()).isSameAs(bo1.getSource());
         assertThat(bo0.getSource()).isSameAs(bo2.getSource());
-        JRadioButton radioButton = Objects.requireNonNull(JRadioButtonOperator.findJRadioButton(
+        JRadioButton radioButton = JRadioButtonOperator.findJRadioButton(
                 frm0,
                 new StringPropertyPredicate(
-                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton"})));
-        JRadioButton radioButton1 = Objects.requireNonNull(JRadioButtonOperator.findJRadioButton(
+                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton"}));
+        assertThat(radioButton).isNotNull();
+        JRadioButton radioButton1 = JRadioButtonOperator.findJRadioButton(
                 frm0,
                 new StringPropertyPredicate(
-                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton1"})));
+                        new String[] {"getClientProperty"}, params, classes, new String[] {"JRadioButton1"}));
+        assertThat(radioButton1).isNotNull();
         JRadioButtonOperator rb0 = JRadioButtonOperator.of(radioButton1);
         JRadioButtonOperator rb1 = JRadioButtonOperator.waitFor(frmo, 1);
         JRadioButtonOperator rb2 = JRadioButtonOperator.waitFor(frmo, "JRadioButton", StringComparators.substring(), 1);

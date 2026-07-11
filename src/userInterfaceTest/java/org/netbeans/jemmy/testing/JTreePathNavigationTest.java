@@ -23,13 +23,13 @@ import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
+import javax.swing.JTree;
 import javax.swing.ListModel;
 import javax.swing.tree.TreePath;
 import org.jspecify.annotations.Nullable;
@@ -51,9 +51,11 @@ class JTreePathNavigationTest {
     void test() {
         TreePathApp.main();
         JFrame frm = JFrameOperator.waitJFrame("TreePathApp");
-        JTreeOperator to = JTreeOperator.of(
-                Objects.requireNonNull(JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1)));
-        TreePath pth = Objects.requireNonNull(to.findPath("node00", "|", StringComparators.strict()));
+        JTree jTree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
+        assertThat(jTree).isNotNull();
+        JTreeOperator to = JTreeOperator.of(jTree);
+        TreePath pth = to.findPath("node00", "|", StringComparators.strict());
+        assertThat(pth).isNotNull();
         assertThat(to.getChildCount(pth)).isEqualTo(2);
         assertThat(to.getChildCount(pth.getLastPathComponent())).isEqualTo(2);
         assertThat(to.getChild(pth.getLastPathComponent(), 0))
@@ -64,8 +66,9 @@ class JTreePathNavigationTest {
                 .isSameAs(to.getChildren(pth.getLastPathComponent())[0]);
         assertThat(to.getChildPaths(pth)[1].getLastPathComponent())
                 .isSameAs(to.getChildren(pth.getLastPathComponent())[1]);
-        JListOperator jListOp = JListOperator.of(
-                Objects.requireNonNull(JListOperator.findJList(frm, null, StringComparators.strict(), -1)));
+        JList<?> jList = JListOperator.findJList(frm, null, StringComparators.strict(), -1);
+        assertThat(jList).isNotNull();
+        JListOperator jListOp = JListOperator.of(jList);
         JPopupMenuOperator pmo;
         String[] strPaths = {"", "node00", "node00|node000", "node00|node001", "node01"};
         TreePath[] paths = new TreePath[strPaths.length];
@@ -104,8 +107,8 @@ class JTreePathNavigationTest {
             FunctionRepeater.on(checker).runUntilNotNull(pths);
         }
 
-        pth = Objects.requireNonNull(
-                to.findPath(new String[] {"node", "node"}, new int[] {1, 1}, StringComparators.substring()));
+        pth = to.findPath(new String[] {"node", "node"}, new int[] {1, 1}, StringComparators.substring());
+        assertThat(pth).isNotNull();
         to.callPopupOnPath(pth);
         pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
         pmo.pushMenu("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict());

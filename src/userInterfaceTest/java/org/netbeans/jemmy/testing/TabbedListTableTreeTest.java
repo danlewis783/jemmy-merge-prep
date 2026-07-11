@@ -21,12 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.ComponentSearcher;
@@ -66,8 +67,9 @@ class TabbedListTableTreeTest {
         Component comp1 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("1"));
         assertThat(comp1).isNotNull();
         tabbedPaneOp.selectPage("Table Page", StringComparators.strict());
-        JTableOperator tableOp = JTableOperator.of(Objects.requireNonNull(
-                JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1)));
+        JTable table = JTableOperator.findJTable(frame, null, StringComparators.caseInsensitiveSubstring(), -1, -1);
+        assertThat(table).isNotNull();
+        JTableOperator tableOp = JTableOperator.of(table);
         tableOp.getHeaderOperator().moveColumn(0, 1);
         assertThat(tableOp.findCellRow("04", StringComparators.strict(), 0, 0)).isEqualTo(4);
         assertThat(tableOp.findCell("04", StringComparators.strict(), 0).x).isEqualTo(0);
@@ -89,11 +91,13 @@ class TabbedListTableTreeTest {
         assertThat(comp11).isNotNull();
         tableOp.clickOnCell(2, 2, 1);
         tabbedPaneOp.selectPage("Tree Page", StringComparators.strict());
-        JTreeOperator treeOp = JTreeOperator.of(Objects.requireNonNull(
-                JTreeOperator.findJTree(frame, null, StringComparators.caseInsensitiveSubstring(), -1)));
+        JTree jTree = JTreeOperator.findJTree(frame, null, StringComparators.caseInsensitiveSubstring(), -1);
+        assertThat(jTree).isNotNull();
+        JTreeOperator treeOp = JTreeOperator.of(jTree);
         TreePath rootPath = treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
         treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
-        TreePath lastPath = Objects.requireNonNull(treeOp.findPath("40/44", "/", StringComparators.substring()));
+        TreePath lastPath = treeOp.findPath("40/44", "/", StringComparators.substring());
+        assertThat(lastPath).isNotNull();
         treeOp.selectPath(lastPath);
         EventQueue.invokeAndWait(() -> compRef.set(treeOp.getRenderedComponent(lastPath)));
         Component comp44 = new ComponentSearcher((Container) compRef.get()).findComponent(new LabelPredicate("!44!"));

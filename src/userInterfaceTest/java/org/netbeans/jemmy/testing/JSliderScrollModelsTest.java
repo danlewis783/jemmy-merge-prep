@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
-import java.util.Objects;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
@@ -37,17 +36,26 @@ class JSliderScrollModelsTest {
         SlidersApp.main();
         JFrame win = JFrameOperator.waitJFrame("SlidersApp");
         JFrameOperator wino = JFrameOperator.of(win);
+        JSlider slider0 = JSliderOperator.findJSlider(win, 0);
+        assertThat(slider0).isNotNull();
+        JSlider slider1 = JSliderOperator.findJSlider(win, 1);
+        assertThat(slider1).isNotNull();
+        JSlider slider2 = JSliderOperator.findJSlider(win, 2);
+        assertThat(slider2).isNotNull();
+        JSlider slider3 = JSliderOperator.findJSlider(win, 3);
+        assertThat(slider3).isNotNull();
         JSliderOperator[] ops = {
-            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 0))),
-            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 1))),
-            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 2))),
-            JSliderOperator.of(Objects.requireNonNull(JSliderOperator.findJSlider(win, 3)))
+            JSliderOperator.of(slider0),
+            JSliderOperator.of(slider1),
+            JSliderOperator.of(slider2),
+            JSliderOperator.of(slider3)
         };
         for (int i = 0; i < ops.length; i++) {
             assertThat(JSliderOperator.waitFor(wino, i).getSource()).isSameAs(ops[i].getSource());
         }
 
-        JLabel label = Objects.requireNonNull(JLabelOperator.findJLabel(win, "0", StringComparators.strict()));
+        JLabel label = JLabelOperator.findJLabel(win, "0", StringComparators.strict());
+        assertThat(label).isNotNull();
         int value;
         for (JSliderOperator op : ops) {
             int min = op.getMinimum();
@@ -55,18 +63,18 @@ class JSliderScrollModelsTest {
             int range = max - min;
             op.setScrollModel(JSliderOperator.PUSH_AND_WAIT_SCROLL_MODEL);
             op.scrollToMaximum();
-            assertThat(Integer.parseInt(label.getText())).isEqualTo(max);
+            assertThat(Integer.parseInt(onQueue(label::getText))).isEqualTo(max);
             value = div10(2.0 * range / 3.0);
             op.setScrollModel(JSliderOperator.CLICK_SCROLL_MODEL);
             op.scrollToValue(value);
-            assertThat(Integer.parseInt(label.getText())).isEqualTo(value);
+            assertThat(Integer.parseInt(onQueue(label::getText))).isEqualTo(value);
             value = div10((double) range / 3);
             op.setScrollModel(JSliderOperator.PUSH_AND_WAIT_SCROLL_MODEL);
             op.scrollToValue(value);
-            assertThat(Integer.parseInt(label.getText())).isEqualTo(value);
+            assertThat(Integer.parseInt(onQueue(label::getText))).isEqualTo(value);
             op.setScrollModel(JSliderOperator.CLICK_SCROLL_MODEL);
             op.scrollToMinimum();
-            assertThat(Integer.parseInt(label.getText())).isEqualTo(min);
+            assertThat(Integer.parseInt(onQueue(label::getText))).isEqualTo(min);
         }
 
         JSliderOperator op = ops[0];

@@ -22,7 +22,6 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 import javax.swing.Icon;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -240,21 +239,25 @@ class JColorChooserOperatorTest {
         operator.setColor(new Color(10, 20, 30));
         JTabbedPaneOperator.waitFor(operator).selectPage("RGB", StringComparators.strict());
 
-        assertThat(Objects.requireNonNull(operator.getRedSpinnerOperator()).getValue())
-                .isEqualTo(10);
-        assertThat(Objects.requireNonNull(operator.getGreenSpinnerOperator()).getValue())
-                .isEqualTo(20);
-        assertThat(Objects.requireNonNull(operator.getBlueSpinnerOperator()).getValue())
-                .isEqualTo(30);
-        assertThat(Objects.requireNonNull(operator.getAlphaSpinnerOperator()).getValue())
-                .isEqualTo(255);
+        JSpinnerOperator redSpinner = operator.getRedSpinnerOperator();
+        assertThat(redSpinner).isNotNull();
+        assertThat(redSpinner.getValue()).isEqualTo(10);
+        JSpinnerOperator greenSpinner = operator.getGreenSpinnerOperator();
+        assertThat(greenSpinner).isNotNull();
+        assertThat(greenSpinner.getValue()).isEqualTo(20);
+        JSpinnerOperator blueSpinner = operator.getBlueSpinnerOperator();
+        assertThat(blueSpinner).isNotNull();
+        assertThat(blueSpinner.getValue()).isEqualTo(30);
+        JSpinnerOperator alphaSpinner = operator.getAlphaSpinnerOperator();
+        assertThat(alphaSpinner).isNotNull();
+        assertThat(alphaSpinner.getValue()).isEqualTo(255);
         assertThat(operator.getRedSliderOperator()).isNotNull();
         assertThat(operator.getGreenSliderOperator()).isNotNull();
         assertThat(operator.getBlueSliderOperator()).isNotNull();
         assertThat(operator.getAlphaSliderOperator()).isNotNull();
-        assertThat(Objects.requireNonNull(operator.getColorCodeTextFieldOperator())
-                        .getText())
-                .isEqualToIgnoringCase("0A141E");
+        JTextFieldOperator colorCodeField = operator.getColorCodeTextFieldOperator();
+        assertThat(colorCodeField).isNotNull();
+        assertThat(colorCodeField.getText()).isEqualToIgnoringCase("0A141E");
 
         // accessors of the other tabs do not apply
         assertThat(operator.getHueSpinnerOperator()).isNull();
