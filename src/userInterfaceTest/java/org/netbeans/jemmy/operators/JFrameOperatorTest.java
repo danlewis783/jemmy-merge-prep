@@ -35,32 +35,39 @@ import javax.swing.JScrollPane;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.IndexedFramesApp;
 import org.netbeans.jemmy.testing.MenuNavigationApp;
 import org.netbeans.jemmy.util.StringComparators;
 
+// mainFrame is assigned inside the EDT lambda in beforeEach, which NullAway cannot trace
+@SuppressWarnings("NullAway.Init")
 class JFrameOperatorTest {
     private JFrame mainFrame;
 
     @BeforeEach
-    void beforeEach() {
-        mainFrame = new JFrame("JFrameOperatorTest");
-        mainFrame.setName("JFrameOperatorTest");
-        mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            mainFrame = new JFrame("JFrameOperatorTest");
+            mainFrame.setName("JFrameOperatorTest");
+            mainFrame.pack();
+            mainFrame.setLocationRelativeTo(null);
+        });
     }
 
     @AfterEach
-    void after() {
-        mainFrame.setVisible(false);
-        mainFrame.dispose();
+    void after() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            mainFrame.setVisible(false);
+            mainFrame.dispose();
+        });
     }
 
     @Test
-    void constructor() {
-        mainFrame.setVisible(true);
+    void constructor() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JFrameOperator operator2 = JFrameOperator.waitFor("JFrameOperatorTest");
@@ -70,8 +77,8 @@ class JFrameOperatorTest {
     }
 
     @Test
-    void gindJFrame() {
-        mainFrame.setVisible(true);
+    void findJFrame() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrame frame1 = JFrameOperator.findJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();
         JFrame frame2 = JFrameOperator.findJFrame("JFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -79,8 +86,8 @@ class JFrameOperatorTest {
     }
 
     @Test
-    void waitJFrame() {
-        mainFrame.setVisible(true);
+    void waitJFrame() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrame frame1 = JFrameOperator.waitJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();
         JFrame frame2 = JFrameOperator.waitJFrame("JFrameOperatorTest");
@@ -94,73 +101,73 @@ class JFrameOperatorTest {
     }
 
     @Test
-    void getAccessibleContext() {
-        mainFrame.setVisible(true);
+    void getAccessibleContext() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         assertThat(operator.getAccessibleContext()).isNotNull();
     }
 
     @Test
-    void getContentPane() {
-        mainFrame.setVisible(true);
+    void getContentPane() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JScrollPane scrollPane = new JScrollPane();
+        JScrollPane scrollPane = onQueue(JScrollPane::new);
         operator.setContentPane(scrollPane);
-        assertThat(scrollPane).isEqualTo(mainFrame.getContentPane());
+        assertThat(onQueue(mainFrame::getContentPane)).isEqualTo(scrollPane);
         assertThat(operator.getContentPane()).isNotNull();
     }
 
     @Test
-    void getDefaultCloseOperation() {
-        mainFrame.setVisible(true);
+    void getDefaultCloseOperation() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        assertThat(JFrame.EXIT_ON_CLOSE).isEqualTo(mainFrame.getDefaultCloseOperation());
-        assertThat(JFrame.EXIT_ON_CLOSE).isEqualTo(operator.getDefaultCloseOperation());
+        assertThat(onQueue(mainFrame::getDefaultCloseOperation)).isEqualTo(JFrame.EXIT_ON_CLOSE);
+        assertThat(operator.getDefaultCloseOperation()).isEqualTo(JFrame.EXIT_ON_CLOSE);
     }
 
     @Test
-    void getGlassPane() {
-        mainFrame.setVisible(true);
+    void getGlassPane() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JScrollPane scrollPane = new JScrollPane();
+        JScrollPane scrollPane = onQueue(JScrollPane::new);
         operator.setGlassPane(scrollPane);
-        assertThat(scrollPane).isEqualTo(mainFrame.getGlassPane());
+        assertThat(onQueue(mainFrame::getGlassPane)).isEqualTo(scrollPane);
         assertThat(operator.getGlassPane()).isNotNull();
     }
 
     @Test
-    void getJMenuBar() {
-        mainFrame.setVisible(true);
+    void getJMenuBar() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JMenuBar menuBar = new JMenuBar();
+        JMenuBar menuBar = onQueue(JMenuBar::new);
         operator.setJMenuBar(menuBar);
-        assertThat(menuBar).isEqualTo(mainFrame.getJMenuBar());
-        assertThat(mainFrame.getJMenuBar()).isEqualTo(operator.getJMenuBar());
+        assertThat(onQueue(mainFrame::getJMenuBar)).isEqualTo(menuBar);
+        assertThat(operator.getJMenuBar()).isEqualTo(menuBar);
     }
 
     @Test
-    void getLayeredPane() {
-        mainFrame.setVisible(true);
+    void getLayeredPane() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        JLayeredPane layeredPane = new JLayeredPane();
+        JLayeredPane layeredPane = onQueue(JLayeredPane::new);
         operator.setLayeredPane(layeredPane);
-        assertThat(layeredPane).isEqualTo(mainFrame.getLayeredPane());
+        assertThat(onQueue(mainFrame::getLayeredPane)).isEqualTo(layeredPane);
         assertThat(operator.getLayeredPane()).isNotNull();
     }
 
     @Test
-    void getRootPane() {
-        mainFrame.setVisible(true);
+    void getRootPane() throws InterruptedException, InvocationTargetException {
+        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        assertThat(mainFrame.getRootPane()).isEqualTo(operator.getRootPane());
+        assertThat(operator.getRootPane()).isEqualTo(onQueue(mainFrame::getRootPane));
     }
 
     // formerly scenario test jemmy_009
@@ -201,6 +208,15 @@ class JFrameOperatorTest {
         } finally {
             disposeApplicationFrames();
         }
+    }
+
+    private void showMainFrame() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> mainFrame.setVisible(true));
+    }
+
+    /** Runs the callable on the event dispatch thread so Swing component state is only touched there. */
+    private static <T> T onQueue(Callable<T> callable) {
+        return QueueTool.getInstance().invokeSmoothly(Caller.of(callable));
     }
 
     private void disposeApplicationFrames() throws InterruptedException, InvocationTargetException {
