@@ -62,13 +62,15 @@ class AccessibleDescriptionPredicateTest {
     }
 
     @AfterEach
-    void after() {
-        frame.setVisible(false);
-        frame.dispose();
-        dialog.setVisible(false);
-        dialog.dispose();
-        window.setVisible(false);
-        window.dispose();
+    void after() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+            dialog.setVisible(false);
+            dialog.dispose();
+            window.setVisible(false);
+            window.dispose();
+        });
     }
 
     @Test

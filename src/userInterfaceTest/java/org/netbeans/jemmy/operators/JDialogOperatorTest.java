@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -211,17 +212,25 @@ class JDialogOperatorTest {
     }
 
     @Test
-    void setLocationRelativeTo() {
-        dialog.setLocation(0, 0);
-        dialog.pack();
-        int x = dialog.getX();
-        int y = dialog.getY();
+    void setLocationRelativeTo() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            dialog.setLocation(0, 0);
+            dialog.pack();
+        });
         JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
+        int x = operator.getX();
+        int y = operator.getY();
         operator.setLocationRelativeTo(null);
-        assertThat(dialog.getX()).isNotEqualTo(x);
-        assertThat(operator.getX()).isEqualTo(dialog.getX());
-        assertThat(dialog.getY()).isNotEqualTo(y);
-        assertThat(operator.getY()).isEqualTo(dialog.getY());
+        AtomicInteger dialogX = new AtomicInteger();
+        AtomicInteger dialogY = new AtomicInteger();
+        EventQueue.invokeAndWait(() -> {
+            dialogX.set(dialog.getX());
+            dialogY.set(dialog.getY());
+        });
+        assertThat(dialogX).doesNotHaveValue(x);
+        assertThat(operator.getX()).isEqualTo(dialogX.get());
+        assertThat(dialogY).doesNotHaveValue(y);
+        assertThat(operator.getY()).isEqualTo(dialogY.get());
     }
 
     private static class GetTopModalDialogRunnable1 implements Runnable {

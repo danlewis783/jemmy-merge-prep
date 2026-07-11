@@ -83,7 +83,7 @@ class OperatorConstructorsSmokeTest {
         abo = AbstractButtonOperator.waitFor(bttFrameOper, "javax.swing.JMenuItem", StringComparators.strict());
         bo = JMenuItemOperator.waitFor(bttFrameOper, "", StringComparators.caseInsensitiveSubstring());
         assertThat(bo.getSource()).isSameAs(abo.getSource());
-        bttFrameOper.getSource().setVisible(false);
+        bttFrameOper.setVisible(false);
         JButtonOperator.waitFor(frameOper, "menus", StringComparators.caseInsensitiveSubstring())
                 .push();
         JFrameOperator mnFrameOper = JFrameOperator.waitFor("ManyComponentsApp.MenusFrame");
@@ -97,11 +97,11 @@ class OperatorConstructorsSmokeTest {
         JMenuItemOperator mio = JMenuItemOperator.waitFor(pmo, "", StringComparators.caseInsensitiveSubstring());
         JMenuItemOperator mio1 = JMenuItemOperator.waitFor(pmo);
         assertThat(mio.getSource()).isSameAs(mio1.getSource());
-        mnFrameOper.getSource().setVisible(false);
+        mnFrameOper.setVisible(false);
         JButtonOperator.waitFor(frameOper, "li", StringComparators.caseInsensitiveSubstring())
                 .push();
         JFrameOperator lstFrameOper = JFrameOperator.waitFor("ManyComponentsApp.ListsFrame");
-        lstFrameOper.getSource().setVisible(false);
+        lstFrameOper.setVisible(false);
         JButtonOperator.waitFor(frameOper, "xts", StringComparators.caseInsensitiveSubstring())
                 .push();
         JFrameOperator txtFrameOper = JFrameOperator.waitFor("ManyComponentsApp.TextsFrame");

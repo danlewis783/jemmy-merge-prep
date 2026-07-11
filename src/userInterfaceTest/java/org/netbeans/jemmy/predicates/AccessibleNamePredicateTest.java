@@ -46,14 +46,16 @@ class AccessibleNamePredicateTest {
     }
 
     @AfterEach
-    void after() {
-        frame.setVisible(false);
-        frame.dispose();
+    void after() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            frame.dispose();
+        });
     }
 
     @Test
-    void testCheckContext() {
-        frame.setVisible(true);
+    void testCheckContext() throws Exception {
+        EventQueue.invokeAndWait(() -> frame.setVisible(true));
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JButtonOperator operator1 = JButtonOperator.waitFor(operator, new AccessibleNamePredicate("Accessible"));
