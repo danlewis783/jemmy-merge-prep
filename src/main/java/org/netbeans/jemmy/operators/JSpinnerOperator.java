@@ -26,11 +26,10 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -43,8 +42,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SpinnerUI;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -148,35 +147,19 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.scroll(JSpinnerOperator.this, adj);
-
-                    return null;
-                },
-                null,
-                TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
+        runTimeRestricted(
+                () -> driver.scroll(JSpinnerOperator.this, adj), TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.scrollToMaximum(JSpinnerOperator.this, SwingConstants.VERTICAL);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.scrollToMaximum(JSpinnerOperator.this, SwingConstants.VERTICAL),
                 TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToMinimum() {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.scrollToMinimum(JSpinnerOperator.this, SwingConstants.VERTICAL);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.scrollToMinimum(JSpinnerOperator.this, SwingConstants.VERTICAL),
                 TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
@@ -235,87 +218,65 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public Object getValue() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getValue());
     }
 
     public void setValue(Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).setValue(object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setValue(object));
     }
 
     public SpinnerUI getUI() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getUI());
     }
 
     public void setUI(SpinnerUI spinnerUI) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).setUI(spinnerUI);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setUI(spinnerUI));
     }
 
     public void setModel(SpinnerModel spinnerModel) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).setModel(spinnerModel);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setModel(spinnerModel));
     }
 
     public SpinnerModel getModel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getModel());
     }
 
     public Object getNextValue() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getNextValue()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getNextValue());
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).addChangeListener(changeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).addChangeListener(changeListener));
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).removeChangeListener(changeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).removeChangeListener(changeListener));
     }
 
     public ChangeListener[] getChangeListeners() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getChangeListeners()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getChangeListeners());
     }
 
     public Object getPreviousValue() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getPreviousValue()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getPreviousValue());
     }
 
     public void setEditor(JComponent jComponent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).setEditor(jComponent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setEditor(jComponent));
     }
 
     public JComponent getEditor() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getEditor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getEditor());
     }
 
     public void commitEdit() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSpinner) getSource()).commitEdit();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> {
+            try {
+                ((JSpinner) getSource()).commitEdit();
+            } catch (ParseException e) {
+                throw new JemmyException("Exception when committing edit", e);
+            }
+        });
     }
 
     public static @Nullable JSpinner findJSpinner(Container cont, Predicate<Component> chooser, int index) {

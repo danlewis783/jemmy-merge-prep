@@ -27,10 +27,8 @@ package org.netbeans.jemmy.drivers.scrolling;
 
 import java.awt.Point;
 import java.util.Collections;
-import java.util.concurrent.Callable;
 import javax.swing.JSlider;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -84,7 +82,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
     @Override
     protected void step(ComponentOperator oper, ScrollAdjuster adj) {
         if (adj.getScrollDirection() != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+            QueueTool.getInstance().runOnQueue(() -> {
                 Point clickPoint = getClickPoint(oper, adj.getScrollDirection(), adj.getScrollOrientation());
                 if (clickPoint != null) {
                     DriverManager.newInstance(JemmyContext.getInstance())
@@ -98,9 +96,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
                                     0,
                                     TimeoutKey.ComponentOperator_MouseClickTimeout);
                 }
-
-                return null;
-            }));
+            });
         }
     }
 
@@ -109,7 +105,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
 
     @Override
     protected void startPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             Point clickPoint = getClickPoint(oper, direction, orientation);
             if (clickPoint != null) {
                 MouseDriver mdriver =
@@ -117,23 +113,19 @@ public final class JSliderDriver extends AbstractScrollDriver {
                 mdriver.moveMouse(oper, clickPoint.x, clickPoint.y);
                 mdriver.pressMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
             }
-
-            return null;
-        }));
+        });
     }
 
     @Override
     protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             Point clickPoint = getClickPoint(oper, direction, orientation);
             if (clickPoint != null) {
                 MouseDriver mdriver =
                         DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
                 mdriver.releaseMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
             }
-
-            return null;
-        }));
+        });
     }
 
     @Override

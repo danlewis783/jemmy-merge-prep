@@ -28,7 +28,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Window;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JDialog;
@@ -36,7 +35,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -220,79 +218,55 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAccessibleContext());
     }
 
     public Container getContentPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getContentPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JDialog) getSource()).getContentPane());
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getDefaultCloseOperation()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JDialog) getSource()).getDefaultCloseOperation());
     }
 
     public Component getGlassPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getGlassPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JDialog) getSource()).getGlassPane());
     }
 
     public JMenuBar getJMenuBar() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getJMenuBar()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JDialog) getSource()).getJMenuBar());
     }
 
     public JLayeredPane getLayeredPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getLayeredPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JDialog) getSource()).getLayeredPane());
     }
 
     public JRootPane getRootPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getRootPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JDialog) getSource()).getRootPane());
     }
 
     public void setContentPane(Container container) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JDialog) getSource()).setContentPane(container);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JDialog) getSource()).setContentPane(container));
     }
 
     public void setDefaultCloseOperation(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JDialog) getSource()).setDefaultCloseOperation(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JDialog) getSource()).setDefaultCloseOperation(i));
     }
 
     public void setGlassPane(Component component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JDialog) getSource()).setGlassPane(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JDialog) getSource()).setGlassPane(component));
     }
 
     public void setJMenuBar(JMenuBar jMenuBar) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JDialog) getSource()).setJMenuBar(jMenuBar);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JDialog) getSource()).setJMenuBar(jMenuBar));
     }
 
     public void setLayeredPane(JLayeredPane jLayeredPane) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JDialog) getSource()).setLayeredPane(jLayeredPane);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JDialog) getSource()).setLayeredPane(jLayeredPane));
     }
 
     public void setLocationRelativeTo(@Nullable Component component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JDialog) getSource()).setLocationRelativeTo(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JDialog) getSource()).setLocationRelativeTo(component));
     }
 
     public static @Nullable JDialog findJDialog(Predicate<Component> predicate, int index) {

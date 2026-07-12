@@ -28,10 +28,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.TextArea;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.TextAreaByTextPredicate;
@@ -126,47 +124,41 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public int getColumns() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getColumns()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextArea) getSource()).getColumns());
     }
 
     public Dimension getMinimumSize(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getMinimumSize(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextArea) getSource()).getMinimumSize(i, i1));
     }
 
     public Dimension getPreferredSize(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getPreferredSize(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextArea) getSource()).getPreferredSize(i, i1));
     }
 
     public int getRows() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getRows()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextArea) getSource()).getRows());
     }
 
     public int getScrollbarVisibility() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getScrollbarVisibility()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextArea) getSource()).getScrollbarVisibility());
     }
 
     public void replaceRange(String string, int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextArea) getSource()).replaceRange(string, i, i1);
-
-            return null;
-        }));
+        });
     }
 
     public void setColumns(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextArea) getSource()).setColumns(i);
-
-            return null;
-        }));
+        });
     }
 
     public void setRows(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextArea) getSource()).setRows(i);
-
-            return null;
-        }));
+        });
     }
 
     public static @Nullable TextArea findTextArea(Container cont, Predicate<Component> chooser, int index) {

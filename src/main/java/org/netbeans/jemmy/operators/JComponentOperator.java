@@ -35,7 +35,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.beans.VetoableChangeListener;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JComponent;
@@ -46,7 +45,6 @@ import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
@@ -162,416 +160,264 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public void addAncestorListener(AncestorListener ancestorListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).addAncestorListener(ancestorListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).addAncestorListener(ancestorListener));
     }
 
     public void addVetoableChangeListener(VetoableChangeListener vetoableChangeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).addVetoableChangeListener(vetoableChangeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> ((JComponent) getSource()).addVetoableChangeListener(vetoableChangeListener));
     }
 
     public void computeVisibleRect(Rectangle rectangle) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).computeVisibleRect(rectangle);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).computeVisibleRect(rectangle));
     }
 
     public JToolTip createToolTip() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).createToolTip()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).createToolTip());
     }
 
     public void firePropertyChange(String string, byte b, byte b1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().firePropertyChange(string, b, b1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().firePropertyChange(string, b, b1));
     }
 
     public void firePropertyChange(String string, char c, char c1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().firePropertyChange(string, c, c1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().firePropertyChange(string, c, c1));
     }
 
     public void firePropertyChange(String string, double d, double d1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().firePropertyChange(string, d, d1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().firePropertyChange(string, d, d1));
     }
 
     public void firePropertyChange(String string, float f, float f1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().firePropertyChange(string, f, f1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().firePropertyChange(string, f, f1));
     }
 
     public void firePropertyChange(String string, int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).firePropertyChange(string, i, i1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).firePropertyChange(string, i, i1));
     }
 
     public void firePropertyChange(String string, long l, long l1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().firePropertyChange(string, l, l1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().firePropertyChange(string, l, l1));
     }
 
     public void firePropertyChange(String string, short s, short s1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().firePropertyChange(string, s, s1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().firePropertyChange(string, s, s1));
     }
 
     public void firePropertyChange(String string, boolean b, boolean b1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).firePropertyChange(string, b, b1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).firePropertyChange(string, b, b1));
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAccessibleContext());
     }
 
     public ActionListener getActionForKeyStroke(KeyStroke keyStroke) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getActionForKeyStroke(keyStroke)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getActionForKeyStroke(keyStroke));
     }
 
     public boolean getAutoscrolls() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getAutoscrolls()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getAutoscrolls());
     }
 
     public @Nullable Border getBorder() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getBorder()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getBorder());
     }
 
     public Object getClientProperty(Object object) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getClientProperty(object)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getClientProperty(object));
     }
 
     public int getConditionForKeyStroke(KeyStroke keyStroke) {
         return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getConditionForKeyStroke(keyStroke)));
+                .callOnQueue(() -> ((JComponent) getSource()).getConditionForKeyStroke(keyStroke));
     }
 
     public int getDebugGraphicsOptions() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getDebugGraphicsOptions()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getDebugGraphicsOptions());
     }
 
     public Insets getInsets(Insets insets) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getInsets(insets)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getInsets(insets));
     }
 
     public Component getNextFocusableComponent() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getNextFocusableComponent()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getNextFocusableComponent());
     }
 
     public KeyStroke[] getRegisteredKeyStrokes() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getRegisteredKeyStrokes()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getRegisteredKeyStrokes());
     }
 
     public JRootPane getRootPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getRootPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getRootPane());
     }
 
     public Point getToolTipLocation(MouseEvent mouseEvent) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getToolTipLocation(mouseEvent)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getToolTipLocation(mouseEvent));
     }
 
     public String getToolTipText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getToolTipText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getToolTipText());
     }
 
     public String getToolTipText(MouseEvent mouseEvent) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).getToolTipText(mouseEvent)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getToolTipText(mouseEvent));
     }
 
     public Container getTopLevelAncestor() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getTopLevelAncestor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getTopLevelAncestor());
     }
 
     public String getUIClassID() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getUIClassID()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getUIClassID());
     }
 
     public Rectangle getVisibleRect() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).getVisibleRect()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).getVisibleRect());
     }
 
     public void grabFocus() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).grabFocus();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).grabFocus());
     }
 
     public boolean isFocusCycleRoot() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).isFocusCycleRoot()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).isFocusCycleRoot());
     }
 
     public boolean isManagingFocus() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).isManagingFocus()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).isManagingFocus());
     }
 
     public boolean isOptimizedDrawingEnabled() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JComponent) getSource()).isOptimizedDrawingEnabled()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).isOptimizedDrawingEnabled());
     }
 
     public boolean isPaintingTile() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).isPaintingTile()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).isPaintingTile());
     }
 
     public boolean isRequestFocusEnabled() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).isRequestFocusEnabled()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).isRequestFocusEnabled());
     }
 
     public boolean isValidateRoot() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).isValidateRoot()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).isValidateRoot());
     }
 
     public void paintImmediately(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).paintImmediately(i, i1, i2, i3);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).paintImmediately(i, i1, i2, i3));
     }
 
     public void paintImmediately(Rectangle rectangle) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).paintImmediately(rectangle);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).paintImmediately(rectangle));
     }
 
     public void putClientProperty(Object object, Object object1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).putClientProperty(object, object1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).putClientProperty(object, object1));
     }
 
     public void registerKeyboardAction(ActionListener actionListener, String string, KeyStroke keyStroke, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).registerKeyboardAction(actionListener, string, keyStroke, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource())
+                .registerKeyboardAction(actionListener, string, keyStroke, i));
     }
 
     public void registerKeyboardAction(ActionListener actionListener, KeyStroke keyStroke, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).registerKeyboardAction(actionListener, keyStroke, i);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> ((JComponent) getSource()).registerKeyboardAction(actionListener, keyStroke, i));
     }
 
     public void removeAncestorListener(AncestorListener ancestorListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).removeAncestorListener(ancestorListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).removeAncestorListener(ancestorListener));
     }
 
     public void removeVetoableChangeListener(VetoableChangeListener vetoableChangeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).removeVetoableChangeListener(vetoableChangeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> ((JComponent) getSource()).removeVetoableChangeListener(vetoableChangeListener));
     }
 
     public void repaint(Rectangle rectangle) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).repaint(rectangle);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).repaint(rectangle));
     }
 
     public boolean requestDefaultFocus() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JComponent) getSource()).requestDefaultFocus()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JComponent) getSource()).requestDefaultFocus());
     }
 
     public void resetKeyboardActions() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).resetKeyboardActions();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).resetKeyboardActions());
     }
 
     public void revalidate() {
-        QueueTool.getInstance().callOnQueue(Caller.of(() -> {
+        QueueTool.getInstance().callOnQueue(() -> {
             getSource().revalidate();
 
             return null;
-        }));
+        });
     }
 
     public void scrollRectToVisible(Rectangle rectangle) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).scrollRectToVisible(rectangle);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).scrollRectToVisible(rectangle));
     }
 
     public void setAlignmentX(float f) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setAlignmentX(f);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setAlignmentX(f));
     }
 
     public void setAlignmentY(float f) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setAlignmentY(f);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setAlignmentY(f));
     }
 
     public void setAutoscrolls(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setAutoscrolls(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setAutoscrolls(b));
     }
 
     public void setBorder(@Nullable Border border) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setBorder(border);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setBorder(border));
     }
 
     public void setDebugGraphicsOptions(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setDebugGraphicsOptions(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setDebugGraphicsOptions(i));
     }
 
     public void setDoubleBuffered(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setDoubleBuffered(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setDoubleBuffered(b));
     }
 
     public void setMaximumSize(Dimension dimension) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setMaximumSize(dimension);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMaximumSize(dimension));
     }
 
     public void setMinimumSize(Dimension dimension) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setMinimumSize(dimension);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMinimumSize(dimension));
     }
 
     public void setNextFocusableComponent(Component component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setNextFocusableComponent(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setNextFocusableComponent(component));
     }
 
     public void setOpaque(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setOpaque(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setOpaque(b));
     }
 
     public void setPreferredSize(Dimension dimension) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setPreferredSize(dimension);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPreferredSize(dimension));
     }
 
     public void setRequestFocusEnabled(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setRequestFocusEnabled(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setRequestFocusEnabled(b));
     }
 
     public void setToolTipText(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).setToolTipText(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).setToolTipText(string));
     }
 
     public void unregisterKeyboardAction(KeyStroke keyStroke) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).unregisterKeyboardAction(keyStroke);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).unregisterKeyboardAction(keyStroke));
     }
 
     public void updateUI() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JComponent) getSource()).updateUI();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JComponent) getSource()).updateUI());
     }
 
     public static @Nullable JComponent findJComponent(Container cont, Predicate<Component> chooser, int index) {

@@ -17,29 +17,24 @@
 
 package org.netbeans.jemmy;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Adapts a {@link Callable} so that it can be run through the Swing Event Queue.
- *
- * @param <R> the type to be returned from the callable
+ * Adapts a {@link Runnable} so that it can be run through the Swing Event Queue.
  */
-final class Caller<R> implements QueueCaller {
-    private final Callable<R> callable;
+final class VoidCaller implements QueueCaller {
+    private final Runnable runnable;
     private final CountDownLatch endGate;
     private final AtomicReference<@Nullable Exception> exception;
-    private final AtomicReference<@Nullable R> result;
     private final CountDownLatch startGate;
     private final AtomicBoolean hasRun;
 
-    private Caller(Callable<R> callable) {
-        this.callable = callable;
+    private VoidCaller(Runnable runnable) {
+        this.runnable = runnable;
         exception = new AtomicReference<>();
-        result = new AtomicReference<>();
         startGate = new CountDownLatch(1);
         endGate = new CountDownLatch(1);
         hasRun = new AtomicBoolean(false);
@@ -48,19 +43,12 @@ final class Caller<R> implements QueueCaller {
     @Override
     public void run() {
         if (!hasRun.compareAndSet(false, true)) {
-            throw new IllegalStateException("attempted to re-run Caller");
+            throw new IllegalStateException("attempted to re-run VoidCaller");
         }
         try {
             startGate.countDown();
 
-            if (result.get() != null) {
-                throw new IllegalStateException("result already non-null");
-            } else {
-                R call = callable.call();
-                if (!result.compareAndSet(null, call)) {
-                    throw new IllegalStateException("result already non-null");
-                }
-            }
+            runnable.run();
 
         } catch (Exception e) {
             if (!exception.compareAndSet(null, e)) {
@@ -81,17 +69,12 @@ final class Caller<R> implements QueueCaller {
         return endGate;
     }
 
-    @Nullable
-    R getResult() {
-        return result.get();
-    }
-
     @Override
     public @Nullable Exception getException() {
         return exception.get();
     }
 
-    static <RR> Caller<RR> of(Callable<RR> callable) {
-        return new Caller<>(callable);
+    static VoidCaller of(Runnable runnable) {
+        return new VoidCaller(runnable);
     }
 }

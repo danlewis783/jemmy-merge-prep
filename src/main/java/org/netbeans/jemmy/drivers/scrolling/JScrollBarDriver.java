@@ -27,9 +27,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 
 import java.awt.Point;
 import java.util.Collections;
-import java.util.concurrent.Callable;
 import javax.swing.JScrollBar;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
@@ -92,7 +90,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
     protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
         JButtonOperator lessButton = findAButton(oper, ScrollAdjuster.DECREASE_SCROLL_DIRECTION);
         JButtonOperator moreButton = findAButton(oper, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             if (adj.getScrollDirection() != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
                 int x, y;
                 if (((JScrollBarOperator) oper).getOrientation() == JScrollBar.HORIZONTAL) {
@@ -101,7 +99,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
                     } else if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
                         x = lessButton.getX() + lessButton.getWidth();
                     } else {
-                        return null;
+                        return;
                     }
 
                     y = lessButton.getHeight() / 2;
@@ -111,21 +109,19 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
                     } else if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
                         y = lessButton.getY() + lessButton.getHeight();
                     } else {
-                        return null;
+                        return;
                     }
 
                     x = lessButton.getWidth() / 2;
                 } else {
-                    return null;
+                    return;
                 }
 
                 DriverManager.newInstance(JemmyContext.getInstance())
                         .getMouseDriver(oper)
                         .clickMouse(oper, x, y, 1, Operator.getDefaultMouseButton(), 0, TimeoutKey.JScrollBar_Jump);
             }
-
-            return null;
-        }));
+        });
     }
 
     @Override

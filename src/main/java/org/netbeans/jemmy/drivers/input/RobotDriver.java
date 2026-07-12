@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -184,7 +183,7 @@ public class RobotDriver extends LightSupportiveDriver {
         if (robotRef.get() != null) {
             return robotRef.get();
         }
-        Robot inst = QueueTool.getInstance().callOnQueue(Caller.of(() -> {
+        Robot inst = QueueTool.getInstance().callOnQueue(() -> {
             try {
                 Robot robot = new Robot();
                 robot.setAutoDelay((int) ((robotAutoDelay == null) ? 0 : Timeouts.get(robotAutoDelay)));
@@ -193,7 +192,7 @@ public class RobotDriver extends LightSupportiveDriver {
                 logger.warn("problem initializing AWT Robot", e);
             }
             return null;
-        }));
+        });
         if (!robotRef.compareAndSet(null, inst)) {
             throw new IllegalStateException("AWT Robot already non-null");
         }

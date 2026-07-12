@@ -29,7 +29,6 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.AbstractButton;
@@ -38,7 +37,6 @@ import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ButtonUI;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
@@ -154,14 +152,8 @@ public class AbstractButtonOperator extends JComponentOperator {
         driver.push(this);
     }
 
-    public <F, T> void pushNoBlock() {
-        produceNoBlocking(
-                (Function<F, T>) f -> {
-                    push();
-
-                    return null;
-                },
-                null);
+    public void pushNoBlock() {
+        runNoBlocking(this::push);
     }
 
     public void changeSelection(boolean selected) {
@@ -207,351 +199,219 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).addActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).addActionListener(actionListener));
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).addChangeListener(changeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).addChangeListener(changeListener));
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).addItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).addItemListener(itemListener));
     }
 
     public void doClick() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).doClick();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).doClick());
     }
 
     public void doClick(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).doClick(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).doClick(i));
     }
 
     public String getActionCommand() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getActionCommand()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getActionCommand());
     }
 
     public @Nullable Icon getDisabledIcon() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getDisabledIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getDisabledIcon());
     }
 
     public Icon getDisabledSelectedIcon() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getDisabledSelectedIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getDisabledSelectedIcon());
     }
 
     public int getHorizontalAlignment() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalAlignment()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getHorizontalAlignment());
     }
 
     public int getHorizontalTextPosition() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalTextPosition()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getHorizontalTextPosition());
     }
 
     public @Nullable Icon getIcon() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getIcon());
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getMargin()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getMargin());
     }
 
     public int getMnemonic() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getMnemonic()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getMnemonic());
     }
 
     public ButtonModel getModel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getModel());
     }
 
     public Icon getPressedIcon() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getPressedIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getPressedIcon());
     }
 
     public Icon getRolloverIcon() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getRolloverIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getRolloverIcon());
     }
 
     public Icon getRolloverSelectedIcon() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getRolloverSelectedIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getRolloverSelectedIcon());
     }
 
     public Icon getSelectedIcon() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getSelectedIcon()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getSelectedIcon());
     }
 
     public Object[] getSelectedObjects() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getSelectedObjects()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getSelectedObjects());
     }
 
     public String getText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getText());
     }
 
     public ButtonUI getUI() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getUI());
     }
 
     public int getVerticalAlignment() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getVerticalAlignment()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getVerticalAlignment());
     }
 
     public int getVerticalTextPosition() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getVerticalTextPosition()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).getVerticalTextPosition());
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isBorderPainted()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).isBorderPainted());
     }
 
     public boolean isContentAreaFilled() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isContentAreaFilled()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).isContentAreaFilled());
     }
 
     public boolean isFocusPainted() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isFocusPainted()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).isFocusPainted());
     }
 
     public boolean isRolloverEnabled() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isRolloverEnabled()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).isRolloverEnabled());
     }
 
     public boolean isSelected() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isSelected()));
+        return QueueTool.getInstance().callOnQueue(() -> ((AbstractButton) getSource()).isSelected());
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).removeActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).removeActionListener(actionListener));
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).removeChangeListener(changeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).removeChangeListener(changeListener));
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).removeItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).removeItemListener(itemListener));
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setActionCommand(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setActionCommand(string));
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setBorderPainted(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setBorderPainted(b));
     }
 
     public void setContentAreaFilled(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setContentAreaFilled(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setContentAreaFilled(b));
     }
 
     public void setDisabledIcon(@Nullable Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setDisabledIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setDisabledIcon(icon));
     }
 
     public void setDisabledSelectedIcon(Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setDisabledSelectedIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setDisabledSelectedIcon(icon));
     }
 
     public void setFocusPainted(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setFocusPainted(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setFocusPainted(b));
     }
 
     public void setHorizontalAlignment(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setHorizontalAlignment(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setHorizontalAlignment(i));
     }
 
     public void setHorizontalTextPosition(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setHorizontalTextPosition(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setHorizontalTextPosition(i));
     }
 
     public void setIcon(@Nullable Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setIcon(icon));
     }
 
     public void setMargin(Insets insets) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setMargin(insets);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setMargin(insets));
     }
 
     public void setMnemonic(char c) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setMnemonic(c);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setMnemonic(c));
     }
 
     public void setMnemonic(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setMnemonic(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setMnemonic(i));
     }
 
     public void setModel(ButtonModel buttonModel) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setModel(buttonModel);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setModel(buttonModel));
     }
 
     public void setPressedIcon(Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setPressedIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setPressedIcon(icon));
     }
 
     public void setRolloverEnabled(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setRolloverEnabled(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setRolloverEnabled(b));
     }
 
     public void setRolloverIcon(Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setRolloverIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setRolloverIcon(icon));
     }
 
     public void setRolloverSelectedIcon(Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setRolloverSelectedIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setRolloverSelectedIcon(icon));
     }
 
     public void setSelected(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setSelected(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setSelected(b));
     }
 
     public void setSelectedIcon(Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setSelectedIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setSelectedIcon(icon));
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setText(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setText(string));
     }
 
     public void setUI(ButtonUI buttonUI) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setUI(buttonUI);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setUI(buttonUI));
     }
 
     public void setVerticalAlignment(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setVerticalAlignment(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setVerticalAlignment(i));
     }
 
     public void setVerticalTextPosition(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((AbstractButton) getSource()).setVerticalTextPosition(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((AbstractButton) getSource()).setVerticalTextPosition(i));
     }
 
     public static @Nullable AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser, int index) {

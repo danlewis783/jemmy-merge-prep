@@ -16,29 +16,28 @@
  */
 package org.netbeans.jemmy.functions;
 
-import java.awt.Toolkit;
-import java.util.function.Function;
-import org.jspecify.annotations.Nullable;
+import java.awt.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * Reports success once the system event queue has stayed empty for {@code emptyTime} milliseconds.
- * Emptiness is sampled on each {@link #apply} call, so the enclosing repeater's checking delta sets
+ * Emptiness is sampled on each {@link #getAsBoolean} call, so the enclosing repeater's checking delta sets
  * the sampling resolution; an event observed between samples restarts the quiet period.
  */
-public final class StayingEmptyFunction implements Function<Void, Boolean> {
+public final class StayingEmptyBooleanSupplier implements BooleanSupplier {
     private final long emptyTime;
     private long emptySince = -1L;
 
-    public StayingEmptyFunction(long emptyTime) {
+    public StayingEmptyBooleanSupplier(long emptyTime) {
         this.emptyTime = emptyTime;
     }
 
     @Override
-    public @Nullable Boolean apply(Void obj) {
+    public boolean getAsBoolean() {
         if (Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() != null) {
             emptySince = -1L;
 
-            return null;
+            return false;
         }
 
         long now = System.currentTimeMillis();
@@ -46,6 +45,6 @@ public final class StayingEmptyFunction implements Function<Void, Boolean> {
             emptySince = now;
         }
 
-        return ((now - emptySince) >= emptyTime) ? true : null;
+        return (now - emptySince) >= emptyTime;
     }
 }

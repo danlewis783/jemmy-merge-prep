@@ -28,11 +28,9 @@ import java.awt.Button;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
@@ -154,43 +152,27 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Button) getSource()).addActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Button) getSource()).addActionListener(actionListener));
     }
 
     public String getActionCommand() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Button) getSource()).getActionCommand()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Button) getSource()).getActionCommand());
     }
 
     public String getLabel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Button) getSource()).getLabel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Button) getSource()).getLabel());
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Button) getSource()).removeActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Button) getSource()).removeActionListener(actionListener));
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Button) getSource()).setActionCommand(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Button) getSource()).setActionCommand(string));
     }
 
     public void setLabel(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Button) getSource()).setLabel(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Button) getSource()).setLabel(string));
     }
 
     public static @Nullable Button findButton(Container cont, Predicate<Component> chooser, int index) {

@@ -27,10 +27,8 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Label;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.LabelByLabelPredicate;
@@ -123,27 +121,19 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public int getAlignment() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Label) getSource()).getAlignment()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Label) getSource()).getAlignment());
     }
 
     public String getText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Label) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Label) getSource()).getText());
     }
 
     public void setAlignment(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Label) getSource()).setAlignment(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Label) getSource()).setAlignment(i));
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Label) getSource()).setText(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Label) getSource()).setText(string));
     }
 
     public static @Nullable Label findLabel(Container cont, Predicate<Component> chooser, int index) {

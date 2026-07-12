@@ -29,16 +29,16 @@ import java.awt.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.MenuElement;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.SupplierRepeater;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.MenuDriver;
@@ -185,8 +185,8 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
 
     protected JMenuItem waitItem(
             ComponentOperator oper, MenuElement element, List<Predicate<Component>> predicates, int depth) {
-        return (JMenuItem) FunctionRepeater.on(new JMenuItemFunction(element, predicates, depth))
-                .runUntilNotNull(null);
+        return (JMenuItem) SupplierRepeater.on(new JMenuItemSupplier(element, predicates, depth))
+                .runUntilNotNull();
     }
 
     private static @Nullable Object getSelectedElement(JMenuBar bar) {
@@ -213,19 +213,19 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
         }
     }
 
-    private static class JMenuItemFunction implements Function<Void, MenuElement> {
+    private static class JMenuItemSupplier implements Supplier<MenuElement> {
         private final List<Predicate<Component>> predicates;
         private final MenuElement cont;
         private final int depth;
 
-        public JMenuItemFunction(MenuElement cont, List<Predicate<Component>> predicates, int depth) {
+        public JMenuItemSupplier(MenuElement cont, List<Predicate<Component>> predicates, int depth) {
             this.cont = cont;
             this.predicates = predicates;
             this.depth = depth;
         }
 
         @Override
-        public @Nullable MenuElement apply(Void v) {
+        public @Nullable MenuElement get() {
             if (!((Component) cont).isShowing()) {
                 return null;
             }

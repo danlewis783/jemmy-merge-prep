@@ -28,9 +28,7 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuBar;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
@@ -177,75 +175,51 @@ public class FrameOperator extends WindowOperator {
     }
 
     public Image getIconImage() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getIconImage()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Frame) getSource()).getIconImage());
     }
 
     public MenuBar getMenuBar() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getMenuBar()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Frame) getSource()).getMenuBar());
     }
 
     public int getExtendedState() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getExtendedState()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Frame) getSource()).getExtendedState());
     }
 
     public int getState() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getState()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Frame) getSource()).getState());
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getTitle()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Frame) getSource()).getTitle());
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).isResizable()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Frame) getSource()).isResizable());
     }
 
     public void setIconImage(Image image) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Frame) getSource()).setIconImage(image);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Frame) getSource()).setIconImage(image));
     }
 
     public void setMenuBar(MenuBar menuBar) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Frame) getSource()).setMenuBar(menuBar);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Frame) getSource()).setMenuBar(menuBar));
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Frame) getSource()).setResizable(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Frame) getSource()).setResizable(b));
     }
 
     public void setExtendedState(int state) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Frame) getSource()).setExtendedState(state);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Frame) getSource()).setExtendedState(state));
     }
 
     public void setState(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Frame) getSource()).setState(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Frame) getSource()).setState(i));
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Frame) getSource()).setTitle(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Frame) getSource()).setTitle(string));
     }
 
     protected static Frame waitFrame(Predicate<Component> predicate, int index) {

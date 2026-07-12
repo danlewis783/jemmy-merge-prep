@@ -21,7 +21,6 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JComponent;
@@ -29,7 +28,6 @@ import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.ToolTipUI;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
@@ -218,31 +216,23 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public String getTipText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JToolTip) getSource()).getTipText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JToolTip) getSource()).getTipText());
     }
 
     public JComponent getComponent() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JToolTip) getSource()).getComponent()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JToolTip) getSource()).getComponent());
     }
 
     public ToolTipUI getUI() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JToolTip) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JToolTip) getSource()).getUI());
     }
 
     public void setTipText(String tipText) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JToolTip) getSource()).setTipText(tipText);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JToolTip) getSource()).setTipText(tipText));
     }
 
     public void setComponent(JComponent component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JToolTip) getSource()).setComponent(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JToolTip) getSource()).setComponent(component));
     }
 
     private static @Nullable Window findSourceWindow(Component source) {

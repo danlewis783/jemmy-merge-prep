@@ -28,7 +28,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
@@ -36,7 +35,6 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.plaf.ColorChooserUI;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
@@ -296,92 +294,62 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public void addChooserPanel(AbstractColorChooserPanel abstractColorChooserPanel) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).addChooserPanel(abstractColorChooserPanel);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> ((JColorChooser) getSource()).addChooserPanel(abstractColorChooserPanel));
     }
 
     public AbstractColorChooserPanel[] getChooserPanels() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JColorChooser) getSource()).getChooserPanels()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getChooserPanels());
     }
 
     public Color getColor() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JColorChooser) getSource()).getColor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getColor());
     }
 
     public JComponent getPreviewPanel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JColorChooser) getSource()).getPreviewPanel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getPreviewPanel());
     }
 
     public ColorSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JColorChooser) getSource()).getSelectionModel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getSelectionModel());
     }
 
     public ColorChooserUI getUI() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JColorChooser) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getUI());
     }
 
     public AbstractColorChooserPanel removeChooserPanel(AbstractColorChooserPanel abstractColorChooserPanel) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JColorChooser) getSource())
-                .removeChooserPanel(abstractColorChooserPanel)));
+        return QueueTool.getInstance()
+                .callOnQueue(() -> ((JColorChooser) getSource()).removeChooserPanel(abstractColorChooserPanel));
     }
 
     public void setChooserPanels(AbstractColorChooserPanel[] abstractColorChooserPanel) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setChooserPanels(abstractColorChooserPanel);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> ((JColorChooser) getSource()).setChooserPanels(abstractColorChooserPanel));
     }
 
     public void setColor(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setColor(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setColor(i));
     }
 
     public void setColor(int i, int i1, int i2) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setColor(i, i1, i2);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setColor(i, i1, i2));
     }
 
     public void setColor(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setColor(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setColor(color));
     }
 
     public void setPreviewPanel(JComponent jComponent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setPreviewPanel(jComponent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setPreviewPanel(jComponent));
     }
 
     public void setSelectionModel(ColorSelectionModel colorSelectionModel) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setSelectionModel(colorSelectionModel);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setSelectionModel(colorSelectionModel));
     }
 
     public void setUI(ColorChooserUI colorChooserUI) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JColorChooser) getSource()).setUI(colorChooserUI);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setUI(colorChooserUI));
     }
 
     public static @Nullable JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser, int index) {

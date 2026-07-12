@@ -29,11 +29,9 @@ import java.awt.CheckboxGroup;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ItemListener;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.ButtonDriver;
@@ -162,55 +160,35 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Checkbox) getSource()).addItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Checkbox) getSource()).addItemListener(itemListener));
     }
 
     public CheckboxGroup getCheckboxGroup() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Checkbox) getSource()).getCheckboxGroup()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Checkbox) getSource()).getCheckboxGroup());
     }
 
     public String getLabel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Checkbox) getSource()).getLabel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Checkbox) getSource()).getLabel());
     }
 
     public boolean getState() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Checkbox) getSource()).getState()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Checkbox) getSource()).getState());
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Checkbox) getSource()).removeItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Checkbox) getSource()).removeItemListener(itemListener));
     }
 
     public void setCheckboxGroup(CheckboxGroup grp) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Checkbox) getSource()).setCheckboxGroup(grp);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Checkbox) getSource()).setCheckboxGroup(grp));
     }
 
     public void setLabel(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Checkbox) getSource()).setLabel(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Checkbox) getSource()).setLabel(string));
     }
 
     public void setState(boolean state) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Checkbox) getSource()).setState(state);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Checkbox) getSource()).setState(state));
     }
 
     public static @Nullable Checkbox findCheckbox(Container cont, Predicate<Component> chooser, int index) {

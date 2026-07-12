@@ -26,8 +26,6 @@
 package org.netbeans.jemmy.drivers.lists;
 
 import java.util.Collections;
-import java.util.concurrent.Callable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.ListDriver;
@@ -45,10 +43,7 @@ public final class JTabAPIDriver extends LightSupportiveDriver implements ListDr
     @Override
     public void selectItem(ComponentOperator oper, int index) {
         if (index != -1) {
-            queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
-                ((JTabbedPaneOperator) oper).setSelectedIndex(index);
-                return null;
-            }));
+            queueTool.runOnQueue(() -> ((JTabbedPaneOperator) oper).setSelectedIndex(index));
         }
     }
 }

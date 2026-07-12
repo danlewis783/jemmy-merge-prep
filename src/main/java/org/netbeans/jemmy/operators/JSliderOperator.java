@@ -28,7 +28,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.BoundedRangeModel;
@@ -36,7 +35,6 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SliderUI;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -152,220 +150,147 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).addChangeListener(changeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).addChangeListener(changeListener));
     }
 
     public Hashtable<?, ?> createStandardLabels(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).createStandardLabels(i));
     }
 
     public Hashtable<?, ?> createStandardLabels(int i, int i1) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).createStandardLabels(i, i1));
     }
 
     public int getExtent() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getExtent()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getExtent());
     }
 
     public boolean getInverted() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getInverted()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getInverted());
     }
 
     public Dictionary<?, ?> getLabelTable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getLabelTable()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getLabelTable());
     }
 
     public int getMajorTickSpacing() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMajorTickSpacing()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMajorTickSpacing());
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMaximum()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMaximum());
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMinimum()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMinimum());
     }
 
     public int getMinorTickSpacing() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMinorTickSpacing()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMinorTickSpacing());
     }
 
     public BoundedRangeModel getModel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getModel());
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getOrientation()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getOrientation());
     }
 
     public boolean getPaintLabels() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getPaintLabels()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getPaintLabels());
     }
 
     public boolean getPaintTicks() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getPaintTicks()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getPaintTicks());
     }
 
     public boolean getPaintTrack() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getPaintTrack()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getPaintTrack());
     }
 
     public boolean getSnapToTicks() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getSnapToTicks()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getSnapToTicks());
     }
 
     public SliderUI getUI() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getUI());
     }
 
     public int getValue() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getValue());
     }
 
     public boolean getValueIsAdjusting() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getValueIsAdjusting()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getValueIsAdjusting());
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).removeChangeListener(changeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).removeChangeListener(changeListener));
     }
 
     public void setExtent(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setExtent(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setExtent(i));
     }
 
     public void setInverted(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setInverted(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setInverted(b));
     }
 
     public void setLabelTable(Dictionary<?, ?> dictionary) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setLabelTable(dictionary);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setLabelTable(dictionary));
     }
 
     public void setMajorTickSpacing(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setMajorTickSpacing(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMajorTickSpacing(i));
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setMaximum(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMaximum(i));
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setMinimum(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMinimum(i));
     }
 
     public void setMinorTickSpacing(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setMinorTickSpacing(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMinorTickSpacing(i));
     }
 
     public void setModel(BoundedRangeModel boundedRangeModel) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setModel(boundedRangeModel);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setModel(boundedRangeModel));
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setOrientation(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setOrientation(i));
     }
 
     public void setPaintLabels(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setPaintLabels(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setPaintLabels(b));
     }
 
     public void setPaintTicks(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setPaintTicks(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setPaintTicks(b));
     }
 
     public void setPaintTrack(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setPaintTrack(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setPaintTrack(b));
     }
 
     public void setSnapToTicks(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setSnapToTicks(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setSnapToTicks(b));
     }
 
     public void setUI(SliderUI sliderUI) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setUI(sliderUI);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setUI(sliderUI));
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setValue(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setValue(i));
     }
 
     public void setValueIsAdjusting(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JSlider) getSource()).setValueIsAdjusting(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setValueIsAdjusting(b));
     }
 
     public static @Nullable JSlider findJSlider(Container cont, Predicate<Component> chooser, int index) {

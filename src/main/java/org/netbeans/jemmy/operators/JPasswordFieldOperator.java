@@ -30,7 +30,6 @@ import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JPasswordField;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -133,24 +132,20 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
     }
 
     public boolean echoCharIsSet() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPasswordField) getSource()).echoCharIsSet()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JPasswordField) getSource()).echoCharIsSet());
     }
 
     public char getEchoChar() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPasswordField) getSource()).getEchoChar()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JPasswordField) getSource()).getEchoChar());
     }
 
     public char[] getPassword() {
         return (char[]) QueueTool.getInstance()
-                .callOnQueue(Caller.of((Callable<Object>) () -> ((JPasswordField) getSource()).getPassword()));
+                .callOnQueue((Callable<Object>) () -> ((JPasswordField) getSource()).getPassword());
     }
 
     public void setEchoChar(char c) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JPasswordField) getSource()).setEchoChar(c);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JPasswordField) getSource()).setEchoChar(c));
     }
 
     public static @Nullable JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser, int index) {

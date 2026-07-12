@@ -29,8 +29,6 @@ import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.util.Collections;
-import java.util.concurrent.Callable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -69,7 +67,7 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
             oper.scrollToItem(index);
         }
 
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             Rectangle rect = oper.getCellBounds(index, index);
             DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)
@@ -81,7 +79,6 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
                             Operator.getDefaultMouseButton(),
                             modifiers,
                             TimeoutKey.ComponentOperator_MouseClickTimeout);
-            return null;
-        }));
+        });
     }
 }

@@ -16,13 +16,30 @@
  */
 package org.netbeans.jemmy.functions;
 
-import java.awt.Toolkit;
-import java.util.function.Function;
+import java.awt.Component;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import javax.swing.JMenuItem;
 import org.jspecify.annotations.Nullable;
+import org.netbeans.jemmy.drivers.MenuDriver;
+import org.netbeans.jemmy.operators.JPopupMenuOperator;
 
-public final class SystemEventQueueEmptyFunction implements Function<Void, Boolean> {
+public final class JPopupMenuPushSupplier implements Supplier<JMenuItem> {
+
+    private final MenuDriver driver;
+    private final JPopupMenuOperator jPopupMenuOperator;
+    private final List<Predicate<Component>> predicates;
+
+    public JPopupMenuPushSupplier(
+            JPopupMenuOperator jPopupMenuOperator, List<Predicate<Component>> predicates, MenuDriver driver) {
+        this.jPopupMenuOperator = jPopupMenuOperator;
+        this.predicates = predicates;
+        this.driver = driver;
+    }
+
     @Override
-    public @Nullable Boolean apply(Void obj) {
-        return (Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null) ? true : null;
+    public @Nullable JMenuItem get() {
+        return (JMenuItem) driver.pushMenu(jPopupMenuOperator, predicates);
     }
 }

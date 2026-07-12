@@ -27,9 +27,7 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -203,39 +201,27 @@ public class DialogOperator extends WindowOperator {
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Dialog) getSource()).getTitle()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Dialog) getSource()).getTitle());
     }
 
     public boolean isModal() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Dialog) getSource()).isModal()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Dialog) getSource()).isModal());
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Dialog) getSource()).isResizable()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Dialog) getSource()).isResizable());
     }
 
     public void setModal(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Dialog) getSource()).setModal(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Dialog) getSource()).setModal(b));
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Dialog) getSource()).setResizable(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Dialog) getSource()).setResizable(b));
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Dialog) getSource()).setTitle(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Dialog) getSource()).setTitle(string));
     }
 
     protected static Dialog waitDialog(Predicate<Component> chooser, int index) {

@@ -49,7 +49,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
@@ -489,7 +488,7 @@ class WindowOperatorTest {
 
     /** Runs the callable on the event dispatch thread so component state is only touched there. */
     private static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(callable));
+        return QueueTool.getInstance().callOnQueue(callable);
     }
 
     /** Builds (but does not show) a second frame, on the EDT. */

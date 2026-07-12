@@ -91,8 +91,7 @@ public final class EventDispatcher {
 
     public Object invokeMethod(String methodName, Object @Nullable [] params, Class<?> @Nullable [] paramClasses) {
         return QueueTool.getInstance()
-                .callOnQueue(
-                        Caller.of(new MethodInvokeCallable(methodName, params, paramClasses, component, reference)));
+                .callOnQueue(new MethodInvokeCallable(methodName, params, paramClasses, component, reference));
     }
 
     public Object invokeExistingMethod(

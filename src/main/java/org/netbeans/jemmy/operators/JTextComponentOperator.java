@@ -31,9 +31,9 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JScrollPane;
@@ -46,7 +46,6 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyInputException;
@@ -218,15 +217,9 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void changeCaretPosition(int position) {
         makeComponentVisible();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.changeCaretPosition(JTextComponentOperator.this, position);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.changeCaretPosition(JTextComponentOperator.this, position),
                 TimeoutKey.JTextComponentOperator_ChangeCaretPositionTimeout);
-
         if (getVerification()) {
             waitCaretPosition(position);
         }
@@ -249,15 +242,9 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void typeText(String text, int caretPosition) {
         makeComponentVisible();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.typeText(JTextComponentOperator.this, text, caretPosition);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.typeText(JTextComponentOperator.this, text, caretPosition),
                 TimeoutKey.JTextComponentOperator_TypeTextTimeout);
-
         if (getVerification()) {
             waitText(text, -1);
         }
@@ -269,13 +256,8 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void selectText(int startPosition, int finalPosition) {
         makeComponentVisible();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.selectText(JTextComponentOperator.this, startPosition, finalPosition);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.selectText(JTextComponentOperator.this, startPosition, finalPosition),
                 TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
@@ -295,14 +277,8 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void clearText() {
         makeComponentVisible();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.clearText(JTextComponentOperator.this);
-
-                    return null;
-                },
-                null,
-                TimeoutKey.JTextComponentOperator_TypeTextTimeout);
+        runTimeRestricted(
+                () -> driver.clearText(JTextComponentOperator.this), TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
     public void scrollToPosition(int position) {
@@ -342,331 +318,232 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void addCaretListener(CaretListener caretListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).addCaretListener(caretListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).addCaretListener(caretListener));
     }
 
     public void copy() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).copy();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).copy());
     }
 
     public void cut() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).cut();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).cut());
     }
 
     public javax.swing.Action[] getActions() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getActions()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getActions());
     }
 
     public Caret getCaret() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getCaret()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getCaret());
     }
 
     public Color getCaretColor() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getCaretColor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getCaretColor());
     }
 
     public int getCaretPosition() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getCaretPosition()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getCaretPosition());
     }
 
     public Color getDisabledTextColor() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getDisabledTextColor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getDisabledTextColor());
     }
 
     public Document getDocument() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getDocument()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getDocument());
     }
 
     public char getFocusAccelerator() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getFocusAccelerator()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getFocusAccelerator());
     }
 
     public Highlighter getHighlighter() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getHighlighter()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getHighlighter());
     }
 
     public Keymap getKeymap() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getKeymap()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getKeymap());
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getMargin()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getMargin());
     }
 
     public Dimension getPreferredScrollableViewportSize() {
         return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getPreferredScrollableViewportSize()));
+                .callOnQueue(() -> ((JTextComponent) getSource()).getPreferredScrollableViewportSize());
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource())
-                .getScrollableBlockIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .callOnQueue(() -> ((JTextComponent) getSource()).getScrollableBlockIncrement(rectangle, i, i1));
     }
 
     public boolean getScrollableTracksViewportHeight() {
         return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportHeight()));
+                .callOnQueue(() -> ((JTextComponent) getSource()).getScrollableTracksViewportHeight());
     }
 
     public boolean getScrollableTracksViewportWidth() {
         return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportWidth()));
+                .callOnQueue(() -> ((JTextComponent) getSource()).getScrollableTracksViewportWidth());
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource())
-                .getScrollableUnitIncrement(rectangle, i, i1)));
+        return QueueTool.getInstance()
+                .callOnQueue(() -> ((JTextComponent) getSource()).getScrollableUnitIncrement(rectangle, i, i1));
     }
 
     public String getSelectedText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectedText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getSelectedText());
     }
 
     public Color getSelectedTextColor() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectedTextColor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getSelectedTextColor());
     }
 
     public Color getSelectionColor() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectionColor()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getSelectionColor());
     }
 
     public int getSelectionEnd() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectionEnd()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getSelectionEnd());
     }
 
     public int getSelectionStart() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectionStart()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getSelectionStart());
     }
 
     public String getText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getText());
     }
 
     public String getText(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getText(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getText(i, i1));
     }
 
     public TextUI getUI() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getUI());
     }
 
     public boolean isEditable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).isEditable()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).isEditable());
     }
 
     public Rectangle modelToView(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).modelToView(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).modelToView(i));
     }
 
     public void moveCaretPosition(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).moveCaretPosition(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).moveCaretPosition(i));
     }
 
     public void paste() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).paste();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).paste());
     }
 
     public void read(Reader reader, Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).read(reader, object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> {
+            try {
+                ((JTextComponent) getSource()).read(reader, object);
+            } catch (IOException e) {
+                throw new JemmyException("Exception when reading", e);
+            }
+        });
     }
 
     public void removeCaretListener(CaretListener caretListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).removeCaretListener(caretListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).removeCaretListener(caretListener));
     }
 
     public void replaceSelection(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).replaceSelection(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).replaceSelection(string));
     }
 
     public void select(int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).select(i, i1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).select(i, i1));
     }
 
     public void selectAll() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).selectAll();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).selectAll());
     }
 
     public void setCaret(Caret caret) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setCaret(caret);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setCaret(caret));
     }
 
     public void setCaretColor(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setCaretColor(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setCaretColor(color));
     }
 
     public void setCaretPosition(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setCaretPosition(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setCaretPosition(i));
     }
 
     public void setDisabledTextColor(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setDisabledTextColor(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setDisabledTextColor(color));
     }
 
     public void setDocument(Document document) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setDocument(document);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setDocument(document));
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setEditable(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setEditable(b));
     }
 
     public void setFocusAccelerator(char c) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setFocusAccelerator(c);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setFocusAccelerator(c));
     }
 
     public void setHighlighter(Highlighter highlighter) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setHighlighter(highlighter);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setHighlighter(highlighter));
     }
 
     public void setKeymap(Keymap keymap) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setKeymap(keymap);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setKeymap(keymap));
     }
 
     public void setMargin(Insets insets) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setMargin(insets);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setMargin(insets));
     }
 
     public void setSelectedTextColor(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setSelectedTextColor(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setSelectedTextColor(color));
     }
 
     public void setSelectionColor(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setSelectionColor(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setSelectionColor(color));
     }
 
     public void setSelectionEnd(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setSelectionEnd(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setSelectionEnd(i));
     }
 
     public void setSelectionStart(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setSelectionStart(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setSelectionStart(i));
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setText(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setText(string));
     }
 
     public void setUI(TextUI textUI) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).setUI(textUI);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextComponent) getSource()).setUI(textUI));
     }
 
     public int viewToModel(Point point) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).viewToModel(point)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).viewToModel(point));
     }
 
     public void write(Writer writer) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextComponent) getSource()).write(writer);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> {
+            try {
+                ((JTextComponent) getSource()).write(writer);
+            } catch (IOException e) {
+                throw new JemmyException("Exception when writing", e);
+            }
+        });
     }
 
     public static @Nullable JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser, int index) {

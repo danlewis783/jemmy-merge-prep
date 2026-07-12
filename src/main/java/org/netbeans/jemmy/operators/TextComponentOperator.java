@@ -28,11 +28,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.TextComponent;
 import java.awt.event.TextListener;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -221,99 +219,81 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void addTextListener(TextListener textListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).addTextListener(textListener);
-
-            return null;
-        }));
+        });
     }
 
     public int getCaretPosition() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getCaretPosition()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextComponent) getSource()).getCaretPosition());
     }
 
     public String getSelectedText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getSelectedText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextComponent) getSource()).getSelectedText());
     }
 
     public int getSelectionEnd() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getSelectionEnd()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextComponent) getSource()).getSelectionEnd());
     }
 
     public int getSelectionStart() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getSelectionStart()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextComponent) getSource()).getSelectionStart());
     }
 
     public String getText() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextComponent) getSource()).getText());
     }
 
     public boolean isEditable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).isEditable()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextComponent) getSource()).isEditable());
     }
 
     public void removeTextListener(TextListener textListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).removeTextListener(textListener);
-
-            return null;
-        }));
+        });
     }
 
     public void select(int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).select(i, i1);
-
-            return null;
-        }));
+        });
     }
 
     public void selectAll() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).selectAll();
-
-            return null;
-        }));
+        });
     }
 
     public void setCaretPosition(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).setCaretPosition(i);
-
-            return null;
-        }));
+        });
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).setEditable(b);
-
-            return null;
-        }));
+        });
     }
 
     public void setSelectionEnd(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).setSelectionEnd(i);
-
-            return null;
-        }));
+        });
     }
 
     public void setSelectionStart(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).setSelectionStart(i);
-
-            return null;
-        }));
+        });
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextComponent) getSource()).setText(string);
-
-            return null;
-        }));
+        });
     }
 
     protected TextDriver getTextDriver() {

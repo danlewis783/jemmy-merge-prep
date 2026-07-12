@@ -31,7 +31,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.ComboBoxEditor;
 import javax.swing.ComboBoxModel;
@@ -44,7 +43,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.plaf.ComboBoxUI;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
@@ -256,319 +254,187 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().actionPerformed(actionEvent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().actionPerformed(actionEvent));
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().addActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().addActionListener(actionListener));
     }
 
     public void addItem(Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().addItem(object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().addItem(object));
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().addItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().addItemListener(itemListener));
     }
 
     public void configureEditor(ComboBoxEditor comboBoxEditor, Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().configureEditor(comboBoxEditor, object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().configureEditor(comboBoxEditor, object));
     }
 
     public void contentsChanged(ListDataEvent listDataEvent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().contentsChanged(listDataEvent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().contentsChanged(listDataEvent));
     }
 
     public String getActionCommand() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getActionCommand()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getActionCommand());
     }
 
     public ComboBoxEditor getEditor() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getEditor()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getEditor());
     }
 
     public Object getItemAt(int i) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getItemAt(i)));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getItemAt(i));
     }
 
     public int getItemCount() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getItemCount()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getItemCount());
     }
 
     public KeySelectionManager getKeySelectionManager() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getKeySelectionManager()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getKeySelectionManager());
     }
 
     public int getMaximumRowCount() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getMaximumRowCount()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getMaximumRowCount());
     }
 
     public ComboBoxModel<?> getModel() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getModel()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getModel());
     }
 
     public ListCellRenderer<?> getRenderer() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getRenderer()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getRenderer());
     }
 
     public int getSelectedIndex() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getSelectedIndex()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getSelectedIndex());
     }
 
     public Object getSelectedItem() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getSelectedItem()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getSelectedItem());
     }
 
     public Object[] getSelectedObjects() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getSelectedObjects()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getSelectedObjects());
     }
 
     public ComboBoxUI getUI() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().getUI()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getUI());
     }
 
     public void hidePopup() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().hidePopup();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().hidePopup());
     }
 
     public void insertItemAt(Object object, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().insertItemAt(object, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().insertItemAt(object, i));
     }
 
     public void intervalAdded(ListDataEvent listDataEvent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().intervalAdded(listDataEvent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().intervalAdded(listDataEvent));
     }
 
     public void intervalRemoved(ListDataEvent listDataEvent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().intervalRemoved(listDataEvent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().intervalRemoved(listDataEvent));
     }
 
     public boolean isEditable() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().isEditable()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().isEditable());
     }
 
     public boolean isLightWeightPopupEnabled() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().isLightWeightPopupEnabled()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().isLightWeightPopupEnabled());
     }
 
     public boolean isPopupVisible() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().isPopupVisible()));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().isPopupVisible());
     }
 
     public void processKeyEvent(KeyEvent keyEvent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().processKeyEvent(keyEvent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().processKeyEvent(keyEvent));
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().removeActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().removeActionListener(actionListener));
     }
 
     public void removeAllItems() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().removeAllItems();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().removeAllItems());
     }
 
     public void removeItem(Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().removeItem(object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().removeItem(object));
     }
 
     public void removeItemAt(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().removeItemAt(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().removeItemAt(i));
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().removeItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().removeItemListener(itemListener));
     }
 
     public boolean selectWithKeyChar(char c) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getJComboBox().selectWithKeyChar(c)));
+        return QueueTool.getInstance().callOnQueue(() -> getJComboBox().selectWithKeyChar(c));
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setActionCommand(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setActionCommand(string));
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setEditable(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setEditable(b));
     }
 
     public void setEditor(ComboBoxEditor comboBoxEditor) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setEditor(comboBoxEditor);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setEditor(comboBoxEditor));
     }
 
     public void setKeySelectionManager(KeySelectionManager keySelectionManager) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setKeySelectionManager(keySelectionManager);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setKeySelectionManager(keySelectionManager));
     }
 
     public void setLightWeightPopupEnabled(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setLightWeightPopupEnabled(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setLightWeightPopupEnabled(b));
     }
 
     public void setMaximumRowCount(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setMaximumRowCount(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setMaximumRowCount(i));
     }
 
     public void setModel(ComboBoxModel<?> comboBoxModel) {
         @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
         ComboBoxModel<Object> model = (ComboBoxModel<Object>) comboBoxModel;
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setModel(model);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setModel(model));
     }
 
     public void setPopupVisible(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setPopupVisible(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setPopupVisible(b));
     }
 
     public void setRenderer(ListCellRenderer<?> listCellRenderer) {
         @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
         ListCellRenderer<Object> renderer = (ListCellRenderer<Object>) listCellRenderer;
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setRenderer(renderer);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setRenderer(renderer));
     }
 
     public void setSelectedIndex(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setSelectedIndex(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setSelectedIndex(i));
     }
 
     public void setSelectedItem(Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setSelectedItem(object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setSelectedItem(object));
     }
 
     public void setUI(ComboBoxUI comboBoxUI) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().setUI(comboBoxUI);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().setUI(comboBoxUI));
     }
 
     public void showPopup() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getJComboBox().showPopup();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getJComboBox().showPopup());
     }
 
     public static @Nullable JComboBox<?> findJComboBox(Container cont, Predicate<Component> chooser, int index) {

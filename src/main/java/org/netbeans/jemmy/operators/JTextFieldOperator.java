@@ -27,12 +27,10 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JTextField;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -143,77 +141,47 @@ public class JTextFieldOperator extends JTextComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).addActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).addActionListener(actionListener));
     }
 
     public int getColumns() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextField) getSource()).getColumns()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextField) getSource()).getColumns());
     }
 
     public int getHorizontalAlignment() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextField) getSource()).getHorizontalAlignment()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextField) getSource()).getHorizontalAlignment());
     }
 
     public BoundedRangeModel getHorizontalVisibility() {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> ((JTextField) getSource()).getHorizontalVisibility()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextField) getSource()).getHorizontalVisibility());
     }
 
     public int getScrollOffset() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextField) getSource()).getScrollOffset()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextField) getSource()).getScrollOffset());
     }
 
     public void postActionEvent() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).postActionEvent();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).postActionEvent());
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).removeActionListener(actionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).removeActionListener(actionListener));
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).setActionCommand(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).setActionCommand(string));
     }
 
     public void setColumns(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).setColumns(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).setColumns(i));
     }
 
     public void setHorizontalAlignment(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).setHorizontalAlignment(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).setHorizontalAlignment(i));
     }
 
     public void setScrollOffset(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextField) getSource()).setScrollOffset(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextField) getSource()).setScrollOffset(i));
     }
 
     private String removeNewLines(String text) {

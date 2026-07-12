@@ -28,9 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Adjustable;
 import java.awt.Point;
 import java.util.List;
-import java.util.concurrent.Callable;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
@@ -65,19 +63,17 @@ public abstract class AWTScrollDriver extends AbstractScrollDriver {
         }
 
         Adjustable adjustable = getAdjustable(oper, adj.getScrollOrientation());
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             int increment = Math.max(1, block ? adjustable.getBlockIncrement() : adjustable.getUnitIncrement());
             adjustable.setValue(adjustable.getValue() + direction * increment);
-
-            return null;
-        }));
+        });
     }
 
     @Override
     protected int position(ComponentOperator oper, int orientation) {
         Adjustable adjustable = getAdjustable(oper, orientation);
 
-        return QueueTool.getInstance().callOnQueue(Caller.of(adjustable::getValue));
+        return QueueTool.getInstance().callOnQueue(adjustable::getValue);
     }
 
     @Override

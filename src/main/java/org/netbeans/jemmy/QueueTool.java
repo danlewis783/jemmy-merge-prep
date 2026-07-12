@@ -28,10 +28,11 @@ import java.awt.AWTEvent;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.InvocationEvent;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import org.netbeans.jemmy.callables.Callables;
-import org.netbeans.jemmy.functions.StayingEmptyFunction;
-import org.netbeans.jemmy.functions.SystemEventQueueEmptyFunction;
+import org.netbeans.jemmy.functions.StayingEmptyBooleanSupplier;
+import org.netbeans.jemmy.functions.SystemEventQueueEmptyBooleanSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,21 +41,29 @@ public final class QueueTool {
 
     private QueueTool() {}
 
+    /**
+     * Wait for the event queue to be empty when sampled.
+     */
     public void waitEmpty() {
-        FunctionRepeater.on(
-                        new SystemEventQueueEmptyFunction(),
+        BooleanSupplierRepeater.on(
+                        new SystemEventQueueEmptyBooleanSupplier(),
                         TimeoutKey.QueueTool_WaitQueueEmptyTimeout,
                         TimeoutKey.QueueTool_QueueCheckingDelta)
-                .runUntilNotNull(null);
+                .runUntilTrue();
     }
 
-    public void waitEmpty(long emptyTime) {
-        FunctionRepeater<Void, Boolean> functionRepeater = FunctionRepeater.on(
-                new StayingEmptyFunction(emptyTime),
+    /**
+     * Wait for the event queue to <em>stay</em> empty, when sampled, for {@code emptyTimeMs} milliseconds.
+     *
+     * @param emptyTimeMs the amount of time the event queue should stay empty
+     */
+    public void waitEmpty(long emptyTimeMs) {
+        BooleanSupplierRepeater supplierRepeater = BooleanSupplierRepeater.on(
+                new StayingEmptyBooleanSupplier(emptyTimeMs),
                 TimeoutKey.QueueTool_WaitQueueEmptyTimeout,
                 TimeoutKey.QueueTool_QueueCheckingDelta);
         try {
-            functionRepeater.runUntilNotNull(null);
+            supplierRepeater.runUntilTrue();
         } catch (TimeoutExpiredException e) {
             AWTEvent event = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent();
             if (event == null) {
@@ -63,7 +72,7 @@ public final class QueueTool {
                         e);
             } else {
                 if (logger.isWarnEnabled()) {
-                    final String eventAtFrontOfQueue = callOnQueue(Caller.of(Callables.toStringOf(event)));
+                    final String eventAtFrontOfQueue = callOnQueue(Callables.toStringOf(event));
                     logger.warn(
                             "Timeout expired waiting for event queue to stay empty.  Event at front of event queue: <{}>",
                             eventAtFrontOfQueue,
@@ -76,33 +85,57 @@ public final class QueueTool {
     }
 
     /**
-     * Calls the caller's callable on the AWT event dispatch thread and blocks until it completes,
-     * returning its result. When invoked off the dispatch thread, the call is dispatched through
-     * the system event queue and waited on (subject to {@code QueueTool_PreInvocationTimeout} and
+     * Calls the callable on the AWT event dispatch thread and blocks until it completes, returning
+     * its result. When invoked off the dispatch thread, the call is dispatched through the system
+     * event queue and waited on (subject to {@code QueueTool_PreInvocationTimeout} and
      * {@code QueueTool_InvocationTimeout}); when already on the dispatch thread, the callable runs
      * directly. Any exception the callable throws is rethrown wrapped in a {@link JemmyException}.
      *
-     * @param caller wraps the callable to run; single-use, see {@link Caller#of}
-     * @return the callable's result
+     * @param callable the work to run on the dispatch thread
+     * @return the callable's result; null exactly when the callable returns null
      */
-    public <T> T callOnQueue(Caller<T> caller) {
-        if (!EventQueue.isDispatchThread()) {
-            return invokeAndWait(caller);
-        } else {
+    public <R> R callOnQueue(Callable<R> callable) {
+        if (EventQueue.isDispatchThread()) {
             try {
-                return caller.getCallable().call();
+                return callable.call();
             } catch (Exception e) {
                 throw new JemmyException("Exception when calling", e);
             }
         }
+
+        return invokeAndWait(Caller.of(callable));
     }
 
-    // the result's nullness follows the Caller's type argument (null for Callable<Void>),
+    /**
+     * Runs the runnable on the AWT event dispatch thread and blocks until it completes, with the
+     * same dispatch, timeout, and exception-wrapping behavior as {@link #callOnQueue}.
+     *
+     * @param runnable the work to run on the dispatch thread
+     */
+    public void runOnQueue(Runnable runnable) {
+        if (EventQueue.isDispatchThread()) {
+            try {
+                runnable.run();
+            } catch (RuntimeException e) {
+                throw new JemmyException("Exception when calling", e);
+            }
+            return;
+        }
+
+        dispatchAndAwait(VoidCaller.of(runnable));
+    }
+
+    // the result's nullness follows the Caller's type argument,
     // which pre-generics NullAway cannot express
     @SuppressWarnings("NullAway")
-    private <T> T invokeAndWait(Caller<T> caller) {
+    private <R> R invokeAndWait(Caller<R> caller) {
+        dispatchAndAwait(caller);
+        return caller.getResult();
+    }
+
+    private void dispatchAndAwait(QueueCaller caller) {
         if (EventQueue.isDispatchThread()) {
-            throw new Error("Cannot call invokeAndWait from the event dispatcher thread");
+            throw new Error("Cannot dispatch and await from the event dispatcher thread");
         }
 
         long preInvocationTimeout = Timeouts.get(TimeoutKey.QueueTool_PreInvocationTimeout);
@@ -139,8 +172,6 @@ public final class QueueTool {
         if (t != null) {
             throw new JemmyException("Throwable captured by invocation event", t);
         }
-
-        return caller.getResult();
     }
 
     public static QueueTool getInstance() {

@@ -26,12 +26,10 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
@@ -181,103 +179,71 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void append(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).append(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).append(string));
     }
 
     public int getColumns() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getColumns()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getColumns());
     }
 
     public int getLineCount() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineCount()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getLineCount());
     }
 
     public int getLineEndOffset(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineEndOffset(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getLineEndOffset(i));
     }
 
     public int getLineOfOffset(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineOfOffset(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getLineOfOffset(i));
     }
 
     public int getLineStartOffset(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineStartOffset(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getLineStartOffset(i));
     }
 
     public boolean getLineWrap() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineWrap()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getLineWrap());
     }
 
     public int getRows() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getRows()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getRows());
     }
 
     public int getTabSize() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getTabSize()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getTabSize());
     }
 
     public boolean getWrapStyleWord() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getWrapStyleWord()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextArea) getSource()).getWrapStyleWord());
     }
 
     public void insert(String string, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).insert(string, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).insert(string, i));
     }
 
     public void replaceRange(String string, int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).replaceRange(string, i, i1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).replaceRange(string, i, i1));
     }
 
     public void setColumns(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).setColumns(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).setColumns(i));
     }
 
     public void setLineWrap(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).setLineWrap(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).setLineWrap(b));
     }
 
     public void setRows(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).setRows(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).setRows(i));
     }
 
     public void setTabSize(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).setTabSize(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).setTabSize(i));
     }
 
     public void setWrapStyleWord(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextArea) getSource()).setWrapStyleWord(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextArea) getSource()).setWrapStyleWord(b));
     }
 
     public static @Nullable JTextArea findJTextArea(Container cont, Predicate<Component> chooser, int index) {

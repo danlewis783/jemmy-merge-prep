@@ -28,10 +28,8 @@ import java.awt.Choice;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ItemListener;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -163,100 +161,60 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void add(String item) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).add(item);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).add(item));
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).addItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).addItemListener(itemListener));
     }
 
     @Override
     public void addNotify() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addNotify();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addNotify());
     }
 
     public String getItem(int index) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getItem(index)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Choice) getSource()).getItem(index));
     }
 
     public int getItemCount() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getItemCount()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Choice) getSource()).getItemCount());
     }
 
     public int getSelectedIndex() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getSelectedIndex()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Choice) getSource()).getSelectedIndex());
     }
 
     public String getSelectedItem() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getSelectedItem()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Choice) getSource()).getSelectedItem());
     }
 
     public void insert(String item, int index) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).insert(item, index);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).insert(item, index));
     }
 
     public void remove(int position) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).remove(position);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).remove(position));
     }
 
     public void remove(String item) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).remove(item);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).remove(item));
     }
 
     public void removeAll() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).removeAll();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).removeAll());
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).removeItemListener(itemListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).removeItemListener(itemListener));
     }
 
     public void select(int pos) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).select(pos);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).select(pos));
     }
 
     public void setState(String str) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Choice) getSource()).select(str);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Choice) getSource()).select(str));
     }
 
     private int doFindItemIndex(String item, StringComparator comparator, int index) {

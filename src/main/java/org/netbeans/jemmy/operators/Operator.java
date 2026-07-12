@@ -31,16 +31,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.CharBindingMap;
+import org.netbeans.jemmy.ConsumerRunner;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.FunctionRunner;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.RunnableRunner;
+import org.netbeans.jemmy.SupplierRunner;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.callables.Callables;
 import org.netbeans.jemmy.functions.OperatorPredicateFunction;
@@ -194,7 +198,7 @@ public abstract class Operator {
     // the result's nullness follows the function's type argument, which pre-generics
     // NullAway cannot express
     @SuppressWarnings("NullAway")
-    <T, R> R produceTimeRestricted(Function<T, R> function, @Nullable T t, TimeoutKey timeoutKey) {
+    <T, R> @Nullable R produceTimeRestricted(Function<T, R> function, @Nullable T t, TimeoutKey timeoutKey) {
         FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
         R result;
         try {
@@ -208,26 +212,120 @@ public abstract class Operator {
             if (throwable instanceof JemmyException) {
                 throw (JemmyException) throwable;
             } else {
-                throw new JemmyException("Exception during " + function, throwable);
+                throw new JemmyException(
+                        String.format("throwable encountered during execution of function \"%s\"", function),
+                        throwable);
             }
         }
 
         return result;
     }
 
+    @SuppressWarnings("SameParameterValue")
+    <R> @Nullable R supplyTimeRestricted(Supplier<@Nullable R> supplier, TimeoutKey timeoutKey) {
+        SupplierRunner<R> supplierRunner = SupplierRunner.on(supplier);
+        R result;
+        try {
+            result = supplierRunner.getAndWait(timeoutKey);
+        } catch (InterruptedException e) {
+            throw new JemmyException("interrupted waiting for supplier", e);
+        }
+
+        Throwable throwable = supplierRunner.getThrowable();
+        if (throwable != null) {
+            if (throwable instanceof JemmyException) {
+                throw (JemmyException) throwable;
+            } else {
+                throw new JemmyException(
+                        String.format("throwable encountered during execution of supplier \"%s\"", supplier),
+                        throwable);
+            }
+        }
+
+        return result;
+    }
+
+    <T> void acceptTimeRestricted(Consumer<T> consumer, @Nullable T t, TimeoutKey timeoutKey) {
+        ConsumerRunner<T> consumerRunner = ConsumerRunner.on(consumer);
+        try {
+            consumerRunner.acceptAndWait(t, timeoutKey);
+        } catch (InterruptedException e) {
+            throw new JemmyException("interrupted waiting for consumer", e);
+        }
+
+        Throwable throwable = consumerRunner.getThrowable();
+        if (throwable != null) {
+            if (throwable instanceof JemmyException) {
+                throw (JemmyException) throwable;
+            } else {
+                throw new JemmyException(
+                        String.format("throwable encountered during execution of consumer \"%s\"", consumer),
+                        throwable);
+            }
+        }
+    }
+
+    void runTimeRestricted(Runnable runnable, TimeoutKey timeoutKey) {
+        RunnableRunner runnableRunner = RunnableRunner.on(runnable);
+        try {
+            runnableRunner.runAndWait(timeoutKey);
+        } catch (InterruptedException e) {
+            throw new JemmyException("interrupted waiting for runnable", e);
+        }
+
+        Throwable throwable = runnableRunner.getThrowable();
+        if (throwable != null) {
+            if (throwable instanceof JemmyException) {
+                throw (JemmyException) throwable;
+            } else {
+                throw new JemmyException(
+                        String.format("throwable encountered during execution of runnable \"%s\"", runnable),
+                        throwable);
+            }
+        }
+    }
+
     protected <T, R> void produceNoBlocking(Function<T, R> function, @Nullable T t) {
         FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
         functionRunner.run(t);
 
+        // TODO throwable may not be available because run does not block
         Throwable throwable = functionRunner.getThrowable();
         if (throwable != null) {
             throw new JemmyException(
-                    String.format("throwable encountered during exception of function \"%s\"", function));
+                    String.format("throwable encountered during execution of function \"%s\"", function), throwable);
+        }
+    }
+
+    protected <T> void acceptNoBlocking(Consumer<T> consumer, @Nullable T t) {
+        ConsumerRunner<T> consumerRunner = ConsumerRunner.on(consumer);
+        consumerRunner.acceptLater(t);
+
+        // TODO throwable may not be available because run does not block
+        Throwable throwable = consumerRunner.getThrowable();
+        if (throwable != null) {
+            throw new JemmyException(
+                    String.format("throwable encountered during execution of consumer \"%s\"", consumer), throwable);
+        }
+    }
+
+    protected void runNoBlocking(Runnable runnable) {
+        RunnableRunner runnableRunner = RunnableRunner.on(runnable);
+        runnableRunner.runLater();
+
+        // TODO throwable may not be available because run does not block
+        Throwable throwable = runnableRunner.getThrowable();
+        if (throwable != null) {
+            throw new JemmyException(
+                    String.format("throwable encountered during execution of runnable \"%s\"", runnable), throwable);
         }
     }
 
     public String getSourceToString() {
-        return queueTool.callOnQueue(Caller.of(Callables.toStringOfOperatorSource(this)));
+        String result = queueTool.callOnQueue(Callables.toStringOfOperatorSource(this));
+        //noinspection UnnecessaryLocalVariable
+        String nonNullResult = Objects.requireNonNull(result);
+        return nonNullResult;
     }
 
     public void setVisualizer(ComponentVisualizer visualizer) {
@@ -285,7 +383,7 @@ public abstract class Operator {
 
         @Override
         public boolean test(T operator) {
-            return QueueTool.getInstance().callOnQueue(Caller.of(() -> predicate.test(operator)));
+            return QueueTool.getInstance().callOnQueue(() -> predicate.test(operator));
         }
 
         @Override

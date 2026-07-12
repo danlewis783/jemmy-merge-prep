@@ -29,10 +29,8 @@ import java.awt.Window;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
@@ -202,7 +200,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static int countWindows(@Nullable Window owner, Predicate<Component> chooser) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(() -> {
             Window[] windows = (owner == null) ? Window.getWindows() : owner.getOwnedWindows();
             int matches = 0;
             for (Window window : windows) {
@@ -212,7 +210,7 @@ public class WindowOperator extends ContainerOperator {
             }
 
             return matches;
-        }));
+        });
     }
 
     public void waitClosed() {
@@ -220,87 +218,71 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void addWindowListener(WindowListener windowListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).addWindowListener(windowListener);
-
-            return null;
-        }));
+        });
     }
 
     public void applyResourceBundle(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).applyResourceBundle(string);
-
-            return null;
-        }));
+        });
     }
 
     public void applyResourceBundle(ResourceBundle resourceBundle) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).applyResourceBundle(resourceBundle);
-
-            return null;
-        }));
+        });
     }
 
     public void dispose() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).dispose();
-
-            return null;
-        }));
+        });
     }
 
     public @Nullable Component getFocusOwner() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getFocusOwner()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Window) getSource()).getFocusOwner());
     }
 
     public Window[] getOwnedWindows() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getOwnedWindows()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Window) getSource()).getOwnedWindows());
     }
 
     public @Nullable Window getOwner() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getOwner()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Window) getSource()).getOwner());
     }
 
     public @Nullable String getWarningString() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getWarningString()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Window) getSource()).getWarningString());
     }
 
     public void pack() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).pack();
-
-            return null;
-        }));
+        });
     }
 
     public void removeWindowListener(WindowListener windowListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).removeWindowListener(windowListener);
-
-            return null;
-        }));
+        });
     }
 
     public void toBack() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).toBack();
-
-            return null;
-        }));
+        });
     }
 
     public void toFront() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((Window) getSource()).toFront();
-
-            return null;
-        }));
+        });
     }
 
     public boolean isFocused() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(() -> {
             try {
                 return (Boolean) new ClassReference<>(getSource()).invokeMethod("isFocused", null, null);
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
@@ -308,11 +290,11 @@ public class WindowOperator extends ContainerOperator {
 
                 return false;
             }
-        }));
+        });
     }
 
     public boolean isActive() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(() -> {
             try {
                 return (Boolean) new ClassReference<>(getSource()).invokeMethod("isActive", null, null);
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
@@ -320,7 +302,7 @@ public class WindowOperator extends ContainerOperator {
 
                 return false;
             }
-        }));
+        });
     }
 
     public static @Nullable Window findWindow(Predicate<Component> chooser, int index) {

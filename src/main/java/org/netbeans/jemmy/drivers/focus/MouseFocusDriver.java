@@ -27,8 +27,6 @@ package org.netbeans.jemmy.drivers.focus;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.Callable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -62,7 +60,7 @@ public final class MouseFocusDriver extends LightSupportiveDriver implements Foc
     @Override
     public void giveFocus(ComponentOperator compOp) {
         if (!compOp.hasFocus()) {
-            QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+            QueueTool.getInstance().runOnQueue(() -> {
                 DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
                 MouseDriver mouseDriver = driverManager.getMouseDriver(compOp);
                 int defaultMouseButton = Operator.getDefaultMouseButton();
@@ -76,8 +74,7 @@ public final class MouseFocusDriver extends LightSupportiveDriver implements Foc
                         defaultMouseButton,
                         0,
                         TimeoutKey.ComponentOperator_MouseClickTimeout);
-                return null;
-            }));
+            });
             compOp.waitHasFocus();
         }
     }

@@ -14,20 +14,22 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.netbeans.jemmy.testing;
+package org.netbeans.jemmy;
 
-import java.util.concurrent.Callable;
-import org.netbeans.jemmy.QueueTool;
+import java.util.concurrent.CountDownLatch;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Test helper for the Swing single-thread rule: runs the callable on the event dispatch thread so
- * component state is only touched there. Typical use is reading raw component state for an
- * operator-vs-source assertion: {@code assertThat(op.getTitle()).isEqualTo(onQueue(src::getTitle))}.
+ * What {@link QueueTool} needs from work it dispatches through the event queue: a runnable whose
+ * start and completion can be awaited, and which captures rather than throws any exception raised
+ * by the work.
  */
-public final class OnQueue {
-    private OnQueue() {}
+interface QueueCaller extends Runnable {
 
-    public static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().callOnQueue(callable);
-    }
+    CountDownLatch getStartGate();
+
+    CountDownLatch getEndGate();
+
+    @Nullable
+    Exception getException();
 }

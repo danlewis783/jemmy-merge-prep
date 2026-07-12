@@ -58,16 +58,14 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.EventDispatcher;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.SupplierRepeater;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FocusDriver;
@@ -174,18 +172,14 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers, boolean forPopup) {
-        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
-            mDriver.clickMouse(
-                    ComponentOperator.this,
-                    x,
-                    y,
-                    clickCount,
-                    mouseButton,
-                    modifiers,
-                    TimeoutKey.ComponentOperator_MouseClickTimeout);
-
-            return null;
-        }));
+        queueTool.runOnQueue(() -> mDriver.clickMouse(
+                ComponentOperator.this,
+                x,
+                y,
+                clickCount,
+                mouseButton,
+                modifiers,
+                TimeoutKey.ComponentOperator_MouseClickTimeout));
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers) {
@@ -255,11 +249,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int clickCount, int mouseButton) {
-        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
-            clickMouse(getCenterXForClick(), getCenterYForClick(), clickCount, mouseButton);
-
-            return null;
-        }));
+        queueTool.runOnQueue(() -> clickMouse(getCenterXForClick(), getCenterYForClick(), clickCount, mouseButton));
     }
 
     public void clickMouse(int clickCount) {
@@ -279,19 +269,11 @@ public class ComponentOperator extends Operator {
     }
 
     public void pressMouse() {
-        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
-            pressMouse(getCenterXForClick(), getCenterYForClick());
-
-            return null;
-        }));
+        queueTool.runOnQueue(() -> pressMouse(getCenterXForClick(), getCenterYForClick()));
     }
 
     public void releaseMouse() {
-        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
-            releaseMouse(getCenterXForClick(), getCenterYForClick());
-
-            return null;
-        }));
+        queueTool.runOnQueue(() -> releaseMouse(getCenterXForClick(), getCenterYForClick()));
     }
 
     public void clickForPopup(int mouseButton) {
@@ -468,673 +450,444 @@ public class ComponentOperator extends Operator {
     }
 
     public void add(PopupMenu popupMenu) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().add(popupMenu);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().add(popupMenu));
     }
 
     public void addComponentListener(ComponentListener componentListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addComponentListener(componentListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addComponentListener(componentListener));
     }
 
     public void addFocusListener(FocusListener focusListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addFocusListener(focusListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addFocusListener(focusListener));
     }
 
     public void addInputMethodListener(InputMethodListener inputMethodListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addInputMethodListener(inputMethodListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addInputMethodListener(inputMethodListener));
     }
 
     public void addKeyListener(KeyListener keyListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addKeyListener(keyListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addKeyListener(keyListener));
     }
 
     public void addMouseListener(MouseListener mouseListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addMouseListener(mouseListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addMouseListener(mouseListener));
     }
 
     public void addMouseMotionListener(MouseMotionListener mouseMotionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addMouseMotionListener(mouseMotionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addMouseMotionListener(mouseMotionListener));
     }
 
     public void addNotify() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addNotify();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addNotify());
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addPropertyChangeListener(propertyChangeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addPropertyChangeListener(propertyChangeListener));
     }
 
     public void addPropertyChangeListener(String string, PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().addPropertyChangeListener(string, propertyChangeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addPropertyChangeListener(string, propertyChangeListener));
     }
 
     public int checkImage(Image image, int i, int i1, @Nullable ImageObserver imageObserver) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getSource().checkImage(image, i, i1, imageObserver)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().checkImage(image, i, i1, imageObserver));
     }
 
     public int checkImage(Image image, @Nullable ImageObserver imageObserver) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().checkImage(image, imageObserver)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().checkImage(image, imageObserver));
     }
 
     public boolean contains(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().contains(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().contains(i, i1));
     }
 
     public boolean contains(Point point) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().contains(point)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().contains(point));
     }
 
     public Image createImage(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().createImage(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().createImage(i, i1));
     }
 
     public Image createImage(ImageProducer imageProducer) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().createImage(imageProducer)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().createImage(imageProducer));
     }
 
     public void dispatchEvent(AWTEvent aWTEvent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().dispatchEvent(aWTEvent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().dispatchEvent(aWTEvent));
     }
 
     public void doLayout() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().doLayout();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().doLayout());
     }
 
     public void enableInputMethods(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().enableInputMethods(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().enableInputMethods(b));
     }
 
     public float getAlignmentX() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAlignmentX()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAlignmentX());
     }
 
     public float getAlignmentY() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAlignmentY()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAlignmentY());
     }
 
     public Color getBackground() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getBackground()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getBackground());
     }
 
     public Rectangle getBounds() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getBounds()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getBounds());
     }
 
     public Rectangle getBounds(Rectangle rectangle) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getBounds(rectangle)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getBounds(rectangle));
     }
 
     public ColorModel getColorModel() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getColorModel()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColorModel());
     }
 
     public Component getComponentAt(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getComponentAt(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentAt(i, i1));
     }
 
     public Component getComponentAt(Point point) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getComponentAt(point)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentAt(point));
     }
 
     public ComponentOrientation getComponentOrientation() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getComponentOrientation()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentOrientation());
     }
 
     public Cursor getCursor() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getCursor()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCursor());
     }
 
     public DropTarget getDropTarget() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getDropTarget()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDropTarget());
     }
 
     public Font getFont() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getFont()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFont());
     }
 
     public FontMetrics getFontMetrics(Font font) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getFontMetrics(font)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFontMetrics(font));
     }
 
     public Color getForeground() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getForeground()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getForeground());
     }
 
     public Graphics getGraphics() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getGraphics()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getGraphics());
     }
 
     public int getHeight() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getHeight()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHeight());
     }
 
     public InputContext getInputContext() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getInputContext()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getInputContext());
     }
 
     public InputMethodRequests getInputMethodRequests() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getInputMethodRequests()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getInputMethodRequests());
     }
 
     public Locale getLocale() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocale()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLocale());
     }
 
     public Point getLocation() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocation()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLocation());
     }
 
     public Point getLocation(Point point) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocation(point)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLocation(point));
     }
 
     public Point getLocationOnScreen() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocationOnScreen()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLocationOnScreen());
     }
 
     public Dimension getMaximumSize() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getMaximumSize()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMaximumSize());
     }
 
     public Dimension getMinimumSize() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getMinimumSize()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMinimumSize());
     }
 
     public String getName() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getName()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getName());
     }
 
     public Container getParent() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getParent()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getParent());
     }
 
     public Dimension getPreferredSize() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getPreferredSize()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPreferredSize());
     }
 
     public Dimension getSize() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getSize()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSize());
     }
 
     public Dimension getSize(Dimension dimension) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getSize(dimension)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSize(dimension));
     }
 
     public Toolkit getToolkit() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getToolkit()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getToolkit());
     }
 
     public Object getTreeLock() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getTreeLock()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTreeLock());
     }
 
     public int getWidth() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getWidth()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getWidth());
     }
 
     public int getX() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getX()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getX());
     }
 
     public int getY() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getY()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getY());
     }
 
     public boolean hasFocus() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().hasFocus()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().hasFocus());
     }
 
     public boolean imageUpdate(Image image, int i, int i1, int i2, int i3, int i4) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().imageUpdate(image, i, i1, i2, i3, i4)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().imageUpdate(image, i, i1, i2, i3, i4));
     }
 
     public void invalidate() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().invalidate();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().invalidate());
     }
 
     public boolean isDisplayable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isDisplayable()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isDisplayable());
     }
 
     public boolean isDoubleBuffered() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isDoubleBuffered()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isDoubleBuffered());
     }
 
     public boolean isEnabled() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isEnabled()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isEnabled());
     }
 
     public boolean isFocusTraversable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isFocusTraversable()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isFocusTraversable());
     }
 
     public boolean isLightweight() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isLightweight()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isLightweight());
     }
 
     public boolean isOpaque() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isOpaque()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isOpaque());
     }
 
     public boolean isShowing() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isShowing()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isShowing());
     }
 
     public boolean isValid() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isValid()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isValid());
     }
 
     public boolean isVisible() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isVisible()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isVisible());
     }
 
     public void list() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().list();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().list());
     }
 
     public void list(PrintStream printStream) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().list(printStream);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().list(printStream));
     }
 
     public void list(PrintStream printStream, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().list(printStream, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().list(printStream, i));
     }
 
     public void list(PrintWriter printWriter) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().list(printWriter);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().list(printWriter));
     }
 
     public void list(PrintWriter printWriter, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().list(printWriter, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().list(printWriter, i));
     }
 
     public void paint(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().paint(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().paint(graphics));
     }
 
     public void paintAll(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().paintAll(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().paintAll(graphics));
     }
 
     public boolean prepareImage(Image image, int i, int i1, @Nullable ImageObserver imageObserver) {
-        return QueueTool.getInstance()
-                .callOnQueue(Caller.of(() -> getSource().prepareImage(image, i, i1, imageObserver)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().prepareImage(image, i, i1, imageObserver));
     }
 
     public boolean prepareImage(Image image, @Nullable ImageObserver imageObserver) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().prepareImage(image, imageObserver)));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().prepareImage(image, imageObserver));
     }
 
     public void print(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().print(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().print(graphics));
     }
 
     public void printAll(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().printAll(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().printAll(graphics));
     }
 
     public void remove(MenuComponent menuComponent) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().remove(menuComponent);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().remove(menuComponent));
     }
 
     public void removeComponentListener(ComponentListener componentListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeComponentListener(componentListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeComponentListener(componentListener));
     }
 
     public void removeFocusListener(FocusListener focusListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeFocusListener(focusListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeFocusListener(focusListener));
     }
 
     public void removeInputMethodListener(InputMethodListener inputMethodListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeInputMethodListener(inputMethodListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeInputMethodListener(inputMethodListener));
     }
 
     public void removeKeyListener(KeyListener keyListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeKeyListener(keyListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeKeyListener(keyListener));
     }
 
     public void removeMouseListener(MouseListener mouseListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeMouseListener(mouseListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeMouseListener(mouseListener));
     }
 
     public void removeMouseMotionListener(MouseMotionListener mouseMotionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeMouseMotionListener(mouseMotionListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeMouseMotionListener(mouseMotionListener));
     }
 
     public void removeNotify() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removeNotify();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeNotify());
     }
 
     public void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removePropertyChangeListener(propertyChangeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removePropertyChangeListener(propertyChangeListener));
     }
 
     public void removePropertyChangeListener(String string, PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().removePropertyChangeListener(string, propertyChangeListener);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> getSource().removePropertyChangeListener(string, propertyChangeListener));
     }
 
     public void repaint() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().repaint();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().repaint());
     }
 
     public void repaint(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().repaint(i, i1, i2, i3);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().repaint(i, i1, i2, i3));
     }
 
     public void repaint(long l) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().repaint(l);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().repaint(l));
     }
 
     public void repaint(long l, int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().repaint(l, i, i1, i2, i3);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().repaint(l, i, i1, i2, i3));
     }
 
     public void requestFocus() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().requestFocus();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().requestFocus());
     }
 
     public void setBackground(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setBackground(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBackground(color));
     }
 
     public void setBounds(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setBounds(i, i1, i2, i3);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBounds(i, i1, i2, i3));
     }
 
     public void setBounds(Rectangle rectangle) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setBounds(rectangle);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBounds(rectangle));
     }
 
     public void setComponentOrientation(ComponentOrientation componentOrientation) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setComponentOrientation(componentOrientation);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setComponentOrientation(componentOrientation));
     }
 
     public void setCursor(Cursor cursor) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setCursor(cursor);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setCursor(cursor));
     }
 
     public void setDropTarget(DropTarget dropTarget) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setDropTarget(dropTarget);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDropTarget(dropTarget));
     }
 
     public void setEnabled(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setEnabled(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEnabled(b));
     }
 
     public void setFont(Font font) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setFont(font);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFont(font));
     }
 
     public void setForeground(Color color) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setForeground(color);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setForeground(color));
     }
 
     public void setLocale(Locale locale) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setLocale(locale);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLocale(locale));
     }
 
     public void setLocation(int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setLocation(i, i1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLocation(i, i1));
     }
 
     public void setLocation(Point point) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setLocation(point);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLocation(point));
     }
 
     public void setName(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setName(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setName(string));
     }
 
     public void setSize(int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setSize(i, i1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSize(i, i1));
     }
 
     public void setSize(Dimension dimension) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setSize(dimension);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSize(dimension));
     }
 
     public void setVisible(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().setVisible(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setVisible(b));
     }
 
     public void transferFocus() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().transferFocus();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().transferFocus());
     }
 
     public void update(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().update(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().update(graphics));
     }
 
     public void validate() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            getSource().validate();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> getSource().validate());
     }
 
     public static @Nullable Component findComponent(Container cont, Predicate<Component> chooser) {
@@ -1150,9 +903,8 @@ public class ComponentOperator extends Operator {
     }
 
     protected static Component waitComponent(Container cont, Predicate<Component> predicate, int index) {
-        return FunctionRepeater.on((Function<Void, Component>)
-                        obj -> findComponent(cont, ComponentPredicates.ofShowing(predicate), index))
-                .runUntilNotNull(null);
+        return SupplierRepeater.on(() -> findComponent(cont, ComponentPredicates.ofShowing(predicate), index))
+                .runUntilNotNull();
     }
 
     private static @Nullable Component findComponent(

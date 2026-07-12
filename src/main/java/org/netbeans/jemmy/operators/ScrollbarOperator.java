@@ -28,11 +28,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Scrollbar;
 import java.awt.event.AdjustmentListener;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -111,14 +109,8 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.scroll(ScrollbarOperator.this, adj);
-
-                    return null;
-                },
-                null,
-                TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+        runTimeRestricted(
+                () -> driver.scroll(ScrollbarOperator.this, adj), TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToValue(int value) {
@@ -131,133 +123,84 @@ public class ScrollbarOperator extends ComponentOperator {
     }
 
     public void scrollToMinimum() {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.scrollToMinimum(ScrollbarOperator.this, getOrientation());
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.scrollToMinimum(ScrollbarOperator.this, getOrientation()),
                 TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver.scrollToMaximum(ScrollbarOperator.this, getOrientation());
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver.scrollToMaximum(ScrollbarOperator.this, getOrientation()),
                 TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void addAdjustmentListener(AdjustmentListener adjustmentListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).addAdjustmentListener(adjustmentListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).addAdjustmentListener(adjustmentListener));
     }
 
     public int getBlockIncrement() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getBlockIncrement()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getBlockIncrement());
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getMaximum()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getMaximum());
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getMinimum()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getMinimum());
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getOrientation()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getOrientation());
     }
 
     public int getUnitIncrement() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getUnitIncrement()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getUnitIncrement());
     }
 
     public int getValue() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getValue());
     }
 
     public int getVisibleAmount() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Scrollbar) getSource()).getVisibleAmount()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Scrollbar) getSource()).getVisibleAmount());
     }
 
     public void removeAdjustmentListener(AdjustmentListener adjustmentListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).removeAdjustmentListener(adjustmentListener);
-
-            return null;
-        }));
+        QueueTool.getInstance()
+                .runOnQueue(() -> ((Scrollbar) getSource()).removeAdjustmentListener(adjustmentListener));
     }
 
     public void setBlockIncrement(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setBlockIncrement(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setBlockIncrement(i));
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setMaximum(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setMaximum(i));
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setMinimum(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setMinimum(i));
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setOrientation(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setOrientation(i));
     }
 
     public void setUnitIncrement(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setUnitIncrement(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setUnitIncrement(i));
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setValue(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setValue(i));
     }
 
     public void setValues(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setValues(i, i1, i2, i3);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setValues(i, i1, i2, i3));
     }
 
     public void setVisibleAmount(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Scrollbar) getSource()).setVisibleAmount(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Scrollbar) getSource()).setVisibleAmount(i));
     }
 
     public static @Nullable Scrollbar findScrollbar(Container cont, Predicate<Component> chooser, int index) {

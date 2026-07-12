@@ -29,10 +29,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
@@ -126,47 +124,41 @@ public class TextFieldOperator extends TextComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextField) getSource()).addActionListener(actionListener);
-
-            return null;
-        }));
+        });
     }
 
     public boolean echoCharIsSet() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextField) getSource()).echoCharIsSet()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextField) getSource()).echoCharIsSet());
     }
 
     public int getColumns() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextField) getSource()).getColumns()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextField) getSource()).getColumns());
     }
 
     public char getEchoChar() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextField) getSource()).getEchoChar()));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextField) getSource()).getEchoChar());
     }
 
     public Dimension getMinimumSize(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextField) getSource()).getMinimumSize(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextField) getSource()).getMinimumSize(i));
     }
 
     public Dimension getPreferredSize(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextField) getSource()).getPreferredSize(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((TextField) getSource()).getPreferredSize(i));
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextField) getSource()).removeActionListener(actionListener);
-
-            return null;
-        }));
+        });
     }
 
     public void setColumns(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             ((TextField) getSource()).setColumns(i);
-
-            return null;
-        }));
+        });
     }
 
     public static @Nullable TextField findTextField(Container cont, Predicate<Component> chooser, int index) {

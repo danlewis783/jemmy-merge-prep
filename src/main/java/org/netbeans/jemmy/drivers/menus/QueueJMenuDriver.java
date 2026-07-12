@@ -25,19 +25,15 @@
 
 package org.netbeans.jemmy.drivers.menus;
 
-import java.awt.Component;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.MenuElement;
-import org.netbeans.jemmy.Caller;
-import org.netbeans.jemmy.FunctionRepeater;
+import javax.swing.*;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.SupplierRepeater;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.callables.OneReleaseCallable;
 import org.netbeans.jemmy.callables.OneReleaseCallableA;
@@ -90,12 +86,11 @@ public final class QueueJMenuDriver extends LightSupportiveDriver implements Men
 
     private MenuElement runOneReleaseCallable(OneReleaseCallable callable, TimeoutKey waitKey) {
         try {
-            return FunctionRepeater.on(
-                            (Function<Void, MenuElement>)
-                                    v -> QueueTool.getInstance().callOnQueue(Caller.of(callable)),
+            return SupplierRepeater.on(
+                            () -> QueueTool.getInstance().callOnQueue(callable),
                             waitKey,
                             TimeoutKey.QueueJMenuDriver_OneReleaseDelta)
-                    .runUntilNotNull(null);
+                    .runUntilNotNull();
         } finally {
             callable.stop();
         }

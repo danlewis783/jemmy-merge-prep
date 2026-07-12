@@ -14,20 +14,15 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.netbeans.jemmy.testing;
+package org.netbeans.jemmy.functions;
 
-import java.util.concurrent.Callable;
-import org.netbeans.jemmy.QueueTool;
+import java.awt.Toolkit;
+import java.util.function.BooleanSupplier;
 
-/**
- * Test helper for the Swing single-thread rule: runs the callable on the event dispatch thread so
- * component state is only touched there. Typical use is reading raw component state for an
- * operator-vs-source assertion: {@code assertThat(op.getTitle()).isEqualTo(onQueue(src::getTitle))}.
- */
-public final class OnQueue {
-    private OnQueue() {}
+public final class SystemEventQueueEmptyBooleanSupplier implements BooleanSupplier {
 
-    public static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().callOnQueue(callable);
+    @Override
+    public boolean getAsBoolean() {
+        return Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null;
     }
 }

@@ -27,7 +27,7 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JMenu;
@@ -36,7 +36,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.MenuElement;
 import javax.swing.event.MenuListener;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -135,10 +134,9 @@ public class JMenuOperator extends JMenuItemOperator {
         this((JMenu) waitComponent(cont, new JMenuByLabelPredicate(text, stringComparator), index));
     }
 
-    public JMenuItem pushMenu(List<Predicate<Component>> predicates) {
-        return produceTimeRestricted(
-                (Function<Void, JMenuItem>) v -> (JMenuItem) driver.pushMenu(JMenuOperator.this, predicates),
-                null,
+    public @Nullable JMenuItem pushMenu(List<Predicate<Component>> predicates) {
+        return supplyTimeRestricted(
+                () -> (JMenuItem) driver.pushMenu(JMenuOperator.this, predicates),
                 TimeoutKey.JMenuOperator_PushMenuTimeout);
     }
 
@@ -146,7 +144,7 @@ public class JMenuOperator extends JMenuItemOperator {
         produceNoBlocking((Function<Void, MenuElement>) v -> driver.pushMenu(JMenuOperator.this, predicates), null);
     }
 
-    public JMenuItem pushMenu(String[] names, StringComparator comparator) {
+    public @Nullable JMenuItem pushMenu(String[] names, StringComparator comparator) {
         return pushMenu(JMenuItemOperator.createPredicates(names, comparator));
     }
 
@@ -154,11 +152,11 @@ public class JMenuOperator extends JMenuItemOperator {
         pushMenuNoBlock(JMenuItemOperator.createPredicates(names, comparator));
     }
 
-    public JMenuItem pushMenu(String path, String delim, StringComparator comparator) {
+    public @Nullable JMenuItem pushMenu(String path, String delim, StringComparator comparator) {
         return pushMenu(parseString(path, delim), comparator);
     }
 
-    public JMenuItem pushMenu(String path, StringComparator comparator) {
+    public @Nullable JMenuItem pushMenu(String path, StringComparator comparator) {
         return pushMenu(parseString(path), comparator);
     }
 
@@ -171,7 +169,8 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public JMenuItemOperator[] showMenuItems(List<Predicate<Component>> predicates) {
-        return JMenuItemOperator.getMenuItems((JMenu) pushMenu(predicates));
+        JMenuItem nonNullMenuItem = Objects.requireNonNull(pushMenu(predicates));
+        return JMenuItemOperator.getMenuItems((JMenu) nonNullMenuItem);
     }
 
     public JMenuItemOperator[] showMenuItems(String[] path, StringComparator comparator) {
@@ -196,9 +195,12 @@ public class JMenuOperator extends JMenuItemOperator {
             menu = (JMenu) pushMenu(parentPath);
         }
 
-        JPopupMenuOperator popup = JPopupMenuOperator.of(menu.getPopupMenu());
+        JMenu nonNullMenu = Objects.requireNonNull(menu);
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.of(nonNullMenu.getPopupMenu());
 
-        return JMenuItemOperator.waitFor(popup, predicates.get(predicates.size() - 1));
+        Predicate<Component> lastPred = predicates.get(predicates.size() - 1);
+        JMenuItemOperator result = JMenuItemOperator.waitFor(popupMenuOp, lastPred);
+        return result;
     }
 
     public JMenuItemOperator showMenuItem(String[] path, StringComparator comparator) {
@@ -211,9 +213,12 @@ public class JMenuOperator extends JMenuItemOperator {
             menu = (JMenu) getSource();
         }
 
-        JPopupMenuOperator popup = JPopupMenuOperator.of(menu.getPopupMenu());
+        JMenu nonNullMenu = Objects.requireNonNull(menu);
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.of(nonNullMenu.getPopupMenu());
 
-        return JMenuItemOperator.waitFor(popup, path[path.length - 1], comparator);
+        String lastPathElem = path[path.length - 1];
+        JMenuItemOperator result = JMenuItemOperator.waitFor(popupMenuOp, lastPathElem, comparator);
+        return result;
     }
 
     public JMenuItemOperator showMenuItem(String path, String delim, StringComparator comparator) {
@@ -225,139 +230,103 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public JMenuItem add(String string) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).add(string)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).add(string));
     }
 
     public JMenuItem add(javax.swing.Action action) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).add(action)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).add(action));
     }
 
     public JMenuItem add(JMenuItem jMenuItem) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).add(jMenuItem)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).add(jMenuItem));
     }
 
     public void addMenuListener(MenuListener menuListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).addMenuListener(menuListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).addMenuListener(menuListener));
     }
 
     public void addSeparator() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).addSeparator();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).addSeparator());
     }
 
     public int getDelay() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getDelay()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getDelay());
     }
 
     public JMenuItem getItem(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getItem(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getItem(i));
     }
 
     public int getItemCount() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getItemCount()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getItemCount());
     }
 
     public Component getMenuComponent(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getMenuComponent(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getMenuComponent(i));
     }
 
     public int getMenuComponentCount() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getMenuComponentCount()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getMenuComponentCount());
     }
 
     public Component[] getMenuComponents() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getMenuComponents()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getMenuComponents());
     }
 
     public JPopupMenu getPopupMenu() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getPopupMenu()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).getPopupMenu());
     }
 
     public void insert(String string, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).insert(string, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).insert(string, i));
     }
 
     public JMenuItem insert(javax.swing.Action action, int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).insert(action, i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).insert(action, i));
     }
 
     public JMenuItem insert(JMenuItem jMenuItem, int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).insert(jMenuItem, i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).insert(jMenuItem, i));
     }
 
     public void insertSeparator(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).insertSeparator(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).insertSeparator(i));
     }
 
     public boolean isMenuComponent(Component component) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isMenuComponent(component)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).isMenuComponent(component));
     }
 
     public boolean isPopupMenuVisible() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isPopupMenuVisible()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).isPopupMenuVisible());
     }
 
     public boolean isTearOff() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isTearOff()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).isTearOff());
     }
 
     public boolean isTopLevelMenu() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isTopLevelMenu()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JMenu) getSource()).isTopLevelMenu());
     }
 
     public void remove(JMenuItem jMenuItem) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).remove(jMenuItem);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).remove(jMenuItem));
     }
 
     public void removeMenuListener(MenuListener menuListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).removeMenuListener(menuListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).removeMenuListener(menuListener));
     }
 
     public void setDelay(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).setDelay(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).setDelay(i));
     }
 
     public void setMenuLocation(int i, int i1) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).setMenuLocation(i, i1);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).setMenuLocation(i, i1));
     }
 
     public void setPopupMenuVisible(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JMenu) getSource()).setPopupMenuVisible(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JMenu) getSource()).setPopupMenuVisible(b));
     }
 
     public static @Nullable JMenu findJMenu(Container cont, Predicate<Component> chooser, int index) {

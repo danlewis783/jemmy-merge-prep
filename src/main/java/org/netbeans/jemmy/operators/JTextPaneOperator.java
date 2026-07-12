@@ -26,7 +26,6 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.Icon;
 import javax.swing.JTextPane;
@@ -35,7 +34,6 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
@@ -135,87 +133,59 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public Style addStyle(String string, @Nullable Style style) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).addStyle(string, style)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).addStyle(string, style));
     }
 
     public AttributeSet getCharacterAttributes() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getCharacterAttributes()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).getCharacterAttributes());
     }
 
     public MutableAttributeSet getInputAttributes() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getInputAttributes()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).getInputAttributes());
     }
 
     public Style getLogicalStyle() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getLogicalStyle()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).getLogicalStyle());
     }
 
     public AttributeSet getParagraphAttributes() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getParagraphAttributes()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).getParagraphAttributes());
     }
 
     public @Nullable Style getStyle(String string) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getStyle(string)));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).getStyle(string));
     }
 
     public StyledDocument getStyledDocument() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getStyledDocument()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JTextPane) getSource()).getStyledDocument());
     }
 
     public void insertComponent(Component component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).insertComponent(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).insertComponent(component));
     }
 
     public void insertIcon(Icon icon) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).insertIcon(icon);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).insertIcon(icon));
     }
 
     public void removeStyle(String string) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).removeStyle(string);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).removeStyle(string));
     }
 
     public void setCharacterAttributes(AttributeSet attributeSet, boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).setCharacterAttributes(attributeSet, b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).setCharacterAttributes(attributeSet, b));
     }
 
     public void setLogicalStyle(@Nullable Style style) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).setLogicalStyle(style);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).setLogicalStyle(style));
     }
 
     public void setParagraphAttributes(AttributeSet attributeSet, boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).setParagraphAttributes(attributeSet, b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).setParagraphAttributes(attributeSet, b));
     }
 
     public void setStyledDocument(StyledDocument styledDocument) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JTextPane) getSource()).setStyledDocument(styledDocument);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JTextPane) getSource()).setStyledDocument(styledDocument));
     }
 
     public static @Nullable JTextPane findJTextPane(Container cont, Predicate<Component> chooser, int index) {

@@ -31,10 +31,8 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.event.ContainerListener;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
@@ -134,127 +132,87 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public Component add(Component component) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).add(component)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).add(component));
     }
 
     public Component add(Component component, int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).add(component, i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).add(component, i));
     }
 
     public void add(Component component, @Nullable Object object) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).add(component, object);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).add(component, object));
     }
 
     public void add(Component component, @Nullable Object object, int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).add(component, object, i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).add(component, object, i));
     }
 
     public Component add(String string, Component component) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).add(string, component)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).add(string, component));
     }
 
     public void addContainerListener(ContainerListener containerListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).addContainerListener(containerListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).addContainerListener(containerListener));
     }
 
     public Component findComponentAt(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).findComponentAt(i, i1)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).findComponentAt(i, i1));
     }
 
     public Component findComponentAt(Point point) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).findComponentAt(point)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).findComponentAt(point));
     }
 
     public Component getComponent(int i) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).getComponent(i)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getComponent(i));
     }
 
     public int getComponentCount() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).getComponentCount()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getComponentCount());
     }
 
     public Component[] getComponents() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).getComponents()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getComponents());
     }
 
     public Insets getInsets() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).getInsets()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getInsets());
     }
 
     public LayoutManager getLayout() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).getLayout()));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getLayout());
     }
 
     public boolean isAncestorOf(Component component) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Container) getSource()).isAncestorOf(component)));
+        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).isAncestorOf(component));
     }
 
     public void paintComponents(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).paintComponents(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).paintComponents(graphics));
     }
 
     public void printComponents(Graphics graphics) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).printComponents(graphics);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).printComponents(graphics));
     }
 
     public void remove(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).remove(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).remove(i));
     }
 
     public void remove(Component component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).remove(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).remove(component));
     }
 
     public void removeAll() {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).removeAll();
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).removeAll());
     }
 
     public void removeContainerListener(ContainerListener containerListener) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).removeContainerListener(containerListener);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).removeContainerListener(containerListener));
     }
 
     public void setLayout(LayoutManager layoutManager) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((Container) getSource()).setLayout(layoutManager);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).setLayout(layoutManager));
     }
 
     public static @Nullable Container findContainer(Container cont, Predicate<Component> chooser, int index) {

@@ -35,7 +35,6 @@ import javax.swing.JScrollPane;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.IndexedFramesApp;
@@ -216,7 +215,7 @@ class JFrameOperatorTest {
 
     /** Runs the callable on the event dispatch thread so Swing component state is only touched there. */
     private static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().callOnQueue(Caller.of(callable));
+        return QueueTool.getInstance().callOnQueue(callable);
     }
 
     private void disposeApplicationFrames() throws InterruptedException, InvocationTargetException {

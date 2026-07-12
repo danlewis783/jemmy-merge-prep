@@ -25,10 +25,8 @@
 package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JCheckBoxMenuItem;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JCheckBoxMenuItemByLabelPredicate;
@@ -127,14 +125,10 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
     }
 
     public boolean getState() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JCheckBoxMenuItem) getSource()).getState()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JCheckBoxMenuItem) getSource()).getState());
     }
 
     public void setState(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JCheckBoxMenuItem) getSource()).setState(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JCheckBoxMenuItem) getSource()).setState(b));
     }
 }

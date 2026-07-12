@@ -28,9 +28,7 @@ package org.netbeans.jemmy.drivers.tables;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
-import java.util.concurrent.Callable;
 import javax.swing.text.JTextComponent;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -75,7 +73,7 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
     }
 
     private void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().runOnQueue(() -> {
             Point point = oper.getPointToClick(row, column);
             DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)
@@ -87,7 +85,6 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
                             Operator.getDefaultMouseButton(),
                             0,
                             TimeoutKey.ComponentOperator_MouseClickTimeout);
-            return null;
-        }));
+        });
     }
 }

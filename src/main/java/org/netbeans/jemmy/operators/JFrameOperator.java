@@ -27,7 +27,6 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.accessibility.AccessibleContext;
 import javax.swing.JFrame;
@@ -35,7 +34,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -138,71 +136,51 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAccessibleContext());
     }
 
     public Container getContentPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getContentPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JFrame) getSource()).getContentPane());
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getDefaultCloseOperation()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JFrame) getSource()).getDefaultCloseOperation());
     }
 
     public Component getGlassPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getGlassPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JFrame) getSource()).getGlassPane());
     }
 
     public JMenuBar getJMenuBar() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getJMenuBar()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JFrame) getSource()).getJMenuBar());
     }
 
     public JLayeredPane getLayeredPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getLayeredPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JFrame) getSource()).getLayeredPane());
     }
 
     public JRootPane getRootPane() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getRootPane()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JFrame) getSource()).getRootPane());
     }
 
     public void setContentPane(Container container) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JFrame) getSource()).setContentPane(container);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JFrame) getSource()).setContentPane(container));
     }
 
     public void setDefaultCloseOperation(int i) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JFrame) getSource()).setDefaultCloseOperation(i);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JFrame) getSource()).setDefaultCloseOperation(i));
     }
 
     public void setGlassPane(Component component) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JFrame) getSource()).setGlassPane(component);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JFrame) getSource()).setGlassPane(component));
     }
 
     public void setJMenuBar(JMenuBar jMenuBar) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JFrame) getSource()).setJMenuBar(jMenuBar);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JFrame) getSource()).setJMenuBar(jMenuBar));
     }
 
     public void setLayeredPane(JLayeredPane jLayeredPane) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JFrame) getSource()).setLayeredPane(jLayeredPane);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JFrame) getSource()).setLayeredPane(jLayeredPane));
     }
 
     public static @Nullable JFrame findJFrame(Predicate<Component> chooser, int index) {

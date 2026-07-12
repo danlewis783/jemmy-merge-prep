@@ -26,11 +26,9 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.util.concurrent.Callable;
 import java.util.function.Predicate;
 import javax.swing.JButton;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.Caller;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
@@ -131,19 +129,15 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public boolean isDefaultButton() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JButton) getSource()).isDefaultButton()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JButton) getSource()).isDefaultButton());
     }
 
     public boolean isDefaultCapable() {
-        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JButton) getSource()).isDefaultCapable()));
+        return QueueTool.getInstance().callOnQueue(() -> ((JButton) getSource()).isDefaultCapable());
     }
 
     public void setDefaultCapable(boolean b) {
-        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
-            ((JButton) getSource()).setDefaultCapable(b);
-
-            return null;
-        }));
+        QueueTool.getInstance().runOnQueue(() -> ((JButton) getSource()).setDefaultCapable(b));
     }
 
     protected void prepareToClick() {
