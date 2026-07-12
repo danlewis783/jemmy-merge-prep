@@ -207,7 +207,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).addActionListener(actionListener);
 
             return null;
@@ -215,7 +215,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).addChangeListener(changeListener);
 
             return null;
@@ -223,7 +223,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).addItemListener(itemListener);
 
             return null;
@@ -231,7 +231,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void doClick() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).doClick();
 
             return null;
@@ -239,7 +239,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void doClick(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).doClick(i);
 
             return null;
@@ -247,113 +247,107 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public String getActionCommand() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getActionCommand()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getActionCommand()));
     }
 
     public @Nullable Icon getDisabledIcon() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getDisabledIcon()));
     }
 
     public Icon getDisabledSelectedIcon() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getDisabledSelectedIcon()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getDisabledSelectedIcon()));
     }
 
     public int getHorizontalAlignment() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalAlignment()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalAlignment()));
     }
 
     public int getHorizontalTextPosition() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalTextPosition()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getHorizontalTextPosition()));
     }
 
     public @Nullable Icon getIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getIcon()));
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getMargin()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getMargin()));
     }
 
     public int getMnemonic() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getMnemonic()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getMnemonic()));
     }
 
     public ButtonModel getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getModel()));
     }
 
     public Icon getPressedIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getPressedIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getPressedIcon()));
     }
 
     public Icon getRolloverIcon() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getRolloverIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getRolloverIcon()));
     }
 
     public Icon getRolloverSelectedIcon() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getRolloverSelectedIcon()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getRolloverSelectedIcon()));
     }
 
     public Icon getSelectedIcon() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getSelectedIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getSelectedIcon()));
     }
 
     public Object[] getSelectedObjects() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getSelectedObjects()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getSelectedObjects()));
     }
 
     public String getText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getText()));
     }
 
     public ButtonUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getUI()));
     }
 
     public int getVerticalAlignment() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getVerticalAlignment()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getVerticalAlignment()));
     }
 
     public int getVerticalTextPosition() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).getVerticalTextPosition()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).getVerticalTextPosition()));
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isBorderPainted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isBorderPainted()));
     }
 
     public boolean isContentAreaFilled() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isContentAreaFilled()));
+                .callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isContentAreaFilled()));
     }
 
     public boolean isFocusPainted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isFocusPainted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isFocusPainted()));
     }
 
     public boolean isRolloverEnabled() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isRolloverEnabled()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isRolloverEnabled()));
     }
 
     public boolean isSelected() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((AbstractButton) getSource()).isSelected()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((AbstractButton) getSource()).isSelected()));
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).removeActionListener(actionListener);
 
             return null;
@@ -361,7 +355,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).removeChangeListener(changeListener);
 
             return null;
@@ -369,7 +363,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).removeItemListener(itemListener);
 
             return null;
@@ -377,7 +371,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setActionCommand(string);
 
             return null;
@@ -385,7 +379,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setBorderPainted(b);
 
             return null;
@@ -393,7 +387,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setContentAreaFilled(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setContentAreaFilled(b);
 
             return null;
@@ -401,7 +395,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setDisabledIcon(@Nullable Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setDisabledIcon(icon);
 
             return null;
@@ -409,7 +403,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setDisabledSelectedIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setDisabledSelectedIcon(icon);
 
             return null;
@@ -417,7 +411,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setFocusPainted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setFocusPainted(b);
 
             return null;
@@ -425,7 +419,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setHorizontalAlignment(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setHorizontalAlignment(i);
 
             return null;
@@ -433,7 +427,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setHorizontalTextPosition(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setHorizontalTextPosition(i);
 
             return null;
@@ -441,7 +435,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setIcon(@Nullable Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setIcon(icon);
 
             return null;
@@ -449,7 +443,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setMargin(Insets insets) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setMargin(insets);
 
             return null;
@@ -457,7 +451,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setMnemonic(char c) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setMnemonic(c);
 
             return null;
@@ -465,7 +459,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setMnemonic(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setMnemonic(i);
 
             return null;
@@ -473,7 +467,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setModel(ButtonModel buttonModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setModel(buttonModel);
 
             return null;
@@ -481,7 +475,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setPressedIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setPressedIcon(icon);
 
             return null;
@@ -489,7 +483,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setRolloverEnabled(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setRolloverEnabled(b);
 
             return null;
@@ -497,7 +491,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setRolloverIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setRolloverIcon(icon);
 
             return null;
@@ -505,7 +499,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setRolloverSelectedIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setRolloverSelectedIcon(icon);
 
             return null;
@@ -513,7 +507,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setSelected(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setSelected(b);
 
             return null;
@@ -521,7 +515,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setSelectedIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setSelectedIcon(icon);
 
             return null;
@@ -529,7 +523,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setText(string);
 
             return null;
@@ -537,7 +531,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setUI(ButtonUI buttonUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setUI(buttonUI);
 
             return null;
@@ -545,7 +539,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setVerticalAlignment(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setVerticalAlignment(i);
 
             return null;
@@ -553,7 +547,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void setVerticalTextPosition(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((AbstractButton) getSource()).setVerticalTextPosition(i);
 
             return null;

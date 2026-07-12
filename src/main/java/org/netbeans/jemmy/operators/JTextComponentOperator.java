@@ -342,7 +342,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void addCaretListener(CaretListener caretListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).addCaretListener(caretListener);
 
             return null;
@@ -350,7 +350,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void copy() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).copy();
 
             return null;
@@ -358,7 +358,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void cut() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).cut();
 
             return null;
@@ -366,120 +366,115 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public javax.swing.Action[] getActions() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getActions()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getActions()));
     }
 
     public Caret getCaret() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getCaret()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getCaret()));
     }
 
     public Color getCaretColor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getCaretColor()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getCaretColor()));
     }
 
     public int getCaretPosition() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getCaretPosition()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getCaretPosition()));
     }
 
     public Color getDisabledTextColor() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getDisabledTextColor()));
+                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getDisabledTextColor()));
     }
 
     public Document getDocument() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getDocument()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getDocument()));
     }
 
     public char getFocusAccelerator() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getFocusAccelerator()));
+                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getFocusAccelerator()));
     }
 
     public Highlighter getHighlighter() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getHighlighter()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getHighlighter()));
     }
 
     public Keymap getKeymap() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getKeymap()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getKeymap()));
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getMargin()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getMargin()));
     }
 
     public Dimension getPreferredScrollableViewportSize() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getPreferredScrollableViewportSize()));
+                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getPreferredScrollableViewportSize()));
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource())
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource())
                 .getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportHeight()));
+                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportWidth()));
+                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource())
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource())
                 .getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public String getSelectedText() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectedText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectedText()));
     }
 
     public Color getSelectedTextColor() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectedTextColor()));
+                .callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectedTextColor()));
     }
 
     public Color getSelectionColor() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionColor()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectionColor()));
     }
 
     public int getSelectionEnd() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionEnd()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectionEnd()));
     }
 
     public int getSelectionStart() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getSelectionStart()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getSelectionStart()));
     }
 
     public String getText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getText()));
     }
 
     public String getText(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getText(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getText(i, i1)));
     }
 
     public TextUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).getUI()));
     }
 
     public boolean isEditable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).isEditable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).isEditable()));
     }
 
     public Rectangle modelToView(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).modelToView(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).modelToView(i)));
     }
 
     public void moveCaretPosition(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).moveCaretPosition(i);
 
             return null;
@@ -487,7 +482,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void paste() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).paste();
 
             return null;
@@ -495,7 +490,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void read(Reader reader, Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).read(reader, object);
 
             return null;
@@ -503,7 +498,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void removeCaretListener(CaretListener caretListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).removeCaretListener(caretListener);
 
             return null;
@@ -511,7 +506,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void replaceSelection(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).replaceSelection(string);
 
             return null;
@@ -519,7 +514,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void select(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).select(i, i1);
 
             return null;
@@ -527,7 +522,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void selectAll() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).selectAll();
 
             return null;
@@ -535,7 +530,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setCaret(Caret caret) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setCaret(caret);
 
             return null;
@@ -543,7 +538,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setCaretColor(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setCaretColor(color);
 
             return null;
@@ -551,7 +546,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setCaretPosition(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setCaretPosition(i);
 
             return null;
@@ -559,7 +554,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setDisabledTextColor(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setDisabledTextColor(color);
 
             return null;
@@ -567,7 +562,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setDocument(Document document) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setDocument(document);
 
             return null;
@@ -575,7 +570,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setEditable(b);
 
             return null;
@@ -583,7 +578,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setFocusAccelerator(char c) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setFocusAccelerator(c);
 
             return null;
@@ -591,7 +586,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setHighlighter(Highlighter highlighter) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setHighlighter(highlighter);
 
             return null;
@@ -599,7 +594,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setKeymap(Keymap keymap) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setKeymap(keymap);
 
             return null;
@@ -607,7 +602,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setMargin(Insets insets) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setMargin(insets);
 
             return null;
@@ -615,7 +610,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setSelectedTextColor(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setSelectedTextColor(color);
 
             return null;
@@ -623,7 +618,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setSelectionColor(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setSelectionColor(color);
 
             return null;
@@ -631,7 +626,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setSelectionEnd(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setSelectionEnd(i);
 
             return null;
@@ -639,7 +634,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setSelectionStart(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setSelectionStart(i);
 
             return null;
@@ -647,7 +642,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setText(string);
 
             return null;
@@ -655,7 +650,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public void setUI(TextUI textUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).setUI(textUI);
 
             return null;
@@ -663,12 +658,11 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public int viewToModel(Point point) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextComponent) getSource()).viewToModel(point)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextComponent) getSource()).viewToModel(point)));
     }
 
     public void write(Writer writer) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextComponent) getSource()).write(writer);
 
             return null;

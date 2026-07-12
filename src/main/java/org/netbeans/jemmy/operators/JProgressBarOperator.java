@@ -111,7 +111,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).addChangeListener(changeListener);
 
             return null;
@@ -119,48 +119,47 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getMaximum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getMaximum()));
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getMinimum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getMinimum()));
     }
 
     public BoundedRangeModel getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getModel()));
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getOrientation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getOrientation()));
     }
 
     public double getPercentComplete() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getPercentComplete()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getPercentComplete()));
     }
 
     public String getString() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getString()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getString()));
     }
 
     public ProgressBarUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getUI()));
     }
 
     public int getValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).getValue()));
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).isBorderPainted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).isBorderPainted()));
     }
 
     public boolean isStringPainted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JProgressBar) getSource()).isStringPainted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JProgressBar) getSource()).isStringPainted()));
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).removeChangeListener(changeListener);
 
             return null;
@@ -168,7 +167,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setBorderPainted(b);
 
             return null;
@@ -176,7 +175,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setMaximum(i);
 
             return null;
@@ -184,7 +183,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setMinimum(i);
 
             return null;
@@ -192,7 +191,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setModel(BoundedRangeModel boundedRangeModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setModel(boundedRangeModel);
 
             return null;
@@ -200,7 +199,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setOrientation(i);
 
             return null;
@@ -208,7 +207,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setString(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setString(string);
 
             return null;
@@ -216,7 +215,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setStringPainted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setStringPainted(b);
 
             return null;
@@ -224,7 +223,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setUI(ProgressBarUI progressBarUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setUI(progressBarUI);
 
             return null;
@@ -232,7 +231,7 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JProgressBar) getSource()).setValue(i);
 
             return null;

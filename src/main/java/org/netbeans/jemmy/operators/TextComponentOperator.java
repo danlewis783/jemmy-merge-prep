@@ -221,7 +221,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void addTextListener(TextListener textListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).addTextListener(textListener);
 
             return null;
@@ -229,33 +229,31 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public int getCaretPosition() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getCaretPosition()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getCaretPosition()));
     }
 
     public String getSelectedText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getSelectedText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getSelectedText()));
     }
 
     public int getSelectionEnd() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getSelectionEnd()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getSelectionEnd()));
     }
 
     public int getSelectionStart() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getSelectionStart()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getSelectionStart()));
     }
 
     public String getText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).getText()));
     }
 
     public boolean isEditable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextComponent) getSource()).isEditable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextComponent) getSource()).isEditable()));
     }
 
     public void removeTextListener(TextListener textListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).removeTextListener(textListener);
 
             return null;
@@ -263,7 +261,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void select(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).select(i, i1);
 
             return null;
@@ -271,7 +269,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void selectAll() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).selectAll();
 
             return null;
@@ -279,7 +277,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void setCaretPosition(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).setCaretPosition(i);
 
             return null;
@@ -287,7 +285,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).setEditable(b);
 
             return null;
@@ -295,7 +293,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void setSelectionEnd(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).setSelectionEnd(i);
 
             return null;
@@ -303,7 +301,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void setSelectionStart(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).setSelectionStart(i);
 
             return null;
@@ -311,7 +309,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextComponent) getSource()).setText(string);
 
             return null;

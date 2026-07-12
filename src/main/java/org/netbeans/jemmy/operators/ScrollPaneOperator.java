@@ -282,41 +282,40 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public Adjustable getHAdjustable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getHAdjustable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getHAdjustable()));
     }
 
     public int getHScrollbarHeight() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getHScrollbarHeight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getHScrollbarHeight()));
     }
 
     public Point getScrollPosition() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getScrollPosition()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getScrollPosition()));
     }
 
     public int getScrollbarDisplayPolicy() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getScrollbarDisplayPolicy()));
+                .callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getScrollbarDisplayPolicy()));
     }
 
     public Adjustable getVAdjustable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getVAdjustable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getVAdjustable()));
     }
 
     public int getVScrollbarWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getVScrollbarWidth()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getVScrollbarWidth()));
     }
 
     public Dimension getViewportSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).getViewportSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).getViewportSize()));
     }
 
     public String paramString() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((ScrollPane) getSource()).paramString()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((ScrollPane) getSource()).paramString()));
     }
 
     public void setScrollPosition(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((ScrollPane) getSource()).setScrollPosition(i, i1);
 
             return null;
@@ -324,7 +323,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     }
 
     public void setScrollPosition(Point point) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((ScrollPane) getSource()).setScrollPosition(point);
 
             return null;

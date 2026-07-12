@@ -138,37 +138,35 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAccessibleContext()));
     }
 
     public Container getContentPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFrame) getSource()).getContentPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getContentPane()));
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JFrame) getSource()).getDefaultCloseOperation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getDefaultCloseOperation()));
     }
 
     public Component getGlassPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFrame) getSource()).getGlassPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getGlassPane()));
     }
 
     public JMenuBar getJMenuBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFrame) getSource()).getJMenuBar()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getJMenuBar()));
     }
 
     public JLayeredPane getLayeredPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFrame) getSource()).getLayeredPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getLayeredPane()));
     }
 
     public JRootPane getRootPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JFrame) getSource()).getRootPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JFrame) getSource()).getRootPane()));
     }
 
     public void setContentPane(Container container) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JFrame) getSource()).setContentPane(container);
 
             return null;
@@ -176,7 +174,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public void setDefaultCloseOperation(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JFrame) getSource()).setDefaultCloseOperation(i);
 
             return null;
@@ -184,7 +182,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public void setGlassPane(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JFrame) getSource()).setGlassPane(component);
 
             return null;
@@ -192,7 +190,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public void setJMenuBar(JMenuBar jMenuBar) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JFrame) getSource()).setJMenuBar(jMenuBar);
 
             return null;
@@ -200,7 +198,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public void setLayeredPane(JLayeredPane jLayeredPane) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JFrame) getSource()).setLayeredPane(jLayeredPane);
 
             return null;

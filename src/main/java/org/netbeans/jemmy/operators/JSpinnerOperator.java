@@ -235,11 +235,11 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public Object getValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getValue()));
     }
 
     public void setValue(Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).setValue(object);
 
             return null;
@@ -247,11 +247,11 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public SpinnerUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getUI()));
     }
 
     public void setUI(SpinnerUI spinnerUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).setUI(spinnerUI);
 
             return null;
@@ -259,7 +259,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public void setModel(SpinnerModel spinnerModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).setModel(spinnerModel);
 
             return null;
@@ -267,15 +267,15 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public SpinnerModel getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getModel()));
     }
 
     public Object getNextValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getNextValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getNextValue()));
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).addChangeListener(changeListener);
 
             return null;
@@ -283,7 +283,7 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).removeChangeListener(changeListener);
 
             return null;
@@ -291,15 +291,15 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public ChangeListener[] getChangeListeners() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getChangeListeners()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getChangeListeners()));
     }
 
     public Object getPreviousValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getPreviousValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getPreviousValue()));
     }
 
     public void setEditor(JComponent jComponent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).setEditor(jComponent);
 
             return null;
@@ -307,11 +307,11 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public JComponent getEditor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSpinner) getSource()).getEditor()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSpinner) getSource()).getEditor()));
     }
 
     public void commitEdit() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSpinner) getSource()).commitEdit();
 
             return null;

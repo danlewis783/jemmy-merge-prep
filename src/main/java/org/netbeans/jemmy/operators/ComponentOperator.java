@@ -174,7 +174,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers, boolean forPopup) {
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             mDriver.clickMouse(
                     ComponentOperator.this,
                     x,
@@ -255,7 +255,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int clickCount, int mouseButton) {
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             clickMouse(getCenterXForClick(), getCenterYForClick(), clickCount, mouseButton);
 
             return null;
@@ -279,7 +279,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void pressMouse() {
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             pressMouse(getCenterXForClick(), getCenterYForClick());
 
             return null;
@@ -287,7 +287,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void releaseMouse() {
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             releaseMouse(getCenterXForClick(), getCenterYForClick());
 
             return null;
@@ -468,7 +468,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void add(PopupMenu popupMenu) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().add(popupMenu);
 
             return null;
@@ -476,7 +476,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addComponentListener(ComponentListener componentListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addComponentListener(componentListener);
 
             return null;
@@ -484,7 +484,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addFocusListener(FocusListener focusListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addFocusListener(focusListener);
 
             return null;
@@ -492,7 +492,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addInputMethodListener(InputMethodListener inputMethodListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addInputMethodListener(inputMethodListener);
 
             return null;
@@ -500,7 +500,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addKeyListener(KeyListener keyListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addKeyListener(keyListener);
 
             return null;
@@ -508,7 +508,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addMouseListener(MouseListener mouseListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addMouseListener(mouseListener);
 
             return null;
@@ -516,7 +516,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addMouseMotionListener(MouseMotionListener mouseMotionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addMouseMotionListener(mouseMotionListener);
 
             return null;
@@ -524,7 +524,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addNotify() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addNotify();
 
             return null;
@@ -532,7 +532,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addPropertyChangeListener(propertyChangeListener);
 
             return null;
@@ -540,7 +540,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void addPropertyChangeListener(String string, PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addPropertyChangeListener(string, propertyChangeListener);
 
             return null;
@@ -549,36 +549,31 @@ public class ComponentOperator extends Operator {
 
     public int checkImage(Image image, int i, int i1, @Nullable ImageObserver imageObserver) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().checkImage(image, i, i1, imageObserver)));
+                .callOnQueue(Caller.of(() -> getSource().checkImage(image, i, i1, imageObserver)));
     }
 
     public int checkImage(Image image, @Nullable ImageObserver imageObserver) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().checkImage(image, imageObserver)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().checkImage(image, imageObserver)));
     }
 
     public boolean contains(int i, int i1) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().contains(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().contains(i, i1)));
     }
 
     public boolean contains(Point point) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().contains(point)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().contains(point)));
     }
 
     public Image createImage(int i, int i1) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().createImage(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().createImage(i, i1)));
     }
 
     public Image createImage(ImageProducer imageProducer) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().createImage(imageProducer)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().createImage(imageProducer)));
     }
 
     public void dispatchEvent(AWTEvent aWTEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().dispatchEvent(aWTEvent);
 
             return null;
@@ -586,7 +581,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void doLayout() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().doLayout();
 
             return null;
@@ -594,7 +589,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void enableInputMethods(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().enableInputMethods(b);
 
             return null;
@@ -602,187 +597,151 @@ public class ComponentOperator extends Operator {
     }
 
     public float getAlignmentX() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getAlignmentX()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAlignmentX()));
     }
 
     public float getAlignmentY() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getAlignmentY()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAlignmentY()));
     }
 
     public Color getBackground() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getBackground()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getBackground()));
     }
 
     public Rectangle getBounds() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getBounds()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getBounds()));
     }
 
     public Rectangle getBounds(Rectangle rectangle) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getBounds(rectangle)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getBounds(rectangle)));
     }
 
     public ColorModel getColorModel() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getColorModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getColorModel()));
     }
 
     public Component getComponentAt(int i, int i1) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getComponentAt(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getComponentAt(i, i1)));
     }
 
     public Component getComponentAt(Point point) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getComponentAt(point)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getComponentAt(point)));
     }
 
     public ComponentOrientation getComponentOrientation() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getComponentOrientation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getComponentOrientation()));
     }
 
     public Cursor getCursor() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getCursor()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getCursor()));
     }
 
     public DropTarget getDropTarget() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getDropTarget()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getDropTarget()));
     }
 
     public Font getFont() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getFont()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getFont()));
     }
 
     public FontMetrics getFontMetrics(Font font) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getFontMetrics(font)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getFontMetrics(font)));
     }
 
     public Color getForeground() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getForeground()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getForeground()));
     }
 
     public Graphics getGraphics() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getGraphics()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getGraphics()));
     }
 
     public int getHeight() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getHeight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getHeight()));
     }
 
     public InputContext getInputContext() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getInputContext()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getInputContext()));
     }
 
     public InputMethodRequests getInputMethodRequests() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getInputMethodRequests()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getInputMethodRequests()));
     }
 
     public Locale getLocale() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getLocale()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocale()));
     }
 
     public Point getLocation() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getLocation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocation()));
     }
 
     public Point getLocation(Point point) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getLocation(point)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocation(point)));
     }
 
     public Point getLocationOnScreen() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getLocationOnScreen()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getLocationOnScreen()));
     }
 
     public Dimension getMaximumSize() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getMaximumSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getMaximumSize()));
     }
 
     public Dimension getMinimumSize() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getMinimumSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getMinimumSize()));
     }
 
     public String getName() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getName()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getName()));
     }
 
     public Container getParent() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getParent()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getParent()));
     }
 
     public Dimension getPreferredSize() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getPreferredSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getPreferredSize()));
     }
 
     public Dimension getSize() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getSize()));
     }
 
     public Dimension getSize(Dimension dimension) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getSize(dimension)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getSize(dimension)));
     }
 
     public Toolkit getToolkit() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getToolkit()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getToolkit()));
     }
 
     public Object getTreeLock() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getTreeLock()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getTreeLock()));
     }
 
     public int getWidth() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getWidth()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getWidth()));
     }
 
     public int getX() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getX()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getX()));
     }
 
     public int getY() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getY()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getY()));
     }
 
     public boolean hasFocus() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().hasFocus()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().hasFocus()));
     }
 
     public boolean imageUpdate(Image image, int i, int i1, int i2, int i3, int i4) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().imageUpdate(image, i, i1, i2, i3, i4)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().imageUpdate(image, i, i1, i2, i3, i4)));
     }
 
     public void invalidate() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().invalidate();
 
             return null;
@@ -790,52 +749,43 @@ public class ComponentOperator extends Operator {
     }
 
     public boolean isDisplayable() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isDisplayable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isDisplayable()));
     }
 
     public boolean isDoubleBuffered() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isDoubleBuffered()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isDoubleBuffered()));
     }
 
     public boolean isEnabled() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isEnabled()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isEnabled()));
     }
 
     public boolean isFocusTraversable() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isFocusTraversable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isFocusTraversable()));
     }
 
     public boolean isLightweight() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isLightweight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isLightweight()));
     }
 
     public boolean isOpaque() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isOpaque()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isOpaque()));
     }
 
     public boolean isShowing() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isShowing()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isShowing()));
     }
 
     public boolean isValid() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isValid()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isValid()));
     }
 
     public boolean isVisible() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().isVisible()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().isVisible()));
     }
 
     public void list() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().list();
 
             return null;
@@ -843,7 +793,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void list(PrintStream printStream) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().list(printStream);
 
             return null;
@@ -851,7 +801,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void list(PrintStream printStream, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().list(printStream, i);
 
             return null;
@@ -859,7 +809,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void list(PrintWriter printWriter) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().list(printWriter);
 
             return null;
@@ -867,7 +817,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void list(PrintWriter printWriter, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().list(printWriter, i);
 
             return null;
@@ -875,7 +825,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void paint(Graphics graphics) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().paint(graphics);
 
             return null;
@@ -883,7 +833,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void paintAll(Graphics graphics) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().paintAll(graphics);
 
             return null;
@@ -892,16 +842,15 @@ public class ComponentOperator extends Operator {
 
     public boolean prepareImage(Image image, int i, int i1, @Nullable ImageObserver imageObserver) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().prepareImage(image, i, i1, imageObserver)));
+                .callOnQueue(Caller.of(() -> getSource().prepareImage(image, i, i1, imageObserver)));
     }
 
     public boolean prepareImage(Image image, @Nullable ImageObserver imageObserver) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().prepareImage(image, imageObserver)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().prepareImage(image, imageObserver)));
     }
 
     public void print(Graphics graphics) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().print(graphics);
 
             return null;
@@ -909,7 +858,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void printAll(Graphics graphics) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().printAll(graphics);
 
             return null;
@@ -917,7 +866,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void remove(MenuComponent menuComponent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().remove(menuComponent);
 
             return null;
@@ -925,7 +874,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeComponentListener(ComponentListener componentListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeComponentListener(componentListener);
 
             return null;
@@ -933,7 +882,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeFocusListener(FocusListener focusListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeFocusListener(focusListener);
 
             return null;
@@ -941,7 +890,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeInputMethodListener(InputMethodListener inputMethodListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeInputMethodListener(inputMethodListener);
 
             return null;
@@ -949,7 +898,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeKeyListener(KeyListener keyListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeKeyListener(keyListener);
 
             return null;
@@ -957,7 +906,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeMouseListener(MouseListener mouseListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeMouseListener(mouseListener);
 
             return null;
@@ -965,7 +914,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeMouseMotionListener(MouseMotionListener mouseMotionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeMouseMotionListener(mouseMotionListener);
 
             return null;
@@ -973,7 +922,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removeNotify() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removeNotify();
 
             return null;
@@ -981,7 +930,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removePropertyChangeListener(propertyChangeListener);
 
             return null;
@@ -989,7 +938,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void removePropertyChangeListener(String string, PropertyChangeListener propertyChangeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().removePropertyChangeListener(string, propertyChangeListener);
 
             return null;
@@ -997,7 +946,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void repaint() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().repaint();
 
             return null;
@@ -1005,7 +954,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void repaint(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().repaint(i, i1, i2, i3);
 
             return null;
@@ -1013,7 +962,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void repaint(long l) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().repaint(l);
 
             return null;
@@ -1021,7 +970,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void repaint(long l, int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().repaint(l, i, i1, i2, i3);
 
             return null;
@@ -1029,7 +978,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void requestFocus() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().requestFocus();
 
             return null;
@@ -1037,7 +986,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setBackground(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setBackground(color);
 
             return null;
@@ -1045,7 +994,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setBounds(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setBounds(i, i1, i2, i3);
 
             return null;
@@ -1053,7 +1002,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setBounds(Rectangle rectangle) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setBounds(rectangle);
 
             return null;
@@ -1061,7 +1010,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setComponentOrientation(ComponentOrientation componentOrientation) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setComponentOrientation(componentOrientation);
 
             return null;
@@ -1069,7 +1018,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setCursor(Cursor cursor) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setCursor(cursor);
 
             return null;
@@ -1077,7 +1026,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setDropTarget(DropTarget dropTarget) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setDropTarget(dropTarget);
 
             return null;
@@ -1085,7 +1034,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setEnabled(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setEnabled(b);
 
             return null;
@@ -1093,7 +1042,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setFont(Font font) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setFont(font);
 
             return null;
@@ -1101,7 +1050,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setForeground(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setForeground(color);
 
             return null;
@@ -1109,7 +1058,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setLocale(Locale locale) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setLocale(locale);
 
             return null;
@@ -1117,7 +1066,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setLocation(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setLocation(i, i1);
 
             return null;
@@ -1125,7 +1074,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setLocation(Point point) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setLocation(point);
 
             return null;
@@ -1133,7 +1082,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setName(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setName(string);
 
             return null;
@@ -1141,7 +1090,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setSize(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setSize(i, i1);
 
             return null;
@@ -1149,7 +1098,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setSize(Dimension dimension) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setSize(dimension);
 
             return null;
@@ -1157,7 +1106,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void setVisible(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().setVisible(b);
 
             return null;
@@ -1165,7 +1114,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void transferFocus() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().transferFocus();
 
             return null;
@@ -1173,7 +1122,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void update(Graphics graphics) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().update(graphics);
 
             return null;
@@ -1181,7 +1130,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void validate() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().validate();
 
             return null;

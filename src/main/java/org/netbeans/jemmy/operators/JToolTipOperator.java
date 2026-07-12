@@ -218,19 +218,19 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public String getTipText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JToolTip) getSource()).getTipText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JToolTip) getSource()).getTipText()));
     }
 
     public JComponent getComponent() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JToolTip) getSource()).getComponent()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JToolTip) getSource()).getComponent()));
     }
 
     public ToolTipUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JToolTip) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JToolTip) getSource()).getUI()));
     }
 
     public void setTipText(String tipText) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JToolTip) getSource()).setTipText(tipText);
 
             return null;
@@ -238,7 +238,7 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public void setComponent(JComponent component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JToolTip) getSource()).setComponent(component);
 
             return null;

@@ -75,7 +75,7 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
     }
 
     private void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             Point point = oper.getPointToClick(row, column);
             DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)

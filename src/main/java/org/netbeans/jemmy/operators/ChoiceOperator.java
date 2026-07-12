@@ -163,7 +163,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void add(String item) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).add(item);
 
             return null;
@@ -171,7 +171,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).addItemListener(itemListener);
 
             return null;
@@ -180,7 +180,7 @@ public class ChoiceOperator extends ComponentOperator {
 
     @Override
     public void addNotify() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getSource().addNotify();
 
             return null;
@@ -188,23 +188,23 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public String getItem(int index) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Choice) getSource()).getItem(index)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getItem(index)));
     }
 
     public int getItemCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Choice) getSource()).getItemCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getItemCount()));
     }
 
     public int getSelectedIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Choice) getSource()).getSelectedIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getSelectedIndex()));
     }
 
     public String getSelectedItem() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Choice) getSource()).getSelectedItem()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Choice) getSource()).getSelectedItem()));
     }
 
     public void insert(String item, int index) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).insert(item, index);
 
             return null;
@@ -212,7 +212,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void remove(int position) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).remove(position);
 
             return null;
@@ -220,7 +220,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void remove(String item) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).remove(item);
 
             return null;
@@ -228,7 +228,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void removeAll() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).removeAll();
 
             return null;
@@ -236,7 +236,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).removeItemListener(itemListener);
 
             return null;
@@ -244,7 +244,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void select(int pos) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).select(pos);
 
             return null;
@@ -252,7 +252,7 @@ public class ChoiceOperator extends ComponentOperator {
     }
 
     public void setState(String str) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Choice) getSource()).select(str);
 
             return null;

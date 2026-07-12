@@ -135,38 +135,35 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public Style addStyle(String string, @Nullable Style style) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).addStyle(string, style)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).addStyle(string, style)));
     }
 
     public AttributeSet getCharacterAttributes() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getCharacterAttributes()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getCharacterAttributes()));
     }
 
     public MutableAttributeSet getInputAttributes() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getInputAttributes()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getInputAttributes()));
     }
 
     public Style getLogicalStyle() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getLogicalStyle()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getLogicalStyle()));
     }
 
     public AttributeSet getParagraphAttributes() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getParagraphAttributes()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getParagraphAttributes()));
     }
 
     public @Nullable Style getStyle(String string) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getStyle(string)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getStyle(string)));
     }
 
     public StyledDocument getStyledDocument() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextPane) getSource()).getStyledDocument()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextPane) getSource()).getStyledDocument()));
     }
 
     public void insertComponent(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).insertComponent(component);
 
             return null;
@@ -174,7 +171,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public void insertIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).insertIcon(icon);
 
             return null;
@@ -182,7 +179,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public void removeStyle(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).removeStyle(string);
 
             return null;
@@ -190,7 +187,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public void setCharacterAttributes(AttributeSet attributeSet, boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).setCharacterAttributes(attributeSet, b);
 
             return null;
@@ -198,7 +195,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public void setLogicalStyle(@Nullable Style style) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).setLogicalStyle(style);
 
             return null;
@@ -206,7 +203,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public void setParagraphAttributes(AttributeSet attributeSet, boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).setParagraphAttributes(attributeSet, b);
 
             return null;
@@ -214,7 +211,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public void setStyledDocument(StyledDocument styledDocument) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextPane) getSource()).setStyledDocument(styledDocument);
 
             return null;

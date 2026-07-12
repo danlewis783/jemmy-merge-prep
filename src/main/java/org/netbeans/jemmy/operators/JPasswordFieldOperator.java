@@ -133,20 +133,20 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
     }
 
     public boolean echoCharIsSet() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPasswordField) getSource()).echoCharIsSet()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPasswordField) getSource()).echoCharIsSet()));
     }
 
     public char getEchoChar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPasswordField) getSource()).getEchoChar()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPasswordField) getSource()).getEchoChar()));
     }
 
     public char[] getPassword() {
         return (char[]) QueueTool.getInstance()
-                .invokeSmoothly(Caller.of((Callable<Object>) () -> ((JPasswordField) getSource()).getPassword()));
+                .callOnQueue(Caller.of((Callable<Object>) () -> ((JPasswordField) getSource()).getPassword()));
     }
 
     public void setEchoChar(char c) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPasswordField) getSource()).setEchoChar(c);
 
             return null;

@@ -127,11 +127,11 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
     }
 
     public boolean getState() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JCheckBoxMenuItem) getSource()).getState()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JCheckBoxMenuItem) getSource()).getState()));
     }
 
     public void setState(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JCheckBoxMenuItem) getSource()).setState(b);
 
             return null;

@@ -65,7 +65,7 @@ public abstract class AWTScrollDriver extends AbstractScrollDriver {
         }
 
         Adjustable adjustable = getAdjustable(oper, adj.getScrollOrientation());
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             int increment = Math.max(1, block ? adjustable.getBlockIncrement() : adjustable.getUnitIncrement());
             adjustable.setValue(adjustable.getValue() + direction * increment);
 
@@ -77,7 +77,7 @@ public abstract class AWTScrollDriver extends AbstractScrollDriver {
     protected int position(ComponentOperator oper, int orientation) {
         Adjustable adjustable = getAdjustable(oper, orientation);
 
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(adjustable::getValue));
+        return QueueTool.getInstance().callOnQueue(Caller.of(adjustable::getValue));
     }
 
     @Override

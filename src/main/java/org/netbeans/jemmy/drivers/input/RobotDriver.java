@@ -184,7 +184,7 @@ public class RobotDriver extends LightSupportiveDriver {
         if (robotRef.get() != null) {
             return robotRef.get();
         }
-        Robot inst = QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        Robot inst = QueueTool.getInstance().callOnQueue(Caller.of(() -> {
             try {
                 Robot robot = new Robot();
                 robot.setAutoDelay((int) ((robotAutoDelay == null) ? 0 : Timeouts.get(robotAutoDelay)));

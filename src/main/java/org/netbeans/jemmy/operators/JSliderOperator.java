@@ -152,7 +152,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).addChangeListener(changeListener);
 
             return null;
@@ -160,80 +160,80 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public Hashtable<?, ?> createStandardLabels(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i)));
     }
 
     public Hashtable<?, ?> createStandardLabels(int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i, i1)));
+                .callOnQueue(Caller.of(() -> ((JSlider) getSource()).createStandardLabels(i, i1)));
     }
 
     public int getExtent() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getExtent()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getExtent()));
     }
 
     public boolean getInverted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getInverted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getInverted()));
     }
 
     public Dictionary<?, ?> getLabelTable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getLabelTable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getLabelTable()));
     }
 
     public int getMajorTickSpacing() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getMajorTickSpacing()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMajorTickSpacing()));
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getMaximum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMaximum()));
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getMinimum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMinimum()));
     }
 
     public int getMinorTickSpacing() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getMinorTickSpacing()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getMinorTickSpacing()));
     }
 
     public BoundedRangeModel getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getModel()));
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getOrientation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getOrientation()));
     }
 
     public boolean getPaintLabels() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getPaintLabels()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getPaintLabels()));
     }
 
     public boolean getPaintTicks() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getPaintTicks()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getPaintTicks()));
     }
 
     public boolean getPaintTrack() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getPaintTrack()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getPaintTrack()));
     }
 
     public boolean getSnapToTicks() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getSnapToTicks()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getSnapToTicks()));
     }
 
     public SliderUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getUI()));
     }
 
     public int getValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getValue()));
     }
 
     public boolean getValueIsAdjusting() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JSlider) getSource()).getValueIsAdjusting()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JSlider) getSource()).getValueIsAdjusting()));
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).removeChangeListener(changeListener);
 
             return null;
@@ -241,7 +241,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setExtent(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setExtent(i);
 
             return null;
@@ -249,7 +249,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setInverted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setInverted(b);
 
             return null;
@@ -257,7 +257,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setLabelTable(Dictionary<?, ?> dictionary) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setLabelTable(dictionary);
 
             return null;
@@ -265,7 +265,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setMajorTickSpacing(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setMajorTickSpacing(i);
 
             return null;
@@ -273,7 +273,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setMaximum(i);
 
             return null;
@@ -281,7 +281,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setMinimum(i);
 
             return null;
@@ -289,7 +289,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setMinorTickSpacing(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setMinorTickSpacing(i);
 
             return null;
@@ -297,7 +297,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setModel(BoundedRangeModel boundedRangeModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setModel(boundedRangeModel);
 
             return null;
@@ -305,7 +305,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setOrientation(i);
 
             return null;
@@ -313,7 +313,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setPaintLabels(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setPaintLabels(b);
 
             return null;
@@ -321,7 +321,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setPaintTicks(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setPaintTicks(b);
 
             return null;
@@ -329,7 +329,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setPaintTrack(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setPaintTrack(b);
 
             return null;
@@ -337,7 +337,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setSnapToTicks(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setSnapToTicks(b);
 
             return null;
@@ -345,7 +345,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setUI(SliderUI sliderUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setUI(sliderUI);
 
             return null;
@@ -353,7 +353,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setValue(i);
 
             return null;
@@ -361,7 +361,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void setValueIsAdjusting(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JSlider) getSource()).setValueIsAdjusting(b);
 
             return null;

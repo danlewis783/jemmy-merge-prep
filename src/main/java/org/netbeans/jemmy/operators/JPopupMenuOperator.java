@@ -228,19 +228,19 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public JMenuItem add(String string) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).add(string)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).add(string)));
     }
 
     public JMenuItem add(javax.swing.Action action) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).add(action)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).add(action)));
     }
 
     public JMenuItem add(JMenuItem jMenuItem) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).add(jMenuItem)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).add(jMenuItem)));
     }
 
     public void addPopupMenuListener(PopupMenuListener popupMenuListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).addPopupMenuListener(popupMenuListener);
 
             return null;
@@ -248,7 +248,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void addSeparator() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).addSeparator();
 
             return null;
@@ -257,35 +257,35 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public int getComponentIndex(Component component) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getComponentIndex(component)));
+                .callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getComponentIndex(component)));
     }
 
     public Component getInvoker() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getInvoker()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getInvoker()));
     }
 
     public String getLabel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getLabel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getLabel()));
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getMargin()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getMargin()));
     }
 
     public SingleSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getSelectionModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getSelectionModel()));
     }
 
     public MenuElement[] getSubElements() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getSubElements()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getSubElements()));
     }
 
     public PopupMenuUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).getUI()));
     }
 
     public void insert(Component component, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).insert(component, i);
 
             return null;
@@ -293,7 +293,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void insert(javax.swing.Action action, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).insert(action, i);
 
             return null;
@@ -301,16 +301,16 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).isBorderPainted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).isBorderPainted()));
     }
 
     public boolean isLightWeightPopupEnabled() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JPopupMenu) getSource()).isLightWeightPopupEnabled()));
+                .callOnQueue(Caller.of(() -> ((JPopupMenu) getSource()).isLightWeightPopupEnabled()));
     }
 
     public void menuSelectionChanged(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).menuSelectionChanged(b);
 
             return null;
@@ -318,7 +318,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void pack() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).pack();
 
             return null;
@@ -327,7 +327,7 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public void processKeyEvent(
             KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).processKeyEvent(keyEvent, menuElement, menuSelectionManager);
 
             return null;
@@ -336,7 +336,7 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public void processMouseEvent(
             MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).processMouseEvent(mouseEvent, menuElement, menuSelectionManager);
 
             return null;
@@ -344,7 +344,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void removePopupMenuListener(PopupMenuListener popupMenuListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).removePopupMenuListener(popupMenuListener);
 
             return null;
@@ -352,7 +352,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setBorderPainted(b);
 
             return null;
@@ -360,7 +360,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setInvoker(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setInvoker(component);
 
             return null;
@@ -368,7 +368,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setLabel(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setLabel(string);
 
             return null;
@@ -376,7 +376,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setLightWeightPopupEnabled(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setLightWeightPopupEnabled(b);
 
             return null;
@@ -384,7 +384,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setPopupSize(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setPopupSize(i, i1);
 
             return null;
@@ -392,7 +392,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setPopupSize(Dimension dimension) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setPopupSize(dimension);
 
             return null;
@@ -400,7 +400,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setSelected(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setSelected(component);
 
             return null;
@@ -408,7 +408,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setSelectionModel(SingleSelectionModel singleSelectionModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setSelectionModel(singleSelectionModel);
 
             return null;
@@ -416,7 +416,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void setUI(PopupMenuUI popupMenuUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).setUI(popupMenuUI);
 
             return null;
@@ -424,7 +424,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public void show(Component component, int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JPopupMenu) getSource()).show(component, i, i1);
 
             return null;

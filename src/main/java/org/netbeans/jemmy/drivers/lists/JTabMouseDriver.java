@@ -48,7 +48,7 @@ public final class JTabMouseDriver extends LightSupportiveDriver implements List
     @Override
     public void selectItem(ComponentOperator oper, int index) {
         if (index != -1) {
-            QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
                 Rectangle rect =
                         ((JTabbedPaneOperator) oper).getUI().getTabBounds((JTabbedPane) oper.getSource(), index);
                 DriverManager.newInstance(JemmyContext.getInstance())

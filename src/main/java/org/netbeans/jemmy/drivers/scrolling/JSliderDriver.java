@@ -84,7 +84,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
     @Override
     protected void step(ComponentOperator oper, ScrollAdjuster adj) {
         if (adj.getScrollDirection() != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
                 Point clickPoint = getClickPoint(oper, adj.getScrollDirection(), adj.getScrollOrientation());
                 if (clickPoint != null) {
                     DriverManager.newInstance(JemmyContext.getInstance())
@@ -109,7 +109,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
 
     @Override
     protected void startPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             Point clickPoint = getClickPoint(oper, direction, orientation);
             if (clickPoint != null) {
                 MouseDriver mdriver =
@@ -124,7 +124,7 @@ public final class JSliderDriver extends AbstractScrollDriver {
 
     @Override
     protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             Point clickPoint = getClickPoint(oper, direction, orientation);
             if (clickPoint != null) {
                 MouseDriver mdriver =

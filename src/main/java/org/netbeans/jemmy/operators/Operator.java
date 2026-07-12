@@ -227,7 +227,7 @@ public abstract class Operator {
     }
 
     public String getSourceToString() {
-        return queueTool.invokeSmoothly(Caller.of(Callables.toStringOfOperatorSource(this)));
+        return queueTool.callOnQueue(Caller.of(Callables.toStringOfOperatorSource(this)));
     }
 
     public void setVisualizer(ComponentVisualizer visualizer) {
@@ -285,7 +285,7 @@ public abstract class Operator {
 
         @Override
         public boolean test(T operator) {
-            return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> predicate.test(operator)));
+            return QueueTool.getInstance().callOnQueue(Caller.of(() -> predicate.test(operator)));
         }
 
         @Override

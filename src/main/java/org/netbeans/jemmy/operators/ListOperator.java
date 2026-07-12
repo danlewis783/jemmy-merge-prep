@@ -190,7 +190,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).addActionListener(actionListener);
 
             return null;
@@ -198,7 +198,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).addItemListener(itemListener);
 
             return null;
@@ -206,7 +206,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void deselect(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).deselect(i);
 
             return null;
@@ -214,63 +214,63 @@ public class ListOperator extends ComponentOperator {
     }
 
     public String getItem(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getItem(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getItem(i)));
     }
 
     public int getItemCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getItemCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getItemCount()));
     }
 
     public String[] getItems() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getItems()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getItems()));
     }
 
     public Dimension getMinimumSize(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getMinimumSize(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getMinimumSize(i)));
     }
 
     public Dimension getPreferredSize(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getPreferredSize(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getPreferredSize(i)));
     }
 
     public int getRows() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getRows()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getRows()));
     }
 
     public int getSelectedIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getSelectedIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getSelectedIndex()));
     }
 
     public int[] getSelectedIndexes() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getSelectedIndexes()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getSelectedIndexes()));
     }
 
     public String getSelectedItem() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getSelectedItem()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getSelectedItem()));
     }
 
     public String[] getSelectedItems() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getSelectedItems()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getSelectedItems()));
     }
 
     public Object[] getSelectedObjects() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getSelectedObjects()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getSelectedObjects()));
     }
 
     public int getVisibleIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).getVisibleIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).getVisibleIndex()));
     }
 
     public boolean isIndexSelected(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).isIndexSelected(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).isIndexSelected(i)));
     }
 
     public boolean isMultipleMode() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((List) getSource()).isMultipleMode()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((List) getSource()).isMultipleMode()));
     }
 
     public void makeVisible(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).makeVisible(i);
 
             return null;
@@ -278,7 +278,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void remove(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).remove(i);
 
             return null;
@@ -286,7 +286,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void remove(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).remove(string);
 
             return null;
@@ -294,7 +294,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).removeActionListener(actionListener);
 
             return null;
@@ -302,7 +302,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void removeAll() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).removeAll();
 
             return null;
@@ -310,7 +310,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).removeItemListener(itemListener);
 
             return null;
@@ -318,7 +318,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void replaceItem(String string, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).replaceItem(string, i);
 
             return null;
@@ -326,7 +326,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void select(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).select(i);
 
             return null;
@@ -334,7 +334,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void setMultipleMode(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((List) getSource()).setMultipleMode(b);
 
             return null;

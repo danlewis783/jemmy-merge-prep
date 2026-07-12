@@ -327,7 +327,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void addInternalFrameListener(InternalFrameListener internalFrameListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).addInternalFrameListener(internalFrameListener);
 
             return null;
@@ -335,7 +335,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void dispose() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).dispose();
 
             return null;
@@ -343,89 +343,88 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public Container getContentPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getContentPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getContentPane()));
     }
 
     public int getDefaultCloseOperation() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDefaultCloseOperation()));
+                .callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getDefaultCloseOperation()));
     }
 
     public JDesktopIcon getDesktopIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDesktopIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getDesktopIcon()));
     }
 
     public JDesktopPane getDesktopPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getDesktopPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getDesktopPane()));
     }
 
     public Icon getFrameIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getFrameIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getFrameIcon()));
     }
 
     public Component getGlassPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getGlassPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getGlassPane()));
     }
 
     public JMenuBar getJMenuBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getJMenuBar()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getJMenuBar()));
     }
 
     public int getLayer() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getLayer()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getLayer()));
     }
 
     public JLayeredPane getLayeredPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getLayeredPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getLayeredPane()));
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getTitle()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getTitle()));
     }
 
     public InternalFrameUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getUI()));
     }
 
     public @Nullable String getWarningString() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).getWarningString()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).getWarningString()));
     }
 
     public boolean isClosable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isClosable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isClosable()));
     }
 
     public boolean isClosed() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isClosed()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isClosed()));
     }
 
     public boolean isIcon() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isIcon()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isIcon()));
     }
 
     public boolean isIconifiable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isIconifiable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isIconifiable()));
     }
 
     public boolean isMaximizable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isMaximizable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isMaximizable()));
     }
 
     public boolean isMaximum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isMaximum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isMaximum()));
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isResizable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isResizable()));
     }
 
     public boolean isSelected() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JInternalFrame) getSource()).isSelected()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JInternalFrame) getSource()).isSelected()));
     }
 
     public void moveToBack() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).moveToBack();
 
             return null;
@@ -433,7 +432,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void moveToFront() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).moveToFront();
 
             return null;
@@ -441,7 +440,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void pack() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).pack();
 
             return null;
@@ -449,7 +448,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void removeInternalFrameListener(InternalFrameListener internalFrameListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).removeInternalFrameListener(internalFrameListener);
 
             return null;
@@ -457,7 +456,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setClosable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setClosable(b);
 
             return null;
@@ -465,7 +464,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setClosed(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setClosed(b);
 
             return null;
@@ -473,7 +472,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setContentPane(Container container) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setContentPane(container);
 
             return null;
@@ -481,7 +480,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setDefaultCloseOperation(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setDefaultCloseOperation(i);
 
             return null;
@@ -489,7 +488,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setDesktopIcon(JDesktopIcon jDesktopIcon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setDesktopIcon(jDesktopIcon);
 
             return null;
@@ -497,7 +496,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setFrameIcon(Icon icon) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setFrameIcon(icon);
 
             return null;
@@ -505,7 +504,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setGlassPane(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setGlassPane(component);
 
             return null;
@@ -513,7 +512,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setIcon(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setIcon(b);
 
             return null;
@@ -521,7 +520,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setIconifiable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setIconifiable(b);
 
             return null;
@@ -529,7 +528,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setJMenuBar(JMenuBar jMenuBar) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setJMenuBar(jMenuBar);
 
             return null;
@@ -537,7 +536,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setLayer(Integer integer) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setLayer(integer);
 
             return null;
@@ -545,7 +544,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setLayeredPane(JLayeredPane jLayeredPane) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setLayeredPane(jLayeredPane);
 
             return null;
@@ -553,7 +552,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setMaximizable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setMaximizable(b);
 
             return null;
@@ -561,7 +560,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setMaximum(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setMaximum(b);
 
             return null;
@@ -569,7 +568,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setResizable(b);
 
             return null;
@@ -577,7 +576,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setSelected(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setSelected(b);
 
             return null;
@@ -585,7 +584,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setTitle(string);
 
             return null;
@@ -593,7 +592,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setUI(InternalFrameUI internalFrameUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).setUI(internalFrameUI);
 
             return null;
@@ -601,7 +600,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void toBack() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).toBack();
 
             return null;
@@ -609,7 +608,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void toFront() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JInternalFrame) getSource()).toFront();
 
             return null;

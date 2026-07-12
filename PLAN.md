@@ -45,7 +45,7 @@ descriptions win for scope; this file wins for sequencing and process.
   suite historically JUnit assertions (being migrated: `assertj-migration`).
   Operator-state predicates live in `org.netbeans.jemmy.predicates` as public
   generic classes; operator method mappings use
-  `QueueTool.getInstance().invokeSmoothly(Caller.of(...))`; timeouts are
+  `QueueTool.getInstance().callOnQueue(Caller.of(...))`; timeouts are
   `TimeoutKey` enum entries with `Timeouts.get/override`.
 - **Prove regression tests bite:** for any test added to pin a fix, verify it
   by temporarily reverting the fix (working tree only), watching the test

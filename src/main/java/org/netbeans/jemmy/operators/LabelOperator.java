@@ -123,15 +123,15 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public int getAlignment() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Label) getSource()).getAlignment()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Label) getSource()).getAlignment()));
     }
 
     public String getText() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Label) getSource()).getText()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Label) getSource()).getText()));
     }
 
     public void setAlignment(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Label) getSource()).setAlignment(i);
 
             return null;
@@ -139,7 +139,7 @@ public class LabelOperator extends ComponentOperator {
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Label) getSource()).setText(string);
 
             return null;

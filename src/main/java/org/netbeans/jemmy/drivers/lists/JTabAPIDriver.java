@@ -45,7 +45,7 @@ public final class JTabAPIDriver extends LightSupportiveDriver implements ListDr
     @Override
     public void selectItem(ComponentOperator oper, int index) {
         if (index != -1) {
-            queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
                 ((JTabbedPaneOperator) oper).setSelectedIndex(index);
                 return null;
             }));

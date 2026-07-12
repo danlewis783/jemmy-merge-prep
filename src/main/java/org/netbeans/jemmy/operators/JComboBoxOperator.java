@@ -256,7 +256,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().actionPerformed(actionEvent);
 
             return null;
@@ -264,7 +264,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().addActionListener(actionListener);
 
             return null;
@@ -272,7 +272,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void addItem(Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().addItem(object);
 
             return null;
@@ -280,7 +280,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().addItemListener(itemListener);
 
             return null;
@@ -288,7 +288,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void configureEditor(ComboBoxEditor comboBoxEditor, Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().configureEditor(comboBoxEditor, object);
 
             return null;
@@ -296,7 +296,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void contentsChanged(ListDataEvent listDataEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().contentsChanged(listDataEvent);
 
             return null;
@@ -305,66 +305,66 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public String getActionCommand() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getActionCommand()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getActionCommand()));
     }
 
     public ComboBoxEditor getEditor() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getEditor()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getEditor()));
     }
 
     public Object getItemAt(int i) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getItemAt(i)));
+                .callOnQueue(Caller.of(() -> getJComboBox().getItemAt(i)));
     }
 
     public int getItemCount() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getItemCount()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getItemCount()));
     }
 
     public KeySelectionManager getKeySelectionManager() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getKeySelectionManager()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getKeySelectionManager()));
     }
 
     public int getMaximumRowCount() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getMaximumRowCount()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getMaximumRowCount()));
     }
 
     public ComboBoxModel<?> getModel() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getModel()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getModel()));
     }
 
     public ListCellRenderer<?> getRenderer() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getRenderer()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getRenderer()));
     }
 
     public int getSelectedIndex() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getSelectedIndex()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getSelectedIndex()));
     }
 
     public Object getSelectedItem() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getSelectedItem()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getSelectedItem()));
     }
 
     public Object[] getSelectedObjects() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getSelectedObjects()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getSelectedObjects()));
     }
 
     public ComboBoxUI getUI() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().getUI()));
+                .callOnQueue(Caller.of(() -> getJComboBox().getUI()));
     }
 
     public void hidePopup() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().hidePopup();
 
             return null;
@@ -372,7 +372,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void insertItemAt(Object object, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().insertItemAt(object, i);
 
             return null;
@@ -380,7 +380,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void intervalAdded(ListDataEvent listDataEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().intervalAdded(listDataEvent);
 
             return null;
@@ -388,7 +388,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void intervalRemoved(ListDataEvent listDataEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().intervalRemoved(listDataEvent);
 
             return null;
@@ -397,21 +397,21 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public boolean isEditable() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().isEditable()));
+                .callOnQueue(Caller.of(() -> getJComboBox().isEditable()));
     }
 
     public boolean isLightWeightPopupEnabled() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().isLightWeightPopupEnabled()));
+                .callOnQueue(Caller.of(() -> getJComboBox().isLightWeightPopupEnabled()));
     }
 
     public boolean isPopupVisible() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().isPopupVisible()));
+                .callOnQueue(Caller.of(() -> getJComboBox().isPopupVisible()));
     }
 
     public void processKeyEvent(KeyEvent keyEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().processKeyEvent(keyEvent);
 
             return null;
@@ -419,7 +419,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().removeActionListener(actionListener);
 
             return null;
@@ -427,7 +427,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void removeAllItems() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().removeAllItems();
 
             return null;
@@ -435,7 +435,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void removeItem(Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().removeItem(object);
 
             return null;
@@ -443,7 +443,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void removeItemAt(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().removeItemAt(i);
 
             return null;
@@ -451,7 +451,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().removeItemListener(itemListener);
 
             return null;
@@ -460,11 +460,11 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public boolean selectWithKeyChar(char c) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJComboBox().selectWithKeyChar(c)));
+                .callOnQueue(Caller.of(() -> getJComboBox().selectWithKeyChar(c)));
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setActionCommand(string);
 
             return null;
@@ -472,7 +472,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setEditable(b);
 
             return null;
@@ -480,7 +480,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setEditor(ComboBoxEditor comboBoxEditor) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setEditor(comboBoxEditor);
 
             return null;
@@ -488,7 +488,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setKeySelectionManager(KeySelectionManager keySelectionManager) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setKeySelectionManager(keySelectionManager);
 
             return null;
@@ -496,7 +496,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setLightWeightPopupEnabled(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setLightWeightPopupEnabled(b);
 
             return null;
@@ -504,7 +504,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setMaximumRowCount(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setMaximumRowCount(i);
 
             return null;
@@ -514,7 +514,7 @@ public class JComboBoxOperator extends JComponentOperator {
     public void setModel(ComboBoxModel<?> comboBoxModel) {
         @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
         ComboBoxModel<Object> model = (ComboBoxModel<Object>) comboBoxModel;
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setModel(model);
 
             return null;
@@ -522,7 +522,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setPopupVisible(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setPopupVisible(b);
 
             return null;
@@ -532,7 +532,7 @@ public class JComboBoxOperator extends JComponentOperator {
     public void setRenderer(ListCellRenderer<?> listCellRenderer) {
         @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
         ListCellRenderer<Object> renderer = (ListCellRenderer<Object>) listCellRenderer;
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setRenderer(renderer);
 
             return null;
@@ -540,7 +540,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setSelectedIndex(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setSelectedIndex(i);
 
             return null;
@@ -548,7 +548,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setSelectedItem(Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setSelectedItem(object);
 
             return null;
@@ -556,7 +556,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void setUI(ComboBoxUI comboBoxUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().setUI(comboBoxUI);
 
             return null;
@@ -564,7 +564,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public void showPopup() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJComboBox().showPopup();
 
             return null;

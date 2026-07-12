@@ -131,15 +131,15 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public boolean isDefaultButton() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JButton) getSource()).isDefaultButton()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JButton) getSource()).isDefaultButton()));
     }
 
     public boolean isDefaultCapable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JButton) getSource()).isDefaultCapable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JButton) getSource()).isDefaultCapable()));
     }
 
     public void setDefaultCapable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JButton) getSource()).setDefaultCapable(b);
 
             return null;

@@ -154,7 +154,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Button) getSource()).addActionListener(actionListener);
 
             return null;
@@ -162,15 +162,15 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public String getActionCommand() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Button) getSource()).getActionCommand()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Button) getSource()).getActionCommand()));
     }
 
     public String getLabel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Button) getSource()).getLabel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Button) getSource()).getLabel()));
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Button) getSource()).removeActionListener(actionListener);
 
             return null;
@@ -178,7 +178,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public void setActionCommand(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Button) getSource()).setActionCommand(string);
 
             return null;
@@ -186,7 +186,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public void setLabel(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Button) getSource()).setLabel(string);
 
             return null;

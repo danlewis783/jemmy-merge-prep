@@ -489,7 +489,7 @@ class WindowOperatorTest {
 
     /** Runs the callable on the event dispatch thread so component state is only touched there. */
     private static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(callable));
+        return QueueTool.getInstance().callOnQueue(Caller.of(callable));
     }
 
     /** Builds (but does not show) a second frame, on the EDT. */

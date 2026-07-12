@@ -131,7 +131,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void setTable(JTable jTable) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setTable(jTable);
 
             return null;
@@ -139,11 +139,11 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public JTable getTable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getTable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getTable()));
     }
 
     public void setReorderingAllowed(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setReorderingAllowed(b);
 
             return null;
@@ -152,11 +152,11 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public boolean getReorderingAllowed() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getReorderingAllowed()));
+                .callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getReorderingAllowed()));
     }
 
     public void setResizingAllowed(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setResizingAllowed(b);
 
             return null;
@@ -164,26 +164,23 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public boolean getResizingAllowed() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getResizingAllowed()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getResizingAllowed()));
     }
 
     public TableColumn getDraggedColumn() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDraggedColumn()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getDraggedColumn()));
     }
 
     public int getDraggedDistance() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDraggedDistance()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getDraggedDistance()));
     }
 
     public TableColumn getResizingColumn() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getResizingColumn()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getResizingColumn()));
     }
 
     public void setUpdateTableInRealTime(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setUpdateTableInRealTime(b);
 
             return null;
@@ -192,11 +189,11 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public boolean getUpdateTableInRealTime() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getUpdateTableInRealTime()));
+                .callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getUpdateTableInRealTime()));
     }
 
     public void setDefaultRenderer(@Nullable TableCellRenderer tableCellRenderer) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setDefaultRenderer(tableCellRenderer);
 
             return null;
@@ -204,25 +201,23 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public @Nullable TableCellRenderer getDefaultRenderer() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getDefaultRenderer()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getDefaultRenderer()));
     }
 
     public int columnAtPoint(Point point) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).columnAtPoint(point)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).columnAtPoint(point)));
     }
 
     public Rectangle getHeaderRect(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getHeaderRect(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getHeaderRect(i)));
     }
 
     public TableHeaderUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getUI()));
     }
 
     public void setUI(TableHeaderUI tableHeaderUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setUI(tableHeaderUI);
 
             return null;
@@ -230,7 +225,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void setColumnModel(TableColumnModel tableColumnModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setColumnModel(tableColumnModel);
 
             return null;
@@ -238,11 +233,11 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public TableColumnModel getColumnModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTableHeader) getSource()).getColumnModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTableHeader) getSource()).getColumnModel()));
     }
 
     public void columnAdded(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).columnAdded(tableColumnModelEvent);
 
             return null;
@@ -250,7 +245,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void columnRemoved(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).columnRemoved(tableColumnModelEvent);
 
             return null;
@@ -258,7 +253,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void columnMoved(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).columnMoved(tableColumnModelEvent);
 
             return null;
@@ -266,7 +261,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void columnMarginChanged(ChangeEvent changeEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).columnMarginChanged(changeEvent);
 
             return null;
@@ -274,7 +269,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void columnSelectionChanged(ListSelectionEvent listSelectionEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).columnSelectionChanged(listSelectionEvent);
 
             return null;
@@ -282,7 +277,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void resizeAndRepaint() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).resizeAndRepaint();
 
             return null;
@@ -290,7 +285,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void setDraggedColumn(TableColumn tableColumn) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setDraggedColumn(tableColumn);
 
             return null;
@@ -298,7 +293,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void setDraggedDistance(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setDraggedDistance(i);
 
             return null;
@@ -306,7 +301,7 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void setResizingColumn(TableColumn tableColumn) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTableHeader) getSource()).setResizingColumn(tableColumn);
 
             return null;

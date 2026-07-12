@@ -203,19 +203,19 @@ public class DialogOperator extends WindowOperator {
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Dialog) getSource()).getTitle()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Dialog) getSource()).getTitle()));
     }
 
     public boolean isModal() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Dialog) getSource()).isModal()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Dialog) getSource()).isModal()));
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Dialog) getSource()).isResizable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Dialog) getSource()).isResizable()));
     }
 
     public void setModal(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Dialog) getSource()).setModal(b);
 
             return null;
@@ -223,7 +223,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Dialog) getSource()).setResizable(b);
 
             return null;
@@ -231,7 +231,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Dialog) getSource()).setTitle(string);
 
             return null;

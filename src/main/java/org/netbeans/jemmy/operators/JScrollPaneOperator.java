@@ -277,65 +277,64 @@ public class JScrollPaneOperator extends JComponentOperator {
 
     public JScrollBar createHorizontalScrollBar() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createHorizontalScrollBar()));
+                .callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).createHorizontalScrollBar()));
     }
 
     public JScrollBar createVerticalScrollBar() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).createVerticalScrollBar()));
+                .callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).createVerticalScrollBar()));
     }
 
     public @Nullable JViewport getColumnHeader() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getColumnHeader()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getColumnHeader()));
     }
 
     public Component getCorner(String string) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getCorner(string)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getCorner(string)));
     }
 
     public JScrollBar getHorizontalScrollBar() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBar()));
+                .callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBar()));
     }
 
     public int getHorizontalScrollBarPolicy() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBarPolicy()));
+                .callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getHorizontalScrollBarPolicy()));
     }
 
     public JViewport getRowHeader() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getRowHeader()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getRowHeader()));
     }
 
     public ScrollPaneUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getUI()));
     }
 
     public JScrollBar getVerticalScrollBar() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBar()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBar()));
     }
 
     public int getVerticalScrollBarPolicy() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBarPolicy()));
+                .callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getVerticalScrollBarPolicy()));
     }
 
     public JViewport getViewport() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewport()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getViewport()));
     }
 
     public Border getViewportBorder() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorder()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorder()));
     }
 
     public Rectangle getViewportBorderBounds() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorderBounds()));
+                .callOnQueue(Caller.of(() -> ((JScrollPane) getSource()).getViewportBorderBounds()));
     }
 
     public void setColumnHeader(@Nullable JViewport jViewport) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setColumnHeader(jViewport);
 
             return null;
@@ -343,7 +342,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setColumnHeaderView(@Nullable Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setColumnHeaderView(component);
 
             return null;
@@ -351,7 +350,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setCorner(String string, Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setCorner(string, component);
 
             return null;
@@ -359,7 +358,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setHorizontalScrollBar(JScrollBar jScrollBar) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setHorizontalScrollBar(jScrollBar);
 
             return null;
@@ -367,7 +366,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setHorizontalScrollBarPolicy(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setHorizontalScrollBarPolicy(i);
 
             return null;
@@ -375,7 +374,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setRowHeader(@Nullable JViewport jViewport) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setRowHeader(jViewport);
 
             return null;
@@ -383,7 +382,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setRowHeaderView(@Nullable Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setRowHeaderView(component);
 
             return null;
@@ -391,7 +390,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setUI(ScrollPaneUI scrollPaneUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setUI(scrollPaneUI);
 
             return null;
@@ -399,7 +398,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setVerticalScrollBar(JScrollBar jScrollBar) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setVerticalScrollBar(jScrollBar);
 
             return null;
@@ -407,7 +406,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setVerticalScrollBarPolicy(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setVerticalScrollBarPolicy(i);
 
             return null;
@@ -415,7 +414,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setViewport(@Nullable JViewport jViewport) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setViewport(jViewport);
 
             return null;
@@ -423,7 +422,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setViewportBorder(@Nullable Border border) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setViewportBorder(border);
 
             return null;
@@ -431,7 +430,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void setViewportView(@Nullable Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollPane) getSource()).setViewportView(component);
 
             return null;

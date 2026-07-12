@@ -225,19 +225,19 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public JMenuItem add(String string) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).add(string)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).add(string)));
     }
 
     public JMenuItem add(javax.swing.Action action) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).add(action)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).add(action)));
     }
 
     public JMenuItem add(JMenuItem jMenuItem) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).add(jMenuItem)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).add(jMenuItem)));
     }
 
     public void addMenuListener(MenuListener menuListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).addMenuListener(menuListener);
 
             return null;
@@ -245,7 +245,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public void addSeparator() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).addSeparator();
 
             return null;
@@ -253,35 +253,35 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public int getDelay() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getDelay()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getDelay()));
     }
 
     public JMenuItem getItem(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getItem(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getItem(i)));
     }
 
     public int getItemCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getItemCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getItemCount()));
     }
 
     public Component getMenuComponent(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getMenuComponent(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getMenuComponent(i)));
     }
 
     public int getMenuComponentCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getMenuComponentCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getMenuComponentCount()));
     }
 
     public Component[] getMenuComponents() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getMenuComponents()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getMenuComponents()));
     }
 
     public JPopupMenu getPopupMenu() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).getPopupMenu()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).getPopupMenu()));
     }
 
     public void insert(String string, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).insert(string, i);
 
             return null;
@@ -289,15 +289,15 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public JMenuItem insert(javax.swing.Action action, int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).insert(action, i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).insert(action, i)));
     }
 
     public JMenuItem insert(JMenuItem jMenuItem, int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).insert(jMenuItem, i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).insert(jMenuItem, i)));
     }
 
     public void insertSeparator(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).insertSeparator(i);
 
             return null;
@@ -305,24 +305,23 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public boolean isMenuComponent(Component component) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).isMenuComponent(component)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isMenuComponent(component)));
     }
 
     public boolean isPopupMenuVisible() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).isPopupMenuVisible()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isPopupMenuVisible()));
     }
 
     public boolean isTearOff() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).isTearOff()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isTearOff()));
     }
 
     public boolean isTopLevelMenu() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenu) getSource()).isTopLevelMenu()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenu) getSource()).isTopLevelMenu()));
     }
 
     public void remove(JMenuItem jMenuItem) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).remove(jMenuItem);
 
             return null;
@@ -330,7 +329,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public void removeMenuListener(MenuListener menuListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).removeMenuListener(menuListener);
 
             return null;
@@ -338,7 +337,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public void setDelay(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).setDelay(i);
 
             return null;
@@ -346,7 +345,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public void setMenuLocation(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).setMenuLocation(i, i1);
 
             return null;
@@ -354,7 +353,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public void setPopupMenuVisible(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenu) getSource()).setPopupMenuVisible(b);
 
             return null;

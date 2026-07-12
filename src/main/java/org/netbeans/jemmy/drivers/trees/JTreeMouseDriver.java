@@ -75,7 +75,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
             }
 
             Point p = toper.getPointToClick(indices[index]);
-            queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
                 mdriver.clickMouse(
                         oper,
                         p.x,
@@ -96,7 +96,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         if (!toper.isExpanded(index)) {
-            queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
                 Point p = toper.getPointToClick(index);
                 mdriver.clickMouse(
                         toper,
@@ -118,7 +118,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         if (toper.isExpanded(index)) {
-            queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
                 Point p = toper.getPointToClick(index);
                 mdriver.clickMouse(
                         toper,
@@ -156,7 +156,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         JTreeOperator toper = (JTreeOperator) oper;
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             Point p = toper.getPointToClick(index);
             mdriver.clickMouse(
                     toper,
@@ -169,7 +169,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
             return null;
         }));
         Timeouts.sleep(TimeoutKey.JTreeOperator_BeforeEditTimeout);
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             Point p = toper.getPointToClick(index);
             mdriver.clickMouse(
                     toper,

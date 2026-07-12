@@ -92,7 +92,7 @@ public final class QueueJMenuDriver extends LightSupportiveDriver implements Men
         try {
             return FunctionRepeater.on(
                             (Function<Void, MenuElement>)
-                                    v -> QueueTool.getInstance().invokeSmoothly(Caller.of(callable)),
+                                    v -> QueueTool.getInstance().callOnQueue(Caller.of(callable)),
                             waitKey,
                             TimeoutKey.QueueJMenuDriver_OneReleaseDelta)
                     .runUntilNotNull(null);

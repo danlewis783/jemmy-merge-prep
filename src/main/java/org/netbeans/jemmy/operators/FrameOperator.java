@@ -177,31 +177,31 @@ public class FrameOperator extends WindowOperator {
     }
 
     public Image getIconImage() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getIconImage()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getIconImage()));
     }
 
     public MenuBar getMenuBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getMenuBar()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getMenuBar()));
     }
 
     public int getExtendedState() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getExtendedState()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getExtendedState()));
     }
 
     public int getState() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getState()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getState()));
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).getTitle()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).getTitle()));
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Frame) getSource()).isResizable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Frame) getSource()).isResizable()));
     }
 
     public void setIconImage(Image image) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setIconImage(image);
 
             return null;
@@ -209,7 +209,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void setMenuBar(MenuBar menuBar) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setMenuBar(menuBar);
 
             return null;
@@ -217,7 +217,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setResizable(b);
 
             return null;
@@ -225,7 +225,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void setExtendedState(int state) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setExtendedState(state);
 
             return null;
@@ -233,7 +233,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void setState(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setState(i);
 
             return null;
@@ -241,7 +241,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Frame) getSource()).setTitle(string);
 
             return null;

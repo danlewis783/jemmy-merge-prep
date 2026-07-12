@@ -181,7 +181,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void append(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).append(string);
 
             return null;
@@ -189,43 +189,43 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public int getColumns() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getColumns()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getColumns()));
     }
 
     public int getLineCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getLineCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineCount()));
     }
 
     public int getLineEndOffset(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getLineEndOffset(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineEndOffset(i)));
     }
 
     public int getLineOfOffset(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getLineOfOffset(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineOfOffset(i)));
     }
 
     public int getLineStartOffset(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getLineStartOffset(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineStartOffset(i)));
     }
 
     public boolean getLineWrap() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getLineWrap()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getLineWrap()));
     }
 
     public int getRows() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getRows()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getRows()));
     }
 
     public int getTabSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getTabSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getTabSize()));
     }
 
     public boolean getWrapStyleWord() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTextArea) getSource()).getWrapStyleWord()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTextArea) getSource()).getWrapStyleWord()));
     }
 
     public void insert(String string, int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).insert(string, i);
 
             return null;
@@ -233,7 +233,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void replaceRange(String string, int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).replaceRange(string, i, i1);
 
             return null;
@@ -241,7 +241,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void setColumns(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).setColumns(i);
 
             return null;
@@ -249,7 +249,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void setLineWrap(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).setLineWrap(b);
 
             return null;
@@ -257,7 +257,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void setRows(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).setRows(i);
 
             return null;
@@ -265,7 +265,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void setTabSize(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).setTabSize(i);
 
             return null;
@@ -273,7 +273,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void setWrapStyleWord(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTextArea) getSource()).setWrapStyleWord(b);
 
             return null;

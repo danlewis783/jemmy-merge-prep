@@ -186,7 +186,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void addAdjustmentListener(AdjustmentListener adjustmentListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).addAdjustmentListener(adjustmentListener);
 
             return null;
@@ -194,56 +194,55 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public int getBlockIncrement() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getBlockIncrement()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getBlockIncrement()));
     }
 
     public int getBlockIncrement(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getBlockIncrement(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getBlockIncrement(i)));
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getMaximum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getMaximum()));
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getMinimum()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getMinimum()));
     }
 
     public BoundedRangeModel getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getModel()));
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getOrientation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getOrientation()));
     }
 
     public ScrollBarUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getUI()));
     }
 
     public int getUnitIncrement() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getUnitIncrement()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getUnitIncrement()));
     }
 
     public int getUnitIncrement(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getUnitIncrement(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getUnitIncrement(i)));
     }
 
     public int getValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getValue()));
     }
 
     public boolean getValueIsAdjusting() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getValueIsAdjusting()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getValueIsAdjusting()));
     }
 
     public int getVisibleAmount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JScrollBar) getSource()).getVisibleAmount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JScrollBar) getSource()).getVisibleAmount()));
     }
 
     public void removeAdjustmentListener(AdjustmentListener adjustmentListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).removeAdjustmentListener(adjustmentListener);
 
             return null;
@@ -251,7 +250,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setBlockIncrement(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setBlockIncrement(i);
 
             return null;
@@ -259,7 +258,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setMaximum(i);
 
             return null;
@@ -267,7 +266,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setMinimum(i);
 
             return null;
@@ -275,7 +274,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setModel(BoundedRangeModel boundedRangeModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setModel(boundedRangeModel);
 
             return null;
@@ -283,7 +282,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setOrientation(i);
 
             return null;
@@ -291,7 +290,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setUnitIncrement(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setUnitIncrement(i);
 
             return null;
@@ -299,7 +298,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setValue(i);
 
             return null;
@@ -307,7 +306,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setValueIsAdjusting(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setValueIsAdjusting(b);
 
             return null;
@@ -315,7 +314,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setValues(int i, int i1, int i2, int i3) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setValues(i, i1, i2, i3);
 
             return null;
@@ -323,7 +322,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void setVisibleAmount(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JScrollBar) getSource()).setVisibleAmount(i);
 
             return null;

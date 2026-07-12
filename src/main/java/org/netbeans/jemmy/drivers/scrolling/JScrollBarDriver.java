@@ -92,7 +92,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
     protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
         JButtonOperator lessButton = findAButton(oper, ScrollAdjuster.DECREASE_SCROLL_DIRECTION);
         JButtonOperator moreButton = findAButton(oper, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             if (adj.getScrollDirection() != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
                 int x, y;
                 if (((JScrollBarOperator) oper).getOrientation() == JScrollBar.HORIZONTAL) {

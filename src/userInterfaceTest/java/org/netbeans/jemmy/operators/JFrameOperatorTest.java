@@ -216,7 +216,7 @@ class JFrameOperatorTest {
 
     /** Runs the callable on the event dispatch thread so Swing component state is only touched there. */
     private static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(callable));
+        return QueueTool.getInstance().callOnQueue(Caller.of(callable));
     }
 
     private void disposeApplicationFrames() throws InterruptedException, InvocationTargetException {

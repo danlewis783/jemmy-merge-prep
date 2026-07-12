@@ -71,7 +71,7 @@ public final class JTableHeaderDriver extends LightSupportiveDriver implements O
     }
 
     private void clickOnHeader(JTableHeaderOperator oper, int index, int modifiers) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             Point toClick = oper.getPointToClick(index);
             DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)

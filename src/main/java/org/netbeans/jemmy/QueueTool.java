@@ -63,7 +63,7 @@ public final class QueueTool {
                         e);
             } else {
                 if (logger.isWarnEnabled()) {
-                    final String eventAtFrontOfQueue = invokeSmoothly(Caller.of(Callables.toStringOf(event)));
+                    final String eventAtFrontOfQueue = callOnQueue(Caller.of(Callables.toStringOf(event)));
                     logger.warn(
                             "Timeout expired waiting for event queue to stay empty.  Event at front of event queue: <{}>",
                             eventAtFrontOfQueue,
@@ -75,7 +75,17 @@ public final class QueueTool {
         }
     }
 
-    public <T> T invokeSmoothly(Caller<T> caller) {
+    /**
+     * Calls the caller's callable on the AWT event dispatch thread and blocks until it completes,
+     * returning its result. When invoked off the dispatch thread, the call is dispatched through
+     * the system event queue and waited on (subject to {@code QueueTool_PreInvocationTimeout} and
+     * {@code QueueTool_InvocationTimeout}); when already on the dispatch thread, the callable runs
+     * directly. Any exception the callable throws is rethrown wrapped in a {@link JemmyException}.
+     *
+     * @param caller wraps the callable to run; single-use, see {@link Caller#of}
+     * @return the callable's result
+     */
+    public <T> T callOnQueue(Caller<T> caller) {
         if (!EventQueue.isDispatchThread()) {
             return invokeAndWait(caller);
         } else {

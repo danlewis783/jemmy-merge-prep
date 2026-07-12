@@ -249,7 +249,7 @@ public class JListOperator extends JComponentOperator {
             source.ensureIndexIsVisible(itemIndex);
         }
 
-        return queueTool.invokeSmoothly(Caller.of(() -> {
+        return queueTool.callOnQueue(Caller.of(() -> {
             Rectangle rect = getCellBounds(itemIndex, itemIndex);
             if (rect == null) {
                 logger.warn("Impossible to determine click point for {}'th", itemIndex);
@@ -274,7 +274,7 @@ public class JListOperator extends JComponentOperator {
 
         scrollToItem(itemIndex);
 
-        return queueTool.invokeSmoothly(Caller.of(() -> {
+        return queueTool.callOnQueue(Caller.of(() -> {
             int index = findItemIndex(new ByListItemElementChooser(item, comparator), 0);
             if (index != -1) {
                 return clickOnItem(index, clickCount);
@@ -318,7 +318,7 @@ public class JListOperator extends JComponentOperator {
 
     public void selectItem(String item, StringComparator stringComparator) {
         scrollToItem(findItemIndex(item, stringComparator));
-        queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
             driver.selectItem(JListOperator.this, findItemIndex(item, stringComparator));
 
             return null;
@@ -356,7 +356,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void addListSelectionListener(ListSelectionListener listSelectionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().addListSelectionListener(listSelectionListener);
 
             return null;
@@ -364,7 +364,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void addSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().addSelectionInterval(i, i1);
 
             return null;
@@ -372,7 +372,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void clearSelection() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().clearSelection();
 
             return null;
@@ -380,7 +380,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void ensureIndexIsVisible(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().ensureIndexIsVisible(i);
 
             return null;
@@ -388,137 +388,137 @@ public class JListOperator extends JComponentOperator {
     }
 
     public int getAnchorSelectionIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getAnchorSelectionIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getAnchorSelectionIndex()));
     }
 
     public Rectangle getCellBounds(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getCellBounds(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getCellBounds(i, i1)));
     }
 
     public ListCellRenderer<?> getCellRenderer() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getCellRenderer()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getCellRenderer()));
     }
 
     public int getFirstVisibleIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getFirstVisibleIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getFirstVisibleIndex()));
     }
 
     public int getFixedCellHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getFixedCellHeight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getFixedCellHeight()));
     }
 
     public int getFixedCellWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getFixedCellWidth()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getFixedCellWidth()));
     }
 
     public int getLastVisibleIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getLastVisibleIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getLastVisibleIndex()));
     }
 
     public int getLeadSelectionIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getLeadSelectionIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getLeadSelectionIndex()));
     }
 
     public int getMaxSelectionIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getMaxSelectionIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getMaxSelectionIndex()));
     }
 
     public int getMinSelectionIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getMinSelectionIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getMinSelectionIndex()));
     }
 
     public ListModel<?> getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getModel()));
     }
 
     public Dimension getPreferredScrollableViewportSize() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getPreferredScrollableViewportSize()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getPreferredScrollableViewportSize()));
     }
 
     public Object getPrototypeCellValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getPrototypeCellValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getPrototypeCellValue()));
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJList().getScrollableBlockIncrement(rectangle, i, i1)));
+                .callOnQueue(Caller.of(() -> getJList().getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getScrollableTracksViewportHeight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getScrollableTracksViewportWidth()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getJList().getScrollableUnitIncrement(rectangle, i, i1)));
+                .callOnQueue(Caller.of(() -> getJList().getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public int getSelectedIndex() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectedIndex()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectedIndex()));
     }
 
     public int[] getSelectedIndices() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectedIndices()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectedIndices()));
     }
 
     public Object getSelectedValue() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectedValue()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectedValue()));
     }
 
     public Object[] getSelectedValues() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectedValues()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectedValues()));
     }
 
     public Color getSelectionBackground() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectionBackground()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectionBackground()));
     }
 
     public Color getSelectionForeground() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectionForeground()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectionForeground()));
     }
 
     public int getSelectionMode() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectionMode()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectionMode()));
     }
 
     public ListSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getSelectionModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getSelectionModel()));
     }
 
     public ListUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getUI()));
     }
 
     public boolean getValueIsAdjusting() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getValueIsAdjusting()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getValueIsAdjusting()));
     }
 
     public int getVisibleRowCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().getVisibleRowCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().getVisibleRowCount()));
     }
 
     public Point indexToLocation(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().indexToLocation(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().indexToLocation(i)));
     }
 
     public boolean isSelectedIndex(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().isSelectedIndex(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().isSelectedIndex(i)));
     }
 
     public boolean isSelectionEmpty() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().isSelectionEmpty()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().isSelectionEmpty()));
     }
 
     public int locationToIndex(Point point) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> getJList().locationToIndex(point)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getJList().locationToIndex(point)));
     }
 
     public void removeListSelectionListener(ListSelectionListener listSelectionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().removeListSelectionListener(listSelectionListener);
 
             return null;
@@ -526,7 +526,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void removeSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().removeSelectionInterval(i, i1);
 
             return null;
@@ -536,7 +536,7 @@ public class JListOperator extends JComponentOperator {
     public void setCellRenderer(ListCellRenderer<?> listCellRenderer) {
         @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
         ListCellRenderer<Object> renderer = (ListCellRenderer<Object>) listCellRenderer;
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setCellRenderer(renderer);
 
             return null;
@@ -544,7 +544,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setFixedCellHeight(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setFixedCellHeight(i);
 
             return null;
@@ -552,7 +552,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setFixedCellWidth(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setFixedCellWidth(i);
 
             return null;
@@ -560,7 +560,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setListData(Vector<?> vector) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setListData(vector);
 
             return null;
@@ -568,7 +568,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setListData(Object[] object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setListData(object);
 
             return null;
@@ -578,7 +578,7 @@ public class JListOperator extends JComponentOperator {
     public void setModel(ListModel<?> listModel) {
         @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
         ListModel<Object> model = (ListModel<Object>) listModel;
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setModel(model);
 
             return null;
@@ -586,7 +586,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setPrototypeCellValue(Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setPrototypeCellValue(object);
 
             return null;
@@ -594,7 +594,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectedIndex(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectedIndex(i);
 
             return null;
@@ -602,7 +602,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectedIndices(int[] i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectedIndices(i);
 
             return null;
@@ -610,7 +610,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectedValue(Object object, boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectedValue(object, b);
 
             return null;
@@ -618,7 +618,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectionBackground(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectionBackground(color);
 
             return null;
@@ -626,7 +626,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectionForeground(Color color) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectionForeground(color);
 
             return null;
@@ -634,7 +634,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectionInterval(i, i1);
 
             return null;
@@ -642,7 +642,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectionMode(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectionMode(i);
 
             return null;
@@ -650,7 +650,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setSelectionModel(ListSelectionModel listSelectionModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setSelectionModel(listSelectionModel);
 
             return null;
@@ -658,7 +658,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setUI(ListUI listUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setUI(listUI);
 
             return null;
@@ -666,7 +666,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setValueIsAdjusting(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setValueIsAdjusting(b);
 
             return null;
@@ -674,7 +674,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void setVisibleRowCount(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             getJList().setVisibleRowCount(i);
 
             return null;

@@ -225,52 +225,52 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public JMenu add(JMenu jMenu) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).add(jMenu)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).add(jMenu)));
     }
 
     public int getComponentIndex(Component component) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getComponentIndex(component)));
+                .callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getComponentIndex(component)));
     }
 
     public JMenu getHelpMenu() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getHelpMenu()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getHelpMenu()));
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getMargin()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getMargin()));
     }
 
     public JMenu getMenu(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getMenu(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getMenu(i)));
     }
 
     public int getMenuCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getMenuCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getMenuCount()));
     }
 
     public SingleSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getSelectionModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getSelectionModel()));
     }
 
     public MenuElement[] getSubElements() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getSubElements()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getSubElements()));
     }
 
     public MenuBarUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).getUI()));
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).isBorderPainted()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).isBorderPainted()));
     }
 
     public boolean isSelected() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JMenuBar) getSource()).isSelected()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JMenuBar) getSource()).isSelected()));
     }
 
     public void menuSelectionChanged(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).menuSelectionChanged(b);
 
             return null;
@@ -279,7 +279,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
     public void processKeyEvent(
             KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).processKeyEvent(keyEvent, menuElement, menuSelectionManager);
 
             return null;
@@ -288,7 +288,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
     public void processMouseEvent(
             MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).processMouseEvent(mouseEvent, menuElement, menuSelectionManager);
 
             return null;
@@ -296,7 +296,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).setBorderPainted(b);
 
             return null;
@@ -304,7 +304,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public void setHelpMenu(JMenu jMenu) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).setHelpMenu(jMenu);
 
             return null;
@@ -312,7 +312,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public void setMargin(Insets insets) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).setMargin(insets);
 
             return null;
@@ -320,7 +320,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public void setSelected(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).setSelected(component);
 
             return null;
@@ -328,7 +328,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public void setSelectionModel(SingleSelectionModel singleSelectionModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).setSelectionModel(singleSelectionModel);
 
             return null;
@@ -336,7 +336,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public void setUI(MenuBarUI menuBarUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JMenuBar) getSource()).setUI(menuBarUI);
 
             return null;

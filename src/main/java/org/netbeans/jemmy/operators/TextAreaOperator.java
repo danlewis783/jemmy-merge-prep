@@ -126,29 +126,27 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public int getColumns() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextArea) getSource()).getColumns()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getColumns()));
     }
 
     public Dimension getMinimumSize(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextArea) getSource()).getMinimumSize(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getMinimumSize(i, i1)));
     }
 
     public Dimension getPreferredSize(int i, int i1) {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((TextArea) getSource()).getPreferredSize(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getPreferredSize(i, i1)));
     }
 
     public int getRows() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((TextArea) getSource()).getRows()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getRows()));
     }
 
     public int getScrollbarVisibility() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((TextArea) getSource()).getScrollbarVisibility()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((TextArea) getSource()).getScrollbarVisibility()));
     }
 
     public void replaceRange(String string, int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextArea) getSource()).replaceRange(string, i, i1);
 
             return null;
@@ -156,7 +154,7 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public void setColumns(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextArea) getSource()).setColumns(i);
 
             return null;
@@ -164,7 +162,7 @@ public class TextAreaOperator extends TextComponentOperator {
     }
 
     public void setRows(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((TextArea) getSource()).setRows(i);
 
             return null;

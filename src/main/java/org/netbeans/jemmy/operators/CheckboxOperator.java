@@ -162,7 +162,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public void addItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Checkbox) getSource()).addItemListener(itemListener);
 
             return null;
@@ -170,19 +170,19 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public CheckboxGroup getCheckboxGroup() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Checkbox) getSource()).getCheckboxGroup()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Checkbox) getSource()).getCheckboxGroup()));
     }
 
     public String getLabel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Checkbox) getSource()).getLabel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Checkbox) getSource()).getLabel()));
     }
 
     public boolean getState() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Checkbox) getSource()).getState()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Checkbox) getSource()).getState()));
     }
 
     public void removeItemListener(ItemListener itemListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Checkbox) getSource()).removeItemListener(itemListener);
 
             return null;
@@ -190,7 +190,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public void setCheckboxGroup(CheckboxGroup grp) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Checkbox) getSource()).setCheckboxGroup(grp);
 
             return null;
@@ -198,7 +198,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public void setLabel(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Checkbox) getSource()).setLabel(string);
 
             return null;
@@ -206,7 +206,7 @@ public class CheckboxOperator extends ComponentOperator {
     }
 
     public void setState(boolean state) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Checkbox) getSource()).setState(state);
 
             return null;

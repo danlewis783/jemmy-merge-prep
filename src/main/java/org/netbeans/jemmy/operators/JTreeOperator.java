@@ -191,11 +191,11 @@ public class JTreeOperator extends JComponentOperator {
 
     public int getChildCount(Object node) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChildCount(node)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getModel().getChildCount(node)));
     }
 
     public Object[] getChildren(Object node) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
             TreeModel md = ((JTree) getSource()).getModel();
             Object[] result = new Object[md.getChildCount(node)];
             for (int i = 0; i < md.getChildCount(node); i++) {
@@ -208,7 +208,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public Object getChild(Object node, int index) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel().getChild(node, index)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getModel().getChild(node, index)));
     }
 
     public int getChildCount(TreePath path) {
@@ -352,7 +352,7 @@ public class JTreeOperator extends JComponentOperator {
     public void selectPath(TreePath path) {
         if (path != null) {
             scrollToPath(path);
-            queueTool.invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            queueTool.callOnQueue(Caller.of((Callable<Void>) () -> {
                 driver.selectItem(JTreeOperator.this, getRowForPath(path));
 
                 return null;
@@ -625,7 +625,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionInterval(i, i1);
 
             return null;
@@ -633,7 +633,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addSelectionPath(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionPath(treePath);
 
             return null;
@@ -641,7 +641,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addSelectionPaths(TreePath @Nullable [] treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionPaths(treePath);
 
             return null;
@@ -649,7 +649,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addSelectionRow(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionRow(i);
 
             return null;
@@ -657,7 +657,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addSelectionRows(int @Nullable [] i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addSelectionRows(i);
 
             return null;
@@ -665,7 +665,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addTreeExpansionListener(TreeExpansionListener treeExpansionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addTreeExpansionListener(treeExpansionListener);
 
             return null;
@@ -673,7 +673,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addTreeSelectionListener(TreeSelectionListener treeSelectionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addTreeSelectionListener(treeSelectionListener);
 
             return null;
@@ -681,7 +681,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void addTreeWillExpandListener(TreeWillExpandListener treeWillExpandListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).addTreeWillExpandListener(treeWillExpandListener);
 
             return null;
@@ -689,7 +689,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void cancelEditing() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).cancelEditing();
 
             return null;
@@ -697,7 +697,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void clearSelection() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).clearSelection();
 
             return null;
@@ -705,7 +705,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void collapsePath(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).collapsePath(treePath);
 
             return null;
@@ -713,7 +713,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void collapseRow(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).collapseRow(i);
 
             return null;
@@ -722,11 +722,11 @@ public class JTreeOperator extends JComponentOperator {
 
     public String convertValueToText(@Nullable Object object, boolean b, boolean b1, boolean b2, int i, boolean b3) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).convertValueToText(object, b, b1, b2, i, b3)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).convertValueToText(object, b, b1, b2, i, b3)));
     }
 
     public void expandPath(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).expandPath(treePath);
 
             return null;
@@ -734,7 +734,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void expandRow(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).expandRow(i);
 
             return null;
@@ -742,7 +742,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void fireTreeCollapsed(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeCollapsed(treePath);
 
             return null;
@@ -750,7 +750,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void fireTreeExpanded(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeExpanded(treePath);
 
             return null;
@@ -758,7 +758,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void fireTreeWillCollapse(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeWillCollapse(treePath);
 
             return null;
@@ -766,7 +766,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void fireTreeWillExpand(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).fireTreeWillExpand(treePath);
 
             return null;
@@ -774,217 +774,216 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public TreeCellEditor getCellEditor() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getCellEditor()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getCellEditor()));
     }
 
     public TreeCellRenderer getCellRenderer() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getCellRenderer()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getCellRenderer()));
     }
 
     public TreePath getClosestPathForLocation(int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestPathForLocation(i, i1)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getClosestPathForLocation(i, i1)));
     }
 
     public int getClosestRowForLocation(int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getClosestRowForLocation(i, i1)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getClosestRowForLocation(i, i1)));
     }
 
     public TreePath getEditingPath() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getEditingPath()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getEditingPath()));
     }
 
     public Enumeration<TreePath> getExpandedDescendants(@Nullable TreePath treePath) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getExpandedDescendants(treePath)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getExpandedDescendants(treePath)));
     }
 
     public boolean getInvokesStopCellEditing() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getInvokesStopCellEditing()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getInvokesStopCellEditing()));
     }
 
     public Object getLastSelectedPathComponent() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLastSelectedPathComponent()));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getLastSelectedPathComponent()));
     }
 
     public TreePath getLeadSelectionPath() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLeadSelectionPath()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getLeadSelectionPath()));
     }
 
     public int getLeadSelectionRow() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getLeadSelectionRow()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getLeadSelectionRow()));
     }
 
     public int getMaxSelectionRow() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getMaxSelectionRow()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getMaxSelectionRow()));
     }
 
     public int getMinSelectionRow() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getMinSelectionRow()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getMinSelectionRow()));
     }
 
     public TreeModel getModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getModel()));
     }
 
     public Rectangle getPathBounds(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathBounds(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getPathBounds(treePath)));
     }
 
     public TreePath getPathForLocation(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathForLocation(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getPathForLocation(i, i1)));
     }
 
     public TreePath getPathForRow(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPathForRow(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getPathForRow(i)));
     }
 
     public Dimension getPreferredScrollableViewportSize() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getPreferredScrollableViewportSize()));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getPreferredScrollableViewportSize()));
     }
 
     public Rectangle getRowBounds(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowBounds(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getRowBounds(i)));
     }
 
     public int getRowCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getRowCount()));
     }
 
     public int getRowForLocation(int i, int i1) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowForLocation(i, i1)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getRowForLocation(i, i1)));
     }
 
     public int getRowForPath(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowForPath(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getRowForPath(treePath)));
     }
 
     public int getRowHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getRowHeight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getRowHeight()));
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getScrollableBlockIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollableTracksViewportHeight() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportHeight()));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportHeight()));
     }
 
     public boolean getScrollableTracksViewportWidth() {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportWidth()));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getScrollableTracksViewportWidth()));
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
+                .callOnQueue(Caller.of(() -> ((JTree) getSource()).getScrollableUnitIncrement(rectangle, i, i1)));
     }
 
     public boolean getScrollsOnExpand() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getScrollsOnExpand()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getScrollsOnExpand()));
     }
 
     public int getSelectionCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getSelectionCount()));
     }
 
     public TreeSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getSelectionModel()));
     }
 
     public TreePath getSelectionPath() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionPath()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getSelectionPath()));
     }
 
     public TreePath[] getSelectionPaths() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionPaths()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getSelectionPaths()));
     }
 
     public int[] getSelectionRows() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getSelectionRows()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getSelectionRows()));
     }
 
     public boolean getShowsRootHandles() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getShowsRootHandles()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getShowsRootHandles()));
     }
 
     public TreeUI getUI() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getUI()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getUI()));
     }
 
     public int getVisibleRowCount() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).getVisibleRowCount()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).getVisibleRowCount()));
     }
 
     public boolean hasBeenExpanded(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).hasBeenExpanded(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).hasBeenExpanded(treePath)));
     }
 
     public boolean isCollapsed(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isCollapsed(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isCollapsed(i)));
     }
 
     public boolean isCollapsed(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isCollapsed(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isCollapsed(treePath)));
     }
 
     public boolean isEditable() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isEditable()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isEditable()));
     }
 
     public boolean isEditing() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isEditing()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isEditing()));
     }
 
     public boolean isExpanded(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isExpanded(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isExpanded(i)));
     }
 
     public boolean isExpanded(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isExpanded(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isExpanded(treePath)));
     }
 
     public boolean isFixedRowHeight() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isFixedRowHeight()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isFixedRowHeight()));
     }
 
     public boolean isLargeModel() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isLargeModel()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isLargeModel()));
     }
 
     public boolean isPathEditable(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isPathEditable(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isPathEditable(treePath)));
     }
 
     public boolean isPathSelected(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isPathSelected(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isPathSelected(treePath)));
     }
 
     public boolean isRootVisible() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isRootVisible()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isRootVisible()));
     }
 
     public boolean isRowSelected(int i) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isRowSelected(i)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isRowSelected(i)));
     }
 
     public boolean isSelectionEmpty() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isSelectionEmpty()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isSelectionEmpty()));
     }
 
     public boolean isVisible(@Nullable TreePath treePath) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).isVisible(treePath)));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).isVisible(treePath)));
     }
 
     public void makeVisible(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).makeVisible(treePath);
 
             return null;
@@ -992,7 +991,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionInterval(i, i1);
 
             return null;
@@ -1000,7 +999,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeSelectionPath(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionPath(treePath);
 
             return null;
@@ -1008,7 +1007,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeSelectionPaths(TreePath @Nullable [] treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionPaths(treePath);
 
             return null;
@@ -1016,7 +1015,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeSelectionRow(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionRow(i);
 
             return null;
@@ -1024,7 +1023,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeSelectionRows(int @Nullable [] i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeSelectionRows(i);
 
             return null;
@@ -1032,7 +1031,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeTreeExpansionListener(TreeExpansionListener treeExpansionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeTreeExpansionListener(treeExpansionListener);
 
             return null;
@@ -1040,7 +1039,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeTreeSelectionListener(TreeSelectionListener treeSelectionListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeTreeSelectionListener(treeSelectionListener);
 
             return null;
@@ -1048,7 +1047,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void removeTreeWillExpandListener(TreeWillExpandListener treeWillExpandListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).removeTreeWillExpandListener(treeWillExpandListener);
 
             return null;
@@ -1056,7 +1055,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void scrollPathToVisible(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).scrollPathToVisible(treePath);
 
             return null;
@@ -1064,7 +1063,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void scrollRowToVisible(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).scrollRowToVisible(i);
 
             return null;
@@ -1072,7 +1071,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setCellEditor(TreeCellEditor treeCellEditor) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setCellEditor(treeCellEditor);
 
             return null;
@@ -1080,7 +1079,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setCellRenderer(TreeCellRenderer treeCellRenderer) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setCellRenderer(treeCellRenderer);
 
             return null;
@@ -1088,7 +1087,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setEditable(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setEditable(b);
 
             return null;
@@ -1096,7 +1095,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setInvokesStopCellEditing(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setInvokesStopCellEditing(b);
 
             return null;
@@ -1104,7 +1103,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setLargeModel(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setLargeModel(b);
 
             return null;
@@ -1112,7 +1111,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setModel(TreeModel treeModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setModel(treeModel);
 
             return null;
@@ -1120,7 +1119,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setRootVisible(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setRootVisible(b);
 
             return null;
@@ -1128,7 +1127,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setRowHeight(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setRowHeight(i);
 
             return null;
@@ -1136,7 +1135,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setScrollsOnExpand(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setScrollsOnExpand(b);
 
             return null;
@@ -1144,7 +1143,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setSelectionInterval(i, i1);
 
             return null;
@@ -1152,7 +1151,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setSelectionModel(TreeSelectionModel treeSelectionModel) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setSelectionModel(treeSelectionModel);
 
             return null;
@@ -1160,7 +1159,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setSelectionPath(TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setSelectionPath(treePath);
 
             return null;
@@ -1168,7 +1167,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setSelectionPaths(TreePath[] treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setSelectionPaths(treePath);
 
             return null;
@@ -1176,7 +1175,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setSelectionRow(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setSelectionRow(i);
 
             return null;
@@ -1184,7 +1183,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setSelectionRows(int[] i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setSelectionRows(i);
 
             return null;
@@ -1192,7 +1191,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setShowsRootHandles(boolean b) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setShowsRootHandles(b);
 
             return null;
@@ -1200,7 +1199,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setUI(TreeUI treeUI) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setUI(treeUI);
 
             return null;
@@ -1208,7 +1207,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void setVisibleRowCount(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).setVisibleRowCount(i);
 
             return null;
@@ -1216,7 +1215,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void startEditingAtPath(@Nullable TreePath treePath) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).startEditingAtPath(treePath);
 
             return null;
@@ -1224,11 +1223,11 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public boolean stopEditing() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JTree) getSource()).stopEditing()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JTree) getSource()).stopEditing()));
     }
 
     public void treeDidChange() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JTree) getSource()).treeDidChange();
 
             return null;

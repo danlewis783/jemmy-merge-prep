@@ -202,7 +202,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static int countWindows(@Nullable Window owner, Predicate<Component> chooser) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
             Window[] windows = (owner == null) ? Window.getWindows() : owner.getOwnedWindows();
             int matches = 0;
             for (Window window : windows) {
@@ -220,7 +220,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void addWindowListener(WindowListener windowListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).addWindowListener(windowListener);
 
             return null;
@@ -228,7 +228,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void applyResourceBundle(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).applyResourceBundle(string);
 
             return null;
@@ -236,7 +236,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void applyResourceBundle(ResourceBundle resourceBundle) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).applyResourceBundle(resourceBundle);
 
             return null;
@@ -244,7 +244,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void dispose() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).dispose();
 
             return null;
@@ -252,23 +252,23 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public @Nullable Component getFocusOwner() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getFocusOwner()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getFocusOwner()));
     }
 
     public Window[] getOwnedWindows() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getOwnedWindows()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getOwnedWindows()));
     }
 
     public @Nullable Window getOwner() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getOwner()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getOwner()));
     }
 
     public @Nullable String getWarningString() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((Window) getSource()).getWarningString()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((Window) getSource()).getWarningString()));
     }
 
     public void pack() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).pack();
 
             return null;
@@ -276,7 +276,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void removeWindowListener(WindowListener windowListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).removeWindowListener(windowListener);
 
             return null;
@@ -284,7 +284,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void toBack() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).toBack();
 
             return null;
@@ -292,7 +292,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void toFront() {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((Window) getSource()).toFront();
 
             return null;
@@ -300,7 +300,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public boolean isFocused() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
             try {
                 return (Boolean) new ClassReference<>(getSource()).invokeMethod("isFocused", null, null);
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
@@ -312,7 +312,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public boolean isActive() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> {
             try {
                 return (Boolean) new ClassReference<>(getSource()).invokeMethod("isActive", null, null);
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {

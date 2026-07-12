@@ -177,7 +177,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     private int getCaretPositionOfReference(String reference) {
-        int pos = QueueTool.getInstance().invokeSmoothly(Caller.of(() -> {
+        int pos = QueueTool.getInstance().callOnQueue(Caller.of(() -> {
             Document doc = ((JEditorPane) getSource()).getDocument();
             if (doc instanceof HTMLDocument) {
                 for (HTMLDocument.Iterator iter = ((HTMLDocument) doc).getIterator(HTML.Tag.A);
@@ -201,7 +201,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public void scrollToReference(String reference) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).scrollToReference(reference);
 
             return null;
@@ -209,80 +209,80 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public void addHyperlinkListener(HyperlinkListener hyperlinkListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).addHyperlinkListener(hyperlinkListener);
             return null;
         }));
     }
 
     public void fireHyperlinkUpdate(HyperlinkEvent hyperlinkEvent) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).fireHyperlinkUpdate(hyperlinkEvent);
             return null;
         }));
     }
 
     public String getContentType() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JEditorPane) getSource()).getContentType()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JEditorPane) getSource()).getContentType()));
     }
 
     public EditorKit getEditorKit() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JEditorPane) getSource()).getEditorKit()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JEditorPane) getSource()).getEditorKit()));
     }
 
     public EditorKit getEditorKitForContentType(String string) {
         return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JEditorPane) getSource()).getEditorKitForContentType(string)));
+                .callOnQueue(Caller.of(() -> ((JEditorPane) getSource()).getEditorKitForContentType(string)));
     }
 
     public URL getPage() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JEditorPane) getSource()).getPage()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JEditorPane) getSource()).getPage()));
     }
 
     public void read(InputStream inputStream, Object object) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).read(inputStream, object);
             return null;
         }));
     }
 
     public void removeHyperlinkListener(HyperlinkListener hyperlinkListener) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).removeHyperlinkListener(hyperlinkListener);
             return null;
         }));
     }
 
     public void setContentType(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).setContentType(string);
             return null;
         }));
     }
 
     public void setEditorKit(EditorKit editorKit) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).setEditorKit(editorKit);
             return null;
         }));
     }
 
     public void setEditorKitForContentType(String string, EditorKit editorKit) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).setEditorKitForContentType(string, editorKit);
             return null;
         }));
     }
 
     public void setPage(String string) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).setPage(string);
             return null;
         }));
     }
 
     public void setPage(URL uRL) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JEditorPane) getSource()).setPage(uRL);
             return null;
         }));

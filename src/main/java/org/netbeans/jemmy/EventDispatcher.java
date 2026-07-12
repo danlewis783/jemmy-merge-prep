@@ -91,7 +91,7 @@ public final class EventDispatcher {
 
     public Object invokeMethod(String methodName, Object @Nullable [] params, Class<?> @Nullable [] paramClasses) {
         return QueueTool.getInstance()
-                .invokeSmoothly(
+                .callOnQueue(
                         Caller.of(new MethodInvokeCallable(methodName, params, paramClasses, component, reference)));
     }
 

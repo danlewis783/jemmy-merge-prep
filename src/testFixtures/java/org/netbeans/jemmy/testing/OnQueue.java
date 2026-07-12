@@ -29,6 +29,6 @@ public final class OnQueue {
     private OnQueue() {}
 
     public static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(callable));
+        return QueueTool.getInstance().callOnQueue(Caller.of(callable));
     }
 }

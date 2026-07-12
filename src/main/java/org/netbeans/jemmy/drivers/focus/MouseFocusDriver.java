@@ -62,7 +62,7 @@ public final class MouseFocusDriver extends LightSupportiveDriver implements Foc
     @Override
     public void giveFocus(ComponentOperator compOp) {
         if (!compOp.hasFocus()) {
-            QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+            QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
                 DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
                 MouseDriver mouseDriver = driverManager.getMouseDriver(compOp);
                 int defaultMouseButton = Operator.getDefaultMouseButton();

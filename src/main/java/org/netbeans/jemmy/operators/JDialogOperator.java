@@ -220,37 +220,35 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public AccessibleContext getAccessibleContext() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> getSource().getAccessibleContext()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> getSource().getAccessibleContext()));
     }
 
     public Container getContentPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getContentPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getContentPane()));
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance()
-                .invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getDefaultCloseOperation()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getDefaultCloseOperation()));
     }
 
     public Component getGlassPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getGlassPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getGlassPane()));
     }
 
     public JMenuBar getJMenuBar() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getJMenuBar()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getJMenuBar()));
     }
 
     public JLayeredPane getLayeredPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getLayeredPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getLayeredPane()));
     }
 
     public JRootPane getRootPane() {
-        return QueueTool.getInstance().invokeSmoothly(Caller.of(() -> ((JDialog) getSource()).getRootPane()));
+        return QueueTool.getInstance().callOnQueue(Caller.of(() -> ((JDialog) getSource()).getRootPane()));
     }
 
     public void setContentPane(Container container) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setContentPane(container);
 
             return null;
@@ -258,7 +256,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public void setDefaultCloseOperation(int i) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setDefaultCloseOperation(i);
 
             return null;
@@ -266,7 +264,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public void setGlassPane(Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setGlassPane(component);
 
             return null;
@@ -274,7 +272,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public void setJMenuBar(JMenuBar jMenuBar) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setJMenuBar(jMenuBar);
 
             return null;
@@ -282,7 +280,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public void setLayeredPane(JLayeredPane jLayeredPane) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setLayeredPane(jLayeredPane);
 
             return null;
@@ -290,7 +288,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public void setLocationRelativeTo(@Nullable Component component) {
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             ((JDialog) getSource()).setLocationRelativeTo(component);
 
             return null;

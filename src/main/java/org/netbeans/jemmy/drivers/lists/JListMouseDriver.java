@@ -69,7 +69,7 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
             oper.scrollToItem(index);
         }
 
-        QueueTool.getInstance().invokeSmoothly(Caller.of((Callable<Void>) () -> {
+        QueueTool.getInstance().callOnQueue(Caller.of((Callable<Void>) () -> {
             Rectangle rect = oper.getCellBounds(index, index);
             DriverManager.newInstance(JemmyContext.getInstance())
                     .getMouseDriver(oper)
