@@ -16,40 +16,19 @@
  */
 package org.netbeans.jemmy;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * Runs a {@link Supplier} on the Jemmy action thread; see {@link ActionRunner} for the
+ * timeout, cancellation, and exception-capture semantics shared by all runners.
+ */
 public final class SupplierRunner<R> {
-    private static final Logger logger = LoggerFactory.getLogger(SupplierRunner.class);
-    private static final ExecutorService JEMMY_ACTION_SERVICE = Executors.newSingleThreadExecutor(new ThreadFactory() {
-        final AtomicLong count = new AtomicLong(0);
-
-        @Override
-        public Thread newThread(Runnable runnable) {
-            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-            thread.setUncaughtExceptionHandler(
-                    (t, e) -> logger.warn("uncaught exception in thread {}", t.getName(), e));
-            thread.setName(String.format("jemmy-function-waiter-%d", count.getAndIncrement()));
-            return thread;
-        }
-    });
     private final Supplier<@Nullable R> supplier;
-    private final AtomicReference<@Nullable Throwable> throwable;
+    private final ActionRunner<R> runner = new ActionRunner<>();
 
     private SupplierRunner(Supplier<@Nullable R> supplier) {
         this.supplier = supplier;
-        this.throwable = new AtomicReference<>();
     }
 
     public static <RR> SupplierRunner<RR> on(Supplier<@Nullable RR> supplier) {
@@ -57,7 +36,7 @@ public final class SupplierRunner<R> {
     }
 
     public @Nullable Throwable getThrowable() {
-        return throwable.get();
+        return runner.getThrowable();
     }
 
     public @Nullable R getAndWaitDefaultTimeout() throws InterruptedException {
@@ -65,36 +44,6 @@ public final class SupplierRunner<R> {
     }
 
     public @Nullable R getAndWait(TimeoutKey timeoutKey) throws InterruptedException {
-        Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(supplier::get);
-        long timeout = Timeouts.get(timeoutKey);
-        long startTime = System.currentTimeMillis();
-        R result = null;
-        try {
-            result = laFutura.get(timeout, TimeUnit.MILLISECONDS);
-        } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof TimeoutExpiredException) {
-                throw (TimeoutExpiredException) cause;
-            }
-            logger.warn("caught ExecutionException running supplier", e);
-            throwable.set(cause);
-        } catch (TimeoutException e) {
-            throwable.set(e);
-            throw new TimeoutExpiredException(
-                    String.format(
-                            "timeout \"%s\" (%d ms) exceeded after (%d ms)",
-                            timeoutKey, timeout, (System.currentTimeMillis() - startTime)),
-                    e);
-        } finally {
-            // cancel on timeout or caller interrupt; an abandoned function would otherwise
-            // occupy the single worker thread and starve every later submission
-            if (!laFutura.isDone()) {
-                if (!laFutura.cancel(true)) {
-                    logger.warn("abandoned supplier could not be cancelled");
-                }
-            }
-        }
-
-        return result;
+        return runner.submitAndGet(supplier::get, timeoutKey);
     }
 }

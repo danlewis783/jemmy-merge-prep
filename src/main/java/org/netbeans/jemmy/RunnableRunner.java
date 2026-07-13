@@ -16,39 +16,18 @@
  */
 package org.netbeans.jemmy;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * Runs a {@link Runnable} on the Jemmy action thread; see {@link ActionRunner} for the
+ * timeout, cancellation, and exception-capture semantics shared by all runners.
+ */
 public final class RunnableRunner {
-    private static final Logger logger = LoggerFactory.getLogger(RunnableRunner.class);
-    private static final ExecutorService JEMMY_ACTION_SERVICE = Executors.newSingleThreadExecutor(new ThreadFactory() {
-        final AtomicLong count = new AtomicLong(0);
-
-        @Override
-        public Thread newThread(Runnable runnable) {
-            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-            thread.setUncaughtExceptionHandler(
-                    (t, e) -> logger.warn("uncaught exception in thread {}", t.getName(), e));
-            thread.setName(String.format("jemmy-function-waiter-%d", count.getAndIncrement()));
-            return thread;
-        }
-    });
     private final Runnable runnable;
-    private final AtomicReference<@Nullable Throwable> throwable;
+    private final ActionRunner<Void> runner = new ActionRunner<>();
 
     private RunnableRunner(Runnable runnable) {
         this.runnable = runnable;
-        this.throwable = new AtomicReference<>();
     }
 
     public static RunnableRunner on(Runnable runnable) {
@@ -56,7 +35,7 @@ public final class RunnableRunner {
     }
 
     public @Nullable Throwable getThrowable() {
-        return throwable.get();
+        return runner.getThrowable();
     }
 
     public void runAndWaitDefaultTimeout() throws InterruptedException {
@@ -64,37 +43,15 @@ public final class RunnableRunner {
     }
 
     public void runAndWait(TimeoutKey timeoutKey) throws InterruptedException {
-        Future<?> laFutura = JEMMY_ACTION_SERVICE.submit(runnable);
-        long timeout = Timeouts.get(timeoutKey);
-        long startTime = System.currentTimeMillis();
-        try {
-            Object ignored = laFutura.get(timeout, TimeUnit.MILLISECONDS);
-        } catch (ExecutionException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof TimeoutExpiredException) {
-                throw (TimeoutExpiredException) cause;
-            }
-            logger.warn("caught ExecutionException running runnable", e);
-            throwable.set(cause);
-        } catch (TimeoutException e) {
-            throwable.set(e);
-            throw new TimeoutExpiredException(
-                    String.format(
-                            "timeout \"%s\" (%d ms) exceeded after (%d ms)",
-                            timeoutKey, timeout, (System.currentTimeMillis() - startTime)),
-                    e);
-        } finally {
-            // cancel on timeout or caller interrupt; an abandoned function would otherwise
-            // occupy the single worker thread and starve every later submission
-            if (!laFutura.isDone()) {
-                if (!laFutura.cancel(true)) {
-                    logger.warn("abandoned runnable could not be cancelled");
-                }
-            }
-        }
+        runner.submitAndGet(
+                () -> {
+                    runnable.run();
+                    return null;
+                },
+                timeoutKey);
     }
 
     public void runLater() {
-        JEMMY_ACTION_SERVICE.execute(runnable);
+        runner.submitLater(runnable);
     }
 }
