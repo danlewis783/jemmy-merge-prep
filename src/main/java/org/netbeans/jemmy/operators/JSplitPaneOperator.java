@@ -44,7 +44,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JSplitPaneOperator extends JComponentOperator {
     private @Nullable ContainerOperator divider;
-    private final ScrollDriver driver;
 
     public static JSplitPaneOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -64,7 +63,10 @@ public class JSplitPaneOperator extends JComponentOperator {
     @Deprecated
     public JSplitPaneOperator(JSplitPane b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
+    }
+
+    private ScrollDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public static JSplitPaneOperator of(JSplitPane b) {
@@ -124,7 +126,7 @@ public class JSplitPaneOperator extends JComponentOperator {
     public void scrollTo(ScrollAdjuster adj) {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scroll(JSplitPaneOperator.this, adj);
+                    driver().scroll(JSplitPaneOperator.this, adj);
 
                     return null;
                 },
@@ -144,7 +146,7 @@ public class JSplitPaneOperator extends JComponentOperator {
     public void moveToMinimum() {
         produceTimeRestricted(
                 (Function<Void, Void>) obj -> {
-                    driver.scrollToMinimum(JSplitPaneOperator.this, getOrientation());
+                    driver().scrollToMinimum(JSplitPaneOperator.this, getOrientation());
 
                     return null;
                 },
@@ -155,7 +157,7 @@ public class JSplitPaneOperator extends JComponentOperator {
     public void moveToMaximum() {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMaximum(JSplitPaneOperator.this, getOrientation());
+                    driver().scrollToMaximum(JSplitPaneOperator.this, getOrientation());
 
                     return null;
                 },

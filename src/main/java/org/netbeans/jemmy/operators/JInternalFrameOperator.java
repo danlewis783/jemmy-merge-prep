@@ -63,14 +63,11 @@ import org.netbeans.jemmy.util.StringComparators;
 
 public class JInternalFrameOperator extends JComponentOperator {
     private @Nullable JButtonOperator closeOper;
-    private final FrameDriver fDriver;
-    private final InternalFrameDriver iDriver;
     private @Nullable JDesktopIconOperator iconOperator;
     private @Nullable JButtonOperator maxOper;
     private @Nullable JButtonOperator minOper;
     private @Nullable JButtonOperator popupButtonOper;
     private @Nullable ContainerOperator titleOperator;
-    private final WindowDriver wDriver;
 
     public static JInternalFrameOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -90,10 +87,18 @@ public class JInternalFrameOperator extends JComponentOperator {
     @Deprecated
     public JInternalFrameOperator(JInternalFrame b) {
         super(b);
-        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
-        wDriver = driverManager.getWindowDriver(getClass());
-        fDriver = driverManager.getFrameDriver(getClass());
-        iDriver = driverManager.getInternalFrameDriver(getClass());
+    }
+
+    private WindowDriver windowDriver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getWindowDriver(getClass());
+    }
+
+    private FrameDriver frameDriver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getFrameDriver(getClass());
+    }
+
+    private InternalFrameDriver internalFrameDriver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getInternalFrameDriver(getClass());
     }
 
     public static JInternalFrameOperator of(JInternalFrame b) {
@@ -166,7 +171,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     public void iconify() {
         checkIconified(false);
         makeComponentVisible();
-        fDriver.iconify(this);
+        frameDriver().iconify(this);
 
         if (getVerification()) {
             waitIcon(true);
@@ -175,7 +180,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void deiconify() {
         checkIconified(true);
-        fDriver.deiconify(this);
+        frameDriver().deiconify(this);
 
         if (getVerification()) {
             waitIcon(false);
@@ -185,7 +190,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     public void maximize() {
         checkIconified(false);
         makeComponentVisible();
-        fDriver.maximize(this);
+        frameDriver().maximize(this);
 
         if (getVerification()) {
             waitMaximum(true);
@@ -195,7 +200,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     public void demaximize() {
         checkIconified(false);
         makeComponentVisible();
-        fDriver.demaximize(this);
+        frameDriver().demaximize(this);
 
         if (getVerification()) {
             waitMaximum(false);
@@ -204,7 +209,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void move(int x, int y) {
         checkIconified(false);
-        wDriver.move(this, x, y);
+        windowDriver().move(this, x, y);
 
         if (getVerification()) {
             waitComponentLocation(new Point(x, y));
@@ -213,7 +218,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void resize(int width, int height) {
         checkIconified(false);
-        wDriver.resize(this, width, height);
+        windowDriver().resize(this, width, height);
 
         if (getVerification()) {
             waitComponentSize(new Dimension(width, height));
@@ -222,7 +227,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void activate() {
         checkIconified(false);
-        wDriver.activate(this);
+        windowDriver().activate(this);
 
         if (getVerification()) {
             waitActivate(true);
@@ -231,7 +236,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void close() {
         checkIconified(false);
-        wDriver.close(this);
+        windowDriver().close(this);
 
         if (getVerification()) {
             waitClosed();
@@ -537,7 +542,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     protected Container findTitlePane() {
-        return (Container) iDriver.getTitlePane(this);
+        return (Container) internalFrameDriver().getTitlePane(this);
     }
 
     protected void initOperators() {

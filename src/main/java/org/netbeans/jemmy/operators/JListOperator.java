@@ -58,7 +58,6 @@ import org.slf4j.LoggerFactory;
 
 public class JListOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JListOperator.class);
-    private final MultiSelListDriver driver;
 
     public static JListOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -78,7 +77,10 @@ public class JListOperator extends JComponentOperator {
     @Deprecated
     public JListOperator(JList<?> b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
+    }
+
+    private MultiSelListDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
 
     public static JListOperator of(JList<?> b) {
@@ -307,7 +309,7 @@ public class JListOperator extends JComponentOperator {
 
     public void selectItem(int index) {
         checkIndex(index);
-        driver.selectItem(this, index);
+        driver().selectItem(this, index);
 
         if (getVerification()) {
             waitItemSelection(index, true);
@@ -316,12 +318,12 @@ public class JListOperator extends JComponentOperator {
 
     public void selectItem(String item, StringComparator stringComparator) {
         scrollToItem(findItemIndex(item, stringComparator));
-        queueTool.runOnQueue(() -> driver.selectItem(JListOperator.this, findItemIndex(item, stringComparator)));
+        queueTool.runOnQueue(() -> driver().selectItem(JListOperator.this, findItemIndex(item, stringComparator)));
     }
 
     public void selectItems(int[] indices) {
         checkIndices(indices);
-        driver.selectItems(this, indices);
+        driver().selectItems(this, indices);
 
         if (getVerification()) {
             waitItemsSelection(indices, true);

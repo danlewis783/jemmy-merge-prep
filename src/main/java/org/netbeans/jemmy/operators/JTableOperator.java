@@ -62,7 +62,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTableOperator extends JComponentOperator {
-    private final TableDriver driver;
 
     public static JTableOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -82,7 +81,10 @@ public class JTableOperator extends JComponentOperator {
     @Deprecated
     public JTableOperator(JTable b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getTableDriver(getClass());
+    }
+
+    private TableDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getTableDriver(getClass());
     }
 
     public static JTableOperator of(JTable b) {
@@ -345,7 +347,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public void changeCellObject(int row, int column, Object newValue) {
-        driver.editCell(this, row, column, newValue);
+        driver().editCell(this, row, column, newValue);
     }
 
     public void scrollToCell(int row, int column) {
@@ -363,7 +365,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public void selectCell(int row, int column) {
-        driver.selectCell(this, row, column);
+        driver().selectCell(this, row, column);
     }
 
     public int findColumn(String name, StringComparator comparator) {

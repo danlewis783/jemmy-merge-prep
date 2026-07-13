@@ -41,7 +41,6 @@ import org.netbeans.jemmy.predicates.ListByItemPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class ListOperator extends ComponentOperator {
-    private final MultiSelListDriver driver;
 
     public static ListOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -61,7 +60,10 @@ public class ListOperator extends ComponentOperator {
     @Deprecated
     public ListOperator(List b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
+    }
+
+    private MultiSelListDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getMultiSelListDriver(getClass());
     }
 
     public static ListOperator of(List b) {
@@ -164,7 +166,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void selectItem(int index) {
-        driver.selectItem(this, index);
+        driver().selectItem(this, index);
 
         if (getVerification()) {
             waitItemSelection(index, true);
@@ -172,7 +174,7 @@ public class ListOperator extends ComponentOperator {
     }
 
     public void selectItems(int from, int to) {
-        driver.selectItems(this, new int[] {from, to});
+        driver().selectItems(this, new int[] {from, to});
 
         if (getVerification()) {
             waitItemsSelection(from, to, true);

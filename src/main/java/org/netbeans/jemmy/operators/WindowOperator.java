@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 
 public class WindowOperator extends ContainerOperator {
     private static final Logger logger = LoggerFactory.getLogger(WindowOperator.class);
-    private final WindowDriver driver;
 
     public static WindowOperator waitFor() {
         return waitFor(0);
@@ -79,8 +78,10 @@ public class WindowOperator extends ContainerOperator {
     @Deprecated
     public WindowOperator(Window w) {
         super(w);
-        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
-        driver = driverManager.getWindowDriver(getClass());
+    }
+
+    private WindowDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getWindowDriver(getClass());
     }
 
     public static WindowOperator of(Window w) {
@@ -136,15 +137,15 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void activate() {
-        driver.activate(this);
+        driver().activate(this);
     }
 
     public void requestClose() {
-        driver.requestClose(this);
+        driver().requestClose(this);
     }
 
     public void requestCloseAndThenHide() {
-        driver.requestCloseAndThenHide(this);
+        driver().requestCloseAndThenHide(this);
 
         if (getVerification()) {
             waitClosed();
@@ -153,7 +154,7 @@ public class WindowOperator extends ContainerOperator {
 
     @Deprecated
     public void close() {
-        driver.close(this);
+        driver().close(this);
 
         if (getVerification()) {
             waitClosed();
@@ -161,11 +162,11 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void move(int x, int y) {
-        driver.move(this, x, y);
+        driver().move(this, x, y);
     }
 
     public void resize(int width, int height) {
-        driver.resize(this, width, height);
+        driver().resize(this, width, height);
     }
 
     public @Nullable Window findSubWindow(Predicate<Component> predicate, int index) {

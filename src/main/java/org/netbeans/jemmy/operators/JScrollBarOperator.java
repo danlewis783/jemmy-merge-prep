@@ -46,7 +46,6 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JScrollBarOperator extends JComponentOperator {
-    private final ScrollDriver driver;
     private @Nullable JButtonOperator maxButtOperator;
     private @Nullable JButtonOperator minButtOperator;
 
@@ -68,7 +67,10 @@ public class JScrollBarOperator extends JComponentOperator {
     @Deprecated
     public JScrollBarOperator(JScrollBar b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
+    }
+
+    private ScrollDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public static JScrollBarOperator of(JScrollBar b) {
@@ -130,7 +132,7 @@ public class JScrollBarOperator extends JComponentOperator {
         initOperators();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scroll(JScrollBarOperator.this, adj);
+                    driver().scroll(JScrollBarOperator.this, adj);
 
                     return null;
                 },
@@ -151,7 +153,7 @@ public class JScrollBarOperator extends JComponentOperator {
         initOperators();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMinimum(JScrollBarOperator.this, getOrientation());
+                    driver().scrollToMinimum(JScrollBarOperator.this, getOrientation());
 
                     return null;
                 },
@@ -163,7 +165,7 @@ public class JScrollBarOperator extends JComponentOperator {
         initOperators();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMaximum(JScrollBarOperator.this, getOrientation());
+                    driver().scrollToMaximum(JScrollBarOperator.this, getOrientation());
 
                     return null;
                 },

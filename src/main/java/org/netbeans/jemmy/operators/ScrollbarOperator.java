@@ -40,7 +40,6 @@ import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public class ScrollbarOperator extends ComponentOperator {
-    private final ScrollDriver driver;
 
     public static ScrollbarOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -60,7 +59,10 @@ public class ScrollbarOperator extends ComponentOperator {
     @Deprecated
     public ScrollbarOperator(Scrollbar b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
+    }
+
+    private ScrollDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public static ScrollbarOperator of(Scrollbar b) {
@@ -110,7 +112,7 @@ public class ScrollbarOperator extends ComponentOperator {
 
     public void scrollTo(ScrollAdjuster adj) {
         runTimeRestricted(
-                () -> driver.scroll(ScrollbarOperator.this, adj), TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
+                () -> driver().scroll(ScrollbarOperator.this, adj), TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToValue(int value) {
@@ -124,13 +126,13 @@ public class ScrollbarOperator extends ComponentOperator {
 
     public void scrollToMinimum() {
         runTimeRestricted(
-                () -> driver.scrollToMinimum(ScrollbarOperator.this, getOrientation()),
+                () -> driver().scrollToMinimum(ScrollbarOperator.this, getOrientation()),
                 TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
         runTimeRestricted(
-                () -> driver.scrollToMaximum(ScrollbarOperator.this, getOrientation()),
+                () -> driver().scrollToMaximum(ScrollbarOperator.this, getOrientation()),
                 TimeoutKey.ScrollbarOperator_WholeScrollTimeout);
     }
 

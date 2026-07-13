@@ -46,7 +46,6 @@ import org.netbeans.jemmy.predicates.JMenuByLabelPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuOperator extends JMenuItemOperator {
-    private final MenuDriver driver;
 
     public static JMenuOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -66,7 +65,10 @@ public class JMenuOperator extends JMenuItemOperator {
     @Deprecated
     public JMenuOperator(JMenu menu) {
         super(menu);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(this);
+    }
+
+    private MenuDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(this);
     }
 
     public static JMenuOperator of(JMenu menu) {
@@ -136,12 +138,12 @@ public class JMenuOperator extends JMenuItemOperator {
 
     public @Nullable JMenuItem pushMenu(List<Predicate<Component>> predicates) {
         return supplyTimeRestricted(
-                () -> (JMenuItem) driver.pushMenu(JMenuOperator.this, predicates),
+                () -> (JMenuItem) driver().pushMenu(JMenuOperator.this, predicates),
                 TimeoutKey.JMenuOperator_PushMenuTimeout);
     }
 
     public void pushMenuNoBlock(List<Predicate<Component>> predicates) {
-        produceNoBlocking((Function<Void, MenuElement>) v -> driver.pushMenu(JMenuOperator.this, predicates), null);
+        produceNoBlocking((Function<Void, MenuElement>) v -> driver().pushMenu(JMenuOperator.this, predicates), null);
     }
 
     public @Nullable JMenuItem pushMenu(String[] names, StringComparator comparator) {

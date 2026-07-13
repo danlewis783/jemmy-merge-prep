@@ -55,8 +55,6 @@ public class ScrollPaneOperator extends ContainerOperator {
         }
     }
 
-    private final ScrollDriver driver;
-
     public static ScrollPaneOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
     }
@@ -75,7 +73,10 @@ public class ScrollPaneOperator extends ContainerOperator {
     @Deprecated
     public ScrollPaneOperator(ScrollPane b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
+    }
+
+    private ScrollDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public static ScrollPaneOperator of(ScrollPane b) {
@@ -128,7 +129,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     public void scrollTo(ScrollAdjuster adj) {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scroll(ScrollPaneOperator.this, adj);
+                    driver().scroll(ScrollPaneOperator.this, adj);
 
                     return null;
                 },
@@ -175,7 +176,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     public void scrollToTop() {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.VERTICAL);
+                    driver().scrollToMinimum(ScrollPaneOperator.this, Adjustable.VERTICAL);
 
                     return null;
                 },
@@ -186,7 +187,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     public void scrollToBottom() {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.VERTICAL);
+                    driver().scrollToMaximum(ScrollPaneOperator.this, Adjustable.VERTICAL);
 
                     return null;
                 },
@@ -197,7 +198,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     public void scrollToLeft() {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMinimum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
+                    driver().scrollToMinimum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
 
                     return null;
                 },
@@ -208,7 +209,7 @@ public class ScrollPaneOperator extends ContainerOperator {
     public void scrollToRight() {
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scrollToMaximum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
+                    driver().scrollToMaximum(ScrollPaneOperator.this, Adjustable.HORIZONTAL);
 
                     return null;
                 },

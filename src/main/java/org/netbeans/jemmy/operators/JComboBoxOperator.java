@@ -56,7 +56,6 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JComboBoxOperator extends JComponentOperator {
     private @Nullable JButtonOperator button;
-    private final ListDriver driver;
     private @Nullable JTextFieldOperator text;
 
     public static JComboBoxOperator waitFor(ContainerOperator cont) {
@@ -77,7 +76,10 @@ public class JComboBoxOperator extends JComponentOperator {
     @Deprecated
     public JComboBoxOperator(JComboBox<?> b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
+    }
+
+    private ListDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
     public static JComboBoxOperator of(JComboBox<?> b) {
@@ -217,7 +219,7 @@ public class JComboBoxOperator extends JComponentOperator {
     public void selectItem(int index) {
         waitComponentEnabled();
 
-        driver.selectItem(this, waitItem(index));
+        driver().selectItem(this, waitItem(index));
 
         if (getVerification()) {
             waitItemSelected(index);

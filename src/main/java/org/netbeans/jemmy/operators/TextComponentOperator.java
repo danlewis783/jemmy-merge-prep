@@ -41,7 +41,6 @@ import org.netbeans.jemmy.predicates.TextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class TextComponentOperator extends ComponentOperator {
-    private final TextDriver driver;
 
     public static TextComponentOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -61,7 +60,10 @@ public class TextComponentOperator extends ComponentOperator {
     @Deprecated
     public TextComponentOperator(TextComponent b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
+    }
+
+    private TextDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
     }
 
     public static TextComponentOperator of(TextComponent b) {
@@ -137,7 +139,7 @@ public class TextComponentOperator extends ComponentOperator {
         makeComponentVisible();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.changeCaretPosition(TextComponentOperator.this, position);
+                    driver().changeCaretPosition(TextComponentOperator.this, position);
 
                     return null;
                 },
@@ -149,7 +151,7 @@ public class TextComponentOperator extends ComponentOperator {
         makeComponentVisible();
         produceTimeRestricted(
                 (Function<Void, Void>) obj -> {
-                    driver.selectText(TextComponentOperator.this, startPosition, finalPosition);
+                    driver().selectText(TextComponentOperator.this, startPosition, finalPosition);
 
                     return null;
                 },
@@ -182,7 +184,7 @@ public class TextComponentOperator extends ComponentOperator {
         makeComponentVisible();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.clearText(TextComponentOperator.this);
+                    driver().clearText(TextComponentOperator.this);
 
                     return null;
                 },
@@ -194,7 +196,7 @@ public class TextComponentOperator extends ComponentOperator {
         makeComponentVisible();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.typeText(TextComponentOperator.this, text, caretPosition);
+                    driver().typeText(TextComponentOperator.this, text, caretPosition);
 
                     return null;
                 },
@@ -210,7 +212,7 @@ public class TextComponentOperator extends ComponentOperator {
         makeComponentVisible();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.enterText(TextComponentOperator.this, text);
+                    driver().enterText(TextComponentOperator.this, text);
 
                     return null;
                 },
@@ -297,7 +299,7 @@ public class TextComponentOperator extends ComponentOperator {
     }
 
     protected TextDriver getTextDriver() {
-        return driver;
+        return driver();
     }
 
     public static @Nullable TextComponent findTextComponent(Container cont, Predicate<Component> chooser, int index) {

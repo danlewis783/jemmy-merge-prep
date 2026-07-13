@@ -39,15 +39,16 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class ChoiceOperator extends ComponentOperator {
-    private final ListDriver driver;
-
     /**
      * @deprecated Use {@link #of(Choice)} instead.
      */
     @Deprecated
     public ChoiceOperator(Choice b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
+    }
+
+    private ListDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
     public static ChoiceOperator of(Choice b) {
@@ -149,7 +150,7 @@ public class ChoiceOperator extends ComponentOperator {
 
         waitComponentEnabled();
 
-        driver.selectItem(this, index);
+        driver().selectItem(this, index);
 
         if (getVerification()) {
             waitItemSelected(index);

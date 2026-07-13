@@ -44,7 +44,6 @@ import org.netbeans.jemmy.predicates.JTabbedPaneByItemPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTabbedPaneOperator extends JComponentOperator {
-    private final ListDriver driver;
 
     public static JTabbedPaneOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -64,7 +63,10 @@ public class JTabbedPaneOperator extends JComponentOperator {
     @Deprecated
     public JTabbedPaneOperator(JTabbedPane b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
+    }
+
+    private ListDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getListDriver(getClass());
     }
 
     public static JTabbedPaneOperator of(JTabbedPane b) {
@@ -167,7 +169,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
 
     public Component selectPage(int index) {
         makeComponentVisible();
-        driver.selectItem(this, index);
+        driver().selectItem(this, index);
 
         if (getVerification()) {
             waitSelected(index);

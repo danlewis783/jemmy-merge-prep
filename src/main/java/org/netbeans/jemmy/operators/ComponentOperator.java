@@ -91,9 +91,6 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
  */
 public class ComponentOperator extends Operator {
     private final EventDispatcher dispatcher;
-    private final FocusDriver fDriver;
-    private final KeyDriver kDriver;
-    private final MouseDriver mDriver;
     private final Component source;
 
     /**
@@ -102,12 +99,19 @@ public class ComponentOperator extends Operator {
     @Deprecated
     public ComponentOperator(Component source) {
         this.source = Objects.requireNonNull(source, "source");
-        DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
-        kDriver = driverManager.getKeyDriver(getClass());
-        mDriver = driverManager.getMouseDriver(getClass());
-        fDriver = driverManager.getFocusDriver(getClass());
         this.dispatcher = new EventDispatcher(source);
-        this.dispatcher.robotSetAutoDelay();
+    }
+
+    private KeyDriver keyDriver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getKeyDriver(getClass());
+    }
+
+    private MouseDriver mouseDriver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(getClass());
+    }
+
+    private FocusDriver focusDriver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getFocusDriver(getClass());
     }
 
     public static ComponentOperator of(Component source) {
@@ -172,14 +176,15 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers, boolean forPopup) {
-        queueTool.runOnQueue(() -> mDriver.clickMouse(
-                ComponentOperator.this,
-                x,
-                y,
-                clickCount,
-                mouseButton,
-                modifiers,
-                TimeoutKey.ComponentOperator_MouseClickTimeout));
+        queueTool.runOnQueue(() -> mouseDriver()
+                .clickMouse(
+                        ComponentOperator.this,
+                        x,
+                        y,
+                        clickCount,
+                        mouseButton,
+                        modifiers,
+                        TimeoutKey.ComponentOperator_MouseClickTimeout));
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers) {
@@ -195,19 +200,19 @@ public class ComponentOperator extends Operator {
     }
 
     public void pressMouse(int x, int y) {
-        mDriver.pressMouse(this, x, y, getDefaultMouseButton(), 0);
+        mouseDriver().pressMouse(this, x, y, getDefaultMouseButton(), 0);
     }
 
     public void releaseMouse(int x, int y) {
-        mDriver.releaseMouse(this, x, y, getDefaultMouseButton(), 0);
+        mouseDriver().releaseMouse(this, x, y, getDefaultMouseButton(), 0);
     }
 
     public void moveMouse(int x, int y) {
-        mDriver.moveMouse(this, x, y);
+        mouseDriver().moveMouse(this, x, y);
     }
 
     public void dragMouse(int x, int y, int mouseButton, int modifiers) {
-        mDriver.dragMouse(this, x, y, mouseButton, modifiers);
+        mouseDriver().dragMouse(this, x, y, mouseButton, modifiers);
     }
 
     public void dragMouse(int x, int y, int mouseButton) {
@@ -219,16 +224,17 @@ public class ComponentOperator extends Operator {
     }
 
     public void dragNDrop(int startX, int startY, int endX, int endY, int mouseButton, int modifiers) {
-        mDriver.dragNDrop(
-                this,
-                startX,
-                startY,
-                endX,
-                endY,
-                mouseButton,
-                modifiers,
-                TimeoutKey.ComponentOperator_BeforeDragTimeout,
-                TimeoutKey.ComponentOperator_AfterDragTimeout);
+        mouseDriver()
+                .dragNDrop(
+                        this,
+                        startX,
+                        startY,
+                        endX,
+                        endY,
+                        mouseButton,
+                        modifiers,
+                        TimeoutKey.ComponentOperator_BeforeDragTimeout,
+                        TimeoutKey.ComponentOperator_AfterDragTimeout);
     }
 
     public void dragNDrop(int startX, int startY, int endX, int endY, int mouseButton) {
@@ -261,11 +267,11 @@ public class ComponentOperator extends Operator {
     }
 
     public void enterMouse() {
-        mDriver.enterMouse(this);
+        mouseDriver().enterMouse(this);
     }
 
     public void exitMouse() {
-        mDriver.exitMouse(this);
+        mouseDriver().exitMouse(this);
     }
 
     public void pressMouse() {
@@ -285,7 +291,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void pressKey(int keyCode, int modifiers) {
-        kDriver.pressKey(this, keyCode, modifiers);
+        keyDriver().pressKey(this, keyCode, modifiers);
     }
 
     public void pressKey(int keyCode) {
@@ -293,7 +299,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void releaseKey(int keyCode, int modifiers) {
-        kDriver.releaseKey(this, keyCode, modifiers);
+        keyDriver().releaseKey(this, keyCode, modifiers);
     }
 
     public void releaseKey(int keyCode) {
@@ -301,7 +307,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void pushKey(int keyCode, int modifiers) {
-        kDriver.pushKey(this, keyCode, modifiers, TimeoutKey.ComponentOperator_PushKeyTimeout);
+        keyDriver().pushKey(this, keyCode, modifiers, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
 
     public void pushKey(int keyCode) {
@@ -309,7 +315,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void typeKey(int keyCode, char keyChar, int modifiers) {
-        kDriver.typeKey(this, keyCode, keyChar, modifiers, TimeoutKey.ComponentOperator_PushKeyTimeout);
+        keyDriver().typeKey(this, keyCode, keyChar, modifiers, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
 
     public void typeKey(char keyChar, int modifiers) {
@@ -330,7 +336,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void getFocus() {
-        fDriver.giveFocus(this);
+        focusDriver().giveFocus(this);
     }
 
     public int getCenterX() {

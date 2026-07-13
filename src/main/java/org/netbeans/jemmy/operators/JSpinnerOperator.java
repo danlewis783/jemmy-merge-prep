@@ -56,7 +56,6 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JSpinnerOperator extends JComponentOperator {
     private @Nullable JButtonOperator decreaseOperator = null;
     private @Nullable JButtonOperator increaseOperator = null;
-    private final ScrollDriver driver;
 
     public static JSpinnerOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -76,7 +75,10 @@ public class JSpinnerOperator extends JComponentOperator {
     @Deprecated
     public JSpinnerOperator(JSpinner b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
+    }
+
+    private ScrollDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public static JSpinnerOperator of(JSpinner b) {
@@ -148,18 +150,18 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public void scrollTo(ScrollAdjuster adj) {
         runTimeRestricted(
-                () -> driver.scroll(JSpinnerOperator.this, adj), TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
+                () -> driver().scroll(JSpinnerOperator.this, adj), TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
         runTimeRestricted(
-                () -> driver.scrollToMaximum(JSpinnerOperator.this, SwingConstants.VERTICAL),
+                () -> driver().scrollToMaximum(JSpinnerOperator.this, SwingConstants.VERTICAL),
                 TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 
     public void scrollToMinimum() {
         runTimeRestricted(
-                () -> driver.scrollToMinimum(JSpinnerOperator.this, SwingConstants.VERTICAL),
+                () -> driver().scrollToMinimum(JSpinnerOperator.this, SwingConstants.VERTICAL),
                 TimeoutKey.JSpinnerOperator_WholeScrollTimeout);
     }
 

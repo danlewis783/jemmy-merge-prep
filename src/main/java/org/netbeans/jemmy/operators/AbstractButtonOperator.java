@@ -47,15 +47,16 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class AbstractButtonOperator extends JComponentOperator {
-    private final ButtonDriver driver;
-
     /**
      * @deprecated Use {@link #of(AbstractButton)} instead.
      */
     @Deprecated
     public AbstractButtonOperator(AbstractButton b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
+    }
+
+    private ButtonDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
     }
 
     public static AbstractButtonOperator of(AbstractButton b) {
@@ -149,7 +150,7 @@ public class AbstractButtonOperator extends JComponentOperator {
 
         waitComponentEnabled();
 
-        driver.push(this);
+        driver().push(this);
     }
 
     public void pushNoBlock() {
@@ -181,13 +182,13 @@ public class AbstractButtonOperator extends JComponentOperator {
 
         waitComponentEnabled();
 
-        driver.press(this);
+        driver().press(this);
     }
 
     public void release() {
         waitComponentEnabled();
 
-        driver.release(this);
+        driver().release(this);
     }
 
     public void waitSelected(boolean selected) {

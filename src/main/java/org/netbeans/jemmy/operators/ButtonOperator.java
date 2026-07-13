@@ -40,15 +40,16 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class ButtonOperator extends ComponentOperator {
-    private final ButtonDriver driver;
-
     /**
      * @deprecated Use {@link #of(Button)} instead.
      */
     @Deprecated
     public ButtonOperator(Button b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
+    }
+
+    private ButtonDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
     }
 
     public static ButtonOperator of(Button b) {
@@ -130,7 +131,7 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public void push() {
-        driver.push(this);
+        driver().push(this);
     }
 
     public void pushNoBlock() {
@@ -144,11 +145,11 @@ public class ButtonOperator extends ComponentOperator {
     }
 
     public void press() {
-        driver.press(this);
+        driver().press(this);
     }
 
     public void release() {
-        driver.press(this);
+        driver().press(this);
     }
 
     public void addActionListener(ActionListener actionListener) {

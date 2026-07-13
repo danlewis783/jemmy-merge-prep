@@ -45,7 +45,6 @@ import org.netbeans.jemmy.drivers.OrderedListDriver;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 
 public class JTableHeaderOperator extends JComponentOperator {
-    private final OrderedListDriver driver;
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -65,7 +64,10 @@ public class JTableHeaderOperator extends JComponentOperator {
     @Deprecated
     public JTableHeaderOperator(JTableHeader b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getOrderedListDriver(getClass());
+    }
+
+    private OrderedListDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getOrderedListDriver(getClass());
     }
 
     public static JTableHeaderOperator of(JTableHeader b) {
@@ -111,15 +113,15 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void selectColumn(int columnIndex) {
-        driver.selectItem(this, columnIndex);
+        driver().selectItem(this, columnIndex);
     }
 
     public void selectColumns(int[] columnIndices) {
-        driver.selectItems(this, columnIndices);
+        driver().selectItems(this, columnIndices);
     }
 
     public void moveColumn(int moveColumn, int moveTo) {
-        driver.moveItem(this, moveColumn, moveTo);
+        driver().moveItem(this, moveColumn, moveTo);
     }
 
     public Point getPointToClick(int columnIndex) {

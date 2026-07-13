@@ -41,15 +41,16 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class CheckboxOperator extends ComponentOperator {
-    private final ButtonDriver driver;
-
     /**
      * @deprecated Use {@link #of(Checkbox)} instead.
      */
     @Deprecated
     public CheckboxOperator(Checkbox b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
+    }
+
+    private ButtonDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(getClass());
     }
 
     public static CheckboxOperator of(Checkbox b) {
@@ -137,7 +138,7 @@ public class CheckboxOperator extends ComponentOperator {
         if (getState() != newValue) {
             waitComponentEnabled();
 
-            driver.push(this);
+            driver().push(this);
 
             if (getVerification()) {
                 waitSelected(newValue);

@@ -55,7 +55,6 @@ import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuBarOperator extends JComponentOperator {
-    private final MenuDriver driver;
 
     public static JMenuBarOperator waitFor(ContainerOperator cont) {
         return new JMenuBarOperator((JMenuBar) waitComponent(cont, ComponentPredicates.of(JMenuBar.class), 0));
@@ -75,7 +74,10 @@ public class JMenuBarOperator extends JComponentOperator {
     @Deprecated
     public JMenuBarOperator(JMenuBar b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
+    }
+
+    private MenuDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getMenuDriver(getClass());
     }
 
     public static JMenuBarOperator of(JMenuBar b) {
@@ -111,13 +113,14 @@ public class JMenuBarOperator extends JComponentOperator {
         makeComponentVisible();
 
         return supplyTimeRestricted(
-                () -> (JMenuItem) driver.pushMenu(JMenuBarOperator.this, predicates),
+                () -> (JMenuItem) driver().pushMenu(JMenuBarOperator.this, predicates),
                 TimeoutKey.JMenuOperator_PushMenuTimeout);
     }
 
     public void pushMenuNoBlock(List<Predicate<Component>> predicates) {
         makeComponentVisible();
-        produceNoBlocking((Function<Void, MenuElement>) v -> driver.pushMenu(JMenuBarOperator.this, predicates), null);
+        produceNoBlocking(
+                (Function<Void, MenuElement>) v -> driver().pushMenu(JMenuBarOperator.this, predicates), null);
     }
 
     public @Nullable JMenuItem pushMenu(String[] names, StringComparator comparator) {

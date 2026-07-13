@@ -51,7 +51,6 @@ public class JSliderOperator extends JComponentOperator {
     public static final int PUSH_AND_WAIT_SCROLL_MODEL = 2;
 
     private int scrollModel = CLICK_SCROLL_MODEL;
-    private final ScrollDriver driver;
 
     public static JSliderOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -71,7 +70,10 @@ public class JSliderOperator extends JComponentOperator {
     @Deprecated
     public JSliderOperator(JSlider b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
+    }
+
+    private ScrollDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getScrollDriver(getClass());
     }
 
     public static JSliderOperator of(JSlider b) {
@@ -129,7 +131,7 @@ public class JSliderOperator extends JComponentOperator {
         makeComponentVisible();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.scroll(JSliderOperator.this, adj);
+                    driver().scroll(JSliderOperator.this, adj);
 
                     return null;
                 },

@@ -43,8 +43,6 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
 public class FrameOperator extends WindowOperator {
-    private final FrameDriver driver;
-
     public static FrameOperator waitFor() {
         return waitFor(0);
     }
@@ -63,7 +61,10 @@ public class FrameOperator extends WindowOperator {
     @Deprecated
     public FrameOperator(Frame w) {
         super(w);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getFrameDriver(getClass());
+    }
+
+    private FrameDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getFrameDriver(getClass());
     }
 
     public static FrameOperator of(Frame w) {
@@ -135,7 +136,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void iconify() {
-        driver.iconify(this);
+        driver().iconify(this);
 
         if (getVerification()) {
             waitState(Frame.ICONIFIED);
@@ -143,7 +144,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void deiconify() {
-        driver.deiconify(this);
+        driver().deiconify(this);
 
         if (getVerification()) {
             waitState(Frame.NORMAL);
@@ -151,7 +152,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void maximize() {
-        driver.maximize(this);
+        driver().maximize(this);
 
         if (getVerification()) {
             waitExtendedState(Frame.MAXIMIZED_BOTH);
@@ -159,7 +160,7 @@ public class FrameOperator extends WindowOperator {
     }
 
     public void demaximize() {
-        driver.demaximize(this);
+        driver().demaximize(this);
 
         if (getVerification()) {
             waitExtendedState(Frame.NORMAL);

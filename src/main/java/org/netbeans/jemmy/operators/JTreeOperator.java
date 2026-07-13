@@ -63,7 +63,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTreeOperator extends JComponentOperator {
-    private final TreeDriver driver;
 
     public static JTreeOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -83,7 +82,10 @@ public class JTreeOperator extends JComponentOperator {
     @Deprecated
     public JTreeOperator(JTree b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getTreeDriver(getClass());
+    }
+
+    private TreeDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getTreeDriver(getClass());
     }
 
     public static JTreeOperator of(JTree b) {
@@ -167,7 +169,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public void doExpandPath(TreePath path) {
         if (path != null) {
-            driver.expandItem(this, getRowForPath(path));
+            driver().expandItem(this, getRowForPath(path));
             waitExpanded(path);
         } else {
             throw new NoSuchPathException();
@@ -175,7 +177,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void doExpandRow(int row) {
-        driver.expandItem(this, row);
+        driver().expandItem(this, row);
         waitExpanded(row);
     }
 
@@ -330,7 +332,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public void doCollapsePath(@Nullable TreePath path) {
         if (path != null) {
-            driver.collapseItem(this, getRowForPath(path));
+            driver().collapseItem(this, getRowForPath(path));
 
             if (getVerification()) {
                 waitCollapsed(path);
@@ -341,7 +343,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void doCollapseRow(int row) {
-        driver.collapseItem(this, row);
+        driver().collapseItem(this, row);
 
         if (getVerification()) {
             waitCollapsed(row);
@@ -351,7 +353,7 @@ public class JTreeOperator extends JComponentOperator {
     public void selectPath(TreePath path) {
         if (path != null) {
             scrollToPath(path);
-            queueTool.runOnQueue(() -> driver.selectItem(JTreeOperator.this, getRowForPath(path)));
+            queueTool.runOnQueue(() -> driver().selectItem(JTreeOperator.this, getRowForPath(path)));
 
             if (getVerification()) {
                 waitSelected(path);
@@ -362,7 +364,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void selectRow(int row) {
-        driver.selectItem(this, row);
+        driver().selectItem(this, row);
 
         if (getVerification()) {
             waitSelected(row);
@@ -375,7 +377,7 @@ public class JTreeOperator extends JComponentOperator {
             rows[i] = getRowForPath(paths[i]);
         }
 
-        driver.selectItems(this, rows);
+        driver().selectItems(this, rows);
 
         if (getVerification()) {
             waitSelected(paths);
@@ -495,7 +497,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void clickForEdit(TreePath path) {
-        driver.startEditing(this, getRowForPath(path), TimeoutKey.JTreeOperator_WaitEditingTimeout);
+        driver().startEditing(this, getRowForPath(path), TimeoutKey.JTreeOperator_WaitEditingTimeout);
     }
 
     public Component getRenderedComponent(TreePath path, boolean isSelected, boolean isExpanded, boolean cellHasFocus) {
@@ -525,7 +527,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public void changePathObject(TreePath path, Object newValue) {
         scrollToPath(path);
-        driver.editItem(this, getRowForPath(path), newValue, TimeoutKey.JTreeOperator_WaitEditingTimeout);
+        driver().editItem(this, getRowForPath(path), newValue, TimeoutKey.JTreeOperator_WaitEditingTimeout);
     }
 
     public void waitExpanded(TreePath path) {

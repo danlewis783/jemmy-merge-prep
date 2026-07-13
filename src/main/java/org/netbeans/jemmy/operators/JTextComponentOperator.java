@@ -60,7 +60,6 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTextComponentOperator extends JComponentOperator {
-    private final TextDriver driver;
 
     public static JTextComponentOperator waitFor(ContainerOperator cont) {
         return waitFor(cont, 0);
@@ -80,7 +79,10 @@ public class JTextComponentOperator extends JComponentOperator {
     @Deprecated
     public JTextComponentOperator(JTextComponent b) {
         super(b);
-        driver = DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
+    }
+
+    private TextDriver driver() {
+        return DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(getClass());
     }
 
     public static JTextComponentOperator of(JTextComponent b) {
@@ -207,7 +209,7 @@ public class JTextComponentOperator extends JComponentOperator {
         requestFocus();
         produceTimeRestricted(
                 (Function<Void, Void>) v -> {
-                    driver.enterText(JTextComponentOperator.this, text);
+                    driver().enterText(JTextComponentOperator.this, text);
 
                     return null;
                 },
@@ -218,7 +220,7 @@ public class JTextComponentOperator extends JComponentOperator {
     public void changeCaretPosition(int position) {
         makeComponentVisible();
         runTimeRestricted(
-                () -> driver.changeCaretPosition(JTextComponentOperator.this, position),
+                () -> driver().changeCaretPosition(JTextComponentOperator.this, position),
                 TimeoutKey.JTextComponentOperator_ChangeCaretPositionTimeout);
         if (getVerification()) {
             waitCaretPosition(position);
@@ -243,7 +245,7 @@ public class JTextComponentOperator extends JComponentOperator {
     public void typeText(String text, int caretPosition) {
         makeComponentVisible();
         runTimeRestricted(
-                () -> driver.typeText(JTextComponentOperator.this, text, caretPosition),
+                () -> driver().typeText(JTextComponentOperator.this, text, caretPosition),
                 TimeoutKey.JTextComponentOperator_TypeTextTimeout);
         if (getVerification()) {
             waitText(text, -1);
@@ -257,7 +259,7 @@ public class JTextComponentOperator extends JComponentOperator {
     public void selectText(int startPosition, int finalPosition) {
         makeComponentVisible();
         runTimeRestricted(
-                () -> driver.selectText(JTextComponentOperator.this, startPosition, finalPosition),
+                () -> driver().selectText(JTextComponentOperator.this, startPosition, finalPosition),
                 TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
@@ -278,7 +280,8 @@ public class JTextComponentOperator extends JComponentOperator {
     public void clearText() {
         makeComponentVisible();
         runTimeRestricted(
-                () -> driver.clearText(JTextComponentOperator.this), TimeoutKey.JTextComponentOperator_TypeTextTimeout);
+                () -> driver().clearText(JTextComponentOperator.this),
+                TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 
     public void scrollToPosition(int position) {
