@@ -24,11 +24,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Adapts a {@link Callable} so that it can be run through the Swing Event Queue.
+ * Adapts a {@link Callable} so that it can be run through the Swing Event Queue: a runnable
+ * whose start and completion can be awaited, and which captures rather than throws any
+ * exception raised by the work.
  *
  * @param <R> the type to be returned from the callable
  */
-final class Caller<R> implements QueueCaller {
+final class Caller<R> implements Runnable {
     private final Callable<R> callable;
     private final CountDownLatch endGate;
     private final AtomicReference<@Nullable Exception> exception;
@@ -71,13 +73,11 @@ final class Caller<R> implements QueueCaller {
         }
     }
 
-    @Override
-    public CountDownLatch getStartGate() {
+    CountDownLatch getStartGate() {
         return startGate;
     }
 
-    @Override
-    public CountDownLatch getEndGate() {
+    CountDownLatch getEndGate() {
         return endGate;
     }
 
@@ -86,8 +86,8 @@ final class Caller<R> implements QueueCaller {
         return result.get();
     }
 
-    @Override
-    public @Nullable Exception getException() {
+    @Nullable
+    Exception getException() {
         return exception.get();
     }
 

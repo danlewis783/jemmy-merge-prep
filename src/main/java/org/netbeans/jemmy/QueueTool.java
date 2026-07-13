@@ -128,7 +128,10 @@ public final class QueueTool {
             return;
         }
 
-        dispatchAndAwait(VoidCaller.of(runnable));
+        dispatchAndAwait(Caller.of(() -> {
+            runnable.run();
+            return null;
+        }));
     }
 
     // the result's nullness follows the Caller's type argument,
@@ -139,7 +142,7 @@ public final class QueueTool {
         return caller.getResult();
     }
 
-    private void dispatchAndAwait(QueueCaller caller) {
+    private void dispatchAndAwait(Caller<?> caller) {
         if (EventQueue.isDispatchThread()) {
             throw new Error("Cannot dispatch and await from the event dispatcher thread");
         }
