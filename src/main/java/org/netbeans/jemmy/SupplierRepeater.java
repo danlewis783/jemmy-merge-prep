@@ -16,23 +16,23 @@
  */
 package org.netbeans.jemmy;
 
-import java.awt.*;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jspecify.annotations.Nullable;
 
+/**
+ * Polls a {@link Supplier} until it produces a non-null value; see {@link Repeater} for the
+ * loop, guard, and timeout semantics shared by all repeaters.
+ */
 public final class SupplierRepeater<R> {
-    private static final String NO_WAITING_ALLOWED_ON_EDT = "no waiting allowed on EDT";
-    private static final Logger logger = LoggerFactory.getLogger(SupplierRepeater.class);
     private final Supplier<R> supplier;
-    private long startTime;
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
 
     private SupplierRepeater(Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
         this.supplier = supplier;
-        this.startTime = System.currentTimeMillis();
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
     }
@@ -58,34 +58,20 @@ public final class SupplierRepeater<R> {
     }
 
     public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        on(() -> condition.getAsBoolean() ? Boolean.TRUE : null, waitKey, waitDelta)
-                .runUntilNotNull();
+        Repeater.repeatUntilTrue(condition, waitKey, waitDelta);
     }
 
     public R runUntilNotNull() {
-        if (EventQueue.isDispatchThread()) {
-            throw new RuntimeException(NO_WAITING_ALLOWED_ON_EDT);
-        }
+        AtomicReference<@Nullable R> result = new AtomicReference<>();
+        Repeater.repeatUntilTrue(
+                () -> {
+                    R r = supplier.get();
+                    result.set(r);
+                    return r != null;
+                },
+                waitKey,
+                waitDelta);
 
-        long delta = Timeouts.get(waitDelta);
-        long wait = Timeouts.get(waitKey);
-        if (delta > wait) {
-            throw new IllegalStateException(String.format(
-                    "delta timeout \"%s\" (%d ms) greater than wait timeout \"%s\" (%d ms)",
-                    waitDelta, delta, waitKey, wait));
-        }
-
-        startTime = System.currentTimeMillis();
-
-        logger.debug("waiting for timeout \"{}\" ({} ms) to elapse", waitKey, wait);
-
-        R r;
-
-        while ((r = supplier.get()) == null) {
-            Timeouts.sleep(waitDelta);
-            Timeouts.check(waitKey, startTime);
-        }
-
-        return r;
+        return Objects.requireNonNull(result.get());
     }
 }

@@ -16,22 +16,19 @@
  */
 package org.netbeans.jemmy;
 
-import java.awt.*;
 import java.util.function.BooleanSupplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * Polls a {@link BooleanSupplier} until it reports true; see {@link Repeater} for the loop,
+ * guard, and timeout semantics shared by all repeaters.
+ */
 public final class BooleanSupplierRepeater {
-    private static final String NO_WAITING_ALLOWED_ON_EDT = "no waiting allowed on EDT";
-    private static final Logger logger = LoggerFactory.getLogger(BooleanSupplierRepeater.class);
     private final BooleanSupplier booleanSupplier;
-    private long startTime;
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
 
     private BooleanSupplierRepeater(BooleanSupplier booleanSupplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
         this.booleanSupplier = booleanSupplier;
-        this.startTime = System.currentTimeMillis();
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
     }
@@ -58,30 +55,10 @@ public final class BooleanSupplierRepeater {
     }
 
     public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        on(() -> condition.getAsBoolean() ? Boolean.TRUE : Boolean.FALSE, waitKey, waitDelta)
-                .runUntilTrue();
+        Repeater.repeatUntilTrue(condition, waitKey, waitDelta);
     }
 
     public void runUntilTrue() {
-        if (EventQueue.isDispatchThread()) {
-            throw new RuntimeException(NO_WAITING_ALLOWED_ON_EDT);
-        }
-
-        long delta = Timeouts.get(waitDelta);
-        long wait = Timeouts.get(waitKey);
-        if (delta > wait) {
-            throw new IllegalStateException(String.format(
-                    "delta timeout \"%s\" (%d ms) greater than wait timeout \"%s\" (%d ms)",
-                    waitDelta, delta, waitKey, wait));
-        }
-
-        startTime = System.currentTimeMillis();
-
-        logger.debug("waiting for timeout \"{}\" ({} ms) to elapse", waitKey, wait);
-
-        while (!booleanSupplier.getAsBoolean()) {
-            Timeouts.sleep(waitDelta);
-            Timeouts.check(waitKey, startTime);
-        }
+        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta);
     }
 }
