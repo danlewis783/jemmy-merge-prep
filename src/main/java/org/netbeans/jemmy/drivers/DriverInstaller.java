@@ -29,8 +29,12 @@ import static org.netbeans.jemmy.TimeoutKey.EventDispatcher_RobotAutoDelay;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.netbeans.jemmy.DispatchingModel;
 import org.netbeans.jemmy.drivers.buttons.ButtonMouseDriver;
 import org.netbeans.jemmy.drivers.focus.APIFocusDriver;
@@ -82,34 +86,9 @@ import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.Platform;
 
 public final class DriverInstaller {
-    private DriverInstaller() {}
-
-    /**
-     * Installs the input drivers and the platform component drivers matching the given dispatching model.
-     */
-    public static void installAll(DriverManager driverManager, EnumSet<DispatchingModel> model) {
-        installInputDrivers(driverManager, model);
-
-        if (Platform.isOSX()) {
-            installApiDrivers(driverManager, model);
-        } else {
-            installDefaultDrivers(driverManager, model);
-        }
-    }
-
-    private static void installInputDrivers(DriverManager driverManager, EnumSet<DispatchingModel> model) {
-        boolean useEventDrivers = !model.contains(DispatchingModel.Robot);
-        boolean smooth = model.contains(DispatchingModel.SmoothRobot);
-
-        if (useEventDrivers) {
-            LightDriver keyE = new KeyEventDriver();
-            LightDriver mouseE = new MouseEventDriver();
-            driverManager.removeDriver(DriverType.Key, keyE.getSupported());
-            driverManager.removeDriver(DriverType.Mouse, mouseE.getSupported());
-            driverManager.setDriver(DriverType.Key, keyE);
-            driverManager.setDriver(DriverType.Mouse, mouseE);
-
-            List<Class<? extends ComponentOperator>> awtOperators = Collections.unmodifiableList(Arrays.asList(
+    /** AWT heavyweights ignore synthesized input events, so they get real robot input in every model. */
+    private static final List<Class<? extends ComponentOperator>> AWT_OPERATORS =
+            Collections.unmodifiableList(Arrays.asList(
                     ButtonOperator.class,
                     CheckboxOperator.class,
                     ChoiceOperator.class,
@@ -120,55 +99,88 @@ public final class DriverInstaller {
                     TextAreaOperator.class,
                     TextComponentOperator.class,
                     TextFieldOperator.class));
-            LightDriver keyR = new KeyRobotDriver(EventDispatcher_RobotAutoDelay, awtOperators);
-            LightDriver mouseR = new MouseRobotDriver(EventDispatcher_RobotAutoDelay, awtOperators);
-            driverManager.removeDriver(DriverType.Key, keyR.getSupported());
-            driverManager.removeDriver(DriverType.Mouse, mouseR.getSupported());
-            driverManager.setDriver(DriverType.Key, keyR);
-            driverManager.setDriver(DriverType.Mouse, mouseR);
+
+    private DriverInstaller() {}
+
+    /**
+     * Builds a complete driver registry for the given dispatching model: the input drivers plus the
+     * platform component drivers. A pure function of the model and the platform - the returned
+     * registry never depends on what was installed before.
+     */
+    public static Map<DriverType, Map<Class<?>, DriverMarker>> registryFor(EnumSet<DispatchingModel> model) {
+        Map<DriverType, Map<Class<?>, DriverMarker>> registry = new EnumMap<>(DriverType.class);
+        for (DriverType driverType : DriverType.values()) {
+            registry.put(driverType, new HashMap<>());
+        }
+
+        installInputDrivers(registry, model);
+
+        if (Platform.isOSX()) {
+            installApiDrivers(registry, model);
         } else {
-            LightDriver keyR = new KeyRobotDriver(EventDispatcher_RobotAutoDelay);
-            LightDriver mouseR = new MouseRobotDriver(EventDispatcher_RobotAutoDelay, smooth);
-            driverManager.removeDriver(DriverType.Key, keyR.getSupported());
-            driverManager.removeDriver(DriverType.Mouse, mouseR.getSupported());
-            driverManager.setDriver(DriverType.Key, keyR);
-            driverManager.setDriver(DriverType.Mouse, mouseR);
+            installDefaultDrivers(registry, model);
+        }
+
+        return registry;
+    }
+
+    private static void put(
+            Map<DriverType, Map<Class<?>, DriverMarker>> registry, DriverType driverType, LightDriver driver) {
+        // registryFor pre-populates every DriverType key
+        Map<Class<?>, DriverMarker> byOperatorClass = Objects.requireNonNull(registry.get(driverType));
+        for (Class<? extends ComponentOperator> opClass : driver.getSupported()) {
+            byOperatorClass.put(opClass, driver);
         }
     }
 
-    private static void installApiDrivers(DriverManager driverManager, EnumSet<DispatchingModel> model) {
+    private static void installInputDrivers(
+            Map<DriverType, Map<Class<?>, DriverMarker>> registry, EnumSet<DispatchingModel> model) {
+        if (model.contains(DispatchingModel.Robot)) {
+            boolean smooth = model.contains(DispatchingModel.SmoothRobot);
+            put(registry, DriverType.Key, new KeyRobotDriver(EventDispatcher_RobotAutoDelay));
+            put(registry, DriverType.Mouse, new MouseRobotDriver(EventDispatcher_RobotAutoDelay, smooth));
+        } else {
+            put(registry, DriverType.Key, new KeyEventDriver());
+            put(registry, DriverType.Mouse, new MouseEventDriver());
+            put(registry, DriverType.Key, new KeyRobotDriver(EventDispatcher_RobotAutoDelay, AWT_OPERATORS));
+            put(registry, DriverType.Mouse, new MouseRobotDriver(EventDispatcher_RobotAutoDelay, AWT_OPERATORS));
+        }
+    }
+
+    private static void installApiDrivers(
+            Map<DriverType, Map<Class<?>, DriverMarker>> registry, EnumSet<DispatchingModel> model) {
         boolean shortcutEvents = model.contains(DispatchingModel.Shortcut);
 
-        driverManager.setDriver(DriverType.List, new JTreeAPIDriver());
-        driverManager.setDriver(DriverType.MultiSelList, new JTreeAPIDriver());
-        driverManager.setDriver(DriverType.Tree, new JTreeAPIDriver());
-        driverManager.setDriver(DriverType.Text, new AWTTextAPIDriver());
-        driverManager.setDriver(DriverType.Text, new SwingTextKeyboardDriver());
-        driverManager.setDriver(DriverType.Scroll, new ScrollbarDriver());
-        driverManager.setDriver(DriverType.Scroll, new ScrollPaneDriver());
-        driverManager.setDriver(DriverType.Scroll, new JScrollBarAPIDriver());
-        driverManager.setDriver(DriverType.Scroll, new JSplitPaneDriver());
-        driverManager.setDriver(DriverType.Scroll, new JSliderAPIDriver());
-        driverManager.setDriver(DriverType.Scroll, new JSpinnerDriver());
-        driverManager.setDriver(DriverType.Button, new ButtonMouseDriver());
-        driverManager.setDriver(DriverType.List, new JTabAPIDriver());
-        driverManager.setDriver(DriverType.List, new ListKeyboardDriver());
-        driverManager.setDriver(DriverType.MultiSelList, new ListKeyboardDriver());
-        driverManager.setDriver(DriverType.List, new JComboMouseDriver());
-        driverManager.setDriver(DriverType.List, new JListMouseDriver());
-        driverManager.setDriver(DriverType.MultiSelList, new JListMouseDriver());
-        driverManager.setDriver(DriverType.Table, new JTableMouseDriver());
-        driverManager.setDriver(DriverType.List, new ChoiceDriver());
-        driverManager.setDriver(DriverType.Frame, new DefaultFrameDriver());
-        driverManager.setDriver(DriverType.Window, new DefaultWindowDriver());
-        driverManager.setDriver(DriverType.Frame, new InternalFrameAPIDriver());
-        driverManager.setDriver(DriverType.InternalFrame, new InternalFrameAPIDriver());
-        driverManager.setDriver(DriverType.Window, new InternalFrameAPIDriver());
-        driverManager.setDriver(DriverType.Focus, new APIFocusDriver());
-        driverManager.setDriver(DriverType.Focus, new MouseFocusDriver());
-        driverManager.setDriver(DriverType.Menu, newMenuDriverA(shortcutEvents));
-        driverManager.setDriver(DriverType.Menu, newMenuDriverB(shortcutEvents));
-        driverManager.setDriver(DriverType.OrderedList, new JTableHeaderDriver());
+        put(registry, DriverType.List, new JTreeAPIDriver());
+        put(registry, DriverType.MultiSelList, new JTreeAPIDriver());
+        put(registry, DriverType.Tree, new JTreeAPIDriver());
+        put(registry, DriverType.Text, new AWTTextAPIDriver());
+        put(registry, DriverType.Text, new SwingTextKeyboardDriver());
+        put(registry, DriverType.Scroll, new ScrollbarDriver());
+        put(registry, DriverType.Scroll, new ScrollPaneDriver());
+        put(registry, DriverType.Scroll, new JScrollBarAPIDriver());
+        put(registry, DriverType.Scroll, new JSplitPaneDriver());
+        put(registry, DriverType.Scroll, new JSliderAPIDriver());
+        put(registry, DriverType.Scroll, new JSpinnerDriver());
+        put(registry, DriverType.Button, new ButtonMouseDriver());
+        put(registry, DriverType.List, new JTabAPIDriver());
+        put(registry, DriverType.List, new ListKeyboardDriver());
+        put(registry, DriverType.MultiSelList, new ListKeyboardDriver());
+        put(registry, DriverType.List, new JComboMouseDriver());
+        put(registry, DriverType.List, new JListMouseDriver());
+        put(registry, DriverType.MultiSelList, new JListMouseDriver());
+        put(registry, DriverType.Table, new JTableMouseDriver());
+        put(registry, DriverType.List, new ChoiceDriver());
+        put(registry, DriverType.Frame, new DefaultFrameDriver());
+        put(registry, DriverType.Window, new DefaultWindowDriver());
+        put(registry, DriverType.Frame, new InternalFrameAPIDriver());
+        put(registry, DriverType.InternalFrame, new InternalFrameAPIDriver());
+        put(registry, DriverType.Window, new InternalFrameAPIDriver());
+        put(registry, DriverType.Focus, new APIFocusDriver());
+        put(registry, DriverType.Focus, new MouseFocusDriver());
+        put(registry, DriverType.Menu, newMenuDriverA(shortcutEvents));
+        put(registry, DriverType.Menu, newMenuDriverB(shortcutEvents));
+        put(registry, DriverType.OrderedList, new JTableHeaderDriver());
     }
 
     private static LightSupportiveDriver newMenuDriverA(boolean shortcutEvents) {
@@ -183,40 +195,41 @@ public final class DriverInstaller {
         return newMenuDriverA(shortcutEvents);
     }
 
-    private static void installDefaultDrivers(DriverManager driverManager, EnumSet<DispatchingModel> model) {
+    private static void installDefaultDrivers(
+            Map<DriverType, Map<Class<?>, DriverMarker>> registry, EnumSet<DispatchingModel> model) {
         boolean shortcutEvents = model.contains(DispatchingModel.Shortcut);
 
-        driverManager.setDriver(DriverType.List, new JTreeMouseDriver());
-        driverManager.setDriver(DriverType.MultiSelList, new JTreeMouseDriver());
-        driverManager.setDriver(DriverType.Tree, new JTreeMouseDriver());
-        driverManager.setDriver(DriverType.Text, new AWTTextAPIDriver());
-        driverManager.setDriver(DriverType.Text, new SwingTextKeyboardDriver());
-        driverManager.setDriver(DriverType.Scroll, new ScrollbarDriver());
-        driverManager.setDriver(DriverType.Scroll, new ScrollPaneDriver());
-        driverManager.setDriver(DriverType.Scroll, new JScrollBarDriver());
-        driverManager.setDriver(DriverType.Scroll, new JSplitPaneDriver());
-        driverManager.setDriver(DriverType.Scroll, new JSliderDriver());
-        driverManager.setDriver(DriverType.Scroll, new JSpinnerDriver());
-        driverManager.setDriver(DriverType.Button, new ButtonMouseDriver());
-        driverManager.setDriver(DriverType.List, new JTabMouseDriver());
-        driverManager.setDriver(DriverType.List, new ListKeyboardDriver());
-        driverManager.setDriver(DriverType.MultiSelList, new ListKeyboardDriver());
-        driverManager.setDriver(DriverType.List, new JComboMouseDriver());
-        driverManager.setDriver(DriverType.List, new JListMouseDriver());
-        driverManager.setDriver(DriverType.MultiSelList, new JListMouseDriver());
-        driverManager.setDriver(DriverType.Table, new JTableMouseDriver());
-        driverManager.setDriver(DriverType.List, new ChoiceDriver());
-        driverManager.setDriver(DriverType.Frame, new DefaultFrameDriver());
-        driverManager.setDriver(DriverType.Window, new DefaultWindowDriver());
+        put(registry, DriverType.List, new JTreeMouseDriver());
+        put(registry, DriverType.MultiSelList, new JTreeMouseDriver());
+        put(registry, DriverType.Tree, new JTreeMouseDriver());
+        put(registry, DriverType.Text, new AWTTextAPIDriver());
+        put(registry, DriverType.Text, new SwingTextKeyboardDriver());
+        put(registry, DriverType.Scroll, new ScrollbarDriver());
+        put(registry, DriverType.Scroll, new ScrollPaneDriver());
+        put(registry, DriverType.Scroll, new JScrollBarDriver());
+        put(registry, DriverType.Scroll, new JSplitPaneDriver());
+        put(registry, DriverType.Scroll, new JSliderDriver());
+        put(registry, DriverType.Scroll, new JSpinnerDriver());
+        put(registry, DriverType.Button, new ButtonMouseDriver());
+        put(registry, DriverType.List, new JTabMouseDriver());
+        put(registry, DriverType.List, new ListKeyboardDriver());
+        put(registry, DriverType.MultiSelList, new ListKeyboardDriver());
+        put(registry, DriverType.List, new JComboMouseDriver());
+        put(registry, DriverType.List, new JListMouseDriver());
+        put(registry, DriverType.MultiSelList, new JListMouseDriver());
+        put(registry, DriverType.Table, new JTableMouseDriver());
+        put(registry, DriverType.List, new ChoiceDriver());
+        put(registry, DriverType.Frame, new DefaultFrameDriver());
+        put(registry, DriverType.Window, new DefaultWindowDriver());
         // Motif keeps internal frame title actions in a popup menu rather than title buttons
         DefaultInternalFrameDriver internalFrameDriver =
                 LookAndFeel.isMotif() ? new InternalFramePopupMenuDriver() : new DefaultInternalFrameDriver();
-        driverManager.setDriver(DriverType.Frame, internalFrameDriver);
-        driverManager.setDriver(DriverType.InternalFrame, internalFrameDriver);
-        driverManager.setDriver(DriverType.Window, internalFrameDriver);
-        driverManager.setDriver(DriverType.Focus, new APIFocusDriver());
-        driverManager.setDriver(DriverType.Focus, new MouseFocusDriver());
-        driverManager.setDriver(DriverType.Menu, shortcutEvents ? new QueueJMenuDriver() : new DefaultJMenuDriver());
-        driverManager.setDriver(DriverType.OrderedList, new JTableHeaderDriver());
+        put(registry, DriverType.Frame, internalFrameDriver);
+        put(registry, DriverType.InternalFrame, internalFrameDriver);
+        put(registry, DriverType.Window, internalFrameDriver);
+        put(registry, DriverType.Focus, new APIFocusDriver());
+        put(registry, DriverType.Focus, new MouseFocusDriver());
+        put(registry, DriverType.Menu, shortcutEvents ? new QueueJMenuDriver() : new DefaultJMenuDriver());
+        put(registry, DriverType.OrderedList, new JTableHeaderDriver());
     }
 }

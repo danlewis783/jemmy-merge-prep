@@ -24,14 +24,10 @@
  */
 package org.netbeans.jemmy;
 
-import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.drivers.DriverInstaller;
-import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverMarker;
 import org.netbeans.jemmy.drivers.DriverType;
 
@@ -40,9 +36,10 @@ import org.netbeans.jemmy.drivers.DriverType;
  * registry backing {@link org.netbeans.jemmy.drivers.DriverManager}, and the keyboard
  * {@link CharBindingMap character bindings}.
  * <p>
- * Changing the dispatching model through {@link #installDriversAndSetDispatchingModel(EnumSet)}
- * installs the input and component drivers to match, so the registry always reflects the current
- * model. There is one instance per JVM, obtained with {@link #getInstance()}.
+ * The model and its driver registry live in one immutable snapshot, replaced atomically by
+ * {@link #installDriversAndSetDispatchingModel(EnumSet)}: the registry is always exactly the
+ * defaults for the current model, and readers racing a switch see either the old state or the new
+ * state, never a mixture. There is one instance per JVM, obtained with {@link #getInstance()}.
  * <p>
  * Upstream Jemmy's counterpart, {@code JemmyProperties}, backs this state with a string-keyed
  * property map fed by {@code jemmy.*} system properties, plus per-thread stacks of such maps. This
@@ -50,40 +47,63 @@ import org.netbeans.jemmy.drivers.DriverType;
  * and renamed the class to match.
  */
 public final class JemmyContext {
-    private final Map<DriverType, Map<Class<?>, DriverMarker>> driverRegistry = new EnumMap<>(DriverType.class);
     private final CharBindingMap charBindingMap;
-    private @Nullable EnumSet<DispatchingModel> dispatchingModel;
+    private volatile ModelSnapshot snapshot;
 
     private JemmyContext() {
         charBindingMap = DefaultCharBindingMap.getInstance();
-        installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
+        snapshot = ModelSnapshot.of(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
     }
 
     public CharBindingMap getCharBindingMap() {
         return charBindingMap;
     }
 
+    /**
+     * @return a copy of the active model; mutating it does not affect this context
+     */
     public EnumSet<DispatchingModel> getDispatchingModel() {
-        return Objects.requireNonNull(dispatchingModel, "dispatching model not set");
-    }
-
-    public void installDriversAndSetDispatchingModel(EnumSet<DispatchingModel> model) {
-        Objects.requireNonNull(model, "model");
-        if (model.equals(dispatchingModel)) {
-            return;
-        }
-
-        DriverInstaller.installAll(DriverManager.newInstance(this), model);
-
-        dispatchingModel = model;
+        return EnumSet.copyOf(snapshot.model);
     }
 
     /**
-     * The driver registry, keyed by driver type and then operator class. Owned here so its lifecycle matches the
-     * properties instance; all access should go through {@link org.netbeans.jemmy.drivers.DriverManager}.
+     * Switches the dispatching model, rebuilding the driver registry from scratch to the new
+     * model's defaults and swapping both in atomically. A failure while building leaves the
+     * previous model and drivers fully in place; drivers customized through
+     * {@link org.netbeans.jemmy.drivers.DriverManager#setDriver} are discarded by the rebuild.
+     * No-op when the model is unchanged.
+     */
+    public synchronized void installDriversAndSetDispatchingModel(EnumSet<DispatchingModel> model) {
+        Objects.requireNonNull(model, "model");
+        if (model.equals(snapshot.model)) {
+            return;
+        }
+
+        snapshot = ModelSnapshot.of(model);
+    }
+
+    /**
+     * The current model's driver registry for one driver type, keyed by operator class. All access
+     * should go through {@link org.netbeans.jemmy.drivers.DriverManager}.
      */
     public Map<Class<?>, DriverMarker> getDriverRegistry(DriverType driverType) {
-        return driverRegistry.computeIfAbsent(driverType, type -> new HashMap<>());
+        return Objects.requireNonNull(snapshot.registry.get(driverType));
+    }
+
+    /** One consistent (model, registry) pair; a switch replaces the whole snapshot in one write. */
+    private static final class ModelSnapshot {
+        private final EnumSet<DispatchingModel> model;
+        private final Map<DriverType, Map<Class<?>, DriverMarker>> registry;
+
+        private ModelSnapshot(EnumSet<DispatchingModel> model, Map<DriverType, Map<Class<?>, DriverMarker>> registry) {
+            this.model = model;
+            this.registry = registry;
+        }
+
+        static ModelSnapshot of(EnumSet<DispatchingModel> model) {
+            EnumSet<DispatchingModel> copy = EnumSet.copyOf(model);
+            return new ModelSnapshot(copy, DriverInstaller.registryFor(copy));
+        }
     }
 
     public static JemmyContext getInstance() {

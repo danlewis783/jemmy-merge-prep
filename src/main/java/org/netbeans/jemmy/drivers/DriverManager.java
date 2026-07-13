@@ -50,6 +50,11 @@ public final class DriverManager {
         }
     }
 
+    /**
+     * Registers the driver for every operator class it supports, replacing the current model's
+     * default. Customizations apply to the currently installed dispatching model only: the next
+     * model change rebuilds the registry and resets every driver to that model's defaults.
+     */
     public void setDriver(DriverType driverType, LightDriver driver) {
         for (Class<? extends ComponentOperator> opClass : driver.getSupported()) {
             jemmyContext.getDriverRegistry(driverType).put(opClass, driver);
