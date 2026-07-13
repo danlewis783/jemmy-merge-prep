@@ -31,13 +31,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.CharBindingMap;
-import org.netbeans.jemmy.ConsumerRunner;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.FunctionRunner;
 import org.netbeans.jemmy.JemmyContext;
@@ -245,26 +243,6 @@ public abstract class Operator {
         return result;
     }
 
-    <T> void acceptTimeRestricted(Consumer<T> consumer, @Nullable T t, TimeoutKey timeoutKey) {
-        ConsumerRunner<T> consumerRunner = ConsumerRunner.on(consumer);
-        try {
-            consumerRunner.acceptAndWait(t, timeoutKey);
-        } catch (InterruptedException e) {
-            throw new JemmyException("interrupted waiting for consumer", e);
-        }
-
-        Throwable throwable = consumerRunner.getThrowable();
-        if (throwable != null) {
-            if (throwable instanceof JemmyException) {
-                throw (JemmyException) throwable;
-            } else {
-                throw new JemmyException(
-                        String.format("throwable encountered during execution of consumer \"%s\"", consumer),
-                        throwable);
-            }
-        }
-    }
-
     void runTimeRestricted(Runnable runnable, TimeoutKey timeoutKey) {
         RunnableRunner runnableRunner = RunnableRunner.on(runnable);
         try {
@@ -294,18 +272,6 @@ public abstract class Operator {
         if (throwable != null) {
             throw new JemmyException(
                     String.format("throwable encountered during execution of function \"%s\"", function), throwable);
-        }
-    }
-
-    protected <T> void acceptNoBlocking(Consumer<T> consumer, @Nullable T t) {
-        ConsumerRunner<T> consumerRunner = ConsumerRunner.on(consumer);
-        consumerRunner.acceptLater(t);
-
-        // TODO throwable may not be available because run does not block
-        Throwable throwable = consumerRunner.getThrowable();
-        if (throwable != null) {
-            throw new JemmyException(
-                    String.format("throwable encountered during execution of consumer \"%s\"", consumer), throwable);
         }
     }
 

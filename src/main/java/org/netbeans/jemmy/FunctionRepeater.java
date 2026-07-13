@@ -18,7 +18,6 @@ package org.netbeans.jemmy;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 
@@ -47,18 +46,6 @@ public final class FunctionRepeater<T, R> {
 
     public static <T, R> FunctionRepeater<T, R> on(Function<T, R> function, TimeoutKey waitKey, TimeoutKey waitDelta) {
         return new FunctionRepeater<>(function, waitKey, waitDelta);
-    }
-
-    public static void waitFor(BooleanSupplier condition) {
-        waitFor(condition, TimeoutKey.Waiter_WaitingTime);
-    }
-
-    public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey) {
-        waitFor(condition, waitKey, TimeoutKey.Waiter_TimeDelta);
-    }
-
-    public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        Repeater.repeatUntilTrue(condition, waitKey, waitDelta);
     }
 
     public R runUntilNotNull(@Nullable T t) {

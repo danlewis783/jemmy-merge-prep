@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.util.Collections;
 import javax.swing.JScrollBar;
-import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -55,7 +55,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
         Point pnt = new Point(0, 0);
         drag(oper, pnt);
         try {
-            FunctionRepeater.waitFor(
+            BooleanSupplierRepeater.waitFor(
                     () -> scrollBar.getValue() <= scrollBar.getMinimum(),
                     TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
         } finally {
@@ -70,7 +70,7 @@ public final class JScrollBarDriver extends AbstractScrollDriver {
         Point pnt = new Point(oper.getWidth() - 1, oper.getHeight() - 1);
         drag(oper, pnt);
         try {
-            FunctionRepeater.waitFor(
+            BooleanSupplierRepeater.waitFor(
                     () -> scrollBar.getValue() <= scrollBar.getMaximum() - scrollBar.getVisibleAmount(),
                     TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
         } finally {

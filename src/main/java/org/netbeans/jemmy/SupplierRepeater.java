@@ -18,7 +18,6 @@ package org.netbeans.jemmy;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 
@@ -47,18 +46,6 @@ public final class SupplierRepeater<R> {
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
         return new SupplierRepeater<>(supplier, waitKey, waitDelta);
-    }
-
-    public static void waitFor(BooleanSupplier condition) {
-        waitFor(condition, TimeoutKey.Waiter_WaitingTime);
-    }
-
-    public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey) {
-        waitFor(condition, waitKey, TimeoutKey.Waiter_TimeDelta);
-    }
-
-    public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        Repeater.repeatUntilTrue(condition, waitKey, waitDelta);
     }
 
     public R runUntilNotNull() {

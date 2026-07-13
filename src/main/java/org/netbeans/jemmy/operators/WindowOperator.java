@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
@@ -191,7 +192,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static void waitWindowCount(@Nullable Window owner, Predicate<Component> chooser, int count) {
-        FunctionRepeater.waitFor(
+        BooleanSupplierRepeater.waitFor(
                 () -> countWindows(owner, chooser) == count, TimeoutKey.WindowWaiter_WaitWindowTimeout);
     }
 

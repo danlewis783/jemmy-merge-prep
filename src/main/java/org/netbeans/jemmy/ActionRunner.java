@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The engine behind the public runners ({@link FunctionRunner}, {@link SupplierRunner},
- * {@link ConsumerRunner}, {@link RunnableRunner}): the single Jemmy action thread plus what
+ * {@link RunnableRunner}): the single Jemmy action thread plus what
  * timeout, cancellation, and exception capture mean for work submitted to it. Keeping every
  * runner on this one executor serializes background actions first-in-first-out, so two
  * actions never drive the real mouse and keyboard at the same time.

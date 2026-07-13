@@ -60,9 +60,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.EventDispatcher;
-import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.SupplierRepeater;
@@ -414,7 +414,7 @@ public class ComponentOperator extends Operator {
     }
 
     public void waitHasFocus() {
-        FunctionRepeater.waitFor(this::hasFocus, TimeoutKey.ComponentOperator_WaitFocusTimeout);
+        BooleanSupplierRepeater.waitFor(this::hasFocus, TimeoutKey.ComponentOperator_WaitFocusTimeout);
     }
 
     public void waitComponentVisible(boolean visibility) {
