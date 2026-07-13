@@ -25,7 +25,6 @@
 
 package org.netbeans.jemmy.drivers.input;
 
-import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -38,11 +37,8 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RobotDriver extends LightSupportiveDriver {
-    private static final Logger logger = LoggerFactory.getLogger(RobotDriver.class);
     private static final double CONSTANT1 = 0.75;
     private static final double CONSTANT2 = 12.0;
     private final TimeoutKey robotAutoDelay;
@@ -183,15 +179,12 @@ public class RobotDriver extends LightSupportiveDriver {
         if (robotRef.get() != null) {
             return robotRef.get();
         }
+        // a thrown AWTException propagates wrapped in a JemmyException with the real cause,
+        // rather than leaving a null robot to fail far from here
         Robot inst = QueueTool.getInstance().callOnQueue(() -> {
-            try {
-                Robot robot = new Robot();
-                robot.setAutoDelay((int) ((robotAutoDelay == null) ? 0 : Timeouts.get(robotAutoDelay)));
-                return robot;
-            } catch (AWTException e) {
-                logger.warn("problem initializing AWT Robot", e);
-            }
-            return null;
+            Robot robot = new Robot();
+            robot.setAutoDelay((int) ((robotAutoDelay == null) ? 0 : Timeouts.get(robotAutoDelay)));
+            return robot;
         });
         if (!robotRef.compareAndSet(null, inst)) {
             throw new IllegalStateException("AWT Robot already non-null");
