@@ -263,28 +263,22 @@ public abstract class Operator {
         }
     }
 
+    /**
+     * Schedules the function on the Jemmy action thread and returns immediately. Because this
+     * method does not wait, a failure cannot be rethrown here: an exception from the action is
+     * logged by the action thread instead.
+     */
     protected <T, R> void produceNoBlocking(Function<T, R> function, @Nullable T t) {
-        FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
-        functionRunner.run(t);
-
-        // TODO throwable may not be available because run does not block
-        Throwable throwable = functionRunner.getThrowable();
-        if (throwable != null) {
-            throw new JemmyException(
-                    String.format("throwable encountered during execution of function \"%s\"", function), throwable);
-        }
+        FunctionRunner.on(function).run(t);
     }
 
+    /**
+     * Schedules the runnable on the Jemmy action thread and returns immediately. Because this
+     * method does not wait, a failure cannot be rethrown here: an exception from the action is
+     * logged by the action thread instead.
+     */
     protected void runNoBlocking(Runnable runnable) {
-        RunnableRunner runnableRunner = RunnableRunner.on(runnable);
-        runnableRunner.runLater();
-
-        // TODO throwable may not be available because run does not block
-        Throwable throwable = runnableRunner.getThrowable();
-        if (throwable != null) {
-            throw new JemmyException(
-                    String.format("throwable encountered during execution of runnable \"%s\"", runnable), throwable);
-        }
+        RunnableRunner.on(runnable).runLater();
     }
 
     public String getSourceToString() {

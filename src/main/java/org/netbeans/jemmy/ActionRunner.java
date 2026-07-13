@@ -94,6 +94,14 @@ final class ActionRunner<R> {
     }
 
     void submitLater(Runnable work) {
-        JEMMY_ACTION_SERVICE.execute(work);
+        JEMMY_ACTION_SERVICE.execute(() -> {
+            try {
+                work.run();
+            } catch (RuntimeException e) {
+                // the submitter has already returned and cannot be told; log so the failure
+                // is not lost, and keep the single worker thread alive for later actions
+                logger.warn("exception in no-blocking action", e);
+            }
+        });
     }
 }
