@@ -89,7 +89,9 @@ public final class QueueTool {
      * its result. When invoked off the dispatch thread, the call is dispatched through the system
      * event queue and waited on (subject to {@code QueueTool_PreInvocationTimeout} and
      * {@code QueueTool_InvocationTimeout}); when already on the dispatch thread, the callable runs
-     * directly. Any exception the callable throws is rethrown wrapped in a {@link JemmyException}.
+     * directly. Any exception the callable throws is rethrown wrapped in a {@link JemmyException},
+     * except that a thrown {@link JemmyException} propagates as-is - work that pre-wraps a checked
+     * exception keeps a single wrapper, so {@code getCause()} stays the original exception.
      *
      * @param callable the work to run on the dispatch thread
      * @return the callable's result; null exactly when the callable returns null
@@ -98,6 +100,8 @@ public final class QueueTool {
         if (EventQueue.isDispatchThread()) {
             try {
                 return callable.call();
+            } catch (JemmyException e) {
+                throw e;
             } catch (Exception e) {
                 throw new JemmyException("Exception when calling", e);
             }
@@ -116,6 +120,8 @@ public final class QueueTool {
         if (EventQueue.isDispatchThread()) {
             try {
                 runnable.run();
+            } catch (JemmyException e) {
+                throw e;
             } catch (RuntimeException e) {
                 throw new JemmyException("Exception when calling", e);
             }
@@ -164,6 +170,9 @@ public final class QueueTool {
         }
 
         Exception e = caller.getException();
+        if (e instanceof JemmyException) {
+            throw (JemmyException) e;
+        }
         if (e != null) {
             throw new JemmyException("Exception captured by caller", e);
         }
