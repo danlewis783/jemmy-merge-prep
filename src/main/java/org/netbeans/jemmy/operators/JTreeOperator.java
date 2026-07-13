@@ -741,7 +741,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().callOnQueue(() -> ((JTree) getSource()).getLastSelectedPathComponent());
     }
 
-    public TreePath getLeadSelectionPath() {
+    public @Nullable TreePath getLeadSelectionPath() {
         return QueueTool.getInstance().callOnQueue(() -> ((JTree) getSource()).getLeadSelectionPath());
     }
 
@@ -827,7 +827,7 @@ public class JTreeOperator extends JComponentOperator {
         return QueueTool.getInstance().callOnQueue(() -> ((JTree) getSource()).getSelectionModel());
     }
 
-    public TreePath getSelectionPath() {
+    public @Nullable TreePath getSelectionPath() {
         return QueueTool.getInstance().callOnQueue(() -> ((JTree) getSource()).getSelectionPath());
     }
 
@@ -1002,7 +1002,7 @@ public class JTreeOperator extends JComponentOperator {
         QueueTool.getInstance().runOnQueue(() -> ((JTree) getSource()).setSelectionModel(treeSelectionModel));
     }
 
-    public void setSelectionPath(TreePath treePath) {
+    public void setSelectionPath(@Nullable TreePath treePath) {
         QueueTool.getInstance().runOnQueue(() -> ((JTree) getSource()).setSelectionPath(treePath));
     }
 

@@ -32,6 +32,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
 import java.awt.Point;
@@ -502,6 +503,7 @@ class ComponentOperatorTest {
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Image image = operator1.createImage(100, 100);
+        assertThat(image).isNotNull();
         operator1.checkImage(image, null);
         operator1.checkImage(image, 100, 100, null);
     }
@@ -843,7 +845,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.imageUpdate(operator1.createImage(100, 100), 100, 100, 100, 100, 100);
+        Image image = operator1.createImage(100, 100);
+        assertThat(image).isNotNull();
+        operator1.imageUpdate(image, 100, 100, 100, 100, 100);
     }
 
     @Test
@@ -955,7 +959,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.paint(operator1.getGraphics());
+        Graphics graphics = operator1.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator1.paint(graphics);
     }
 
     @Test
@@ -964,7 +970,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.paintAll(operator1.getGraphics());
+        Graphics graphics = operator1.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator1.paintAll(graphics);
     }
 
     @Test
@@ -974,6 +982,7 @@ class ComponentOperatorTest {
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         Image image = operator1.createImage(100, 100);
+        assertThat(image).isNotNull();
         operator1.prepareImage(image, null);
         operator1.prepareImage(image, 100, 100, null);
     }
@@ -984,7 +993,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.print(operator1.getGraphics());
+        Graphics graphics = operator1.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator1.print(graphics);
     }
 
     @Test
@@ -993,7 +1004,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.printAll(operator1.getGraphics());
+        Graphics graphics = operator1.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator1.printAll(graphics);
     }
 
     @Test
@@ -1116,7 +1129,9 @@ class ComponentOperatorTest {
         assertThat(operator).isNotNull();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
-        operator1.update(operator1.getGraphics());
+        Graphics graphics = operator1.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator1.update(graphics);
     }
 
     @Test

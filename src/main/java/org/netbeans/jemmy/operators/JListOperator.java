@@ -441,7 +441,7 @@ public class JListOperator extends JComponentOperator {
         return QueueTool.getInstance().callOnQueue(() -> getJList().getSelectedIndices());
     }
 
-    public Object getSelectedValue() {
+    public @Nullable Object getSelectedValue() {
         return QueueTool.getInstance().callOnQueue(() -> getJList().getSelectedValue());
     }
 

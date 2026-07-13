@@ -425,7 +425,7 @@ public class JFileChooserOperator extends JComponentOperator {
         return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getName(file));
     }
 
-    public File getSelectedFile() {
+    public @Nullable File getSelectedFile() {
         return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getSelectedFile());
     }
 
@@ -498,7 +498,7 @@ public class JFileChooserOperator extends JComponentOperator {
         QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setApproveButtonToolTipText(string));
     }
 
-    public void setCurrentDirectory(File file) {
+    public void setCurrentDirectory(@Nullable File file) {
         QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setCurrentDirectory(file));
     }
 
@@ -534,7 +534,7 @@ public class JFileChooserOperator extends JComponentOperator {
         QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setMultiSelectionEnabled(b));
     }
 
-    public void setSelectedFile(File file) {
+    public void setSelectedFile(@Nullable File file) {
         QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setSelectedFile(file));
     }
 

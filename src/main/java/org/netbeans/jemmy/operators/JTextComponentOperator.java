@@ -394,7 +394,7 @@ public class JTextComponentOperator extends JComponentOperator {
                 .callOnQueue(() -> ((JTextComponent) getSource()).getScrollableUnitIncrement(rectangle, i, i1));
     }
 
-    public String getSelectedText() {
+    public @Nullable String getSelectedText() {
         return QueueTool.getInstance().callOnQueue(() -> ((JTextComponent) getSource()).getSelectedText());
     }
 

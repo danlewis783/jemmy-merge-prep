@@ -505,7 +505,7 @@ public class ComponentOperator extends Operator {
         return QueueTool.getInstance().callOnQueue(() -> getSource().contains(point));
     }
 
-    public Image createImage(int i, int i1) {
+    public @Nullable Image createImage(int i, int i1) {
         return QueueTool.getInstance().callOnQueue(() -> getSource().createImage(i, i1));
     }
 
@@ -581,7 +581,7 @@ public class ComponentOperator extends Operator {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getForeground());
     }
 
-    public Graphics getGraphics() {
+    public @Nullable Graphics getGraphics() {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getGraphics());
     }
 

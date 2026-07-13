@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.ContainerAdapter;
@@ -181,14 +182,18 @@ class ContainerOperatorTest {
     void testPaintComponents() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        operator.paintComponents(operator.getGraphics());
+        Graphics graphics = operator.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator.paintComponents(graphics);
     }
 
     @Test
     void testPrintComponents() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
-        operator.printComponents(operator.getGraphics());
+        Graphics graphics = operator.getGraphics();
+        assertThat(graphics).isNotNull();
+        operator.printComponents(graphics);
     }
 
     @Test
