@@ -25,22 +25,24 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Adapts a {@link Callable} so that it can be run through the Swing Event Queue: a runnable
- * whose start and completion can be awaited, and which captures rather than throws any
- * exception raised by the work.
+ * whose start and completion can be awaited, and which captures rather than throws anything
+ * the work raises. Capturing must cover {@link Throwable}, not just {@link Exception}: an
+ * Error that escaped into the InvocationEvent would be recorded only after the end gate has
+ * already released the waiting thread, which could then miss it entirely.
  *
  * @param <R> the type to be returned from the callable
  */
 final class Caller<R> implements Runnable {
     private final Callable<R> callable;
     private final CountDownLatch endGate;
-    private final AtomicReference<@Nullable Exception> exception;
+    private final AtomicReference<@Nullable Throwable> throwable;
     private final AtomicReference<@Nullable R> result;
     private final CountDownLatch startGate;
     private final AtomicBoolean hasRun;
 
     private Caller(Callable<R> callable) {
         this.callable = callable;
-        exception = new AtomicReference<>();
+        throwable = new AtomicReference<>();
         result = new AtomicReference<>();
         startGate = new CountDownLatch(1);
         endGate = new CountDownLatch(1);
@@ -64,9 +66,9 @@ final class Caller<R> implements Runnable {
                 }
             }
 
-        } catch (Exception e) {
-            if (!exception.compareAndSet(null, e)) {
-                throw new IllegalStateException("exception already thrown");
+        } catch (Throwable t) {
+            if (!throwable.compareAndSet(null, t)) {
+                throw new IllegalStateException("throwable already captured");
             }
         } finally {
             endGate.countDown();
@@ -87,8 +89,8 @@ final class Caller<R> implements Runnable {
     }
 
     @Nullable
-    Exception getException() {
-        return exception.get();
+    Throwable getThrowable() {
+        return throwable.get();
     }
 
     static <RR> Caller<RR> of(Callable<RR> callable) {

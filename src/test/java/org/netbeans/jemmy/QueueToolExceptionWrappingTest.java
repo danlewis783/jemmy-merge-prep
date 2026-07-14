@@ -42,7 +42,7 @@ class QueueToolExceptionWrappingTest {
                 .isThrownBy(() -> queueTool.callOnQueue(() -> {
                     throw original;
                 }))
-                .withMessage("Exception captured by caller")
+                .withMessage("Throwable captured by caller")
                 .satisfies(e -> assertThat(e.getCause()).isSameAs(original));
     }
 
@@ -54,7 +54,36 @@ class QueueToolExceptionWrappingTest {
                 .isThrownBy(() -> queueTool.runOnQueue(() -> {
                     throw original;
                 }))
-                .withMessage("Exception captured by caller")
+                .withMessage("Throwable captured by caller")
+                .satisfies(e -> assertThat(e.getCause()).isSameAs(original));
+    }
+
+    /**
+     * Errors must be captured by the caller too: JMenu.setAccelerator and friends throw Error on
+     * the dispatch thread, and an Error that escaped to the InvocationEvent is recorded only
+     * after the end gate has released the waiting thread, which raced and sometimes missed it.
+     */
+    @Test
+    void runOnQueueWrapsErrorOnce() {
+        Error original = new Error("not defined for JMenu");
+
+        assertThatExceptionOfType(JemmyException.class)
+                .isThrownBy(() -> queueTool.runOnQueue(() -> {
+                    throw original;
+                }))
+                .withMessage("Throwable captured by caller")
+                .satisfies(e -> assertThat(e.getCause()).isSameAs(original));
+    }
+
+    @Test
+    void callOnQueueWrapsErrorOnce() {
+        Error original = new Error("not defined for JMenu");
+
+        assertThatExceptionOfType(JemmyException.class)
+                .isThrownBy(() -> queueTool.callOnQueue(() -> {
+                    throw original;
+                }))
+                .withMessage("Throwable captured by caller")
                 .satisfies(e -> assertThat(e.getCause()).isSameAs(original));
     }
 

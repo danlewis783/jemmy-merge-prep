@@ -368,7 +368,7 @@ class JMenuOperatorTest {
 
         assertThatExceptionOfType(JemmyException.class)
                 .isThrownBy(jMenuOp::isTearOff)
-                .withMessage("Throwable captured by invocation event")
+                .withMessage("Throwable captured by caller")
                 .havingCause()
                 .withMessage("boolean isTearOff() {} not yet implemented");
     }

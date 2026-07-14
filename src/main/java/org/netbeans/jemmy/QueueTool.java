@@ -172,14 +172,16 @@ public final class QueueTool {
             throw new JemmyException("InterruptedException raised while waiting for end latch of caller", e);
         }
 
-        Exception e = caller.getException();
-        if (e instanceof JemmyException) {
-            throw (JemmyException) e;
+        Throwable thrown = caller.getThrowable();
+        if (thrown instanceof JemmyException) {
+            throw (JemmyException) thrown;
         }
-        if (e != null) {
-            throw new JemmyException("Exception captured by caller", e);
+        if (thrown != null) {
+            throw new JemmyException("Throwable captured by caller", thrown);
         }
 
+        // backstop for throwables raised outside the caller's capture; unlike the caller's
+        // gate-ordered field, this read is not synchronized with the end gate - best effort only
         Throwable t = event.getThrowable();
         if (t != null) {
             throw new JemmyException("Throwable captured by invocation event", t);

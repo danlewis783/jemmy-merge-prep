@@ -150,7 +150,7 @@ class JMenuItemOperatorTest {
 
         assertThatExceptionOfType(JemmyException.class)
                 .isThrownBy(() -> jMenuItemOp.setAccelerator(KeyStroke.getKeyStroke('a')))
-                .withMessage("Throwable captured by invocation event")
+                .withMessage("Throwable captured by caller")
                 .havingCause()
                 .withMessage("setAccelerator() is not defined for JMenu.  Use setMnemonic() instead.");
 
