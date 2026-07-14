@@ -23,6 +23,7 @@ import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Label;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
@@ -302,20 +303,28 @@ class WindowOperatorTest {
         FrameOperator frameOp = FrameOperator.of(mainFrame);
         frameOp.requestFocus();
         frameOp.waitHasFocus();
-        AtomicBoolean wasComponentMovedCalled = new AtomicBoolean(false);
+        // evidence log for a load-only flake: a failed run must show whether the window
+        // really moved, and when the stray event arrived relative to the resize
+        List<String> moveEvents = Collections.synchronizedList(new ArrayList<>());
+        List<String> componentEventLog = Collections.synchronizedList(new ArrayList<>());
         AtomicInteger componentResizedCalledCount = new AtomicInteger(0);
         AtomicInteger componentResizedWidth = new AtomicInteger(0);
         AtomicInteger componentResizedHeight = new AtomicInteger(0);
         // the frame delivers two componentResized events for one resize; wait for both
         CountDownLatch resizedLatch = new CountDownLatch(2);
+        Point locationAfterFocus = onQueue(mainFrame::getLocation);
+        long listenerAddedNanos = System.nanoTime();
         frameOp.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
-                wasComponentMovedCalled.set(true);
+                String entry = e + " at +" + elapsedMillis(listenerAddedNanos) + "ms";
+                moveEvents.add(entry);
+                componentEventLog.add(entry);
             }
 
             @Override
             public void componentResized(ComponentEvent e) {
+                componentEventLog.add(e + " at +" + elapsedMillis(listenerAddedNanos) + "ms");
                 Rectangle bounds = ((Component) e.getSource()).getBounds();
                 componentResizedWidth.set(bounds.width);
                 componentResizedHeight.set(bounds.height);
@@ -325,9 +334,15 @@ class WindowOperatorTest {
         });
         assertThat(frameOp.getWidth()).isNotEqualTo(100);
         assertThat(frameOp.getHeight()).isNotEqualTo(200);
+        componentEventLog.add("resize(100, 200) called at +" + elapsedMillis(listenerAddedNanos) + "ms");
         frameOp.resize(100, 200);
         awaitLatch(resizedLatch);
-        assertThat(wasComponentMovedCalled).isFalse();
+        Point locationAfterResize = onQueue(mainFrame::getLocation);
+        assertThat(moveEvents)
+                .as(
+                        "location after focus %s, after resize %s; events: %s",
+                        locationAfterFocus, locationAfterResize, componentEventLog)
+                .isEmpty();
         assertThat(componentResizedCalledCount).hasValueGreaterThan(1);
         assertThat(componentResizedCalledCount).hasValueLessThan(3);
         assertThat(componentResizedWidth).hasValueGreaterThan(130);
@@ -503,6 +518,11 @@ class WindowOperatorTest {
 
             return other;
         });
+    }
+
+    /** Milliseconds elapsed since the given {@link System#nanoTime()} reading. */
+    private static long elapsedMillis(long sinceNanos) {
+        return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - sinceNanos);
     }
 
     // generous ceiling: only costs time when the awaited event never arrives
