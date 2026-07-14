@@ -179,10 +179,6 @@ final class RobotVsQueueDispatchTest {
                         eventDescription = "Mouse released";
                     } else if (e.getID() == MouseEvent.MOUSE_CLICKED) {
                         eventDescription = "Mouse clicked";
-                    } else if (e.getID() == MouseEvent.MOUSE_ENTERED) {
-                        eventDescription = "Mouse entered";
-                    } else if (e.getID() == MouseEvent.MOUSE_EXITED) {
-                        eventDescription = "Mouse exited";
                     }
 
                     temp.add(eventDescription + " " + ((MouseEvent) e).getX() + " " + ((MouseEvent) e).getY());
@@ -217,15 +213,15 @@ final class RobotVsQueueDispatchTest {
             eventDispatched(e);
         }
 
+        // enter/exit events are pointer-model-specific and excluded from the comparison:
+        // the queue model brackets every click with enter/exit at the click point, while
+        // the real robot pointer enters once, exits only en route to the next target at a
+        // path-dependent boundary point, and never exits after the last click
         @Override
-        public void mouseEntered(MouseEvent e) {
-            eventDispatched(e);
-        }
+        public void mouseEntered(MouseEvent e) {}
 
         @Override
-        public void mouseExited(MouseEvent e) {
-            eventDispatched(e);
-        }
+        public void mouseExited(MouseEvent e) {}
 
         @Override
         public void mousePressed(MouseEvent e) {

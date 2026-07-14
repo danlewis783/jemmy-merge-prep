@@ -38,6 +38,9 @@ final class TypingFeedbackApp extends JFrame {
         contentPane.add(jPanel, BorderLayout.CENTER);
         setSize(300, 100);
         setLocationRelativeTo(null);
+        // the robot rounds of RobotVsQueueDispatchTest click at real screen coordinates;
+        // an overlapping window would swallow them - same mitigation as ListOperatorTest
+        setAlwaysOnTop(true);
     }
 
     public static void main(String... args) {
