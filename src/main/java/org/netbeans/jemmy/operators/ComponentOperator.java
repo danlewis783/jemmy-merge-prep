@@ -155,7 +155,7 @@ public class ComponentOperator extends Operator {
     }
 
     public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new ComponentOperator(waitComponent((Container) cont.getSource(), chooser, index));
+        return ComponentOperator.of(waitComponent((Container) cont.getSource(), chooser, index));
     }
 
     /**

@@ -16,37 +16,38 @@
  */
 package org.netbeans.jemmy.predicates;
 
-import java.awt.Component;
+import java.awt.*;
 import java.util.Objects;
 import java.util.function.Predicate;
-import javax.swing.JComponent;
+import javax.swing.*;
 import org.netbeans.jemmy.util.StringComparator;
 
-public final class TrimmingTooltipPredicate implements Predicate<Component> {
-    private final String tooltip;
+public final class TabbedPaneByTitlePredicate implements Predicate<Component> {
+    private final String title;
     private final StringComparator comparator;
 
-    public TrimmingTooltipPredicate(String tooltip, StringComparator comparator) {
-        this.tooltip = Objects.requireNonNull(tooltip, "tooltip");
+    public TabbedPaneByTitlePredicate(String title, StringComparator comparator) {
+        this.title = Objects.requireNonNull(title, "title");
         this.comparator = Objects.requireNonNull(comparator, "comparator");
     }
 
     @Override
     public boolean test(Component comp) {
 
-        if (!(comp instanceof JComponent)) {
+        if (!(comp instanceof JTabbedPane)) {
             return false;
         }
 
-        JComponent jComponent = (JComponent) comp;
-        String toolTipText = jComponent.getToolTipText();
-        if (toolTipText == null) {
-            return false;
+        JTabbedPane pane = (JTabbedPane) comp;
+        final int tabCount = pane.getTabCount();
+
+        for (int i = 0; i < tabCount; i++) {
+            String paneTitle = pane.getTitleAt(i);
+            if (comparator.equals(paneTitle, title)) {
+                return true;
+            }
         }
 
-        String trimmed = toolTipText.trim();
-        boolean result = comparator.equals(trimmed, tooltip);
-
-        return result;
+        return false;
     }
 }
