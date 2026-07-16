@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.IntConsumer;
 import javax.swing.JTable;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.util.StringComparators;
 

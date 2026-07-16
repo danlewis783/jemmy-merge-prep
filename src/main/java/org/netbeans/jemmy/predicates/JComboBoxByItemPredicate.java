@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JComboBoxByItemPredicate implements Predicate<Component> {

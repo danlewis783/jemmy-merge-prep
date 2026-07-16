@@ -19,7 +19,7 @@ package org.netbeans.jemmy.callables;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.ComponentIsNotFocusedException;
 import org.netbeans.jemmy.ComponentIsNotVisibleException;

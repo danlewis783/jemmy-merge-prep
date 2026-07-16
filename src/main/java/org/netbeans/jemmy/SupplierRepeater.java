@@ -19,7 +19,7 @@ package org.netbeans.jemmy;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Polls a {@link Supplier} until it produces a non-null value; see {@link Repeater} for the

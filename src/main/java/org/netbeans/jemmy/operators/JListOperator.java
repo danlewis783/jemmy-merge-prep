@@ -39,7 +39,7 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ListUI;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.QueueTool;

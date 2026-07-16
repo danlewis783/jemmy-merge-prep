@@ -20,7 +20,7 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JTable;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTableByCellValuePredicate implements Predicate<Component> {

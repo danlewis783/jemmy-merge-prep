@@ -17,7 +17,7 @@
 package org.netbeans.jemmy;
 
 import java.util.function.Function;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Runs a {@link Function} on the Jemmy action thread; see {@link ActionRunner} for the

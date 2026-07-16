@@ -28,6 +28,9 @@ dependencies {
     api(libs.jspecify)
     implementation(libs.slf4j)
     testFixturesImplementation(libs.assertj.core)
+    compileOnly(libs.jetbrains.annotations)
+    testCompileOnly(libs.jetbrains.annotations)
+    testFixturesCompileOnly(libs.jetbrains.annotations)
 
     // Null-checking: NullAway runs as an Error Prone plugin (configured below, on every source set).
     errorprone(libs.errorprone.core)

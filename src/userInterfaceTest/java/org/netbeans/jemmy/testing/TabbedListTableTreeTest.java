@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.operators.JFrameOperator;

@@ -21,7 +21,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.EnumSet;
 import java.util.Objects;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

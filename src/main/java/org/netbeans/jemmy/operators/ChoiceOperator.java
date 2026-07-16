@@ -29,7 +29,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ItemListener;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;

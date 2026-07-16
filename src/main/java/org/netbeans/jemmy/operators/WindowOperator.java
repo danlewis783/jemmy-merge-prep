@@ -29,7 +29,7 @@ import java.awt.Window;
 import java.awt.event.WindowListener;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;

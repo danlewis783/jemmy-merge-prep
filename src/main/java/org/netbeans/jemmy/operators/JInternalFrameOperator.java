@@ -42,7 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.InternalFrameUI;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyInputException;

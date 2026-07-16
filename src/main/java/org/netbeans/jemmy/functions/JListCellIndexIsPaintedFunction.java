@@ -20,7 +20,7 @@ package org.netbeans.jemmy.functions;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import javax.swing.JList;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.operators.JListOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

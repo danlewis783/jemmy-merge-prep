@@ -21,7 +21,7 @@ import java.awt.Window;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.swing.MenuElement;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.operators.JPopupMenuOperator;
 import org.netbeans.jemmy.operators.WindowOperator;
 

@@ -30,7 +30,7 @@ import java.awt.Dimension;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;

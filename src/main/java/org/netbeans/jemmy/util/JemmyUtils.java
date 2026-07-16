@@ -18,7 +18,7 @@ package org.netbeans.jemmy.util;
 
 import java.util.Objects;
 import javax.swing.JDialog;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.ContainerOperator;

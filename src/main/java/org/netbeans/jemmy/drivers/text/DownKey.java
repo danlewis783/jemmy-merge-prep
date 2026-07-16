@@ -26,7 +26,7 @@
 package org.netbeans.jemmy.drivers.text;
 
 import java.util.Objects;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 final class DownKey extends GoAndBackKey {
     private @Nullable UpKey backKey;

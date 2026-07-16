@@ -21,7 +21,7 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.predicates.IndexPredicate;
 
 public class WindowFunction<T extends Window> implements Function<Void, T> {

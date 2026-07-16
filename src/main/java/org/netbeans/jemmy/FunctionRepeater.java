@@ -19,7 +19,7 @@ package org.netbeans.jemmy;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Polls a {@link Function} of a fixed argument until it produces a non-null value; see

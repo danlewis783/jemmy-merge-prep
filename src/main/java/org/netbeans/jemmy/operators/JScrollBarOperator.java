@@ -34,7 +34,7 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.plaf.ScrollBarUI;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;

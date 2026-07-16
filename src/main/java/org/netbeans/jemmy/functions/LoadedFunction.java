@@ -19,7 +19,7 @@ package org.netbeans.jemmy.functions;
 import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.tree.TreePath;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.TreePathAndBoolean;
 import org.netbeans.jemmy.TreePathChooserAndTreePath;
 import org.netbeans.jemmy.operators.JTreeOperator;

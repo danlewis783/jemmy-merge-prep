@@ -25,7 +25,7 @@
 package org.netbeans.jemmy;
 
 import java.awt.AWTEvent;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.functions.AwtEventByMaskFunction;
 import org.netbeans.jemmy.functions.NoEventFunction;
 

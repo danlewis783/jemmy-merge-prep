@@ -18,7 +18,7 @@ package org.netbeans.jemmy.functions;
 
 import java.awt.AWTEvent;
 import java.util.function.Function;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.EventListener;
 import org.netbeans.jemmy.EventTool;
 

@@ -21,7 +21,7 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.predicates.DialogSubPredicate;
 
 public final class DialogFunction extends WindowFunction<Dialog> {

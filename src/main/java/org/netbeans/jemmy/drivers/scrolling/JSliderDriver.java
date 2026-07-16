@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.util.Collections;
 import javax.swing.JSlider;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;

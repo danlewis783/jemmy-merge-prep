@@ -32,7 +32,7 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.event.ContainerListener;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;

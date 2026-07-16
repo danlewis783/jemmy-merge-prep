@@ -25,7 +25,7 @@
 package org.netbeans.jemmy;
 
 import java.awt.Component;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class JemmyInputException extends JemmyException {
     public JemmyInputException(Component comp) {

@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.CharBindingMap;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.FunctionRunner;

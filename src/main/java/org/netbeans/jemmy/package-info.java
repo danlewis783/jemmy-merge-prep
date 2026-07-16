@@ -30,7 +30,7 @@
  * @since 02/23/2002
  * <hr>
  */
-@NullMarked
+@NotNullByDefault
 package org.netbeans.jemmy;
 
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;

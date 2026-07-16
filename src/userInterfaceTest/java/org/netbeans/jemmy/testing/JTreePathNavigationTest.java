@@ -32,7 +32,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.ListModel;
 import javax.swing.tree.TreePath;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.operators.JCheckBoxOperator;

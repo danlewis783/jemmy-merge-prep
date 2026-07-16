@@ -21,7 +21,7 @@ import java.awt.event.AWTEventListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicLong;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public final class EventListener implements AWTEventListener {
     private final long eventMask;

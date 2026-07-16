@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JList;
 import javax.swing.plaf.basic.ComboPopup;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.functions.WindowFunction;
 import org.netbeans.jemmy.predicates.PopupWindowPredicate;

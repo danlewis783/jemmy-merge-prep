@@ -29,7 +29,7 @@ import java.awt.Container;
 import java.util.function.Predicate;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;

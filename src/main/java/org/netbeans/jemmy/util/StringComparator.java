@@ -16,7 +16,7 @@
  */
 package org.netbeans.jemmy.util;
 
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface StringComparator {
     /**

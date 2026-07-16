@@ -19,7 +19,7 @@ package org.netbeans.jemmy.functions;
 import java.awt.Component;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
 
 public final class ComponentSearcherFunction implements Function<Void, Component> {

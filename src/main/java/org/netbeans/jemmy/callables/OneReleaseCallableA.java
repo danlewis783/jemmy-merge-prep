@@ -20,7 +20,7 @@ import java.awt.Component;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.swing.MenuElement;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public class OneReleaseCallableA extends OneReleaseCallable {

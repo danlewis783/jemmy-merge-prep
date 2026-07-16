@@ -20,7 +20,7 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ClassReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

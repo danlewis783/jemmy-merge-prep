@@ -26,7 +26,7 @@ package org.netbeans.jemmy;
 
 import java.awt.Component;
 import java.util.Objects;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.callables.MethodInvokeCallable;
 
 /**

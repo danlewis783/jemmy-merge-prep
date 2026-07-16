@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.plaf.LabelUI;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JLabelByTextPredicate;

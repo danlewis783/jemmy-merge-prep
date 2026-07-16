@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Adjustable;
 import java.awt.Point;
 import java.util.List;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;

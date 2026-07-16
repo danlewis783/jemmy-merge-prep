@@ -28,7 +28,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Label;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.LabelByLabelPredicate;

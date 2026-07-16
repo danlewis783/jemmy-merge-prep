@@ -28,7 +28,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.Objects;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public final class ComponentSearcher {
     private final Container container;

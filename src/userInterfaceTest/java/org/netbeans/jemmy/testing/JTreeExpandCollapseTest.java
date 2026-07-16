@@ -22,7 +22,7 @@ import java.util.function.Function;
 import javax.swing.JFrame;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;

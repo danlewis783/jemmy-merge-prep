@@ -31,7 +31,7 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.JProgressBar;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ProgressBarUI;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;

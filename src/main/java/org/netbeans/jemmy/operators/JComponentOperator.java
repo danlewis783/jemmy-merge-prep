@@ -44,7 +44,7 @@ import javax.swing.JToolTip;
 import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;

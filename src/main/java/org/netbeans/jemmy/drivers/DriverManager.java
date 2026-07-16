@@ -27,7 +27,7 @@ package org.netbeans.jemmy.drivers;
 
 import java.util.List;
 import java.util.Map;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.operators.ComponentOperator;

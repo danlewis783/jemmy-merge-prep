@@ -17,27 +17,8 @@
 
 package org.netbeans.jemmy.operators;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.netbeans.jemmy.testing.OnQueue.onQueue;
-
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JTable;
-import javax.swing.UIManager;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +31,22 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.util.StringComparators;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 // UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
 @SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
@@ -68,8 +65,15 @@ final class JFileChooserOperatorTest {
     @BeforeAll
     static void beforeAll() throws IOException {
         Timeouts.resetToDefaults();
-        Files.createFile(tempDir.resolve(FN2));
-        Files.createDirectory(tempDir.resolve(FN3));
+
+        Files.createFile(Paths.get(FN2));
+        Files.createDirectory(Paths.get(FN3));
+    }
+
+    @AfterAll
+    static void afterClass() throws IOException {
+        Files.deleteIfExists(Paths.get(FN2));
+        Files.deleteIfExists(Paths.get(FN3));
     }
 
     @BeforeEach

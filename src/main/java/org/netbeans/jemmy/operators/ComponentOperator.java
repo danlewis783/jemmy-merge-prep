@@ -59,7 +59,7 @@ import java.io.PrintWriter;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.EventDispatcher;

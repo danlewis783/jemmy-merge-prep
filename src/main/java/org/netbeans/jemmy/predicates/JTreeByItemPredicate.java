@@ -21,7 +21,7 @@ import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTreeByItemPredicate implements Predicate<Component> {

@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 import java.util.function.Supplier;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Detects Swing components touched off the event dispatch thread, in the style of Alexander

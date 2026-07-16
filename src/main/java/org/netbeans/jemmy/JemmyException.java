@@ -26,7 +26,7 @@ package org.netbeans.jemmy;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

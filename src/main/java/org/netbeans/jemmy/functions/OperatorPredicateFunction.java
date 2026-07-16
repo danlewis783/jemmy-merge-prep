@@ -18,7 +18,7 @@ package org.netbeans.jemmy.functions;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.operators.Operator;
 
 public final class OperatorPredicateFunction<T extends Operator> implements Function<Void, Boolean> {

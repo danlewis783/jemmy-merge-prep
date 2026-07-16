@@ -19,7 +19,7 @@ package org.netbeans.jemmy.predicates;
 import java.awt.Component;
 import java.util.function.Predicate;
 import javax.swing.text.JTextComponent;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class JTextComponentByTextPredicate implements Predicate<Component> {

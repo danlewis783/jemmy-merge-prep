@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 import java.util.function.Predicate;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JTextField;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;

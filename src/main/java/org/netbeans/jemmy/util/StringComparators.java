@@ -18,7 +18,7 @@
 package org.netbeans.jemmy.util;
 
 import java.util.regex.Pattern;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public final class StringComparators {
     private StringComparators() {}
