@@ -27,17 +27,12 @@ package org.netbeans.jemmy.operators;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.WindowListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
-import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.netbeans.jemmy.BooleanSupplierRepeater;
-import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
-import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -45,12 +40,8 @@ import org.netbeans.jemmy.drivers.WindowDriver;
 import org.netbeans.jemmy.functions.WindowFunction;
 import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class WindowOperator extends ContainerOperator {
-    private static final Logger logger = LoggerFactory.getLogger(WindowOperator.class);
-
     public static WindowOperator waitFor() {
         return waitFor(0);
     }
@@ -271,13 +262,11 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public boolean isFocused() {
-        return QueueTool.getInstance()
-                .callOnQueue((BooleanSupplier) () -> callNoArgBooleanMethodUsingReflection("isFocused"));
+        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().isFocused());
     }
 
     public boolean isActive() {
-        return QueueTool.getInstance()
-                .callOnQueue((BooleanSupplier) () -> callNoArgBooleanMethodUsingReflection("isActive"));
+        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().isActive());
     }
 
     public static @Nullable Window findWindow(Predicate<Component> chooser, int index) {
@@ -320,15 +309,7 @@ public class WindowOperator extends ContainerOperator {
                 .runUntilNotNull(null);
     }
 
-    private boolean callNoArgBooleanMethodUsingReflection(String methodName) {
-        try {
-            return (Boolean) new ClassReference<>(getSource()).invokeMethod(methodName, null, null);
-        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            throw new JemmyException("call to '" + methodName + "' using reflection failed", e);
-        }
-    }
-
-    private @NonNull Window getSourceAsWindow() {
+    private Window getSourceAsWindow() {
         return (Window) getSource();
     }
 }

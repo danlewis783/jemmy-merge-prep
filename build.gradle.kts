@@ -29,7 +29,7 @@ dependencies {
     implementation(libs.slf4j)
     testFixturesImplementation(libs.assertj.core)
 
-    // Null-checking: NullAway runs as an Error Prone plugin (enabled on main only).
+    // Null-checking: NullAway runs as an Error Prone plugin (configured below, on every source set).
     errorprone(libs.errorprone.core)
     errorprone(libs.nullaway)
 }

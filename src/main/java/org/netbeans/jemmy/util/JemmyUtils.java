@@ -1,32 +1,65 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.util;
 
-import java.awt.*;
 import java.util.Objects;
-import javax.swing.*;
+import javax.swing.JDialog;
 import org.jspecify.annotations.Nullable;
-import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.*;
-import org.netbeans.jemmy.predicates.DialogShowingByTitlePredicate;
+import org.netbeans.jemmy.operators.ContainerOperator;
+import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JDialogOperator;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JMenuBarOperator;
+import org.netbeans.jemmy.operators.JMenuItemOperator;
+import org.netbeans.jemmy.operators.JTextFieldOperator;
 
 public final class JemmyUtils {
     private static final String OPEN = "Open";
 
     private JemmyUtils() {}
 
+    /**
+     * Waits up to {@code ms} milliseconds for a showing dialog whose title matches exactly.
+     * Polls locally instead of overriding the global dialog-wait timeout, so concurrent waits
+     * and callers that already hold an override are unaffected.
+     *
+     * @return the dialog's operator, or {@code null} if no such dialog shows up in time
+     */
     public static @Nullable JDialogOperator waitForOptionalDialog(String title, long ms) {
-        try (TimeoutOverride t = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, ms)) {
-            JDialog dialog =
-                    JDialogOperator.waitJDialog(new DialogShowingByTitlePredicate(Objects.requireNonNull(title)));
-            if (dialog == null) {
+        return waitForOptionalDialog(title, StringComparators.strict(), ms);
+    }
+
+    public static @Nullable JDialogOperator waitForOptionalDialog(String title, StringComparator comparator, long ms) {
+        Objects.requireNonNull(title, "title");
+        Objects.requireNonNull(comparator, "comparator");
+        long deadline = System.currentTimeMillis() + ms;
+        while (true) {
+            JDialog dialog = JDialogOperator.findJDialog(title, comparator);
+            if (dialog != null) {
+                return JDialogOperator.of(dialog);
+            }
+
+            if (System.currentTimeMillis() >= deadline) {
                 return null;
             }
 
-            return JDialogOperator.of(dialog);
-        } catch (TimeoutExpiredException e) {
-            return null;
+            Timeouts.sleep(TimeoutKey.Waiter_TimeDelta);
         }
     }
 
@@ -42,49 +75,60 @@ public final class JemmyUtils {
         jMenuItemOp.push();
     }
 
-    public static void pushMenuBarNoBlock(String menuPath, String pathDelimiter) {
+    /**
+     * @return {@code true} if the menu item was pushed, {@code false} if it was disabled
+     * @see #pushMenuBarNoBlock(JFrameOperator, String, String)
+     */
+    public static boolean pushMenuBarNoBlock(String menuPath, String pathDelimiter) {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
-        pushMenuBarNoBlock(jFrameOp, menuPath, pathDelimiter);
+        return pushMenuBarNoBlock(jFrameOp, menuPath, pathDelimiter);
     }
 
     /**
-     * Locates the menu item in the given frame's menu bar and pushes it if it is enabled, without blocking.
+     * Locates the menu item in the given frame's menu bar and pushes it if it is enabled, without
+     * blocking. When the item is disabled, the menus opened while locating it are closed again.
+     *
      * @param jFrameOp not null
      * @param menuPath not null
      * @param pathDelimiter not null
-     * @return {@code null} if successful, otherwise, the JMenuItemOperator
+     * @return {@code true} if the menu item was pushed, {@code false} if it was disabled
      */
-    public static @Nullable JMenuItemOperator pushMenuBarNoBlock(
-            JFrameOperator jFrameOp, String menuPath, String pathDelimiter) {
+    public static boolean pushMenuBarNoBlock(JFrameOperator jFrameOp, String menuPath, String pathDelimiter) {
         Objects.requireNonNull(jFrameOp);
         Objects.requireNonNull(pathDelimiter);
         JMenuBarOperator jMenuBarOp = JMenuBarOperator.waitFor(jFrameOp);
         JMenuItemOperator jMenuItemOp = jMenuBarOp.showMenuItem(menuPath, pathDelimiter, StringComparators.strict());
         if (jMenuItemOp.isEnabled()) {
             jMenuItemOp.pushNoBlock();
-            return null;
+            return true;
         }
-        return jMenuItemOp;
+
+        jMenuBarOp.closeSubmenus();
+        return false;
     }
 
     public static void useOpenDialog(String fileName) {
         Objects.requireNonNull(fileName, "fileName");
-        JDialogOperator openDialog = waitForDialog(OPEN);
+        JDialogOperator openDialog = waitForDialog(OPEN, StringComparators.caseInsensitiveSubstring());
         JTextFieldOperator jTextFieldOperator = JTextFieldOperator.waitFor(openDialog);
         jTextFieldOperator.setText(fileName);
         pushBlockingButton(openDialog, OPEN);
     }
 
+    /**
+     * Waits for a showing dialog whose title matches exactly, consistent with
+     * {@link #waitForOptionalDialog(String, long)}. Pass a comparator for looser matching.
+     */
     public static JDialogOperator waitForDialog(String title) {
-        JDialog dialog = JDialogOperator.waitJDialog(
-                new DialogShowingByTitlePredicate(title, StringComparators.caseInsensitiveSubstring()));
-        return JDialogOperator.of(dialog);
+        return waitForDialog(title, StringComparators.strict());
+    }
+
+    public static JDialogOperator waitForDialog(String title, StringComparator comparator) {
+        return JDialogOperator.of(JDialogOperator.waitJDialog(title, comparator));
     }
 
     public static void pushBlockingButton(ContainerOperator parent, String text) {
-        JButton button =
-                JButtonOperator.waitJButton((Container) parent.getSource(), text, StringComparators.caseInsensitive());
-        JButtonOperator buttonOp = JButtonOperator.of(button);
+        JButtonOperator buttonOp = JButtonOperator.waitFor(parent, text, StringComparators.caseInsensitive());
         buttonOp.requestFocus();
         buttonOp.push();
     }

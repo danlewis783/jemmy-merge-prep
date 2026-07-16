@@ -1,12 +1,31 @@
+/*
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation, with the "Classpath"
+ * exception as provided in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package org.netbeans.jemmy.util;
 
-import javax.swing.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.swing.JComponent;
 
+/**
+ * Repaint manager that throws {@link EdtViolationException} on the violating thread when a
+ * component is touched off the event dispatch thread. The exception is raised on the thread
+ * that committed the violation - a violation from an application worker thread does not fail
+ * the test unless that thread's exceptions are observed.
+ */
 public class FailOnThreadViolationRepaintManager extends CheckThreadViolationRepaintManager {
-    private static final Logger logger = LoggerFactory.getLogger(FailOnThreadViolationRepaintManager.class);
-    private static boolean enableInstallOptimization = true;
+    private static volatile boolean enableInstallOptimization = true;
 
     public FailOnThreadViolationRepaintManager() {}
 
@@ -15,12 +34,9 @@ public class FailOnThreadViolationRepaintManager extends CheckThreadViolationRep
     }
 
     @Override
-    void violationFound(JComponent c, StackTraceElement[] stackTraceElements) {
+    protected void violationFound(JComponent c, StackTraceElement[] stackTraceElements) {
         EdtViolationException e = new EdtViolationException("EDT violation detected");
-        if (stackTraceElements != null) {
-            e.setStackTrace(stackTraceElements);
-        }
-
+        e.setStackTrace(stackTraceElements);
         throw e;
     }
 
@@ -29,20 +45,9 @@ public class FailOnThreadViolationRepaintManager extends CheckThreadViolationRep
     }
 
     public static FailOnThreadViolationRepaintManager install() {
-        if (enableInstallOptimization) {
-            Object m = currentManager(null);
-            if (m instanceof FailOnThreadViolationRepaintManager) {
-                return (FailOnThreadViolationRepaintManager) m;
-            }
-        }
-
-        return installNew();
-    }
-
-    private static FailOnThreadViolationRepaintManager installNew() {
-        FailOnThreadViolationRepaintManager m = new FailOnThreadViolationRepaintManager();
-        setCurrentManager(m);
-
-        return m;
+        return install(
+                FailOnThreadViolationRepaintManager.class,
+                enableInstallOptimization,
+                FailOnThreadViolationRepaintManager::new);
     }
 }

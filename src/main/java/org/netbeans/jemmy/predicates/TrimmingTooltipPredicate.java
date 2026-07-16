@@ -31,9 +31,24 @@ public final class TrimmingTooltipPredicate implements Predicate<Component> {
         this.comparator = Objects.requireNonNull(comparator, "comparator");
     }
 
+    /**
+     * @deprecated Use {@link #TrimmingTooltipPredicate(String, StringComparator)} and pass the
+     * index to the search instead. The old skip-the-first-{@code index}-visited-components
+     * behavior never reset between wait retries, so any nonzero index only worked for a one-shot
+     * search with a fresh instance; a nonzero index is now rejected outright.
+     * @throws IllegalArgumentException if {@code index} is nonzero
+     */
+    @Deprecated
+    public TrimmingTooltipPredicate(String tooltip, StringComparator comparator, int index) {
+        this(tooltip, comparator);
+        if (index != 0) {
+            throw new IllegalArgumentException(
+                    "index-skipping is no longer supported; pass the index to the search instead");
+        }
+    }
+
     @Override
     public boolean test(Component comp) {
-
         if (!(comp instanceof JComponent)) {
             return false;
         }
@@ -44,9 +59,6 @@ public final class TrimmingTooltipPredicate implements Predicate<Component> {
             return false;
         }
 
-        String trimmed = toolTipText.trim();
-        boolean result = comparator.equals(trimmed, tooltip);
-
-        return result;
+        return comparator.equals(toolTipText.trim(), tooltip);
     }
 }

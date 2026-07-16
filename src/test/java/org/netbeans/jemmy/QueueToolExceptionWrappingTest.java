@@ -22,8 +22,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.concurrent.Callable;
-import java.util.function.BooleanSupplier;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,7 +39,7 @@ class QueueToolExceptionWrappingTest {
         ParseException original = new ParseException("unparseable", 0);
 
         assertThatExceptionOfType(JemmyException.class)
-                .isThrownBy(() -> queueTool.callOnQueue((Callable<Object>) () -> {
+                .isThrownBy(() -> queueTool.callOnQueue(() -> {
                     throw original;
                 }))
                 .withMessage("Throwable captured by caller")
@@ -82,7 +80,7 @@ class QueueToolExceptionWrappingTest {
         Error original = new Error("not defined for JMenu");
 
         assertThatExceptionOfType(JemmyException.class)
-                .isThrownBy(() -> queueTool.callOnQueue((BooleanSupplier) () -> {
+                .isThrownBy(() -> queueTool.callOnQueue(() -> {
                     throw original;
                 }))
                 .withMessage("Throwable captured by caller")
@@ -94,7 +92,7 @@ class QueueToolExceptionWrappingTest {
         JemmyException preWrapped = new JemmyException("could not commit edit", new ParseException("unparseable", 0));
 
         assertThatExceptionOfType(JemmyException.class)
-                .isThrownBy(() -> queueTool.callOnQueue((BooleanSupplier) () -> {
+                .isThrownBy(() -> queueTool.callOnQueue(() -> {
                     throw preWrapped;
                 }))
                 .isSameAs(preWrapped);
@@ -116,7 +114,7 @@ class QueueToolExceptionWrappingTest {
         ParseException original = new ParseException("unparseable", 0);
 
         EventQueue.invokeAndWait(() -> assertThatExceptionOfType(JemmyException.class)
-                .isThrownBy(() -> queueTool.callOnQueue((Callable<Object>) () -> {
+                .isThrownBy(() -> queueTool.callOnQueue(() -> {
                     throw original;
                 }))
                 .withMessage("Exception when calling")
@@ -129,7 +127,7 @@ class QueueToolExceptionWrappingTest {
         JemmyException preWrapped = new JemmyException("could not commit edit", new ParseException("unparseable", 0));
 
         EventQueue.invokeAndWait(() -> assertThatExceptionOfType(JemmyException.class)
-                .isThrownBy(() -> queueTool.callOnQueue((BooleanSupplier) () -> {
+                .isThrownBy(() -> queueTool.callOnQueue(() -> {
                     throw preWrapped;
                 }))
                 .isSameAs(preWrapped));

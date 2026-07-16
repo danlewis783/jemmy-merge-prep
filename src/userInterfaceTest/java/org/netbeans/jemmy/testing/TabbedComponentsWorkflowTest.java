@@ -101,7 +101,7 @@ final class TabbedComponentsWorkflowTest {
                             .getSource());
             jTableOp.changeCellObject(49, 49, "-1-1");
             jTableOp.waitCell("-1-1", STRICT, 49, 49);
-            assertThat(jTableOp.getValueAt(49, 49).toString()).isEqualTo("-1-1");
+            assertThat(jTableOp.getValueAt(49, 49)).hasToString("-1-1");
             jTableOp.scrollToCell(jTableOp.findCellRow("2424", STRICT), jTableOp.findCellColumn("2424", STRICT));
             EventQueue.invokeAndWait(() -> jTableOp.getModel().setValueAt(null, 24, 24));
             jTableOp.getSource().repaint();

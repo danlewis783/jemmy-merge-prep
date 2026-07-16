@@ -18,7 +18,6 @@
 package org.netbeans.jemmy.callables;
 
 import java.util.concurrent.Callable;
-import java.util.function.BooleanSupplier;
 import org.netbeans.jemmy.operators.Operator;
 
 public final class Callables {
@@ -30,9 +29,5 @@ public final class Callables {
 
     public static Callable<String> toStringOfOperatorSource(Operator operator) {
         return () -> operator.getSource().toString();
-    }
-
-    public static Callable<Boolean> fromBooleanSupplier(BooleanSupplier booleanSupplier) {
-        return () -> booleanSupplier.getAsBoolean();
     }
 }

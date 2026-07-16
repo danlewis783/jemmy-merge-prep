@@ -396,14 +396,6 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return waitJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 
-    public static JTabbedPane waitJTabbedPaneUnder(Container cont, Predicate<Component> chooser) {
-        return (JTabbedPane) waitContainerUnder(cont, ComponentPredicates.of(JTabbedPane.class, chooser));
-    }
-
-    public static JTabbedPane waitJTabbedPaneUnder(Container cont) {
-        return waitJTabbedPaneUnder(cont, ComponentPredicates.of(JTabbedPane.class));
-    }
-
     public interface TabPageChooser {
         boolean checkPage(JTabbedPaneOperator oper, int index);
     }

@@ -254,17 +254,4 @@ public class ContainerOperator extends ComponentOperator {
     public static Container waitContainer(Container cont) {
         return waitContainer(cont, 0);
     }
-
-    public static Container waitContainerUnder(Component comp, Predicate<Component> chooser) {
-        ContainerOperator containerOperator = ContainerOperator.of((Container) comp);
-        ComponentOperator componentOperator =
-                ComponentOperator.waitFor(containerOperator, ComponentPredicates.of(Container.class, chooser));
-        Component componentSource = componentOperator.getSource();
-        Container componentSourceAsContainer = (Container) componentSource;
-        return componentSourceAsContainer;
-    }
-
-    public static Container waitContainerUnder(Component comp) {
-        return waitContainerUnder(comp, ComponentPredicates.alwaysTrue());
-    }
 }

@@ -30,7 +30,6 @@ import java.awt.Toolkit;
 import java.awt.event.InvocationEvent;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BooleanSupplier;
 import org.netbeans.jemmy.callables.Callables;
 import org.netbeans.jemmy.functions.StayingEmptyBooleanSupplier;
 import org.netbeans.jemmy.functions.SystemEventQueueEmptyBooleanSupplier;
@@ -109,10 +108,6 @@ public final class QueueTool {
         }
 
         return invokeAndWait(Caller.of(callable));
-    }
-
-    public boolean callOnQueue(BooleanSupplier booleanSupplier) {
-        return callOnQueue(Callables.fromBooleanSupplier(booleanSupplier));
     }
 
     /**

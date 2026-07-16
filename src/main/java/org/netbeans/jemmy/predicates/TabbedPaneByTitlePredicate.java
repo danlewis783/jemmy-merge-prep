@@ -16,10 +16,11 @@
  */
 package org.netbeans.jemmy.predicates;
 
-import java.awt.*;
+import java.awt.Component;
 import java.util.Objects;
 import java.util.function.Predicate;
-import javax.swing.*;
+import javax.swing.JTabbedPane;
+import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 import org.netbeans.jemmy.util.StringComparator;
 
 public final class TabbedPaneByTitlePredicate implements Predicate<Component> {
@@ -33,17 +34,15 @@ public final class TabbedPaneByTitlePredicate implements Predicate<Component> {
 
     @Override
     public boolean test(Component comp) {
-
         if (!(comp instanceof JTabbedPane)) {
             return false;
         }
 
-        JTabbedPane pane = (JTabbedPane) comp;
+        JTabbedPaneOperator pane = JTabbedPaneOperator.of((JTabbedPane) comp);
         final int tabCount = pane.getTabCount();
 
         for (int i = 0; i < tabCount; i++) {
-            String paneTitle = pane.getTitleAt(i);
-            if (comparator.equals(paneTitle, title)) {
+            if (comparator.equals(pane.getTitleAt(i), title)) {
                 return true;
             }
         }

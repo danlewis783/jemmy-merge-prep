@@ -662,7 +662,7 @@ public class JTableOperator extends JComponentOperator {
         return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getUI());
     }
 
-    public Object getValueAt(int i, int i1) {
+    public @Nullable Object getValueAt(int i, int i1) {
         return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getValueAt(i, i1));
     }
 
