@@ -32,6 +32,7 @@ import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.WindowOperator;
+import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class AccessibleDescriptionPredicateTest {
@@ -49,15 +50,15 @@ class AccessibleDescriptionPredicateTest {
             button = new JButton("Button");
             button.getAccessibleContext().setAccessibleDescription("Accessible");
             frame.getContentPane().add(button);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
             dialog = new JDialog();
             dialog.getAccessibleContext().setAccessibleDescription("Dialog");
-            dialog.setLocationRelativeTo(null);
+            TestWindows.place(dialog, 1);
             dialog.setVisible(true);
             window = new JWindow(frame);
             window.getAccessibleContext().setAccessibleDescription("Window");
-            window.setLocationRelativeTo(null);
+            TestWindows.place(window, 2);
             window.setVisible(true);
         });
     }

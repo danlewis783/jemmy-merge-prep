@@ -34,6 +34,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
+import org.netbeans.jemmy.testing.TestWindows;
 
 /**
  * Exercises internal frames through {@link InternalFrameAPIDriver}, the look-and-feel-immune driver. Installs the
@@ -67,7 +68,7 @@ class InternalFrameApiDriverTest {
             internalFrame.setVisible(true);
             desktop.add(internalFrame);
             frame.setSize(300, 300);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

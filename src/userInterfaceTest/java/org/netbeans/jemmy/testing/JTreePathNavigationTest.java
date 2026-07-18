@@ -113,7 +113,7 @@ class JTreePathNavigationTest {
             contentPane.add(showWrong, BorderLayout.SOUTH);
             contentPane.add(split, BorderLayout.CENTER);
             jFrame.setSize(400, 200);
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

@@ -24,6 +24,16 @@ dependencies {
     testFixturesCompileOnly(libs.jetbrains.annotations)
 }
 
+// Forward the test-window placement overrides (see TestWindows in testFixtures) from the
+// gradle invocation into the test JVMs, e.g. gradlew userInterfaceTest -Djemmy.testing.window.x=900
+fun Test.forwardWindowPlacementProperties() {
+    listOf("jemmy.testing.window.x", "jemmy.testing.window.y").forEach { key ->
+        (providers.gradleProperty(key).orNull ?: providers.systemProperty(key).orNull)?.let {
+            systemProperty(key, it)
+        }
+    }
+}
+
 testing {
     suites {
         named<JvmTestSuite>("test") {
@@ -40,6 +50,7 @@ testing {
                     testTask.configure {
                         systemProperty("logback.configurationFile", "logback-automated-test.xml")
                         systemProperty("swing.defaultlaf", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel")
+                        forwardWindowPlacementProperties()
                     }
                 }
             }
@@ -65,6 +76,7 @@ testing {
                         shouldRunAfter(tasks.test)
                         systemProperty("logback.configurationFile", "logback-automated-test.xml")
                         systemProperty("swing.defaultlaf", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel")
+                        forwardWindowPlacementProperties()
                     }
                 }
             }

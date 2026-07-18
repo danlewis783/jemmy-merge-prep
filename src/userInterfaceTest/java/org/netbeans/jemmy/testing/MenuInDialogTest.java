@@ -113,7 +113,7 @@ class MenuInDialogTest {
 
             jDialog.setJMenuBar(bar);
             jDialog.setSize(300, 200);
-            jDialog.setLocation(200, 200);
+            TestWindows.place(jDialog);
             jDialog.setModal(true);
 
             this.jFrame = jFrame;

@@ -38,6 +38,7 @@ import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 /**
@@ -69,7 +70,7 @@ class JToolTipOperatorTest {
             label.setToolTipText(TOOLTIP_TEXT);
             frame.getContentPane().add(label);
             frame.setSize(400, 400);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

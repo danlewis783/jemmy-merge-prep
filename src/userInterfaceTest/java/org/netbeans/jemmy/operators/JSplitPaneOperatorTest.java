@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class JSplitPaneOperatorTest {
@@ -46,7 +47,7 @@ class JSplitPaneOperatorTest {
             splitPane.setName("JSplitPane");
             frame.getContentPane().add(splitPane);
             frame.setSize(400, 300);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

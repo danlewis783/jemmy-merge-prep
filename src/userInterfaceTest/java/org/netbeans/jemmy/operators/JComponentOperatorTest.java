@@ -41,6 +41,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -60,7 +61,7 @@ class JComponentOperatorTest {
             frame.getContentPane().add(component);
             frame.setName("JFrameOperatorTest");
             frame.setSize(300, 200);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

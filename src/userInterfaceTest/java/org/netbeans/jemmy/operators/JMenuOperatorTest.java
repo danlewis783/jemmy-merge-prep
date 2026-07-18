@@ -47,6 +47,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -83,6 +84,7 @@ class JMenuOperatorTest {
             jMenuBar.add(jMenu);
             jFrame.setJMenuBar(jMenuBar);
             jFrame.setSize(250, 100);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
             frame = jFrame;
             menu = jMenu;

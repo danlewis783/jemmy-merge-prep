@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -59,7 +60,7 @@ class JListOperatorTest {
             list.setSelectedIndex(0);
             frameNew.getContentPane().add(new JScrollPane(list));
             frameNew.setSize(300, 200);
-            frameNew.setLocationRelativeTo(null);
+            TestWindows.place(frameNew);
             frameNew.setVisible(true);
             frame = frameNew;
         });

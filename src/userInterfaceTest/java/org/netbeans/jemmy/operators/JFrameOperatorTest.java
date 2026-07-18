@@ -38,7 +38,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
-import org.netbeans.jemmy.testing.IndexedFramesApp;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -51,7 +51,7 @@ class JFrameOperatorTest {
             mainFrame = new JFrame("JFrameOperatorTest");
             mainFrame.setName("JFrameOperatorTest");
             mainFrame.pack();
-            mainFrame.setLocationRelativeTo(null);
+            TestWindows.place(mainFrame);
             mainFrame.setVisible(true);
         });
     }

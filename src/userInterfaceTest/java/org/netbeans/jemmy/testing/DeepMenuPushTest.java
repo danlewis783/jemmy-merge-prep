@@ -65,7 +65,7 @@ class DeepMenuPushTest {
             jFrame.setJMenuBar(menuBar);
             contentPane.add(menuLabel);
             jFrame.setSize(200, 200);
-            jFrame.setLocation(100, 100);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
-import org.netbeans.jemmy.testing.IndexedFramesApp;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ class JFrameOperatorIndexedFramesTest {
             super("frame" + index);
             this.index = index;
             setSize(300, 300);
-            setLocation(index * 50, index * 50);
+            TestWindows.place(this, index);
         }
 
         int getIndex() {

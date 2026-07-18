@@ -33,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class ContainerOperatorTest {
@@ -47,7 +48,7 @@ class ContainerOperatorTest {
             panel = new Panel();
             panel.setName("ContainerOperatorTest");
             frame.add(panel);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

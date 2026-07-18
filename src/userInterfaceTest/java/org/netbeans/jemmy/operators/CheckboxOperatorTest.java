@@ -30,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -50,6 +51,7 @@ class CheckboxOperatorTest {
             // (e.g. a lingering frame from an adjacent test JVM) overlaps this frame, the
             // click lands on that window instead and waitSelected times out
             frame.setAlwaysOnTop(true);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

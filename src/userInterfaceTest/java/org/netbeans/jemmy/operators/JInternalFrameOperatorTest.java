@@ -51,6 +51,7 @@ import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JInternalFrameOperator.JDesktopIconOperator;
 import org.netbeans.jemmy.operators.JInternalFrameOperator.WrongInternalFrameStateException;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -76,7 +77,7 @@ class JInternalFrameOperatorTest {
             internalFrame.setVisible(true);
             desktop.add(internalFrame);
             frame.setSize(200, 200);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

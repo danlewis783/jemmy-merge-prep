@@ -33,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class JScrollPaneOperatorTest {
@@ -53,7 +54,7 @@ class JScrollPaneOperatorTest {
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             frame.getContentPane().add(scrollPane);
             frame.setSize(200, 200);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
         });
     }
 

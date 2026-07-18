@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -43,7 +44,7 @@ class JRadioButtonOperatorTest {
             radioButton.setName("JRadioButtonOperatorTest");
             frame.getContentPane().add(radioButton);
             frame.pack();
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
         });
     }
 

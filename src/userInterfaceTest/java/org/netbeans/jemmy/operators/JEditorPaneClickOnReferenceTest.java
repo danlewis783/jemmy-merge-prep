@@ -36,6 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.netbeans.jemmy.testing.TestWindows;
 
 /**
  * Exercises {@code JEditorPaneOperator.clickOnReference}, ported from openjdk/jemmy-v2 (CODETOOLS-7902156), with
@@ -87,7 +88,7 @@ class JEditorPaneClickOnReferenceTest {
             editorPane = newEditorPane();
             frame.getContentPane().add(new JScrollPane(editorPane), BorderLayout.CENTER);
             frame.pack();
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
         JEditorPaneOperator operator = JEditorPaneOperator.waitFor(JFrameOperator.of(frame));
@@ -117,7 +118,7 @@ class JEditorPaneClickOnReferenceTest {
             editorPane = newEditorPane();
             frame.getContentPane().add(editorPane);
             frame.pack();
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
         JEditorPaneOperator operator = JEditorPaneOperator.waitFor(JFrameOperator.of(frame));

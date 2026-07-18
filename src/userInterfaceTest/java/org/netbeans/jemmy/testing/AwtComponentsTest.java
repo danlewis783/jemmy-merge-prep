@@ -107,7 +107,7 @@ class AwtComponentsTest {
             contentPane.add(label, BorderLayout.SOUTH);
 
             jFrame.setSize(600, 300);
-            jFrame.setLocation(200, 200);
+            TestWindows.place(jFrame);
 
             jFrame.setVisible(true);
         });

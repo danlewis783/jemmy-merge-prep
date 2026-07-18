@@ -29,6 +29,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 import javax.swing.*;
@@ -74,7 +75,7 @@ final class JPopupMenuOperatorRobotTest {
             popup = jPopupMenu;
 
             jFrame.setSize(400, 300);
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             // the popup tests drive real Robot clicks at screen coordinates; if another window
             // overlaps this frame the click lands on that window and the menu push times out
             jFrame.setAlwaysOnTop(true);

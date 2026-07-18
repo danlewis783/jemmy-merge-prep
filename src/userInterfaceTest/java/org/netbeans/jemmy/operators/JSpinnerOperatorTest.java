@@ -56,6 +56,7 @@ import org.netbeans.jemmy.operators.JSpinnerOperator.ListScrollAdjuster;
 import org.netbeans.jemmy.operators.JSpinnerOperator.NumberScrollAdjuster;
 import org.netbeans.jemmy.operators.JSpinnerOperator.ToStringScrollAdjuster;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -73,7 +74,7 @@ class JSpinnerOperatorTest {
             jSpinner.setName("JSpinnerOperatorTest");
             jFrame.getContentPane().add(jSpinner);
             jFrame.pack();
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
             frame = jFrame;
         });

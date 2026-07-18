@@ -68,7 +68,7 @@ final class RobotVsQueueDispatchTest {
             jPanel.add(new JTextArea(), BorderLayout.CENTER);
             contentPane.add(jPanel, BorderLayout.CENTER);
             jFrame.setSize(300, 100);
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             // the robot rounds of RobotVsQueueDispatchTest click at real screen coordinates;
             // an overlapping window would swallow them - same mitigation as ListOperatorTest
             jFrame.setAlwaysOnTop(true);

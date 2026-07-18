@@ -21,6 +21,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.netbeans.jemmy.testing.TestWindows;
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,6 +117,7 @@ class JFrameOperatorMenuNavigationTest {
     void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             frame = new MenuNavigationApp();
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

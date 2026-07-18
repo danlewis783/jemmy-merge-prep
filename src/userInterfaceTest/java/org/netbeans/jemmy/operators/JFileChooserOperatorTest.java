@@ -34,6 +34,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -83,7 +84,7 @@ final class JFileChooserOperatorTest {
             fileChooser = new JFileChooser();
             frame.getContentPane().add(fileChooser);
             frame.pack();
-            frame.setLocation(100, 100);
+            TestWindows.place(frame);
             frame.setVisible(true);
             fileChooser.setCurrentDirectory(tempDir.toFile());
         });
@@ -138,7 +139,7 @@ final class JFileChooserOperatorTest {
             dialog.setModal(false);
             dialog.getContentPane().add(fileChooser);
             dialog.pack();
-            dialog.setLocationRelativeTo(null);
+            TestWindows.place(dialog, 1);
             dialog.setVisible(true);
             dialogRef.set(dialog);
         });

@@ -107,6 +107,7 @@ class DialogComboListWorkflowTest {
             pane.add(nonEditable);
             jDialog.setSize(200, 200);
             jDialog.setModal(true);
+            TestWindows.place(jDialog);
         });
 
         //NOTE: we need to set visible on an invokeLater, otherwise we block forever

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.LookAndFeel;
 
 /**
@@ -73,7 +74,7 @@ class InternalFrameTitleButtonsLafTest {
             internalFrame.setVisible(true);
             desktop.add(internalFrame);
             frame.setSize(400, 400);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
         assumeFalse(LookAndFeel.isMotif(), "Motif keeps title actions in a popup menu, not title buttons");

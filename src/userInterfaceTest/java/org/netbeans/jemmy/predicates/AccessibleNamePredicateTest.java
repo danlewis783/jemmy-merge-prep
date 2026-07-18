@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class AccessibleNamePredicateTest {
@@ -42,7 +43,7 @@ class AccessibleNamePredicateTest {
             button = new JButton("Button");
             button.getAccessibleContext().setAccessibleName("Accessible");
             frame.getContentPane().add(button);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
         });
     }
 

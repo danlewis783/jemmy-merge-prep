@@ -45,6 +45,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -57,13 +58,13 @@ class JDialogOperatorTest {
     void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
-            jFrame.setLocationRelativeTo(null);
             frame = jFrame;
             JDialog jDialog = new JDialog(jFrame, "JDialogOperatorTest");
             jDialog.setName("JDialogOperatorTest");
             jDialog.pack();
-            jDialog.setLocationRelativeTo(null);
+            TestWindows.place(jDialog, 1);
             jDialog.setVisible(true);
             dialog = jDialog;
         });

@@ -129,7 +129,7 @@ final class TabbedComponentsWorkflowTest {
             jTabbedPane.add("Text Page", new JScrollPane(new JTextArea(text2)));
             jFrame.getContentPane().add(jTabbedPane);
             jFrame.setSize(500, 500);
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
 
             jFrame.setVisible(true);
         });

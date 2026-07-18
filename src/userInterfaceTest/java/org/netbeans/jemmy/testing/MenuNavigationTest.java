@@ -100,7 +100,7 @@ class MenuNavigationTest {
             jFrame.setJMenuBar(menuBar);
             contentPane.add(menuLabel);
             jFrame.setSize(400, 300);
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

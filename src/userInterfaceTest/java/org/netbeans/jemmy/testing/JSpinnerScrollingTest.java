@@ -68,7 +68,7 @@ class JSpinnerScrollingTest {
             four.setModel(new SpinnerNumberModel(5, 0, 10, 1));
             contentPane.add(four);
             jFrame.setSize(400, 200);
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

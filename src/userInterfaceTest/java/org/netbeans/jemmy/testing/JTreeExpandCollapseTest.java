@@ -79,6 +79,7 @@ class JTreeExpandCollapseTest {
             contentPane.setLayout(new BorderLayout());
             contentPane.add(tree, BorderLayout.CENTER);
             jFrame.setSize(300, 300);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

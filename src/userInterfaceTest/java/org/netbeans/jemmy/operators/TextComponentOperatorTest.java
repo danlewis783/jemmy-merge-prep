@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -57,7 +58,7 @@ class TextComponentOperatorTest {
             textComponent.setText("TextComponentOperatorTest");
             frame.add(textComponent);
             frame.setSize(400, 300);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             // AWT operators use real Robot clicks at screen coordinates; if another window
             // (e.g. a lingering frame from an adjacent test JVM) overlaps this frame, the
             // click lands on that window instead and the test times out waiting on component state

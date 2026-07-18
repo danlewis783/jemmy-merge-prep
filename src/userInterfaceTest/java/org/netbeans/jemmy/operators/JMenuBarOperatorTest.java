@@ -40,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -64,7 +65,7 @@ class JMenuBarOperatorTest {
             menu.add(new JMenuItem("JMenuItem11"));
             frame.setJMenuBar(menuBar);
             frame.setSize(400, 300);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }
@@ -104,6 +105,7 @@ class JMenuBarOperatorTest {
         EventQueue.invokeAndWait(() -> {
             dialog = new JDialog();
             dialog.setJMenuBar(new JMenuBar());
+            TestWindows.place(dialog, 1);
             dialog.setVisible(true);
         });
         JMenuBar menuBar2 = JMenuBarOperator.waitJMenuBar(dialog);

@@ -33,6 +33,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
+import org.netbeans.jemmy.testing.TestWindows;
 
 /**
  * Exercises internal frames under the Motif look and feel through {@link InternalFramePopupMenuDriver}, ported from
@@ -78,7 +79,7 @@ class InternalFramePopupMenuDriverTest {
             internalFrame.setVisible(true);
             desktop.add(internalFrame);
             frame.setSize(400, 400);
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
             frame.setVisible(true);
         });
     }

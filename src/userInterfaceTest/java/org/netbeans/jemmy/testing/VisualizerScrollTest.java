@@ -85,13 +85,13 @@ class VisualizerScrollTest {
 
             jFrameRight.getContentPane().add(dp);
             jFrameRight.setSize(400, 400);
-            jFrameRight.setLocation(0, 0);
+            TestWindows.place(jFrameRight);
 
             jFrameRight.setVisible(true);
 
             JFrame jFrameWrong = new JFrame("Wrong one");
             this.jFrameWrong = jFrameWrong;
-            jFrameWrong.setLocation(0, 0);
+            TestWindows.place(jFrameWrong, 1);
             jFrameWrong.setSize(500, 500);
             jFrameWrong.setVisible(true);
         });

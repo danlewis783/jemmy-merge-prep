@@ -38,6 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.testing.TestWindows;
 
 // formerly scenario test jemmy_030
 @Timeout(value=15, unit=TimeUnit.SECONDS)
@@ -59,7 +60,7 @@ class EventToolTest {
 
         EventQueue.invokeAndWait(() -> {
             jFrame = new JFrame("EventToolTest");
-            jFrame.setLocationRelativeTo(null);
+            TestWindows.place(jFrame);
             jFrame.setSize(250, 100);
             jFrame.setVisible(true);
         });

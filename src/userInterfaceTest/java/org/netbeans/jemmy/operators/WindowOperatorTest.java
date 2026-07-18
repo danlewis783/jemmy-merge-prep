@@ -54,6 +54,7 @@ import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class WindowOperatorTest {
@@ -77,14 +78,16 @@ class WindowOperatorTest {
             frame.setName("Main" + "_" + "WindowOperatorTest");
             frame.add(new Label("Main"));
             frame.pack();
-            frame.setLocationByPlatform(true);
+            // explicit placement instead of setLocationByPlatform: the platform cascade can move
+            // the window after show, which the move/resize tests would observe as a stray event
+            TestWindows.place(frame);
             Dialog dialog = new Dialog((Window) frame);
             subDialog = dialog;
             dialog.setTitle("Sub");
             dialog.setName("Sub" + "_" + "WindowOperatorTest");
             dialog.add(new Label("Sub"));
             dialog.pack();
-            dialog.setLocationByPlatform(true);
+            TestWindows.place(dialog, 1);
             frame.setVisible(true);
             dialog.setVisible(true);
         });
@@ -507,7 +510,7 @@ class WindowOperatorTest {
             other.setName("other" + "_" + "WindowOperatorTest");
             other.add(new Label("other"));
             other.pack();
-            other.setLocationByPlatform(true);
+            TestWindows.place(other, 2);
 
             return other;
         });
@@ -535,9 +538,11 @@ class WindowOperatorTest {
             EventQueue.invokeAndWait(() -> {
                 extra1.setName("CountMe");
                 extra1.pack();
+                TestWindows.place(extra1, 2);
                 extra1.setVisible(true);
                 extra2.setName("CountMe");
                 extra2.pack();
+                TestWindows.place(extra2, 3);
                 extra2.setVisible(true);
             });
             WindowOperator.waitWindowCount(countable, 2);

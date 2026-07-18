@@ -47,7 +47,7 @@ class ButtonGridLookupTest {
     void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame("ButtonGridLookupTest");
-            jFrame.setLocation(400, 400);
+            TestWindows.place(jFrame);
             this.jFrame = jFrame;
 
             Container contentPane = jFrame.getContentPane();

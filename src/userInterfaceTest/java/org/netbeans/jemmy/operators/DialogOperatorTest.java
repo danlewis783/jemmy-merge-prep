@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -42,7 +43,9 @@ class DialogOperatorTest {
             frame = new Frame();
             dialog = new Dialog(frame, "DialogOperatorTest");
             dialog.setName("DialogOperatorTest");
+            TestWindows.place(frame);
             frame.setVisible(true);
+            TestWindows.place(dialog, 1);
             dialog.setVisible(true);
         });
     }

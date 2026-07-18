@@ -68,6 +68,7 @@ class ScrollToComponentTest {
             }
 
             jFrame.setSize(150, 150);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

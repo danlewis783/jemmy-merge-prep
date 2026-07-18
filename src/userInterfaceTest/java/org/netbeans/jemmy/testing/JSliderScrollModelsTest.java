@@ -74,6 +74,7 @@ class JSliderScrollModelsTest {
             jFrame.getContentPane().setLayout(new BorderLayout());
             jFrame.getContentPane().add(pane, BorderLayout.CENTER);
             jFrame.setSize(400, 400);
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
     }

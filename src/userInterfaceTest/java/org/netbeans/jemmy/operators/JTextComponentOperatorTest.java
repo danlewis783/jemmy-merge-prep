@@ -52,6 +52,7 @@ import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JTextComponentOperator.NoSuchTextException;
 import org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -66,7 +67,7 @@ class JTextComponentOperatorTest {
             textComponent.setName("JTextComponentOperatorTest");
             frame.getContentPane().add(textComponent);
             frame.pack();
-            frame.setLocationRelativeTo(null);
+            TestWindows.place(frame);
         });
     }
 
