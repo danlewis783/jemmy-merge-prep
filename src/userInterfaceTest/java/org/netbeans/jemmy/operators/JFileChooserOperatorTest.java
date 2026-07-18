@@ -78,7 +78,7 @@ final class JFileChooserOperatorTest {
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
-        override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 3000L);
+        override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 3_000L);
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             fileChooser = new JFileChooser();
@@ -636,12 +636,12 @@ final class JFileChooserOperatorTest {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         assertThat(op).isNotNull();
         int result;
-        try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L)) {
+        try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
             result =
                     Objects.requireNonNull(FunctionRunner.on((Function<Void, Integer>) v -> op.showDialog(null, "Plus"))
                             .submitAndGet(null, TimeoutKey.Testing_A));
         }
-        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L)) {
+        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1_000L)) {
             FunctionRunner.on((Function<Void, Void>) v -> {
                         JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
                         assertThat(buttonOp).isNotNull();
@@ -659,11 +659,11 @@ final class JFileChooserOperatorTest {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         assertThat(op).isNotNull();
         int result;
-        try (TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1000L)) {
+        try (TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1_000L)) {
             result = Objects.requireNonNull(FunctionRunner.on((Function<Void, Integer>) v -> op.showOpenDialog(null))
                     .submitAndGet(null, TimeoutKey.Testing_C));
         }
-        try (TimeoutOverride overrideD = Timeouts.override(TimeoutKey.Testing_D, 1000L)) {
+        try (TimeoutOverride overrideD = Timeouts.override(TimeoutKey.Testing_D, 1_000L)) {
             FunctionRunner.on((Function<Void, Void>) v -> {
                         JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
                         assertThat(buttonOp).isNotNull();
@@ -681,11 +681,11 @@ final class JFileChooserOperatorTest {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         assertThat(op).isNotNull();
         int result;
-        try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1000L)) {
+        try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
             result = Objects.requireNonNull(FunctionRunner.on((Function<Void, Integer>) v -> op.showSaveDialog(null))
                     .submitAndGet(null, TimeoutKey.Testing_A));
         }
-        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1000L)) {
+        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1_000L)) {
             FunctionRunner.on((Function<Void, Void>) v -> {
                         JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
                         assertThat(buttonOp).isNotNull();

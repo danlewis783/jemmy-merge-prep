@@ -157,7 +157,7 @@ class JSpinnerOperatorTest {
     void scrollTo() {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1_000L)) {
             jSpinnerOp.scrollTo(new NullScrollAdjuster());
         }
     }
@@ -169,7 +169,7 @@ class JSpinnerOperatorTest {
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 100, 1);
         jSpinnerOp.setModel(model);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3_000L)) {
             jSpinnerOp.scrollToMaximum();
         }
     }
@@ -181,7 +181,7 @@ class JSpinnerOperatorTest {
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         SpinnerNumberModel model = new SpinnerNumberModel(100, 1, 100, 1);
         jSpinnerOp.setModel(model);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3_000L)) {
             jSpinnerOp.scrollToMinimum();
         }
     }
@@ -191,7 +191,7 @@ class JSpinnerOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1_000L)) {
             jSpinnerOpNumber.scrollToObject(11, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
         }
     }
@@ -201,7 +201,7 @@ class JSpinnerOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1_000L)) {
             jSpinnerOpNumber.scrollToString("11", STRICT, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
         }
     }
@@ -312,22 +312,22 @@ class JSpinnerOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         jSpinnerOp.setModel(new SpinnerDateModel());
-        DateScrollAdjuster adjuster = new DateScrollAdjuster(jSpinnerOp, new Date(System.currentTimeMillis() + 1000));
+        DateScrollAdjuster adjuster = new DateScrollAdjuster(jSpinnerOp, new Date(System.currentTimeMillis() + 1_000));
         assertThat(adjuster).isNotNull();
         assertThat(adjuster.getScrollOrientation()).isEqualTo(SwingConstants.VERTICAL);
         assertThat(adjuster.getScrollDirection()).isEqualTo(ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
         jSpinnerOp.setModel(new SpinnerDateModel(
                 new Date(),
-                new Date(System.currentTimeMillis() - 3600),
-                new Date(System.currentTimeMillis() + 3600),
+                new Date(System.currentTimeMillis() - 3_600),
+                new Date(System.currentTimeMillis() + 3_600),
                 Calendar.MINUTE));
-        adjuster = new DateScrollAdjuster(jSpinnerOp, new Date(System.currentTimeMillis() - 2400));
+        adjuster = new DateScrollAdjuster(jSpinnerOp, new Date(System.currentTimeMillis() - 2_400));
         assertThat(adjuster.getScrollDirection()).isEqualTo(ScrollAdjuster.DECREASE_SCROLL_DIRECTION);
         Date date = new Date();
         jSpinnerOp.setModel(new SpinnerDateModel(
                 date,
-                new Date(System.currentTimeMillis() - 3600),
-                new Date(System.currentTimeMillis() + 3600),
+                new Date(System.currentTimeMillis() - 3_600),
+                new Date(System.currentTimeMillis() + 3_600),
                 Calendar.MINUTE));
         adjuster = new DateScrollAdjuster(jSpinnerOp, date);
         assertThat(adjuster.getScrollDirection()).isEqualTo(ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION);

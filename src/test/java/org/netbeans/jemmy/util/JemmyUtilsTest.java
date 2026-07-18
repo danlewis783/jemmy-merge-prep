@@ -42,9 +42,9 @@ class JemmyUtilsTest {
      */
     @Test
     void waitForOptionalDialogDoesNotTouchGlobalTimeoutRegistry() {
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 1234)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 1_234)) {
             assertThat(JemmyUtils.waitForOptionalDialog("No Such Dialog", 50)).isNull();
-            assertThat(Timeouts.get(TimeoutKey.DialogWaiter_WaitDialogTimeout)).isEqualTo(1234);
+            assertThat(Timeouts.get(TimeoutKey.DialogWaiter_WaitDialogTimeout)).isEqualTo(1_234);
         }
     }
 }

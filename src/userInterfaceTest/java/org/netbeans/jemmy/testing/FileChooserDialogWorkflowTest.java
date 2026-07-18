@@ -71,7 +71,7 @@ class FileChooserDialogWorkflowTest {
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
         Timeouts.resetToDefaults();
-        override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L);
+        override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1_000L);
         EventQueue.invokeAndWait(() -> {
             jFrame = new JFrame("FileChooserLaunchApp");
             JTextField jTextField = new JTextField("");

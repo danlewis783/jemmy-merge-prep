@@ -82,7 +82,7 @@ class TabbedPanePageSwitchTest {
 
     @Test
     void doit() throws Exception {
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3_000L)) {
             JFrame win = JFrameOperator.waitJFrame("TabbedPagesApp");
             JTabbedPaneOperator tpo =
                     JTabbedPaneOperator.waitFor(JFrameOperator.of(win), "Page1", StringComparators.strict());

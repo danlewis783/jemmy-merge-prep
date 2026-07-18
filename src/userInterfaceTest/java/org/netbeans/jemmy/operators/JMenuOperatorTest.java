@@ -65,8 +65,8 @@ class JMenuOperatorTest {
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
-        override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 2000L);
-        override2 = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 2000L);
+        override1 = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 2_000L);
+        override2 = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 2_000L);
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
             JMenuBar jMenuBar = new JMenuBar();

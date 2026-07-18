@@ -103,7 +103,7 @@ class JToolTipOperatorTest {
 
         // clicking dismisses the tooltip
         labelOperator.clickMouse();
-        try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 2000L)) {
+        try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 2_000L)) {
             assertThatExceptionOfType(TimeoutExpiredException.class).isThrownBy(JToolTipOperator::waitJToolTip);
         }
     }
@@ -116,7 +116,7 @@ class JToolTipOperatorTest {
         EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(false));
         try {
             JLabelOperator dummyLabel = JLabelOperator.of(new JLabel());
-            try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1000L)) {
+            try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> JToolTipOperator.waitFor(dummyLabel));
                 assertThatExceptionOfType(TimeoutExpiredException.class)

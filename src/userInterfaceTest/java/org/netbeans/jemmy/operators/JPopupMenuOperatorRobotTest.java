@@ -55,7 +55,7 @@ final class JPopupMenuOperatorRobotTest {
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
-        override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 3000L);
+        override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 3_000L);
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
             JPopupMenu jPopupMenu = new JPopupMenu("0");

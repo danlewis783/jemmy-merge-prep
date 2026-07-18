@@ -89,11 +89,11 @@ class EventToolTest {
         eventTool.addListeners();
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
-            Future<Void> mover = executorService.submit(new MouseMover(jFrameOp, 1000, 1));
+            Future<Void> mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
             assertThat(eventTool.waitEvent(AWTEvent.MOUSE_EVENT_MASK)).isNotNull();
 
             // the mover is already done, so nothing arrives during this window
-            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1000L)) {
+            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
                         .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (1000 ms) exceeded after (");
@@ -101,11 +101,11 @@ class EventToolTest {
 
             awaitQuiet(mover);
             eventTool.removeListeners();
-            mover = executorService.submit(new MouseMover(jFrameOp, 1000, 1));
+            mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
 
             // window sized so the mover's mouse activity (~1 s in) falls inside it: with the
             // listeners removed it must go unrecorded and the wait must still expire
-            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2000L)) {
+            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
                         .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (2000 ms) exceeded after (");
@@ -113,10 +113,10 @@ class EventToolTest {
 
             awaitQuiet(mover);
             eventTool.addListeners();
-            mover = executorService.submit(new MouseMover(jFrameOp, 1000, 1));
+            mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
             assertThat(eventTool.waitEvent()).isNotNull();
             awaitQuiet(mover);
-            mover = executorService.submit(new MouseMover(jFrameOp, 1000, 1));
+            mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
                 assertThat(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK))
@@ -124,7 +124,7 @@ class EventToolTest {
                         .isTrue();
             }
 
-            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L)) {
+            try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1_500L)) {
                 assertThat(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK))
                         .as("Mouse event was not occurred in 1500 milliseconds")
                         .isFalse();
@@ -138,19 +138,19 @@ class EventToolTest {
                         .isTrue();
             }
 
-            mover = executorService.submit(new MouseMover(jFrameOp, 1000, 2));
+            mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 2));
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
                 eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK);
             }
 
             awaitQuiet(mover);
-            mover = executorService.submit(new MouseMover(jFrameOp, 1000, 2));
+            mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 2));
 
             // mouse events keep arriving less than 1500 ms apart for the whole 3000 ms budget,
             // so no 1500 ms quiet window is found and the wait must give up
-            try (TimeoutOverride quietPeriod = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1500L);
-                    TimeoutOverride budget = Timeouts.override(TimeoutKey.EventTool_WaitNoEventTimeout, 3000L)) {
+            try (TimeoutOverride quietPeriod = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1_500L);
+                    TimeoutOverride budget = Timeouts.override(TimeoutKey.EventTool_WaitNoEventTimeout, 3_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK))
                         .withMessageContaining("timeout \"EventTool_WaitNoEventTimeout\" (3000 ms) exceeded after (");

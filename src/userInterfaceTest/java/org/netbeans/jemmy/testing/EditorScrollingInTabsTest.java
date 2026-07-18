@@ -156,7 +156,7 @@ class EditorScrollingInTabsTest {
     }
 
     private void checkSelectedText(JTextComponentOperator tco, String eta) {
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5_000L)) {
             FunctionRepeater.on(new SelectedTextChecker(tco, eta)).runUntilNotNull(null);
         } catch (TimeoutExpiredException e) {
             // the wait gave up; assert the end state so the failure shows actual vs expected

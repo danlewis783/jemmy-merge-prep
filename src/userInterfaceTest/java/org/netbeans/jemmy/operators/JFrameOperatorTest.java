@@ -92,7 +92,7 @@ class JFrameOperatorTest {
         Future<JFrame> laFutura = Executors.newSingleThreadExecutor().submit(new WaitJFrameCallable());
         JFrameOperator.waitFor();
 
-        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> laFutura.get(1000, TimeUnit.MILLISECONDS));
+        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> laFutura.get(1_000, TimeUnit.MILLISECONDS));
     }
 
     @Test

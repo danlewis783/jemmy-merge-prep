@@ -62,7 +62,7 @@ class ToggleButtonSelectionTest {
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
-        override = Timeouts.override(TimeoutKey.ComponentOperator_WaitFocusTimeout, 1000L);
+        override = Timeouts.override(TimeoutKey.ComponentOperator_WaitFocusTimeout, 1_000L);
         EventQueue.invokeAndWait(() -> {
             jFrame = new JFrame("ToggleButtonsApp");
             jFrame.getContentPane().setLayout(new FlowLayout());

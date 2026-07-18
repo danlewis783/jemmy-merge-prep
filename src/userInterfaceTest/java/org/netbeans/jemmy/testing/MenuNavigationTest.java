@@ -181,9 +181,9 @@ class MenuNavigationTest {
         JButtonOperator.waitFor(jFrameOp, "button", strict()).push();
         JLabelOperator.waitFor(jFrameOp, "Button has been pushed", strict());
 
-        try (TimeoutOverride override3 = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout, 1000L);
-             TimeoutOverride override4 = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 1000L);
-             TimeoutOverride override5 = Timeouts.override(TimeoutKey.JMenuOperator_WaitPopupTimeout, 1000L)) {
+        try (TimeoutOverride override3 = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout, 1_000L);
+             TimeoutOverride override4 = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 1_000L);
+             TimeoutOverride override5 = Timeouts.override(TimeoutKey.JMenuOperator_WaitPopupTimeout, 1_000L)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
                     .isThrownBy(() -> mb0.pushMenu("menu|submenu|subsubmenu2", strict()));
         }

@@ -192,7 +192,7 @@ class DialogComboListWorkflowTest {
         JComboBoxOperator jComboOp7 = JComboBoxOperator.waitFor(
                 jDialogOp1, ComponentPredicates.byName("on_e", StringComparators.caseInsensitiveSubstring()));
         assertThat(jComboOp7.getSource()).isSameAs(jComboOp6.getSource());
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1_000L)) {
             assertThatExceptionOfType(TimeoutExpiredException.class)
                     .isThrownBy(() -> JComboBoxOperator.waitFor(jDialogOp1, ComponentPredicates.byName("non_edit")));
         }

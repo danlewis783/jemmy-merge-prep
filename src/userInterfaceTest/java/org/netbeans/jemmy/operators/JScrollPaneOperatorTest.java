@@ -45,9 +45,9 @@ class JScrollPaneOperatorTest {
         EventQueue.invokeAndWait(() -> {
             frame = new JFrame();
             textArea = new JTextArea("JTextArea");
-            textArea.setSize(1000, 1000);
-            textArea.setMaximumSize(new Dimension(1000, 1000));
-            textArea.setMinimumSize(new Dimension(1000, 1000));
+            textArea.setSize(1_000, 1_000);
+            textArea.setMaximumSize(new Dimension(1_000, 1_000));
+            textArea.setMinimumSize(new Dimension(1_000, 1_000));
             JScrollPane scrollPane = new JScrollPane(textArea);
             scrollPane.setName("JScrollPaneOperatorTest");
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
