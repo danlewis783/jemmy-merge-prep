@@ -17,21 +17,19 @@
 package org.netbeans.jemmy.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Panel;
 import javax.swing.JLabel;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.util.StringComparators;
 
 class TrimmingNamePredicateTest {
 
-    private final QueueTool queueTool = QueueTool.getInstance();
-
     @Test
     void matchesTrimmedNameOnJComponent() {
-        Component component = queueTool.callOnQueue(() -> {
+        Component component = onQueue(() -> {
             JLabel label = new JLabel();
             label.setName("  target  ");
             return label;
@@ -44,7 +42,7 @@ class TrimmingNamePredicateTest {
     /** getName() is java.awt.Component API; plain AWT components must be matchable too. */
     @Test
     void matchesTrimmedNameOnPlainAwtComponent() {
-        Component component = queueTool.callOnQueue(() -> {
+        Component component = onQueue(() -> {
             Panel panel = new Panel();
             panel.setName(" target ");
             return panel;
@@ -56,7 +54,7 @@ class TrimmingNamePredicateTest {
 
     @Test
     void rejectsComponentWithoutName() {
-        Component component = queueTool.callOnQueue(JLabel::new);
+        Component component = onQueue(JLabel::new);
 
         assertThat(new TrimmingNamePredicate("target", StringComparators.strict()))
                 .rejects(component);
@@ -64,7 +62,7 @@ class TrimmingNamePredicateTest {
 
     @Test
     void rejectsNonMatchingName() {
-        Component component = queueTool.callOnQueue(() -> {
+        Component component = onQueue(() -> {
             JLabel label = new JLabel();
             label.setName("other");
             return label;

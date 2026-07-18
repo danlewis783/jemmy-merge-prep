@@ -18,17 +18,15 @@ package org.netbeans.jemmy.util.assertions;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import javax.swing.JTable;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.QueueTool;
 
 class TableValidatorTest {
 
-    private final QueueTool queueTool = QueueTool.getInstance();
-
     private TableValidator validatorFor(Object[][] data, Object[] columnNames) {
-        JTable table = queueTool.callOnQueue(() -> new JTable(data, columnNames));
+        JTable table = onQueue(() -> new JTable(data, columnNames));
         return new TableValidator(table);
     }
 

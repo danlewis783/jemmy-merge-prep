@@ -18,21 +18,19 @@ package org.netbeans.jemmy.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Panel;
 import javax.swing.JLabel;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.util.StringComparators;
 
 class TrimmingTooltipPredicateTest {
 
-    private final QueueTool queueTool = QueueTool.getInstance();
-
     @Test
     void matchesTrimmedTooltip() {
-        Component component = queueTool.callOnQueue(() -> {
+        Component component = onQueue(() -> {
             JLabel label = new JLabel();
             label.setToolTipText("  Save the file  ");
             return label;
@@ -44,7 +42,7 @@ class TrimmingTooltipPredicateTest {
 
     @Test
     void rejectsComponentWithoutTooltip() {
-        Component component = queueTool.callOnQueue(JLabel::new);
+        Component component = onQueue(JLabel::new);
 
         assertThat(new TrimmingTooltipPredicate("Save the file", StringComparators.strict()))
                 .rejects(component);
@@ -53,7 +51,7 @@ class TrimmingTooltipPredicateTest {
     /** getToolTipText() is JComponent-only, so AWT components can never match. */
     @Test
     void rejectsNonJComponent() {
-        Component component = queueTool.callOnQueue(Panel::new);
+        Component component = onQueue(Panel::new);
 
         assertThat(new TrimmingTooltipPredicate("Save the file", StringComparators.strict()))
                 .rejects(component);
@@ -62,7 +60,7 @@ class TrimmingTooltipPredicateTest {
     @SuppressWarnings("deprecation")
     @Test
     void deprecatedConstructorAcceptsIndexZero() {
-        Component component = queueTool.callOnQueue(() -> {
+        Component component = onQueue(() -> {
             JLabel label = new JLabel();
             label.setToolTipText("Save the file");
             return label;

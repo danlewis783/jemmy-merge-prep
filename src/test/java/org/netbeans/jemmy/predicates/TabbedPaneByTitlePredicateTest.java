@@ -17,20 +17,18 @@
 package org.netbeans.jemmy.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 import org.junit.jupiter.api.Test;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.util.StringComparators;
 
 class TabbedPaneByTitlePredicateTest {
 
-    private final QueueTool queueTool = QueueTool.getInstance();
-
     private Component tabbedPane() {
-        return queueTool.callOnQueue(() -> {
+        return onQueue(() -> {
             JTabbedPane pane = new JTabbedPane();
             pane.addTab("First", new JLabel("one"));
             pane.addTab("Second", new JLabel("two"));
@@ -56,7 +54,7 @@ class TabbedPaneByTitlePredicateTest {
 
     @Test
     void rejectsNonTabbedPane() {
-        Component label = queueTool.callOnQueue(JLabel::new);
+        Component label = onQueue(JLabel::new);
 
         assertThat(new TabbedPaneByTitlePredicate("First", StringComparators.strict()))
                 .rejects(label);

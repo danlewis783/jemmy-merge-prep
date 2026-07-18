@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -36,7 +37,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
@@ -156,11 +156,6 @@ class JFrameOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         assertThat(operator.getRootPane()).isEqualTo(onQueue(mainFrame::getRootPane));
-    }
-
-    /** Runs the callable on the event dispatch thread so Swing component state is only touched there. */
-    private static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().callOnQueue(callable);
     }
 
     private static class WaitJFrameCallable implements Callable<JFrame> {

@@ -19,6 +19,7 @@ package org.netbeans.jemmy.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import javax.swing.JLabel;
@@ -26,15 +27,12 @@ import javax.swing.RepaintManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.QueueTool;
 
 /**
  * These tests run on the JUnit thread, which is never the event dispatch thread, so calling the
  * manager's entry points directly IS an EDT violation from the checker's point of view.
  */
 class FailOnThreadViolationRepaintManagerTest {
-
-    private final QueueTool queueTool = QueueTool.getInstance();
 
     @AfterEach
     void restoreRepaintManager() {
@@ -50,7 +48,7 @@ class FailOnThreadViolationRepaintManagerTest {
 
     @Test
     void offEdtInvalidationIsReported() {
-        JLabel label = queueTool.callOnQueue(JLabel::new);
+        JLabel label = onQueue(JLabel::new);
         FailOnThreadViolationRepaintManager manager = new FailOnThreadViolationRepaintManager();
 
         assertThatExceptionOfType(EdtViolationException.class)
@@ -60,7 +58,7 @@ class FailOnThreadViolationRepaintManagerTest {
 
     @Test
     void offEdtDirtyRegionIsReported() {
-        JLabel label = queueTool.callOnQueue(JLabel::new);
+        JLabel label = onQueue(JLabel::new);
         FailOnThreadViolationRepaintManager manager = new FailOnThreadViolationRepaintManager();
 
         assertThatExceptionOfType(EdtViolationException.class)
@@ -70,7 +68,7 @@ class FailOnThreadViolationRepaintManagerTest {
     /** repaint() is documented thread-safe; a stack that came through repaint() must not report. */
     @Test
     void offEdtRepaintIsSafe() {
-        JLabel label = queueTool.callOnQueue(() -> {
+        JLabel label = onQueue(() -> {
             JLabel l = new JLabel("x");
             l.setSize(20, 20);
             return l;

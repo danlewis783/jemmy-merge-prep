@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Dialog;
@@ -51,7 +52,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.TestWindows;
@@ -313,7 +313,7 @@ class WindowOperatorTest {
         AtomicInteger componentResizedHeight = new AtomicInteger(0);
         // the frame delivers two componentResized events for one resize; wait for both
         CountDownLatch resizedLatch = new CountDownLatch(2);
-        Point locationAfterFocus = QueueTool.getInstance().callOnQueue(mainFrame::getLocation);
+        Point locationAfterFocus = onQueue(mainFrame::getLocation);
         long listenerAddedNanos = System.nanoTime();
         frameOp.addComponentListener(new ComponentAdapter() {
             @Override
@@ -338,7 +338,7 @@ class WindowOperatorTest {
         componentEventLog.add("resize(100, 200) called at +" + elapsedMillis(listenerAddedNanos) + "ms");
         frameOp.resize(100, 200);
         awaitLatch(resizedLatch);
-        Point locationAfterResize = QueueTool.getInstance().callOnQueue(mainFrame::getLocation);
+        Point locationAfterResize = onQueue(mainFrame::getLocation);
         assertThat(moveEvents)
                 .as(
                         "location after focus %s, after resize %s; events: %s",
@@ -504,7 +504,7 @@ class WindowOperatorTest {
 
     /** Builds (but does not show) a second frame, on the EDT. */
     private static Frame createOtherFrame() {
-        return QueueTool.getInstance().callOnQueue(() -> {
+        return onQueue(() -> {
             Frame other = new Frame();
             other.setTitle("other");
             other.setName("other" + "_" + "WindowOperatorTest");
@@ -532,8 +532,8 @@ class WindowOperatorTest {
     @Test
     void testWaitWindowCount() throws InterruptedException, InvocationTargetException {
         Predicate<Component> countable = comp -> "CountMe".equals(comp.getName()) && comp.isShowing();
-        Frame extra1 = QueueTool.getInstance().callOnQueue(() -> new Frame("CountMe one"));
-        Frame extra2 = QueueTool.getInstance().callOnQueue(() -> new Frame("CountMe two"));
+        Frame extra1 = onQueue(() -> new Frame("CountMe one"));
+        Frame extra2 = onQueue(() -> new Frame("CountMe two"));
         try {
             EventQueue.invokeAndWait(() -> {
                 extra1.setName("CountMe");
