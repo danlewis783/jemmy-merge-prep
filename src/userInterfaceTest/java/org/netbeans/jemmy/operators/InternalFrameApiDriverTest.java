@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
@@ -38,8 +40,7 @@ import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
  * driver for this JVM only; the UI test suite forks one JVM per class, so the default drivers are unaffected
  * elsewhere.
  */
-// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class InternalFrameApiDriverTest {
 
     private JFrame frame;

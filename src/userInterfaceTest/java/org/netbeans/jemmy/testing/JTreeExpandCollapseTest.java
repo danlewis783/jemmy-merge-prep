@@ -16,87 +16,145 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.function.Function;
-import javax.swing.JFrame;
-import javax.swing.JTree;
-import javax.swing.tree.TreePath;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 // formerly scenario test jemmy_006
 // fields are assigned at the start of the test before the checker reads them
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=3, unit=TimeUnit.SECONDS)
 class JTreeExpandCollapseTest {
 
-    private JTreeOperator to;
-    private JTree tree;
+    private static final String FRAME_TITLE = "JTreeExpandCollapseTest";
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame(FRAME_TITLE);
+            this.jFrame = jFrame;
+            DefaultMutableTreeNode node000 = new DefaultMutableTreeNode();
+            node000.setUserObject("node000");
+            DefaultMutableTreeNode node001 = new DefaultMutableTreeNode();
+            node001.setUserObject("node001");
+            DefaultMutableTreeNode node00 = new DefaultMutableTreeNode();
+            node00.setUserObject("node00");
+            node00.insert(node000, 0);
+            node00.insert(node001, 1);
+            DefaultMutableTreeNode node000Dup = new DefaultMutableTreeNode();
+            node000Dup.setUserObject("node000");
+            DefaultMutableTreeNode node001Dup = new DefaultMutableTreeNode();
+            node001Dup.setUserObject("node001");
+            DefaultMutableTreeNode node00Dup = new DefaultMutableTreeNode();
+            node00Dup.setUserObject("node00");
+            node00Dup.insert(node000Dup, 0);
+            node00Dup.insert(node001Dup, 1);
+            DefaultMutableTreeNode node01 = new DefaultMutableTreeNode();
+            node01.setUserObject("node01");
+            DefaultMutableTreeNode node0 = new DefaultMutableTreeNode();
+            node0.setUserObject("node0");
+            node0.insert(node00, 0);
+            node0.insert(node00Dup, 1);
+            node0.insert(node01, 2);
+            JTree tree = new JTree(node0);
+            tree.setEditable(true);
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            contentPane.add(tree, BorderLayout.CENTER);
+            jFrame.setSize(300, 300);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
+
 
     @Test
     void test() {
-        TreeExpandApp.main();
-        QueueTool.getInstance().waitEmpty(100);
-        JFrame frm = JFrameOperator.waitJFrame("TreeExpandApp");
-        JTree foundTree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
-        assertThat(foundTree).isNotNull();
-        tree = foundTree;
-        to = JTreeOperator.of(tree);
-        TreeChecker checker = new TreeChecker();
-        to.selectRow(0);
-        to.waitSelected(0);
-        TreePath firstPath = to.findPath("node00", "|", StringComparators.strict());
+        JFrame jFrame = JFrameOperator.waitJFrame(FRAME_TITLE);
+        JTree jTree = JTreeOperator.findJTree(jFrame, null, StringComparators.strict(), -1);
+        assertThat(jTree).isNotNull();
+        JTreeOperator jTreeOp = JTreeOperator.of(jTree);
+        TreeChecker checker = new TreeChecker(jTreeOp, jTree);
+        jTreeOp.selectRow(0);
+        jTreeOp.waitSelected(0);
+        TreePath firstPath = jTreeOp.findPath("node00", "|", StringComparators.strict());
         assertThat(firstPath).isNotNull();
-        to.doExpandPath(firstPath);
+        jTreeOp.doExpandPath(firstPath);
         FunctionRepeater.on(checker).runUntilNotNull("first expanded");
-        TreePath secondPath = to.findPath("node00", "1", "|", StringComparators.strict());
+        TreePath secondPath = jTreeOp.findPath("node00", "1", "|", StringComparators.strict());
         assertThat(secondPath).isNotNull();
-        to.doExpandPath(secondPath);
+        jTreeOp.doExpandPath(secondPath);
         FunctionRepeater.on(checker).runUntilNotNull("second expanded");
-        to.collapsePath(to.findPath("node00", "|", StringComparators.strict()));
+        jTreeOp.collapsePath(jTreeOp.findPath("node00", "|", StringComparators.strict()));
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
-        to.collapsePath(to.findPath("node00", "1", "|", StringComparators.strict()));
+        jTreeOp.collapsePath(jTreeOp.findPath("node00", "1", "|", StringComparators.strict()));
         FunctionRepeater.on(checker).runUntilNotNull("second collapsed");
-        to.doExpandRow(1);
+        jTreeOp.doExpandRow(1);
         FunctionRepeater.on(checker).runUntilNotNull("first expanded");
-        to.doExpandRow(4);
+        jTreeOp.doExpandRow(4);
         FunctionRepeater.on(checker).runUntilNotNull("second expanded");
-        to.collapseRow(1);
+        jTreeOp.collapseRow(1);
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
-        to.collapseRow(2);
+        jTreeOp.collapseRow(2);
         FunctionRepeater.on(checker).runUntilNotNull("second collapsed");
-        TreePath pathy = to.findPath("node00", "1", "|", StringComparators.strict());
+        TreePath pathy = jTreeOp.findPath("node00", "1", "|", StringComparators.strict());
         assertThat(pathy).isNotNull();
-        to.selectPath(pathy);
-        to.selectPath(pathy);
-        assertThat(to.isEditing())
+        jTreeOp.selectPath(pathy);
+        jTreeOp.selectPath(pathy);
+        assertThat(jTreeOp.isEditing())
                 .as("JTree turned into editing mode after two path selecting")
                 .isFalse();
-        to.changePathText(pathy, "node01");
+        jTreeOp.changePathText(pathy, "node01");
     }
 
     private class TreeChecker implements Function<String, Object> {
+        private final JTreeOperator jTreeOp;
+        private final JTree jTree;
+
+        private TreeChecker(JTreeOperator jTreeOp, JTree jTree) {
+            this.jTreeOp = jTreeOp;
+            this.jTree = jTree;
+        }
+
         @Override
         public @Nullable Object apply(String obj) {
             TreePath path;
             try {
                 if (obj.startsWith("first")) {
-                    path = JTreeOperator.of(tree).findPath("node00", "0", "|", StringComparators.strict());
+                    path = JTreeOperator.of(jTree).findPath("node00", "0", "|", StringComparators.strict());
                 } else {
-                    path = JTreeOperator.of(tree).findPath("node00", "1", "|", StringComparators.strict());
+                    path = JTreeOperator.of(jTree).findPath("node00", "1", "|", StringComparators.strict());
                 }
             } catch (TimeoutExpiredException e) {
                 return null;
             }
 
-            if ((obj.endsWith("expanded") && to.isExpanded(path) && to.isExpanded(to.getRowForPath(path)))
-                    || (obj.endsWith("collapsed") && to.isCollapsed(path) && to.isCollapsed(to.getRowForPath(path)))) {
+            if ((obj.endsWith("expanded") && jTreeOp.isExpanded(path) && jTreeOp.isExpanded(jTreeOp.getRowForPath(path)))
+                    || (obj.endsWith("collapsed") && jTreeOp.isCollapsed(path) && jTreeOp.isCollapsed(jTreeOp.getRowForPath(path)))) {
                 return this;
             } else {
                 return null;

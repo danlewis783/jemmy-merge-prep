@@ -20,22 +20,24 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
-import java.awt.AWTEvent;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.DispatchingModel;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.Timeouts;
@@ -43,56 +45,77 @@ import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JTextAreaOperator;
 
+import javax.swing.*;
+
 // formerly scenario test jemmy_043
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 final class RobotVsQueueDispatchTest {
 
+    private static final String FRAME_TITLE = "RobotVsQueueDispatchTest";
+    private JFrame jFrame;
+
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         Timeouts.resetToDefaults();
-        TypingFeedbackApp.main();
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame(FRAME_TITLE);
+            this.jFrame = jFrame;
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            JPanel jPanel = new JPanel();
+            jPanel.setLayout(new BorderLayout());
+            jPanel.add(new JButton("Button"), BorderLayout.NORTH);
+            jPanel.add(new JTextArea(), BorderLayout.CENTER);
+            contentPane.add(jPanel, BorderLayout.CENTER);
+            jFrame.setSize(300, 100);
+            jFrame.setLocationRelativeTo(null);
+            // the robot rounds of RobotVsQueueDispatchTest click at real screen coordinates;
+            // an overlapping window would swallow them - same mitigation as ListOperatorTest
+            jFrame.setAlwaysOnTop(true);
+            jFrame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void after() {
-        JFrameOperator.waitFor("TypingFeedbackApp").setVisible(false);
+    void after() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
     }
 
     @Test
     void robotVsQueue() {
-        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
-            JFrameOperator jFrameOp = JFrameOperator.waitFor("TypingFeedbackApp");
-            JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
-            JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
+        JFrameOperator jFrameOp = JFrameOperator.waitFor(FRAME_TITLE);
+        JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
+        JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
 
-            goQueueMode();
+        goQueueMode();
 
-            List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-            goRobotMode();
+        goRobotMode();
 
-            List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-            assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
-        });
+        assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
     }
 
     @Test
     void queueVsRobot() {
-        assertTimeoutPreemptively(Duration.ofSeconds(5), () -> {
-            JFrameOperator jFrameOp = JFrameOperator.waitFor("TypingFeedbackApp");
-            JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
-            JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
+        JFrameOperator jFrameOp = JFrameOperator.waitFor(FRAME_TITLE);
+        JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
+        JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
 
-            goRobotMode();
+        goRobotMode();
 
-            List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-            goQueueMode();
+        goQueueMode();
 
-            List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-            assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
-        });
+        assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
     }
 
     private List<String> recordEvents(

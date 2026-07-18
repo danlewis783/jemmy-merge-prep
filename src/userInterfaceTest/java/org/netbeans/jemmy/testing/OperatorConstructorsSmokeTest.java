@@ -21,7 +21,9 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.AbstractButtonOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.ContainerOperator;
@@ -43,6 +45,7 @@ import org.netbeans.jemmy.operators.WindowOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_032
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class OperatorConstructorsSmokeTest {
 
     @Test

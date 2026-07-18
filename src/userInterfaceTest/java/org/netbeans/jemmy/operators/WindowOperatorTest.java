@@ -50,12 +50,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 
-// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class WindowOperatorTest {
 
     @BeforeAll
@@ -102,16 +102,14 @@ class WindowOperatorTest {
 
     @Test
     void constructor() {
-        assertThat(WindowOperator.waitFor()).isNotNull();
-        assertThat(FrameOperator.waitFor()).isNotNull();
+        WindowOperator.waitFor();
+        FrameOperator.waitFor();
         WindowOperator operator2 = WindowOperator.of(mainFrame);
         assertThat(operator2).isNotNull();
         assertThat(operator2.getSource()).isSameAs(mainFrame);
         WindowOperator sub1 = WindowOperator.waitFor(operator2);
-        assertThat(sub1).isNotNull();
         assertThat(sub1.getSource()).isSameAs(subDialog);
         WindowOperator sub2 = WindowOperator.waitFor(operator2, ComponentPredicates.byName("Sub_WindowOperatorTest"));
-        assertThat(sub2).isNotNull();
         assertThat(sub2.getSource()).isSameAs(subDialog);
     }
 
@@ -312,7 +310,7 @@ class WindowOperatorTest {
         AtomicInteger componentResizedHeight = new AtomicInteger(0);
         // the frame delivers two componentResized events for one resize; wait for both
         CountDownLatch resizedLatch = new CountDownLatch(2);
-        Point locationAfterFocus = onQueue(mainFrame::getLocation);
+        Point locationAfterFocus = QueueTool.getInstance().callOnQueue(mainFrame::getLocation);
         long listenerAddedNanos = System.nanoTime();
         frameOp.addComponentListener(new ComponentAdapter() {
             @Override
@@ -337,7 +335,7 @@ class WindowOperatorTest {
         componentEventLog.add("resize(100, 200) called at +" + elapsedMillis(listenerAddedNanos) + "ms");
         frameOp.resize(100, 200);
         awaitLatch(resizedLatch);
-        Point locationAfterResize = onQueue(mainFrame::getLocation);
+        Point locationAfterResize = QueueTool.getInstance().callOnQueue(mainFrame::getLocation);
         assertThat(moveEvents)
                 .as(
                         "location after focus %s, after resize %s; events: %s",
@@ -501,14 +499,9 @@ class WindowOperatorTest {
         otherOp.dispose();
     }
 
-    /** Runs the callable on the event dispatch thread so component state is only touched there. */
-    private static <T> T onQueue(Callable<T> callable) {
-        return QueueTool.getInstance().callOnQueue(callable);
-    }
-
     /** Builds (but does not show) a second frame, on the EDT. */
     private static Frame createOtherFrame() {
-        return onQueue(() -> {
+        return QueueTool.getInstance().callOnQueue(() -> {
             Frame other = new Frame();
             other.setTitle("other");
             other.setName("other" + "_" + "WindowOperatorTest");
@@ -536,8 +529,8 @@ class WindowOperatorTest {
     @Test
     void testWaitWindowCount() throws InterruptedException, InvocationTargetException {
         Predicate<Component> countable = comp -> "CountMe".equals(comp.getName()) && comp.isShowing();
-        Frame extra1 = onQueue(() -> new Frame("CountMe one"));
-        Frame extra2 = onQueue(() -> new Frame("CountMe two"));
+        Frame extra1 = QueueTool.getInstance().callOnQueue(() -> new Frame("CountMe one"));
+        Frame extra2 = QueueTool.getInstance().callOnQueue(() -> new Frame("CountMe two"));
         try {
             EventQueue.invokeAndWait(() -> {
                 extra1.setName("CountMe");

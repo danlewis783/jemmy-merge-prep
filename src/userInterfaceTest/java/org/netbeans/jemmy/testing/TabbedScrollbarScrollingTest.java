@@ -17,7 +17,9 @@
 package org.netbeans.jemmy.testing;
 
 import javax.swing.JFrame;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
 import org.netbeans.jemmy.operators.JTabbedPaneOperator;
@@ -25,6 +27,7 @@ import org.netbeans.jemmy.operators.ScrollbarOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_037
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class TabbedScrollbarScrollingTest {
 
     @Test

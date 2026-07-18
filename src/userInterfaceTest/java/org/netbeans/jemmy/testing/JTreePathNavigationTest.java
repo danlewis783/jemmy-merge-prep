@@ -16,24 +16,11 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.netbeans.jemmy.testing.OnQueue.onQueue;
-
-import java.awt.Component;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPopupMenu;
-import javax.swing.JSplitPane;
-import javax.swing.JTree;
-import javax.swing.ListModel;
-import javax.swing.tree.TreePath;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.operators.JCheckBoxOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -44,13 +31,105 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
 import org.netbeans.jemmy.util.StringComparators;
 
+import javax.swing.*;
+import javax.swing.event.ListDataListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
+
 // formerly scenario test jemmy_005
+@Timeout(value=20, unit=TimeUnit.SECONDS)
 class JTreePathNavigationTest {
+
+    private static final String FRAME_TITLE = "JTreePathNavigationTest";
+    private static final int WRONG_POPUP_SHOW_TIME_MS = 500;
+
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame(FRAME_TITLE);
+            this.jFrame = jFrame;
+            DefaultMutableTreeNode nodeMinus1 = new DefaultMutableTreeNode();
+            nodeMinus1.setUserObject("node-1");
+            DefaultMutableTreeNode node000 = new DefaultMutableTreeNode();
+            node000.setUserObject("node000");
+            DefaultMutableTreeNode node001 = new DefaultMutableTreeNode();
+            node001.setUserObject("node001");
+            DefaultMutableTreeNode node00 = new DefaultMutableTreeNode();
+            node00.setUserObject("node00");
+            node00.insert(node000, 0);
+            node00.insert(node001, 1);
+            DefaultMutableTreeNode node01 = new DefaultMutableTreeNode();
+            node01.setUserObject("node01");
+            DefaultMutableTreeNode node0 = new DefaultMutableTreeNode();
+            node0.setUserObject("node0");
+            node0.insert(nodeMinus1, 0);
+            node0.insert(node00, 1);
+            node0.insert(node01, 2);
+            JTree tree = new JTree(node0);
+            tree.setEditable(true);
+            JList<TreePath> list = new JList<>();
+            JPopupMenu wrongPopup = new JPopupMenu();
+            JMenuItem wpb = new JMenuItem(
+                    "Huge row ...........................................................................................................................................");
+            wrongPopup.add(wpb);
+            JPopupMenu popup = new JPopupMenu();
+            JMenuItem itm = new JMenuItem("menuItem");
+            itm.addActionListener(e -> {
+                list.setModel(new MyModel(Objects.requireNonNull(tree.getSelectionPaths())));
+                popup.setVisible(false);
+            });
+            JMenu sbsbm = new JMenu("subsubmenu");
+            sbsbm.add(itm);
+            JMenu sbsbm2 = new JMenu("subsubmenu2");
+            JMenu sbm = new JMenu("submenu");
+            sbm.add(sbsbm);
+            sbm.add(new JSeparator());
+            sbm.add(sbsbm2);
+            JMenuItem pb = new JMenu("XXX");
+            pb.add(sbm);
+            popup.add(pb);
+            popup.add(new JSeparator());
+            JCheckBox showWrong = new JCheckBox("Show Huge Popup");
+            tree.addMouseListener(new PopupListener(popup, showWrong, wrongPopup));
+            JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(tree), new JScrollPane(list));
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            contentPane.add(showWrong, BorderLayout.SOUTH);
+            contentPane.add(split, BorderLayout.CENTER);
+            jFrame.setSize(400, 200);
+            jFrame.setLocationRelativeTo(null);
+            jFrame.setVisible(true);
+        });
+    }
+
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
 
     @Test
     void test() {
-        TreePathApp.main();
-        JFrame frm = JFrameOperator.waitJFrame("TreePathApp");
+        JFrame frm = JFrameOperator.waitJFrame(FRAME_TITLE);
         JTree jTree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
         assertThat(jTree).isNotNull();
         JTreeOperator to = JTreeOperator.of(jTree);
@@ -215,6 +294,74 @@ class JTreePathNavigationTest {
             }
 
             return true;
+        }
+    }
+
+    private static class MyModel implements ListModel<TreePath> {
+        private final TreePath[] store;
+
+        MyModel(TreePath[] st) {
+            if (st == null) {
+                store = new TreePath[0];
+            } else {
+                store = st;
+            }
+        }
+
+        @Override
+        public void addListDataListener(ListDataListener l) {}
+
+        @Override
+        public TreePath getElementAt(int index) {
+            return store[index];
+        }
+
+        @Override
+        public int getSize() {
+            return store.length;
+        }
+
+        @Override
+        public void removeListDataListener(ListDataListener l) {}
+    }
+
+    private static class PopupListener extends MouseAdapter {
+        private final JPopupMenu popup;
+        private final JCheckBox showWrong;
+        private final JPopupMenu wrongPopup;
+
+        private PopupListener(JPopupMenu popup, JCheckBox showWrong, JPopupMenu wrongPopup) {
+            this.popup = popup;
+            this.showWrong = showWrong;
+            this.wrongPopup = wrongPopup;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                if (showWrong.isSelected()) {
+                    // show the wrong popup first, then swap in the real one without blocking
+                    // the EDT; a waiter looking for the real popup must skip past the wrong one
+                    wrongPopup.show(e.getComponent(), e.getX(), e.getY());
+                    Timer showRealPopup = new Timer(WRONG_POPUP_SHOW_TIME_MS, unused -> {
+                        wrongPopup.setVisible(false);
+                        popup.show(e.getComponent(), e.getX(), e.getY());
+                    });
+                    showRealPopup.setRepeats(false);
+                    showRealPopup.start();
+                } else {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
         }
     }
 }

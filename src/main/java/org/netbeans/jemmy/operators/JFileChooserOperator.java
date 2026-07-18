@@ -134,10 +134,16 @@ public class JFileChooserOperator extends JComponentOperator {
         return getNoTextButton(0);
     }
 
+    /**
+     * @return on Windows L&F on Windows 11, this is the "Recent Items" button
+     */
     public JToggleButton getListToggleButton() {
         return getToggleButton(0);
     }
 
+    /**
+     * @return on Windows L&F on Windows 11, this is the "Desktop" button
+     */
     public JToggleButton getDetailsToggleButton() {
         return getToggleButton(1);
     }

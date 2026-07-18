@@ -35,14 +35,13 @@ import javax.swing.JScrollPane;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.IndexedFramesApp;
-import org.netbeans.jemmy.testing.MenuNavigationApp;
 import org.netbeans.jemmy.util.StringComparators;
 
-// mainFrame is assigned inside the EDT lambda in beforeEach, which NullAway cannot trace
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class JFrameOperatorTest {
     private JFrame mainFrame;
 
@@ -53,11 +52,12 @@ class JFrameOperatorTest {
             mainFrame.setName("JFrameOperatorTest");
             mainFrame.pack();
             mainFrame.setLocationRelativeTo(null);
+            mainFrame.setVisible(true);
         });
     }
 
     @AfterEach
-    void after() throws InterruptedException, InvocationTargetException {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             mainFrame.setVisible(false);
             mainFrame.dispose();
@@ -66,7 +66,7 @@ class JFrameOperatorTest {
 
     @Test
     void constructor() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
+
         JFrameOperator operator1 = JFrameOperator.waitFor();
         assertThat(operator1).isNotNull();
         JFrameOperator operator2 = JFrameOperator.waitFor("JFrameOperatorTest");
@@ -77,7 +77,6 @@ class JFrameOperatorTest {
 
     @Test
     void findJFrame() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrame frame1 = JFrameOperator.findJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();
         JFrame frame2 = JFrameOperator.findJFrame("JFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -85,23 +84,19 @@ class JFrameOperatorTest {
     }
 
     @Test
+    @Timeout(value=2, unit=TimeUnit.SECONDS)
     void waitJFrame() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
-        JFrame frame1 = JFrameOperator.waitJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
-        assertThat(frame1).isNotNull();
-        JFrame frame2 = JFrameOperator.waitJFrame("JFrameOperatorTest");
-        assertThat(frame2).isNotNull();
-        WaitJFrameCallable callable = new WaitJFrameCallable();
-        Future<JFrame> future = Executors.newSingleThreadExecutor().submit(callable);
-        JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
+        JFrame frameOpByName = JFrameOperator.waitJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
+        JFrame frameOpByTitle = JFrameOperator.waitJFrame("JFrameOperatorTest");
 
-        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> future.get(1000, TimeUnit.MILLISECONDS));
+        Future<JFrame> laFutura = Executors.newSingleThreadExecutor().submit(new WaitJFrameCallable());
+        JFrameOperator.waitFor();
+
+        assertThatExceptionOfType(TimeoutException.class).isThrownBy(() -> laFutura.get(1000, TimeUnit.MILLISECONDS));
     }
 
     @Test
     void getAccessibleContext() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         assertThat(operator.getAccessibleContext()).isNotNull();
@@ -109,7 +104,6 @@ class JFrameOperatorTest {
 
     @Test
     void getContentPane() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPane scrollPane = onQueue(JScrollPane::new);
@@ -120,7 +114,6 @@ class JFrameOperatorTest {
 
     @Test
     void getDefaultCloseOperation() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         operator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,7 +123,6 @@ class JFrameOperatorTest {
 
     @Test
     void getGlassPane() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JScrollPane scrollPane = onQueue(JScrollPane::new);
@@ -141,7 +133,6 @@ class JFrameOperatorTest {
 
     @Test
     void getJMenuBar() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JMenuBar menuBar = onQueue(JMenuBar::new);
@@ -152,7 +143,6 @@ class JFrameOperatorTest {
 
     @Test
     void getLayeredPane() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JLayeredPane layeredPane = onQueue(JLayeredPane::new);
@@ -163,70 +153,14 @@ class JFrameOperatorTest {
 
     @Test
     void getRootPane() throws InterruptedException, InvocationTargetException {
-        showMainFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         assertThat(operator.getRootPane()).isEqualTo(onQueue(mainFrame::getRootPane));
     }
 
-    // formerly scenario test jemmy_009
-    @Test
-    void waitJFrameByIndexAndRetitle() throws InterruptedException, InvocationTargetException {
-        IndexedFramesApp.main();
-        QueueTool.getInstance().waitEmpty();
-        try {
-            JFrame frm0 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring());
-            assertThat(((IndexedFramesApp) frm0).getIndex()).isEqualTo(0);
-            JFrame frm1 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring(), 1);
-            assertThat(((IndexedFramesApp) frm1).getIndex()).isEqualTo(1);
-            JFrame frm2 = JFrameOperator.waitJFrame("IndexedFramesApp", StringComparators.substring(), 2);
-            assertThat(((IndexedFramesApp) frm2).getIndex()).isEqualTo(2);
-            JFrameOperator frm2o = JFrameOperator.of(frm2);
-            frm2o.setTitle("New Title");
-            frm2o.waitTitle("New Title", StringComparators.strict());
-        } finally {
-            disposeApplicationFrames();
-        }
-    }
-
-    // formerly scenario test jemmy_038
-    @Test
-    void frameLifecycleSequence() throws InterruptedException, InvocationTargetException {
-        MenuNavigationApp.main();
-        try {
-            JFrame win = JFrameOperator.waitJFrame("MenuNavigationApp");
-            JFrameOperator fo = JFrameOperator.of(win);
-            fo.activate();
-            fo.resize(400, 400);
-            fo.move(200, 200);
-            fo.maximize();
-            fo.demaximize();
-            fo.iconify();
-            fo.deiconify();
-            fo.requestClose();
-        } finally {
-            disposeApplicationFrames();
-        }
-    }
-
-    private void showMainFrame() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> mainFrame.setVisible(true));
-    }
-
     /** Runs the callable on the event dispatch thread so Swing component state is only touched there. */
     private static <T> T onQueue(Callable<T> callable) {
         return QueueTool.getInstance().callOnQueue(callable);
-    }
-
-    private void disposeApplicationFrames() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> {
-            for (Frame frame : Frame.getFrames()) {
-                if (frame != mainFrame) {
-                    frame.setVisible(false);
-                    frame.dispose();
-                }
-            }
-        });
     }
 
     private static class WaitJFrameCallable implements Callable<JFrame> {

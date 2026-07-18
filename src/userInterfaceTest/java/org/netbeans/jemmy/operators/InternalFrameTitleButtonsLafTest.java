@@ -21,8 +21,10 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.netbeans.jemmy.util.LookAndFeel;
@@ -33,8 +35,7 @@ import org.netbeans.jemmy.util.LookAndFeel;
  * skipped: it keeps title actions in a popup menu instead of buttons (covered by
  * {@link InternalFramePopupMenuDriverTest}).
  */
-// UI fixtures are created on the EDT inside each test; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class InternalFrameTitleButtonsLafTest {
 
     private JFrame frame;

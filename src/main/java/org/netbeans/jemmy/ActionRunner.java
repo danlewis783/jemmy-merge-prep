@@ -71,7 +71,6 @@ final class ActionRunner<R> {
             if (cause instanceof TimeoutExpiredException) {
                 throw (TimeoutExpiredException) cause;
             }
-            logger.warn("caught ExecutionException running action", e);
             throwable.set(cause);
         } catch (TimeoutException e) {
             throwable.set(e);

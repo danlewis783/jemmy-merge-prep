@@ -134,9 +134,6 @@ public final class QueueTool {
         }));
     }
 
-    // the result's nullness follows the Caller's type argument,
-    // which pre-generics NullAway cannot express
-    @SuppressWarnings("NullAway")
     private <R> R invokeAndWait(Caller<R> caller) {
         dispatchAndAwait(caller);
         return caller.getResult();

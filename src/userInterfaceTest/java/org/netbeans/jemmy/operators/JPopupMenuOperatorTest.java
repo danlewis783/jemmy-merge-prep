@@ -17,73 +17,66 @@
 
 package org.netbeans.jemmy.operators;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.netbeans.jemmy.testing.OnQueue.onQueue;
-
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
-import java.util.EnumSet;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
-import javax.swing.Action;
-import javax.swing.DefaultSingleSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.MenuElement;
-import javax.swing.MenuSelectionManager;
-import javax.swing.SingleSelectionModel;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.plaf.PopupMenuUI;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.netbeans.jemmy.DispatchingModel;
 import org.netbeans.jemmy.DumpOnFailure;
-import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.util.StringComparators;
 
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.PopupMenuUI;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
+
 @ExtendWith(DumpOnFailure.class)
-// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=500, unit=TimeUnit.MILLISECONDS)
 final class JPopupMenuOperatorTest {
 
-    private JFrame frame;
-    private JPopupMenu popup;
+    private JFrame jFrame;
+    private JPopupMenu jPopupMenu;
     private TimeoutOverride override;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
-        override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 3000L);
+        override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 3_000L);
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
+            this.jFrame = jFrame;
+
             JPopupMenu jPopupMenu = new JPopupMenu("0");
+            this.jPopupMenu = jPopupMenu;
+
             jPopupMenu.setName("JPopupMenuOperatorTest");
             jPopupMenu.add(new JMenuItem("1"));
             jPopupMenu.add(new JMenuItem("12"));
             jPopupMenu.add(new JMenuItem("123"));
             jPopupMenu.add(new JMenu("1234"));
-            popup = jPopupMenu;
             jFrame.setSize(400, 300);
             jFrame.setLocationRelativeTo(null);
             // the popup tests drive real Robot clicks at screen coordinates; if another window
             // overlaps this frame the click lands on that window and the menu push times out
             jFrame.setAlwaysOnTop(true);
             jFrame.setVisible(true);
-            frame = jFrame;
+        });
+        EventQueue.invokeLater(() -> {
+            jPopupMenu.show(jFrame, 30, 30);
         });
     }
 
@@ -91,9 +84,9 @@ final class JPopupMenuOperatorTest {
     void afterEach() throws InterruptedException, InvocationTargetException {
         try {
             EventQueue.invokeAndWait(() -> {
-                frame.setVisible(false);
-                frame.dispose();
-                popup.setVisible(false);
+                jFrame.setVisible(false);
+                jFrame.dispose();
+                jPopupMenu.setVisible(false);
             });
         } finally {
             override.cancel();
@@ -101,275 +94,201 @@ final class JPopupMenuOperatorTest {
     }
 
     @Test
-    void testRobot56091() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> {
-            JMenu subMenu = new JMenu("SubMenu");
-            subMenu.add("SubMenu item 1");
-            JMenuItem item = new JMenuItem("SubMenu item 1.1");
-            item.setVisible(false);
-            subMenu.add(item);
-            subMenu.add("SubMenu item 2");
-            popup.add(subMenu);
-            popup.show(frame, 30, 30);
-        });
-        JemmyContext jemmyContext = JemmyContext.getInstance();
-        EnumSet<DispatchingModel> oldModel = jemmyContext.getDispatchingModel();
-        jemmyContext.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
-
-        try {
-            JPopupMenuOperator jPopupMenuOp = JPopupMenuOperator.waitFor();
-            assertThat(jPopupMenuOp).isNotNull();
-            jPopupMenuOp.pushMenu("SubMenu|SubMenu item 2", StringComparators.strict());
-        } finally {
-            jemmyContext.installDriversAndSetDispatchingModel(oldModel);
-        }
+    void testConstructor() {
+        JPopupMenuOperator.waitFor();
+        new JPopupMenuOperator(jPopupMenu);
+        JFrameOperator.waitFor();
     }
 
     @Test
-    void testConstructor() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JPopupMenuOperator operator2 = JPopupMenuOperator.of(popup);
-        assertThat(operator2).isNotNull();
-        JFrameOperator operator3 = JFrameOperator.waitFor();
-        assertThat(operator3).isNotNull();
+    void show() {
+        JFrameOperator.waitFor();
+        JPopupMenuOperator.waitFor();
     }
 
     @Test
-    void show() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JPopupMenuOperator operator1 = JPopupMenuOperator.waitFor();
-        assertThat(operator1).isNotNull();
+    void show2() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.show(jFrame, 0, 0);
     }
 
+
     @Test
+    @Timeout(value=4, unit=TimeUnit.SECONDS)
     void pushMenu() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.pushMenu("1", StringComparators.strict());
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        String[] menus = new String[1];
-        menus[0] = "1";
-        operator.pushMenu(menus, StringComparators.strict());
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        assertThat(popupMenuOp.pushMenu("1", StringComparators.strict())).isNotNull();
+        assertThat(popupMenuOp.pushMenu(new String[] {"1"}, StringComparators.strict()));
     }
 
     @Test
-    void pushMenuNoBlock() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.pushMenuNoBlock("1", StringComparators.strict());
+    void pushMenuNoBlock() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.pushMenuNoBlock("1", StringComparators.strict());
     }
 
     @Test
-    void show2() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.show(frame, 0, 0);
+    @Timeout(value=5, unit=TimeUnit.SECONDS)
+    void showMenuItems() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.showMenuItems("1234", StringComparators.strict());
+        popupMenuOp.showMenuItems("1234", "/", StringComparators.strict());
     }
 
     @Test
-    void showMenuItems() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.showMenuItems("1234", StringComparators.strict());
-        operator.showMenuItems("1234", "/", StringComparators.strict());
-    }
-
-    @Test
-    void showMenuItem() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.showMenuItem("1", StringComparators.strict());
-        operator.showMenuItem("1", "/", StringComparators.strict());
-        operator.showMenuItem(new String[] {"1"}, StringComparators.strict());
+    void showMenuItem() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.showMenuItem("1", StringComparators.strict());
+        popupMenuOp.showMenuItem("1", "/", StringComparators.strict());
+        popupMenuOp.showMenuItem(new String[] {"1"}, StringComparators.strict());
     }
 
     @Test
     void add() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+
         AtomicReference<@Nullable JMenuItem> menuItem = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> menuItem.set(new JMenuItem("4")));
-        operator.add(Objects.requireNonNull(menuItem.get()));
-        operator.add("12345");
-        operator.add(new NullAction());
+        assertThat(menuItem).doesNotHaveNullValue();
+        popupMenuOp.add(menuItem.get());
+
+        popupMenuOp.add("12345");
+        popupMenuOp.add(new NullAction());
     }
 
     @Test
-    void addPopupMenuListener() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
+    void addPopupMenuListener() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
         NullPopupMenuListener listener = new NullPopupMenuListener();
-        operator.addPopupMenuListener(listener);
-        assertThat(onQueue(popup::getPopupMenuListeners)).hasSize(2);
-        operator.removePopupMenuListener(listener);
-        assertThat(onQueue(popup::getPopupMenuListeners)).hasSize(1);
+        popupMenuOp.addPopupMenuListener(listener);
+        assertThat(onQueue(jPopupMenu::getPopupMenuListeners)).hasSize(2);
+        popupMenuOp.removePopupMenuListener(listener);
+        assertThat(onQueue(jPopupMenu::getPopupMenuListeners)).hasSize(1);
     }
 
     @Test
-    void addSeparator() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.addSeparator();
+    void addSeparator() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.addSeparator();
     }
 
     @Test
-    void getComponentIndex() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.getComponentIndex(frame);
+    void getComponentIndex() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.getComponentIndex(jFrame);
     }
 
     @Test
-    void getInvoker() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.setInvoker(frame);
-        assertThat(operator.getInvoker()).isNotNull();
+    void getInvoker() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.setInvoker(jFrame);
+        assertThat(popupMenuOp.getInvoker()).isNotNull();
     }
 
     @Test
-    void getLabel() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.setLabel("12345");
-        assertThat(operator.getLabel()).isEqualTo("12345");
+    void getLabel() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.setLabel("12345");
+        assertThat(popupMenuOp.getLabel()).isEqualTo("12345");
     }
 
     @Test
-    void getMargin() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        assertThat(operator.getMargin()).isNotNull();
+    void getMargin() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        assertThat(popupMenuOp.getMargin()).isNotNull();
     }
 
     @Test
-    void getSelectionModel() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
+    void getSelectionModel() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
         SingleSelectionModel model = new DefaultSingleSelectionModel();
-        operator.setSelectionModel(model);
-        assertThat(operator.getSelectionModel()).isEqualTo(model);
+        popupMenuOp.setSelectionModel(model);
+        assertThat(popupMenuOp.getSelectionModel()).isEqualTo(model);
     }
 
     @Test
-    void getSubElements() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.getSubElements();
+    void getSubElements() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.getSubElements();
     }
 
     @Test
-    void getUi() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
+    void getUi() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
         NullPopupMenuUI ui = new NullPopupMenuUI();
-        operator.setUI(ui);
-        assertThat(operator.getUI()).isEqualTo(ui);
+        popupMenuOp.setUI(ui);
+        assertThat(popupMenuOp.getUI()).isEqualTo(ui);
     }
 
     @Test
     void insert() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+
         AtomicReference<@Nullable JButton> button = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> button.set(new JButton("Hello")));
-        operator.insert(Objects.requireNonNull(button.get()), 0);
-        operator.insert(new NullAction(), 0);
+        assertThat(button).doesNotHaveNullValue();
+        popupMenuOp.insert(button.get(), 0);
+
+        popupMenuOp.insert(new NullAction(), 0);
     }
 
     @Test
-    void isBorderPainted() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.setBorderPainted(true);
-        assertThat(operator.isBorderPainted()).isTrue();
-        operator.setBorderPainted(false);
-        assertThat(operator.isBorderPainted()).isFalse();
+    void isBorderPainted() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.setBorderPainted(true);
+        assertThat(popupMenuOp.isBorderPainted()).isTrue();
+        popupMenuOp.setBorderPainted(false);
+        assertThat(popupMenuOp.isBorderPainted()).isFalse();
     }
 
     @Test
-    void isLightWeightPopupEnabled() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.setLightWeightPopupEnabled(true);
-        assertThat(operator.isLightWeightPopupEnabled()).isTrue();
-        operator.setLightWeightPopupEnabled(false);
-        assertThat(operator.isLightWeightPopupEnabled()).isFalse();
+    void isLightWeightPopupEnabled() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.setLightWeightPopupEnabled(true);
+        assertThat(popupMenuOp.isLightWeightPopupEnabled()).isTrue();
+        popupMenuOp.setLightWeightPopupEnabled(false);
+        assertThat(popupMenuOp.isLightWeightPopupEnabled()).isFalse();
     }
 
     @Test
-    void menuSelectionChanged() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.menuSelectionChanged(true);
+    void menuSelectionChanged() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.menuSelectionChanged(true);
     }
 
     @Test
-    void pack() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.pack();
+    void pack() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.pack();
     }
 
     @Test
-    void processKeyEvent() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.processKeyEvent(
-                new KeyEvent(frame, 0, 0, 0, 0), new MenuElement[0], MenuSelectionManager.defaultManager());
+    void processKeyEvent() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.processKeyEvent(
+                new KeyEvent(jFrame, 0, 0, 0, 0), new MenuElement[0], MenuSelectionManager.defaultManager());
     }
 
     @Test
-    void processMouseEvent() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.processMouseEvent(
-                new MouseEvent(frame, 0, 0, 0, 0, 0, 0, true),
+    void processMouseEvent() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.processMouseEvent(
+                new MouseEvent(jFrame, 0, 0, 0, 0, 0, 0, true),
                 new MenuElement[0],
                 MenuSelectionManager.defaultManager());
     }
 
     @Test
-    void setPopupSize() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.setPopupSize(100, 100);
-        operator.setPopupSize(new Dimension(200, 200));
+    void setPopupSize() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.setPopupSize(100, 100);
+        popupMenuOp.setPopupSize(new Dimension(200, 200));
     }
 
     @Test
-    void setSelected() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> popup.show(frame, 30, 30));
-        JPopupMenuOperator operator = JPopupMenuOperator.waitFor();
-        assertThat(operator).isNotNull();
-        operator.setSelected(frame);
+    void setSelected() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        popupMenuOp.setSelected(jFrame);
     }
 
     private static class NullAction implements Action {

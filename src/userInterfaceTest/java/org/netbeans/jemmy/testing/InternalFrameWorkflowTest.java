@@ -21,7 +21,9 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -29,6 +31,7 @@ import org.netbeans.jemmy.operators.JInternalFrameOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_022
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class InternalFrameWorkflowTest {
 
     @Test

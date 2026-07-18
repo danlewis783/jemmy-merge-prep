@@ -26,7 +26,9 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import org.jetbrains.annotations.Nullable;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
@@ -43,6 +45,7 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_021
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class EditorScrollingInTabsTest {
 
     @Test

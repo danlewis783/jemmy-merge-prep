@@ -21,7 +21,9 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.ContainerOperator;
@@ -37,6 +39,7 @@ import org.netbeans.jemmy.util.DefaultVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_029
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class ModalDialogVisualizerTest {
 
     @Test

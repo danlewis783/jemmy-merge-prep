@@ -21,19 +21,16 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.within;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.Window;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
@@ -55,18 +52,79 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_001
-// UI fixtures are created on the EDT in the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class DialogComboListWorkflowTest {
+    private JFrame jFrame;
+    private JDialog jDialog;
 
-    private DialogComboListApp application001;
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame();
+            this.jFrame = jFrame;
+            JDialog jDialog = new JDialog(jFrame, "DialogComboListWorkflowTest");
+            this.jDialog = jDialog;
+
+            Container contentPane = jDialog.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            JPanel pane = new JPanel();
+            GridBagLayout gridbag = new GridBagLayout();
+            GridBagConstraints c = new GridBagConstraints();
+            pane.setLayout(gridbag);
+            contentPane.add(new JScrollPane(pane), BorderLayout.CENTER);
+            String[] editableContents = {"editable_one", "editable_two", "editable_three", "editable_four"};
+            DefaultComboBoxModel<String> editableModel = new DefaultComboBoxModel<>(editableContents);
+            JComboBox<String> editable = new JComboBox<>(editableModel);
+            editable.setEditable(true);
+            editable.getEditor()
+                    .addActionListener(e ->
+                            editableModel.addElement((String) editable.getEditor().getItem()));
+            editable.setName("editable");
+            c.fill = GridBagConstraints.CENTER;
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.gridheight = 1;
+            c.weighty = 1.0;
+            gridbag.setConstraints(editable, c);
+            pane.add(editable);
+            String[] listContents = {"list_one", "list_two", "list_three", "list_four"};
+            JList<String> list = new JList<>(listContents);
+            list.setName("list");
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.gridheight = 2;
+            c.weighty = 1.0;
+            gridbag.setConstraints(list, c);
+            pane.add(list);
+            String[] nonEditableContents = {
+                    "non_editable_one", "non_editable_two", "non_editable_three", "non_editable_four"
+            };
+            JComboBox<String> nonEditable = new JComboBox<>(nonEditableContents);
+            nonEditable.setEditable(false);
+            nonEditable.setName("non_editable");
+            c.gridwidth = GridBagConstraints.REMAINDER;
+            c.gridheight = 1;
+            c.weighty = 1.0;
+            gridbag.setConstraints(nonEditable, c);
+            pane.add(nonEditable);
+            jDialog.setSize(200, 200);
+            jDialog.setModal(true);
+        });
+
+        //NOTE: we need to set visible on an invokeLater, otherwise we block forever
+        EventQueue.invokeLater(() -> jDialog.setVisible(true));
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jDialog.setVisible(false);
+            jDialog.dispose();
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
 
     @Test
     void test() throws Exception {
-        EventQueue.invokeAndWait(() -> application001 = new DialogComboListApp());
-        EventQueue.invokeLater(() -> application001.setVisible(true));
-        EventQueue.invokeAndWait(() -> {});
-        JDialog jDialog = JDialogOperator.waitJDialog("DialogComboListApp", StringComparators.strict());
         JDialogOperator jDialogOp1 = JDialogOperator.of(jDialog);
         JDialogOperator jDialogOp2 = JDialogOperator.waitFor();
         DialogOperator dialogOp = DialogOperator.waitFor();

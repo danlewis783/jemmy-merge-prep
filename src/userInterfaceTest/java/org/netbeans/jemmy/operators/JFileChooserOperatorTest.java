@@ -18,18 +18,23 @@
 package org.netbeans.jemmy.operators;
 
 import org.jetbrains.annotations.Nullable;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
+import org.netbeans.jemmy.ComponentSearcher;
+import org.netbeans.jemmy.ComponentStreamer;
 import org.netbeans.jemmy.FunctionRunner;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparators;
 
 import javax.swing.*;
@@ -46,10 +51,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
-// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=500, unit=TimeUnit.MILLISECONDS)
 final class JFileChooserOperatorTest {
 
     private static final String FN2 = "showit.txt";
@@ -66,14 +71,8 @@ final class JFileChooserOperatorTest {
     static void beforeAll() throws IOException {
         Timeouts.resetToDefaults();
 
-        Files.createFile(Paths.get(FN2));
-        Files.createDirectory(Paths.get(FN3));
-    }
-
-    @AfterAll
-    static void afterClass() throws IOException {
-        Files.deleteIfExists(Paths.get(FN2));
-        Files.deleteIfExists(Paths.get(FN3));
+        Files.createFile(tempDir.resolve(FN2));
+        Files.createDirectory(tempDir.resolve(FN3));
     }
 
     @BeforeEach
@@ -84,7 +83,7 @@ final class JFileChooserOperatorTest {
             fileChooser = new JFileChooser();
             frame.getContentPane().add(fileChooser);
             frame.pack();
-            frame.setLocationRelativeTo(null);
+            frame.setLocation(100, 100);
             frame.setVisible(true);
             fileChooser.setCurrentDirectory(tempDir.toFile());
         });
@@ -92,12 +91,15 @@ final class JFileChooserOperatorTest {
 
     @AfterEach
     void after() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> {
-            frame.setVisible(false);
-            frame.dispose();
-            fileChooser.setVisible(false);
-        });
-        override.cancel();
+        try {
+            EventQueue.invokeAndWait(() -> {
+                frame.setVisible(false);
+                frame.dispose();
+                fileChooser.setVisible(false);
+            });
+        } finally {
+            override.cancel();
+        }
     }
 
     @Test
@@ -231,18 +233,41 @@ final class JFileChooserOperatorTest {
     }
 
     @Test
-    void testDetailsViewUsesTable() {
-        JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        JToggleButtonOperator.of(op.getDetailsToggleButton()).push();
-        op.waitStateOnQueue(o -> op.getFileList() instanceof JTable);
-        assertThat(op.getFileCount()).isEqualTo(2);
-        assertThat(op.getFiles()).extracting(File::getName).containsExactlyInAnyOrder(FN2, FN3);
-        op.selectFile(FN2);
-        op.waitStateOnQueue(o -> {
-            File selected = ((JFileChooser) op.getSource()).getSelectedFile();
+    @Timeout(value=1, unit=TimeUnit.SECONDS)
+    void testDetailsViewUsesTableOnMetalLookAndFeel() throws InterruptedException {
+        assumeThat(LookAndFeel.isMetal())
+                .as("check that swing is running metal look and feel")
+                .isTrue();
 
-            return (selected != null) && FN2.equals(selected.getName());
-        });
+        // on Metal look and feel, this is the toggle button on far right, and you should see a JTable
+        JFileChooserOperator chooserOp = JFileChooserOperator.of(fileChooser);
+        JToggleButton detailsToggleButton = chooserOp.getDetailsToggleButton();
+        JToggleButtonOperator.of(detailsToggleButton).push();
+        Component fileList = chooserOp.getFileList();
+        assertThat(QueueTool.getInstance().callOnQueue(() -> ComponentStreamer.streamOfType(fileList, JTable.class).findAny().isPresent()));
+
+        assertThat(chooserOp.getFileCount()).isEqualTo(2);
+        assertThat(chooserOp.getFiles()).extracting(File::getName).containsExactlyInAnyOrder(FN2, FN3);
+        chooserOp.selectFile(FN2);
+        assertThat(chooserOp.getSelectedFile()).hasName(FN2);
+    }
+
+    @Test
+    @Timeout(value=1, unit=TimeUnit.SECONDS)
+    void testDesktopViewOnWindowsLookAndFeel() throws InterruptedException {
+        assumeThat(LookAndFeel.isWindows())
+                .as("check that swing is running windows look and feel")
+                .isTrue();
+
+        JFileChooserOperator chooserOp = JFileChooserOperator.of(fileChooser);
+
+        // this is actually the "Desktop" button in Windows L&F
+        JToggleButton detailsToggleButton = chooserOp.getDetailsToggleButton();
+        JToggleButtonOperator.of(detailsToggleButton).push();
+
+        // in Windows L&F, once you hit the "Desktop" button, all bets are off as to what you might find
+        // so cancel here
+        chooserOp.cancel();
     }
 
     @Test

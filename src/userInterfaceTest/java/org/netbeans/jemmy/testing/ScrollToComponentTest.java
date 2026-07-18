@@ -19,28 +19,71 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
 import org.netbeans.jemmy.operators.JScrollPaneOperator;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.util.ComponentVisualizer;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_018
+@Timeout(value=2, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {
+    private JFrame jFrame;
+    private ComponentVisualizer savedDefaultComponentVisualizer;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        savedDefaultComponentVisualizer = ComponentOperator.getDefaultComponentVisualizer();
+        ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame("ScrollToComponentTest");
+            this.jFrame = jFrame;
+
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            JPanel pane = new JPanel();
+            pane.setLayout(new GridLayout(5, 5));
+            JScrollPane scrollPane = new JScrollPane(pane);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            contentPane.add(scrollPane, BorderLayout.CENTER);
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    pane.add(new JButton(String.valueOf(i) + j));
+                }
+            }
+
+            jFrame.setSize(150, 150);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+        ComponentOperator.setDefaultComponentVisualizer(savedDefaultComponentVisualizer);
+    }
 
     @Test
     void test() {
-        ButtonGridScrollApp.main();
-        ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
-        JFrame jFrame = JFrameOperator.waitJFrame("ButtonGridScrollApp");
+        JFrame jFrame = JFrameOperator.waitJFrame("ScrollToComponentTest");
         JButton butt00 = JButtonOperator.findJButton(jFrame, "00", StringComparators.strict());
         assertThat(butt00).isNotNull();
         ComponentOperator butt00Op = ComponentOperator.of(butt00);
@@ -66,97 +109,92 @@ class ScrollToComponentTest {
         JButton butt40 = JButtonOperator.findJButton(jFrame, "40", StringComparators.strict());
         assertThat(butt40).isNotNull();
         ComponentOperator butt40Op = ComponentOperator.of(butt40);
-        JScrollPane sp = JScrollPaneOperator.findJScrollPane(jFrame, ComponentPredicates.alwaysTrue());
-        assertThat(sp).isNotNull();
-        assertThat(JScrollPaneOperator.findJScrollPaneUnder(butt00)).isSameAs(sp);
-        JScrollBarOperator hscroll = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame), 1);
-        assertThat(hscroll.getOrientation()).isEqualTo(JScrollBar.HORIZONTAL);
-        JScrollBarOperator vscroll = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame));
-        assertThat(vscroll.getOrientation()).isEqualTo(JScrollBar.VERTICAL);
-        JScrollPaneOperator scroller = JScrollPaneOperator.of(sp);
+        JScrollPane scrollPane = JScrollPaneOperator.findJScrollPane(jFrame, ComponentPredicates.alwaysTrue());
+        assertThat(scrollPane).isNotNull();
+        assertThat(JScrollPaneOperator.findJScrollPaneUnder(butt00)).isSameAs(scrollPane);
+        JScrollBarOperator hScrollBarOp = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame), 1);
+        assertThat(hScrollBarOp.getOrientation()).isEqualTo(JScrollBar.HORIZONTAL);
+        JScrollBarOperator vScrollBarOp = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame));
+        assertThat(vScrollBarOp.getOrientation()).isEqualTo(JScrollBar.VERTICAL);
+        JScrollPaneOperator scrollPaneOp = JScrollPaneOperator.of(scrollPane);
         assertThat(JScrollPaneOperator.waitFor(JFrameOperator.of(jFrame)).getSource())
-                .isSameAs(scroller.getSource());
-        scroller.setValues(
-                scroller.getHorizontalScrollBar().getMaximum(),
-                scroller.getVerticalScrollBar().getMaximum());
-        assertThat(CheckInside.isInside(butt44Op, scroller, 0, 0, butt44Op.getWidth(), butt44Op.getHeight()))
+                .isSameAs(scrollPaneOp.getSource());
+        scrollPaneOp.setValues(
+                scrollPaneOp.getHorizontalScrollBar().getMaximum(),
+                scrollPaneOp.getVerticalScrollBar().getMaximum());
+        assertThat(CheckInside.isInside(butt44Op, scrollPaneOp, 0, 0, butt44Op.getWidth(), butt44Op.getHeight()))
                 .isTrue();
-        scroller.setValues(0, 0);
-        assertThat(CheckInside.isInside(butt00Op, scroller, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
+        scrollPaneOp.setValues(0, 0);
+        assertThat(CheckInside.isInside(butt00Op, scrollPaneOp, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
                 .isTrue();
-        scroller.scrollToComponentPoint(butt22, butt22Op.getWidth() / 2, butt22Op.getHeight() / 2);
+        scrollPaneOp.scrollToComponentPoint(butt22, butt22Op.getWidth() / 2, butt22Op.getHeight() / 2);
         assertThat(CheckInside.isInside(
-                        butt22Op, scroller, butt22Op.getWidth() / 2 - 1, butt22Op.getHeight() / 2 - 1, 2, 2))
+                        butt22Op, scrollPaneOp, butt22Op.getWidth() / 2 - 1, butt22Op.getHeight() / 2 - 1, 2, 2))
                 .isTrue();
-        scroller.scrollToRight();
+        scrollPaneOp.scrollToRight();
         assertThat(CheckInside.isInside(
-                        butt24Op, scroller, butt24Op.getWidth() / 2 - 1, butt24Op.getHeight() / 2 - 1, 2, 2))
+                        butt24Op, scrollPaneOp, butt24Op.getWidth() / 2 - 1, butt24Op.getHeight() / 2 - 1, 2, 2))
                 .isTrue();
         int x22 = 10;
         int y22 = 10;
         int w22 = butt22Op.getWidth() - 20;
         int h22 = butt22Op.getHeight() - 20;
-        scroller.scrollToComponentRectangle(butt22, x22, y22, w22, h22);
-        assertThat(CheckInside.isInside(butt22Op, scroller, x22, y22, w22, h22)).isTrue();
-        scroller.scrollToBottom();
+        scrollPaneOp.scrollToComponentRectangle(butt22, x22, y22, w22, h22);
+        assertThat(CheckInside.isInside(butt22Op, scrollPaneOp, x22, y22, w22, h22)).isTrue();
+        scrollPaneOp.scrollToBottom();
         int x42 = 10;
         int y42 = 10;
         int w42 = butt42Op.getWidth() - 20;
         int h42 = butt42Op.getHeight() - 20;
-        assertThat(CheckInside.isInside(butt42Op, scroller, x42, y42, w42, h42)).isTrue();
-        scroller.scrollToLeft();
-        assertThat(CheckInside.isInside(butt40Op, scroller, 0, 0, butt40Op.getWidth(), butt40Op.getHeight()))
+        assertThat(CheckInside.isInside(butt42Op, scrollPaneOp, x42, y42, w42, h42)).isTrue();
+        scrollPaneOp.scrollToLeft();
+        assertThat(CheckInside.isInside(butt40Op, scrollPaneOp, 0, 0, butt40Op.getWidth(), butt40Op.getHeight()))
                 .isTrue();
-        scroller.scrollToTop();
-        assertThat(CheckInside.isInside(butt00Op, scroller, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
+        scrollPaneOp.scrollToTop();
+        assertThat(CheckInside.isInside(butt00Op, scrollPaneOp, 0, 0, butt00Op.getWidth(), butt00Op.getHeight()))
                 .isTrue();
-        scroller.scrollToValues(0.5, 0.5);
-        assertThat(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
+        scrollPaneOp.scrollToValues(0.5, 0.5);
+        assertThat(CheckInside.isInside(butt22Op, scrollPaneOp, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
                 .isTrue();
-        scroller.scrollToComponent(butt11);
-        assertThat(CheckInside.isInside(butt11Op, scroller, 0, 0, butt11Op.getWidth(), butt11Op.getHeight()))
+        scrollPaneOp.scrollToComponent(butt11);
+        assertThat(CheckInside.isInside(butt11Op, scrollPaneOp, 0, 0, butt11Op.getWidth(), butt11Op.getHeight()))
                 .isTrue();
-        scroller.scrollToComponent(butt33);
-        assertThat(CheckInside.isInside(butt33Op, scroller, 0, 0, butt33Op.getWidth(), butt33Op.getHeight()))
+        scrollPaneOp.scrollToComponent(butt33);
+        assertThat(CheckInside.isInside(butt33Op, scrollPaneOp, 0, 0, butt33Op.getWidth(), butt33Op.getHeight()))
                 .isTrue();
-        scroller.getHScrollBarOperator()
+        scrollPaneOp.getHScrollBarOperator()
                 .scrollTo(op -> Integer.compare((op.getMaximum() - op.getVisibleAmount()) / 2, op.getValue()));
-        scroller.getVScrollBarOperator()
+        scrollPaneOp.getVScrollBarOperator()
                 .scrollTo(op -> Integer.compare((op.getMaximum() - op.getVisibleAmount()) / 2, op.getValue()));
-        assertThat(CheckInside.isInside(butt22Op, scroller, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
+        assertThat(CheckInside.isInside(butt22Op, scrollPaneOp, 0, 0, butt22Op.getWidth(), butt22Op.getHeight()))
                 .isTrue();
 
-        testJScrollBar(hscroll);
-        testJScrollPane(scroller);
+        // test scrollbar
+        JScrollBar hScrollBar = (JScrollBar) hScrollBarOp.getSource();
+        assertThat(hScrollBarOp.getBlockIncrement()).isEqualTo(onQueue(hScrollBar::getBlockIncrement));
+        assertThat(hScrollBarOp.getMaximum()).isEqualTo(onQueue(hScrollBar::getMaximum));
+        assertThat(hScrollBarOp.getMinimum()).isEqualTo(onQueue(hScrollBar::getMinimum));
+        assertThat(hScrollBarOp.getModel()).isEqualTo(onQueue(hScrollBar::getModel));
+        assertThat(hScrollBarOp.getOrientation()).isEqualTo(onQueue(hScrollBar::getOrientation));
+        assertThat(hScrollBarOp.getUI()).isEqualTo(onQueue(hScrollBar::getUI));
+        assertThat(hScrollBarOp.getUnitIncrement()).isEqualTo(onQueue(hScrollBar::getUnitIncrement));
+        assertThat(hScrollBarOp.getValue()).isEqualTo(onQueue(hScrollBar::getValue));
+        assertThat(hScrollBarOp.getValueIsAdjusting()).isEqualTo(onQueue(hScrollBar::getValueIsAdjusting));
+        assertThat(hScrollBarOp.getVisibleAmount()).isEqualTo(onQueue(hScrollBar::getVisibleAmount));
+
+        // test scrollpane
+        assertThat(scrollPaneOp.getColumnHeader()).isEqualTo(onQueue(scrollPane::getColumnHeader));
+        assertThat(scrollPaneOp.getHorizontalScrollBar()).isEqualTo(onQueue(scrollPane::getHorizontalScrollBar));
+        assertThat(scrollPaneOp.getHorizontalScrollBarPolicy())
+                .isEqualTo(onQueue(scrollPane::getHorizontalScrollBarPolicy));
+        assertThat(scrollPaneOp.getRowHeader()).isEqualTo(onQueue(scrollPane::getRowHeader));
+        assertThat(scrollPaneOp.getUI()).isEqualTo(onQueue(scrollPane::getUI));
+        assertThat(scrollPaneOp.getVerticalScrollBar()).isEqualTo(onQueue(scrollPane::getVerticalScrollBar));
+        assertThat(scrollPaneOp.getVerticalScrollBarPolicy())
+                .isEqualTo(onQueue(scrollPane::getVerticalScrollBarPolicy));
+        assertThat(scrollPaneOp.getViewport()).isEqualTo(onQueue(scrollPane::getViewport));
+        assertThat(scrollPaneOp.getViewportBorder()).isEqualTo(onQueue(scrollPane::getViewportBorder));
+        assertThat(scrollPaneOp.getViewportBorderBounds()).isEqualTo(onQueue(scrollPane::getViewportBorderBounds));
     }
 
-    private void testJScrollBar(JScrollBarOperator jScrollBarOperator) {
-        JScrollBar src = (JScrollBar) jScrollBarOperator.getSource();
-        assertThat(jScrollBarOperator.getBlockIncrement()).isEqualTo(onQueue(src::getBlockIncrement));
-        assertThat(jScrollBarOperator.getMaximum()).isEqualTo(onQueue(src::getMaximum));
-        assertThat(jScrollBarOperator.getMinimum()).isEqualTo(onQueue(src::getMinimum));
-        assertThat(jScrollBarOperator.getModel()).isEqualTo(onQueue(src::getModel));
-        assertThat(jScrollBarOperator.getOrientation()).isEqualTo(onQueue(src::getOrientation));
-        assertThat(jScrollBarOperator.getUI()).isEqualTo(onQueue(src::getUI));
-        assertThat(jScrollBarOperator.getUnitIncrement()).isEqualTo(onQueue(src::getUnitIncrement));
-        assertThat(jScrollBarOperator.getValue()).isEqualTo(onQueue(src::getValue));
-        assertThat(jScrollBarOperator.getValueIsAdjusting()).isEqualTo(onQueue(src::getValueIsAdjusting));
-        assertThat(jScrollBarOperator.getVisibleAmount()).isEqualTo(onQueue(src::getVisibleAmount));
-    }
-
-    private void testJScrollPane(JScrollPaneOperator jScrollPaneOperator) {
-        JScrollPane src = (JScrollPane) jScrollPaneOperator.getSource();
-        assertThat(jScrollPaneOperator.getColumnHeader()).isEqualTo(onQueue(src::getColumnHeader));
-        assertThat(jScrollPaneOperator.getHorizontalScrollBar()).isEqualTo(onQueue(src::getHorizontalScrollBar));
-        assertThat(jScrollPaneOperator.getHorizontalScrollBarPolicy())
-                .isEqualTo(onQueue(src::getHorizontalScrollBarPolicy));
-        assertThat(jScrollPaneOperator.getRowHeader()).isEqualTo(onQueue(src::getRowHeader));
-        assertThat(jScrollPaneOperator.getUI()).isEqualTo(onQueue(src::getUI));
-        assertThat(jScrollPaneOperator.getVerticalScrollBar()).isEqualTo(onQueue(src::getVerticalScrollBar));
-        assertThat(jScrollPaneOperator.getVerticalScrollBarPolicy())
-                .isEqualTo(onQueue(src::getVerticalScrollBarPolicy));
-        assertThat(jScrollPaneOperator.getViewport()).isEqualTo(onQueue(src::getViewport));
-        assertThat(jScrollPaneOperator.getViewportBorder()).isEqualTo(onQueue(src::getViewportBorder));
-        assertThat(jScrollPaneOperator.getViewportBorderBounds()).isEqualTo(onQueue(src::getViewportBorderBounds));
-    }
 }

@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.swing.JFrame;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
@@ -38,6 +40,7 @@ import org.netbeans.jemmy.util.WindowFunction;
 import org.netbeans.jemmy.util.WindowManager;
 
 // formerly scenario test jemmy_017
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class WindowManagerJobsTest {
 
     @Test

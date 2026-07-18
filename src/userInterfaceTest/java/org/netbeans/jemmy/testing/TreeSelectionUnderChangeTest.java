@@ -19,7 +19,9 @@ package org.netbeans.jemmy.testing;
 import java.util.function.Function;
 import javax.swing.tree.TreePath;
 import org.jetbrains.annotations.Nullable;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -27,6 +29,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_041
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class TreeSelectionUnderChangeTest {
 
     @Test

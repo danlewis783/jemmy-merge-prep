@@ -30,7 +30,9 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 import org.jetbrains.annotations.Nullable;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.ComponentSearcher;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JListOperator;
@@ -40,6 +42,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_027
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class TabbedListTableTreeTest {
 
     @Test

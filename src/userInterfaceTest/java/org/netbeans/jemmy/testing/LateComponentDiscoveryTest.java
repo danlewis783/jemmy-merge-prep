@@ -31,10 +31,12 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 
 // formerly scenario test jemmy_048
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class LateComponentDiscoveryTest {
 
     private final AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();

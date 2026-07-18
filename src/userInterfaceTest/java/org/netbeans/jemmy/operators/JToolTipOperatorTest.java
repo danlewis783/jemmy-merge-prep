@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Predicate;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JToolTip;
@@ -30,6 +31,7 @@ import javax.swing.ToolTipManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.DumpOnFailure;
 import org.netbeans.jemmy.TimeoutExpiredException;
@@ -42,8 +44,7 @@ import org.netbeans.jemmy.util.StringComparators;
  * Exercises {@code JToolTipOperator}, ported from openjdk/jemmy-v2 (CODETOOLS-7902278, CODETOOLS-7902342).
  */
 @ExtendWith(DumpOnFailure.class)
-// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class JToolTipOperatorTest {
 
     private static final String TOOLTIP_TEXT = "A simple Tooltip";
@@ -62,7 +63,7 @@ class JToolTipOperatorTest {
             // keep the tooltip up for the whole constructor cascade; the default 4 s
             // dismiss delay is too tight on a loaded machine
             savedDismissDelay = ToolTipManager.sharedInstance().getDismissDelay();
-            ToolTipManager.sharedInstance().setDismissDelay(60000);
+            ToolTipManager.sharedInstance().setDismissDelay(60_000);
             frame = new JFrame();
             label = new JLabel(LABEL_TEXT);
             label.setToolTipText(TOOLTIP_TEXT);

@@ -28,10 +28,12 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -46,6 +48,7 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_031
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class FileChooserDialogWorkflowTest {
     private static final StringComparator STRICT = StringComparators.strict();
     private static final long PREEMPTIVE_TIMEOUT_SEC = 2;

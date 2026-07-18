@@ -21,7 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Button;
 import javax.swing.JFrame;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.ButtonOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -30,6 +32,7 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_035
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class AwtScrollPaneScrollingTest {
 
     @Test

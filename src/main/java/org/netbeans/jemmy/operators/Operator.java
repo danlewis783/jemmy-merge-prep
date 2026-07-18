@@ -193,9 +193,6 @@ public abstract class Operator {
         waitState(new OnQueuePredicate<>(predicate), timeoutKey);
     }
 
-    // the result's nullness follows the function's type argument, which pre-generics
-    // NullAway cannot express
-    @SuppressWarnings("NullAway")
     <T, R> @Nullable R produceTimeRestricted(Function<T, R> function, @Nullable T t, TimeoutKey timeoutKey) {
         FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
         R result;

@@ -22,14 +22,15 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import javax.swing.JDialog;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.DialogOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_010
-// UI fixtures are created on the EDT in the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class ModalDialogWaitingTest {
     private static final String TITLE = "StagedDialogsApp";
 

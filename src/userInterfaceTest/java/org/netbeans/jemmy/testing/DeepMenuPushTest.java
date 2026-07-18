@@ -16,32 +16,76 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.util.StringComparators.strict;
+
 // formerly scenario test jemmy_040
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class DeepMenuPushTest {
+
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame("DeepMenuPushTest");
+            this.jFrame = jFrame;
+
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new FlowLayout());
+            JMenuItem menuItem = new JMenuItem("menuItem");
+            JLabel menuLabel = new JLabel("Menu has not been pushed yet");
+            menuItem.addActionListener(event -> menuLabel.setText("menu item has been pushed"));
+            JMenu submenu;
+            JMenuItem prevmenu = menuItem;
+            for (int i = 0; i < 20; i++) {
+                submenu = new JMenu("submenu" + i);
+                submenu.add(prevmenu);
+                prevmenu = submenu;
+            }
+
+            JMenuBar menuBar = new JMenuBar();
+            menuBar.add(prevmenu);
+            jFrame.setJMenuBar(menuBar);
+            contentPane.add(menuLabel);
+            jFrame.setSize(200, 200);
+            jFrame.setLocation(100, 100);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
+
 
     @Test
     void test() {
-        DeepMenuApp.main();
-        JFrame win = JFrameOperator.waitJFrame("DeepMenuApp");
-        assertThat(JFrameOperator.of(win)).isNotNull();
-        JMenuBar menuBar = JMenuBarOperator.findJMenuBar(win);
+        JMenuBar menuBar = JMenuBarOperator.findJMenuBar(jFrame);
         assertThat(menuBar).isNotNull();
         JMenuBarOperator mbo = JMenuBarOperator.of(menuBar);
 
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 15000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 15_000L)) {
             StringBuilder sb = new StringBuilder();
             for (int i = 19; i >= 0; i--) {
                 sb.append("submenu");
@@ -50,10 +94,9 @@ class DeepMenuPushTest {
             }
 
             sb.append("menuItem");
-            assertThat(mbo.pushMenu(sb.toString(), "|", StringComparators.strict()))
-                    .isNotNull();
-            assertThat(JLabelOperator.of(
-                            JLabelOperator.waitJLabel(win, "menu item has been pushed", StringComparators.strict())))
+            assertThat(mbo.pushMenu(sb.toString(), "|", strict())).isNotNull();
+            assertThat(JLabelOperator
+                    .of(JLabelOperator.waitJLabel(jFrame, "menu item has been pushed", strict())))
                     .isNotNull();
         }
     }

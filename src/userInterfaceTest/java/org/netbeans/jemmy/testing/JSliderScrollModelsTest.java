@@ -19,42 +19,86 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JSlider;
+import javax.swing.*;
+import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JSliderOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_025
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class JSliderScrollModelsTest {
+    private static final String FRAME_TITLE = "JSliderScrollModelsTest";
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            JFrame jFrame = new JFrame(FRAME_TITLE);
+            this.jFrame = jFrame;
+
+            JLabel label = new JLabel("0");
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setVerticalAlignment(SwingConstants.CENTER);
+            JSlider hSlider = new JSlider(JSlider.HORIZONTAL);
+            hSlider.addChangeListener(e -> label.setText(String.valueOf(hSlider.getValue())));
+            JSlider hQSlider = new JSlider(JSlider.HORIZONTAL, 0, 3, 0);
+            hQSlider.addChangeListener(e -> label.setText(String.valueOf(hQSlider.getValue())));
+            hQSlider.setInverted(true);
+            hQSlider.setPaintLabels(true);
+            hQSlider.setPaintTicks(true);
+            hQSlider.setPaintTrack(true);
+            JSlider vSlider = new JSlider(JSlider.VERTICAL);
+            vSlider.addChangeListener(e -> label.setText(String.valueOf(vSlider.getValue())));
+            JSlider vQSlider = new JSlider(JSlider.VERTICAL, 0, 3, 0);
+            vQSlider.addChangeListener(e -> label.setText(String.valueOf(vQSlider.getValue())));
+            vQSlider.setInverted(true);
+            vQSlider.setPaintLabels(true);
+            vQSlider.setPaintTicks(true);
+            vQSlider.setPaintTrack(true);
+            JPanel pane = new JPanel();
+            pane.setLayout(new BorderLayout());
+            pane.add(hSlider, BorderLayout.SOUTH);
+            pane.add(hQSlider, BorderLayout.NORTH);
+            pane.add(vSlider, BorderLayout.EAST);
+            pane.add(vQSlider, BorderLayout.WEST);
+            pane.add(label, BorderLayout.CENTER);
+            jFrame.getContentPane().setLayout(new BorderLayout());
+            jFrame.getContentPane().add(pane, BorderLayout.CENTER);
+            jFrame.setSize(400, 400);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
 
     @Test
     void test() {
-        SlidersApp.main();
-        JFrame win = JFrameOperator.waitJFrame("SlidersApp");
-        JFrameOperator wino = JFrameOperator.of(win);
-        JSlider slider0 = JSliderOperator.findJSlider(win, 0);
-        assertThat(slider0).isNotNull();
-        JSlider slider1 = JSliderOperator.findJSlider(win, 1);
-        assertThat(slider1).isNotNull();
-        JSlider slider2 = JSliderOperator.findJSlider(win, 2);
-        assertThat(slider2).isNotNull();
-        JSlider slider3 = JSliderOperator.findJSlider(win, 3);
-        assertThat(slider3).isNotNull();
-        JSliderOperator[] ops = {
-            JSliderOperator.of(slider0),
-            JSliderOperator.of(slider1),
-            JSliderOperator.of(slider2),
-            JSliderOperator.of(slider3)
-        };
+        JFrameOperator jFrameOp = JFrameOperator.waitFor(FRAME_TITLE);
+        JFrame jFrame = (JFrame) jFrameOp.getSource();
+        JSliderOperator[] ops = new JSliderOperator[4];
         for (int i = 0; i < ops.length; i++) {
-            assertThat(JSliderOperator.waitFor(wino, i).getSource()).isSameAs(ops[i].getSource());
+            JSlider jSlider = JSliderOperator.findJSlider(jFrame, i);
+            assertThat(jSlider).isNotNull();
+            ops[i] = JSliderOperator.of(jSlider);
+            assertThat(JSliderOperator.waitFor(jFrameOp, i).getSource()).isSameAs(ops[i].getSource());
         }
 
-        JLabel label = JLabelOperator.findJLabel(win, "0", StringComparators.strict());
+        JLabel label = JLabelOperator.findJLabel(jFrame, "0", StringComparators.strict());
         assertThat(label).isNotNull();
         int value;
         for (JSliderOperator op : ops) {

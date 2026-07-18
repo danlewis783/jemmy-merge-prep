@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -62,16 +63,19 @@ class QueueToolWaitEmptyTest {
     }
 
     @AfterEach
-    void afterEach() throws Exception {
-        if (blockedQueue != null) {
-            blockedQueue.releaseEdt();
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        try {
+            if (blockedQueue != null) {
+                blockedQueue.releaseEdt();
+            }
+
+            releaser.shutdownNow();
+
+            // leave the next test a drained queue, even when an assertion failed mid-phase
+            EventQueue.invokeAndWait(() -> {});
+        } finally {
+            override.cancel();
         }
-
-        releaser.shutdownNow();
-        override.cancel();
-
-        // leave the next test a drained queue, even when an assertion failed mid-phase
-        EventQueue.invokeAndWait(() -> {});
     }
 
     @Test

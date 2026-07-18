@@ -40,14 +40,14 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparators;
 
-// UI fixtures are created on the EDT in beforeEach; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class JDialogOperatorTest {
 
     private JDialog dialog;
@@ -102,6 +102,7 @@ class JDialogOperatorTest {
     }
 
     @Test
+    @Timeout(value=2, unit=TimeUnit.SECONDS)
     void waitJDialog() {
         assertThat(JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict()))
                 .isNotNull();
@@ -114,13 +115,13 @@ class JDialogOperatorTest {
         Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
         JDialogOperator.waitFor();
         assertThatExceptionOfType(TimeoutException.class)
-                .isThrownBy(() -> future1.get(1000L, TimeUnit.MILLISECONDS))
+                .isThrownBy(() -> future1.get(500L, TimeUnit.MILLISECONDS))
                 .withMessage(null);
 
         Future<JDialog> future2 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable2(frame));
         JDialogOperator.waitFor();
         assertThatExceptionOfType(TimeoutException.class)
-                .isThrownBy(() -> future2.get(1000L, TimeUnit.MILLISECONDS))
+                .isThrownBy(() -> future2.get(500L, TimeUnit.MILLISECONDS))
                 .withMessage(null);
     }
 

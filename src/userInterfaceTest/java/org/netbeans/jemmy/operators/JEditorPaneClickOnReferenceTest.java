@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -34,13 +35,13 @@ import javax.swing.event.HyperlinkListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * Exercises {@code JEditorPaneOperator.clickOnReference}, ported from openjdk/jemmy-v2 (CODETOOLS-7902156), with
  * and without an enclosing scroll pane. The HTML fixtures link to each other by named anchors.
  */
-// UI fixtures are created on the EDT in beforeEach or the test body; NullAway cannot see through invokeAndWait
-@SuppressWarnings({"NullAway.Init", "NotNullFieldNotInitialized"})
+@Timeout(value=1, unit=TimeUnit.SECONDS)
 class JEditorPaneClickOnReferenceTest {
 
     private static final String PAGE1 = "page1";

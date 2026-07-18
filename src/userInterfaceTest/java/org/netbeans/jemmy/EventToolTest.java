@@ -20,9 +20,9 @@ package org.netbeans.jemmy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
+import java.awt.*;
 import java.awt.event.ContainerEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -32,31 +32,51 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JFrame;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
 
 // formerly scenario test jemmy_030
+@Timeout(value=15, unit=TimeUnit.SECONDS)
 class EventToolTest {
+
+    private JFrame jFrame;
+    private EventTool eventTool;
 
     @BeforeAll
     static void beforeAll() {
         Timeouts.resetToDefaults();
     }
 
-    @Test
-    void doit() throws Exception {
-        EventTool eventTool = EventTool.getInstance();
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+
+        eventTool = EventTool.getInstance();
         eventTool.addListeners(AWTEvent.CONTAINER_EVENT_MASK);
-        AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();
+
         EventQueue.invokeAndWait(() -> {
-            JFrame jFrame = new JFrame("EventToolTest");
+            jFrame = new JFrame("EventToolTest");
             jFrame.setLocationRelativeTo(null);
             jFrame.setSize(250, 100);
             jFrame.setVisible(true);
-            jFrameRef.set(jFrame);
         });
-        JFrameOperator jFrameOp = JFrameOperator.of(Objects.requireNonNull(jFrameRef.get()));
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+        eventTool.removeListeners();
+    }
+
+    @Test
+    void doit() throws Exception {
+        JFrameOperator jFrameOp = JFrameOperator.of(jFrame);
         assertThat(eventTool.getLastEvent()).isInstanceOf(ContainerEvent.class);
         assertThat(eventTool.getCurrentEventMask()).isEqualTo(AWTEvent.CONTAINER_EVENT_MASK);
         assertThat(eventTool.getLastEvent(AWTEvent.WINDOW_EVENT_MASK))
