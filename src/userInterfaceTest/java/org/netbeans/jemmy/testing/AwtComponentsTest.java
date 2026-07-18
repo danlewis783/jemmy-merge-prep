@@ -52,6 +52,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.DisplayAssumptions.assumeUnscaledDisplay;
 import static org.netbeans.jemmy.util.StringComparators.strict;
 
 // formerly scenario test jemmy_036
@@ -65,6 +66,10 @@ class AwtComponentsTest {
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
+        // AWT peers only react to real native input, so every test here clicks with the real
+        // robot at screen coordinates - unreliable under display scaling, hence the class-wide
+        // assumption
+        assumeUnscaledDisplay();
         Timeouts.resetToDefaults();
         override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 5_000L);
 
@@ -115,13 +120,18 @@ class AwtComponentsTest {
 
     @AfterEach
     void after() throws InterruptedException, InvocationTargetException {
+        // both may be unset: an aborted display-scaling assumption in beforeEach still lands here
         try {
-            EventQueue.invokeAndWait(() -> {
-                jFrame.setVisible(false);
-                jFrame.dispose();
-            });
+            if (jFrame != null) {
+                EventQueue.invokeAndWait(() -> {
+                    jFrame.setVisible(false);
+                    jFrame.dispose();
+                });
+            }
         } finally {
-            override.cancel();
+            if (override != null) {
+                override.cancel();
+            }
         }
     }
 

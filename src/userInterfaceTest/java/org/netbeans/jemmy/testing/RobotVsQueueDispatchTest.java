@@ -18,8 +18,8 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.netbeans.jemmy.testing.DisplayAssumptions.assumeUnscaledDisplay;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -45,7 +45,6 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JTextAreaOperator;
-import org.netbeans.jemmy.util.Display;
 
 import javax.swing.*;
 
@@ -120,17 +119,6 @@ final class RobotVsQueueDispatchTest {
         List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
         assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
-    }
-
-    /**
-     * The comparison demands robot clicks land at exact component coordinates; under display
-     * scaling the Java 8 robot's screen mapping is off by the scale factor, so the queue and
-     * robot rounds legitimately diverge.
-     */
-    private static void assumeUnscaledDisplay() {
-        assumeThat(Display.isScaled())
-                .as("check that no display scaling is active (robot coordinates are unreliable under scaling)")
-                .isFalse();
     }
 
     private List<String> recordEvents(
