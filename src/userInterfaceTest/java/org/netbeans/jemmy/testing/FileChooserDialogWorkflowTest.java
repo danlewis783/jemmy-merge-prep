@@ -21,6 +21,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.EventQueue;
 import java.io.File;
 import java.time.Duration;
 import java.util.Objects;
@@ -28,6 +31,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,6 +58,7 @@ class FileChooserDialogWorkflowTest {
     private static final StringComparator STRICT = StringComparators.strict();
     private static final long PREEMPTIVE_TIMEOUT_SEC = 2;
     private static File userDir;
+    private JFrame jFrame;
     private JFrameOperator frameOp;
     private JButtonOperator launchFileChooserButtonOp;
     private TimeoutOverride override;
@@ -63,11 +69,43 @@ class FileChooserDialogWorkflowTest {
     }
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         Timeouts.resetToDefaults();
         override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 1000L);
-        FileChooserLaunchApp.main();
-        JFrame jFrame = JFrameOperator.waitJFrame("FileChooserLaunchApp");
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("FileChooserLaunchApp");
+            JTextField jTextField = new JTextField("");
+            JButton jButton = new JButton("...");
+
+            JFileChooser jFileChooser = new JFileChooser();
+            jFileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            jFileChooser.addChoosableFileFilter(new NoDirFilter());
+            jFileChooser.addChoosableFileFilter(new NothingFilter());
+            jFileChooser.addChoosableFileFilter(new NoFileFilter());
+            jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+            jButton.addActionListener(e -> {
+                jTextField.setText("");
+                int respond = jFileChooser.showDialog(jButton, "---");
+                if (respond == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = jFileChooser.getSelectedFile();
+                    if (selectedFile != null) {
+                        jTextField.setText(selectedFile.getAbsolutePath());
+                    } else {
+                        jTextField.setText("");
+                    }
+                }
+            });
+
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            contentPane.add(jButton, BorderLayout.EAST);
+            contentPane.add(jTextField, BorderLayout.CENTER);
+            jFrame.setSize(400, 100);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
         frameOp = JFrameOperator.of(jFrame);
         JButton launchButton = JButtonOperator.findJButton(jFrame, "...", STRICT);
         assertThat(launchButton).isNotNull();
@@ -75,8 +113,10 @@ class FileChooserDialogWorkflowTest {
     }
 
     @AfterEach
-    void afterEach() {
+    void afterEach() throws InterruptedException, InvocationTargetException {
         override.cancel();
+        // the file chooser dialog may still be showing when a test fails, so sweep everything
+        TestWindows.disposeAll();
     }
 
     private JFileChooserOperator launchFileChooser() {
@@ -278,5 +318,41 @@ class FileChooserDialogWorkflowTest {
             assertThat(fcOp.isFileSelectionEnabled()).isEqualTo(onQueue(fc::isFileSelectionEnabled));
             assertThat(fcOp.isMultiSelectionEnabled()).isEqualTo(onQueue(fc::isMultiSelectionEnabled));
         });
+    }
+
+    private static class NoDirFilter extends javax.swing.filechooser.FileFilter {
+        @Override
+        public boolean accept(File f) {
+            return !f.isDirectory();
+        }
+
+        @Override
+        public String getDescription() {
+            return "No directory";
+        }
+    }
+
+    private static class NoFileFilter extends javax.swing.filechooser.FileFilter {
+        @Override
+        public boolean accept(File f) {
+            return f.isDirectory();
+        }
+
+        @Override
+        public String getDescription() {
+            return "No file";
+        }
+    }
+
+    private static class NothingFilter extends javax.swing.filechooser.FileFilter {
+        @Override
+        public boolean accept(File f) {
+            return false;
+        }
+
+        @Override
+        public String getDescription() {
+            return "Nothing";
+        }
     }
 }

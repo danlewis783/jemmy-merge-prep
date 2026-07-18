@@ -19,9 +19,19 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.JemmyInputException;
@@ -42,10 +52,40 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class ModalDialogVisualizerTest {
 
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("Right one");
+            JButton button = new JButton("Button");
+            button.addActionListener(e -> jFrame.getContentPane().add(new JLabel("label")));
+            JButton showModal = new JButton("Show modal dialog");
+            showModal.addActionListener(e -> new MyModalDialog(jFrame).setVisible(true));
+            jFrame.getContentPane().setLayout(new FlowLayout());
+            jFrame.getContentPane().add(button);
+            jFrame.getContentPane().add(showModal);
+            JMenuItem menuItem = new JMenuItem("MenuItem");
+            menuItem.addActionListener(e -> new MyModalDialog(jFrame).setVisible(true));
+            JMenu menu = new JMenu("Menu");
+            menu.add(menuItem);
+            JMenuBar menuBar = new JMenuBar();
+            menuBar.add(menu);
+            jFrame.setJMenuBar(menuBar);
+            jFrame.setSize(500, 500);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        TestWindows.disposeAll();
+    }
+
     @Test
     void doit() {
         ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).checkForModal(true);
-        ModalDialogsApp.main();
         JFrame jFrame = JFrameOperator.waitJFrame("Right one");
         JFrameOperator jFrameOperator = JFrameOperator.of(jFrame);
         assertThat(JDialogOperator.getTopModalDialog()).isNull();
@@ -90,5 +130,16 @@ class ModalDialogVisualizerTest {
         modal = JDialogOperator.waitFor("Modal dialog");
         JButtonOperator.waitFor(modal, "", StringComparators.substring()).push();
         modal.waitClosed();
+    }
+
+    private static class MyModalDialog extends JDialog {
+        MyModalDialog(JFrame win) {
+            super(win, "Modal dialog");
+            JButton button = new JButton("Close");
+            button.addActionListener(e -> setVisible(false));
+            getContentPane().add(button);
+            setSize(100, 100);
+            setModal(true);
+        }
     }
 }

@@ -20,10 +20,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutExpiredException;
@@ -40,9 +46,42 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class TabbedPanePageSwitchTest {
 
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("TabbedPagesApp");
+            JTabbedPane tp = new JTabbedPane();
+            JPanel pane1 = new JPanel();
+            pane1.setLayout(new FlowLayout());
+            pane1.add(new JButton("button1"));
+            tp.add("Page1", pane1);
+            JPanel pane2 = new JPanel();
+            pane2.setLayout(new FlowLayout());
+            pane2.add(new JButton("button2"));
+            tp.add("Page2", pane2);
+            JPanel listPane = new JPanel();
+            String[] listItems = {"one", "two", "three"};
+            listPane.add(new JList<>(listItems));
+            tp.add("List Page", listPane);
+            jFrame.getContentPane().add(tp);
+            jFrame.setSize(400, 400);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
+
     @Test
     void doit() throws Exception {
-        TabbedPagesApp.main();
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3000L)) {
             JFrame win = JFrameOperator.waitJFrame("TabbedPagesApp");
             JTabbedPaneOperator tpo =

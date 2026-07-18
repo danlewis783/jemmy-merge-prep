@@ -19,9 +19,18 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Container;
+import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.awt.Panel;
+import java.awt.ScrollPane;
 import javax.swing.JFrame;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.ButtonOperator;
@@ -35,30 +44,63 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class AwtScrollPaneScrollingTest {
 
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("AwtButtonGridScrollApp");
+            Container contentPane = jFrame.getContentPane();
+            contentPane.setLayout(new BorderLayout());
+            Panel panel = new Panel();
+            panel.setLayout(new GridLayout(5, 5));
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.add(panel);
+            contentPane.add(scrollPane, BorderLayout.CENTER);
+
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    panel.add(new Button(String.valueOf(i) + j));
+                }
+            }
+
+            jFrame.setSize(150, 150);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
+
     @Test
     void test() {
-        AwtButtonGridScrollApp.main();
         ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
-        JFrame jFrame = JFrameOperator.waitJFrame("AwtButtonGridScrollApp");
-        Button butt00 = ButtonOperator.findButton(jFrame, "00", StringComparators.strict());
+        JFrame frm = JFrameOperator.waitJFrame("AwtButtonGridScrollApp");
+        Button butt00 = ButtonOperator.findButton(frm, "00", StringComparators.strict());
         assertThat(butt00).isNotNull();
-        Button butt04 = ButtonOperator.findButton(jFrame, "04", StringComparators.strict());
+        Button butt04 = ButtonOperator.findButton(frm, "04", StringComparators.strict());
         assertThat(butt04).isNotNull();
-        Button butt11 = ButtonOperator.findButton(jFrame, "11", StringComparators.strict());
+        Button butt11 = ButtonOperator.findButton(frm, "11", StringComparators.strict());
         assertThat(butt11).isNotNull();
-        Button butt22 = ButtonOperator.findButton(jFrame, "22", StringComparators.strict());
+        Button butt22 = ButtonOperator.findButton(frm, "22", StringComparators.strict());
         assertThat(butt22).isNotNull();
-        Button butt24 = ButtonOperator.findButton(jFrame, "24", StringComparators.strict());
+        Button butt24 = ButtonOperator.findButton(frm, "24", StringComparators.strict());
         assertThat(butt24).isNotNull();
-        Button butt33 = ButtonOperator.findButton(jFrame, "33", StringComparators.strict());
+        Button butt33 = ButtonOperator.findButton(frm, "33", StringComparators.strict());
         assertThat(butt33).isNotNull();
-        Button butt44 = ButtonOperator.findButton(jFrame, "44", StringComparators.strict());
+        Button butt44 = ButtonOperator.findButton(frm, "44", StringComparators.strict());
         assertThat(butt44).isNotNull();
-        Button butt42 = ButtonOperator.findButton(jFrame, "42", StringComparators.strict());
+        Button butt42 = ButtonOperator.findButton(frm, "42", StringComparators.strict());
         assertThat(butt42).isNotNull();
-        Button butt40 = ButtonOperator.findButton(jFrame, "40", StringComparators.strict());
+        Button butt40 = ButtonOperator.findButton(frm, "40", StringComparators.strict());
         assertThat(butt40).isNotNull();
-        ScrollPaneOperator scrollPaneOp = ScrollPaneOperator.waitFor(JFrameOperator.of(jFrame));
+        ScrollPaneOperator scrollPaneOp = ScrollPaneOperator.waitFor(JFrameOperator.of(frm));
         assertThat(ScrollPaneOperator.findScrollPaneUnder(butt00)).isSameAs(scrollPaneOp.getSource());
         scrollPaneOp.setValues(
                 scrollPaneOp.getHAdjustable().getMaximum(),

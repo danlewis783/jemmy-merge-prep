@@ -19,11 +19,18 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutExpiredException;
@@ -43,11 +50,24 @@ import org.netbeans.jemmy.util.WindowManager;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class WindowManagerJobsTest {
 
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            new WindowSeriesFrame(0).setVisible(true);
+            new WindowSeriesFrame(1).setVisible(true);
+            new WindowSeriesFrame(2).setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        TestWindows.disposeAll();
+    }
+
     @Test
     void doit() {
         ComponentOperator.setDefaultComponentVisualizer(new MouseVisualizer(.5, 5));
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20000L)) {
-            WindowSeriesApp.main();
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
             assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring()))
@@ -62,6 +82,22 @@ class WindowManagerJobsTest {
                     .isNotNull();
             assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
                     .isNotNull();
+        }
+    }
+
+    private static class WindowSeriesFrame extends JFrame {
+
+        private WindowSeriesFrame(int index) {
+            super("WindowSeriesApp/" + index);
+            setSize(300, 300);
+            TestWindows.place(this, index);
+            getContentPane().setLayout(new FlowLayout());
+            JLabel label = new JLabel("has not been processed");
+            getContentPane().add(label);
+            getContentPane().add(new JButton("another button"));
+            JButton close = new JButton("process " + index);
+            close.addActionListener(e -> label.setText("has been processed"));
+            getContentPane().add(close);
         }
     }
 

@@ -19,6 +19,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -30,6 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.jetbrains.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -41,12 +43,18 @@ class LateComponentDiscoveryTest {
 
     private final AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();
 
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        TestWindows.disposeAll();
+    }
+
     @Test
     void doit() throws Exception {
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
             jFrame.setTitle("Test Frame");
             jFrame.pack();
+            TestWindows.place(jFrame);
             jFrame.setVisible(true);
             jFrameRef.set(jFrame);
         });

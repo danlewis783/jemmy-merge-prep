@@ -21,8 +21,11 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Dialog;
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JDialog;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.DialogOperator;
@@ -38,19 +41,32 @@ class ModalDialogWaitingTest {
     private StagedDialogsApp appInstance1;
     private StagedDialogsApp appInstance2;
 
-    @Test
-    void test() throws Exception {
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             appInstance0 = new StagedDialogsApp(0);
             appInstance1 = new StagedDialogsApp(1);
             appInstance2 = new StagedDialogsApp(2);
-        });
-        EventQueue.invokeLater(() -> {
             appInstance0.setVisible(true);
             appInstance1.setVisible(true);
             appInstance2.setVisible(true);
         });
-        EventQueue.invokeAndWait(() -> {});
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            appInstance0.setVisible(false);
+            appInstance0.dispose();
+            appInstance1.setVisible(false);
+            appInstance1.dispose();
+            appInstance2.setVisible(false);
+            appInstance2.dispose();
+        });
+    }
+
+    @Test
+    void test() {
         JDialog jDialog0 = JDialogOperator.waitJDialog(TITLE, StringComparators.substring());
         JDialogOperator fo = JDialogOperator.of(jDialog0);
         JDialogOperator fo2 = JDialogOperator.waitFor();
@@ -91,5 +107,20 @@ class ModalDialogWaitingTest {
         assertThat(op.getJMenuBar()).isEqualTo(onQueue(src::getJMenuBar));
         assertThat(op.getLayeredPane()).isEqualTo(onQueue(src::getLayeredPane));
         assertThat(op.getRootPane()).isEqualTo(onQueue(src::getRootPane));
+    }
+
+    private static class StagedDialogsApp extends JDialog {
+        private final int index;
+
+        StagedDialogsApp(int index) {
+            super.setTitle("StagedDialogsApp/" + index);
+            this.index = index;
+            setSize(300, 300);
+            TestWindows.place(this, index);
+        }
+
+        int getIndex() {
+            return index;
+        }
     }
 }

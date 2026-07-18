@@ -16,8 +16,19 @@
  */
 package org.netbeans.jemmy.testing;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Scrollbar;
+import java.awt.Toolkit;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JTabbedPane;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -30,9 +41,48 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class TabbedScrollbarScrollingTest {
 
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("TabbedScrollbarsApp");
+            Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+            size.width = size.width / 2;
+            size.height = size.height / 2;
+            JScrollBar swhscroll = new JScrollBar(JScrollBar.HORIZONTAL, 0, 10, 0, 100);
+            JScrollBar swvscroll = new JScrollBar(JScrollBar.VERTICAL, 0, 10, 0, 100);
+            JPanel swingPane = new JPanel();
+            swingPane.setLayout(new BorderLayout());
+            swingPane.add(swvscroll, BorderLayout.EAST);
+            swingPane.add(swhscroll, BorderLayout.SOUTH);
+            Scrollbar awhscroll = new Scrollbar(JScrollBar.HORIZONTAL, 0, 10, 0, 100);
+            Scrollbar awvscroll = new Scrollbar(JScrollBar.VERTICAL, 0, 10, 0, 100);
+            JPanel awtPane = new JPanel();
+            awtPane.setLayout(new BorderLayout());
+            awtPane.add(awvscroll, BorderLayout.EAST);
+            awtPane.add(awhscroll, BorderLayout.SOUTH);
+            JTabbedPane tabbed = new JTabbedPane();
+            tabbed.add("AWT", awtPane);
+            tabbed.add("Swing", swingPane);
+            jFrame.getContentPane().setLayout(new BorderLayout());
+            jFrame.getContentPane().add(tabbed, BorderLayout.CENTER);
+            jFrame.setSize(size);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
+
     @Test
     void test() {
-        TabbedScrollbarsApp.main();
         JFrame win = JFrameOperator.waitJFrame("TabbedScrollbarsApp");
         JFrameOperator fro = JFrameOperator.of(win);
         JTabbedPaneOperator tb = JTabbedPaneOperator.waitFor(fro);

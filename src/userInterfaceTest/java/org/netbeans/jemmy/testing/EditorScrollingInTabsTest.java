@@ -20,13 +20,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.util.function.Function;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import org.jetbrains.annotations.Nullable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.FunctionRepeater;
@@ -48,9 +54,35 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class EditorScrollingInTabsTest {
 
+    private JFrame jFrame;
+
+    @BeforeEach
+    void beforeEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("EditorTabsApp");
+            JEditorPane editor = new JEditorPane("text", "");
+            JTextArea area = new JTextArea();
+            JTabbedPane tp = new JTabbedPane();
+            tp.add("JEditorPane", new JScrollPane(editor));
+            tp.add("JTextArea", new JScrollPane(area));
+            jFrame.getContentPane().setLayout(new BorderLayout());
+            jFrame.getContentPane().add(tp, BorderLayout.CENTER);
+            jFrame.setSize(200, 400);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
+    }
+
+    @AfterEach
+    void afterEach() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
+    }
+
     @Test
     void test() {
-        EditorTabsApp.main();
         String allChars = "0123456789\n0123456789\n0123456789\n0123456789";
         QueueTool.getInstance().waitEmpty();
         JFrame frm = JFrameOperator.waitJFrame("EditorTabsApp");

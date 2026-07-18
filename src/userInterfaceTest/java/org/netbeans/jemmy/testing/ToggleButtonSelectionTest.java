@@ -18,9 +18,15 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -52,20 +58,51 @@ class ToggleButtonSelectionTest {
     private JCheckBoxOperator boxOper;
     private JRadioButtonOperator radio1Oper;
     private TimeoutOverride override;
+    private JFrame jFrame;
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws InterruptedException, InvocationTargetException {
         override = Timeouts.override(TimeoutKey.ComponentOperator_WaitFocusTimeout, 1000L);
+        EventQueue.invokeAndWait(() -> {
+            jFrame = new JFrame("ToggleButtonsApp");
+            jFrame.getContentPane().setLayout(new FlowLayout());
+            JComponent comp;
+            comp = new JButton("JButton");
+            comp.putClientProperty("classname", "JButton");
+            jFrame.getContentPane().add(comp);
+            comp = new JLabel("JLabel");
+            comp.putClientProperty("classname", "JLabel");
+            jFrame.getContentPane().add(comp);
+            comp = new JCheckBox("JCheckBox");
+            comp.putClientProperty("classname", "JCheckBox");
+            jFrame.getContentPane().add(comp);
+            ButtonGroup group = new ButtonGroup();
+            comp = new JRadioButton("JRadioButton");
+            comp.putClientProperty("classname", "JRadioButton");
+            jFrame.getContentPane().add(comp);
+            group.add((AbstractButton) comp);
+            ((AbstractButton) comp).setSelected(true);
+            comp = new JRadioButton("JRadioButton1");
+            comp.putClientProperty("classname", "JRadioButton1");
+            jFrame.getContentPane().add(comp);
+            group.add((AbstractButton) comp);
+            jFrame.setSize(300, 300);
+            TestWindows.place(jFrame);
+            jFrame.setVisible(true);
+        });
     }
 
     @AfterEach
-    void after() {
+    void after() throws InterruptedException, InvocationTargetException {
         override.cancel();
+        EventQueue.invokeAndWait(() -> {
+            jFrame.setVisible(false);
+            jFrame.dispose();
+        });
     }
 
     @Test
     void doit() throws Exception {
-        ToggleButtonsApp.main();
         QueueTool.getInstance().waitEmpty();
 
         JFrame frm0 = JFrameOperator.waitJFrame("ToggleButtonsApp");
