@@ -35,7 +35,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.JemmyInputException;
-import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
@@ -85,12 +84,12 @@ class ModalDialogVisualizerTest {
 
     @Test
     void doit() {
-        ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).checkForModal(true);
         JFrame jFrame = JFrameOperator.waitJFrame("Right one");
         JFrameOperator jFrameOperator = JFrameOperator.of(jFrame);
         assertThat(JDialogOperator.getTopModalDialog()).isNull();
         JButtonOperator bttOper =
                 JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "Button", StringComparators.strict()));
+        bttOper.setVisualizer(new DefaultVisualizer(true));
         bttOper.push();
         JLabelOperator.waitJLabel(jFrame, ComponentPredicates.alwaysTrue());
         JButtonOperator.waitFor(ContainerOperator.of(jFrame), "Show", StringComparators.substring())

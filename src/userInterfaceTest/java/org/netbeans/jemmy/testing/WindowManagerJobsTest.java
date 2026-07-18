@@ -37,7 +37,6 @@ import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
@@ -66,7 +65,6 @@ class WindowManagerJobsTest {
 
     @Test
     void doit() {
-        ComponentOperator.setDefaultComponentVisualizer(new MouseVisualizer(.5, 5));
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20_000L)) {
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
@@ -122,8 +120,10 @@ class WindowManagerJobsTest {
         @Override
         public Void apply(JFrame jFrame) {
             try {
-                JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring()))
-                        .push();
+                JButtonOperator buttonOp =
+                        JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring()));
+                buttonOp.setVisualizer(new MouseVisualizer(.5, 5));
+                buttonOp.push();
                 processed.add(jFrame);
             } catch (TimeoutExpiredException e) {
                 // don't care

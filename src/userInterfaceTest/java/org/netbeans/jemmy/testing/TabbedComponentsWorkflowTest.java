@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JListOperator;
 import org.netbeans.jemmy.operators.JTabbedPaneOperator;
@@ -149,12 +148,12 @@ final class TabbedComponentsWorkflowTest {
 
     @Test
     void test() throws InterruptedException, InvocationTargetException {
-        ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         JFrame jFrame = JFrameOperator.waitJFrame(FRAME_TITLE);
         JFrameOperator jFrameOp = JFrameOperator.of(jFrame);
         JTabbedPane tabbedPane = JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0);
         assertThat(tabbedPane).isNotNull();
         JTabbedPaneOperator jTabbedPaneOp = JTabbedPaneOperator.of(tabbedPane);
+        jTabbedPaneOp.setVisualizer(new EmptyVisualizer());
         Component jTabbedPane = jTabbedPaneOp.getSource();
         assertThat(jTabbedPane)
                 .isSameAs(JTabbedPaneOperator.waitFor(jFrameOp).getSource());
@@ -168,6 +167,7 @@ final class TabbedComponentsWorkflowTest {
                 JTableOperator.findJTable(jFrame, null, caseInsensitiveSubstring(), -1, -1);
         assertThat(table).isNotNull();
         JTableOperator jTableOp = JTableOperator.of(table);
+        jTableOp.setVisualizer(new EmptyVisualizer());
         jTableOp.clickOnCell(0, 0);
         assertThat(jTableOp.getSource())
                 .isSameAs(JTableOperator.waitFor(jFrameOp).getSource());
@@ -189,6 +189,7 @@ final class TabbedComponentsWorkflowTest {
         assertThat(jTableOp.findCellRow("-1-1", STRICT)).isEqualTo(-1);
         jTabbedPaneOp.selectPage("Tree Page", STRICT);
         JTreeOperator jTreeOp = JTreeOperator.waitFor(JFrameOperator.of(jFrame));
+        jTreeOp.setVisualizer(new EmptyVisualizer());
         jTreeOp.clickOnPath(jTreeOp.getPathForRow(0));
         Component jTree = jTreeOp.getSource();
         assertThat(jTree)
@@ -215,10 +216,12 @@ final class TabbedComponentsWorkflowTest {
         jTreeOp.scrollToPath(path0);
         jTabbedPaneOp.selectPage("List Page", STRICT);
         JListOperator listOper = JListOperator.waitFor(JFrameOperator.of(jFrame));
+        listOper.setVisualizer(new EmptyVisualizer());
         listOper.scrollToItem(49);
         listOper.scrollToItem(0);
         jTabbedPaneOp.selectPage("Text Page", STRICT);
         JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
+        jTextAreaOp.setVisualizer(new EmptyVisualizer());
         jTextAreaOp.scrollToPosition(jTextAreaOp.getText().length());
         jTextAreaOp.clearText();
         assertThat(jTextAreaOp.getText()).isEmpty();

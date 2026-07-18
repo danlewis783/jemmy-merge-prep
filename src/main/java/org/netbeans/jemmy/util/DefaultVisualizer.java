@@ -41,24 +41,26 @@ import org.netbeans.jemmy.operators.WindowOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Makes the target component actionable before real input is driven at it: fronts and activates
+ * the window, activates containing internal frames, selects the containing tab, and scrolls the
+ * target into view. Stateless apart from the immutable modal-check option, so instances are safe
+ * to share.
+ */
 public class DefaultVisualizer implements ComponentVisualizer {
     private static final Logger logger = LoggerFactory.getLogger(DefaultVisualizer.class);
-    private boolean switchTab = false;
-    private boolean scroll = false;
-    private boolean modal = false;
+    private final boolean checkModal;
 
-    public DefaultVisualizer() {}
-
-    public void checkForModal(boolean modal) {
-        this.modal = modal;
+    public DefaultVisualizer() {
+        this(false);
     }
 
-    public void scroll(boolean scroll) {
-        this.scroll = scroll;
-    }
-
-    public void switchTab(boolean switchTab) {
-        this.switchTab = switchTab;
+    /**
+     * @param checkModal if true, refuses to act on a component that is not on the top modal
+     *     dialog while one is showing
+     */
+    public DefaultVisualizer(boolean checkModal) {
+        this.checkModal = checkModal;
     }
 
     protected boolean isWindowActive(WindowOperator winOp) {
@@ -108,7 +110,7 @@ public class DefaultVisualizer implements ComponentVisualizer {
     @Override
     public void makeVisible(ComponentOperator compOp) {
         try {
-            if (modal) {
+            if (checkModal) {
                 Dialog modalDialog = JDialogOperator.getTopModalDialog();
                 if ((modalDialog != null) && (compOp.getWindow() != modalDialog)) {
                     throw new JemmyInputException("Component is not on top modal dialog.", compOp.getSource());
@@ -130,11 +132,11 @@ public class DefaultVisualizer implements ComponentVisualizer {
                     JInternalFrameOperator jifOp = JInternalFrameOperator.of((JInternalFrame) cont);
                     jifOp.setVisualizer(new EmptyVisualizer());
                     initInternalFrame(jifOp);
-                } else if (scroll && (cont instanceof JScrollPane)) {
+                } else if (cont instanceof JScrollPane) {
                     JScrollPaneOperator jspOp = JScrollPaneOperator.of((JScrollPane) cont);
                     jspOp.setVisualizer(new EmptyVisualizer());
                     scroll(jspOp, compOp.getSource());
-                } else if (switchTab && (cont instanceof JTabbedPane)) {
+                } else if (cont instanceof JTabbedPane) {
                     JTabbedPaneOperator jtpOp = JTabbedPaneOperator.of((JTabbedPane) cont);
                     jtpOp.setVisualizer(new EmptyVisualizer());
                     switchTab(jtpOp, (i == 0) ? compOp.getSource() : conts[i - 1]);

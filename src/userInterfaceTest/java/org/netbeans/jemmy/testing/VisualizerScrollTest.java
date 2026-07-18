@@ -20,10 +20,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
-import org.netbeans.jemmy.util.DefaultVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
 import javax.swing.JDesktopPane;
@@ -110,8 +108,6 @@ class VisualizerScrollTest {
 
     @Test
     void test() {
-        ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).switchTab(true);
-        ((DefaultVisualizer) ComponentOperator.getDefaultComponentVisualizer()).scroll(true);
         JFrame win = JFrameOperator.waitJFrame("Right one");
         JTextFieldOperator targetOp = JTextFieldOperator.of(target);
         targetOp.clearText();

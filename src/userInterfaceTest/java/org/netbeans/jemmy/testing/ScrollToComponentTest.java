@@ -34,7 +34,6 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
 import org.netbeans.jemmy.operators.JScrollPaneOperator;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
-import org.netbeans.jemmy.util.ComponentVisualizer;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -42,12 +41,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=2, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {
     private JFrame jFrame;
-    private ComponentVisualizer savedDefaultComponentVisualizer;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
-        savedDefaultComponentVisualizer = ComponentOperator.getDefaultComponentVisualizer();
-        ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame("ScrollToComponentTest");
             this.jFrame = jFrame;
@@ -79,7 +75,6 @@ class ScrollToComponentTest {
             jFrame.setVisible(false);
             jFrame.dispose();
         });
-        ComponentOperator.setDefaultComponentVisualizer(savedDefaultComponentVisualizer);
     }
 
     @Test
@@ -118,6 +113,7 @@ class ScrollToComponentTest {
         JScrollBarOperator vScrollBarOp = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame));
         assertThat(vScrollBarOp.getOrientation()).isEqualTo(JScrollBar.VERTICAL);
         JScrollPaneOperator scrollPaneOp = JScrollPaneOperator.of(scrollPane);
+        scrollPaneOp.setVisualizer(new EmptyVisualizer());
         assertThat(JScrollPaneOperator.waitFor(JFrameOperator.of(jFrame)).getSource())
                 .isSameAs(scrollPaneOp.getSource());
         scrollPaneOp.setValues(

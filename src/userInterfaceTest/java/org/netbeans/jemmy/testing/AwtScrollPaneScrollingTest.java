@@ -80,7 +80,6 @@ class AwtScrollPaneScrollingTest {
 
     @Test
     void test() {
-        ComponentOperator.setDefaultComponentVisualizer(new EmptyVisualizer());
         JFrame frm = JFrameOperator.waitJFrame("AwtButtonGridScrollApp");
         Button butt00 = ButtonOperator.findButton(frm, "00", StringComparators.strict());
         assertThat(butt00).isNotNull();
@@ -101,6 +100,7 @@ class AwtScrollPaneScrollingTest {
         Button butt40 = ButtonOperator.findButton(frm, "40", StringComparators.strict());
         assertThat(butt40).isNotNull();
         ScrollPaneOperator scrollPaneOp = ScrollPaneOperator.waitFor(JFrameOperator.of(frm));
+        scrollPaneOp.setVisualizer(new EmptyVisualizer());
         assertThat(ScrollPaneOperator.findScrollPaneUnder(butt00)).isSameAs(scrollPaneOp.getSource());
         scrollPaneOp.setValues(
                 scrollPaneOp.getHAdjustable().getMaximum(),

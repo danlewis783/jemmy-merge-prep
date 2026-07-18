@@ -49,23 +49,16 @@ import org.netbeans.jemmy.functions.OperatorPredicateFunction;
 import org.netbeans.jemmy.util.ComponentVisualizer;
 import org.netbeans.jemmy.util.DefaultPathParser;
 import org.netbeans.jemmy.util.DefaultVisualizer;
-import org.netbeans.jemmy.util.MouseVisualizer;
 import org.netbeans.jemmy.util.PathParser;
-import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
 
 public abstract class Operator {
-    private static volatile @Nullable ComponentVisualizer defaultComponentVisualizer;
+    // stateless, so one shared instance is safe; per-operator overrides go through setVisualizer
+    private static final ComponentVisualizer DEFAULT_COMPONENT_VISUALIZER = new DefaultVisualizer();
     private static volatile @Nullable PathParser defaultPathParser;
     private static volatile boolean defaultVerification;
 
     static {
-        if (Platform.isLinux()) {
-            setDefaultComponentVisualizer(new MouseVisualizer(0.5, 10));
-        } else {
-            setDefaultComponentVisualizer(new DefaultVisualizer());
-        }
-
         setDefaultPathParser(new DefaultPathParser("|"));
         setDefaultVerification(true);
     }
@@ -289,14 +282,8 @@ public abstract class Operator {
         this.visualizer = visualizer;
     }
 
-    public static @Nullable ComponentVisualizer setDefaultComponentVisualizer(ComponentVisualizer visualizer) {
-        ComponentVisualizer previous = defaultComponentVisualizer;
-        defaultComponentVisualizer = visualizer;
-        return previous;
-    }
-
     public static ComponentVisualizer getDefaultComponentVisualizer() {
-        return Objects.requireNonNull(defaultComponentVisualizer, "default component visualizer not set");
+        return DEFAULT_COMPONENT_VISUALIZER;
     }
 
     private static @Nullable PathParser setDefaultPathParser(PathParser parser) {
