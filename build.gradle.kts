@@ -88,6 +88,12 @@ tasks.named("check") {
     dependsOn(testing.suites.named("userInterfaceTest"))
 }
 
+tasks.register("compileAll") {
+    description = "Compiles every source set (main, test, testFixtures, userInterfaceTest)."
+    group = "build"
+    dependsOn(tasks.withType<JavaCompile>())
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
