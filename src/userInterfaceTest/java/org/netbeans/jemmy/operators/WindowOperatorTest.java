@@ -346,8 +346,11 @@ class WindowOperatorTest {
                 .isEmpty();
         assertThat(componentResizedCalledCount).hasValueGreaterThan(1);
         assertThat(componentResizedCalledCount).hasValueLessThan(3);
-        assertThat(componentResizedWidth).hasValueGreaterThan(130);
-        assertThat(componentResizedWidth).hasValueLessThan(160);
+        // the requested width of 100 is clamped up to the OS minimum frame width, which varies
+        // with DPI scaling and window chrome; assert the clamp happened and the event reported
+        // the frame's real final width, rather than pinning one machine's chrome metrics
+        assertThat(componentResizedWidth).hasValue(onQueue(mainFrame::getWidth));
+        assertThat(componentResizedWidth).hasValueGreaterThan(100);
         assertThat(componentResizedHeight).hasValue(200);
     }
 
