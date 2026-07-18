@@ -119,7 +119,9 @@ final class JPopupMenuOperatorTest {
     void pushMenu() throws InterruptedException, InvocationTargetException {
         JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
         assertThat(popupMenuOp.pushMenu("1", StringComparators.strict())).isNotNull();
-        assertThat(popupMenuOp.pushMenu(new String[] {"1"}, StringComparators.strict()));
+        // the first push closed the popup; re-show it before pushing again
+        EventQueue.invokeAndWait(() -> jPopupMenu.show(jFrame, 30, 30));
+        assertThat(popupMenuOp.pushMenu(new String[] {"1"}, StringComparators.strict())).isNotNull();
     }
 
     @Test
