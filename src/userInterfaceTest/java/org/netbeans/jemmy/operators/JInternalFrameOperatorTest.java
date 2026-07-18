@@ -26,6 +26,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
@@ -52,6 +53,7 @@ import org.netbeans.jemmy.operators.JInternalFrameOperator.JDesktopIconOperator;
 import org.netbeans.jemmy.operators.JInternalFrameOperator.WrongInternalFrameStateException;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.testing.TestWindows;
+import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.StringComparators;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -150,6 +152,9 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testIconify() {
+        assumeThat(LookAndFeel.isWindows())
+                .as("check that swing is running windows look and feel")
+                .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
@@ -178,6 +183,9 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testMaximize() {
+        assumeThat(LookAndFeel.isWindows())
+                .as("check that swing is running windows look and feel")
+                .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
@@ -224,6 +232,9 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testClose() {
+        assumeThat(LookAndFeel.isWindows())
+                .as("check that swing is running windows look and feel")
+                .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
@@ -347,6 +358,9 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testWaitIcon() {
+        assumeThat(LookAndFeel.isWindows())
+                .as("check that swing is running windows look and feel")
+                .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
@@ -360,6 +374,9 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testWaitMaximum() {
+        assumeThat(LookAndFeel.isWindows())
+                .as("check that swing is running windows look and feel")
+                .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
         assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
