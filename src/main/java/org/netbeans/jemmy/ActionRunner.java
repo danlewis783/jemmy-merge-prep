@@ -61,11 +61,11 @@ final class ActionRunner<R> {
 
     @Nullable
     R submitAndGet(Callable<@Nullable R> work, TimeoutKey timeoutKey) throws InterruptedException {
-        Future<R> future = JEMMY_ACTION_SERVICE.submit(work);
+        Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(work);
         long timeout = Timeouts.get(timeoutKey);
         long startTime = System.currentTimeMillis();
         try {
-            return future.get(timeout, TimeUnit.MILLISECONDS);
+            return laFutura.get(timeout, TimeUnit.MILLISECONDS);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof TimeoutExpiredException) {
@@ -82,8 +82,8 @@ final class ActionRunner<R> {
         } finally {
             // cancel on timeout or caller interrupt; an abandoned action would otherwise
             // occupy the single worker thread and starve every later submission
-            if (!future.isDone()) {
-                if (!future.cancel(true)) {
+            if (!laFutura.isDone()) {
+                if (!laFutura.cancel(true)) {
                     logger.warn("abandoned action could not be cancelled");
                 }
             }
