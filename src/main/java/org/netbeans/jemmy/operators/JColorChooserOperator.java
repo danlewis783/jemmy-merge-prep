@@ -78,19 +78,7 @@ public class JColorChooserOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JColorChooserOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JColorChooser)} instead.
-     */
-    @Deprecated
-    public JColorChooserOperator(JColorChooser comp) {
+    JColorChooserOperator(JColorChooser comp) {
         super(comp);
         tabbed = JTabbedPaneOperator.waitFor(this);
     }
@@ -104,37 +92,13 @@ public class JColorChooserOperator extends JComponentOperator {
                 (JColorChooser) waitComponent(cont, ComponentPredicates.of(JColorChooser.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JColorChooserOperator(ContainerOperator cont, int index) {
-        this((JColorChooser) waitComponent(cont, ComponentPredicates.of(JColorChooser.class), index));
-    }
-
     public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JColorChooserOperator(
                 (JColorChooser) cont.waitSubComponent(ComponentPredicates.of(JColorChooser.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JColorChooser) cont.waitSubComponent(ComponentPredicates.of(JColorChooser.class, chooser), index));
     }
 
     public void switchToRGB() {

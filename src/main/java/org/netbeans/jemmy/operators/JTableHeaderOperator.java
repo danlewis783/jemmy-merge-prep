@@ -50,19 +50,7 @@ public class JTableHeaderOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JTableHeader)} instead.
-     */
-    @Deprecated
-    public JTableHeaderOperator(JTableHeader b) {
+    JTableHeaderOperator(JTableHeader b) {
         super(b);
     }
 
@@ -79,37 +67,13 @@ public class JTableHeaderOperator extends JComponentOperator {
                 (JTableHeader) waitComponent(cont, ComponentPredicates.of(JTableHeader.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont, int index) {
-        this((JTableHeader) waitComponent(cont, ComponentPredicates.of(JTableHeader.class), index));
-    }
-
     public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTableHeaderOperator(
                 (JTableHeader) cont.waitSubComponent(ComponentPredicates.of(JTableHeader.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTableHeader) cont.waitSubComponent(ComponentPredicates.of(JTableHeader.class, chooser), index));
     }
 
     public void selectColumn(int columnIndex) {

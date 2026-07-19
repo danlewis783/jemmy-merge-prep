@@ -42,19 +42,7 @@ public class JProgressBarOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JProgressBarOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JProgressBar)} instead.
-     */
-    @Deprecated
-    public JProgressBarOperator(JProgressBar b) {
+    JProgressBarOperator(JProgressBar b) {
         super(b);
     }
 
@@ -67,37 +55,13 @@ public class JProgressBarOperator extends JComponentOperator {
                 (JProgressBar) waitComponent(cont, ComponentPredicates.of(JProgressBar.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JProgressBarOperator(ContainerOperator cont, int index) {
-        this((JProgressBar) waitComponent(cont, ComponentPredicates.of(JProgressBar.class), index));
-    }
-
     public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JProgressBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JProgressBarOperator(
                 (JProgressBar) cont.waitSubComponent(ComponentPredicates.of(JProgressBar.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JProgressBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JProgressBar) cont.waitSubComponent(ComponentPredicates.of(JProgressBar.class, chooser), index));
     }
 
     public void waitValue(int value) {

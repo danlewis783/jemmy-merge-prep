@@ -41,19 +41,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JPasswordField)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(JPasswordField b) {
+    JPasswordFieldOperator(JPasswordField b) {
         super(b);
     }
 
@@ -66,24 +54,8 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
                 (JPasswordField) waitComponent(cont, ComponentPredicates.of(JPasswordField.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(ContainerOperator cont, int index) {
-        this((JPasswordField) waitComponent(cont, ComponentPredicates.of(JPasswordField.class), index));
-    }
-
     public static JPasswordFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JPasswordFieldOperator waitFor(
@@ -91,41 +63,14 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
         return waitFor(cont, text, stringComparator, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
-    }
-
     public static JPasswordFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JPasswordFieldOperator(
                 (JPasswordField) cont.waitSubComponent(ComponentPredicates.of(JPasswordField.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JPasswordField) cont.waitSubComponent(ComponentPredicates.of(JPasswordField.class, chooser), index));
-    }
-
     public static JPasswordFieldOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JPasswordFieldOperator((JPasswordField) waitComponent(
-                cont,
-                ComponentPredicates.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
-                index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JPasswordFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JPasswordField) waitComponent(
                 cont,
                 ComponentPredicates.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));

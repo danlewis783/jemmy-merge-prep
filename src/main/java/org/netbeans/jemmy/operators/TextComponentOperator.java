@@ -46,19 +46,7 @@ public class TextComponentOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(TextComponent)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(TextComponent b) {
+    TextComponentOperator(TextComponent b) {
         super(b);
     }
 
@@ -75,24 +63,8 @@ public class TextComponentOperator extends ComponentOperator {
                 (TextComponent) waitComponent(cont, ComponentPredicates.of(TextComponent.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(ContainerOperator cont, int index) {
-        this((TextComponent) waitComponent(cont, ComponentPredicates.of(TextComponent.class), index));
-    }
-
     public static TextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static TextComponentOperator waitFor(
@@ -100,39 +72,15 @@ public class TextComponentOperator extends ComponentOperator {
         return waitFor(cont, text, stringComparator, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
-    }
-
     public static TextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new TextComponentOperator(
                 (TextComponent) cont.waitSubComponent(ComponentPredicates.of(TextComponent.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((TextComponent) cont.waitSubComponent(ComponentPredicates.of(TextComponent.class, chooser), index));
     }
 
     public static TextComponentOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new TextComponentOperator(
                 (TextComponent) waitComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public TextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((TextComponent) waitComponent(cont, new TextComponentByTextPredicate(text, stringComparator), index));
     }
 
     public void changeCaretPosition(int position) {

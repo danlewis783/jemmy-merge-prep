@@ -52,19 +52,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JScrollPane)} instead.
-     */
-    @Deprecated
-    public JScrollPaneOperator(JScrollPane b) {
+    JScrollPaneOperator(JScrollPane b) {
         super(b);
     }
 
@@ -77,37 +65,13 @@ public class JScrollPaneOperator extends JComponentOperator {
                 (JScrollPane) waitComponent(cont, ComponentPredicates.of(JScrollPane.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont, int index) {
-        this((JScrollPane) waitComponent(cont, ComponentPredicates.of(JScrollPane.class), index));
-    }
-
     public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JScrollPaneOperator(
                 (JScrollPane) cont.waitSubComponent(ComponentPredicates.of(JScrollPane.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollPane) cont.waitSubComponent(ComponentPredicates.of(JScrollPane.class, chooser), index));
     }
 
     public void setValues(int hValue, int vValue) {

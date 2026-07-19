@@ -73,19 +73,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JInternalFrame)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(JInternalFrame b) {
+    JInternalFrameOperator(JInternalFrame b) {
         super(b);
     }
 
@@ -109,24 +97,8 @@ public class JInternalFrameOperator extends JComponentOperator {
         return new JInternalFrameOperator((JInternalFrame) waitComponent(cont, new JInternalFramePredicate(), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(ContainerOperator cont, int index) {
-        this((JInternalFrame) waitComponent(cont, new JInternalFramePredicate(), index));
-    }
-
     public static JInternalFrameOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JInternalFrameOperator waitFor(
@@ -134,38 +106,14 @@ public class JInternalFrameOperator extends JComponentOperator {
         return waitFor(cont, text, stringComparator, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
-    }
-
     public static JInternalFrameOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JInternalFrameOperator(
                 (JInternalFrame) cont.waitSubComponent(new JInternalFramePredicate(chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JInternalFrame) cont.waitSubComponent(new JInternalFramePredicate(chooser), index));
-    }
-
     public static JInternalFrameOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JInternalFrameOperator(findOne(cont, text, stringComparator, index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JInternalFrameOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(findOne(cont, text, stringComparator, index));
     }
 
     public void iconify() {
@@ -662,8 +610,12 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public static class JDesktopIconOperator extends JComponentOperator {
-        public JDesktopIconOperator(JInternalFrame.JDesktopIcon b) {
+        JDesktopIconOperator(JInternalFrame.JDesktopIcon b) {
             super(b);
+        }
+
+        public static JDesktopIconOperator of(JInternalFrame.JDesktopIcon b) {
+            return new JDesktopIconOperator(b);
         }
 
         public JInternalFrame getInternalFrame() {

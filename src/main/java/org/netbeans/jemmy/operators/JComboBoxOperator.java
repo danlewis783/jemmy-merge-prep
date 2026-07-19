@@ -62,19 +62,7 @@ public class JComboBoxOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JComboBox)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(JComboBox<?> b) {
+    JComboBoxOperator(JComboBox<?> b) {
         super(b);
     }
 
@@ -91,36 +79,12 @@ public class JComboBoxOperator extends JComponentOperator {
                 (JComboBox<?>) waitComponent(cont, ComponentPredicates.of(JComboBox.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(ContainerOperator cont, int index) {
-        this((JComboBox<?>) waitComponent(cont, ComponentPredicates.of(JComboBox.class), index));
-    }
-
     public static JComboBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
-    }
-
     public static JComboBoxOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
     }
 
     public static JComboBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -128,26 +92,10 @@ public class JComboBoxOperator extends JComponentOperator {
                 (JComboBox<?>) cont.waitSubComponent(ComponentPredicates.of(JComboBox.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JComboBox<?>) cont.waitSubComponent(ComponentPredicates.of(JComboBox.class, chooser), index));
-    }
-
     public static JComboBoxOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JComboBoxOperator(
                 (JComboBox<?>) waitComponent(cont, new JComboBoxByItemPredicate(text, -1, stringComparator), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JComboBoxOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JComboBox<?>) waitComponent(cont, new JComboBoxByItemPredicate(text, -1, stringComparator), index));
     }
 
     @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API

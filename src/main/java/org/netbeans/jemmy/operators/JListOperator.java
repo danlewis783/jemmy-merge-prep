@@ -63,19 +63,7 @@ public class JListOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JListOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JList)} instead.
-     */
-    @Deprecated
-    public JListOperator(JList<?> b) {
+    JListOperator(JList<?> b) {
         super(b);
     }
 
@@ -91,48 +79,16 @@ public class JListOperator extends JComponentOperator {
         return new JListOperator((JList<?>) waitComponent(cont, ComponentPredicates.of(JList.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JListOperator(ContainerOperator cont, int index) {
-        this((JList<?>) waitComponent(cont, ComponentPredicates.of(JList.class), index));
-    }
-
     public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JListOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JListOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
-    }
-
     public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JListOperator((JList<?>) cont.waitSubComponent(ComponentPredicates.of(JList.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JListOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JList<?>) cont.waitSubComponent(ComponentPredicates.of(JList.class, chooser), index));
     }
 
     public static JListOperator waitFor(
@@ -140,27 +96,10 @@ public class JListOperator extends JComponentOperator {
         return waitFor(cont, text, stringComparator, -1, index);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
-    }
-
     public static JListOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
         return new JListOperator(
                 (JList<?>) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int, int)} instead.
-     */
-    @Deprecated
-    public JListOperator(
-            ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
-        this((JList<?>) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
     @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API

@@ -93,11 +93,7 @@ public class ComponentOperator extends Operator {
     private final EventDispatcher dispatcher;
     private final Component source;
 
-    /**
-     * @deprecated Use {@link #of(Component)} instead.
-     */
-    @Deprecated
-    public ComponentOperator(Component source) {
+    ComponentOperator(Component source) {
         this.source = Objects.requireNonNull(source, "source");
         this.dispatcher = new EventDispatcher(source);
     }
@@ -122,48 +118,16 @@ public class ComponentOperator extends Operator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public ComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
     public static ComponentOperator waitFor(ContainerOperator cont, int index) {
         return waitFor(cont, ComponentPredicates.alwaysTrue(), index);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public ComponentOperator(ContainerOperator cont, int index) {
-        this(cont, ComponentPredicates.alwaysTrue(), index);
     }
 
     public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public ComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
-    }
-
     public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return ComponentOperator.of(waitComponent((Container) cont.getSource(), chooser, index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public ComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this(waitComponent((Container) cont.getSource(), chooser, index));
     }
 
     @Override

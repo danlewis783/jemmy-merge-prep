@@ -51,31 +51,11 @@ public class JDialogOperator extends DialogOperator {
         return waitFor(0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor()} instead.
-     */
-    @Deprecated
-    public JDialogOperator() {
-        this(0);
-    }
-
     public static JDialogOperator waitFor(int index) {
         return new JDialogOperator(waitJDialog(ComponentPredicates.of(JDialog.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(int)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(int index) {
-        this(waitJDialog(ComponentPredicates.of(JDialog.class), index));
-    }
-
-    /**
-     * @deprecated Use {@link #of(JDialog)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(JDialog w) {
+    JDialogOperator(JDialog w) {
         super(w);
     }
 
@@ -87,48 +67,16 @@ public class JDialogOperator extends DialogOperator {
         return waitFor(predicate, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(Predicate)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(Predicate<Component> predicate) {
-        this(predicate, 0);
-    }
-
     public static JDialogOperator waitFor(String title) {
         return waitFor(title, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(String)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(String title) {
-        this(title, 0);
     }
 
     public static JDialogOperator waitFor(WindowOperator owner) {
         return waitFor(owner, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(WindowOperator owner) {
-        this(owner, 0);
-    }
-
     public static JDialogOperator waitFor(Predicate<Component> predicate, int index) {
         return new JDialogOperator(waitJDialog(ComponentPredicates.of(JDialog.class, predicate), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(Predicate, int)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(Predicate<Component> predicate, int index) {
-        this(waitJDialog(ComponentPredicates.of(JDialog.class, predicate), index));
     }
 
     public static JDialogOperator waitFor(String title, int index) {
@@ -138,51 +86,16 @@ public class JDialogOperator extends DialogOperator {
                 index);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(String, int)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(String title, int index) {
-        this(
-                ComponentPredicates.of(
-                        JDialog.class, new DialogShowingByTitlePredicate(title, StringComparators.strict())),
-                index);
-    }
-
     public static JDialogOperator waitFor(WindowOperator owner, int index) {
         return new JDialogOperator(waitJDialog(owner, ComponentPredicates.of(JDialog.class), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, int)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(WindowOperator owner, int index) {
-        this(waitJDialog(owner, ComponentPredicates.of(JDialog.class), index));
     }
 
     public static JDialogOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {
         return waitFor(owner, predicate, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(WindowOperator owner, Predicate<Component> predicate) {
-        this(owner, predicate, 0);
-    }
-
     public static JDialogOperator waitFor(WindowOperator owner, String title, StringComparator stringComparator) {
         return waitFor(owner, title, stringComparator, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(WindowOperator owner, String title, StringComparator stringComparator) {
-        this(owner, title, stringComparator, 0);
     }
 
     public static JDialogOperator waitFor(WindowOperator owner, Predicate<Component> predicate, int index) {
@@ -190,28 +103,9 @@ public class JDialogOperator extends DialogOperator {
                 (JDialog) owner.waitSubWindow(ComponentPredicates.of(JDialog.class, predicate), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(WindowOperator owner, Predicate<Component> predicate, int index) {
-        this((JDialog) owner.waitSubWindow(ComponentPredicates.of(JDialog.class, predicate), index));
-    }
-
     public static JDialogOperator waitFor(
             WindowOperator owner, String title, StringComparator stringComparator, int index) {
         return new JDialogOperator(waitJDialog(
-                owner,
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
-                index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JDialogOperator(WindowOperator owner, String title, StringComparator stringComparator, int index) {
-        this(waitJDialog(
                 owner,
                 ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index));

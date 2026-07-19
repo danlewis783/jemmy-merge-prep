@@ -47,19 +47,7 @@ public class FrameOperator extends WindowOperator {
         return waitFor(0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor()} instead.
-     */
-    @Deprecated
-    public FrameOperator() {
-        this(0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(Frame)} instead.
-     */
-    @Deprecated
-    public FrameOperator(Frame w) {
+    FrameOperator(Frame w) {
         super(w);
     }
 
@@ -75,60 +63,20 @@ public class FrameOperator extends WindowOperator {
         return new FrameOperator(waitFrame(ComponentPredicates.of(Frame.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(int)} instead.
-     */
-    @Deprecated
-    public FrameOperator(int index) {
-        this(waitFrame(ComponentPredicates.of(Frame.class), index));
-    }
-
     public static FrameOperator waitFor(Predicate<Component> chooser) {
         return waitFor(chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(Predicate)} instead.
-     */
-    @Deprecated
-    public FrameOperator(Predicate<Component> chooser) {
-        this(chooser, 0);
     }
 
     public static FrameOperator waitFor(String title) {
         return waitFor(title, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(String)} instead.
-     */
-    @Deprecated
-    public FrameOperator(String title) {
-        this(title, 0);
-    }
-
     public static FrameOperator waitFor(Predicate<Component> chooser, int index) {
         return new FrameOperator(waitFrame(ComponentPredicates.of(Frame.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(Predicate, int)} instead.
-     */
-    @Deprecated
-    public FrameOperator(Predicate<Component> chooser, int index) {
-        this(waitFrame(ComponentPredicates.of(Frame.class, chooser), index));
-    }
-
     public static FrameOperator waitFor(String title, int index) {
         return new FrameOperator(waitFrame(new FrameShowingByTitlePredicate(title, StringComparators.strict()), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(String, int)} instead.
-     */
-    @Deprecated
-    public FrameOperator(String title, int index) {
-        this(waitFrame(new FrameShowingByTitlePredicate(title, StringComparators.strict()), index));
     }
 
     public void waitTitle(String title, StringComparator stringComparator) {

@@ -40,7 +40,7 @@ public final class JInternalFrameByTitlePredicate implements Predicate<Component
                 frame = (JInternalFrame) comp;
             } else {
                 JInternalFrameOperator.JDesktopIconOperator io =
-                        new JInternalFrameOperator.JDesktopIconOperator((JInternalFrame.JDesktopIcon) comp);
+                        JInternalFrameOperator.JDesktopIconOperator.of((JInternalFrame.JDesktopIcon) comp);
                 frame = io.getInternalFrame();
             }
 

@@ -41,11 +41,7 @@ import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class CheckboxOperator extends ComponentOperator {
-    /**
-     * @deprecated Use {@link #of(Checkbox)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(Checkbox b) {
+    CheckboxOperator(Checkbox b) {
         super(b);
     }
 
@@ -61,48 +57,16 @@ public class CheckboxOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
     public static CheckboxOperator waitFor(ContainerOperator cont, int index) {
         return new CheckboxOperator((Checkbox) waitComponent(cont, ComponentPredicates.of(Checkbox.class), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(ContainerOperator cont, int index) {
-        this((Checkbox) waitComponent(cont, ComponentPredicates.of(Checkbox.class), index));
     }
 
     public static CheckboxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
-    }
-
     public static CheckboxOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
     }
 
     public static CheckboxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -110,26 +74,10 @@ public class CheckboxOperator extends ComponentOperator {
                 (Checkbox) cont.waitSubComponent(ComponentPredicates.of(Checkbox.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Checkbox) cont.waitSubComponent(ComponentPredicates.of(Checkbox.class, chooser), index));
-    }
-
     public static CheckboxOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new CheckboxOperator(
                 (Checkbox) waitComponent(cont, new CheckboxByLabelPredicate(text, stringComparator), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public CheckboxOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((Checkbox) waitComponent(cont, new CheckboxByLabelPredicate(text, stringComparator), index));
     }
 
     public void changeSelection(boolean newValue) {

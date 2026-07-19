@@ -45,19 +45,7 @@ public class ScrollbarOperator extends ComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public ScrollbarOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(Scrollbar)} instead.
-     */
-    @Deprecated
-    public ScrollbarOperator(Scrollbar b) {
+    ScrollbarOperator(Scrollbar b) {
         super(b);
     }
 
@@ -73,37 +61,13 @@ public class ScrollbarOperator extends ComponentOperator {
         return new ScrollbarOperator((Scrollbar) waitComponent(cont, ComponentPredicates.of(Scrollbar.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public ScrollbarOperator(ContainerOperator cont, int index) {
-        this((Scrollbar) waitComponent(cont, ComponentPredicates.of(Scrollbar.class), index));
-    }
-
     public static ScrollbarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public ScrollbarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static ScrollbarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ScrollbarOperator(
                 (Scrollbar) cont.waitSubComponent(ComponentPredicates.of(Scrollbar.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public ScrollbarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Scrollbar) cont.waitSubComponent(ComponentPredicates.of(Scrollbar.class, chooser), index));
     }
 
     public void scrollTo(Function<Object, ?> w, @Nullable Object waiterParam, boolean increase) {

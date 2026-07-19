@@ -38,19 +38,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JRadioButton)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(JRadioButton b) {
+    JRadioButtonOperator(JRadioButton b) {
         super(b);
     }
 
@@ -63,36 +51,12 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
                 (JRadioButton) waitComponent(cont, ComponentPredicates.of(JRadioButton.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(ContainerOperator cont, int index) {
-        this((JRadioButton) waitComponent(cont, ComponentPredicates.of(JRadioButton.class), index));
-    }
-
     public static JRadioButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
-    }
-
     public static JRadioButtonOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
     }
 
     public static JRadioButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -100,28 +64,9 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
                 (JRadioButton) cont.waitSubComponent(ComponentPredicates.of(JRadioButton.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JRadioButton) cont.waitSubComponent(ComponentPredicates.of(JRadioButton.class, chooser), index));
-    }
-
     public static JRadioButtonOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JRadioButtonOperator((JRadioButton) waitComponent(
-                cont,
-                ComponentPredicates.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
-                index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JRadioButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JRadioButton) waitComponent(
                 cont,
                 ComponentPredicates.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));

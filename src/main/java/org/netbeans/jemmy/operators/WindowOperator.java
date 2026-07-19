@@ -46,31 +46,11 @@ public class WindowOperator extends ContainerOperator {
         return waitFor(0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor()} instead.
-     */
-    @Deprecated
-    public WindowOperator() {
-        this(0);
-    }
-
     public static WindowOperator waitFor(int index) {
         return new WindowOperator(waitWindow(ComponentPredicates.alwaysTrue(), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(int)} instead.
-     */
-    @Deprecated
-    public WindowOperator(int index) {
-        this(waitWindow(ComponentPredicates.alwaysTrue(), index));
-    }
-
-    /**
-     * @deprecated Use {@link #of(Window)} instead.
-     */
-    @Deprecated
-    public WindowOperator(Window w) {
+    WindowOperator(Window w) {
         super(w);
     }
 
@@ -86,48 +66,16 @@ public class WindowOperator extends ContainerOperator {
         return waitFor(owner, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator)} instead.
-     */
-    @Deprecated
-    public WindowOperator(WindowOperator owner) {
-        this(owner, 0);
-    }
-
     public static WindowOperator waitFor(WindowOperator owner, int index) {
         return new WindowOperator(waitWindow(owner, ComponentPredicates.alwaysTrue(), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, int)} instead.
-     */
-    @Deprecated
-    public WindowOperator(WindowOperator owner, int index) {
-        this(waitWindow(owner, ComponentPredicates.alwaysTrue(), index));
     }
 
     public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {
         return waitFor(owner, predicate, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public WindowOperator(WindowOperator owner, Predicate<Component> predicate) {
-        this(owner, predicate, 0);
-    }
-
     public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate, int index) {
         return new WindowOperator(owner.waitSubWindow(predicate, index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(WindowOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public WindowOperator(WindowOperator owner, Predicate<Component> predicate, int index) {
-        this(owner.waitSubWindow(predicate, index));
     }
 
     public void activate() {

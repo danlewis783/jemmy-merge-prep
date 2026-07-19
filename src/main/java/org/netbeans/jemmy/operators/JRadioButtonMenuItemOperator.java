@@ -36,19 +36,7 @@ public class JRadioButtonMenuItemOperator extends JMenuItemOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JRadioButtonMenuItem)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(JRadioButtonMenuItem item) {
+    JRadioButtonMenuItemOperator(JRadioButtonMenuItem item) {
         super(item);
     }
 
@@ -61,37 +49,13 @@ public class JRadioButtonMenuItemOperator extends JMenuItemOperator {
                 (JRadioButtonMenuItem) waitComponent(cont, ComponentPredicates.of(JRadioButtonMenuItem.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(ContainerOperator cont, int index) {
-        this((JRadioButtonMenuItem) waitComponent(cont, ComponentPredicates.of(JRadioButtonMenuItem.class), index));
-    }
-
     public static JRadioButtonMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JRadioButtonMenuItemOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
     }
 
     public static JRadioButtonMenuItemOperator waitFor(
@@ -100,28 +64,10 @@ public class JRadioButtonMenuItemOperator extends JMenuItemOperator {
                 cont.waitSubComponent(ComponentPredicates.of(JRadioButtonMenuItem.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JRadioButtonMenuItem)
-                cont.waitSubComponent(ComponentPredicates.of(JRadioButtonMenuItem.class, chooser), index));
-    }
-
     public static JRadioButtonMenuItemOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JRadioButtonMenuItemOperator((JRadioButtonMenuItem)
                 waitComponent(cont, new JRadioButtonMenuItemByLabelPredicate(text, stringComparator), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JRadioButtonMenuItemOperator(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JRadioButtonMenuItem)
-                waitComponent(cont, new JRadioButtonMenuItemByLabelPredicate(text, stringComparator), index));
-    }
 }

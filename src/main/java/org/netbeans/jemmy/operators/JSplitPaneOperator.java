@@ -49,19 +49,7 @@ public class JSplitPaneOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JSplitPane)} instead.
-     */
-    @Deprecated
-    public JSplitPaneOperator(JSplitPane b) {
+    JSplitPaneOperator(JSplitPane b) {
         super(b);
     }
 
@@ -78,37 +66,13 @@ public class JSplitPaneOperator extends JComponentOperator {
                 (JSplitPane) waitComponent(cont, ComponentPredicates.of(JSplitPane.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont, int index) {
-        this((JSplitPane) waitComponent(cont, ComponentPredicates.of(JSplitPane.class), index));
-    }
-
     public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JSplitPaneOperator(
                 (JSplitPane) cont.waitSubComponent(ComponentPredicates.of(JSplitPane.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSplitPane) cont.waitSubComponent(ComponentPredicates.of(JSplitPane.class, chooser), index));
     }
 
     public BasicSplitPaneDivider findDivider() {

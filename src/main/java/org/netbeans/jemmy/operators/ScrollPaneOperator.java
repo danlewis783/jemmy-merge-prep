@@ -59,19 +59,7 @@ public class ScrollPaneOperator extends ContainerOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public ScrollPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(ScrollPane)} instead.
-     */
-    @Deprecated
-    public ScrollPaneOperator(ScrollPane b) {
+    ScrollPaneOperator(ScrollPane b) {
         super(b);
     }
 
@@ -88,37 +76,13 @@ public class ScrollPaneOperator extends ContainerOperator {
                 (ScrollPane) waitComponent(cont, ComponentPredicates.of(ScrollPane.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public ScrollPaneOperator(ContainerOperator cont, int index) {
-        this((ScrollPane) waitComponent(cont, ComponentPredicates.of(ScrollPane.class), index));
-    }
-
     public static ScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public ScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
     }
 
     public static ScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new ScrollPaneOperator(
                 (ScrollPane) cont.waitSubComponent(ComponentPredicates.of(ScrollPane.class, chooser), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public ScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((ScrollPane) cont.waitSubComponent(ComponentPredicates.of(ScrollPane.class, chooser), index));
     }
 
     public void setValues(int x, int y) {

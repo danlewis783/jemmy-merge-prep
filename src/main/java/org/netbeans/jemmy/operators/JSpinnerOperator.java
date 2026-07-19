@@ -61,19 +61,7 @@ public class JSpinnerOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(ContainerOperator cont) {
-        this(cont, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #of(JSpinner)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(JSpinner b) {
+    JSpinnerOperator(JSpinner b) {
         super(b);
     }
 
@@ -89,36 +77,12 @@ public class JSpinnerOperator extends JComponentOperator {
         return new JSpinnerOperator((JSpinner) waitComponent(cont, ComponentPredicates.of(JSpinner.class), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, int index) {
-        this((JSpinner) waitComponent(cont, ComponentPredicates.of(JSpinner.class), index));
-    }
-
     public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
-    }
-
     public static JSpinnerOperator waitFor(ContainerOperator cont, String text, StringComparator comparator) {
         return waitFor(cont, text, comparator, 0);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, String text, StringComparator comparator) {
-        this(cont, text, comparator, 0);
     }
 
     public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -126,26 +90,10 @@ public class JSpinnerOperator extends JComponentOperator {
                 (JSpinner) cont.waitSubComponent(ComponentPredicates.of(JSpinner.class, chooser), index));
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSpinner) cont.waitSubComponent(ComponentPredicates.of(JSpinner.class, chooser), index));
-    }
-
     public static JSpinnerOperator waitFor(
             ContainerOperator cont, String text, StringComparator comparator, int index) {
         return new JSpinnerOperator(
                 (JSpinner) waitComponent(cont, new JSpinnerByTextPredicate(text, comparator), index));
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
-     */
-    @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, String text, StringComparator comparator, int index) {
-        this((JSpinner) waitComponent(cont, new JSpinnerByTextPredicate(text, comparator), index));
     }
 
     public void scrollTo(ScrollAdjuster adj) {
