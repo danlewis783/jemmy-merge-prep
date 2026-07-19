@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.DisplayAssumptions.assumeUnscaledDisplay;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.BorderLayout;
@@ -58,6 +59,9 @@ class EditorScrollingInTabsTest {
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
+        // selectText/typeText press-drag at character coordinates (~7px targets), the finest
+        // robot precision in the suite - unreliable under display scaling
+        assumeUnscaledDisplay();
         EventQueue.invokeAndWait(() -> {
             jFrame = new JFrame("EditorTabsApp");
             JEditorPane editor = new JEditorPane("text", "");
@@ -75,10 +79,13 @@ class EditorScrollingInTabsTest {
 
     @AfterEach
     void afterEach() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> {
-            jFrame.setVisible(false);
-            jFrame.dispose();
-        });
+        // null when the display-scaling assumption aborted beforeEach
+        if (jFrame != null) {
+            EventQueue.invokeAndWait(() -> {
+                jFrame.setVisible(false);
+                jFrame.dispose();
+            });
+        }
     }
 
     @Test
