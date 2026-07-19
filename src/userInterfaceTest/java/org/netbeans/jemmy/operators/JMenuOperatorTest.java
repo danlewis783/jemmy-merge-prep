@@ -111,7 +111,7 @@ class JMenuOperatorTest {
         JMenuOperator.waitFor(jMenuBarOp);
         JMenuOperator.waitFor(jMenuBarOp, ComponentPredicates.byName("JMenuOperatorTest"));
         JMenuOperator.waitFor(jMenuBarOp, "JMenuOperatorTest", StringComparators.strict());
-        assertThat(JMenuOperator.of(menu)).isNotNull();
+        JMenuOperator.of(menu);
     }
 
     @Test

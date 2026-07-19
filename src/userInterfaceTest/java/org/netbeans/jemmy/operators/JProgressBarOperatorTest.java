@@ -71,8 +71,7 @@ class JProgressBarOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JProgressBarOperator.waitFor(operator);
         JProgressBarOperator.waitFor(operator, ComponentPredicates.byName("JProgressBarOperatorTest"));
-        JProgressBarOperator operator3 = JProgressBarOperator.of(progressBar);
-        assertThat(operator3).isNotNull();
+        JProgressBarOperator.of(progressBar);
     }
 
     @Test

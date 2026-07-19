@@ -72,7 +72,6 @@ class JRadioButtonMenuItemOperatorTest {
         JRadioButtonMenuItemOperator.waitFor(popup);
         JRadioButtonMenuItemOperator.waitFor(popup, ComponentPredicates.byName("Radio Button 1"));
         JRadioButtonMenuItemOperator.waitFor(popup, "Radio Button 1", StringComparators.strict());
-        JRadioButtonMenuItemOperator operator5 = JRadioButtonMenuItemOperator.of(menuItem);
-        assertThat(operator5).isNotNull();
+        JRadioButtonMenuItemOperator.of(menuItem);
     }
 }

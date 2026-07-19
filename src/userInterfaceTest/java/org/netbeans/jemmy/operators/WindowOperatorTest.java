@@ -108,7 +108,6 @@ class WindowOperatorTest {
         WindowOperator.waitFor();
         FrameOperator.waitFor();
         WindowOperator operator2 = WindowOperator.of(mainFrame);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.getSource()).isSameAs(mainFrame);
         WindowOperator sub1 = WindowOperator.waitFor(operator2);
         assertThat(sub1.getSource()).isSameAs(subDialog);

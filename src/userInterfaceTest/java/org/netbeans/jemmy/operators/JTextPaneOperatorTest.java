@@ -79,8 +79,7 @@ class JTextPaneOperatorTest {
         JTextPaneOperator.waitFor(operator);
         JTextPaneOperator.waitFor(operator, ComponentPredicates.byName("JTextPaneOperatorTest"));
         JTextPaneOperator.waitFor(operator, "JTextPaneOperatorTest", StringComparators.strict());
-        JTextPaneOperator operator4 = JTextPaneOperator.of(textPane);
-        assertThat(operator4).isNotNull();
+        JTextPaneOperator.of(textPane);
     }
 
     @Test

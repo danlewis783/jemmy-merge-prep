@@ -64,7 +64,6 @@ class ContainerOperatorTest {
     @Test
     void testConstructor() {
         ContainerOperator operator = ContainerOperator.of(frame);
-        assertThat(operator).isNotNull();
         ContainerOperator.waitFor(operator);
         ContainerOperator.waitFor(operator, ComponentPredicates.byName("ContainerOperatorTest"));
     }

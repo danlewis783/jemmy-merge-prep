@@ -65,8 +65,7 @@ class JSplitPaneOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSplitPaneOperator.waitFor(operator);
         JSplitPaneOperator.waitFor(operator, ComponentPredicates.byName("JSplitPane"));
-        JSplitPaneOperator operator3 = JSplitPaneOperator.of(splitPane);
-        assertThat(operator3).isNotNull();
+        JSplitPaneOperator.of(splitPane);
     }
 
     @Test

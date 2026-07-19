@@ -80,7 +80,6 @@ class JScrollBarOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator.waitFor(operator);
         JScrollBarOperator.waitFor(operator, ComponentPredicates.byName("JScrollBarOperatorTest"));
     }
@@ -103,7 +102,6 @@ class JScrollBarOperatorTest {
     @Test
     void testScroll() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.scroll(true);
     }
@@ -111,7 +109,6 @@ class JScrollBarOperatorTest {
     @Test
     void testScrollTo() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.scrollTo(o -> JScrollBarOperatorTest.this, null, true);
     }
@@ -119,7 +116,6 @@ class JScrollBarOperatorTest {
     @Test
     void testScrollToValue() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.scrollToValue(1.0);
     }
@@ -141,7 +137,6 @@ class JScrollBarOperatorTest {
     @Test
     void testScrollToMinimum() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.scrollToMinimum();
     }
@@ -149,7 +144,6 @@ class JScrollBarOperatorTest {
     @Test
     void testScrollToMaximum() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.scrollToMaximum();
     }
@@ -157,7 +151,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetDecreaseButton() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.getDecreaseButton();
     }
@@ -165,7 +158,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetIncreaseButton() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.getIncreaseButton();
     }
@@ -173,7 +165,6 @@ class JScrollBarOperatorTest {
     @Test
     void testAddAdjustmentListener() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         AdjustmentListenerTest listener = new AdjustmentListenerTest();
         operator1.addAdjustmentListener(listener);
@@ -183,7 +174,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetBlockIncrement() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setBlockIncrement(operator1.getBlockIncrement());
         operator1.getBlockIncrement(0);
@@ -192,7 +182,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetMaximum() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setMaximum(operator1.getMaximum());
     }
@@ -200,7 +189,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetMinimum() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setMinimum(operator1.getMinimum());
     }
@@ -208,7 +196,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetModel() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setModel(operator1.getModel());
     }
@@ -216,7 +203,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetOrientation() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setOrientation(operator1.getOrientation());
     }
@@ -224,7 +210,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetUI() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.getUI();
     }
@@ -232,7 +217,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetUnitIncrement() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setUnitIncrement(operator1.getUnitIncrement());
     }
@@ -240,7 +224,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetValue() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setValue(operator1.getValue());
     }
@@ -248,7 +231,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetValueIsAdjusting() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setValueIsAdjusting(operator1.getValueIsAdjusting());
     }
@@ -256,7 +238,6 @@ class JScrollBarOperatorTest {
     @Test
     void testGetVisibleAmount() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setVisibleAmount(operator1.getVisibleAmount());
     }
@@ -264,7 +245,6 @@ class JScrollBarOperatorTest {
     @Test
     void testSetValues() {
         JFrameOperator operator = JFrameOperator.of(frame);
-        assertThat(operator).isNotNull();
         JScrollBarOperator operator1 = JScrollBarOperator.waitFor(operator);
         operator1.setValues(0, 0, 0, 0);
     }

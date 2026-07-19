@@ -102,8 +102,7 @@ class JTableOperatorTest {
         operator2.selectCell(0, 0);
         JTableOperator operator3 = JTableOperator.waitFor(operator, "Mary", StringComparators.strict());
         JTableOperator operator4 = JTableOperator.waitFor(operator, "Mary", StringComparators.strict(), 0, 0);
-        JTableOperator operator5 = JTableOperator.of(table);
-        assertThat(operator5).isNotNull();
+        JTableOperator.of(table);
     }
 
     @Test

@@ -119,7 +119,7 @@ final class JFileChooserOperatorTest {
 
     @Test
     void testConstructorD() {
-        assertThat(JFileChooserOperator.of(fileChooser)).isNotNull();
+        JFileChooserOperator.of(fileChooser);
     }
 
     @Test
@@ -159,70 +159,60 @@ final class JFileChooserOperatorTest {
     @Test
     void testGetPathCombo() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getPathCombo();
     }
 
     @Test
     void testGetFileTypesCombo() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getFileTypesCombo();
     }
 
     @Test
     void testGetApproveButton() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getApproveButton();
     }
 
     @Test
     void testGetCancelButton() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getCancelButton();
     }
 
     @Test
     void testGetHomeButton() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getHomeButton();
     }
 
     @Test
     void testGetUpLevelButton() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getUpLevelButton();
     }
 
     @Test
     void testGetListToggleButton() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getListToggleButton();
     }
 
     @Test
     void testGetDetailsToggleButton() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getDetailsToggleButton();
     }
 
     @Test
     void testGetPathField() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getPathField();
     }
 
     @Test
     void testGetFileList() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         // in list view the file list is the JList carrying the look and feel's accessible name
         Component list = op.getFileList();
         assertThat(list).isInstanceOf(JList.class);
@@ -271,28 +261,24 @@ final class JFileChooserOperatorTest {
     @Test
     void testApprove() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.approve();
     }
 
     @Test
     void testCancel() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.cancel();
     }
 
     @Test
     void testChooseFile() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.chooseFile("1234");
     }
 
     @Test
     void testGoUpLevel() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setCurrentDirectory(tempDir.resolve(FN3).toFile());
         op.goUpLevel();
     }
@@ -300,21 +286,18 @@ final class JFileChooserOperatorTest {
     @Test
     void testGoHome() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.goHome();
     }
 
     @Test
     void testClickOnFile() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.clickOnFile(FN2);
     }
 
     @Test
     void testEnterSubDir() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         File result = op.enterSubDir(FN3);
         assertThat(result.getName()).isEqualTo(FN3);
         assertThat(op.getCurrentDirectory().getName()).isEqualTo(FN3);
@@ -323,49 +306,42 @@ final class JFileChooserOperatorTest {
     @Test
     void testSelectFile() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.selectFile(FN2);
     }
 
     @Test
     void testSelectPathDirectory() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.selectPathDirectory("1234", StringComparators.strict());
     }
 
     @Test
     void testSelectFileType() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.selectFileType("1234", StringComparators.strict());
     }
 
     @Test
     void testCheckFileDisplayed() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.checkFileDisplayed(FN2);
     }
 
     @Test
     void testGetFileCount() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getFileCount();
     }
 
     @Test
     void testGetFiles() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getFiles();
     }
 
     @Test
     void testWaitFileCount() throws InterruptedException, InvocationTargetException {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         EventQueue.invokeAndWait(
                 () -> fileChooser.setCurrentDirectory(tempDir.resolve(FN3).toFile()));
         op.waitFileCount(0);
@@ -375,21 +351,18 @@ final class JFileChooserOperatorTest {
     @Test
     void testWaitFileDisplayed() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.waitFileDisplayed(FN2);
     }
 
     @Test
     void testAccept() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.accept(new File(FN2));
     }
 
     @Test
     void testAddActionListener() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         ActionListener listener = e -> {};
         op.addActionListener(listener);
         op.removeActionListener(listener);
@@ -398,7 +371,6 @@ final class JFileChooserOperatorTest {
     @Test
     void testAddChoosableFileFilter() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.addChoosableFileFilter(op.getChoosableFileFilters()[0]);
         op.removeChoosableFileFilter(op.getChoosableFileFilters()[0]);
     }
@@ -406,49 +378,42 @@ final class JFileChooserOperatorTest {
     @Test
     void testApproveSelection() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.approveSelection();
     }
 
     @Test
     void testCancelSelection() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.cancelSelection();
     }
 
     @Test
     void testChangeToParentDirectory() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.changeToParentDirectory();
     }
 
     @Test
     void testEnsureFileIsVisible() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.ensureFileIsVisible(new File(FN2));
     }
 
     @Test
     void testGetAcceptAllFileFilter() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getAcceptAllFileFilter();
     }
 
     @Test
     void testGetAccessory() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setAccessory(op.getAccessory());
     }
 
     @Test
     void testGetApproveButtonMnemonic() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setApproveButtonMnemonic(op.getApproveButtonMnemonic());
         op.setApproveButtonMnemonic('a');
     }
@@ -456,154 +421,132 @@ final class JFileChooserOperatorTest {
     @Test
     void testGetApproveButtonText() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setApproveButtonText(op.getApproveButtonText());
     }
 
     @Test
     void testGetApproveButtonToolTipText() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setApproveButtonToolTipText(op.getApproveButtonToolTipText());
     }
 
     @Test
     void testGetChoosableFileFilters() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getChoosableFileFilters();
     }
 
     @Test
     void testGetCurrentDirectory() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setCurrentDirectory(op.getCurrentDirectory());
     }
 
     @Test
     void testGetDescription() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getDescription(new File(FN2));
     }
 
     @Test
     void testGetDialogTitle() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setDialogTitle(op.getDialogTitle());
     }
 
     @Test
     void testGetDialogType() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setDialogType(op.getDialogType());
     }
 
     @Test
     void testGetFileFilter() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setFileFilter(op.getFileFilter());
     }
 
     @Test
     void testGetFileSelectionMode() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setFileSelectionMode(op.getFileSelectionMode());
     }
 
     @Test
     void testGetFileSystemView() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setFileSystemView(op.getFileSystemView());
     }
 
     @Test
     void testGetFileView() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setFileView(op.getFileView());
     }
 
     @Test
     void testGetIcon() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getIcon(new File(FN2));
     }
 
     @Test
     void testGetName() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getName(new File(FN2));
     }
 
     @Test
     void testGetSelectedFile() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setSelectedFile(op.getSelectedFile());
     }
 
     @Test
     void testGetSelectedFiles() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setSelectedFiles(op.getSelectedFiles());
     }
 
     @Test
     void testGetTypeDescription() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getTypeDescription(new File(FN2));
     }
 
     @Test
     void testGetUI() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.getUI();
     }
 
     @Test
     void testIsDirectorySelectionEnabled() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.isDirectorySelectionEnabled();
     }
 
     @Test
     void testIsFileHidingEnabled() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setFileHidingEnabled(op.isFileHidingEnabled());
     }
 
     @Test
     void testIsFileSelectionEnabled() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.isFileSelectionEnabled();
     }
 
     @Test
     void testIsMultiSelectionEnabled() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.setMultiSelectionEnabled(op.isMultiSelectionEnabled());
     }
 
     @Test
     void testIsTraversable() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.isTraversable(new File(FN2));
     }
 
@@ -616,14 +559,12 @@ final class JFileChooserOperatorTest {
     @Test
     void testRescanCurrentDirectory() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.rescanCurrentDirectory();
     }
 
     @Test
     void testResetChoosableFileFilters() {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         op.resetChoosableFileFilters();
     }
 
@@ -647,7 +588,6 @@ final class JFileChooserOperatorTest {
     @Timeout(value = 3, unit = TimeUnit.SECONDS)
     void testShowDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
             CompletableFuture<Integer> resultFuture = CompletableFuture.supplyAsync(() -> op.showDialog(null, "Plus"));
             try {
@@ -666,7 +606,6 @@ final class JFileChooserOperatorTest {
     @Timeout(value = 3, unit = TimeUnit.SECONDS)
     void testShowOpenDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         try (TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1_000L)) {
             CompletableFuture<Integer> resultFuture = CompletableFuture.supplyAsync(() -> op.showOpenDialog(null));
             try {
@@ -685,7 +624,6 @@ final class JFileChooserOperatorTest {
     @Timeout(value = 3, unit = TimeUnit.SECONDS)
     void testShowSaveDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
-        assertThat(op).isNotNull();
         try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
             CompletableFuture<Integer> resultFuture = CompletableFuture.supplyAsync(() -> op.showSaveDialog(null));
             try {

@@ -67,8 +67,7 @@ class JRadioButtonOperatorTest {
         JRadioButtonOperator.waitFor(operator);
         JRadioButtonOperator.waitFor(operator, "JRadioButtonOperatorTest", StringComparators.strict());
         JRadioButtonOperator.waitFor(operator, ComponentPredicates.byName("JRadioButtonOperatorTest"));
-        JRadioButtonOperator operator4 = JRadioButtonOperator.of(radioButton);
-        assertThat(operator4).isNotNull();
+        JRadioButtonOperator.of(radioButton);
     }
 
     @Test
