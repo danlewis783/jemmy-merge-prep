@@ -36,7 +36,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
@@ -110,23 +109,24 @@ class TextComponentOperatorTest {
     }
 
     @Test
-    @Disabled("FIXME")
     void testChangeCaretPosition() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         TextComponentOperator operator1 = TextComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.changeCaretPosition(1);
+        assertThat(operator1.getCaretPosition()).isEqualTo(1);
     }
 
     @Test
-    @Disabled("FIXME")
     void testSelectText() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         TextComponentOperator operator1 = TextComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.selectText(0, 10);
+        assertThat(operator1.getSelectionStart()).isEqualTo(0);
+        assertThat(operator1.getSelectionEnd()).isEqualTo(10);
     }
 
     @Test
@@ -139,33 +139,36 @@ class TextComponentOperatorTest {
     }
 
     @Test
-    @Disabled("FIXME")
+    @Timeout(value=5, unit=TimeUnit.SECONDS)
     void testClearText() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         TextComponentOperator operator1 = TextComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.clearText();
+        assertThat(operator1.getText()).isEmpty();
     }
 
     @Test
-    @Disabled("FIXME")
+    @Timeout(value=5, unit=TimeUnit.SECONDS)
     void testTypeText() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         TextComponentOperator operator1 = TextComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.typeText("BOOOOOOOH !");
+        assertThat(operator1.getText()).isEqualTo("BOOOOOOOH !TextComponentOperatorTest");
     }
 
     @Test
-    @Disabled("FIXME")
+    @Timeout(value=5, unit=TimeUnit.SECONDS)
     void testEnterText() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         TextComponentOperator operator1 = TextComponentOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.enterText("BOOOOOOOH !");
+        assertThat(operator1.getText()).isEqualTo("BOOOOOOOH !\n");
     }
 
     @Test
