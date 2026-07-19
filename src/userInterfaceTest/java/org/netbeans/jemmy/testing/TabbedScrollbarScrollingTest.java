@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Scrollbar;
 import java.awt.Toolkit;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JFrame;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
 import org.netbeans.jemmy.operators.JTabbedPaneOperator;
-import org.netbeans.jemmy.operators.ScrollbarOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_037
@@ -56,14 +54,7 @@ class TabbedScrollbarScrollingTest {
             swingPane.setLayout(new BorderLayout());
             swingPane.add(swvscroll, BorderLayout.EAST);
             swingPane.add(swhscroll, BorderLayout.SOUTH);
-            Scrollbar awhscroll = new Scrollbar(JScrollBar.HORIZONTAL, 0, 10, 0, 100);
-            Scrollbar awvscroll = new Scrollbar(JScrollBar.VERTICAL, 0, 10, 0, 100);
-            JPanel awtPane = new JPanel();
-            awtPane.setLayout(new BorderLayout());
-            awtPane.add(awvscroll, BorderLayout.EAST);
-            awtPane.add(awhscroll, BorderLayout.SOUTH);
             JTabbedPane tabbed = new JTabbedPane();
-            tabbed.add("AWT", awtPane);
             tabbed.add("Swing", swingPane);
             jFrame.getContentPane().setLayout(new BorderLayout());
             jFrame.getContentPane().add(tabbed, BorderLayout.CENTER);
@@ -93,12 +84,5 @@ class TabbedScrollbarScrollingTest {
         JScrollBarOperator scroll1 = JScrollBarOperator.waitFor(fro, 1);
         scroll1.scrollToMaximum();
         scroll1.scrollToMinimum();
-        tb.selectPage("AWT", StringComparators.strict());
-        ScrollbarOperator awscroll0 = ScrollbarOperator.waitFor(fro);
-        awscroll0.scrollToMaximum();
-        awscroll0.scrollToMinimum();
-        ScrollbarOperator awscroll1 = ScrollbarOperator.waitFor(fro, 1);
-        awscroll1.scrollToMaximum();
-        awscroll1.scrollToMinimum();
     }
 }

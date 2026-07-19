@@ -12,7 +12,7 @@ test is renamed on either side.
 | `ComponentChooserTest` | — | N/A — `ComponentChooser` replaced by `java.util.function.Predicate`; default-`getDescription` behavior has no analogue |
 | `OperatorTest` (waitState, waitStateOnQueue) | `OperatorTest` (unit) | covered — ported 2026-07-06 with the `waitStateOnQueue` feature |
 | `ComponentOperatorTest` (waitComponentLocationOnScreen) | `ComponentOperatorTest.testWaitComponentLocationOnScreen` | covered — ported with the geometry waits |
-| `TextComponentOperatorTest` (selection) | `TextComponentOperatorTest` | covered |
+| `TextComponentOperatorTest` (selection) | — | N/A — AWT `TextComponentOperator` and its test were removed; this fork supports only the Swing base layer |
 | `JTextComponentOperatorTest` (selection) | `JTextComponentOperatorTest` | covered |
 | `FileChooserTest` (testSelection/testCount/testGoHome) | `JFileChooserOperatorTest` (testSelectFile/testGetFileCount/testWaitFileCount/testGoHome) | covered |
 | `JInternalFrameOperatorTest` (ops + testTitleButtons across LAFs) | `JInternalFrameOperatorTest` + `InternalFrameTitleButtonsLafTest` | covered — LAF-parameterized via adopted `LookAndFeelProvider` |

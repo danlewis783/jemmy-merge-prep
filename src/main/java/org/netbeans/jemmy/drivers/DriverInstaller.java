@@ -27,12 +27,9 @@ package org.netbeans.jemmy.drivers;
 
 import static org.netbeans.jemmy.TimeoutKey.EventDispatcher_RobotAutoDelay;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.netbeans.jemmy.DispatchingModel;
@@ -43,13 +40,11 @@ import org.netbeans.jemmy.drivers.input.KeyEventDriver;
 import org.netbeans.jemmy.drivers.input.KeyRobotDriver;
 import org.netbeans.jemmy.drivers.input.MouseEventDriver;
 import org.netbeans.jemmy.drivers.input.MouseRobotDriver;
-import org.netbeans.jemmy.drivers.lists.ChoiceDriver;
 import org.netbeans.jemmy.drivers.lists.JComboMouseDriver;
 import org.netbeans.jemmy.drivers.lists.JListMouseDriver;
 import org.netbeans.jemmy.drivers.lists.JTabAPIDriver;
 import org.netbeans.jemmy.drivers.lists.JTabMouseDriver;
 import org.netbeans.jemmy.drivers.lists.JTableHeaderDriver;
-import org.netbeans.jemmy.drivers.lists.ListKeyboardDriver;
 import org.netbeans.jemmy.drivers.menus.AppleMenuDriver;
 import org.netbeans.jemmy.drivers.menus.DefaultJMenuDriver;
 import org.netbeans.jemmy.drivers.menus.QueueJMenuDriver;
@@ -59,10 +54,7 @@ import org.netbeans.jemmy.drivers.scrolling.JSliderAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.JSliderDriver;
 import org.netbeans.jemmy.drivers.scrolling.JSpinnerDriver;
 import org.netbeans.jemmy.drivers.scrolling.JSplitPaneDriver;
-import org.netbeans.jemmy.drivers.scrolling.ScrollPaneDriver;
-import org.netbeans.jemmy.drivers.scrolling.ScrollbarDriver;
 import org.netbeans.jemmy.drivers.tables.JTableMouseDriver;
-import org.netbeans.jemmy.drivers.text.AWTTextAPIDriver;
 import org.netbeans.jemmy.drivers.text.SwingTextKeyboardDriver;
 import org.netbeans.jemmy.drivers.trees.JTreeAPIDriver;
 import org.netbeans.jemmy.drivers.trees.JTreeMouseDriver;
@@ -71,35 +63,11 @@ import org.netbeans.jemmy.drivers.windows.DefaultInternalFrameDriver;
 import org.netbeans.jemmy.drivers.windows.DefaultWindowDriver;
 import org.netbeans.jemmy.drivers.windows.InternalFrameAPIDriver;
 import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
-import org.netbeans.jemmy.operators.ButtonOperator;
-import org.netbeans.jemmy.operators.CheckboxOperator;
-import org.netbeans.jemmy.operators.ChoiceOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
-import org.netbeans.jemmy.operators.LabelOperator;
-import org.netbeans.jemmy.operators.ListOperator;
-import org.netbeans.jemmy.operators.ScrollPaneOperator;
-import org.netbeans.jemmy.operators.ScrollbarOperator;
-import org.netbeans.jemmy.operators.TextAreaOperator;
-import org.netbeans.jemmy.operators.TextComponentOperator;
-import org.netbeans.jemmy.operators.TextFieldOperator;
 import org.netbeans.jemmy.util.LookAndFeel;
 import org.netbeans.jemmy.util.Platform;
 
 public final class DriverInstaller {
-    /** AWT heavyweights ignore synthesized input events, so they get real robot input in every model. */
-    private static final List<Class<? extends ComponentOperator>> AWT_OPERATORS =
-            Collections.unmodifiableList(Arrays.asList(
-                    ButtonOperator.class,
-                    CheckboxOperator.class,
-                    ChoiceOperator.class,
-                    LabelOperator.class,
-                    ListOperator.class,
-                    ScrollPaneOperator.class,
-                    ScrollbarOperator.class,
-                    TextAreaOperator.class,
-                    TextComponentOperator.class,
-                    TextFieldOperator.class));
-
     private DriverInstaller() {}
 
     /**
@@ -142,8 +110,6 @@ public final class DriverInstaller {
         } else {
             put(registry, DriverType.Key, new KeyEventDriver());
             put(registry, DriverType.Mouse, new MouseEventDriver());
-            put(registry, DriverType.Key, new KeyRobotDriver(EventDispatcher_RobotAutoDelay, AWT_OPERATORS));
-            put(registry, DriverType.Mouse, new MouseRobotDriver(EventDispatcher_RobotAutoDelay, AWT_OPERATORS));
         }
     }
 
@@ -154,23 +120,17 @@ public final class DriverInstaller {
         put(registry, DriverType.List, new JTreeAPIDriver());
         put(registry, DriverType.MultiSelList, new JTreeAPIDriver());
         put(registry, DriverType.Tree, new JTreeAPIDriver());
-        put(registry, DriverType.Text, new AWTTextAPIDriver());
         put(registry, DriverType.Text, new SwingTextKeyboardDriver());
-        put(registry, DriverType.Scroll, new ScrollbarDriver());
-        put(registry, DriverType.Scroll, new ScrollPaneDriver());
         put(registry, DriverType.Scroll, new JScrollBarAPIDriver());
         put(registry, DriverType.Scroll, new JSplitPaneDriver());
         put(registry, DriverType.Scroll, new JSliderAPIDriver());
         put(registry, DriverType.Scroll, new JSpinnerDriver());
         put(registry, DriverType.Button, new ButtonMouseDriver());
         put(registry, DriverType.List, new JTabAPIDriver());
-        put(registry, DriverType.List, new ListKeyboardDriver());
-        put(registry, DriverType.MultiSelList, new ListKeyboardDriver());
         put(registry, DriverType.List, new JComboMouseDriver());
         put(registry, DriverType.List, new JListMouseDriver());
         put(registry, DriverType.MultiSelList, new JListMouseDriver());
         put(registry, DriverType.Table, new JTableMouseDriver());
-        put(registry, DriverType.List, new ChoiceDriver());
         put(registry, DriverType.Frame, new DefaultFrameDriver());
         put(registry, DriverType.Window, new DefaultWindowDriver());
         put(registry, DriverType.Frame, new InternalFrameAPIDriver());
@@ -202,23 +162,17 @@ public final class DriverInstaller {
         put(registry, DriverType.List, new JTreeMouseDriver());
         put(registry, DriverType.MultiSelList, new JTreeMouseDriver());
         put(registry, DriverType.Tree, new JTreeMouseDriver());
-        put(registry, DriverType.Text, new AWTTextAPIDriver());
         put(registry, DriverType.Text, new SwingTextKeyboardDriver());
-        put(registry, DriverType.Scroll, new ScrollbarDriver());
-        put(registry, DriverType.Scroll, new ScrollPaneDriver());
         put(registry, DriverType.Scroll, new JScrollBarDriver());
         put(registry, DriverType.Scroll, new JSplitPaneDriver());
         put(registry, DriverType.Scroll, new JSliderDriver());
         put(registry, DriverType.Scroll, new JSpinnerDriver());
         put(registry, DriverType.Button, new ButtonMouseDriver());
         put(registry, DriverType.List, new JTabMouseDriver());
-        put(registry, DriverType.List, new ListKeyboardDriver());
-        put(registry, DriverType.MultiSelList, new ListKeyboardDriver());
         put(registry, DriverType.List, new JComboMouseDriver());
         put(registry, DriverType.List, new JListMouseDriver());
         put(registry, DriverType.MultiSelList, new JListMouseDriver());
         put(registry, DriverType.Table, new JTableMouseDriver());
-        put(registry, DriverType.List, new ChoiceDriver());
         put(registry, DriverType.Frame, new DefaultFrameDriver());
         put(registry, DriverType.Window, new DefaultWindowDriver());
         // Motif keeps internal frame title actions in a popup menu rather than title buttons

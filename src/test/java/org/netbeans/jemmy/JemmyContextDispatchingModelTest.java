@@ -31,7 +31,6 @@ import org.netbeans.jemmy.drivers.MouseDriver;
 import org.netbeans.jemmy.drivers.input.MouseEventDriver;
 import org.netbeans.jemmy.drivers.input.MouseRobotDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
-import org.netbeans.jemmy.operators.TextFieldOperator;
 
 // mutates the JemmyContext singleton's dispatching model, never run in parallel
 @Isolated
@@ -60,30 +59,17 @@ class JemmyContextDispatchingModelTest {
     }
 
     @Test
-    void robotModeResolvesOneMouseDriverForAwtAndSwingAlike() {
-        context.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot, DispatchingModel.SmoothRobot));
-
-        assertThat(drivers.getMouseDriver(TextFieldOperator.class))
-                .as("check that no event-mode AWT entry shadows the robot mouse driver")
-                .isInstanceOf(MouseRobotDriver.class)
-                .isSameAs(drivers.getMouseDriver(ComponentOperator.class));
-    }
-
-    @Test
     void switchingBackAndForthIsPathIndependent() {
         context.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
         context.installDriversAndSetDispatchingModel(DEFAULT_MODEL);
 
         assertThat(drivers.getMouseDriver(ComponentOperator.class)).isInstanceOf(MouseEventDriver.class);
-        assertThat(drivers.getMouseDriver(TextFieldOperator.class))
-                .as("check that AWT heavyweights keep robot input in the event model")
-                .isInstanceOf(MouseRobotDriver.class);
 
         context.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
 
-        assertThat(drivers.getMouseDriver(TextFieldOperator.class))
+        assertThat(drivers.getMouseDriver(ComponentOperator.class))
                 .as("check that the registry depends on the model, not on the switch history")
-                .isSameAs(drivers.getMouseDriver(ComponentOperator.class));
+                .isInstanceOf(MouseRobotDriver.class);
     }
 
     @Test

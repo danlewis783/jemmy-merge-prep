@@ -25,7 +25,6 @@
 
 package org.netbeans.jemmy.drivers.text;
 
-import java.awt.TextArea;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import org.netbeans.jemmy.JemmyContext;
@@ -35,7 +34,6 @@ import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.TextDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
-import org.netbeans.jemmy.operators.TextComponentOperator;
 
 public abstract class TextAPIDriver extends LightSupportiveDriver implements TextDriver {
     public TextAPIDriver(List<? extends Class<? extends ComponentOperator>> supported) {
@@ -45,12 +43,7 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     @Override
     public void changeCaretPosition(ComponentOperator oper, int position) {
         checkSupported(oper);
-
-        if (oper instanceof TextComponentOperator) {
-            ((TextComponentOperator) oper).setCaretPosition(position);
-        } else {
-            ((JTextComponentOperator) oper).setCaretPosition(position);
-        }
+        ((JTextComponentOperator) oper).setCaretPosition(position);
     }
 
     @Override
@@ -58,24 +51,14 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
         checkSupported(oper);
         int start = Math.min(startPosition, finalPosition);
         int end = Math.max(startPosition, finalPosition);
-        if (oper instanceof TextComponentOperator) {
-            TextComponentOperator toper = (TextComponentOperator) oper;
-            toper.setSelectionStart(start);
-            toper.setSelectionEnd(end);
-        } else {
-            JTextComponentOperator toper = (JTextComponentOperator) oper;
-            toper.setSelectionStart(start);
-            toper.setSelectionEnd(end);
-        }
+        JTextComponentOperator toper = (JTextComponentOperator) oper;
+        toper.setSelectionStart(start);
+        toper.setSelectionEnd(end);
     }
 
     @Override
     public void clearText(ComponentOperator oper) {
-        if (oper instanceof TextComponentOperator) {
-            ((TextComponentOperator) oper).setText("");
-        } else {
-            ((JTextComponentOperator) oper).setText("");
-        }
+        ((JTextComponentOperator) oper).setText("");
     }
 
     @Override
@@ -97,25 +80,11 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     @Override
     public void changeText(ComponentOperator oper, String text) {
         checkSupported(oper);
-
-        if (oper instanceof TextComponentOperator) {
-            ((TextComponentOperator) oper).setText(text);
-        } else {
-            ((JTextComponentOperator) oper).setText(text);
-        }
+        ((JTextComponentOperator) oper).setText(text);
     }
 
     @Override
     public void enterText(ComponentOperator oper, String text) {
-        if (oper.getSource() instanceof TextArea) {
-            // a real Enter press appends a line break, but native AWT controls ignore synthetic
-            // key events, so apply the newline through the API and skip the key press (under the
-            // robot model a real Enter would otherwise add a second line break)
-            changeText(oper, text + "\n");
-
-            return;
-        }
-
         changeText(oper, text);
         DriverManager.newInstance(JemmyContext.getInstance())
                 .getKeyDriver(oper)
