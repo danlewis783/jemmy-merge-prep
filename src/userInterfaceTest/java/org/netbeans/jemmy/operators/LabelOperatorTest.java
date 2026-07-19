@@ -64,13 +64,9 @@ class LabelOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         LabelOperator operator1 = LabelOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         LabelOperator operator2 = LabelOperator.waitFor(operator, ComponentPredicates.byName("LabelOperatorTest"));
-        assertThat(operator2).isNotNull();
         LabelOperator operator3 = LabelOperator.waitFor(operator, "LabelOperatorTest", StringComparators.strict(), 0);
-        assertThat(operator3).isNotNull();
     }
 
     @Test
@@ -83,27 +79,21 @@ class LabelOperatorTest {
 
     @Test
     void testWaitLabel() {
-        Label label = LabelOperator.waitLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(label).isNotNull();
-        Label label2 = LabelOperator.waitLabel(frame, ComponentPredicates.byName("LabelOperatorTest"));
-        assertThat(label2).isNotNull();
+        LabelOperator.waitLabel(frame, "LabelOperatorTest", StringComparators.caseInsensitiveSubstring());
+        LabelOperator.waitLabel(frame, ComponentPredicates.byName("LabelOperatorTest"));
     }
 
     @Test
     void testGetAlignment() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         LabelOperator operator1 = LabelOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setAlignment(operator1.getAlignment());
     }
 
     @Test
     void testGetText() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         LabelOperator operator1 = LabelOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setText(operator1.getText());
     }
 }

@@ -62,15 +62,9 @@ class JToggleButtonOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JToggleButtonOperator operator2 = JToggleButtonOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
-        JToggleButtonOperator operator3 =
-                JToggleButtonOperator.waitFor(operator1, ComponentPredicates.byName("JToggleButtonOperatorTest"));
-        assertThat(operator3).isNotNull();
-        JToggleButtonOperator operator4 =
-                JToggleButtonOperator.waitFor(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
-        assertThat(operator4).isNotNull();
+        JToggleButtonOperator.waitFor(operator1);
+        JToggleButtonOperator.waitFor(operator1, ComponentPredicates.byName("JToggleButtonOperatorTest"));
+        JToggleButtonOperator.waitFor(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
     }
 
     @Test
@@ -85,20 +79,15 @@ class JToggleButtonOperatorTest {
 
     @Test
     void testWaitJToggleButton() {
-        JToggleButton toggleButton1 = JToggleButtonOperator.waitJToggleButton(
+        JToggleButtonOperator.waitJToggleButton(
                 frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(toggleButton1).isNotNull();
-        JToggleButton toggleButton2 =
-                JToggleButtonOperator.waitJToggleButton(frame, ComponentPredicates.byName("JToggleButtonOperatorTest"));
-        assertThat(toggleButton2).isNotNull();
+        JToggleButtonOperator.waitJToggleButton(frame, ComponentPredicates.byName("JToggleButtonOperatorTest"));
     }
 
     @Test
     void testPrepareToClick() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JToggleButtonOperator operator2 = JToggleButtonOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
         operator2.prepareToClick();
         assertThat(onQueue(toggleButton::isVisible)).isTrue();
     }

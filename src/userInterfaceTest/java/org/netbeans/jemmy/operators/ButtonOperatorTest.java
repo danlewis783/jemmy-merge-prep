@@ -66,13 +66,9 @@ class ButtonOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
-        ButtonOperator operator2 = ButtonOperator.waitFor(operator, ComponentPredicates.byName("ButtonOperatorTest"));
-        assertThat(operator2).isNotNull();
-        ButtonOperator operator3 = ButtonOperator.waitFor(operator, "ButtonOperatorTest", StringComparators.strict());
-        assertThat(operator3).isNotNull();
+        ButtonOperator.waitFor(operator);
+        ButtonOperator.waitFor(operator, ComponentPredicates.byName("ButtonOperatorTest"));
+        ButtonOperator.waitFor(operator, "ButtonOperatorTest", StringComparators.strict());
     }
 
     @Test
@@ -86,19 +82,14 @@ class ButtonOperatorTest {
 
     @Test
     void testWaitButton() {
-        Button button1 =
-                ButtonOperator.waitButton(frame, "ButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(button1).isNotNull();
-        Button button2 = ButtonOperator.waitButton(frame, ComponentPredicates.byName("ButtonOperatorTest"));
-        assertThat(button2).isNotNull();
+        ButtonOperator.waitButton(frame, "ButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
+        ButtonOperator.waitButton(frame, ComponentPredicates.byName("ButtonOperatorTest"));
     }
 
     @Test
     void testGetActionCommand() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setActionCommand("TEST");
         assertThat(operator1.getActionCommand()).isEqualTo("TEST");
     }
@@ -106,9 +97,7 @@ class ButtonOperatorTest {
     @Test
     void testGetLabel() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setLabel("TEST");
         assertThat(operator1.getLabel()).isEqualTo("TEST");
     }
@@ -116,9 +105,7 @@ class ButtonOperatorTest {
     @Test
     void testAddActionListener() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.addActionListener(event -> {});
         assertThat(onQueue(button::getActionListeners)).hasSize(1);
         ActionListener[] listeners = onQueue(button::getActionListeners);
@@ -129,18 +116,14 @@ class ButtonOperatorTest {
     @Test
     void testPush() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.push();
     }
 
     @Test
     void testPushNoBlock() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.pushNoBlock();
         operator1.push();
     }
@@ -148,9 +131,7 @@ class ButtonOperatorTest {
     @Test
     void testRelease() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         ButtonOperator operator1 = ButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.press();
         operator1.release();
     }

@@ -63,27 +63,18 @@ class DialogOperatorTest {
     @Test
     void testConstructor() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         DialogOperator operator1 = DialogOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         DialogOperator operator2 = DialogOperator.waitFor();
-        assertThat(operator2).isNotNull();
         DialogOperator operator3 = DialogOperator.waitFor(ComponentPredicates.byName("DialogOperatorTest"));
-        assertThat(operator3).isNotNull();
         DialogOperator operator4 = DialogOperator.waitFor("DialogOperatorTest");
-        assertThat(operator4).isNotNull();
         DialogOperator operator5 = DialogOperator.waitFor(operator, ComponentPredicates.byName("DialogOperatorTest"));
-        assertThat(operator5).isNotNull();
         DialogOperator operator6 = DialogOperator.waitFor(operator, "DialogOperatorTest", StringComparators.strict());
-        assertThat(operator6).isNotNull();
     }
 
     @Test
     void testWaitTitle() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         DialogOperator operator1 = DialogOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setTitle("BOOH");
         operator1.waitTitle("BOOH", StringComparators.strict());
     }
@@ -91,18 +82,14 @@ class DialogOperatorTest {
     @Test
     void testGetTitle() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         DialogOperator operator1 = DialogOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getTitle();
     }
 
     @Test
     void testIsModal() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         DialogOperator operator1 = DialogOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setModal(false);
         assertThat(operator1.isModal()).isFalse();
     }
@@ -110,9 +97,7 @@ class DialogOperatorTest {
     @Test
     void testIsResizable() {
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         DialogOperator operator1 = DialogOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setResizable(true);
         assertThat(operator1.isResizable()).isTrue();
     }

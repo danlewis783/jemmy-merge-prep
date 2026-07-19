@@ -66,25 +66,18 @@ class JCheckBoxMenuItemOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator frameOp = JFrameOperator.waitFor();
-        assertThat(frameOp).isNotNull();
         JMenuBarOperator menuBarOp = JMenuBarOperator.waitFor(frameOp);
-        assertThat(menuBarOp).isNotNull();
-        JCheckBoxMenuItemOperator operator3 = JCheckBoxMenuItemOperator.waitFor(menuBarOp);
-        assertThat(operator3).isNotNull();
-        JCheckBoxMenuItemOperator operator4 = JCheckBoxMenuItemOperator.waitFor(
+        JCheckBoxMenuItemOperator.waitFor(menuBarOp);
+        JCheckBoxMenuItemOperator.waitFor(
                 menuBarOp, ComponentPredicates.byName("JCheckBoxMenuItemOperatorTest"));
-        assertThat(operator4).isNotNull();
-        JCheckBoxMenuItemOperator operator5 = JCheckBoxMenuItemOperator.waitFor(
+        JCheckBoxMenuItemOperator.waitFor(
                 menuBarOp, "JCheckBoxMenuItemOperatorTest", StringComparators.strict());
-        assertThat(operator5).isNotNull();
     }
 
     @Test
     void testGetState() {
         JFrameOperator frameOp = JFrameOperator.waitFor();
-        assertThat(frameOp).isNotNull();
         JCheckBoxMenuItemOperator checkBoxMenuItemOp = JCheckBoxMenuItemOperator.waitFor(frameOp);
-        assertThat(checkBoxMenuItemOp).isNotNull();
         checkBoxMenuItemOp.setState(true);
         assertThat(checkBoxMenuItemOp.getState()).isTrue();
         assertThat(onQueue(checkBoxMenuItem::getState)).isEqualTo(checkBoxMenuItemOp.getState());

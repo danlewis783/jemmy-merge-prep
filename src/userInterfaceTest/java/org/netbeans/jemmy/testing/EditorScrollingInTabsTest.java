@@ -129,11 +129,9 @@ class EditorScrollingInTabsTest {
         checkSelectedText(to, "567");
         to.selectText(3, 37);
         to.typeText("3");
-        assertThat(JEditorPaneOperator.waitJEditorPane(frm, "0123456789", StringComparators.strict()))
-                .isNotNull();
+        JEditorPaneOperator.waitJEditorPane(frm, "0123456789", StringComparators.strict());
         to.clearText();
-        assertThat(JEditorPaneOperator.waitJEditorPane(frm, "", StringComparators.strict()))
-                .isNotNull();
+        JEditorPaneOperator.waitJEditorPane(frm, "", StringComparators.strict());
         testJEditorPane(to);
         tp.selectPage("JTextArea", StringComparators.substring());
         JTextArea textArea = JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring());
@@ -153,11 +151,9 @@ class EditorScrollingInTabsTest {
         checkSelectedText(tao, "0123456789\n0123456789\n");
         tao.selectText(0, 3, 3, 4);
         tao.typeText("3");
-        assertThat(JTextAreaOperator.waitJTextArea(frm, "0123456789", StringComparators.strict()))
-                .isNotNull();
+        JTextAreaOperator.waitJTextArea(frm, "0123456789", StringComparators.strict());
         tao.clearText();
-        assertThat(JTextAreaOperator.waitJTextArea(frm, "", StringComparators.strict()))
-                .isNotNull();
+        JTextAreaOperator.waitJTextArea(frm, "", StringComparators.strict());
         testJTabbedPane(tp);
         testJTextArea(tao);
     }

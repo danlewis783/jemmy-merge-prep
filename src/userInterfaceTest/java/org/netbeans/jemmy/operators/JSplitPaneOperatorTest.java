@@ -63,11 +63,8 @@ class JSplitPaneOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
-        JSplitPaneOperator operator2 = JSplitPaneOperator.waitFor(operator, ComponentPredicates.byName("JSplitPane"));
-        assertThat(operator2).isNotNull();
+        JSplitPaneOperator.waitFor(operator);
+        JSplitPaneOperator.waitFor(operator, ComponentPredicates.byName("JSplitPane"));
         JSplitPaneOperator operator3 = JSplitPaneOperator.of(splitPane);
         assertThat(operator3).isNotNull();
     }
@@ -90,45 +87,35 @@ class JSplitPaneOperatorTest {
 
     @Test
     void testWaitJSplitPane() {
-        JSplitPane pane1 = JSplitPaneOperator.waitJSplitPane(frame);
-        assertThat(pane1).isNotNull();
-        JSplitPane pane2 = JSplitPaneOperator.waitJSplitPane(frame, ComponentPredicates.byName("JSplitPane"));
-        assertThat(pane2).isNotNull();
+        JSplitPaneOperator.waitJSplitPane(frame);
+        JSplitPaneOperator.waitJSplitPane(frame, ComponentPredicates.byName("JSplitPane"));
     }
 
     @Test
     void testFindDivider() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.findDivider();
     }
 
     @Test
     void testGetDivider() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getDivider();
     }
 
     @Test
     void testScrollTo() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.scrollTo(new ScrollAdjusterTest());
     }
 
     @Test
     void testMoveDivider() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOneTouchExpandable(true);
         operator1.moveDivider(250);
         operator1.moveDivider(1.0);
@@ -137,9 +124,7 @@ class JSplitPaneOperatorTest {
     @Test
     void testMoveToMinimum() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOneTouchExpandable(true);
         operator1.moveToMinimum();
     }
@@ -147,9 +132,7 @@ class JSplitPaneOperatorTest {
     @Test
     void testMoveToMaximum() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOneTouchExpandable(true);
         operator1.moveToMaximum();
     }
@@ -157,9 +140,7 @@ class JSplitPaneOperatorTest {
     @Test
     void testExpandRight() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOneTouchExpandable(true);
         operator1.expandRight();
     }
@@ -167,9 +148,7 @@ class JSplitPaneOperatorTest {
     @Test
     void testExpandLeft() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOneTouchExpandable(true);
         operator1.expandLeft();
     }
@@ -177,9 +156,7 @@ class JSplitPaneOperatorTest {
     @Test
     void testGetBottomComponent() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
 
         EventQueue.invokeAndWait(() -> panel = new JPanel());
 
@@ -190,9 +167,7 @@ class JSplitPaneOperatorTest {
     @Test
     void testGetDividerLocation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setDividerLocation(1.0);
         operator1.setDividerLocation(operator1.getDividerLocation());
     }
@@ -200,108 +175,84 @@ class JSplitPaneOperatorTest {
     @Test
     void testGetDividerSize() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setDividerSize(operator1.getDividerSize());
     }
 
     @Test
     void testGetLastDividerLocation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setLastDividerLocation(operator1.getLastDividerLocation());
     }
 
     @Test
     void testGetLeftComponent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setLeftComponent(operator1.getLeftComponent());
     }
 
     @Test
     void testGetMaximumDividerLocation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getMaximumDividerLocation();
     }
 
     @Test
     void testGetMinimumDividerLocation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getMinimumDividerLocation();
     }
 
     @Test
     void testGetOrientation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOrientation(operator1.getOrientation());
     }
 
     @Test
     void testGetRightComponent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setRightComponent(operator1.getRightComponent());
     }
 
     @Test
     void testGetTopComponent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setTopComponent(operator1.getTopComponent());
     }
 
     @Test
     void testGetUI() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setUI(operator1.getUI());
     }
 
     @Test
     void testIsContinuousLayout() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setContinuousLayout(operator1.isContinuousLayout());
     }
 
     @Test
     void testIsOneTouchExpandable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOneTouchExpandable(operator1.isOneTouchExpandable());
     }
 
     @Test
     void testResetToPreferredSizes() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.resetToPreferredSizes();
     }
 

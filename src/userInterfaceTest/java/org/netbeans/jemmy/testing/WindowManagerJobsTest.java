@@ -16,8 +16,6 @@
  */
 package org.netbeans.jemmy.testing;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -68,18 +66,12 @@ class WindowManagerJobsTest {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20_000L)) {
             WindowManager.addJob(new WindowProcessor());
             JFrame jFrame;
-            assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring()))
-                    .isNotNull();
-            assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
-                    .isNotNull();
-            assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/1", StringComparators.substring()))
-                    .isNotNull();
-            assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
-                    .isNotNull();
-            assertThat(jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/2", StringComparators.substring()))
-                    .isNotNull();
-            assertThat(JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict()))
-                    .isNotNull();
+            jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring());
+            JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict());
+            jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/1", StringComparators.substring());
+            JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict());
+            jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/2", StringComparators.substring());
+            JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict());
         }
     }
 

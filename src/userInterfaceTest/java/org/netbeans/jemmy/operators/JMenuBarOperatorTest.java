@@ -81,12 +81,8 @@ class JMenuBarOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
-        JMenuBarOperator operator2 =
-                JMenuBarOperator.waitFor(operator, ComponentPredicates.byName("JMenuBarOperatorTest"));
-        assertThat(operator2).isNotNull();
+        JMenuBarOperator.waitFor(operator);
+        JMenuBarOperator.waitFor(operator, ComponentPredicates.byName("JMenuBarOperatorTest"));
     }
 
     @Test
@@ -100,16 +96,14 @@ class JMenuBarOperatorTest {
 
     @Test
     void testWaitJMenuBar() throws InterruptedException, InvocationTargetException {
-        JMenuBar menuBar1 = JMenuBarOperator.waitJMenuBar(frame);
-        assertThat(menuBar1).isNotNull();
+        JMenuBarOperator.waitJMenuBar(frame);
         EventQueue.invokeAndWait(() -> {
             dialog = new JDialog();
             dialog.setJMenuBar(new JMenuBar());
             TestWindows.place(dialog, 1);
             dialog.setVisible(true);
         });
-        JMenuBar menuBar2 = JMenuBarOperator.waitJMenuBar(dialog);
-        assertThat(menuBar2).isNotNull();
+        JMenuBarOperator.waitJMenuBar(dialog);
         EventQueue.invokeAndWait(() -> {
             dialog.setVisible(false);
             dialog.dispose();
@@ -119,9 +113,7 @@ class JMenuBarOperatorTest {
     @Test
     void testPushMenu() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.pushMenu("JMenu1", StringComparators.strict());
         operator1.pushMenu("JMenu1", "/", StringComparators.caseInsensitiveSubstring());
         operator1.pushMenu(new String[] {"JMenu1"}, StringComparators.strict());
@@ -133,9 +125,7 @@ class JMenuBarOperatorTest {
     @Test
     void testPushMenuNoBlock() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.pushMenuNoBlock("JMenu1", StringComparators.strict());
         operator1.pushMenuNoBlock("JMenu1", "/", StringComparators.caseInsensitiveSubstring());
         operator1.pushMenuNoBlock(new String[] {"JMenu1"}, StringComparators.strict());
@@ -147,18 +137,14 @@ class JMenuBarOperatorTest {
     @Test
     void testShowMenuItems() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         ComponentPredicates.byName("JMenuItem1");
     }
 
     @Test
     void testShowMenuItem() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.showMenuItem("JMenu1", StringComparators.strict());
         operator1.showMenuItem("JMenu1", "/", StringComparators.strict());
         operator1.showMenuItem(new String[] {"JMenu1"}, StringComparators.strict());
@@ -168,18 +154,14 @@ class JMenuBarOperatorTest {
     @Test
     void testCloseSubmenus() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.closeSubmenus();
     }
 
     @Test
     void testAdd() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         EventQueue.invokeAndWait(() -> menu = new JMenu("Test"));
         operator1.add(menu);
     }
@@ -187,18 +169,14 @@ class JMenuBarOperatorTest {
     @Test
     void testGetComponentIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getComponentIndex(frame);
     }
 
     @Test
     void testGetMargin() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setMargin(new Insets(0, 0, 0, 0));
         operator1.getMargin();
     }
@@ -206,27 +184,21 @@ class JMenuBarOperatorTest {
     @Test
     void testGetMenu() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getMenu(0);
     }
 
     @Test
     void testGetMenuCount() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getMenuCount();
     }
 
     @Test
     void testGetSelectionModel() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectionModel(new DefaultSingleSelectionModel());
         operator1.getSelectionModel();
     }
@@ -234,18 +206,14 @@ class JMenuBarOperatorTest {
     @Test
     void testGetSubElements() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getSubElements();
     }
 
     @Test
     void testGetUI() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         MenuBarUIImpl menuBarUI = new MenuBarUIImpl();
         operator1.setUI(menuBarUI);
         assertThat(operator1.getUI()).isSameAs(menuBarUI);
@@ -254,9 +222,7 @@ class JMenuBarOperatorTest {
     @Test
     void testIsBorderPainted() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setBorderPainted(false);
         operator1.isBorderPainted();
     }
@@ -264,27 +230,21 @@ class JMenuBarOperatorTest {
     @Test
     void testIsSelected() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isSelected();
     }
 
     @Test
     void testMenuSelectionChanged() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.menuSelectionChanged(true);
     }
 
     @Test
     void testProcessKeyEvent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.processKeyEvent(
                 new KeyEvent(frame, 0, 0, 0, 0), new MenuElement[0], MenuSelectionManager.defaultManager());
     }
@@ -292,9 +252,7 @@ class JMenuBarOperatorTest {
     @Test
     void testProcessMouseEvent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.processMouseEvent(
                 new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false),
                 new MenuElement[0],
@@ -304,9 +262,7 @@ class JMenuBarOperatorTest {
     @Test
     void testSetSelected() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         EventQueue.invokeAndWait(() -> panel = new JPanel());
         operator1.setSelected(panel);
     }
@@ -314,11 +270,8 @@ class JMenuBarOperatorTest {
     @Test
     void testIssue54793() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         JMenuOperator operator2 = JMenuOperator.waitFor(operator1, "JMenu1", StringComparators.strict());
-        assertThat(operator2).isNotNull();
         JMenuItemOperator operator3 = operator2.showMenuItem("JMenuItem11", StringComparators.strict());
         assertThat(operator3.getText()).isEqualTo("JMenuItem11");
     }

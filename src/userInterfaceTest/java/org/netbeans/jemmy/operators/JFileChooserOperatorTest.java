@@ -103,18 +103,18 @@ final class JFileChooserOperatorTest {
 
     @Test
     void testConstructJFrameOperator() {
-        assertThat(JFrameOperator.waitFor()).isNotNull();
+        JFrameOperator.waitFor();
     }
 
     @Test
     void testConstructJFileChooserOperator() {
-        assertThat(JFileChooserOperator.waitFor()).isNotNull();
+        JFileChooserOperator.waitFor();
     }
 
     @Test
     void testConstructJFrameOperatorAndJFileChooserOperatorBackToBack() {
-        assertThat(JFrameOperator.waitFor()).isNotNull();
-        assertThat(JFileChooserOperator.waitFor()).isNotNull();
+        JFrameOperator.waitFor();
+        JFileChooserOperator.waitFor();
     }
 
     @Test
@@ -153,8 +153,7 @@ final class JFileChooserOperatorTest {
 
     @Test
     void testWaitJFileChooser() {
-        JFileChooser jFileChooser = JFileChooserOperator.waitJFileChooser(frame);
-        assertThat(jFileChooser).isNotNull();
+        JFileChooserOperator.waitJFileChooser(frame);
     }
 
     @Test
@@ -654,7 +653,6 @@ final class JFileChooserOperatorTest {
             try {
                 waitForModalDialog(TimeoutKey.Testing_A);
                 JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
-                assertThat(buttonOp).isNotNull();
                 buttonOp.clickMouse();
                 int result = resultFuture.get(Timeouts.get(TimeoutKey.Testing_A), TimeUnit.MILLISECONDS);
                 assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
@@ -674,7 +672,6 @@ final class JFileChooserOperatorTest {
             try {
                 waitForModalDialog(TimeoutKey.Testing_C);
                 JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
-                assertThat(buttonOp).isNotNull();
                 buttonOp.clickMouse();
                 int result = resultFuture.get(Timeouts.get(TimeoutKey.Testing_C), TimeUnit.MILLISECONDS);
                 assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
@@ -694,7 +691,6 @@ final class JFileChooserOperatorTest {
             try {
                 waitForModalDialog(TimeoutKey.Testing_A);
                 JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
-                assertThat(buttonOp).isNotNull();
                 buttonOp.clickMouse();
                 int result = resultFuture.get(Timeouts.get(TimeoutKey.Testing_A), TimeUnit.MILLISECONDS);
                 assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);

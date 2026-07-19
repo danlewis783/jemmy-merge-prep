@@ -77,12 +77,8 @@ class JComponentOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
-        JComponentOperator operator2 =
-                JComponentOperator.waitFor(operator, ComponentPredicates.byName("JComponentOperatorTest"));
-        assertThat(operator2).isNotNull();
+        JComponentOperator.waitFor(operator);
+        JComponentOperator.waitFor(operator, ComponentPredicates.byName("JComponentOperatorTest"));
     }
 
     @Test
@@ -97,63 +93,48 @@ class JComponentOperatorTest {
 
     @Test
     void testWaitJComponent() {
-        JComponent component1 =
-                JComponentOperator.waitJComponent(frame, ComponentPredicates.byName("JComponentOperatorTest"));
-        assertThat(component1).isNotNull();
-        JComponent component2 = JComponentOperator.waitJComponent(
+        JComponentOperator.waitJComponent(frame, ComponentPredicates.byName("JComponentOperatorTest"));
+        JComponentOperator.waitJComponent(
                 frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(component2).isNotNull();
     }
 
     @Test
     void testGetCenterXForClick() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getCenterXForClick();
     }
 
     @Test
     void testGetCenterYForClick() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getCenterYForClick();
     }
 
     @Test
     void testShowToolTip() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
+        JComponentOperator.waitFor(operator);
     }
 
     @Test
     void testWaitToolTip() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
+        JComponentOperator.waitFor(operator);
     }
 
     @Test
     void testGetWindowContainerOperator() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getWindowContainerOperator();
     }
 
     @Test
     void testAddAncestorListener() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         AncestorListenerTest listener = new AncestorListenerTest();
         operator1.addAncestorListener(listener);
         operator1.removeAncestorListener(listener);
@@ -162,9 +143,7 @@ class JComponentOperatorTest {
     @Test
     void testAddVetoableChangeListener() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         VetoableChangeListenerTest listener = new VetoableChangeListenerTest();
         operator1.addVetoableChangeListener(listener);
         operator1.removeVetoableChangeListener(listener);
@@ -173,27 +152,21 @@ class JComponentOperatorTest {
     @Test
     void testComputeVisibleRect() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.computeVisibleRect(new Rectangle(0, 0, 100, 100));
     }
 
     @Test
     void testCreateToolTip() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.createToolTip();
     }
 
     @Test
     void testFirePropertyChange() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.firePropertyChange("1", false, false);
         operator1.firePropertyChange("1", (byte) 'a', (byte) 'b');
         operator1.firePropertyChange("1", 'a', 'b');
@@ -207,27 +180,21 @@ class JComponentOperatorTest {
     @Test
     void testGetAccessibleContext() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getAccessibleContext();
     }
 
     @Test
     void testGetActionForKeyStroke() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getActionForKeyStroke(KeyStroke.getKeyStroke('a'));
     }
 
     @Test
     void testGetAutoscrolls() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setAutoscrolls(true);
         assertThat(operator1.getAutoscrolls()).isTrue();
         operator1.setAutoscrolls(false);
@@ -237,9 +204,7 @@ class JComponentOperatorTest {
     @Test
     void testGetBorder() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setBorder(null);
         assertThat(operator1.getBorder()).isNull();
     }
@@ -247,27 +212,21 @@ class JComponentOperatorTest {
     @Test
     void testGetClientProperty() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getClientProperty("1");
     }
 
     @Test
     void testGetConditionForKeyStroke() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getConditionForKeyStroke(KeyStroke.getKeyStroke('a'));
     }
 
     @Test
     void testGetDebugGraphicsOptions() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setDebugGraphicsOptions(0);
         assertThat(operator1.getDebugGraphicsOptions()).isEqualTo(0);
     }
@@ -275,9 +234,7 @@ class JComponentOperatorTest {
     @Test
     void testGetInsets() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getInsets(new Insets(0, 0, 1, 1));
         operator1.getInsets();
     }
@@ -285,45 +242,35 @@ class JComponentOperatorTest {
     @Test
     void testGetNextFocusableComponent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getNextFocusableComponent();
     }
 
     @Test
     void testGetRegisteredKeyStrokes() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getRegisteredKeyStrokes();
     }
 
     @Test
     void testGetRootPane() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getRootPane();
     }
 
     @Test
     void testGetToolTipLocation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getToolTipLocation(new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false));
     }
 
     @Test
     void testGetToolTipText() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getToolTipText();
         operator1.getToolTipText(new MouseEvent(frame, 0, 0, 0, 0, 0, 0, false));
     }
@@ -331,99 +278,77 @@ class JComponentOperatorTest {
     @Test
     void testGetTopLevelAncestor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getTopLevelAncestor();
     }
 
     @Test
     void testGetUIClassID() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getUIClassID();
     }
 
     @Test
     void testGetVisibleRect() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getVisibleRect();
     }
 
     @Test
     void testGrabFocus() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.grabFocus();
     }
 
     @Test
     void testIsFocusCycleRoot() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isFocusCycleRoot();
     }
 
     @Test
     void testIsManagingFocus() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isManagingFocus();
     }
 
     @Test
     void testIsOptimizedDrawingEnabled() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isOptimizedDrawingEnabled();
     }
 
     @Test
     void testIsPaintingTile() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isPaintingTile();
     }
 
     @Test
     void testIsRequestFocusEnabled() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isRequestFocusEnabled();
     }
 
     @Test
     void testIsValidateRoot() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isValidateRoot();
     }
 
     @Test
     void testPaintImmediately() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.paintImmediately(0, 0, 1, 1);
         operator1.paintImmediately(new Rectangle(0, 0, 1, 1));
     }
@@ -431,18 +356,14 @@ class JComponentOperatorTest {
     @Test
     void testPutClientProperty() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.putClientProperty("1", "2");
     }
 
     @Test
     void testRegisterKeyboardAction() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.registerKeyboardAction(new ActionListenerTest(), KeyStroke.getKeyStroke('a'), 1);
         operator1.registerKeyboardAction(new ActionListenerTest(), "1", KeyStroke.getKeyStroke('a'), 1);
     }
@@ -456,9 +377,7 @@ class JComponentOperatorTest {
     @Test
     void testRepaint() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.repaint();
         operator1.repaint(new Rectangle(0, 0, 1, 1));
     }
@@ -466,90 +385,70 @@ class JComponentOperatorTest {
     @Test
     void testRequestDefaultFocus() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.requestDefaultFocus();
     }
 
     @Test
     void testResetKeyboardActions() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.resetKeyboardActions();
     }
 
     @Test
     void testRevalidate() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.revalidate();
     }
 
     @Test
     void testScrollRectToVisible() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
     }
 
     @Test
     void testSetAlignmentX() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setAlignmentX(1.0f);
     }
 
     @Test
     void testSetAlignmentY() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setAlignmentY(1.0f);
     }
 
     @Test
     void testSetDoubleBuffered() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setDoubleBuffered(true);
     }
 
     @Test
     void testSetMaximumSize() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setMaximumSize(new Dimension(100, 100));
     }
 
     @Test
     void testSetMinimumSize() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setMinimumSize(new Dimension(10, 10));
     }
 
     @Test
     void testSetNextFocusableComponent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
 
         assertThatCode(() -> EventQueue.invokeAndWait(() -> panel = new JPanel()))
                 .doesNotThrowAnyException();
@@ -560,54 +459,42 @@ class JComponentOperatorTest {
     @Test
     void testSetOpaque() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setOpaque(false);
     }
 
     @Test
     void testSetPreferredSize() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setPreferredSize(new Dimension(100, 100));
     }
 
     @Test
     void testSetRequestFocusEnabled() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setRequestFocusEnabled(false);
     }
 
     @Test
     void testSetToolTipText() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setToolTipText("1234");
     }
 
     @Test
     void testUnregisterKeyboardAction() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.unregisterKeyboardAction(KeyStroke.getKeyStroke('a'));
     }
 
     @Test
     void testUpdateUI() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JComponentOperator operator1 = JComponentOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.updateUI();
     }
 

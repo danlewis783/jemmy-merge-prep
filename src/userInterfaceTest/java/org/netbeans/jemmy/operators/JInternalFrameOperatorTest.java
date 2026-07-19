@@ -95,15 +95,9 @@ class JInternalFrameOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
-        JInternalFrameOperator operator3 =
-                JInternalFrameOperator.waitFor(operator, ComponentPredicates.byName("JInternalFrameOperatorTest"));
-        assertThat(operator3).isNotNull();
-        JInternalFrameOperator operator4 =
-                JInternalFrameOperator.waitFor(operator, "JInternalFrameOperatorTest", StringComparators.strict());
-        assertThat(operator4).isNotNull();
+        JInternalFrameOperator.waitFor(operator);
+        JInternalFrameOperator.waitFor(operator, ComponentPredicates.byName("JInternalFrameOperatorTest"));
+        JInternalFrameOperator.waitFor(operator, "JInternalFrameOperatorTest", StringComparators.strict());
     }
 
     @Test
@@ -142,12 +136,10 @@ class JInternalFrameOperatorTest {
 
     @Test
     void testWaitJInternalFrame() {
-        JInternalFrame internalFrame1 = JInternalFrameOperator.waitJInternalFrame(
+        JInternalFrameOperator.waitJInternalFrame(
                 frame, ComponentPredicates.byName("JInternalFrameOperatorTest"));
-        assertThat(internalFrame1).isNotNull();
-        JInternalFrame internalFrame2 = JInternalFrameOperator.waitJInternalFrame(
+        JInternalFrameOperator.waitJInternalFrame(
                 frame, "JInternalFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(internalFrame2).isNotNull();
     }
 
     @Test
@@ -156,9 +148,7 @@ class JInternalFrameOperatorTest {
                 .as("check that swing is running windows look and feel")
                 .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.isIconifiable()).isTrue();
         operator2.waitComponentShowing(true);
         operator2.iconify();
@@ -187,9 +177,7 @@ class JInternalFrameOperatorTest {
                 .as("check that swing is running windows look and feel")
                 .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.maximize();
         assertThat(operator2.isMaximum()).isTrue();
         assertThat(onQueue(internalFrame::isMaximum)).isTrue();
@@ -201,9 +189,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testMove() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.move(100, 100);
         assertThat(operator2.getX()).isEqualTo(100);
         assertThat(operator2.getY()).isEqualTo(100);
@@ -212,9 +198,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testResize() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.resize(127, 129);
         assertThat(onQueue(internalFrame::getWidth)).isEqualTo(127);
         assertThat(onQueue(internalFrame::getHeight)).isEqualTo(129);
@@ -223,9 +207,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testActivate() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.activate();
         assertThat(operator2.isSelected()).isEqualTo(onQueue(internalFrame::isSelected));
     }
@@ -236,9 +218,7 @@ class JInternalFrameOperatorTest {
                 .as("check that swing is running windows look and feel")
                 .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.close();
         assertThat(operator2.isClosed()).isTrue();
         assertThat(onQueue(internalFrame::isVisible)).isFalse();
@@ -248,9 +228,7 @@ class JInternalFrameOperatorTest {
     void testTitleButtonsWhenNotIconifiable() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> internalFrame.setIconifiable(false));
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThatExceptionOfType(NullPointerException.class).isThrownBy(operator2::getMinimizeButton);
         operator2.getMaximizeButton().push();
         operator2.waitMaximum(true);
@@ -262,9 +240,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testWaitActivate() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.activate();
         operator2.waitActivate(true);
         assertThat(operator2.isSelected()).isTrue();
@@ -273,9 +249,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testWaitClosed() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         EventQueue.invokeAndWait(() -> {
             try {
                 internalFrame.setClosed(true);
@@ -290,9 +264,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testScrollToRectangle() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.scrollToRectangle(0, 0, 100, 100);
         operator2.scrollToRectangle(new Rectangle(0, 0, 100, 100));
     }
@@ -300,18 +272,14 @@ class JInternalFrameOperatorTest {
     @Test
     void testScrollToFrame() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.scrollToFrame();
     }
 
     @Test
     void testGetMinimizeButton() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         JButtonOperator minimizeButtonOperator = operator2.getMinimizeButton();
         assertThat(minimizeButtonOperator).isNotNull();
     }
@@ -319,9 +287,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetMaximizeButton() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         JButtonOperator maximizeButtonOperator = operator2.getMaximizeButton();
         assertThat(maximizeButtonOperator).isNotNull();
     }
@@ -329,9 +295,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetCloseButton() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         JButtonOperator closeButtonOperator = operator2.getCloseButton();
         assertThat(closeButtonOperator).isNotNull();
     }
@@ -339,9 +303,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetTitleOperator() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         ContainerOperator titleOperator = operator2.getTitleOperator();
         assertThat(titleOperator).isNotNull();
     }
@@ -349,9 +311,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetIconOperator() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         JDesktopIconOperator iconOperator = operator2.getIconOperator();
         assertThat(iconOperator).isNotNull();
     }
@@ -362,9 +322,7 @@ class JInternalFrameOperatorTest {
                 .as("check that swing is running windows look and feel")
                 .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.waitIcon(false);
         assertThat(onQueue(internalFrame::isIcon)).isFalse();
         operator2.iconify();
@@ -378,9 +336,7 @@ class JInternalFrameOperatorTest {
                 .as("check that swing is running windows look and feel")
                 .isTrue();
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.waitMaximum(false);
         assertThat(operator2.isMaximum()).isFalse();
         operator2.maximize();
@@ -391,9 +347,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testAddInternalFrameListener() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         InternalFrameListenerTest listener = new InternalFrameListenerTest();
         operator2.addInternalFrameListener(listener);
         assertThat(onQueue(internalFrame::getInternalFrameListeners)).hasSize(2);
@@ -404,18 +358,14 @@ class JInternalFrameOperatorTest {
     @Test
     void testDispose() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.dispose();
     }
 
     @Test
     void testGetContentPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
 
         EventQueue.invokeAndWait(() -> contentPane = new JPanel());
 
@@ -426,9 +376,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetDefaultCloseOperation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         assertThat(operator2.getDefaultCloseOperation()).isEqualTo(JInternalFrame.DISPOSE_ON_CLOSE);
         assertThat(onQueue(internalFrame::getDefaultCloseOperation)).isEqualTo(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -437,9 +385,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetDesktopIcon() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
 
         EventQueue.invokeAndWait(() -> icon = new JDesktopIcon(internalFrame));
 
@@ -450,18 +396,14 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetDesktopPane() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.getDesktopPane()).isNotNull();
     }
 
     @Test
     void testGetFrameIcon() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         ImageIcon icon = new ImageIcon();
         operator2.setFrameIcon(icon);
         assertThat(operator2.getFrameIcon()).isEqualTo(icon);
@@ -470,9 +412,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetGlassPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
 
         EventQueue.invokeAndWait(() -> glassPane = new JPanel());
 
@@ -483,9 +423,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetJMenuBar() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
 
         EventQueue.invokeAndWait(() -> menuBar = new JMenuBar());
 
@@ -497,18 +435,14 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetLayer() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(onQueue(internalFrame::getLayer)).isEqualTo(operator2.getLayer());
     }
 
     @Test
     void testGetLayeredPane() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         JLayeredPane layeredPane = new JLayeredPane();
         operator2.setLayeredPane(layeredPane);
         assertThat(operator2.getLayeredPane()).isEqualTo(layeredPane);
@@ -517,9 +451,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetTitle() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setTitle("TITLE");
         assertThat(operator2.getTitle()).isEqualTo("TITLE");
     }
@@ -527,9 +459,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetUI() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         InternalFrameUITest ui = new InternalFrameUITest();
         operator2.setUI(ui);
         assertThat(operator2.getUI()).isEqualTo(ui);
@@ -538,18 +468,14 @@ class JInternalFrameOperatorTest {
     @Test
     void testGetWarningString() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.getWarningString()).isNull();
     }
 
     @Test
     void testIsClosable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.isClosable()).isTrue();
         operator2.setClosable(false);
         assertThat(operator2.isClosable()).isFalse();
@@ -558,9 +484,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testIsSelected() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setSelected(true);
         assertThat(onQueue(internalFrame::isSelected)).isTrue();
         operator2.setSelected(false);
@@ -570,36 +494,28 @@ class JInternalFrameOperatorTest {
     @Test
     void testMoveToBack() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.moveToBack();
     }
 
     @Test
     void testMoveToFront() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.moveToFront();
     }
 
     @Test
     void testPack() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.pack();
     }
 
     @Test
     void testSetClosable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setClosable(true);
         assertThat(operator2.isClosable()).isTrue();
         operator2.setClosable(false);
@@ -609,9 +525,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testSetClosed() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setClosed(true);
         assertThat(operator2.isClosed()).isTrue();
     }
@@ -619,9 +533,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testSetLayer() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setLayer(1);
         assertThat(operator2.getLayer()).isEqualTo(1);
     }
@@ -629,27 +541,21 @@ class JInternalFrameOperatorTest {
     @Test
     void testToBack() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.toBack();
     }
 
     @Test
     void testToFront() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.toFront();
     }
 
     @Test
     void testIsResizable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setResizable(true);
         assertThat(operator2.isResizable()).isTrue();
         operator2.setResizable(false);
@@ -659,9 +565,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testIsMaximizable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setMaximizable(false);
         assertThat(operator2.isMaximizable()).isFalse();
         operator2.setMaximizable(true);
@@ -671,9 +575,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testIsIconifiable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.isIconifiable()).isTrue();
         operator2.setIconifiable(false);
         assertThat(operator2.isIconifiable()).isFalse();
@@ -682,9 +584,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testSetIcon() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.isIconifiable()).isTrue();
         operator2.setIcon(true);
         assertThat(operator2.isIcon()).isTrue();
@@ -693,9 +593,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testSetMaximum() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         assertThat(operator2.isMaximizable()).isTrue();
         operator2.setMaximum(true);
         assertThat(operator2.isMaximum()).isTrue();
@@ -704,9 +602,7 @@ class JInternalFrameOperatorTest {
     @Test
     void testSetMaximizable() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        assertThat(operator2).isNotNull();
         operator2.setMaximizable(true);
         assertThat(operator2.isMaximizable()).isTrue();
     }

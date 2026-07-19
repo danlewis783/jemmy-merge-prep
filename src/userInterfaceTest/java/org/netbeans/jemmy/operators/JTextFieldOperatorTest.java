@@ -65,15 +65,9 @@ class JTextFieldOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JTextFieldOperator operator2 = JTextFieldOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
-        JTextFieldOperator operator3 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator3).isNotNull();
-        JTextFieldOperator operator4 =
-                JTextFieldOperator.waitFor(operator1, "JTextFieldOperatorTest", StringComparators.strict());
-        assertThat(operator4).isNotNull();
+        JTextFieldOperator.waitFor(operator1);
+        JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+        JTextFieldOperator.waitFor(operator1, "JTextFieldOperatorTest", StringComparators.strict());
     }
 
     @Test
@@ -88,21 +82,16 @@ class JTextFieldOperatorTest {
 
     @Test
     void testWaitJTextField() {
-        JTextField textField1 =
-                JTextFieldOperator.waitJTextField(frame, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(textField1).isNotNull();
-        JTextField textField2 = JTextFieldOperator.waitJTextField(
+        JTextFieldOperator.waitJTextField(frame, ComponentPredicates.byName("JTextFieldOperatorTest"));
+        JTextFieldOperator.waitJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(textField2).isNotNull();
     }
 
     @Test
     void testWaitText() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator2).isNotNull();
         operator2.waitText("JTextFieldOperatorTest", StringComparators.strict());
         assertThat(onQueue(() -> textField.getText())).isEqualTo("JTextFieldOperatorTest");
         operator2.waitText("JTextFieldOperatorTest\n", StringComparators.strict());
@@ -112,10 +101,8 @@ class JTextFieldOperatorTest {
     @Test
     void testAddActionListener() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator2).isNotNull();
         ActionListener listener = event -> {};
         operator2.addActionListener(listener);
         ActionListener[] listeners = onQueue(textField::getActionListeners);
@@ -127,10 +114,8 @@ class JTextFieldOperatorTest {
     @Test
     void testGetColumns() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator2).isNotNull();
         operator2.setColumns(10);
         assertThat(operator2.getColumns()).isEqualTo(10);
         assertThat(operator2.getColumns()).isEqualTo(onQueue(textField::getColumns));
@@ -139,10 +124,8 @@ class JTextFieldOperatorTest {
     @Test
     void testGetHorizontalAlignment() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator2).isNotNull();
         operator2.setHorizontalAlignment(SwingConstants.RIGHT);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.RIGHT);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(onQueue(textField::getHorizontalAlignment));
@@ -151,20 +134,16 @@ class JTextFieldOperatorTest {
     @Test
     void testGetScrollOffset() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator2).isNotNull();
         operator2.setScrollOffset(operator2.getScrollOffset());
     }
 
     @Test
     void testPostActionEvent() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 =
                 JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
-        assertThat(operator2).isNotNull();
         operator2.setActionCommand("ACTION_COMMAND");
         ActionListener1 listener = new ActionListener1();
         operator2.addActionListener(listener);
@@ -175,9 +154,7 @@ class JTextFieldOperatorTest {
     @Test
     void testGetHorizontalVisibility() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JTextFieldOperator operator2 = JTextFieldOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
         operator2.getHorizontalVisibility();
     }
 

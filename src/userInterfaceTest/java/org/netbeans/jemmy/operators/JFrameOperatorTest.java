@@ -67,12 +67,9 @@ class JFrameOperatorTest {
     @Test
     void constructor() throws InterruptedException, InvocationTargetException {
 
-        JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JFrameOperator operator2 = JFrameOperator.waitFor("JFrameOperatorTest");
-        assertThat(operator2).isNotNull();
-        JFrameOperator operator3 = JFrameOperator.waitFor(ComponentPredicates.byName("JFrameOperatorTest"));
-        assertThat(operator3).isNotNull();
+        JFrameOperator.waitFor();
+        JFrameOperator.waitFor("JFrameOperatorTest");
+        JFrameOperator.waitFor(ComponentPredicates.byName("JFrameOperatorTest"));
     }
 
     @Test
@@ -98,14 +95,12 @@ class JFrameOperatorTest {
     @Test
     void getAccessibleContext() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         assertThat(operator.getAccessibleContext()).isNotNull();
     }
 
     @Test
     void getContentPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JScrollPane scrollPane = onQueue(JScrollPane::new);
         operator.setContentPane(scrollPane);
         assertThat(onQueue(mainFrame::getContentPane)).isEqualTo(scrollPane);
@@ -115,7 +110,6 @@ class JFrameOperatorTest {
     @Test
     void getDefaultCloseOperation() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         assertThat(onQueue(mainFrame::getDefaultCloseOperation)).isEqualTo(JFrame.EXIT_ON_CLOSE);
         assertThat(operator.getDefaultCloseOperation()).isEqualTo(JFrame.EXIT_ON_CLOSE);
@@ -124,7 +118,6 @@ class JFrameOperatorTest {
     @Test
     void getGlassPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JScrollPane scrollPane = onQueue(JScrollPane::new);
         operator.setGlassPane(scrollPane);
         assertThat(onQueue(mainFrame::getGlassPane)).isEqualTo(scrollPane);
@@ -134,7 +127,6 @@ class JFrameOperatorTest {
     @Test
     void getJMenuBar() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuBar menuBar = onQueue(JMenuBar::new);
         operator.setJMenuBar(menuBar);
         assertThat(onQueue(mainFrame::getJMenuBar)).isEqualTo(menuBar);
@@ -144,7 +136,6 @@ class JFrameOperatorTest {
     @Test
     void getLayeredPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JLayeredPane layeredPane = onQueue(JLayeredPane::new);
         operator.setLayeredPane(layeredPane);
         assertThat(onQueue(mainFrame::getLayeredPane)).isEqualTo(layeredPane);
@@ -154,7 +145,6 @@ class JFrameOperatorTest {
     @Test
     void getRootPane() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         assertThat(operator.getRootPane()).isEqualTo(onQueue(mainFrame::getRootPane));
     }
 

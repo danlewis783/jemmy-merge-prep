@@ -105,14 +105,10 @@ class JDialogOperatorTest {
     @Test
     @Timeout(value=2, unit=TimeUnit.SECONDS)
     void waitJDialog() {
-        assertThat(JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict()))
-                .isNotNull();
-        assertThat(JDialogOperator.waitJDialog(frame, "JDialogOperatorTest", StringComparators.strict()))
-                .isNotNull();
-        assertThat(JDialogOperator.waitJDialog(ComponentPredicates.byName("JDialogOperatorTest")))
-                .isNotNull();
-        assertThat(JDialogOperator.waitJDialog(frame, ComponentPredicates.byName("JDialogOperatorTest")))
-                .isNotNull();
+        JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict());
+        JDialogOperator.waitJDialog(frame, "JDialogOperatorTest", StringComparators.strict());
+        JDialogOperator.waitJDialog(ComponentPredicates.byName("JDialogOperatorTest"));
+        JDialogOperator.waitJDialog(frame, ComponentPredicates.byName("JDialogOperatorTest"));
         Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
         JDialogOperator.waitFor();
         assertThatExceptionOfType(TimeoutException.class)
@@ -201,15 +197,13 @@ class JDialogOperatorTest {
     void getTopModalDialog() throws InterruptedException, InvocationTargetException {
         GetTopModalDialogRunnable1 runnable1 = new GetTopModalDialogRunnable1(dialog);
         EventQueue.invokeAndWait(runnable1);
-        JDialogOperator operator1 = JDialogOperator.waitFor();
-        assertThat(operator1).isNotNull();
+        JDialogOperator.waitFor();
         JDialog dialog1 = (JDialog) JDialogOperator.getTopModalDialog();
         assertThat(dialog1).isNotNull();
         AtomicReference<@Nullable GetTopModalDialogRunnable2> runnable2 = new AtomicReference<>();
         EventQueue.invokeAndWait(() -> runnable2.set(new GetTopModalDialogRunnable2(dialog)));
         EventQueue.invokeAndWait(runnable2.get());
-        JDialogOperator operator2 = JDialogOperator.waitFor("JDialogOperatorTest");
-        assertThat(operator2).isNotNull();
+        JDialogOperator.waitFor("JDialogOperatorTest");
         JDialog dialog2 = (JDialog) JDialogOperator.getTopModalDialog();
         assertThat(dialog2).isNotNull();
         EventQueue.invokeAndWait(() -> Objects.requireNonNull(runnable2.get()).cleanup());

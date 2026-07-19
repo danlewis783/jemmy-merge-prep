@@ -90,7 +90,7 @@ class EventToolTest {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
             Future<Void> mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
-            assertThat(eventTool.waitEvent(AWTEvent.MOUSE_EVENT_MASK)).isNotNull();
+            eventTool.waitEvent(AWTEvent.MOUSE_EVENT_MASK);
 
             // the mover is already done, so nothing arrives during this window
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1_000L)) {
@@ -114,7 +114,7 @@ class EventToolTest {
             awaitQuiet(mover);
             eventTool.addListeners();
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
-            assertThat(eventTool.waitEvent()).isNotNull();
+            eventTool.waitEvent();
             awaitQuiet(mover);
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
 

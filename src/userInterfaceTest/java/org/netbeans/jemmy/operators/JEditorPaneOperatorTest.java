@@ -90,21 +90,14 @@ class JEditorPaneOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JEditorPaneOperator operator3 =
-                JEditorPaneOperator.waitFor(operator1, ComponentPredicates.byName("JEditorPaneOperatorTest"));
-        assertThat(operator3).isNotNull();
-        JEditorPaneOperator operator4 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator4).isNotNull();
-        JEditorPaneOperator operator5 =
-                JEditorPaneOperator.waitFor(operator1, "JEditorPaneOperatorTest", StringComparators.strict());
-        assertThat(operator5).isNotNull();
+        JEditorPaneOperator.waitFor(operator1, ComponentPredicates.byName("JEditorPaneOperatorTest"));
+        JEditorPaneOperator.waitFor(operator1);
+        JEditorPaneOperator.waitFor(operator1, "JEditorPaneOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testFindJEditorPane() {
-        JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
+        JFrameOperator.waitFor();
         JEditorPane editorPane1 =
                 JEditorPaneOperator.findJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
         assertThat(editorPane1).isNotNull();
@@ -115,22 +108,16 @@ class JEditorPaneOperatorTest {
 
     @Test
     void testWaitJEditorPane() {
-        JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JEditorPane editorPane1 =
-                JEditorPaneOperator.waitJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
-        assertThat(editorPane1).isNotNull();
-        JEditorPane editorPane2 = JEditorPaneOperator.waitJEditorPane(
+        JFrameOperator.waitFor();
+        JEditorPaneOperator.waitJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
+        JEditorPaneOperator.waitJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(editorPane2).isNotNull();
     }
 
     @Test
     void testAddHyperlinkListener() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
         HyperlinkListenerTest listener = new HyperlinkListenerTest();
         operator2.addHyperlinkListener(listener);
         assertThat(onQueue(editorPane::getHyperlinkListeners)).hasSize(1);
@@ -143,9 +130,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testGetContentType() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator4 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator4).isNotNull();
         assertThat(operator4.getContentType()).isEqualTo("text/plain");
         operator4.setContentType("text/html");
         assertThat(operator4.getContentType()).isEqualTo("text/html");
@@ -155,9 +140,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testGetEditorKit() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
         EditorKitTest editorKit = new EditorKitTest();
         operator2.setEditorKit(editorKit);
         assertThat(operator2.getEditorKit()).isEqualTo(editorKit);
@@ -167,9 +150,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testGetEditorKitForContentType() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
         EditorKitTest editorKit = new EditorKitTest();
         operator2.setEditorKitForContentType("text/plain", editorKit);
         assertThat(operator2.getEditorKitForContentType("text/plain")).isEqualTo(editorKit);
@@ -180,9 +161,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testGetPage() throws MalformedURLException {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator4 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator4).isNotNull();
 
         String urlA = "https://www.google.com/";
         String urlB = "https://www.google.com/";
@@ -198,9 +177,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testRead() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JEditorPaneOperator operator2 = JEditorPaneOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
         operator2.setContentType("text/html");
         operator2.read(new ByteArrayInputStream("<html></html>".getBytes()), HTMLDocument.class);
         String text = onQueue(editorPane::getText);

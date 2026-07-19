@@ -62,19 +62,15 @@ class FrameOperatorTest {
     @Test
     void testConstructor() throws InterruptedException, InvocationTargetException {
         showFrame();
-        FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        FrameOperator operator2 = FrameOperator.waitFor(ComponentPredicates.byName("FrameOperatorTest"));
-        assertThat(operator2).isNotNull();
-        FrameOperator operator3 = FrameOperator.waitFor("FrameOperatorTest");
-        assertThat(operator3).isNotNull();
+        FrameOperator.waitFor();
+        FrameOperator.waitFor(ComponentPredicates.byName("FrameOperatorTest"));
+        FrameOperator.waitFor("FrameOperatorTest");
     }
 
     @Test
     void testWaitTitle() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setTitle("Title");
         operator.waitTitle("Title", StringComparators.strict());
     }
@@ -83,7 +79,6 @@ class FrameOperatorTest {
     void testIconify() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.iconify();
     }
 
@@ -91,7 +86,6 @@ class FrameOperatorTest {
     void testDeiconify() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.deiconify();
     }
 
@@ -99,7 +93,6 @@ class FrameOperatorTest {
     void testMaximize() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.maximize();
         assertThat(operator.getExtendedState()).isEqualTo(Frame.MAXIMIZED_BOTH);
     }
@@ -108,7 +101,6 @@ class FrameOperatorTest {
     void testDemaximize() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.maximize();
         operator.demaximize();
         assertThat(operator.getExtendedState()).isEqualTo(Frame.NORMAL);
@@ -118,7 +110,6 @@ class FrameOperatorTest {
     void testSetIconImage() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setIconImage(operator.getIconImage());
     }
 
@@ -126,7 +117,6 @@ class FrameOperatorTest {
     void testSetMenuBar() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setMenuBar(operator.getMenuBar());
     }
 
@@ -134,7 +124,6 @@ class FrameOperatorTest {
     void testSetResizable() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setResizable(operator.isResizable());
     }
 
@@ -142,7 +131,6 @@ class FrameOperatorTest {
     void testSetState() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setState(operator.getState());
     }
 
@@ -150,7 +138,6 @@ class FrameOperatorTest {
     void testSetTitle() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         operator.setTitle(operator.getTitle());
     }
 }

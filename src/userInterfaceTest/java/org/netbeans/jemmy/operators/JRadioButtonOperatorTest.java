@@ -64,15 +64,9 @@ class JRadioButtonOperatorTest {
     void testConstructor() throws InterruptedException, InvocationTargetException {
         showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JRadioButtonOperator operator1 = JRadioButtonOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
-        JRadioButtonOperator operator2 =
-                JRadioButtonOperator.waitFor(operator, "JRadioButtonOperatorTest", StringComparators.strict());
-        assertThat(operator2).isNotNull();
-        JRadioButtonOperator operator3 =
-                JRadioButtonOperator.waitFor(operator, ComponentPredicates.byName("JRadioButtonOperatorTest"));
-        assertThat(operator3).isNotNull();
+        JRadioButtonOperator.waitFor(operator);
+        JRadioButtonOperator.waitFor(operator, "JRadioButtonOperatorTest", StringComparators.strict());
+        JRadioButtonOperator.waitFor(operator, ComponentPredicates.byName("JRadioButtonOperatorTest"));
         JRadioButtonOperator operator4 = JRadioButtonOperator.of(radioButton);
         assertThat(operator4).isNotNull();
     }
@@ -91,11 +85,8 @@ class JRadioButtonOperatorTest {
     @Test
     void testWaitJRadioButton() throws InterruptedException, InvocationTargetException {
         showFrame();
-        JRadioButton radioButton1 = JRadioButtonOperator.waitJRadioButton(
+        JRadioButtonOperator.waitJRadioButton(
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(radioButton1).isNotNull();
-        JRadioButton radioButton2 =
-                JRadioButtonOperator.waitJRadioButton(frame, ComponentPredicates.byName("JRadioButtonOperatorTest"));
-        assertThat(radioButton2).isNotNull();
+        JRadioButtonOperator.waitJRadioButton(frame, ComponentPredicates.byName("JRadioButtonOperatorTest"));
     }
 }

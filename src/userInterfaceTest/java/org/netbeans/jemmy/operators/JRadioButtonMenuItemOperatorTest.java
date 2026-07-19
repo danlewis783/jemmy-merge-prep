@@ -66,19 +66,12 @@ class JRadioButtonMenuItemOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JMenuOperator operator1 = JMenuOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.showMenuItem("Radio Button 1", StringComparators.strict());
         JPopupMenuOperator popup = JPopupMenuOperator.waitFor();
-        JRadioButtonMenuItemOperator operator2 = JRadioButtonMenuItemOperator.waitFor(popup);
-        assertThat(operator2).isNotNull();
-        JRadioButtonMenuItemOperator operator3 =
-                JRadioButtonMenuItemOperator.waitFor(popup, ComponentPredicates.byName("Radio Button 1"));
-        assertThat(operator3).isNotNull();
-        JRadioButtonMenuItemOperator operator4 =
-                JRadioButtonMenuItemOperator.waitFor(popup, "Radio Button 1", StringComparators.strict());
-        assertThat(operator4).isNotNull();
+        JRadioButtonMenuItemOperator.waitFor(popup);
+        JRadioButtonMenuItemOperator.waitFor(popup, ComponentPredicates.byName("Radio Button 1"));
+        JRadioButtonMenuItemOperator.waitFor(popup, "Radio Button 1", StringComparators.strict());
         JRadioButtonMenuItemOperator operator5 = JRadioButtonMenuItemOperator.of(menuItem);
         assertThat(operator5).isNotNull();
     }

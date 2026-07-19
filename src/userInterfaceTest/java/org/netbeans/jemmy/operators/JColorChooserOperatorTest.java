@@ -72,12 +72,8 @@ class JColorChooserOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JColorChooserOperator operator2 = JColorChooserOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
-        JColorChooserOperator operator3 =
-                JColorChooserOperator.waitFor(operator1, ComponentPredicates.byName("JColorChooserOperatorTest"));
-        assertThat(operator3).isNotNull();
+        JColorChooserOperator.waitFor(operator1);
+        JColorChooserOperator.waitFor(operator1, ComponentPredicates.byName("JColorChooserOperatorTest"));
     }
 
     @Test
@@ -91,11 +87,8 @@ class JColorChooserOperatorTest {
 
     @Test
     void testWaitJColorChooser() {
-        JColorChooser colorChooser1 = JColorChooserOperator.waitJColorChooser(frame);
-        assertThat(colorChooser1).isNotNull();
-        JColorChooser colorChooser2 =
-                JColorChooserOperator.waitJColorChooser(frame, ComponentPredicates.byName("JColorChooserOperatorTest"));
-        assertThat(colorChooser2).isNotNull();
+        JColorChooserOperator.waitJColorChooser(frame);
+        JColorChooserOperator.waitJColorChooser(frame, ComponentPredicates.byName("JColorChooserOperatorTest"));
     }
 
     @Test

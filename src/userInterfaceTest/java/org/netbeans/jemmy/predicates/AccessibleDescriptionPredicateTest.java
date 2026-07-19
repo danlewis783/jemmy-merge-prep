@@ -16,8 +16,6 @@
  */
 package org.netbeans.jemmy.predicates;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.awt.EventQueue;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
@@ -78,14 +76,9 @@ class AccessibleDescriptionPredicateTest {
     @Test
     void testCheckContext() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JButtonOperator operator1 = JButtonOperator.waitFor(operator, new AccessibleDescriptionPredicate("Accessible"));
-        assertThat(operator1).isNotNull();
-        JDialogOperator operator2 = JDialogOperator.waitFor(new AccessibleDescriptionPredicate("Dialog"));
-        assertThat(operator2).isNotNull();
-        JFrameOperator operator3 = JFrameOperator.waitFor(new AccessibleDescriptionPredicate("Frame"));
-        assertThat(operator3).isNotNull();
-        WindowOperator operator4 = WindowOperator.waitFor(operator, new AccessibleDescriptionPredicate("Window"));
-        assertThat(operator4).isNotNull();
+        JButtonOperator.waitFor(operator, new AccessibleDescriptionPredicate("Accessible"));
+        JDialogOperator.waitFor(new AccessibleDescriptionPredicate("Dialog"));
+        JFrameOperator.waitFor(new AccessibleDescriptionPredicate("Frame"));
+        WindowOperator.waitFor(operator, new AccessibleDescriptionPredicate("Window"));
     }
 }

@@ -62,21 +62,14 @@ class JPasswordFieldOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JPasswordFieldOperator operator3 =
-                JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
-        assertThat(operator3).isNotNull();
-        JPasswordFieldOperator operator4 = JPasswordFieldOperator.waitFor(operator1);
-        assertThat(operator4).isNotNull();
-        JPasswordFieldOperator operator5 =
-                JPasswordFieldOperator.waitFor(operator1, "JPasswordFieldOperatorTest", StringComparators.strict());
-        assertThat(operator5).isNotNull();
+        JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
+        JPasswordFieldOperator.waitFor(operator1);
+        JPasswordFieldOperator.waitFor(operator1, "JPasswordFieldOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testFindJPasswordField() {
-        JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
+        JFrameOperator.waitFor();
         JPasswordField passwordField1 = JPasswordFieldOperator.findJPasswordField(
                 frame, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
         assertThat(passwordField1).isNotNull();
@@ -87,23 +80,18 @@ class JPasswordFieldOperatorTest {
 
     @Test
     void testWaitJPasswordField() {
-        JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JPasswordField passwordField1 = JPasswordFieldOperator.waitJPasswordField(
+        JFrameOperator.waitFor();
+        JPasswordFieldOperator.waitJPasswordField(
                 frame, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
-        assertThat(passwordField1).isNotNull();
-        JPasswordField passwordField2 = JPasswordFieldOperator.waitJPasswordField(
+        JPasswordFieldOperator.waitJPasswordField(
                 frame, "JPasswordFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(passwordField2).isNotNull();
     }
 
     @Test
     void testEchoCharIsSet() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JPasswordFieldOperator operator3 =
                 JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
-        assertThat(operator3).isNotNull();
         assertThat(operator3.echoCharIsSet()).isTrue();
         assertThat(onQueue(passwordField::echoCharIsSet)).isTrue();
         operator3.setEchoChar('a');
@@ -114,10 +102,8 @@ class JPasswordFieldOperatorTest {
     @Test
     void testGetPassword() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
         JPasswordFieldOperator operator3 =
                 JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
-        assertThat(operator3).isNotNull();
 
         EventQueue.invokeAndWait(() -> passwordField.setText("hallo"));
 

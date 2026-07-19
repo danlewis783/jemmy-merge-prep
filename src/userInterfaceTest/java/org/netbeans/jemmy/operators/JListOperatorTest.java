@@ -77,13 +77,9 @@ class JListOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
-        JListOperator operator2 = JListOperator.waitFor(operator, ComponentPredicates.byName("JListOperatorTest"));
-        assertThat(operator2).isNotNull();
-        JListOperator operator3 = JListOperator.waitFor(operator, "one", StringComparators.strict());
-        assertThat(operator3).isNotNull();
+        JListOperator.waitFor(operator);
+        JListOperator.waitFor(operator, ComponentPredicates.byName("JListOperatorTest"));
+        JListOperator.waitFor(operator, "one", StringComparators.strict());
     }
 
     @Test
@@ -96,36 +92,28 @@ class JListOperatorTest {
 
     @Test
     void testWaitJList() {
-        JList<?> list1 = JListOperator.waitJList(frame, ComponentPredicates.byName("JListOperatorTest"));
-        assertThat(list1).isNotNull();
-        JList<?> list2 = JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
-        assertThat(list2).isNotNull();
+        JListOperator.waitJList(frame, ComponentPredicates.byName("JListOperatorTest"));
+        JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
     }
 
     @Test
     void testGetClickPoint() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getClickPoint(0);
     }
 
     @Test
     void testGetRenderedComponent() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getRenderedComponent(0);
     }
 
     @Test
     void testFindItemIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         assertThat(operator1.findItemIndex("one", StringComparators.strict())).isEqualTo(0);
         assertThat(operator1.findItemIndex("one", StringComparators.caseInsensitiveSubstring()))
                 .isEqualTo(0);
@@ -139,9 +127,7 @@ class JListOperatorTest {
     @Test
     void testClickOnItem() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.clickOnItem("one", StringComparators.strict());
         operator1.clickOnItem("one", StringComparators.caseInsensitiveSubstring());
         operator1.clickOnItem("one", StringComparators.regex());
@@ -154,9 +140,7 @@ class JListOperatorTest {
     @Test
     void testScrollToItem() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.scrollToItem(0);
         operator1.scrollToItem("one", StringComparators.caseInsensitiveSubstring());
         operator1.scrollToItem("one", StringComparators.regex());
@@ -165,9 +149,7 @@ class JListOperatorTest {
     @Test
     void testSelectItem() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.selectItem("one", StringComparators.strict());
         operator1.selectItem(0);
         operator1.selectItem(new String[] {"one"}, StringComparators.strict());
@@ -176,9 +158,7 @@ class JListOperatorTest {
     @Test
     void testSelectItems() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         int[] items = new int[1];
         items[0] = 0;
         operator1.selectItems(items);
@@ -187,9 +167,7 @@ class JListOperatorTest {
     @Test
     void testWaitItemsSelection() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         int[] items = new int[1];
         items[0] = 0;
         operator1.waitItemsSelection(items, true);
@@ -198,27 +176,21 @@ class JListOperatorTest {
     @Test
     void testWaitItemSelection() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.waitItemSelection(0, true);
     }
 
     @Test
     void testWaitItem() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.waitItem("one", StringComparators.strict(), 0);
     }
 
     @Test
     void testAddListSelectionListener() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         NullListSelectionListener listener = new NullListSelectionListener();
         operator1.addListSelectionListener(listener);
         operator1.removeListSelectionListener(listener);
@@ -227,9 +199,7 @@ class JListOperatorTest {
     @Test
     void testAddSelectionInterval() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.addSelectionInterval(0, 0);
         operator1.removeSelectionInterval(0, 0);
     }
@@ -237,45 +207,35 @@ class JListOperatorTest {
     @Test
     void testClearSelection() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.clearSelection();
     }
 
     @Test
     void testEnsureIndexIsVisible() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.ensureIndexIsVisible(0);
     }
 
     @Test
     void testGetAnchorSelectionIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getAnchorSelectionIndex();
     }
 
     @Test
     void testGetCellBounds() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getCellBounds(0, 0);
     }
 
     @Test
     void testGetCellRenderer() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setCellRenderer(new DefaultListCellRenderer());
         operator1.getCellRenderer();
     }
@@ -283,18 +243,14 @@ class JListOperatorTest {
     @Test
     void testGetFirstVisibleIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getFirstVisibleIndex();
     }
 
     @Test
     void testGetFixedCellHeight() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setFixedCellHeight(10);
         operator1.getFixedCellHeight();
     }
@@ -302,9 +258,7 @@ class JListOperatorTest {
     @Test
     void testGetFixedCellWidth() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setFixedCellWidth(10);
         operator1.getFixedCellWidth();
     }
@@ -312,54 +266,42 @@ class JListOperatorTest {
     @Test
     void testGetLastVisibleIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getLastVisibleIndex();
     }
 
     @Test
     void testGetLeadSelectionIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getLeadSelectionIndex();
     }
 
     @Test
     void testGetMaxSelectionIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getMaxSelectionIndex();
     }
 
     @Test
     void testGetMinSelectionIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getMinSelectionIndex();
     }
 
     @Test
     void testGetPreferredScrollableViewportSize() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getPreferredScrollableViewportSize();
     }
 
     @Test
     void testGetPrototypeCellValue() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setPrototypeCellValue("1");
         operator1.getPrototypeCellValue();
     }
@@ -367,45 +309,35 @@ class JListOperatorTest {
     @Test
     void testGetScrollableBlockIncrement() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getScrollableBlockIncrement(new Rectangle(100, 100), 0, 0);
     }
 
     @Test
     void testGetScrollableTracksViewportHeight() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getScrollableTracksViewportHeight();
     }
 
     @Test
     void testGetScrollableTracksViewportWidth() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getScrollableTracksViewportWidth();
     }
 
     @Test
     void testGetScrollableUnitIncrement() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getScrollableUnitIncrement(new Rectangle(100, 100), 0, 0);
     }
 
     @Test
     void testGetSelectedIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectedIndex(0);
         operator1.getSelectedIndex();
     }
@@ -413,9 +345,7 @@ class JListOperatorTest {
     @Test
     void testGetSelectedIndices() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         int[] indices = new int[1];
         indices[0] = 0;
         operator1.setSelectedIndices(indices);
@@ -425,9 +355,7 @@ class JListOperatorTest {
     @Test
     void testGetSelectedValue() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectedValue("one", true);
         operator1.getSelectedValue();
     }
@@ -435,18 +363,14 @@ class JListOperatorTest {
     @Test
     void testGetSelectedValues() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.getSelectedValues();
     }
 
     @Test
     void testGetSelectionBackground() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectionBackground(Color.black);
         operator1.getSelectionBackground();
     }
@@ -454,9 +378,7 @@ class JListOperatorTest {
     @Test
     void testGetSelectionForeground() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectionForeground(Color.white);
         operator1.getSelectionForeground();
     }
@@ -464,9 +386,7 @@ class JListOperatorTest {
     @Test
     void testGetSelectionMode() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectionMode(0);
         operator1.getSelectionMode();
     }
@@ -474,9 +394,7 @@ class JListOperatorTest {
     @Test
     void testGetSelectionModel() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectionModel(new DefaultListSelectionModel());
         operator1.getSelectionModel();
     }
@@ -484,9 +402,7 @@ class JListOperatorTest {
     @Test
     void testGetUI() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setUI(new NullListUI());
         operator1.getUI();
     }
@@ -494,9 +410,7 @@ class JListOperatorTest {
     @Test
     void testGetValueIsAdjusting() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setValueIsAdjusting(true);
         operator1.getValueIsAdjusting();
     }
@@ -504,9 +418,7 @@ class JListOperatorTest {
     @Test
     void testGetVisibleRowCount() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setVisibleRowCount(1);
         operator1.getVisibleRowCount();
     }
@@ -514,45 +426,35 @@ class JListOperatorTest {
     @Test
     void testIndexToLocation() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.indexToLocation(0);
     }
 
     @Test
     void testIsSelectedIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isSelectedIndex(0);
     }
 
     @Test
     void testIsSelectionEmpty() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.isSelectionEmpty();
     }
 
     @Test
     void testLocationToIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.locationToIndex(new Point(10, 10));
     }
 
     @Test
     void testSetListData() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         String[] listData = {"one", "two", "three", "four"};
         operator1.setListData(listData);
         operator1.setListData(new Vector<>());
@@ -561,18 +463,14 @@ class JListOperatorTest {
     @Test
     void testSetModel() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setModel(new DefaultListModel<>());
     }
 
     @Test
     void testSetSelectionInterval() {
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        assertThat(operator1).isNotNull();
         operator1.setSelectionInterval(0, 0);
     }
 

@@ -16,8 +16,6 @@
  */
 package org.netbeans.jemmy.predicates;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.awt.EventQueue;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
@@ -59,8 +57,6 @@ class AccessibleNamePredicateTest {
     void testCheckContext() throws Exception {
         EventQueue.invokeAndWait(() -> frame.setVisible(true));
         JFrameOperator operator = JFrameOperator.waitFor();
-        assertThat(operator).isNotNull();
-        JButtonOperator operator1 = JButtonOperator.waitFor(operator, new AccessibleNamePredicate("Accessible"));
-        assertThat(operator1).isNotNull();
+        JButtonOperator.waitFor(operator, new AccessibleNamePredicate("Accessible"));
     }
 }

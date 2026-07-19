@@ -61,15 +61,9 @@ class JCheckBoxOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        assertThat(operator1).isNotNull();
-        JCheckBoxOperator operator2 = JCheckBoxOperator.waitFor(operator1);
-        assertThat(operator2).isNotNull();
-        JCheckBoxOperator operator3 =
-                JCheckBoxOperator.waitFor(operator1, ComponentPredicates.byName("JCheckBoxOperatorTest"));
-        assertThat(operator3).isNotNull();
-        JCheckBoxOperator operator4 =
-                JCheckBoxOperator.waitFor(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
-        assertThat(operator4).isNotNull();
+        JCheckBoxOperator.waitFor(operator1);
+        JCheckBoxOperator.waitFor(operator1, ComponentPredicates.byName("JCheckBoxOperatorTest"));
+        JCheckBoxOperator.waitFor(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
     }
 
     @Test
@@ -84,11 +78,8 @@ class JCheckBoxOperatorTest {
 
     @Test
     void testWaitJCheckBox() {
-        JCheckBox checkBox1 =
-                JCheckBoxOperator.waitJCheckBox(frame, ComponentPredicates.byName("JCheckBoxOperatorTest"));
-        assertThat(checkBox1).isNotNull();
-        JCheckBox checkBox2 = JCheckBoxOperator.waitJCheckBox(
+        JCheckBoxOperator.waitJCheckBox(frame, ComponentPredicates.byName("JCheckBoxOperatorTest"));
+        JCheckBoxOperator.waitJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
-        assertThat(checkBox2).isNotNull();
     }
 }
