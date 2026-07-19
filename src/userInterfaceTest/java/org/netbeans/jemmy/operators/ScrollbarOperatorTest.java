@@ -27,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
@@ -105,34 +104,37 @@ class ScrollbarOperatorTest {
     }
 
     @Test
-    @Disabled("FIXME")
     void testScrollToValue() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToValue(1.0);
+        assertThat(operator1.getValue())
+                .isEqualTo(operator1.getMinimum()
+                        + (operator1.getMaximum() - operator1.getVisibleAmount() - operator1.getMinimum()));
         operator1.scrollToValue(1);
+        assertThat(operator1.getValue()).isEqualTo(1);
     }
 
     @Test
-    @Disabled("FIXME")
     void testScrollToMinimum() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToMinimum();
+        assertThat(operator1.getValue()).isEqualTo(operator1.getMinimum());
     }
 
     @Test
-    @Disabled("FIXME")
     void testScrollToMaximum() {
         FrameOperator operator = FrameOperator.waitFor();
         assertThat(operator).isNotNull();
         ScrollbarOperator operator1 = ScrollbarOperator.waitFor(operator);
         assertThat(operator1).isNotNull();
         operator1.scrollToMaximum();
+        assertThat(operator1.getValue()).isEqualTo(operator1.getMaximum() - operator1.getVisibleAmount());
     }
 
     @Test
