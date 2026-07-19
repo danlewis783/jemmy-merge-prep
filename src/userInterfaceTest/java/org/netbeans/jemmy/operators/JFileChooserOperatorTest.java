@@ -23,13 +23,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.jemmy.ComponentStreamer;
-import org.netbeans.jemmy.FunctionRunner;
 import org.netbeans.jemmy.QueueTool;
+import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -47,8 +46,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -629,70 +628,116 @@ final class JFileChooserOperatorTest {
         op.resetChoosableFileFilters();
     }
 
+    // showDialog/showOpenDialog/showSaveDialog are modal: the call does not return until the
+    // dialog is dismissed. Running it via FunctionRunner would occupy the single Jemmy action
+    // thread for the dialog's whole lifetime, so a later FunctionRunner-based Cancel click could
+    // never run - a sequencing deadlock. Instead the modal call is kicked off on its own thread
+    // (CompletableFuture), which frees the test thread to find and click Cancel directly, exactly
+    // as the other (non-modal) chooser tests in this class do (e.g. testCancel, op.cancel()).
+    //
+    // The Cancel button is part of the chooser's UI even before show*Dialog is called (it is
+    // already visible while the chooser sits in the plain, non-modal `frame` from @BeforeEach),
+    // so JButtonOperator.waitFor(op, "Cancel", ...) would find and could click it immediately -
+    // racing ahead of the background show*Dialog call before it has reparented the chooser into
+    // the new dialog and wired up its own approve/cancel listener. Clicking that early is a
+    // no-op: nothing is listening yet, so the dialog opens moments later and then just sits
+    // there, unclicked, until the test times out. waitForModalDialog(...) blocks until the
+    // chooser's window ancestor actually changes to the new (showing) dialog, which only happens
+    // once show*Dialog has reached that wiring, closing the race.
     @Test
-    @Disabled("this always fails with timing issues")
-    void testShowDialog() throws InterruptedException {
+    @Timeout(value = 3, unit = TimeUnit.SECONDS)
+    void testShowDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         assertThat(op).isNotNull();
-        int result;
         try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
-            result =
-                    Objects.requireNonNull(FunctionRunner.on((Function<Void, Integer>) v -> op.showDialog(null, "Plus"))
-                            .submitAndGet(null, TimeoutKey.Testing_A));
+            CompletableFuture<Integer> resultFuture = CompletableFuture.supplyAsync(() -> op.showDialog(null, "Plus"));
+            try {
+                waitForModalDialog(TimeoutKey.Testing_A);
+                JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
+                assertThat(buttonOp).isNotNull();
+                buttonOp.clickMouse();
+                int result = resultFuture.get(Timeouts.get(TimeoutKey.Testing_A), TimeUnit.MILLISECONDS);
+                assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
+            } finally {
+                closeLeakedDialogIfStillOpen(resultFuture);
+            }
         }
-        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1_000L)) {
-            FunctionRunner.on((Function<Void, Void>) v -> {
-                        JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
-                        assertThat(buttonOp).isNotNull();
-                        buttonOp.clickMouse();
-                        return null;
-                    })
-                    .submitAndGet(null, TimeoutKey.Testing_B);
-        }
-        assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
     }
 
     @Test
-    @Disabled("this always fails with timing issues")
-    void testShowOpenDialog() throws InterruptedException {
+    @Timeout(value = 3, unit = TimeUnit.SECONDS)
+    void testShowOpenDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         assertThat(op).isNotNull();
-        int result;
         try (TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1_000L)) {
-            result = Objects.requireNonNull(FunctionRunner.on((Function<Void, Integer>) v -> op.showOpenDialog(null))
-                    .submitAndGet(null, TimeoutKey.Testing_C));
+            CompletableFuture<Integer> resultFuture = CompletableFuture.supplyAsync(() -> op.showOpenDialog(null));
+            try {
+                waitForModalDialog(TimeoutKey.Testing_C);
+                JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
+                assertThat(buttonOp).isNotNull();
+                buttonOp.clickMouse();
+                int result = resultFuture.get(Timeouts.get(TimeoutKey.Testing_C), TimeUnit.MILLISECONDS);
+                assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
+            } finally {
+                closeLeakedDialogIfStillOpen(resultFuture);
+            }
         }
-        try (TimeoutOverride overrideD = Timeouts.override(TimeoutKey.Testing_D, 1_000L)) {
-            FunctionRunner.on((Function<Void, Void>) v -> {
-                        JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
-                        assertThat(buttonOp).isNotNull();
-                        buttonOp.clickMouse();
-                        return null;
-                    })
-                    .submitAndGet(null, TimeoutKey.Testing_D);
-        }
-        assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
     }
 
     @Test
-    @Disabled("this always fails with timing issues")
-    void testShowSaveDialog() throws InterruptedException {
+    @Timeout(value = 3, unit = TimeUnit.SECONDS)
+    void testShowSaveDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         assertThat(op).isNotNull();
-        int result;
         try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
-            result = Objects.requireNonNull(FunctionRunner.on((Function<Void, Integer>) v -> op.showSaveDialog(null))
-                    .submitAndGet(null, TimeoutKey.Testing_A));
+            CompletableFuture<Integer> resultFuture = CompletableFuture.supplyAsync(() -> op.showSaveDialog(null));
+            try {
+                waitForModalDialog(TimeoutKey.Testing_A);
+                JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
+                assertThat(buttonOp).isNotNull();
+                buttonOp.clickMouse();
+                int result = resultFuture.get(Timeouts.get(TimeoutKey.Testing_A), TimeUnit.MILLISECONDS);
+                assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
+            } finally {
+                closeLeakedDialogIfStillOpen(resultFuture);
+            }
         }
-        try (TimeoutOverride overrideB = Timeouts.override(TimeoutKey.Testing_B, 1_000L)) {
-            FunctionRunner.on((Function<Void, Void>) v -> {
-                        JButtonOperator buttonOp = JButtonOperator.waitFor(op, "Cancel", StringComparators.strict());
-                        assertThat(buttonOp).isNotNull();
-                        buttonOp.clickMouse();
-                        return null;
-                    })
-                    .submitAndGet(null, TimeoutKey.Testing_B);
+    }
+
+    // Blocks until the chooser has been reparented into a new, showing window (the dialog
+    // created by show*Dialog) rather than still sitting in the plain @BeforeEach frame - see the
+    // race explained above the three show*Dialog tests.
+    private void waitForModalDialog(TimeoutKey budgetKey) throws InterruptedException {
+        long budget = Timeouts.get(budgetKey);
+        long deadline = System.currentTimeMillis() + budget;
+        do {
+            boolean dialogShowing = onQueue(() -> {
+                Window ancestor = SwingUtilities.getWindowAncestor(fileChooser);
+                return ancestor != null && ancestor != frame && ancestor.isShowing();
+            });
+            if (dialogShowing) {
+                return;
+            }
+            Thread.sleep(10L);
+        } while (System.currentTimeMillis() < deadline);
+        throw new TimeoutExpiredException(
+                String.format("modal dialog for file chooser did not appear within \"%s\" (%d ms)", budgetKey, budget));
+    }
+
+    // if the Cancel click failed to land (or the future timed out) the modal dialog created by
+    // show*Dialog is still open; force it closed on the EDT so it cannot poison later tests, and
+    // stop waiting on the now-abandoned background call.
+    private void closeLeakedDialogIfStillOpen(CompletableFuture<Integer> resultFuture)
+            throws InterruptedException, InvocationTargetException {
+        if (!resultFuture.isDone()) {
+            resultFuture.cancel(true);
+            EventQueue.invokeAndWait(() -> {
+                Window ancestor = SwingUtilities.getWindowAncestor(fileChooser);
+                if (ancestor != null) {
+                    ancestor.setVisible(false);
+                    ancestor.dispose();
+                }
+            });
         }
-        assertThat(result).as("cancel=1,approve=0,error=-1").isEqualTo(JFileChooser.CANCEL_OPTION);
     }
 }
