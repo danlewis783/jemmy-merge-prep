@@ -25,6 +25,7 @@
 
 package org.netbeans.jemmy.drivers.input;
 
+import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -78,11 +79,13 @@ public class RobotDriver extends LightSupportiveDriver {
     }
 
     public void moveMouse(int x, int y) {
+        // map logical coordinates into the robot's request space; identity on unscaled displays
+        Point target = RobotCalibration.map(x, y);
         if (!smooth) {
-            getRobot().mouseMove(x, y);
+            getRobot().mouseMove(target.x, target.y);
         } else {
-            double targetX = x;
-            double targetY = y;
+            double targetX = target.x;
+            double targetY = target.y;
             if (haveOldPos) {
                 double currX = oldX;
                 double currY = oldY;

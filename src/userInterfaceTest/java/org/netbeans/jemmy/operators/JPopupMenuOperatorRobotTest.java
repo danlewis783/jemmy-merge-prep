@@ -44,7 +44,6 @@ import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.netbeans.jemmy.testing.DisplayAssumptions.assumeUnscaledDisplay;
 
 @ExtendWith(DumpOnFailure.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
@@ -102,8 +101,6 @@ final class JPopupMenuOperatorRobotTest {
 
     @Test
     void testRobot56091() {
-        assumeUnscaledDisplay();
-
         JemmyContext jemmyContext = JemmyContext.getInstance();
         EnumSet<DispatchingModel> oldModel = jemmyContext.getDispatchingModel();
         jemmyContext.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));

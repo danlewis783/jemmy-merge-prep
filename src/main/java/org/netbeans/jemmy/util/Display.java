@@ -24,10 +24,11 @@ import java.awt.Toolkit;
 
 /**
  * Detects display scaling (Windows DPI scaling above 100%, or a mix of scales across monitors).
- * On Java 8 the AWT Robot's screen-coordinate mapping is unreliable under scaling: a
- * queue-dispatched event carries exact component coordinates while a real robot click can land
- * tens of pixels off target. Tests that depend on exact robot click coordinates should assume an
- * unscaled display.
+ * On Java 8 the AWT Robot's screen-coordinate mapping is off by the scale factor under scaling:
+ * a queue-dispatched event carries exact component coordinates while an uncorrected robot click
+ * lands tens of pixels off target. Robot input corrects for this by measuring the actual mapping
+ * once per session (see {@code org.netbeans.jemmy.drivers.input.RobotCalibration}); this check is
+ * its fast path for skipping the measurement entirely on unscaled displays.
  */
 public final class Display {
 

@@ -19,7 +19,6 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-import static org.netbeans.jemmy.testing.DisplayAssumptions.assumeUnscaledDisplay;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -87,7 +86,6 @@ final class RobotVsQueueDispatchTest {
 
     @Test
     void robotVsQueue() {
-        assumeUnscaledDisplay();
         JFrameOperator jFrameOp = JFrameOperator.waitFor(FRAME_TITLE);
         JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
         JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
@@ -105,7 +103,6 @@ final class RobotVsQueueDispatchTest {
 
     @Test
     void queueVsRobot() {
-        assumeUnscaledDisplay();
         JFrameOperator jFrameOp = JFrameOperator.waitFor(FRAME_TITLE);
         JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
         JButtonOperator jButtonOp = JButtonOperator.waitFor(jFrameOp);
