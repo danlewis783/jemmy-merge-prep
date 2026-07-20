@@ -324,6 +324,10 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return waitJTabbedPane(cont, chooser, 0);
     }
 
+    public static JTabbedPane waitJTabbedPane(Container cont, int index) {
+        return waitJTabbedPane(cont, ComponentPredicates.alwaysTrue(), index);
+    }
+
     public static JTabbedPane waitJTabbedPane(
             Container cont, @Nullable String text, StringComparator stringComparator, int itemIndex, int index) {
         return waitJTabbedPane(cont, new JTabbedPaneByItemPredicate(text, itemIndex, stringComparator), index);

@@ -14,7 +14,7 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.netbeans.jemmy.operators;
+package org.netbeans.jemmy.functions;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -25,7 +25,7 @@ import javax.swing.JList;
 import javax.swing.plaf.basic.ComboPopup;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ComponentSearcher;
-import org.netbeans.jemmy.functions.WindowFunction;
+import org.netbeans.jemmy.operators.JComboBoxOperator;
 import org.netbeans.jemmy.predicates.PopupWindowPredicate;
 
 public class ComboBoxPopupListFunction implements Function<Void, Component> {

@@ -48,6 +48,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ListDriver;
+import org.netbeans.jemmy.functions.ComboBoxPopupListFunction;
 import org.netbeans.jemmy.predicates.ComponentPredicates;
 import org.netbeans.jemmy.predicates.JComboBoxByItemPredicate;
 import org.netbeans.jemmy.predicates.JComboBoxOperatorByItemIndexPredicate;
