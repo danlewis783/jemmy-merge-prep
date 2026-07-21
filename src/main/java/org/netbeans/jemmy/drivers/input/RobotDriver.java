@@ -119,16 +119,20 @@ public class RobotDriver extends LightSupportiveDriver {
      * mapping can guarantee the landing. Instead, read where the pointer actually ended up and
      * nudge the request by half the remaining error until the pointer sits on the logical
      * target — the half step keeps the loop convergent for any conversion factor below 4x,
-     * where a full step was observed to oscillate. {@link MouseInfo} reports the same
-     * coordinates that delivered mouse events carry, so equality means events land where the
-     * caller aimed. Best-effort bounded loop; no-op on unscaled displays.
+     * where a full step was observed to oscillate. The OS can also re-snap the pointer
+     * asynchronously shortly after a move, undoing an apparently converged landing, so the
+     * landing only counts once the pointer is still on target after a settle delay.
+     * {@link MouseInfo} reports the same coordinates that delivered mouse events carry, so
+     * stable equality means events land where the caller aimed. Best-effort bounded loop;
+     * no-op on unscaled displays.
      */
     private void landMouse(int requestX, int requestY, int targetX, int targetY) {
         if (!RobotCalibration.isActive()) {
             return;
         }
 
-        for (int attempt = 0; attempt < 16; attempt++) {
+        int stableReads = 0;
+        for (int attempt = 0; attempt < 24; attempt++) {
             PointerInfo info = MouseInfo.getPointerInfo();
             if (info == null) {
                 return;
@@ -136,9 +140,16 @@ public class RobotDriver extends LightSupportiveDriver {
 
             Point pointer = info.getLocation();
             if ((pointer.x == targetX) && (pointer.y == targetY)) {
-                return;
+                stableReads++;
+                if (stableReads >= 2) {
+                    return;
+                }
+
+                getRobot().delay(50);
+                continue;
             }
 
+            stableReads = 0;
             requestX += halfStep(targetX - pointer.x);
             requestY += halfStep(targetY - pointer.y);
             getRobot().mouseMove(requestX, requestY);

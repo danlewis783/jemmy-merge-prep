@@ -39,6 +39,13 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 public abstract class AbstractScrollDriver extends LightSupportiveDriver implements ScrollDriver {
     public static final int ADJUST_CLICK_COUNT = 10;
 
+    /** Consecutive no-movement attempts after which a scroll phase gives up its loop. A
+     * scrollbar can be un-scrollable in one direction (e.g. a track too small under display
+     * scaling for the minimum thumb, where every track click pages the same way), and a phase
+     * that keeps trying anyway would spin forever; bailing out lets the remaining phases try
+     * and, if nothing moves the value, the push-and-wait freeze check report the failure. */
+    private static final int STALL_LIMIT = 3;
+
     public AbstractScrollDriver(List<? extends Class<? extends ComponentOperator>> supported) {
         super(supported);
     }
@@ -99,8 +106,13 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
                 return;
             }
 
-            while (adj.getScrollDirection() == direction) {
+            int stalled = 0;
+            int position = position(oper, adj.getScrollOrientation());
+            while ((adj.getScrollDirection() == direction) && (stalled < STALL_LIMIT)) {
                 drag(oper, pnt = increasePoint(oper, pnt, adj, direction));
+                int current = position(oper, adj.getScrollOrientation());
+                stalled = (current == position) ? (stalled + 1) : 0;
+                position = current;
             }
 
             drop(oper, pnt);
@@ -110,8 +122,13 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
     protected void doJumps(ComponentOperator oper, ScrollAdjuster adj) {
         int direction = adj.getScrollDirection();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            while (adj.getScrollDirection() == direction) {
+            int stalled = 0;
+            int position = position(oper, adj.getScrollOrientation());
+            while ((adj.getScrollDirection() == direction) && (stalled < STALL_LIMIT)) {
                 jump(oper, adj);
+                int current = position(oper, adj.getScrollOrientation());
+                stalled = (current == position) ? (stalled + 1) : 0;
+                position = current;
             }
         }
     }
@@ -147,8 +164,13 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
     protected void doSteps(ComponentOperator oper, ScrollAdjuster adj) {
         int direction = adj.getScrollDirection();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            while (adj.getScrollDirection() == direction) {
+            int stalled = 0;
+            int position = position(oper, adj.getScrollOrientation());
+            while ((adj.getScrollDirection() == direction) && (stalled < STALL_LIMIT)) {
                 step(oper, adj);
+                int current = position(oper, adj.getScrollOrientation());
+                stalled = (current == position) ? (stalled + 1) : 0;
+                position = current;
             }
         }
     }

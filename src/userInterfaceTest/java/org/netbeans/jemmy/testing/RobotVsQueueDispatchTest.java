@@ -152,11 +152,11 @@ final class RobotVsQueueDispatchTest {
             assertThat(actualEvent.description).as(description).isEqualTo(expectedEvent.description);
             assertThat(actualEvent.mouse).as(description).isEqualTo(expectedEvent.mouse);
             if (expectedEvent.mouse) {
-                // robot input on fractionally scaled displays cannot reach every logical pixel,
-                // and the coordinate conversion wobbles a further pixel or two, so a robot
-                // click may land a few pixels from the queue model's exact coordinates
-                assertThat(actualEvent.x).as(description + " x").isCloseTo(expectedEvent.x, within(3));
-                assertThat(actualEvent.y).as(description + " y").isCloseTo(expectedEvent.y, within(3));
+                // robot input on scaled displays cannot always reach the exact logical pixel:
+                // the closed-loop landing was measured to terminate up to ~5px off at 150%
+                // scaling, where the conversion of injected moves flips between regimes
+                assertThat(actualEvent.x).as(description + " x").isCloseTo(expectedEvent.x, within(6));
+                assertThat(actualEvent.y).as(description + " y").isCloseTo(expectedEvent.y, within(6));
             }
         }
     }

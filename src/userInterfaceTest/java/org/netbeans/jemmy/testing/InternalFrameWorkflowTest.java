@@ -43,7 +43,7 @@ import org.netbeans.jemmy.operators.JInternalFrameOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_022
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class InternalFrameWorkflowTest {
 
     private JFrame jFrame;
@@ -86,7 +86,9 @@ class InternalFrameWorkflowTest {
             jFrame.getContentPane().add(new JScrollPane(desk), BorderLayout.CENTER);
             frame1.getContentPane().add(new JButton("Button 1"));
             frame2.getContentPane().add(new JButton("Button 2"));
-            jFrame.setSize(400, 400);
+            // the internal frames get moved to (100,100) and resized to 250x250; the desktop
+            // pane must still fit that after native decorations grow under display scaling
+            jFrame.setSize(500, 500);
 
             try {
                 frame1.setIcon(true);

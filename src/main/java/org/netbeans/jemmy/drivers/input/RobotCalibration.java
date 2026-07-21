@@ -70,15 +70,16 @@ import org.netbeans.jemmy.util.Display;
 public final class RobotCalibration {
 
     /**
-     * Sub-pixel aim offsets tried during verification, in preference order. 0.0 suits platforms
-     * that round the pointer position to logical pixels (and the identity mapping); 0.5 centers
-     * the landing inside the target pixel on platforms that truncate.
+     * Sub-pixel aim offset applied when inverting the fit; a quarter pixel is a neutral
+     * compromise between platforms that truncate and platforms that round when reporting the
+     * pointer position. The mapping only seeds the closed-loop landing in
+     * {@code RobotDriver.landMouse}, so sub-pixel tuning beyond this is not worth probe time.
      */
-    private static final double[] CANDIDATE_AIMS = {0.0, 0.5, 0.25};
+    private static final double AIM = 0.25;
 
     /** Verification target positions as fractions of the primary screen size, chosen to stay on
      * the primary screen even when the request space is 2.5x finer than the logical space. */
-    private static final double[] TARGET_FRACTIONS = {0.20, 0.26, 0.32, 0.38};
+    private static final double[] TARGET_FRACTIONS = {0.22, 0.30, 0.38};
 
     /** Fit probe positions as fractions of the primary screen size. Five probes give the median
      * slope estimate enough pairs to outvote an individual poisoned reading. */
@@ -206,7 +207,7 @@ public final class RobotCalibration {
 
             Linear x = Linear.fit(requestsX, observedX);
             Linear y = Linear.fit(requestsY, observedY);
-            return verifyAndChooseAims(robot, screen, bounds, park, x, y);
+            return verify(robot, screen, bounds, park, x, y);
         } finally {
             screen.dispose(queueTool);
             // the caller's robot input follows immediately; if the calibration window's native
@@ -222,85 +223,38 @@ public final class RobotCalibration {
     }
 
     /**
-     * Moves through the fitted mapping to known logical targets and checks where the moves land,
-     * picking the sub-pixel aim offset per axis whose landings are closest (most of them exact,
-     * ideally). Fails if the best candidate still misses any target by more than one pixel.
+     * Moves through the fitted mapping to a few known logical targets and checks where the
+     * moves land. The mapping only seeds the closed-loop landing in
+     * {@code RobotDriver.landMouse}, which corrects the residual error per move, so seed
+     * quality within a few pixels is sufficient; beyond that the fit did not capture the
+     * display's behavior at all and robot input would wander, so calibration fails instead.
      */
-    private static Mapping verifyAndChooseAims(
+    private static Mapping verify(
             Robot robot, CalibrationScreen screen, Rectangle bounds, Point park, Linear x, Linear y) {
-        int targetCount = TARGET_FRACTIONS.length;
-        double bestAimX = 0.0;
-        double bestAimY = 0.0;
-        int bestExactX = -1;
-        int bestExactY = -1;
-        int bestMaxErrorX = Integer.MAX_VALUE;
-        int bestMaxErrorY = Integer.MAX_VALUE;
         StringBuilder diagnostics = new StringBuilder();
-
-        for (double aim : CANDIDATE_AIMS) {
-            int exactX = 0;
-            int exactY = 0;
-            int maxErrorX = 0;
-            int maxErrorY = 0;
-            for (int i = 0; i < targetCount; i++) {
-                // the +i varies the fractional phase so the targets exercise different points
-                // of the request grid
-                Point target = new Point(
-                        bounds.x + (int) (bounds.width * TARGET_FRACTIONS[i]) + i,
-                        bounds.y + (int) (bounds.height * TARGET_FRACTIONS[i]) + i);
-                Point request = new Point(x.requestFor(target.x, aim), y.requestFor(target.y, aim));
-                Point observed = probe(robot, screen, park, request);
-                if ((Math.abs(observed.x - target.x) > 1) || (Math.abs(observed.y - target.y) > 1)) {
-                    // a transient disturbance (user mouse input, an OS pointer adjustment) can
-                    // poison a single reading; confirm a miss before letting it count
-                    observed = probe(robot, screen, park, request);
-                }
-
-                int errorX = Math.abs(observed.x - target.x);
-                int errorY = Math.abs(observed.y - target.y);
-                if (errorX == 0) {
-                    exactX++;
-                }
-                if (errorY == 0) {
-                    exactY++;
-                }
-                maxErrorX = Math.max(maxErrorX, errorX);
-                maxErrorY = Math.max(maxErrorY, errorY);
-                diagnostics
-                        .append("aim=").append(aim)
-                        .append(" target=").append(target.x).append(',').append(target.y)
-                        .append(" observed=").append(observed.x).append(',').append(observed.y)
-                        .append(System.lineSeparator());
-            }
-
-            if ((maxErrorX <= 2) && (maxErrorY <= 2)) {
-                // good enough on both axes; skip the remaining candidates to keep the one-time
-                // calibration cost out of test timeout budgets
-                return new Mapping(x, aim, y, aim);
-            }
-
-            if ((maxErrorX < bestMaxErrorX) || ((maxErrorX == bestMaxErrorX) && (exactX > bestExactX))) {
-                bestExactX = exactX;
-                bestMaxErrorX = maxErrorX;
-                bestAimX = aim;
-            }
-            if ((maxErrorY < bestMaxErrorY) || ((maxErrorY == bestMaxErrorY) && (exactY > bestExactY))) {
-                bestExactY = exactY;
-                bestMaxErrorY = maxErrorY;
-                bestAimY = aim;
-            }
+        int maxError = 0;
+        for (int i = 0; i < TARGET_FRACTIONS.length; i++) {
+            // the +i varies the fractional phase so the targets exercise different points of
+            // the request grid
+            Point target = new Point(
+                    bounds.x + (int) (bounds.width * TARGET_FRACTIONS[i]) + i,
+                    bounds.y + (int) (bounds.height * TARGET_FRACTIONS[i]) + i);
+            Point request = new Point(x.requestFor(target.x, AIM), y.requestFor(target.y, AIM));
+            Point observed = probe(robot, screen, park, request);
+            maxError = Math.max(maxError, Math.abs(observed.x - target.x));
+            maxError = Math.max(maxError, Math.abs(observed.y - target.y));
+            diagnostics
+                    .append("target=").append(target.x).append(',').append(target.y)
+                    .append(" observed=").append(observed.x).append(',').append(observed.y)
+                    .append(System.lineSeparator());
         }
 
-        // the mapping only seeds the closed-loop landing in RobotDriver.landMouse, which reads
-        // the actual pointer position and corrects the residual error per move, so seed quality
-        // within a few pixels is sufficient; beyond that the fit did not capture the display's
-        // behavior at all
-        if ((bestMaxErrorX > 5) || (bestMaxErrorY > 5)) {
-            throw new JemmyException("robot calibration could not find a mapping that lands robot moves on their"
+        if (maxError > 5) {
+            throw new JemmyException("robot calibration could not find a mapping that lands robot moves near their"
                     + " targets (fitted x: " + x + ", y: " + y + ")" + System.lineSeparator() + diagnostics);
         }
 
-        return new Mapping(x, bestAimX, y, bestAimY);
+        return new Mapping(x, AIM, y, AIM);
     }
 
     /**

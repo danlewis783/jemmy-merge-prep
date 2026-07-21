@@ -94,6 +94,9 @@ class WindowManagerJobsTest {
     }
 
     private static class WindowProcessor implements WindowFunction<JFrame> {
+        /** For diagnosing timeouts: relates processing progress to the test's 20s budget. */
+        private static final long START = System.currentTimeMillis();
+
         private final List<JFrame> processed;
 
         private WindowProcessor() {
@@ -114,13 +117,17 @@ class WindowManagerJobsTest {
         @Override
         public Void apply(JFrame jFrame) {
             try {
+                System.out.println("processing " + jFrame.getTitle() + " at " + (System.currentTimeMillis() - START) + " ms");
                 JButtonOperator buttonOp =
                         JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "process", StringComparators.substring()));
                 buttonOp.setVisualizer(new MouseVisualizer(.5, 5));
                 buttonOp.push();
+                System.out.println("processed " + jFrame.getTitle() + " at " + (System.currentTimeMillis() - START) + " ms");
                 processed.add(jFrame);
             } catch (TimeoutExpiredException e) {
-                // don't care
+                // tolerated, but never silently: a swallowed failure here surfaces later as an
+                // unexplained waitJLabel timeout in the test body
+                e.printStackTrace();
             }
 
             return null;

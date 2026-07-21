@@ -38,7 +38,9 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_018
-@Timeout(value=2, unit=TimeUnit.SECONDS)
+// 10s rather than 2s: at higher display scaling the scaled content leaves the small viewport
+// proportionally more to scroll through
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {
     private JFrame jFrame;
 
@@ -51,19 +53,23 @@ class ScrollToComponentTest {
             Container contentPane = jFrame.getContentPane();
             contentPane.setLayout(new BorderLayout());
             JPanel pane = new JPanel();
-            pane.setLayout(new GridLayout(5, 5));
+            pane.setLayout(new GridLayout(7, 7));
             JScrollPane scrollPane = new JScrollPane(pane);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             contentPane.add(scrollPane, BorderLayout.CENTER);
 
-            for (int i = 0; i < 5; i++) {
-                for (int j = 0; j < 5; j++) {
+            // 7x7 rather than 5x5, in a larger frame: the content must overflow the viewport in
+            // both axes at 100% scaling, while the scrollbar tracks must stay longer than the
+            // scaled minimum thumb at 150-200% (a track shorter than the minimum thumb hides
+            // the thumb, and every track click then pages in the same direction)
+            for (int i = 0; i < 7; i++) {
+                for (int j = 0; j < 7; j++) {
                     pane.add(new JButton(String.valueOf(i) + j));
                 }
             }
 
-            jFrame.setSize(150, 150);
+            jFrame.setSize(220, 220);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });

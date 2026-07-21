@@ -114,7 +114,15 @@ public final class WindowManager {
             }
 
             while (!needStop.get()) {
-                WindowManager.getInstance().performJobOnce(job);
+                try {
+                    WindowManager.getInstance().performJobOnce(job);
+                } catch (RuntimeException e) {
+                    // a transient failure must not kill the job: nothing ever queries the
+                    // executor's future, so a propagated exception would vanish silently and
+                    // the job would simply stop performing
+                    logger.warn("window job iteration failed; retrying", e);
+                }
+
                 Timeouts.sleep(TimeoutKey.WindowManager_TimeDelta);
             }
 

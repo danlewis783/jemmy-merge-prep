@@ -78,7 +78,9 @@ class JInternalFrameOperatorTest {
             internalFrame.setSize(100, 100);
             internalFrame.setVisible(true);
             desktop.add(internalFrame);
-            frame.setSize(200, 200);
+            // roomy enough that the desktop pane still fits the resize target after the
+            // native frame decorations grow under display scaling
+            frame.setSize(400, 400);
             TestWindows.place(frame);
             frame.setVisible(true);
         });
@@ -199,9 +201,11 @@ class JInternalFrameOperatorTest {
     void testResize() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        operator2.resize(127, 129);
-        assertThat(onQueue(internalFrame::getWidth)).isEqualTo(127);
-        assertThat(onQueue(internalFrame::getHeight)).isEqualTo(129);
+        // comfortably above the internal frame's minimum size, which scales with display DPI
+        // (the scaled title-pane buttons alone force a minimum width of 128 at 150%)
+        operator2.resize(241, 179);
+        assertThat(onQueue(internalFrame::getWidth)).isEqualTo(241);
+        assertThat(onQueue(internalFrame::getHeight)).isEqualTo(179);
     }
 
     @Test
