@@ -34,6 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.util.Display;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Maps logical screen coordinates to the coordinate space {@link Robot#mouseMove} actually moves
@@ -68,6 +70,8 @@ import org.netbeans.jemmy.util.Display;
  * driving robot input on a secondary monitor with a different scale are out of scope.
  */
 public final class RobotCalibration {
+
+    private static final Logger logger = LoggerFactory.getLogger(RobotCalibration.class);
 
     /**
      * Sub-pixel aim offset applied when inverting the fit; a quarter pixel is a neutral
@@ -104,11 +108,27 @@ public final class RobotCalibration {
      */
     public static synchronized Point map(int x, int y) {
         if (!initialized) {
-            mapping = Display.isScaled() ? calibrateOnAnyThread() : null;
+            mapping = Display.isScaled() ? calibrateWithRetry() : null;
             initialized = true;
         }
 
         return (mapping == null) ? new Point(x, y) : new Point(mapping.mapX(x), mapping.mapY(y));
+    }
+
+    /**
+     * Right after another process drove heavy robot input, the OS conversion can sit in a
+     * transient regime where the fitted mapping verifies a few pixels off target, while a
+     * calibration repeated moments later observes the settled conversion and passes (seen
+     * reproducibly on a 4K/125% display with back-to-back test JVMs). Retry once before
+     * giving up.
+     */
+    static Mapping calibrateWithRetry() {
+        try {
+            return calibrateOnAnyThread();
+        } catch (JemmyException e) {
+            logger.warn("robot calibration failed to verify; retrying once", e);
+            return calibrateOnAnyThread();
+        }
     }
 
     /**

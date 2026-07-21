@@ -33,7 +33,9 @@ final class RobotCalibrationTest {
 
     @Test
     void calibrationConvergesOnThisDisplay() {
-        RobotCalibration.Mapping mapping = RobotCalibration.calibrate();
+        // the retrying path is what production robot input uses; a single calibrate() attempt
+        // can transiently verify a few pixels off right after another JVM's robot activity
+        RobotCalibration.Mapping mapping = RobotCalibration.calibrateWithRetry();
 
         // calibrate() self-verifies by probing: it throws if mapped moves do not land on their
         // targets, so the substantive check is that it returned at all; spot-check that the
