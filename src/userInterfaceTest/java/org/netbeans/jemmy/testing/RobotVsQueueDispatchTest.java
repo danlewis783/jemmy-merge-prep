@@ -18,6 +18,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 import java.awt.*;
@@ -39,7 +40,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.DispatchingModel;
+import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -48,15 +52,19 @@ import org.netbeans.jemmy.operators.JTextAreaOperator;
 import javax.swing.*;
 
 // formerly scenario test jemmy_043
-@Timeout(value=5, unit=TimeUnit.SECONDS)
+// 20s rather than 5s: on scaled displays the first robot action pays the one-time
+// robot-coordinate calibration (a few seconds of probing) inside this budget
+@Timeout(value=20, unit=TimeUnit.SECONDS)
 final class RobotVsQueueDispatchTest {
 
     private static final String FRAME_TITLE = "RobotVsQueueDispatchTest";
     private JFrame jFrame;
+    private TimeoutOverride quietPeriod;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
         Timeouts.resetToDefaults();
+        quietPeriod = Timeouts.override(TimeoutKey.Testing_A, 300L);
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame(FRAME_TITLE);
             this.jFrame = jFrame;
@@ -78,10 +86,14 @@ final class RobotVsQueueDispatchTest {
 
     @AfterEach
     void after() throws InterruptedException, InvocationTargetException {
-        EventQueue.invokeAndWait(() -> {
-            jFrame.setVisible(false);
-            jFrame.dispose();
-        });
+        try {
+            EventQueue.invokeAndWait(() -> {
+                jFrame.setVisible(false);
+                jFrame.dispose();
+            });
+        } finally {
+            quietPeriod.cancel();
+        }
     }
 
     @Test
@@ -92,13 +104,13 @@ final class RobotVsQueueDispatchTest {
 
         goQueueMode();
 
-        List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<RecordedEvent> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
         goRobotMode();
 
-        List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<RecordedEvent> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-        assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
+        assertEventsMatch(linesQueue, linesRobot);
     }
 
     @Test
@@ -109,23 +121,44 @@ final class RobotVsQueueDispatchTest {
 
         goRobotMode();
 
-        List<String> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<RecordedEvent> linesRobot = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
         goQueueMode();
 
-        List<String> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
+        List<RecordedEvent> linesQueue = recordEvents(jFrameOp, jTextAreaOp, jButtonOp);
 
-        assertThat(linesQueue).containsExactlyElementsOf(linesRobot);
+        assertEventsMatch(linesQueue, linesRobot);
     }
 
-    private List<String> recordEvents(
+    private List<RecordedEvent> recordEvents(
             JFrameOperator jFrameOp, JTextAreaOperator jTextAreaOp, JButtonOperator jButtonOp) {
+        // a robot event from the previous scenario (e.g. clearText's DELETE release) can still
+        // be in flight when the listeners attach and would record as a stray leading event
+        EventTool.getInstance().waitNoEvent(TimeoutKey.Testing_A);
         EventRecorder eventRecorder = new EventRecorder();
         addListener(eventRecorder, jFrameOp, jTextAreaOp, jButtonOp);
         scenario(jTextAreaOp, jButtonOp);
         removeListener(eventRecorder, jFrameOp, jTextAreaOp, jButtonOp);
         jTextAreaOp.clearText();
         return eventRecorder.summary();
+    }
+
+    private static void assertEventsMatch(List<RecordedEvent> expected, List<RecordedEvent> actual) {
+        assertThat(actual).hasSameSizeAs(expected);
+        for (int i = 0; i < expected.size(); i++) {
+            RecordedEvent expectedEvent = expected.get(i);
+            RecordedEvent actualEvent = actual.get(i);
+            String description = "event " + i + " (" + expectedEvent.description + ")";
+            assertThat(actualEvent.description).as(description).isEqualTo(expectedEvent.description);
+            assertThat(actualEvent.mouse).as(description).isEqualTo(expectedEvent.mouse);
+            if (expectedEvent.mouse) {
+                // robot input on fractionally scaled displays cannot reach every logical pixel,
+                // and the coordinate conversion wobbles a further pixel or two, so a robot
+                // click may land a few pixels from the queue model's exact coordinates
+                assertThat(actualEvent.x).as(description + " x").isCloseTo(expectedEvent.x, within(3));
+                assertThat(actualEvent.y).as(description + " y").isCloseTo(expectedEvent.y, within(3));
+            }
+        }
     }
 
     private void goRobotMode() {
@@ -181,8 +214,8 @@ final class RobotVsQueueDispatchTest {
             events.add(e);
         }
 
-        private List<String> summary() {
-            List<String> temp = new ArrayList<>();
+        private List<RecordedEvent> summary() {
+            List<RecordedEvent> temp = new ArrayList<>();
             for (AWTEvent e : events) {
                 String eventDescription = e.toString();
                 if (e instanceof KeyEvent) {
@@ -194,7 +227,8 @@ final class RobotVsQueueDispatchTest {
                         eventDescription = "Key typed";
                     }
 
-                    temp.add(eventDescription + " " + getKeyName(((KeyEvent) e).getKeyCode()));
+                    temp.add(new RecordedEvent(
+                            eventDescription + " " + getKeyName(((KeyEvent) e).getKeyCode()), 0, 0, false));
                 } else if (e instanceof MouseEvent) {
                     if (e.getID() == MouseEvent.MOUSE_PRESSED) {
                         eventDescription = "Mouse pressed";
@@ -204,7 +238,8 @@ final class RobotVsQueueDispatchTest {
                         eventDescription = "Mouse clicked";
                     }
 
-                    temp.add(eventDescription + " " + ((MouseEvent) e).getX() + " " + ((MouseEvent) e).getY());
+                    temp.add(new RecordedEvent(
+                            eventDescription, ((MouseEvent) e).getX(), ((MouseEvent) e).getY(), true));
                 }
             }
 
@@ -269,6 +304,25 @@ final class RobotVsQueueDispatchTest {
         @Override
         public void keyTyped(KeyEvent e) {
             eventDispatched(e);
+        }
+    }
+
+    private static final class RecordedEvent {
+        private final String description;
+        private final int x;
+        private final int y;
+        private final boolean mouse;
+
+        private RecordedEvent(String description, int x, int y, boolean mouse) {
+            this.description = description;
+            this.x = x;
+            this.y = y;
+            this.mouse = mouse;
+        }
+
+        @Override
+        public String toString() {
+            return mouse ? (description + " " + x + "," + y) : description;
         }
     }
 }

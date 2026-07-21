@@ -21,10 +21,14 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.SecondaryLoop;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JWindow;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
@@ -44,9 +48,19 @@ import org.netbeans.jemmy.util.Display;
  * transform is fitted from the observations, and the fit is then verified by moving to computed
  * request points and checking the observed landing positions match the intended targets. The
  * verification also selects a sub-pixel aim offset per axis, so that integer logical targets are
- * hit exactly regardless of whether the platform truncates or rounds when converting the pointer
- * position back to logical pixels. Calibration fails with a {@link JemmyException} rather than
- * letting robot input proceed with a mapping that has been shown not to land where it aims.
+ * hit as exactly as the request grid allows regardless of whether the platform truncates or
+ * rounds when converting the pointer position back to logical pixels. Calibration fails with a
+ * {@link JemmyException} rather than letting robot input proceed with a mapping that has been
+ * shown not to land where it aims. When first triggered on the event dispatch thread, the
+ * calibration runs on a worker thread while the EDT keeps dispatching events in a
+ * {@link SecondaryLoop}.
+ *
+ * <p>On some scaled-display configurations (observed on a docked laptop driving a single 4K
+ * display at 125%) a single cursor move can land off target in a history-dependent way — the
+ * landing varies with where the cursor came from — while an immediate repeat of the same move
+ * lands consistently. Every probe therefore issues its move twice (the repeat is a no-op when
+ * the first move already landed), and the fit uses the median of pairwise slopes across several
+ * probes, so an individual poisoned reading cannot corrupt the model.
  *
  * <p>On unscaled displays {@link Display#isScaled()} short-circuits all of this to the identity
  * mapping, so calibration (and its brief full-screen window flash) only ever happens on machines
@@ -66,12 +80,17 @@ public final class RobotCalibration {
      * the primary screen even when the request space is 2.5x finer than the logical space. */
     private static final double[] TARGET_FRACTIONS = {0.20, 0.26, 0.32, 0.38};
 
-    private static final long PROBE_TIMEOUT_MS = 5_000L;
-    private static final int ROBOT_AUTO_DELAY_MS = 10;
+    /** Fit probe positions as fractions of the primary screen size. Five probes give the median
+     * slope estimate enough pairs to outvote an individual poisoned reading. */
+    private static final double[] FIT_FRACTIONS = {0.10, 0.19, 0.28, 0.37, 0.45};
 
-    /** Scales at or below this still reach every logical pixel, so verification demands
-     * exact landings; a coarser request grid cannot represent every target. */
-    private static final double FINE_GRID_MAX_SCALE = 1.02;
+    private static final long PROBE_TIMEOUT_MS = 5_000L;
+
+    /** How long the observed-event queue must stay quiet before a probe reading is final, so a
+     * reading is never taken while a later position report is still in flight. */
+    private static final long QUIET_PERIOD_MS = 50L;
+
+    private static final int ROBOT_AUTO_DELAY_MS = 10;
 
     private static boolean initialized;
     private static @Nullable Mapping mapping;
@@ -84,11 +103,70 @@ public final class RobotCalibration {
      */
     public static synchronized Point map(int x, int y) {
         if (!initialized) {
-            mapping = Display.isScaled() ? calibrate() : null;
+            mapping = Display.isScaled() ? calibrateOnAnyThread() : null;
             initialized = true;
         }
 
         return (mapping == null) ? new Point(x, y) : new Point(mapping.mapX(x), mapping.mapY(y));
+    }
+
+    /**
+     * True when a non-identity mapping is in effect (calibration ran on a scaled display).
+     * Movers should then verify each move's landing against the actual pointer position and
+     * correct the residual (see {@code RobotDriver.landMouse}): on such displays the conversion
+     * of an injected move is history- and timing-dependent, so the mapped request is only a
+     * seed, not a guarantee.
+     */
+    public static synchronized boolean isActive() {
+        return mapping != null;
+    }
+
+    /**
+     * Runs the calibration from whatever thread first needed the mapping. Robot input is
+     * frequently dispatched on the event dispatch thread, where the calibration cannot simply
+     * block (the mouse events it waits for are dispatched by that very thread); there it runs on
+     * a worker thread while the EDT keeps pumping events in a {@link SecondaryLoop}.
+     */
+    private static Mapping calibrateOnAnyThread() {
+        if (!EventQueue.isDispatchThread()) {
+            return calibrate();
+        }
+
+        SecondaryLoop loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop();
+        AtomicReference<Object> outcome = new AtomicReference<>();
+        Thread worker = new Thread(() -> {
+            try {
+                outcome.set(calibrate());
+            } catch (RuntimeException e) {
+                outcome.set(e);
+            } finally {
+                // exit() before the EDT reaches enter() returns false and would strand the EDT
+                // in the loop forever; retry until the entered loop is really exited
+                try {
+                    for (int i = 0; (i < 600) && !loop.exit(); i++) {
+                        Thread.sleep(10);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }, "jemmy-robot-calibration");
+        worker.setDaemon(true);
+        worker.start();
+        if (!loop.enter()) {
+            throw new JemmyException(
+                    "could not enter a secondary event loop to run robot calibration off the event dispatch thread");
+        }
+
+        Object result = outcome.get();
+        if (result instanceof RuntimeException) {
+            throw (RuntimeException) result;
+        }
+        if (result == null) {
+            throw new JemmyException("robot calibration worker terminated without a result");
+        }
+
+        return (Mapping) result;
     }
 
     /** Measures and verifies the request-space mapping for the primary screen. */
@@ -112,23 +190,41 @@ public final class RobotCalibration {
         CalibrationScreen screen = CalibrationScreen.show(bounds, queueTool);
         try {
             Point park = at(bounds, 0.05);
-            Point fitRequest1 = at(bounds, 0.10);
-            Point fitRequest2 = at(bounds, 0.45);
-            Point observed1 = probe(robot, screen, park, fitRequest1);
-            Point observed2 = probe(robot, screen, park, fitRequest2);
-            Linear x = Linear.fit(fitRequest1.x, observed1.x, fitRequest2.x, observed2.x);
-            Linear y = Linear.fit(fitRequest1.y, observed1.y, fitRequest2.y, observed2.y);
+            int probeCount = FIT_FRACTIONS.length;
+            int[] requestsX = new int[probeCount];
+            int[] requestsY = new int[probeCount];
+            int[] observedX = new int[probeCount];
+            int[] observedY = new int[probeCount];
+            for (int i = 0; i < probeCount; i++) {
+                Point request = at(bounds, FIT_FRACTIONS[i]);
+                Point observed = probe(robot, screen, park, request);
+                requestsX[i] = request.x;
+                requestsY[i] = request.y;
+                observedX[i] = observed.x;
+                observedY[i] = observed.y;
+            }
+
+            Linear x = Linear.fit(requestsX, observedX);
+            Linear y = Linear.fit(requestsY, observedY);
             return verifyAndChooseAims(robot, screen, bounds, park, x, y);
         } finally {
             screen.dispose(queueTool);
+            // the caller's robot input follows immediately; if the calibration window's native
+            // teardown has not finished, that input lands on the dying window instead of the
+            // caller's target — wait until it is really gone
+            robot.waitForIdle();
+            try {
+                Thread.sleep(150L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
     /**
      * Moves through the fitted mapping to known logical targets and checks where the moves land,
-     * picking the sub-pixel aim offset per axis that lands exactly. Fails if no candidate does
-     * (or, for a request grid coarser than the logical grid, if any landing is off by more than
-     * one pixel).
+     * picking the sub-pixel aim offset per axis whose landings are closest (most of them exact,
+     * ideally). Fails if the best candidate still misses any target by more than one pixel.
      */
     private static Mapping verifyAndChooseAims(
             Robot robot, CalibrationScreen screen, Rectangle bounds, Point park, Linear x, Linear y) {
@@ -154,6 +250,12 @@ public final class RobotCalibration {
                         bounds.y + (int) (bounds.height * TARGET_FRACTIONS[i]) + i);
                 Point request = new Point(x.requestFor(target.x, aim), y.requestFor(target.y, aim));
                 Point observed = probe(robot, screen, park, request);
+                if ((Math.abs(observed.x - target.x) > 1) || (Math.abs(observed.y - target.y) > 1)) {
+                    // a transient disturbance (user mouse input, an OS pointer adjustment) can
+                    // poison a single reading; confirm a miss before letting it count
+                    observed = probe(robot, screen, park, request);
+                }
+
                 int errorX = Math.abs(observed.x - target.x);
                 int errorY = Math.abs(observed.y - target.y);
                 if (errorX == 0) {
@@ -171,26 +273,29 @@ public final class RobotCalibration {
                         .append(System.lineSeparator());
             }
 
-            if (exactX > bestExactX) {
+            if ((maxErrorX <= 2) && (maxErrorY <= 2)) {
+                // good enough on both axes; skip the remaining candidates to keep the one-time
+                // calibration cost out of test timeout budgets
+                return new Mapping(x, aim, y, aim);
+            }
+
+            if ((maxErrorX < bestMaxErrorX) || ((maxErrorX == bestMaxErrorX) && (exactX > bestExactX))) {
                 bestExactX = exactX;
                 bestMaxErrorX = maxErrorX;
                 bestAimX = aim;
             }
-            if (exactY > bestExactY) {
+            if ((maxErrorY < bestMaxErrorY) || ((maxErrorY == bestMaxErrorY) && (exactY > bestExactY))) {
                 bestExactY = exactY;
                 bestMaxErrorY = maxErrorY;
                 bestAimY = aim;
             }
-            if ((bestExactX == targetCount) && (bestExactY == targetCount)) {
-                break;
-            }
         }
 
-        boolean xAcceptable =
-                (x.scale <= FINE_GRID_MAX_SCALE) ? (bestExactX == targetCount) : (bestMaxErrorX <= 1);
-        boolean yAcceptable =
-                (y.scale <= FINE_GRID_MAX_SCALE) ? (bestExactY == targetCount) : (bestMaxErrorY <= 1);
-        if (!xAcceptable || !yAcceptable) {
+        // the mapping only seeds the closed-loop landing in RobotDriver.landMouse, which reads
+        // the actual pointer position and corrects the residual error per move, so seed quality
+        // within a few pixels is sufficient; beyond that the fit did not capture the display's
+        // behavior at all
+        if ((bestMaxErrorX > 5) || (bestMaxErrorY > 5)) {
             throw new JemmyException("robot calibration could not find a mapping that lands robot moves on their"
                     + " targets (fitted x: " + x + ", y: " + y + ")" + System.lineSeparator() + diagnostics);
         }
@@ -199,14 +304,19 @@ public final class RobotCalibration {
     }
 
     /**
-     * Moves to the park point, then to the request point, and returns where the second move
-     * landed. The park hop guarantees the request move actually changes the pointer position, so
-     * a mouse event is always generated.
+     * Moves to the park point, then to the request point twice, and returns where the pointer
+     * finally landed. The park hop guarantees the request move actually changes the pointer
+     * position, so a mouse event is always generated. The repeated request move counters
+     * scaled-display configurations where a single move's landing depends on where the cursor
+     * came from: the repeat lands consistently, and generates no further event when the first
+     * move already landed exactly.
      */
     private static Point probe(Robot robot, CalibrationScreen screen, Point park, Point request) {
         robot.mouseMove(park.x, park.y);
         robot.waitForIdle();
         screen.reset();
+        robot.mouseMove(request.x, request.y);
+        robot.waitForIdle();
         robot.mouseMove(request.x, request.y);
         robot.waitForIdle();
         Point observed = screen.awaitPointer(PROBE_TIMEOUT_MS);
@@ -256,14 +366,40 @@ public final class RobotCalibration {
             this.offset = offset;
         }
 
-        static Linear fit(int request1, int observed1, int request2, int observed2) {
-            if (Math.abs(observed2 - observed1) < 10) {
-                throw new JemmyException("mouse pointer did not track the calibration probes (moves to " + request1
-                        + " and " + request2 + " were observed at " + observed1 + " and " + observed2 + ")");
+        /**
+         * Theil-Sen fit: the median of all pairwise slopes, with the median residual as the
+         * offset. The medians make the fit immune to a minority of poisoned probe readings,
+         * which some scaled-display configurations produce (see the class comment).
+         */
+        static Linear fit(int[] requests, int[] observed) {
+            int count = requests.length;
+            double[] slopes = new double[count * (count - 1) / 2];
+            int pair = 0;
+            for (int i = 0; i < count; i++) {
+                for (int j = i + 1; j < count; j++) {
+                    slopes[pair++] = (double) (observed[j] - observed[i]) / (requests[j] - requests[i]);
+                }
             }
 
-            double scale = (double) (observed2 - observed1) / (request2 - request1);
-            return new Linear(scale, observed1 - scale * request1);
+            double scale = median(slopes);
+            if ((Math.abs(observed[count - 1] - observed[0]) < 10) || (scale <= 0.1)) {
+                throw new JemmyException("mouse pointer did not track the calibration probes (requests "
+                        + Arrays.toString(requests) + " were observed at " + Arrays.toString(observed) + ")");
+            }
+
+            double[] residuals = new double[count];
+            for (int i = 0; i < count; i++) {
+                residuals[i] = observed[i] - scale * requests[i];
+            }
+
+            return new Linear(scale, median(residuals));
+        }
+
+        private static double median(double[] values) {
+            double[] sorted = values.clone();
+            Arrays.sort(sorted);
+            int middle = sorted.length / 2;
+            return ((sorted.length % 2) == 1) ? sorted[middle] : ((sorted[middle - 1] + sorted[middle]) / 2.0);
         }
 
         /** The request coordinate whose observed landing is the given logical target. */
@@ -334,8 +470,11 @@ public final class RobotCalibration {
                     return null;
                 }
 
+                // keep draining until the queue stays quiet for a beat, so the reading is never
+                // taken while a later (more final) position report is still in flight; a
+                // stationary pointer stops reporting, so this terminates
                 Point later;
-                while ((later = observed.poll()) != null) {
+                while ((later = observed.poll(QUIET_PERIOD_MS, TimeUnit.MILLISECONDS)) != null) {
                     point = later;
                 }
 

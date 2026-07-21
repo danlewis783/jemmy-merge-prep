@@ -44,7 +44,9 @@ import org.netbeans.jemmy.util.WindowFunction;
 import org.netbeans.jemmy.util.WindowManager;
 
 // formerly scenario test jemmy_017
-@Timeout(value=5, unit=TimeUnit.SECONDS)
+// 20s rather than 5s: the MouseVisualizer's real robot click pays the one-time
+// robot-coordinate calibration (a few seconds of probing) on scaled displays
+@Timeout(value=20, unit=TimeUnit.SECONDS)
 class WindowManagerJobsTest {
 
     @BeforeEach

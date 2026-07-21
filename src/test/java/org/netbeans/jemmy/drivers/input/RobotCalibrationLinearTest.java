@@ -27,14 +27,16 @@ final class RobotCalibrationLinearTest {
 
     @Test
     void fitRecoversScaleAndOffset() {
-        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(200, 160, 1000, 800);
+        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(
+                new int[] {200, 600, 1000}, new int[] {160, 480, 800});
         assertThat(linear.scale).isCloseTo(0.8, within(1e-12));
         assertThat(linear.offset).isCloseTo(0.0, within(1e-9));
     }
 
     @Test
     void identityFitMapsTargetsToThemselves() {
-        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(100, 100, 900, 900);
+        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(
+                new int[] {100, 300, 500, 700, 900}, new int[] {100, 300, 500, 700, 900});
         for (int target = 0; target <= 500; target++) {
             assertThat(linear.requestFor(target, 0.0)).as("target %d", target).isEqualTo(target);
         }
@@ -44,7 +46,8 @@ final class RobotCalibrationLinearTest {
     void halfPixelAimLandsExactlyWhenPlatformTruncates() {
         // 125% scaling: the robot moves in physical pixels and the platform truncates when
         // reporting the pointer in logical pixels, so a landing observes floor(0.8 * request)
-        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(200, 160, 1000, 800);
+        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(
+                new int[] {200, 600, 1000}, new int[] {160, 480, 800});
         for (int target = 0; target <= 1000; target++) {
             int request = linear.requestFor(target, 0.5);
             int landed = (int) Math.floor(0.8 * request);
@@ -53,8 +56,19 @@ final class RobotCalibrationLinearTest {
     }
 
     @Test
+    void poisonedProbeIsOutvoted() {
+        // true mapping is observed = truncate(1.25 * request); the second probe reads 20px
+        // short, the way a mixed-DPI cursor-move conversion poisons a reading
+        RobotCalibration.Linear linear = RobotCalibration.Linear.fit(
+                new int[] {384, 730, 1075, 1421, 1728}, new int[] {480, 892, 1343, 1776, 2160});
+        assertThat(linear.scale).isCloseTo(1.25, within(0.01));
+        assertThat(linear.offset).isCloseTo(0.0, within(3.0));
+    }
+
+    @Test
     void untrackedProbesAreRejected() {
-        assertThatThrownBy(() -> RobotCalibration.Linear.fit(100, 400, 900, 401))
+        assertThatThrownBy(() -> RobotCalibration.Linear.fit(
+                        new int[] {100, 300, 500, 700, 900}, new int[] {400, 401, 400, 399, 401}))
                 .isInstanceOf(JemmyException.class)
                 .hasMessageContaining("did not track");
     }

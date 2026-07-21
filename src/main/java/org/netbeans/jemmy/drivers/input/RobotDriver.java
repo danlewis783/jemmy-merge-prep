@@ -25,7 +25,9 @@
 
 package org.netbeans.jemmy.drivers.input;
 
+import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -83,6 +85,7 @@ public class RobotDriver extends LightSupportiveDriver {
         Point target = RobotCalibration.map(x, y);
         if (!smooth) {
             getRobot().mouseMove(target.x, target.y);
+            landMouse(target.x, target.y, x, y);
         } else {
             double targetX = target.x;
             double targetY = target.y;
@@ -105,7 +108,49 @@ public class RobotDriver extends LightSupportiveDriver {
             haveOldPos = true;
             oldX = targetX;
             oldY = targetY;
+            landMouse(target.x, target.y, x, y);
         }
+    }
+
+    /**
+     * Closed-loop landing for displays where the calibration is active. The OS conversion of an
+     * injected cursor move there is history- and timing-dependent (landing factors between
+     * ~0.94x and ~1.8x were measured on the same machine within one session), so no open-loop
+     * mapping can guarantee the landing. Instead, read where the pointer actually ended up and
+     * nudge the request by half the remaining error until the pointer sits on the logical
+     * target — the half step keeps the loop convergent for any conversion factor below 4x,
+     * where a full step was observed to oscillate. {@link MouseInfo} reports the same
+     * coordinates that delivered mouse events carry, so equality means events land where the
+     * caller aimed. Best-effort bounded loop; no-op on unscaled displays.
+     */
+    private void landMouse(int requestX, int requestY, int targetX, int targetY) {
+        if (!RobotCalibration.isActive()) {
+            return;
+        }
+
+        for (int attempt = 0; attempt < 16; attempt++) {
+            PointerInfo info = MouseInfo.getPointerInfo();
+            if (info == null) {
+                return;
+            }
+
+            Point pointer = info.getLocation();
+            if ((pointer.x == targetX) && (pointer.y == targetY)) {
+                return;
+            }
+
+            requestX += halfStep(targetX - pointer.x);
+            requestY += halfStep(targetY - pointer.y);
+            getRobot().mouseMove(requestX, requestY);
+        }
+    }
+
+    private static int halfStep(int error) {
+        if (error > 0) {
+            return Math.max(1, error / 2);
+        }
+
+        return (error < 0) ? Math.min(-1, error / 2) : 0;
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers, TimeoutKey mouseClick) {

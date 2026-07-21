@@ -45,8 +45,10 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// 20s rather than 10s: on scaled displays the first robot move pays the one-time
+// robot-coordinate calibration (a few seconds of probing) inside this budget
 @ExtendWith(DumpOnFailure.class)
-@Timeout(value=10, unit=TimeUnit.SECONDS)
+@Timeout(value=20, unit=TimeUnit.SECONDS)
 final class JPopupMenuOperatorRobotTest {
 
     private JFrame frame;
