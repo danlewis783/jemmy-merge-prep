@@ -42,28 +42,32 @@ public final class JemmyQueue extends EventQueue {
     }
 
     public void install() {
-        if (installed.compareAndSet(false, true)) {
-            try {
-                Runnable runnable =
-                        () -> Toolkit.getDefaultToolkit().getSystemEventQueue().push(JemmyQueue.this);
-                if (EventQueue.isDispatchThread()) {
-                    runnable.run();
-                } else {
-                    try {
-                        EventQueue.invokeAndWait(runnable);
-                    } catch (InterruptedException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
+        // The flag must flip on the EDT, atomically with the push itself. If it flipped on the
+        // calling thread instead, an interrupt while waiting for a blocked EDT would roll the
+        // flag back with the push runnable still queued; once that stale runnable finally ran,
+        // a later install() would push this same queue a second time, and EventQueue.push()
+        // then links the queue to itself — an unbreakable cycle that wedges all of AWT.
+        Runnable runnable = () -> {
+            if (installed.compareAndSet(false, true)) {
+                try {
+                    Toolkit.getDefaultToolkit().getSystemEventQueue().push(JemmyQueue.this);
+                } catch (RuntimeException | Error e) {
+                    installed.set(false);
+                    throw e;
                 }
-            } catch (RuntimeException | Error e) {
-                // failed before the push took effect; roll the flag back so the state stays
-                // "not installed" instead of claiming an installation that never happened
-                installed.set(false);
-                throw e;
+                logger.info("JemmyQueue installed");
+            } else {
+                logger.debug("already installed");
             }
-            logger.info("JemmyQueue installed");
+        };
+        if (EventQueue.isDispatchThread()) {
+            runnable.run();
         } else {
-            logger.debug("already installed");
+            try {
+                EventQueue.invokeAndWait(runnable);
+            } catch (InterruptedException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
