@@ -93,6 +93,10 @@ public final class QueueTool {
      * except that a thrown {@link JemmyException} propagates as-is - work that pre-wraps a checked
      * exception keeps a single wrapper, so {@code getCause()} stays the original exception.
      *
+     * <p>If this call gives up before the work starts (pre-invocation timeout, interrupt), the
+     * queued work is cancelled: when the dispatch thread eventually reaches the stale event it
+     * no-ops instead of running work nobody is waiting for.
+     *
      * @param callable the work to run on the dispatch thread
      * @return the callable's result; null exactly when the callable returns null
      */
@@ -151,11 +155,15 @@ public final class QueueTool {
 
         try {
             if (!caller.getStartGate().await(preInvocationTimeout, TimeUnit.MILLISECONDS)) {
+                // cancel before throwing: the still-queued event must no-op when the EDT gets
+                // to it, not replay clicks and reads long after this caller gave up on them
+                caller.cancel();
                 throw new TimeoutExpiredException(String.format(
                         "QueueTool_PreInvocationTimeout timeout (%d) exceeded waiting for start latch of caller",
                         preInvocationTimeout));
             }
         } catch (InterruptedException e) {
+            caller.cancel();
             throw new JemmyException("InterruptedException raised while waiting for start latch of caller", e);
         }
 
