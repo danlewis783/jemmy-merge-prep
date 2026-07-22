@@ -40,6 +40,12 @@ public final class EventListener implements AWTEventListener {
         eventTime.set(System.currentTimeMillis());
     }
 
+    /** Forgets the last observed event and its time, returning to the just-constructed state. */
+    public void reset() {
+        eventRef = new WeakReference<>(null);
+        eventTime.set(-1);
+    }
+
     public @Nullable AWTEvent getEvent() {
         return eventRef.get();
     }

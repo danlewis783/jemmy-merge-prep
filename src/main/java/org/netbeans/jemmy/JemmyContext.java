@@ -30,6 +30,8 @@ import java.util.Objects;
 import org.netbeans.jemmy.drivers.DriverInstaller;
 import org.netbeans.jemmy.drivers.DriverMarker;
 import org.netbeans.jemmy.drivers.DriverType;
+import org.netbeans.jemmy.util.CheckThreadViolationRepaintManager;
+import org.netbeans.jemmy.util.WindowManager;
 
 /**
  * Process-wide harness state: the active input {@link DispatchingModel dispatching model}, the driver
@@ -52,7 +54,12 @@ public final class JemmyContext {
 
     private JemmyContext() {
         charBindingMap = DefaultCharBindingMap.getInstance();
-        snapshot = ModelSnapshot.of(EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut));
+        snapshot = ModelSnapshot.of(defaultModel());
+    }
+
+    /** @return the model active at startup and after {@link #resetToDefaults()}: queue dispatching with shortcutting */
+    public static EnumSet<DispatchingModel> defaultModel() {
+        return EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut);
     }
 
     public CharBindingMap getCharBindingMap() {
@@ -68,10 +75,12 @@ public final class JemmyContext {
 
     /**
      * Switches the dispatching model, rebuilding the driver registry from scratch to the new
-     * model's defaults and swapping both in atomically. A failure while building leaves the
-     * previous model and drivers fully in place; drivers customized through
-     * {@link org.netbeans.jemmy.drivers.DriverManager#setDriver} are discarded by the rebuild.
-     * No-op when the model is unchanged.
+     * model's defaults and swapping both in atomically. The queue installation status
+     * ({@link QueueUtils}) is reset in the same step, so the next event dispatched re-reads the
+     * new model and installs the {@link JemmyQueue} exactly when the model calls for it. A failure
+     * at any point leaves the previous model, drivers, and a self-consistent queue state fully in
+     * place; drivers customized through {@link org.netbeans.jemmy.drivers.DriverManager#setDriver}
+     * are discarded by the rebuild. No-op when the model is unchanged.
      */
     public synchronized void installDriversAndSetDispatchingModel(EnumSet<DispatchingModel> model) {
         Objects.requireNonNull(model, "model");
@@ -79,7 +88,26 @@ public final class JemmyContext {
             return;
         }
 
-        snapshot = ModelSnapshot.of(model);
+        install(ModelSnapshot.of(model));
+    }
+
+    /**
+     * Restores the default dispatching model with its default drivers, unconditionally: unlike
+     * {@link #installDriversAndSetDispatchingModel}, drivers customized through
+     * {@link org.netbeans.jemmy.drivers.DriverManager#setDriver} are discarded even when the model
+     * is already the default. The queue installation status is reset along with the model. A
+     * failure while rebuilding leaves the previous state fully in place.
+     */
+    public synchronized void resetToDefaults() {
+        install(ModelSnapshot.of(defaultModel()));
+    }
+
+    private void install(ModelSnapshot fresh) {
+        // order matters for failure atomicity: the snapshot build and the queue reset can each
+        // fail without having changed anything (a failed queue reset keeps its old installation
+        // and the old snapshot still matches it); the final swap is a plain write
+        QueueUtils.reset();
+        snapshot = fresh;
     }
 
     /**
@@ -104,6 +132,25 @@ public final class JemmyContext {
             EnumSet<DispatchingModel> copy = EnumSet.copyOf(model);
             return new ModelSnapshot(copy, DriverInstaller.registryFor(copy));
         }
+    }
+
+    /**
+     * Restores every kind of process-wide Jemmy state to its just-started condition: window jobs
+     * stopped ({@link WindowManager#removeAllJobs}), any thread-violation repaint manager
+     * uninstalled ({@link CheckThreadViolationRepaintManager#uninstall}), the dispatching model,
+     * drivers, and queue installation back to defaults ({@link #resetToDefaults}), timeout
+     * overrides cleared ({@link Timeouts#resetToDefaults}), and the AWT event listeners
+     * re-registered with their last-event memory forgotten ({@link EventTool#reset}). Intended for
+     * test harnesses that run many test classes in one JVM, so no class inherits state a previous
+     * class mutated - or, having failed, never restored.
+     */
+    public static void resetAllState() {
+        // background window-job threads first, so nothing races the resets below
+        WindowManager.removeAllJobs();
+        CheckThreadViolationRepaintManager.uninstall();
+        getInstance().resetToDefaults();
+        Timeouts.resetToDefaults();
+        EventTool.getInstance().reset();
     }
 
     public static JemmyContext getInstance() {

@@ -36,26 +36,19 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 @Isolated
 class JemmyContextDispatchingModelTest {
 
-    private static final EnumSet<DispatchingModel> DEFAULT_MODEL =
-            EnumSet.of(DispatchingModel.Queue, DispatchingModel.Shortcut);
+    private static final EnumSet<DispatchingModel> DEFAULT_MODEL = JemmyContext.defaultModel();
 
     private final JemmyContext context = JemmyContext.getInstance();
     private final DriverManager drivers = DriverManager.newInstance(context);
 
     @BeforeEach
     void beforeEach() {
-        resetToFreshDefaults();
+        context.resetToDefaults();
     }
 
     @AfterEach
     void afterEach() {
-        resetToFreshDefaults();
-    }
-
-    /** Two flips force a rebuild even when the model already matches, discarding customizations. */
-    private void resetToFreshDefaults() {
-        context.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
-        context.installDriversAndSetDispatchingModel(DEFAULT_MODEL);
+        context.resetToDefaults();
     }
 
     @Test
@@ -89,6 +82,30 @@ class JemmyContextDispatchingModelTest {
 
         assertThat(context.getDispatchingModel()).contains(DispatchingModel.Robot);
         assertThat(drivers.getMouseDriver(ComponentOperator.class)).isInstanceOf(MouseRobotDriver.class);
+    }
+
+    @Test
+    void resetToDefaultsRestoresTheDefaultModelAndDrivers() {
+        context.installDriversAndSetDispatchingModel(EnumSet.of(DispatchingModel.Robot));
+
+        context.resetToDefaults();
+
+        assertThat(context.getDispatchingModel()).isEqualTo(DEFAULT_MODEL);
+        assertThat(drivers.getMouseDriver(ComponentOperator.class)).isInstanceOf(MouseEventDriver.class);
+    }
+
+    @Test
+    void resetToDefaultsDiscardsCustomDriversEvenWhenTheModelIsAlreadyDefault() {
+        StubMouseDriver custom = new StubMouseDriver();
+        drivers.setDriver(DriverType.Mouse, custom);
+        assertThat(drivers.getMouseDriver(ComponentOperator.class)).isSameAs(custom);
+
+        context.resetToDefaults();
+
+        assertThat(drivers.getMouseDriver(ComponentOperator.class))
+                .as("check that the reset rebuilds the registry unconditionally, unlike a same-model install")
+                .isNotSameAs(custom)
+                .isInstanceOf(MouseEventDriver.class);
     }
 
     @Test

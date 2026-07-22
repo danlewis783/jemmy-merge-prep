@@ -78,6 +78,13 @@ public final class ListenerSet {
         }
     }
 
+    /** Forgets every listener's last observed event and time; registration status is unaffected. */
+    public void clearLastEvents() {
+        for (EventListener listener : listeners) {
+            listener.reset();
+        }
+    }
+
     public long getTheWholeMask() {
         return theWholeMask;
     }

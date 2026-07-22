@@ -61,4 +61,23 @@ public final class QueueUtils {
             Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
         }
     }
+
+    /**
+     * Uninstalls the {@link JemmyQueue} if one was installed and forgets the initialization, so the
+     * next {@link #processEvent(AWTEvent)} re-reads the dispatching model from
+     * {@link JemmyContext} and installs (or not) accordingly. {@link JemmyContext} calls this on
+     * every model switch, keeping the queue installation consistent with the active model; it is
+     * also the reset for the queue installation status on its own.
+     */
+    public static synchronized void reset() {
+        JemmyQueue queue = jemmyQueue;
+        if (queue != null) {
+            // uninstall before forgetting: if it fails, every field is untouched and the old
+            // state stays fully consistent
+            queue.uninstall();
+        }
+        jemmyQueue = null;
+        isShortcutMode = false;
+        isInitialized = false;
+    }
 }

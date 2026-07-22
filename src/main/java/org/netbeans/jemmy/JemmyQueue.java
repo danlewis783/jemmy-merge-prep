@@ -43,16 +43,23 @@ public final class JemmyQueue extends EventQueue {
 
     public void install() {
         if (installed.compareAndSet(false, true)) {
-            Runnable runnable =
-                    () -> Toolkit.getDefaultToolkit().getSystemEventQueue().push(JemmyQueue.this);
-            if (EventQueue.isDispatchThread()) {
-                runnable.run();
-            } else {
-                try {
-                    EventQueue.invokeAndWait(runnable);
-                } catch (InterruptedException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+            try {
+                Runnable runnable =
+                        () -> Toolkit.getDefaultToolkit().getSystemEventQueue().push(JemmyQueue.this);
+                if (EventQueue.isDispatchThread()) {
+                    runnable.run();
+                } else {
+                    try {
+                        EventQueue.invokeAndWait(runnable);
+                    } catch (InterruptedException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+            } catch (RuntimeException | Error e) {
+                // failed before the push took effect; roll the flag back so the state stays
+                // "not installed" instead of claiming an installation that never happened
+                installed.set(false);
+                throw e;
             }
             logger.info("JemmyQueue installed");
         } else {
@@ -62,7 +69,13 @@ public final class JemmyQueue extends EventQueue {
 
     public void uninstall() {
         if (installed.compareAndSet(true, false)) {
-            pop();
+            try {
+                pop();
+            } catch (RuntimeException | Error e) {
+                // the queue is still pushed; roll the flag back so a later uninstall can retry
+                installed.set(true);
+                throw e;
+            }
         } else {
             logger.debug("already uninstalled");
         }

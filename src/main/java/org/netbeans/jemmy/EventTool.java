@@ -72,6 +72,23 @@ public final class EventTool {
         listenerSet.removeListeners();
     }
 
+    /**
+     * Restores the just-constructed state: every listener registered (the whole event mask) and no
+     * last-event memory, no matter what combination of {@link #addListeners(long)} and
+     * {@link #removeListeners()} ran before or how a test using them ended.
+     */
+    public void reset() {
+        listenerSet.removeListeners();
+        listenerSet.clearLastEvents();
+        listenerSet.addListeners();
+        currentEventMask = listenerSet.getTheWholeMask();
+    }
+
+    /** Forgets every listener's last observed event and time; registration status is unaffected. */
+    public void clearLastEvents() {
+        listenerSet.clearLastEvents();
+    }
+
     public long getCurrentEventMask() {
         return currentEventMask;
     }
