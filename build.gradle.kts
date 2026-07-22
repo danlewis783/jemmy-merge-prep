@@ -20,8 +20,12 @@ dependencies {
     api(libs.jspecify)
     implementation(libs.slf4j)
     testFixturesImplementation(libs.assertj.core)
+    testFixturesImplementation(libs.slf4j)
     compileOnly(libs.jetbrains.annotations)
     testFixturesCompileOnly(libs.jetbrains.annotations)
+    // compileOnly: JemmyStateResetExtension needs the extension API, but only test suites that
+    // actually register the extension need JUnit at runtime
+    testFixturesCompileOnly(libs.junit.jupiter.api)
 }
 
 // Forward the test-window placement overrides (see TestWindows in testFixtures) from the
@@ -69,10 +73,11 @@ testing {
             targets {
                 all {
                     testTask.configure {
-                        // one JVM per test class, mirroring the jtreg othervm isolation
-                        // these tests relied on (UIManager L&F and JemmyProperties are global)
+                        // one sequential JVM for the whole suite; JemmyStateResetExtension
+                        // (auto-registered via this suite's junit-platform.properties) restores
+                        // all process-wide state between classes, replacing the former
+                        // forkEvery = 1 jtreg-othervm-style isolation
                         maxParallelForks = 1
-                        forkEvery = 1
                         shouldRunAfter(tasks.test)
                         systemProperty("logback.configurationFile", "logback-automated-test.xml")
                         systemProperty("swing.defaultlaf", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel")

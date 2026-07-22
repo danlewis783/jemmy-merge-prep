@@ -38,8 +38,8 @@ import org.netbeans.jemmy.testing.TestWindows;
 
 /**
  * Exercises internal frames through {@link InternalFrameAPIDriver}, the look-and-feel-immune driver. Installs the
- * driver for this JVM only; the UI test suite forks one JVM per class, so the default drivers are unaffected
- * elsewhere.
+ * driver for this class only; JemmyStateResetExtension restores the default drivers after the class, so other
+ * classes sharing the JVM are unaffected.
  */
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class InternalFrameApiDriverTest {

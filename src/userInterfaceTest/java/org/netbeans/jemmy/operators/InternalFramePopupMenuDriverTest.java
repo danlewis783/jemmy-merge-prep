@@ -38,8 +38,8 @@ import org.netbeans.jemmy.testing.TestWindows;
 /**
  * Exercises internal frames under the Motif look and feel through {@link InternalFramePopupMenuDriver}, ported from
  * openjdk/jemmy-v2 (CODETOOLS-7902300): Motif keeps close/minimize/maximize/restore in a popup menu behind the sole
- * title button. Installs the LAF and driver for this JVM only; the UI test suite forks one JVM per class, so the
- * defaults are unaffected elsewhere.
+ * title button. Installs the LAF and driver for this class only; JemmyStateResetExtension restores the default
+ * look and feel and drivers after the class, so other classes sharing the JVM are unaffected.
  */
 @ExtendWith(DumpOnFailure.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
