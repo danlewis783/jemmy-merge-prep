@@ -20,11 +20,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.TimeoutExpiredException;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.TimeoutOverride;
-import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
@@ -33,7 +28,6 @@ import org.netbeans.jemmy.operators.JMenuBarOperator;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -43,11 +37,12 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
 
 /**
  * Documents what happens when consuming code commits the anti-pattern of calling operator
- * methods on the EDT itself (from inside {@code invokeAndWait}/{@code invokeLater}).
- * Wait-backed methods are rejected instantly by the {@code Repeater} guard, but
- * {@code ActionRunner}-backed methods ({@code pushMenu}, {@code enterText}, the scroll family)
- * have no such guard: they occupy the EDT until their operator timeout expires — with the
- * 60-second defaults, each such call freezes the UI for a minute before recovering.
+ * methods on the EDT itself (from inside {@code invokeAndWait}/{@code invokeLater}): every
+ * blocking operator entry point fails fast. Wait-backed methods are rejected by the
+ * {@code Repeater} guard, and {@code ActionRunner}-backed methods ({@code pushMenu},
+ * {@code enterText}, the scroll family) by the same guard in {@code ActionRunner.submitAndGet} —
+ * without it they would park the EDT for the whole operator budget while the background action
+ * waits on the very thread the caller occupies.
  */
 @Timeout(value = 10, unit = TimeUnit.SECONDS)
 class OperatorOnEdtTest {
@@ -105,40 +100,18 @@ class OperatorOnEdtTest {
     }
 
     @Test
-    void actionBackedMethodCalledOnEdtFreezesEdtUntilTimeout() throws InterruptedException {
+    void actionBackedMethodCalledOnEdtFailsFast() throws InterruptedException, InvocationTargetException {
         JFrameOperator frameOp = JFrameOperator.waitFor(FRAME_TITLE);
         JMenuBarOperator menuBarOp = JMenuBarOperator.waitFor(frameOp);
 
         AtomicReference<Throwable> thrown = new AtomicReference<>();
-        CountDownLatch pushMenuReturned = new CountDownLatch(1);
-        CountDownLatch probeRan = new CountDownLatch(1);
-        try (TimeoutOverride pushBudget = Timeouts.override(TimeoutKey.JMenuOperator_PushMenuTimeout, 500L);
-             TimeoutOverride popupBudget = Timeouts.override(TimeoutKey.JMenuOperator_WaitPopupTimeout, 500L)) {
-            EventQueue.invokeLater(() -> {
-                thrown.set(catchThrowable(() -> menuBarOp.pushMenu("menu|menuItem", strict())));
-                pushMenuReturned.countDown();
-            });
-            EventQueue.invokeLater(probeRan::countDown);
+        EventQueue.invokeAndWait(() -> thrown.set(catchThrowable(() -> menuBarOp.pushMenu("menu|menuItem", strict()))));
 
-            // pushMenu() parks the EDT on ActionRunner's Future.get while the menu work waits
-            // for that same EDT to show the popup: everything queued behind it is frozen out
-            assertThat(probeRan.await(200, TimeUnit.MILLISECONDS))
-                    .as("a task queued behind the EDT-bound pushMenu() must not run while it blocks")
-                    .isFalse();
+        assertThat(thrown.get())
+                .as("pushMenu() would park the EDT on the action budget; the ActionRunner guard rejects it")
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("no waiting allowed on EDT");
 
-            assertThat(pushMenuReturned.await(5, TimeUnit.SECONDS))
-                    .as("the ActionRunner budget expires and unblocks the EDT")
-                    .isTrue();
-            assertThat(probeRan.await(5, TimeUnit.SECONDS))
-                    .as("the queued task runs once the EDT is free again")
-                    .isTrue();
-            assertThat(thrown.get()).isInstanceOf(TimeoutExpiredException.class);
-        }
-
-        // the cancelled background action may have left posted events behind; drain them and
-        // close any menu a stale click opened before proving normal operation resumes
-        QueueTool.getInstance().waitEmpty();
-        menuBarOp.closeSubmenus();
         assertThat(menuBarOp.pushMenu("menu|menuItem", strict())).isNotNull();
         JLabelOperator.waitFor(frameOp, "Menu has been pushed", strict());
     }

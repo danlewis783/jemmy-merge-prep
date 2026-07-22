@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy;
 
+import java.awt.EventQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -61,6 +62,11 @@ final class ActionRunner<R> {
 
     @Nullable
     R submitAndGet(Callable<@Nullable R> work, TimeoutKey timeoutKey) throws InterruptedException {
+        // same fail-fast contract as Repeater: blocking on the EDT would park the thread the
+        // submitted action needs to make progress, freezing the UI for the whole budget
+        if (EventQueue.isDispatchThread()) {
+            throw new RuntimeException("no waiting allowed on EDT");
+        }
         Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(work);
         long timeout = Timeouts.get(timeoutKey);
         long startTime = System.currentTimeMillis();
