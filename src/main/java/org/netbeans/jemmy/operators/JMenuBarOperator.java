@@ -31,7 +31,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -119,8 +118,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
     public void pushMenuNoBlock(List<Predicate<Component>> predicates) {
         makeComponentVisible();
-        produceNoBlocking(
-                (Function<Void, MenuElement>) v -> driver().pushMenu(JMenuBarOperator.this, predicates), null);
+        runNoBlocking(() -> driver().pushMenu(JMenuBarOperator.this, predicates));
     }
 
     public @Nullable JMenuItem pushMenu(String[] names, StringComparator comparator) {

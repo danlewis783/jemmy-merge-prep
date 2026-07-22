@@ -28,12 +28,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.MenuElement;
 import javax.swing.event.MenuListener;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
@@ -143,7 +141,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public void pushMenuNoBlock(List<Predicate<Component>> predicates) {
-        produceNoBlocking((Function<Void, MenuElement>) v -> driver().pushMenu(JMenuOperator.this, predicates), null);
+        runNoBlocking(() -> driver().pushMenu(JMenuOperator.this, predicates));
     }
 
     public @Nullable JMenuItem pushMenu(String[] names, StringComparator comparator) {

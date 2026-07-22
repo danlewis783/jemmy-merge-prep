@@ -29,7 +29,6 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
@@ -168,13 +167,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public void changeSelectionNoBlock(boolean selected) {
-        produceNoBlocking(
-                (Function<Boolean, Void>) param -> {
-                    changeSelection(param);
-
-                    return null;
-                },
-                selected);
+        runNoBlocking(() -> changeSelection(selected));
     }
 
     public void press() {

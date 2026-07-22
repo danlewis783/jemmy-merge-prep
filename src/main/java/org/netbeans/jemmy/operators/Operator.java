@@ -234,7 +234,11 @@ public abstract class Operator {
      * Schedules the function on the Jemmy action thread and returns immediately. Because this
      * method does not wait, a failure cannot be rethrown here: an exception from the action is
      * logged by the action thread instead.
+     *
+     * @deprecated Use {@link #runNoBlocking(Runnable)} instead: the result is discarded by
+     *     construction and the argument can be captured by the lambda.
      */
+    @Deprecated
     protected <T, R> void produceNoBlocking(Function<T, R> function, @Nullable T t) {
         FunctionRunner.on(function).run(t);
     }
