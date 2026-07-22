@@ -34,7 +34,6 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JScrollPane;
 import javax.swing.event.CaretListener;
@@ -207,13 +206,8 @@ public class JTextComponentOperator extends JComponentOperator {
     public void enterText(String text) {
         makeComponentVisible();
         requestFocus();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().enterText(JTextComponentOperator.this, text);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().enterText(JTextComponentOperator.this, text),
                 TimeoutKey.JTextComponentOperator_TypeTextTimeout);
     }
 

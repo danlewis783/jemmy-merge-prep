@@ -186,29 +186,6 @@ public abstract class Operator {
         waitState(new OnQueuePredicate<>(predicate), timeoutKey);
     }
 
-    <T, R> @Nullable R produceTimeRestricted(Function<T, R> function, @Nullable T t, TimeoutKey timeoutKey) {
-        FunctionRunner<T, R> functionRunner = FunctionRunner.on(function);
-        R result;
-        try {
-            result = functionRunner.submitAndGet(t, timeoutKey);
-        } catch (InterruptedException e) {
-            throw new JemmyException("interrupted waiting for function", e);
-        }
-
-        Throwable throwable = functionRunner.getThrowable();
-        if (throwable != null) {
-            if (throwable instanceof JemmyException) {
-                throw (JemmyException) throwable;
-            } else {
-                throw new JemmyException(
-                        String.format("throwable encountered during execution of function \"%s\"", function),
-                        throwable);
-            }
-        }
-
-        return result;
-    }
-
     @SuppressWarnings("SameParameterValue")
     <R> @Nullable R supplyTimeRestricted(Supplier<@Nullable R> supplier, TimeoutKey timeoutKey) {
         SupplierRunner<R> supplierRunner = SupplierRunner.on(supplier);

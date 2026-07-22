@@ -26,7 +26,6 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
@@ -124,13 +123,8 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public void scrollTo(ScrollAdjuster adj) {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().scroll(JSplitPaneOperator.this, adj);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scroll(JSplitPaneOperator.this, adj),
                 TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
     }
 
@@ -144,24 +138,14 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public void moveToMinimum() {
-        produceTimeRestricted(
-                (Function<Void, Void>) obj -> {
-                    driver().scrollToMinimum(JSplitPaneOperator.this, getOrientation());
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scrollToMinimum(JSplitPaneOperator.this, getOrientation()),
                 TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
     }
 
     public void moveToMaximum() {
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().scrollToMaximum(JSplitPaneOperator.this, getOrientation());
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scrollToMaximum(JSplitPaneOperator.this, getOrientation()),
                 TimeoutKey.JSplitPaneOperator_WholeScrollTimeout);
     }
 

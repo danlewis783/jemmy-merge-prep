@@ -130,13 +130,8 @@ public class JScrollBarOperator extends JComponentOperator {
 
     public void scrollTo(ScrollAdjuster adj) {
         initOperators();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().scroll(JScrollBarOperator.this, adj);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scroll(JScrollBarOperator.this, adj),
                 TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
     }
 
@@ -151,25 +146,15 @@ public class JScrollBarOperator extends JComponentOperator {
 
     public void scrollToMinimum() {
         initOperators();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().scrollToMinimum(JScrollBarOperator.this, getOrientation());
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scrollToMinimum(JScrollBarOperator.this, getOrientation()),
                 TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
     }
 
     public void scrollToMaximum() {
         initOperators();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().scrollToMaximum(JScrollBarOperator.this, getOrientation());
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scrollToMaximum(JScrollBarOperator.this, getOrientation()),
                 TimeoutKey.JScrollBarOperator_WholeScrollTimeout);
     }
 

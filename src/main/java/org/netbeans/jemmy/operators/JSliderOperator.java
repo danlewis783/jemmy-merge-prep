@@ -28,7 +28,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JSlider;
@@ -129,13 +128,8 @@ public class JSliderOperator extends JComponentOperator {
 
     public void scrollTo(ScrollAdjuster adj) {
         makeComponentVisible();
-        produceTimeRestricted(
-                (Function<Void, Void>) v -> {
-                    driver().scroll(JSliderOperator.this, adj);
-
-                    return null;
-                },
-                null,
+        runTimeRestricted(
+                () -> driver().scroll(JSliderOperator.this, adj),
                 TimeoutKey.JSliderOperator_WholeScrollTimeout);
     }
 
