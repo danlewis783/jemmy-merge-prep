@@ -60,6 +60,9 @@ class WindowManagerJobsTest {
 
     @AfterEach
     void afterEach() throws InterruptedException, InvocationTargetException {
+        // jobs poll in background threads until stopped; a leaked one would keep clicking
+        // matching windows in later tests
+        WindowManager.removeAllJobs();
         TestWindows.disposeAll();
     }
 
@@ -74,6 +77,23 @@ class WindowManagerJobsTest {
             JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict());
             jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/2", StringComparators.substring());
             JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict());
+        }
+    }
+
+    @Test
+    void removeAllJobsStopsAJobItsCreatorNeverRemoved() throws Exception {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.ComponentOperator_WaitComponentTimeout, 20_000L)) {
+            WindowManager.addJob(new WindowProcessor());
+            JFrame jFrame = JFrameOperator.waitJFrame("WindowSeriesApp/0", StringComparators.substring());
+            JLabelOperator.waitJLabel(jFrame, "has been processed", StringComparators.strict());
+
+            WindowManager.removeAllJobs();
+
+            EventQueue.invokeAndWait(() -> new WindowSeriesFrame(3).setVisible(true));
+            // three polling periods: ample opportunity for a still-running job to process it
+            Thread.sleep(3 * Timeouts.get(TimeoutKey.WindowManager_TimeDelta));
+            JFrame lateFrame = JFrameOperator.waitJFrame("WindowSeriesApp/3", StringComparators.substring());
+            JLabelOperator.waitJLabel(lateFrame, "has not been processed", StringComparators.strict());
         }
     }
 

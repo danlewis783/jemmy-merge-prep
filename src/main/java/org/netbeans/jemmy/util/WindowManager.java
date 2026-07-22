@@ -28,6 +28,7 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.jemmy.TimeoutKey;
@@ -47,7 +48,10 @@ public final class WindowManager {
         synchronized (jobs) {
             WindowJobPerformer performer = new WindowJobPerformer(job);
             jobs.add(performer);
-            Executors.newSingleThreadExecutor().submit(performer);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.submit(performer);
+            // let the worker thread die with the job instead of idling for the JVM's life
+            executor.shutdown();
         }
     }
 
@@ -62,6 +66,22 @@ public final class WindowManager {
             }
 
             jobs.removeAll(stopList);
+        }
+    }
+
+    /**
+     * Stops every job still running, no matter who added it. This is the reset for the window-job
+     * state: a job leaked by a failed test would otherwise keep its background thread polling
+     * windows for the rest of the JVM's life.
+     */
+    public static void removeAllJobs() {
+        WindowManager windowManager = getInstance();
+        synchronized (windowManager.jobs) {
+            for (WindowJobPerformer performer : windowManager.jobs) {
+                performer.stop();
+            }
+
+            windowManager.jobs.clear();
         }
     }
 
