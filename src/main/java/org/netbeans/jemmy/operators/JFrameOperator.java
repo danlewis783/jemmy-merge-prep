@@ -49,11 +49,31 @@ public class JFrameOperator extends FrameOperator {
         return waitFor(0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor()} instead.
+     */
+    @Deprecated
+    public JFrameOperator() {
+        this(0);
+    }
+
     public static JFrameOperator waitFor(int index) {
         return new JFrameOperator((JFrame) waitFrame(ComponentPredicates.of(JFrame.class), index));
     }
 
-    JFrameOperator(JFrame w) {
+    /**
+     * @deprecated Use {@link #waitFor(int)} instead.
+     */
+    @Deprecated
+    public JFrameOperator(int index) {
+        this((JFrame) waitFrame(ComponentPredicates.of(JFrame.class), index));
+    }
+
+    /**
+     * @deprecated Use {@link #of(JFrame)} instead.
+     */
+    @Deprecated
+    public JFrameOperator(JFrame w) {
         super(w);
     }
 
@@ -65,16 +85,51 @@ public class JFrameOperator extends FrameOperator {
         return waitFor(chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(Predicate)} instead.
+     */
+    @Deprecated
+    public JFrameOperator(Predicate<Component> chooser) {
+        this(chooser, 0);
+    }
+
     public static JFrameOperator waitFor(String title) {
         return waitFor(title, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(String)} instead.
+     */
+    @Deprecated
+    public JFrameOperator(String title) {
+        this(title, 0);
     }
 
     public static JFrameOperator waitFor(Predicate<Component> chooser, int index) {
         return new JFrameOperator((JFrame) waitFrame(ComponentPredicates.of(JFrame.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(Predicate, int)} instead.
+     */
+    @Deprecated
+    public JFrameOperator(Predicate<Component> chooser, int index) {
+        this((JFrame) waitFrame(ComponentPredicates.of(JFrame.class, chooser), index));
+    }
+
     public static JFrameOperator waitFor(String title, int index) {
         return waitFor(
+                ComponentPredicates.of(
+                        JFrame.class, new FrameShowingByTitlePredicate(title, StringComparators.strict())),
+                index);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(String, int)} instead.
+     */
+    @Deprecated
+    public JFrameOperator(String title, int index) {
+        this(
                 ComponentPredicates.of(
                         JFrame.class, new FrameShowingByTitlePredicate(title, StringComparators.strict())),
                 index);

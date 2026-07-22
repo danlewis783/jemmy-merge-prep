@@ -56,7 +56,19 @@ public class JMenuItemOperator extends AbstractButtonOperator {
         return waitFor(cont, 0);
     }
 
-    JMenuItemOperator(JMenuItem item) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JMenuItem)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(JMenuItem item) {
         super(item);
     }
 
@@ -68,12 +80,36 @@ public class JMenuItemOperator extends AbstractButtonOperator {
         return new JMenuItemOperator((JMenuItem) waitComponent(cont, ComponentPredicates.of(JMenuItem.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(ContainerOperator cont, int index) {
+        this((JMenuItem) waitComponent(cont, ComponentPredicates.of(JMenuItem.class), index));
+    }
+
     public static JMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static JMenuItemOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static JMenuItemOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -81,10 +117,26 @@ public class JMenuItemOperator extends AbstractButtonOperator {
                 (JMenuItem) cont.waitSubComponent(ComponentPredicates.of(JMenuItem.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JMenuItem) cont.waitSubComponent(ComponentPredicates.of(JMenuItem.class, chooser), index));
+    }
+
     public static JMenuItemOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JMenuItemOperator(
                 (JMenuItem) waitComponent(cont, new JMenuItemByTextPredicate(text, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public JMenuItemOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((JMenuItem) waitComponent(cont, new JMenuItemByTextPredicate(text, stringComparator), index));
     }
 
     @Override

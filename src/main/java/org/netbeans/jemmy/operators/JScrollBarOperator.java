@@ -53,7 +53,19 @@ public class JScrollBarOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    JScrollBarOperator(JScrollBar b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JScrollBarOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JScrollBar)} instead.
+     */
+    @Deprecated
+    public JScrollBarOperator(JScrollBar b) {
         super(b);
     }
 
@@ -70,13 +82,37 @@ public class JScrollBarOperator extends JComponentOperator {
                 (JScrollBar) waitComponent(cont, ComponentPredicates.of(JScrollBar.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JScrollBarOperator(ContainerOperator cont, int index) {
+        this((JScrollBar) waitComponent(cont, ComponentPredicates.of(JScrollBar.class), index));
+    }
+
     public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
     }
 
     public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JScrollBarOperator(
                 (JScrollBar) cont.waitSubComponent(ComponentPredicates.of(JScrollBar.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JScrollBar) cont.waitSubComponent(ComponentPredicates.of(JScrollBar.class, chooser), index));
     }
 
     @Deprecated

@@ -43,7 +43,19 @@ public class DialogOperator extends WindowOperator {
         return waitFor(0);
     }
 
-    DialogOperator(Dialog w) {
+    /**
+     * @deprecated Use {@link #waitFor()} instead.
+     */
+    @Deprecated
+    public DialogOperator() {
+        this(0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(Dialog)} instead.
+     */
+    @Deprecated
+    public DialogOperator(Dialog w) {
         super(w);
     }
 
@@ -55,45 +67,133 @@ public class DialogOperator extends WindowOperator {
         return new DialogOperator(waitDialog(ComponentPredicates.of(Dialog.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(int)} instead.
+     */
+    @Deprecated
+    public DialogOperator(int index) {
+        this(waitDialog(ComponentPredicates.of(Dialog.class), index));
+    }
+
     public static DialogOperator waitFor(Predicate<Component> chooser) {
         return waitFor(chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(Predicate)} instead.
+     */
+    @Deprecated
+    public DialogOperator(Predicate<Component> chooser) {
+        this(chooser, 0);
     }
 
     public static DialogOperator waitFor(String title) {
         return waitFor(title, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(String)} instead.
+     */
+    @Deprecated
+    public DialogOperator(String title) {
+        this(title, 0);
+    }
+
     public static DialogOperator waitFor(WindowOperator owner) {
         return waitFor(owner, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(WindowOperator)} instead.
+     */
+    @Deprecated
+    public DialogOperator(WindowOperator owner) {
+        this(owner, 0);
     }
 
     public static DialogOperator waitFor(Predicate<Component> chooser, int index) {
         return new DialogOperator(waitDialog(ComponentPredicates.of(Dialog.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(Predicate, int)} instead.
+     */
+    @Deprecated
+    public DialogOperator(Predicate<Component> chooser, int index) {
+        this(waitDialog(ComponentPredicates.of(Dialog.class, chooser), index));
+    }
+
     public static DialogOperator waitFor(String title, int index) {
         return waitFor(new DialogShowingByTitlePredicate(title), index);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(String, int)} instead.
+     */
+    @Deprecated
+    public DialogOperator(String title, int index) {
+        this(new DialogShowingByTitlePredicate(title), index);
     }
 
     public static DialogOperator waitFor(WindowOperator owner, int index) {
         return new DialogOperator(waitDialog(owner, ComponentPredicates.of(Dialog.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(WindowOperator, int)} instead.
+     */
+    @Deprecated
+    public DialogOperator(WindowOperator owner, int index) {
+        this(waitDialog(owner, ComponentPredicates.of(Dialog.class), index));
+    }
+
     public static DialogOperator waitFor(WindowOperator owner, Predicate<Component> chooser) {
         return waitFor(owner, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(WindowOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public DialogOperator(WindowOperator owner, Predicate<Component> chooser) {
+        this(owner, chooser, 0);
     }
 
     public static DialogOperator waitFor(WindowOperator owner, String title, StringComparator stringComparator) {
         return waitFor(owner, title, stringComparator, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(WindowOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public DialogOperator(WindowOperator owner, String title, StringComparator stringComparator) {
+        this(owner, title, stringComparator, 0);
+    }
+
     public static DialogOperator waitFor(WindowOperator owner, Predicate<Component> chooser, int index) {
         return new DialogOperator((Dialog) owner.waitSubWindow(ComponentPredicates.of(Dialog.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(WindowOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public DialogOperator(WindowOperator owner, Predicate<Component> chooser, int index) {
+        this((Dialog) owner.waitSubWindow(ComponentPredicates.of(Dialog.class, chooser), index));
     }
 
     public static DialogOperator waitFor(
             WindowOperator owner, String title, StringComparator stringComparator, int index) {
         return new DialogOperator(waitDialog(owner, new DialogShowingByTitlePredicate(title, stringComparator), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(WindowOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public DialogOperator(WindowOperator owner, String title, StringComparator stringComparator, int index) {
+        this(waitDialog(owner, new DialogShowingByTitlePredicate(title, stringComparator), index));
     }
 
     public void waitTitle(String title, StringComparator stringComparator) {

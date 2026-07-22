@@ -56,7 +56,19 @@ public class JSliderOperator extends JComponentOperator {
         return waitFor(cont, 0);
     }
 
-    JSliderOperator(JSlider b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JSliderOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JSlider)} instead.
+     */
+    @Deprecated
+    public JSliderOperator(JSlider b) {
         super(b);
     }
 
@@ -72,13 +84,37 @@ public class JSliderOperator extends JComponentOperator {
         return new JSliderOperator((JSlider) waitComponent(cont, ComponentPredicates.of(JSlider.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JSliderOperator(ContainerOperator cont, int index) {
+        this((JSlider) waitComponent(cont, ComponentPredicates.of(JSlider.class), index));
+    }
+
     public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
     }
 
     public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JSliderOperator(
                 (JSlider) cont.waitSubComponent(ComponentPredicates.of(JSlider.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JSlider) cont.waitSubComponent(ComponentPredicates.of(JSlider.class, chooser), index));
     }
 
     @Deprecated

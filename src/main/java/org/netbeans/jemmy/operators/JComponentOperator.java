@@ -56,7 +56,19 @@ public class JComponentOperator extends ContainerOperator {
         return waitFor(cont, 0);
     }
 
-    JComponentOperator(JComponent b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JComponentOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JComponent)} instead.
+     */
+    @Deprecated
+    public JComponentOperator(JComponent b) {
         super(b);
     }
 
@@ -69,13 +81,38 @@ public class JComponentOperator extends ContainerOperator {
                 waitComponent(cont, ComponentPredicates.of(JComponent.class, ComponentPredicates.alwaysTrue()), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JComponentOperator(ContainerOperator cont, int index) {
+        this((JComponent)
+                waitComponent(cont, ComponentPredicates.of(JComponent.class, ComponentPredicates.alwaysTrue()), index));
+    }
+
     public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
     }
 
     public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JComponentOperator(
                 (JComponent) cont.waitSubComponent(ComponentPredicates.of(JComponent.class, chooser), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JComponent) cont.waitSubComponent(ComponentPredicates.of(JComponent.class, chooser), index));
     }
 
     @Override

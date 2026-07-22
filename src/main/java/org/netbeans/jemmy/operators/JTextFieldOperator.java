@@ -41,7 +41,19 @@ public class JTextFieldOperator extends JTextComponentOperator {
         return waitFor(cont, 0);
     }
 
-    JTextFieldOperator(JTextField b) {
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(ContainerOperator cont) {
+        this(cont, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #of(JTextField)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(JTextField b) {
         super(b);
     }
 
@@ -54,12 +66,36 @@ public class JTextFieldOperator extends JTextComponentOperator {
                 (JTextField) waitComponent(cont, ComponentPredicates.of(JTextField.class), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(ContainerOperator cont, int index) {
+        this((JTextField) waitComponent(cont, ComponentPredicates.of(JTextField.class), index));
+    }
+
     public static JTextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
         return waitFor(cont, chooser, 0);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(ContainerOperator cont, Predicate<Component> chooser) {
+        this(cont, chooser, 0);
+    }
+
     public static JTextFieldOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
         return waitFor(cont, text, stringComparator, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
+        this(cont, text, stringComparator, 0);
     }
 
     public static JTextFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
@@ -67,9 +103,28 @@ public class JTextFieldOperator extends JTextComponentOperator {
                 (JTextField) cont.waitSubComponent(ComponentPredicates.of(JTextField.class, chooser), index));
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
+        this((JTextField) cont.waitSubComponent(ComponentPredicates.of(JTextField.class, chooser), index));
+    }
+
     public static JTextFieldOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JTextFieldOperator((JTextField) waitComponent(
+                cont,
+                ComponentPredicates.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
+     */
+    @Deprecated
+    public JTextFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+        this((JTextField) waitComponent(
                 cont,
                 ComponentPredicates.of(JTextField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
