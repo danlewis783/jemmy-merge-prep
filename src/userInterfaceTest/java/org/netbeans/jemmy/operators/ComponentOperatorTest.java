@@ -58,7 +58,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -92,7 +92,7 @@ class ComponentOperatorTest {
     void testConstructor() {
         FrameOperator operator = FrameOperator.waitFor();
         ComponentOperator.waitFor(operator);
-        ComponentOperator.waitFor(operator, ComponentPredicates.byName("ComponentOperatorTest"));
+        ComponentOperator.waitFor(operator, PredicatesJ.byName("ComponentOperatorTest"));
     }
 
     @Test
@@ -122,13 +122,13 @@ class ComponentOperatorTest {
     @Test
     void testFindComponent() {
         Component component =
-                ComponentOperator.findComponent(frame, ComponentPredicates.byName("ComponentOperatorTest"));
+                ComponentOperator.findComponent(frame, PredicatesJ.byName("ComponentOperatorTest"));
         assertThat(component).isNotNull();
     }
 
     @Test
     void testWaitComponent() {
-        ComponentOperator.waitComponent(frame, ComponentPredicates.byName("ComponentOperatorTest"));
+        ComponentOperator.waitComponent(frame, PredicatesJ.byName("ComponentOperatorTest"));
     }
 
     @Test
@@ -315,7 +315,7 @@ class ComponentOperatorTest {
     void testGetContainer() {
         FrameOperator operator = FrameOperator.waitFor();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
-        Container container = operator1.getContainer(ComponentPredicates.byName("FrameOperatorTest"));
+        Container container = operator1.getContainer(PredicatesJ.byName("FrameOperatorTest"));
         assertThat(container).isNotNull();
     }
 

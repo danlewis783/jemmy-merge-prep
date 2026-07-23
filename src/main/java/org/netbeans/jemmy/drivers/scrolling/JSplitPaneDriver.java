@@ -39,7 +39,7 @@ import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JSplitPaneOperator;
 import org.netbeans.jemmy.operators.Operator;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JSplitPaneDriver extends LightSupportiveDriver implements ScrollDriver {
     public JSplitPaneDriver() {
@@ -145,7 +145,7 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     private void expandTo(JSplitPaneOperator oper, int index) {
         ContainerOperator divOper = oper.getDivider();
         JButtonOperator bo = JButtonOperator.of((JButton) divOper.waitSubComponent(
-                ComponentPredicates.of(JButton.class, ComponentPredicates.alwaysTrue()), index));
+                PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         ButtonDriver bdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getButtonDriver(bo);
         bdriver.push(bo);

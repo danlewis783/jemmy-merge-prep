@@ -39,7 +39,7 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.DialogFunction;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.DialogShowingByTitlePredicate;
 import org.netbeans.jemmy.predicates.TopVisibleModalDialogPredicate;
 import org.netbeans.jemmy.util.StringComparator;
@@ -60,7 +60,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static JDialogOperator waitFor(int index) {
-        return new JDialogOperator(waitJDialog(ComponentPredicates.of(JDialog.class), index));
+        return new JDialogOperator(waitJDialog(PredicatesJ.of(JDialog.class), index));
     }
 
     /**
@@ -68,7 +68,7 @@ public class JDialogOperator extends DialogOperator {
      */
     @Deprecated
     public JDialogOperator(int index) {
-        this(waitJDialog(ComponentPredicates.of(JDialog.class), index));
+        this(waitJDialog(PredicatesJ.of(JDialog.class), index));
     }
 
     /**
@@ -120,7 +120,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static JDialogOperator waitFor(Predicate<Component> predicate, int index) {
-        return new JDialogOperator(waitJDialog(ComponentPredicates.of(JDialog.class, predicate), index));
+        return new JDialogOperator(waitJDialog(PredicatesJ.of(JDialog.class, predicate), index));
     }
 
     /**
@@ -128,12 +128,12 @@ public class JDialogOperator extends DialogOperator {
      */
     @Deprecated
     public JDialogOperator(Predicate<Component> predicate, int index) {
-        this(waitJDialog(ComponentPredicates.of(JDialog.class, predicate), index));
+        this(waitJDialog(PredicatesJ.of(JDialog.class, predicate), index));
     }
 
     public static JDialogOperator waitFor(String title, int index) {
         return waitFor(
-                ComponentPredicates.of(
+                PredicatesJ.of(
                         JDialog.class, new DialogShowingByTitlePredicate(title, StringComparators.strict())),
                 index);
     }
@@ -144,13 +144,13 @@ public class JDialogOperator extends DialogOperator {
     @Deprecated
     public JDialogOperator(String title, int index) {
         this(
-                ComponentPredicates.of(
+                PredicatesJ.of(
                         JDialog.class, new DialogShowingByTitlePredicate(title, StringComparators.strict())),
                 index);
     }
 
     public static JDialogOperator waitFor(WindowOperator owner, int index) {
-        return new JDialogOperator(waitJDialog(owner, ComponentPredicates.of(JDialog.class), index));
+        return new JDialogOperator(waitJDialog(owner, PredicatesJ.of(JDialog.class), index));
     }
 
     /**
@@ -158,7 +158,7 @@ public class JDialogOperator extends DialogOperator {
      */
     @Deprecated
     public JDialogOperator(WindowOperator owner, int index) {
-        this(waitJDialog(owner, ComponentPredicates.of(JDialog.class), index));
+        this(waitJDialog(owner, PredicatesJ.of(JDialog.class), index));
     }
 
     public static JDialogOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {
@@ -187,7 +187,7 @@ public class JDialogOperator extends DialogOperator {
 
     public static JDialogOperator waitFor(WindowOperator owner, Predicate<Component> predicate, int index) {
         return new JDialogOperator(
-                (JDialog) owner.waitSubWindow(ComponentPredicates.of(JDialog.class, predicate), index));
+                (JDialog) owner.waitSubWindow(PredicatesJ.of(JDialog.class, predicate), index));
     }
 
     /**
@@ -195,14 +195,14 @@ public class JDialogOperator extends DialogOperator {
      */
     @Deprecated
     public JDialogOperator(WindowOperator owner, Predicate<Component> predicate, int index) {
-        this((JDialog) owner.waitSubWindow(ComponentPredicates.of(JDialog.class, predicate), index));
+        this((JDialog) owner.waitSubWindow(PredicatesJ.of(JDialog.class, predicate), index));
     }
 
     public static JDialogOperator waitFor(
             WindowOperator owner, String title, StringComparator stringComparator, int index) {
         return new JDialogOperator(waitJDialog(
                 owner,
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index));
     }
 
@@ -213,7 +213,7 @@ public class JDialogOperator extends DialogOperator {
     public JDialogOperator(WindowOperator owner, String title, StringComparator stringComparator, int index) {
         this(waitJDialog(
                 owner,
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index));
     }
 
@@ -270,7 +270,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static @Nullable JDialog findJDialog(Predicate<Component> predicate, int index) {
-        return (JDialog) DialogFunction.getDialog(ComponentPredicates.of(JDialog.class, predicate), index);
+        return (JDialog) DialogFunction.getDialog(PredicatesJ.of(JDialog.class, predicate), index);
     }
 
     public static @Nullable JDialog findJDialog(Predicate<Component> predicate) {
@@ -279,7 +279,7 @@ public class JDialogOperator extends DialogOperator {
 
     public static @Nullable JDialog findJDialog(String title, StringComparator stringComparator, int index) {
         return (JDialog) DialogFunction.getDialog(
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index);
     }
 
@@ -288,7 +288,7 @@ public class JDialogOperator extends DialogOperator {
     }
 
     public static @Nullable JDialog findJDialog(Window owner, Predicate<Component> predicate, int index) {
-        return (JDialog) DialogFunction.getDialog(owner, ComponentPredicates.of(JDialog.class, predicate), index);
+        return (JDialog) DialogFunction.getDialog(owner, PredicatesJ.of(JDialog.class, predicate), index);
     }
 
     public static @Nullable JDialog findJDialog(Window owner, Predicate<Component> predicate) {
@@ -299,7 +299,7 @@ public class JDialogOperator extends DialogOperator {
             Window owner, String title, StringComparator stringComparator, int index) {
         return (JDialog) DialogFunction.getDialog(
                 owner,
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index);
     }
 
@@ -313,7 +313,7 @@ public class JDialogOperator extends DialogOperator {
 
     public static JDialog waitJDialog(String title, StringComparator stringComparator, int index) {
         return waitJDialog(
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index);
     }
 
@@ -328,7 +328,7 @@ public class JDialogOperator extends DialogOperator {
     public static JDialog waitJDialog(Window owner, String title, StringComparator stringComparator, int index) {
         return waitJDialog(
                 owner,
-                ComponentPredicates.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
+                PredicatesJ.of(JDialog.class, new DialogShowingByTitlePredicate(title, stringComparator)),
                 index);
     }
 
@@ -350,7 +350,7 @@ public class JDialogOperator extends DialogOperator {
 
     protected static JDialog waitJDialog(@Nullable Window owner, Predicate<Component> predicate, int index) {
         return (JDialog) FunctionRepeater.on(
-                        new DialogFunction(index, owner, ComponentPredicates.of(JDialog.class, predicate)),
+                        new DialogFunction(index, owner, PredicatesJ.of(JDialog.class, predicate)),
                         TimeoutKey.DialogWaiter_WaitDialogTimeout)
                 .runUntilNotNull(null);
     }

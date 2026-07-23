@@ -31,7 +31,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -66,14 +66,14 @@ class JTextFieldOperatorTest {
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator.waitFor(operator1);
-        JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+        JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         JTextFieldOperator.waitFor(operator1, "JTextFieldOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testFindJTextField() {
         JTextField textField1 =
-                JTextFieldOperator.findJTextField(frame, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.findJTextField(frame, PredicatesJ.byName("JTextFieldOperatorTest"));
         assertThat(textField1).isNotNull();
         JTextField textField2 = JTextFieldOperator.findJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -82,7 +82,7 @@ class JTextFieldOperatorTest {
 
     @Test
     void testWaitJTextField() {
-        JTextFieldOperator.waitJTextField(frame, ComponentPredicates.byName("JTextFieldOperatorTest"));
+        JTextFieldOperator.waitJTextField(frame, PredicatesJ.byName("JTextFieldOperatorTest"));
         JTextFieldOperator.waitJTextField(
                 frame, "JTextFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
     }
@@ -91,7 +91,7 @@ class JTextFieldOperatorTest {
     void testWaitText() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         operator2.waitText("JTextFieldOperatorTest", StringComparators.strict());
         assertThat(onQueue(() -> textField.getText())).isEqualTo("JTextFieldOperatorTest");
         operator2.waitText("JTextFieldOperatorTest\n", StringComparators.strict());
@@ -102,7 +102,7 @@ class JTextFieldOperatorTest {
     void testAddActionListener() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         ActionListener listener = event -> {};
         operator2.addActionListener(listener);
         ActionListener[] listeners = onQueue(textField::getActionListeners);
@@ -115,7 +115,7 @@ class JTextFieldOperatorTest {
     void testGetColumns() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         operator2.setColumns(10);
         assertThat(operator2.getColumns()).isEqualTo(10);
         assertThat(operator2.getColumns()).isEqualTo(onQueue(textField::getColumns));
@@ -125,7 +125,7 @@ class JTextFieldOperatorTest {
     void testGetHorizontalAlignment() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         operator2.setHorizontalAlignment(SwingConstants.RIGHT);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(SwingConstants.RIGHT);
         assertThat(operator2.getHorizontalAlignment()).isEqualTo(onQueue(textField::getHorizontalAlignment));
@@ -135,7 +135,7 @@ class JTextFieldOperatorTest {
     void testGetScrollOffset() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         operator2.setScrollOffset(operator2.getScrollOffset());
     }
 
@@ -143,7 +143,7 @@ class JTextFieldOperatorTest {
     void testPostActionEvent() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JTextFieldOperator operator2 =
-                JTextFieldOperator.waitFor(operator1, ComponentPredicates.byName("JTextFieldOperatorTest"));
+                JTextFieldOperator.waitFor(operator1, PredicatesJ.byName("JTextFieldOperatorTest"));
         operator2.setActionCommand("ACTION_COMMAND");
         ActionListener1 listener = new ActionListener1();
         operator2.addActionListener(listener);

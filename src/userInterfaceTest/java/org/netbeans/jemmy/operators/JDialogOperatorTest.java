@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -82,11 +82,11 @@ class JDialogOperatorTest {
 
     @Test
     void constructor() {
-        JDialogOperator.waitFor(ComponentPredicates.byName("JDialogOperatorTest"));
+        JDialogOperator.waitFor(PredicatesJ.byName("JDialogOperatorTest"));
         JFrameOperator.waitFor();
         JDialogOperator.waitFor(JFrameOperator.waitFor());
         JFrameOperator.waitFor();
-        JDialogOperator.waitFor(JFrameOperator.waitFor(), ComponentPredicates.byName("JDialogOperatorTest"));
+        JDialogOperator.waitFor(JFrameOperator.waitFor(), PredicatesJ.byName("JDialogOperatorTest"));
         JDialogOperator.waitFor(JFrameOperator.waitFor(), "JDialogOperatorTest", StringComparators.strict());
     }
 
@@ -96,9 +96,9 @@ class JDialogOperatorTest {
                 .isNotNull();
         assertThat(JDialogOperator.findJDialog(frame, "JDialogOperatorTest", StringComparators.strict()))
                 .isNotNull();
-        assertThat(JDialogOperator.findJDialog(ComponentPredicates.byName("JDialogOperatorTest")))
+        assertThat(JDialogOperator.findJDialog(PredicatesJ.byName("JDialogOperatorTest")))
                 .isNotNull();
-        assertThat(JDialogOperator.findJDialog(frame, ComponentPredicates.byName("JDialogOperatorTest")))
+        assertThat(JDialogOperator.findJDialog(frame, PredicatesJ.byName("JDialogOperatorTest")))
                 .isNotNull();
     }
 
@@ -107,8 +107,8 @@ class JDialogOperatorTest {
     void waitJDialog() {
         JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict());
         JDialogOperator.waitJDialog(frame, "JDialogOperatorTest", StringComparators.strict());
-        JDialogOperator.waitJDialog(ComponentPredicates.byName("JDialogOperatorTest"));
-        JDialogOperator.waitJDialog(frame, ComponentPredicates.byName("JDialogOperatorTest"));
+        JDialogOperator.waitJDialog(PredicatesJ.byName("JDialogOperatorTest"));
+        JDialogOperator.waitJDialog(frame, PredicatesJ.byName("JDialogOperatorTest"));
         Future<JDialog> future1 = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
         JDialogOperator.waitFor();
         assertThatExceptionOfType(TimeoutException.class)
@@ -281,7 +281,7 @@ class JDialogOperatorTest {
 
         @Override
         public JDialog call() {
-            return JDialogOperator.waitJDialog(frame, ComponentPredicates.byName("YouWontEverFindMe"));
+            return JDialogOperator.waitJDialog(frame, PredicatesJ.byName("YouWontEverFindMe"));
         }
     }
 }

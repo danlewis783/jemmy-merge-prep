@@ -42,7 +42,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.predicates.AccessibleNamePredicate;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.DialogShowingByTitlePredicate;
 import org.netbeans.jemmy.util.DefaultVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
@@ -91,7 +91,7 @@ class ModalDialogVisualizerTest {
                 JButtonOperator.of(JButtonOperator.waitJButton(jFrame, "Button", StringComparators.strict()));
         bttOper.setVisualizer(new DefaultVisualizer(true));
         bttOper.push();
-        JLabelOperator.waitJLabel(jFrame, ComponentPredicates.alwaysTrue());
+        JLabelOperator.waitJLabel(jFrame, PredicatesJ.alwaysTrue());
         JButtonOperator.waitFor(ContainerOperator.of(jFrame), "Show", StringComparators.substring())
                 .pushNoBlock();
         JDialog d = JDialogOperator.waitJDialog("Modal dialog", StringComparators.strict());
@@ -108,7 +108,7 @@ class ModalDialogVisualizerTest {
         assertThatExceptionOfType(JemmyInputException.class)
                 .isThrownBy(bttOper::push)
                 .withMessage("Component is not on top modal dialog.");
-        assertThat(JLabelOperator.findJLabel(jFrame, ComponentPredicates.alwaysTrue(), 1))
+        assertThat(JLabelOperator.findJLabel(jFrame, PredicatesJ.alwaysTrue(), 1))
                 .isNull();
         JButtonOperator.waitFor(do1, "", StringComparators.substring()).push();
         JMenuBarOperator mbo = JMenuBarOperator.waitFor(ContainerOperator.of(jFrame));

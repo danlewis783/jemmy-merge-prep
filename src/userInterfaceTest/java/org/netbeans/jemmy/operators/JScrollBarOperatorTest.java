@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.drivers.scrolling.JScrollBarAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 
@@ -81,7 +81,7 @@ class JScrollBarOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.of(frame);
         JScrollBarOperator.waitFor(operator);
-        JScrollBarOperator.waitFor(operator, ComponentPredicates.byName("JScrollBarOperatorTest"));
+        JScrollBarOperator.waitFor(operator, PredicatesJ.byName("JScrollBarOperatorTest"));
     }
 
     @Test
@@ -89,14 +89,14 @@ class JScrollBarOperatorTest {
         JScrollBar scrollBar1 = JScrollBarOperator.findJScrollBar(frame);
         assertThat(scrollBar1).isNotNull();
         JScrollBar scrollBar2 =
-                JScrollBarOperator.findJScrollBar(frame, ComponentPredicates.byName("JScrollBarOperatorTest"));
+                JScrollBarOperator.findJScrollBar(frame, PredicatesJ.byName("JScrollBarOperatorTest"));
         assertThat(scrollBar2).isNotNull();
     }
 
     @Test
     void testWaitJScrollBar() {
         JScrollBarOperator.waitJScrollBar(frame);
-        JScrollBarOperator.waitJScrollBar(frame, ComponentPredicates.byName("JScrollBarOperatorTest"));
+        JScrollBarOperator.waitJScrollBar(frame, PredicatesJ.byName("JScrollBarOperatorTest"));
     }
 
     @Test

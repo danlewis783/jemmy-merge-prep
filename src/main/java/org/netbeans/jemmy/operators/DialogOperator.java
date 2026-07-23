@@ -32,7 +32,7 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.DialogFunction;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.DialogOperatorShowingByTitlePredicate;
 import org.netbeans.jemmy.predicates.DialogShowingByTitlePredicate;
 import org.netbeans.jemmy.util.StringComparator;
@@ -64,7 +64,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     public static DialogOperator waitFor(int index) {
-        return new DialogOperator(waitDialog(ComponentPredicates.of(Dialog.class), index));
+        return new DialogOperator(waitDialog(PredicatesJ.of(Dialog.class), index));
     }
 
     /**
@@ -72,7 +72,7 @@ public class DialogOperator extends WindowOperator {
      */
     @Deprecated
     public DialogOperator(int index) {
-        this(waitDialog(ComponentPredicates.of(Dialog.class), index));
+        this(waitDialog(PredicatesJ.of(Dialog.class), index));
     }
 
     public static DialogOperator waitFor(Predicate<Component> chooser) {
@@ -112,7 +112,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     public static DialogOperator waitFor(Predicate<Component> chooser, int index) {
-        return new DialogOperator(waitDialog(ComponentPredicates.of(Dialog.class, chooser), index));
+        return new DialogOperator(waitDialog(PredicatesJ.of(Dialog.class, chooser), index));
     }
 
     /**
@@ -120,7 +120,7 @@ public class DialogOperator extends WindowOperator {
      */
     @Deprecated
     public DialogOperator(Predicate<Component> chooser, int index) {
-        this(waitDialog(ComponentPredicates.of(Dialog.class, chooser), index));
+        this(waitDialog(PredicatesJ.of(Dialog.class, chooser), index));
     }
 
     public static DialogOperator waitFor(String title, int index) {
@@ -136,7 +136,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     public static DialogOperator waitFor(WindowOperator owner, int index) {
-        return new DialogOperator(waitDialog(owner, ComponentPredicates.of(Dialog.class), index));
+        return new DialogOperator(waitDialog(owner, PredicatesJ.of(Dialog.class), index));
     }
 
     /**
@@ -144,7 +144,7 @@ public class DialogOperator extends WindowOperator {
      */
     @Deprecated
     public DialogOperator(WindowOperator owner, int index) {
-        this(waitDialog(owner, ComponentPredicates.of(Dialog.class), index));
+        this(waitDialog(owner, PredicatesJ.of(Dialog.class), index));
     }
 
     public static DialogOperator waitFor(WindowOperator owner, Predicate<Component> chooser) {
@@ -172,7 +172,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     public static DialogOperator waitFor(WindowOperator owner, Predicate<Component> chooser, int index) {
-        return new DialogOperator((Dialog) owner.waitSubWindow(ComponentPredicates.of(Dialog.class, chooser), index));
+        return new DialogOperator((Dialog) owner.waitSubWindow(PredicatesJ.of(Dialog.class, chooser), index));
     }
 
     /**
@@ -180,7 +180,7 @@ public class DialogOperator extends WindowOperator {
      */
     @Deprecated
     public DialogOperator(WindowOperator owner, Predicate<Component> chooser, int index) {
-        this((Dialog) owner.waitSubWindow(ComponentPredicates.of(Dialog.class, chooser), index));
+        this((Dialog) owner.waitSubWindow(PredicatesJ.of(Dialog.class, chooser), index));
     }
 
     public static DialogOperator waitFor(
@@ -226,7 +226,7 @@ public class DialogOperator extends WindowOperator {
 
     protected static Dialog waitDialog(Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
-                        new DialogFunction(index, null, ComponentPredicates.of(Dialog.class, chooser)),
+                        new DialogFunction(index, null, PredicatesJ.of(Dialog.class, chooser)),
                         TimeoutKey.DialogWaiter_WaitDialogTimeout)
                 .runUntilNotNull(null);
     }
@@ -237,7 +237,7 @@ public class DialogOperator extends WindowOperator {
 
     protected static Dialog waitDialog(Window owner, Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
-                        new DialogFunction(index, owner, ComponentPredicates.of(Dialog.class, chooser)),
+                        new DialogFunction(index, owner, PredicatesJ.of(Dialog.class, chooser)),
                         TimeoutKey.DialogWaiter_WaitDialogTimeout)
                 .runUntilNotNull(null);
     }

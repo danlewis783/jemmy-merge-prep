@@ -42,7 +42,7 @@ import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.predicates.AbstractButtonOperatorByTextPredicate;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class AbstractButtonOperator extends JComponentOperator {
@@ -76,7 +76,7 @@ public class AbstractButtonOperator extends JComponentOperator {
 
     public static AbstractButtonOperator waitFor(ContainerOperator cont, int index) {
         return new AbstractButtonOperator(
-                (AbstractButton) waitComponent(cont, ComponentPredicates.of(AbstractButton.class), index));
+                (AbstractButton) waitComponent(cont, PredicatesJ.of(AbstractButton.class), index));
     }
 
     /**
@@ -84,7 +84,7 @@ public class AbstractButtonOperator extends JComponentOperator {
      */
     @Deprecated
     public AbstractButtonOperator(ContainerOperator cont, int index) {
-        this((AbstractButton) waitComponent(cont, ComponentPredicates.of(AbstractButton.class), index));
+        this((AbstractButton) waitComponent(cont, PredicatesJ.of(AbstractButton.class), index));
     }
 
     public static AbstractButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -114,7 +114,7 @@ public class AbstractButtonOperator extends JComponentOperator {
 
     public static AbstractButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new AbstractButtonOperator(
-                (AbstractButton) cont.waitSubComponent(ComponentPredicates.of(AbstractButton.class, chooser), index));
+                (AbstractButton) cont.waitSubComponent(PredicatesJ.of(AbstractButton.class, chooser), index));
     }
 
     /**
@@ -122,14 +122,14 @@ public class AbstractButtonOperator extends JComponentOperator {
      */
     @Deprecated
     public AbstractButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((AbstractButton) cont.waitSubComponent(ComponentPredicates.of(AbstractButton.class, chooser), index));
+        this((AbstractButton) cont.waitSubComponent(PredicatesJ.of(AbstractButton.class, chooser), index));
     }
 
     public static AbstractButtonOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new AbstractButtonOperator((AbstractButton) waitComponent(
                 cont,
-                ComponentPredicates.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -140,7 +140,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     public AbstractButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         this((AbstractButton) waitComponent(
                 cont,
-                ComponentPredicates.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(AbstractButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -409,7 +409,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public static @Nullable AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser, int index) {
-        return (AbstractButton) findComponent(cont, ComponentPredicates.of(AbstractButton.class, chooser), index);
+        return (AbstractButton) findComponent(cont, PredicatesJ.of(AbstractButton.class, chooser), index);
     }
 
     public static @Nullable AbstractButton findAbstractButton(Container cont, Predicate<Component> chooser) {
@@ -427,7 +427,7 @@ public class AbstractButtonOperator extends JComponentOperator {
     }
 
     public static AbstractButton waitAbstractButton(Container cont, Predicate<Component> chooser, int index) {
-        return (AbstractButton) waitComponent(cont, ComponentPredicates.of(AbstractButton.class, chooser), index);
+        return (AbstractButton) waitComponent(cont, PredicatesJ.of(AbstractButton.class, chooser), index);
     }
 
     public static AbstractButton waitAbstractButton(Container cont, Predicate<Component> chooser) {

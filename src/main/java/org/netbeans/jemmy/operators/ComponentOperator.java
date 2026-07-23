@@ -77,7 +77,7 @@ import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorLocationOnScreenPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorLocationPredicate;
 import org.netbeans.jemmy.predicates.ComponentOperatorSizePredicate;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 /**
  * Root of the operator hierarchy for AWT/Swing components.
@@ -131,7 +131,7 @@ public class ComponentOperator extends Operator {
     }
 
     public static ComponentOperator waitFor(ContainerOperator cont, int index) {
-        return waitFor(cont, ComponentPredicates.alwaysTrue(), index);
+        return waitFor(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     /**
@@ -139,7 +139,7 @@ public class ComponentOperator extends Operator {
      */
     @Deprecated
     public ComponentOperator(ContainerOperator cont, int index) {
-        this(cont, ComponentPredicates.alwaysTrue(), index);
+        this(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -411,7 +411,7 @@ public class ComponentOperator extends Operator {
             return (Window) source;
         }
 
-        Window window = (Window) getContainer(ComponentPredicates.of(Window.class));
+        Window window = (Window) getContainer(PredicatesJ.of(Window.class));
         if (window == null) {
             throw new NullPointerException("unable to find Window");
         }
@@ -909,7 +909,7 @@ public class ComponentOperator extends Operator {
     }
 
     protected static Component waitComponent(Container cont, Predicate<Component> predicate, int index) {
-        return SupplierRepeater.on(() -> findComponent(cont, ComponentPredicates.ofShowing(predicate), index))
+        return SupplierRepeater.on(() -> findComponent(cont, PredicatesJ.ofShowing(predicate), index))
                 .runUntilNotNull();
     }
 
@@ -919,6 +919,6 @@ public class ComponentOperator extends Operator {
     }
 
     public static @Nullable Component findComponent(Container cont, Predicate<Component> chooser, int index) {
-        return new ComponentSearcher(cont).findComponent(ComponentPredicates.ofShowing(chooser), index);
+        return new ComponentSearcher(cont).findComponent(PredicatesJ.ofShowing(chooser), index);
     }
 }

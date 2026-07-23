@@ -39,7 +39,7 @@ import javax.swing.plaf.ScrollPaneUI;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JScrollPaneOperator extends JComponentOperator {
@@ -74,7 +74,7 @@ public class JScrollPaneOperator extends JComponentOperator {
 
     public static JScrollPaneOperator waitFor(ContainerOperator cont, int index) {
         return new JScrollPaneOperator(
-                (JScrollPane) waitComponent(cont, ComponentPredicates.of(JScrollPane.class), index));
+                (JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
     }
 
     /**
@@ -82,7 +82,7 @@ public class JScrollPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JScrollPaneOperator(ContainerOperator cont, int index) {
-        this((JScrollPane) waitComponent(cont, ComponentPredicates.of(JScrollPane.class), index));
+        this((JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
     }
 
     public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -99,7 +99,7 @@ public class JScrollPaneOperator extends JComponentOperator {
 
     public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JScrollPaneOperator(
-                (JScrollPane) cont.waitSubComponent(ComponentPredicates.of(JScrollPane.class, chooser), index));
+                (JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     /**
@@ -107,7 +107,7 @@ public class JScrollPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollPane) cont.waitSubComponent(ComponentPredicates.of(JScrollPane.class, chooser), index));
+        this((JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     public void setValues(int hValue, int vValue) {
@@ -394,7 +394,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JScrollPane findJScrollPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JScrollPane) findComponent(cont, ComponentPredicates.of(JScrollPane.class, chooser), index);
+        return (JScrollPane) findComponent(cont, PredicatesJ.of(JScrollPane.class, chooser), index);
     }
 
     public static @Nullable JScrollPane findJScrollPane(Container cont, Predicate<Component> chooser) {
@@ -402,7 +402,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JScrollPane findJScrollPane(Container cont, int index) {
-        return findJScrollPane(cont, ComponentPredicates.alwaysTrue(), index);
+        return findJScrollPane(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static @Nullable JScrollPane findJScrollPane(Container cont) {
@@ -410,15 +410,15 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JScrollPane findJScrollPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (JScrollPane) findContainerUnder(comp, ComponentPredicates.of(JScrollPane.class, chooser));
+        return (JScrollPane) findContainerUnder(comp, PredicatesJ.of(JScrollPane.class, chooser));
     }
 
     public static @Nullable JScrollPane findJScrollPaneUnder(Component comp) {
-        return findJScrollPaneUnder(comp, ComponentPredicates.of(JScrollPane.class));
+        return findJScrollPaneUnder(comp, PredicatesJ.of(JScrollPane.class));
     }
 
     public static JScrollPane waitJScrollPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JScrollPane) waitComponent(cont, ComponentPredicates.of(JScrollPane.class, chooser), index);
+        return (JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class, chooser), index);
     }
 
     public static JScrollPane waitJScrollPane(Container cont, Predicate<Component> chooser) {
@@ -426,7 +426,7 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public static JScrollPane waitJScrollPane(Container cont, int index) {
-        return waitJScrollPane(cont, ComponentPredicates.alwaysTrue(), index);
+        return waitJScrollPane(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static JScrollPane waitJScrollPane(Container cont) {

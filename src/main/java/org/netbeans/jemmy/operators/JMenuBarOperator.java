@@ -48,7 +48,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.MenuDriver;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JMenuItemByTextPredicate;
 import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
@@ -56,7 +56,7 @@ import org.netbeans.jemmy.util.StringComparator;
 public class JMenuBarOperator extends JComponentOperator {
 
     public static JMenuBarOperator waitFor(ContainerOperator cont) {
-        return new JMenuBarOperator((JMenuBar) waitComponent(cont, ComponentPredicates.of(JMenuBar.class), 0));
+        return new JMenuBarOperator((JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class), 0));
     }
 
     /**
@@ -64,7 +64,7 @@ public class JMenuBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JMenuBarOperator(ContainerOperator cont) {
-        this((JMenuBar) waitComponent(cont, ComponentPredicates.of(JMenuBar.class), 0));
+        this((JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class), 0));
     }
 
     /**
@@ -97,7 +97,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
     public static JMenuBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JMenuBarOperator(
-                (JMenuBar) cont.waitSubComponent(ComponentPredicates.of(JMenuBar.class, chooser), index));
+                (JMenuBar) cont.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     /**
@@ -105,7 +105,7 @@ public class JMenuBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JMenuBar) cont.waitSubComponent(ComponentPredicates.of(JMenuBar.class, chooser), index));
+        this((JMenuBar) cont.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     public @Nullable JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -323,7 +323,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public static JMenuBar waitJMenuBar(Container cont) {
-        return (JMenuBar) waitComponent(cont, ComponentPredicates.of(JMenuBar.class));
+        return (JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class));
     }
 
     public static JMenuBar waitJMenuBar(JFrame frame) {
@@ -335,7 +335,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public static @Nullable JMenuBar findJMenuBar(Container cont) {
-        return (JMenuBar) findComponent(cont, ComponentPredicates.of(JMenuBar.class));
+        return (JMenuBar) findComponent(cont, PredicatesJ.of(JMenuBar.class));
     }
 
     private static class IsJMenuAndPopupIsVisiblePredicate implements Predicate<Component> {

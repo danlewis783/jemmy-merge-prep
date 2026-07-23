@@ -42,7 +42,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.OrderedListDriver;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class JTableHeaderOperator extends JComponentOperator {
 
@@ -76,7 +76,7 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, int index) {
         return new JTableHeaderOperator(
-                (JTableHeader) waitComponent(cont, ComponentPredicates.of(JTableHeader.class), index));
+                (JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
     }
 
     /**
@@ -84,7 +84,7 @@ public class JTableHeaderOperator extends JComponentOperator {
      */
     @Deprecated
     public JTableHeaderOperator(ContainerOperator cont, int index) {
-        this((JTableHeader) waitComponent(cont, ComponentPredicates.of(JTableHeader.class), index));
+        this((JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
     }
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -101,7 +101,7 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTableHeaderOperator(
-                (JTableHeader) cont.waitSubComponent(ComponentPredicates.of(JTableHeader.class, chooser), index));
+                (JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
     }
 
     /**
@@ -109,7 +109,7 @@ public class JTableHeaderOperator extends JComponentOperator {
      */
     @Deprecated
     public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTableHeader) cont.waitSubComponent(ComponentPredicates.of(JTableHeader.class, chooser), index));
+        this((JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
     }
 
     public void selectColumn(int columnIndex) {

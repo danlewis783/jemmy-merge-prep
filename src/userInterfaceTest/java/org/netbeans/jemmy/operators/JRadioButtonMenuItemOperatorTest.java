@@ -29,7 +29,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -70,7 +70,7 @@ class JRadioButtonMenuItemOperatorTest {
         operator1.showMenuItem("Radio Button 1", StringComparators.strict());
         JPopupMenuOperator popup = JPopupMenuOperator.waitFor();
         JRadioButtonMenuItemOperator.waitFor(popup);
-        JRadioButtonMenuItemOperator.waitFor(popup, ComponentPredicates.byName("Radio Button 1"));
+        JRadioButtonMenuItemOperator.waitFor(popup, PredicatesJ.byName("Radio Button 1"));
         JRadioButtonMenuItemOperator.waitFor(popup, "Radio Button 1", StringComparators.strict());
         JRadioButtonMenuItemOperator.of(menuItem);
     }

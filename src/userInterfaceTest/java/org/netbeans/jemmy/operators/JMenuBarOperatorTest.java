@@ -39,7 +39,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -82,7 +82,7 @@ class JMenuBarOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JMenuBarOperator.waitFor(operator);
-        JMenuBarOperator.waitFor(operator, ComponentPredicates.byName("JMenuBarOperatorTest"));
+        JMenuBarOperator.waitFor(operator, PredicatesJ.byName("JMenuBarOperatorTest"));
     }
 
     @Test
@@ -138,7 +138,7 @@ class JMenuBarOperatorTest {
     void testShowMenuItems() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        ComponentPredicates.byName("JMenuItem1");
+        PredicatesJ.byName("JMenuItem1");
     }
 
     @Test
@@ -148,7 +148,7 @@ class JMenuBarOperatorTest {
         operator1.showMenuItem("JMenu1", StringComparators.strict());
         operator1.showMenuItem("JMenu1", "/", StringComparators.strict());
         operator1.showMenuItem(new String[] {"JMenu1"}, StringComparators.strict());
-        operator1.showMenuItem(Collections.singletonList(ComponentPredicates.byName("JMenu1")));
+        operator1.showMenuItem(Collections.singletonList(PredicatesJ.byName("JMenu1")));
     }
 
     @Test

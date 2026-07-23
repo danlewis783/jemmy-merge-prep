@@ -37,7 +37,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -69,12 +69,12 @@ class JFrameOperatorTest {
 
         JFrameOperator.waitFor();
         JFrameOperator.waitFor("JFrameOperatorTest");
-        JFrameOperator.waitFor(ComponentPredicates.byName("JFrameOperatorTest"));
+        JFrameOperator.waitFor(PredicatesJ.byName("JFrameOperatorTest"));
     }
 
     @Test
     void findJFrame() throws InterruptedException, InvocationTargetException {
-        JFrame frame1 = JFrameOperator.findJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
+        JFrame frame1 = JFrameOperator.findJFrame(PredicatesJ.byName("JFrameOperatorTest"));
         assertThat(frame1).isNotNull();
         JFrame frame2 = JFrameOperator.findJFrame("JFrameOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(frame2).isNotNull();
@@ -83,7 +83,7 @@ class JFrameOperatorTest {
     @Test
     @Timeout(value=2, unit=TimeUnit.SECONDS)
     void waitJFrame() throws InterruptedException, InvocationTargetException {
-        JFrame frameOpByName = JFrameOperator.waitJFrame(ComponentPredicates.byName("JFrameOperatorTest"));
+        JFrame frameOpByName = JFrameOperator.waitJFrame(PredicatesJ.byName("JFrameOperatorTest"));
         JFrame frameOpByTitle = JFrameOperator.waitJFrame("JFrameOperatorTest");
 
         Future<JFrame> laFutura = Executors.newSingleThreadExecutor().submit(new WaitJFrameCallable());

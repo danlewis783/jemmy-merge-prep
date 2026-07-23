@@ -35,7 +35,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -65,7 +65,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public static JTextPaneOperator waitFor(ContainerOperator cont, int index) {
-        return new JTextPaneOperator((JTextPane) waitComponent(cont, ComponentPredicates.of(JTextPane.class), index));
+        return new JTextPaneOperator((JTextPane) waitComponent(cont, PredicatesJ.of(JTextPane.class), index));
     }
 
     /**
@@ -73,7 +73,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
      */
     @Deprecated
     public JTextPaneOperator(ContainerOperator cont, int index) {
-        this((JTextPane) waitComponent(cont, ComponentPredicates.of(JTextPane.class), index));
+        this((JTextPane) waitComponent(cont, PredicatesJ.of(JTextPane.class), index));
     }
 
     public static JTextPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -90,7 +90,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
 
     public static JTextPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTextPaneOperator(
-                (JTextPane) cont.waitSubComponent(ComponentPredicates.of(JTextPane.class, chooser), index));
+                (JTextPane) cont.waitSubComponent(PredicatesJ.of(JTextPane.class, chooser), index));
     }
 
     /**
@@ -98,7 +98,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
      */
     @Deprecated
     public JTextPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTextPane) cont.waitSubComponent(ComponentPredicates.of(JTextPane.class, chooser), index));
+        this((JTextPane) cont.waitSubComponent(PredicatesJ.of(JTextPane.class, chooser), index));
     }
 
     public static JTextPaneOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
@@ -117,7 +117,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JTextPaneOperator((JTextPane) waitComponent(
                 cont,
-                ComponentPredicates.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -128,7 +128,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     public JTextPaneOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         this((JTextPane) waitComponent(
                 cont,
-                ComponentPredicates.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -189,7 +189,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public static @Nullable JTextPane findJTextPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextPane) findJTextComponent(cont, ComponentPredicates.of(JTextPane.class, chooser), index);
+        return (JTextPane) findJTextComponent(cont, PredicatesJ.of(JTextPane.class, chooser), index);
     }
 
     public static @Nullable JTextPane findJTextPane(Container cont, Predicate<Component> chooser) {
@@ -200,7 +200,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextPane(
                 cont,
-                ComponentPredicates.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -209,7 +209,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     }
 
     public static JTextPane waitJTextPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextPane) waitJTextComponent(cont, ComponentPredicates.of(JTextPane.class, chooser), index);
+        return (JTextPane) waitJTextComponent(cont, PredicatesJ.of(JTextPane.class, chooser), index);
     }
 
     public static JTextPane waitJTextPane(Container cont, Predicate<Component> chooser) {
@@ -219,7 +219,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
     public static JTextPane waitJTextPane(Container cont, String text, StringComparator stringComparator, int index) {
         return waitJTextPane(
                 cont,
-                ComponentPredicates.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextPane.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 

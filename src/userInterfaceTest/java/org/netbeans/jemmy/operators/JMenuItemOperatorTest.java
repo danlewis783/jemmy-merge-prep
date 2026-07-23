@@ -43,7 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -94,7 +94,7 @@ class JMenuItemOperatorTest {
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         JPopupMenuOperator popup = JPopupMenuOperator.waitFor();
         JMenuItem menuItem1 = JMenuItemOperator.findJMenuItem(
-                (Container) popup.getSource(), ComponentPredicates.byName("JMenuItemOperatorTest"));
+                (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
         assertThat(menuItem1).isNotNull();
         operator1.pushMenu("JMenuOperatorTest", "|", StringComparators.strict());
         popup = JPopupMenuOperator.waitFor();
@@ -110,7 +110,7 @@ class JMenuItemOperatorTest {
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         JPopupMenuOperator popup = JPopupMenuOperator.waitFor();
         JMenuItemOperator.waitJMenuItem(
-                (Container) popup.getSource(), ComponentPredicates.byName("JMenuItemOperatorTest"));
+                (Container) popup.getSource(), PredicatesJ.byName("JMenuItemOperatorTest"));
         operator1.pushMenuNoBlock("JMenuOperatorTest", "|", StringComparators.strict());
         popup = JPopupMenuOperator.waitFor();
         JMenuItemOperator.waitJMenuItem(

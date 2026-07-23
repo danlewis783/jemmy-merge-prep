@@ -42,7 +42,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JScrollBarOperator extends JComponentOperator {
@@ -79,7 +79,7 @@ public class JScrollBarOperator extends JComponentOperator {
 
     public static JScrollBarOperator waitFor(ContainerOperator cont, int index) {
         return new JScrollBarOperator(
-                (JScrollBar) waitComponent(cont, ComponentPredicates.of(JScrollBar.class), index));
+                (JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class), index));
     }
 
     /**
@@ -87,7 +87,7 @@ public class JScrollBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JScrollBarOperator(ContainerOperator cont, int index) {
-        this((JScrollBar) waitComponent(cont, ComponentPredicates.of(JScrollBar.class), index));
+        this((JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class), index));
     }
 
     public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -104,7 +104,7 @@ public class JScrollBarOperator extends JComponentOperator {
 
     public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JScrollBarOperator(
-                (JScrollBar) cont.waitSubComponent(ComponentPredicates.of(JScrollBar.class, chooser), index));
+                (JScrollBar) cont.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     /**
@@ -112,7 +112,7 @@ public class JScrollBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollBar) cont.waitSubComponent(ComponentPredicates.of(JScrollBar.class, chooser), index));
+        this((JScrollBar) cont.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     @Deprecated
@@ -272,7 +272,7 @@ public class JScrollBarOperator extends JComponentOperator {
             return;
         }
 
-        Predicate<Component> predicate = ComponentPredicates.of(JButton.class);
+        Predicate<Component> predicate = PredicatesJ.of(JButton.class);
         ComponentSearcher searcher = new ComponentSearcher((Container) getSource());
         JButton butt0 = (JButton) searcher.findComponent(predicate, 0);
         JButton butt1 = (JButton) searcher.findComponent(predicate, 1);
@@ -309,7 +309,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public static @Nullable JScrollBar findJScrollBar(Container cont, Predicate<Component> chooser, int index) {
-        return (JScrollBar) findComponent(cont, ComponentPredicates.of(JScrollBar.class, chooser), index);
+        return (JScrollBar) findComponent(cont, PredicatesJ.of(JScrollBar.class, chooser), index);
     }
 
     public static @Nullable JScrollBar findJScrollBar(Container cont, Predicate<Component> chooser) {
@@ -317,7 +317,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public static @Nullable JScrollBar findJScrollBar(Container cont, int index) {
-        return findJScrollBar(cont, ComponentPredicates.alwaysTrue(), index);
+        return findJScrollBar(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static @Nullable JScrollBar findJScrollBar(Container cont) {
@@ -325,7 +325,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public static JScrollBar waitJScrollBar(Container cont, Predicate<Component> chooser, int index) {
-        return (JScrollBar) waitComponent(cont, ComponentPredicates.of(JScrollBar.class, chooser), index);
+        return (JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class, chooser), index);
     }
 
     public static JScrollBar waitJScrollBar(Container cont, Predicate<Component> chooser) {
@@ -333,7 +333,7 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public static JScrollBar waitJScrollBar(Container cont, int index) {
-        return waitJScrollBar(cont, ComponentPredicates.alwaysTrue(), index);
+        return waitJScrollBar(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static JScrollBar waitJScrollBar(Container cont) {

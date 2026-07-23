@@ -32,7 +32,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -76,7 +76,7 @@ class JScrollPaneOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
         JScrollPaneOperator operator2 =
-                JScrollPaneOperator.waitFor(operator, ComponentPredicates.byName("JScrollPaneOperatorTest"));
+                JScrollPaneOperator.waitFor(operator, PredicatesJ.byName("JScrollPaneOperatorTest"));
     }
 
     @Test
@@ -85,7 +85,7 @@ class JScrollPaneOperatorTest {
         JScrollPane scrollPane1 = JScrollPaneOperator.findJScrollPane(frame);
         assertThat(scrollPane1).isNotNull();
         JScrollPane scrollPane2 =
-                JScrollPaneOperator.findJScrollPane(frame, ComponentPredicates.byName("JScrollPaneOperatorTest"));
+                JScrollPaneOperator.findJScrollPane(frame, PredicatesJ.byName("JScrollPaneOperatorTest"));
         assertThat(scrollPane2).isNotNull();
     }
 
@@ -96,7 +96,7 @@ class JScrollPaneOperatorTest {
     void testWaitJScrollPane() throws InterruptedException, InvocationTargetException {
         showFrame();
         JScrollPaneOperator.waitJScrollPane(frame);
-        JScrollPaneOperator.waitJScrollPane(frame, ComponentPredicates.byName("JScrollPaneOperatorTest"));
+        JScrollPaneOperator.waitJScrollPane(frame, PredicatesJ.byName("JScrollPaneOperatorTest"));
     }
 
     @Test

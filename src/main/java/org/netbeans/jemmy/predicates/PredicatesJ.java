@@ -26,8 +26,8 @@ import javax.swing.JComponent;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
-public final class ComponentPredicates {
-    private ComponentPredicates() {}
+public final class PredicatesJ {
+    private PredicatesJ() {}
 
     public static Predicate<Component> of(Class<?> clazz) {
         return new IsInstancePredicate(clazz);

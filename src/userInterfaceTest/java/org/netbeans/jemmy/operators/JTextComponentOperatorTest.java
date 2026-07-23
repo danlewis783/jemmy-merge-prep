@@ -51,7 +51,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JTextComponentOperator.NoSuchTextException;
 import org.netbeans.jemmy.operators.JTextComponentOperator.TextChooser;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -89,7 +89,7 @@ class JTextComponentOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTextComponentOperator.waitFor(operator);
         JTextComponentOperator.waitFor(operator, StringComparators.strict(), "JTextComponentOperatorTest");
-        JTextComponentOperator.waitFor(operator, ComponentPredicates.byName("JTextComponentOperatorTest"));
+        JTextComponentOperator.waitFor(operator, PredicatesJ.byName("JTextComponentOperatorTest"));
     }
 
     @Test
@@ -99,7 +99,7 @@ class JTextComponentOperatorTest {
                 frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textComponent).isNotNull();
         JTextComponent textComponent2 = JTextComponentOperator.findJTextComponent(
-                frame, ComponentPredicates.byName("JTextComponentOperatorTest"));
+                frame, PredicatesJ.byName("JTextComponentOperatorTest"));
         assertThat(textComponent2).isNotNull();
     }
 
@@ -109,7 +109,7 @@ class JTextComponentOperatorTest {
         JTextComponentOperator.waitJTextComponent(
                 frame, "JTextComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
         JTextComponentOperator.waitJTextComponent(
-                frame, ComponentPredicates.byName("JTextComponentOperatorTest"));
+                frame, PredicatesJ.byName("JTextComponentOperatorTest"));
     }
 
     @Test

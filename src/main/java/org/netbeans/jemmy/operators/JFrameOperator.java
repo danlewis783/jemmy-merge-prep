@@ -38,7 +38,7 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.functions.FrameFunction;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.FrameShowingByTitlePredicate;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
@@ -58,7 +58,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public static JFrameOperator waitFor(int index) {
-        return new JFrameOperator((JFrame) waitFrame(ComponentPredicates.of(JFrame.class), index));
+        return new JFrameOperator((JFrame) waitFrame(PredicatesJ.of(JFrame.class), index));
     }
 
     /**
@@ -66,7 +66,7 @@ public class JFrameOperator extends FrameOperator {
      */
     @Deprecated
     public JFrameOperator(int index) {
-        this((JFrame) waitFrame(ComponentPredicates.of(JFrame.class), index));
+        this((JFrame) waitFrame(PredicatesJ.of(JFrame.class), index));
     }
 
     /**
@@ -106,7 +106,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public static JFrameOperator waitFor(Predicate<Component> chooser, int index) {
-        return new JFrameOperator((JFrame) waitFrame(ComponentPredicates.of(JFrame.class, chooser), index));
+        return new JFrameOperator((JFrame) waitFrame(PredicatesJ.of(JFrame.class, chooser), index));
     }
 
     /**
@@ -114,12 +114,12 @@ public class JFrameOperator extends FrameOperator {
      */
     @Deprecated
     public JFrameOperator(Predicate<Component> chooser, int index) {
-        this((JFrame) waitFrame(ComponentPredicates.of(JFrame.class, chooser), index));
+        this((JFrame) waitFrame(PredicatesJ.of(JFrame.class, chooser), index));
     }
 
     public static JFrameOperator waitFor(String title, int index) {
         return waitFor(
-                ComponentPredicates.of(
+                PredicatesJ.of(
                         JFrame.class, new FrameShowingByTitlePredicate(title, StringComparators.strict())),
                 index);
     }
@@ -130,7 +130,7 @@ public class JFrameOperator extends FrameOperator {
     @Deprecated
     public JFrameOperator(String title, int index) {
         this(
-                ComponentPredicates.of(
+                PredicatesJ.of(
                         JFrame.class, new FrameShowingByTitlePredicate(title, StringComparators.strict())),
                 index);
     }
@@ -184,7 +184,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public static @Nullable JFrame findJFrame(Predicate<Component> chooser, int index) {
-        return (JFrame) FrameFunction.getFrame(ComponentPredicates.of(JFrame.class, chooser), index);
+        return (JFrame) FrameFunction.getFrame(PredicatesJ.of(JFrame.class, chooser), index);
     }
 
     public static @Nullable JFrame findJFrame(Predicate<Component> chooser) {
@@ -193,7 +193,7 @@ public class JFrameOperator extends FrameOperator {
 
     public static @Nullable JFrame findJFrame(String title, StringComparator stringComparator, int index) {
         return (JFrame) FrameFunction.getFrame(
-                ComponentPredicates.of(JFrame.class, new FrameShowingByTitlePredicate(title, stringComparator)), index);
+                PredicatesJ.of(JFrame.class, new FrameShowingByTitlePredicate(title, stringComparator)), index);
     }
 
     public static @Nullable JFrame findJFrame(String title, StringComparator stringComparator) {
@@ -201,7 +201,7 @@ public class JFrameOperator extends FrameOperator {
     }
 
     public static JFrame waitJFrame(Predicate<Component> chooser, int index) {
-        return (JFrame) waitFrame(ComponentPredicates.of(JFrame.class, chooser), index);
+        return (JFrame) waitFrame(PredicatesJ.of(JFrame.class, chooser), index);
     }
 
     public static JFrame waitJFrame(Predicate<Component> chooser) {
@@ -221,9 +221,9 @@ public class JFrameOperator extends FrameOperator {
                         new FrameFunction(
                                 index,
                                 null,
-                                ComponentPredicates.of(
+                                PredicatesJ.of(
                                         Frame.class,
-                                        ComponentPredicates.of(
+                                        PredicatesJ.of(
                                                 JFrame.class,
                                                 new FrameShowingByTitlePredicate(title, stringComparator)))),
                         TimeoutKey.FrameWaiter_WaitFrameTimeout)

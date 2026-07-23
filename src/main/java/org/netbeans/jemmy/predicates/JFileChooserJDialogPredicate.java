@@ -29,7 +29,7 @@ public final class JFileChooserJDialogPredicate implements Predicate<Component> 
     public boolean test(Component comp) {
         if ((comp instanceof Window) && comp.isVisible()) {
             ComponentSearcher searcher = new ComponentSearcher((Container) comp);
-            return searcher.findComponent(ComponentPredicates.of(JFileChooser.class)) != null;
+            return searcher.findComponent(PredicatesJ.of(JFileChooser.class)) != null;
         } else {
             return false;
         }

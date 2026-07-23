@@ -28,7 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -62,7 +62,7 @@ class JPasswordFieldOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
+        JPasswordFieldOperator.waitFor(operator1, PredicatesJ.byName("JPasswordFieldOperatorTest"));
         JPasswordFieldOperator.waitFor(operator1);
         JPasswordFieldOperator.waitFor(operator1, "JPasswordFieldOperatorTest", StringComparators.strict());
     }
@@ -71,7 +71,7 @@ class JPasswordFieldOperatorTest {
     void testFindJPasswordField() {
         JFrameOperator.waitFor();
         JPasswordField passwordField1 = JPasswordFieldOperator.findJPasswordField(
-                frame, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
+                frame, PredicatesJ.byName("JPasswordFieldOperatorTest"));
         assertThat(passwordField1).isNotNull();
         JPasswordField passwordField2 = JPasswordFieldOperator.findJPasswordField(
                 frame, "JPasswordFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -82,7 +82,7 @@ class JPasswordFieldOperatorTest {
     void testWaitJPasswordField() {
         JFrameOperator.waitFor();
         JPasswordFieldOperator.waitJPasswordField(
-                frame, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
+                frame, PredicatesJ.byName("JPasswordFieldOperatorTest"));
         JPasswordFieldOperator.waitJPasswordField(
                 frame, "JPasswordFieldOperatorTest", StringComparators.caseInsensitiveSubstring());
     }
@@ -91,7 +91,7 @@ class JPasswordFieldOperatorTest {
     void testEchoCharIsSet() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JPasswordFieldOperator operator3 =
-                JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
+                JPasswordFieldOperator.waitFor(operator1, PredicatesJ.byName("JPasswordFieldOperatorTest"));
         assertThat(operator3.echoCharIsSet()).isTrue();
         assertThat(onQueue(passwordField::echoCharIsSet)).isTrue();
         operator3.setEchoChar('a');
@@ -103,7 +103,7 @@ class JPasswordFieldOperatorTest {
     void testGetPassword() throws InterruptedException, InvocationTargetException {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JPasswordFieldOperator operator3 =
-                JPasswordFieldOperator.waitFor(operator1, ComponentPredicates.byName("JPasswordFieldOperatorTest"));
+                JPasswordFieldOperator.waitFor(operator1, PredicatesJ.byName("JPasswordFieldOperatorTest"));
 
         EventQueue.invokeAndWait(() -> passwordField.setText("hallo"));
 

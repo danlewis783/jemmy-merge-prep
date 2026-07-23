@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.drivers.scrolling.JSliderAPIDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -71,21 +71,21 @@ class JSliderOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSliderOperator.waitFor(operator);
-        JSliderOperator.waitFor(operator, ComponentPredicates.byName("JSliderOperatorTest"));
+        JSliderOperator.waitFor(operator, PredicatesJ.byName("JSliderOperatorTest"));
     }
 
     @Test
     void testFindJSlider() {
         JSlider slider1 = JSliderOperator.findJSlider(frame);
         assertThat(slider1).isNotNull();
-        JSlider slider2 = JSliderOperator.findJSlider(frame, ComponentPredicates.byName("JSliderOperatorTest"));
+        JSlider slider2 = JSliderOperator.findJSlider(frame, PredicatesJ.byName("JSliderOperatorTest"));
         assertThat(slider2).isNotNull();
     }
 
     @Test
     void testWaitJSlider() {
         JSliderOperator.waitJSlider(frame);
-        JSliderOperator.waitJSlider(frame, ComponentPredicates.byName("JSliderOperatorTest"));
+        JSliderOperator.waitJSlider(frame, PredicatesJ.byName("JSliderOperatorTest"));
     }
 
     @Test

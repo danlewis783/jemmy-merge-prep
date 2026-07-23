@@ -36,7 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -73,7 +73,7 @@ class JColorChooserOperatorTest {
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JColorChooserOperator.waitFor(operator1);
-        JColorChooserOperator.waitFor(operator1, ComponentPredicates.byName("JColorChooserOperatorTest"));
+        JColorChooserOperator.waitFor(operator1, PredicatesJ.byName("JColorChooserOperatorTest"));
     }
 
     @Test
@@ -81,14 +81,14 @@ class JColorChooserOperatorTest {
         JColorChooser colorChooser1 = JColorChooserOperator.findJColorChooser(frame);
         assertThat(colorChooser1).isNotNull();
         JColorChooser colorChooser2 =
-                JColorChooserOperator.findJColorChooser(frame, ComponentPredicates.byName("JColorChooserOperatorTest"));
+                JColorChooserOperator.findJColorChooser(frame, PredicatesJ.byName("JColorChooserOperatorTest"));
         assertThat(colorChooser2).isNotNull();
     }
 
     @Test
     void testWaitJColorChooser() {
         JColorChooserOperator.waitJColorChooser(frame);
-        JColorChooserOperator.waitJColorChooser(frame, ComponentPredicates.byName("JColorChooserOperatorTest"));
+        JColorChooserOperator.waitJColorChooser(frame, PredicatesJ.byName("JColorChooserOperatorTest"));
     }
 
     @Test

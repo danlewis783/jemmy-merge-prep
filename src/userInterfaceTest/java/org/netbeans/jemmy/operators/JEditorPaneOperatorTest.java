@@ -53,7 +53,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -90,7 +90,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
-        JEditorPaneOperator.waitFor(operator1, ComponentPredicates.byName("JEditorPaneOperatorTest"));
+        JEditorPaneOperator.waitFor(operator1, PredicatesJ.byName("JEditorPaneOperatorTest"));
         JEditorPaneOperator.waitFor(operator1);
         JEditorPaneOperator.waitFor(operator1, "JEditorPaneOperatorTest", StringComparators.strict());
     }
@@ -99,7 +99,7 @@ class JEditorPaneOperatorTest {
     void testFindJEditorPane() {
         JFrameOperator.waitFor();
         JEditorPane editorPane1 =
-                JEditorPaneOperator.findJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
+                JEditorPaneOperator.findJEditorPane(frame, PredicatesJ.byName("JEditorPaneOperatorTest"));
         assertThat(editorPane1).isNotNull();
         JEditorPane editorPane2 = JEditorPaneOperator.findJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -109,7 +109,7 @@ class JEditorPaneOperatorTest {
     @Test
     void testWaitJEditorPane() {
         JFrameOperator.waitFor();
-        JEditorPaneOperator.waitJEditorPane(frame, ComponentPredicates.byName("JEditorPaneOperatorTest"));
+        JEditorPaneOperator.waitJEditorPane(frame, PredicatesJ.byName("JEditorPaneOperatorTest"));
         JEditorPaneOperator.waitJEditorPane(
                 frame, "JEditorPaneOperatorTest", StringComparators.caseInsensitiveSubstring());
     }

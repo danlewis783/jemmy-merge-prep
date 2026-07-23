@@ -34,7 +34,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -81,7 +81,7 @@ class OperatorTest {
     void testGetParentPath() {
         FrameOperator operator = FrameOperator.waitFor();
         ContainerOperator operator1 = ContainerOperator.waitFor(operator);
-        operator1.getParentPath(Collections.singletonList(ComponentPredicates.byName("1")));
+        operator1.getParentPath(Collections.singletonList(PredicatesJ.byName("1")));
     }
 
     @Test

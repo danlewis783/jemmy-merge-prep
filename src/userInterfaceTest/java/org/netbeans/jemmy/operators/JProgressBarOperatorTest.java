@@ -33,7 +33,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -70,7 +70,7 @@ class JProgressBarOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JProgressBarOperator.waitFor(operator);
-        JProgressBarOperator.waitFor(operator, ComponentPredicates.byName("JProgressBarOperatorTest"));
+        JProgressBarOperator.waitFor(operator, PredicatesJ.byName("JProgressBarOperatorTest"));
         JProgressBarOperator.of(progressBar);
     }
 
@@ -79,14 +79,14 @@ class JProgressBarOperatorTest {
         JProgressBar progressBar1 = JProgressBarOperator.findJProgressBar(frame);
         assertThat(progressBar1).isNotNull();
         JProgressBar progressBar2 =
-                JProgressBarOperator.findJProgressBar(frame, ComponentPredicates.byName("JProgressBarOperatorTest"));
+                JProgressBarOperator.findJProgressBar(frame, PredicatesJ.byName("JProgressBarOperatorTest"));
         assertThat(progressBar2).isNotNull();
     }
 
     @Test
     void testWaitJProgressBar() {
         JProgressBarOperator.waitJProgressBar(frame);
-        JProgressBarOperator.waitJProgressBar(frame, ComponentPredicates.byName("JProgressBarOperatorTest"));
+        JProgressBarOperator.waitJProgressBar(frame, PredicatesJ.byName("JProgressBarOperatorTest"));
     }
 
     @Test

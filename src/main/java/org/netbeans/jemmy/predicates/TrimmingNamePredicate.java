@@ -23,7 +23,7 @@ import org.netbeans.jemmy.util.StringComparator;
 
 /**
  * Matches any component whose {@link Component#getName() name}, trimmed of surrounding
- * whitespace, matches the expected name; like {@link ComponentPredicates#byName} plus the trim.
+ * whitespace, matches the expected name; like {@link PredicatesJ#byName} plus the trim.
  */
 public final class TrimmingNamePredicate implements Predicate<Component> {
     private final String name;

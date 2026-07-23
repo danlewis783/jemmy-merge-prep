@@ -30,7 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -65,12 +65,12 @@ class JLabelOperatorTest {
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JLabelOperator.waitFor(operator1);
-        JLabelOperator.waitFor(operator1, ComponentPredicates.byName("JLabelOperatorTest"));
+        JLabelOperator.waitFor(operator1, PredicatesJ.byName("JLabelOperatorTest"));
     }
 
     @Test
     void testFindJLabel() {
-        JLabel label1 = JLabelOperator.findJLabel(frame, ComponentPredicates.byName("JLabelOperatorTest"));
+        JLabel label1 = JLabelOperator.findJLabel(frame, PredicatesJ.byName("JLabelOperatorTest"));
         assertThat(label1).isNotNull();
         JLabel label2 =
                 JLabelOperator.findJLabel(frame, "JLabelOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -79,7 +79,7 @@ class JLabelOperatorTest {
 
     @Test
     void testWaitJLabel() {
-        JLabelOperator.waitJLabel(frame, ComponentPredicates.byName("JLabelOperatorTest"));
+        JLabelOperator.waitJLabel(frame, PredicatesJ.byName("JLabelOperatorTest"));
         JLabelOperator.waitJLabel(frame, "JLabelOperatorTest", StringComparators.caseInsensitiveSubstring());
     }
 

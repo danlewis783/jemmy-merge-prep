@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -59,7 +59,7 @@ class JTextAreaOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTextAreaOperator.waitFor(operator);
-        JTextAreaOperator.waitFor(operator, ComponentPredicates.byName("JTextAreaOperatorTest"));
+        JTextAreaOperator.waitFor(operator, PredicatesJ.byName("JTextAreaOperatorTest"));
         JTextAreaOperator.waitFor(operator, "JTextAreaOperatorTest", StringComparators.strict());
     }
 
@@ -69,7 +69,7 @@ class JTextAreaOperatorTest {
                 frame, "JTextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(textArea1).isNotNull();
         JTextArea textArea2 =
-                JTextAreaOperator.findJTextArea(frame, ComponentPredicates.byName("JTextAreaOperatorTest"));
+                JTextAreaOperator.findJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
         assertThat(textArea2).isNotNull();
     }
 
@@ -77,7 +77,7 @@ class JTextAreaOperatorTest {
     void testWaitJTextArea() {
         JTextAreaOperator.waitJTextArea(
                 frame, "JTextAreaOperatorTest", StringComparators.caseInsensitiveSubstring());
-        JTextAreaOperator.waitJTextArea(frame, ComponentPredicates.byName("JTextAreaOperatorTest"));
+        JTextAreaOperator.waitJTextArea(frame, PredicatesJ.byName("JTextAreaOperatorTest"));
     }
 
     @Test

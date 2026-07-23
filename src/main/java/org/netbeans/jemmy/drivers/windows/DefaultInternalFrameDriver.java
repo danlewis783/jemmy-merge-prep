@@ -37,7 +37,7 @@ import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.WindowDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JInternalFrameOperator;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class DefaultInternalFrameDriver extends LightSupportiveDriver
         implements WindowDriver, FrameDriver, InternalFrameDriver {
@@ -128,6 +128,6 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
     public Component getTitlePane(ComponentOperator operator) {
         ComponentSearcher cs = new ComponentSearcher((Container) operator.getSource());
         return Objects.requireNonNull(
-                cs.findComponent(ComponentPredicates.of(BasicInternalFrameTitlePane.class)), "title pane not found");
+                cs.findComponent(PredicatesJ.of(BasicInternalFrameTitlePane.class)), "title pane not found");
     }
 }

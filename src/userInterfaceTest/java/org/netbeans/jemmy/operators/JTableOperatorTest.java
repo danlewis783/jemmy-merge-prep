@@ -43,7 +43,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -98,7 +98,7 @@ class JTableOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator.waitFor(operator);
-        JTableOperator operator2 = JTableOperator.waitFor(operator, ComponentPredicates.byName("JTableOperatorTest"));
+        JTableOperator operator2 = JTableOperator.waitFor(operator, PredicatesJ.byName("JTableOperatorTest"));
         operator2.selectCell(0, 0);
         JTableOperator operator3 = JTableOperator.waitFor(operator, "Mary", StringComparators.strict());
         JTableOperator operator4 = JTableOperator.waitFor(operator, "Mary", StringComparators.strict(), 0, 0);
@@ -110,7 +110,7 @@ class JTableOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
         operator1.selectCell(0, 0);
-        JTable table1 = JTableOperator.findJTable(frame, ComponentPredicates.byName("JTableOperatorTest"));
+        JTable table1 = JTableOperator.findJTable(frame, PredicatesJ.byName("JTableOperatorTest"));
         assertThat(table1).isNotNull();
         JTable table2 = JTableOperator.findJTable(frame, "Mary", StringComparators.strict(), 0, 0);
         assertThat(table2).isNotNull();
@@ -121,7 +121,7 @@ class JTableOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
         operator1.selectCell(0, 0);
-        JTableOperator.waitJTable(frame, ComponentPredicates.byName("JTableOperatorTest"));
+        JTableOperator.waitJTable(frame, PredicatesJ.byName("JTableOperatorTest"));
         JTableOperator.waitJTable(frame, "Mary", StringComparators.strict(), 0, 0);
     }
 
@@ -135,7 +135,7 @@ class JTableOperatorTest {
         rows[0] = 0;
         int[] columns = new int[1];
         columns[0] = 0;
-        Point point2 = operator1.findCell(ComponentPredicates.byName("Mary"), rows, columns, 0);
+        Point point2 = operator1.findCell(PredicatesJ.byName("Mary"), rows, columns, 0);
         assertThat(point2).isNotNull();
         Point point3 = operator1.findCell("XXXXXX", StringComparators.strict(), 0);
         assertThat(point3).isNotNull();

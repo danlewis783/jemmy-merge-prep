@@ -40,7 +40,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class JSliderOperator extends JComponentOperator {
     @Deprecated
@@ -80,7 +80,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public static JSliderOperator waitFor(ContainerOperator cont, int index) {
-        return new JSliderOperator((JSlider) waitComponent(cont, ComponentPredicates.of(JSlider.class), index));
+        return new JSliderOperator((JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class), index));
     }
 
     /**
@@ -88,7 +88,7 @@ public class JSliderOperator extends JComponentOperator {
      */
     @Deprecated
     public JSliderOperator(ContainerOperator cont, int index) {
-        this((JSlider) waitComponent(cont, ComponentPredicates.of(JSlider.class), index));
+        this((JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class), index));
     }
 
     public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -105,7 +105,7 @@ public class JSliderOperator extends JComponentOperator {
 
     public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JSliderOperator(
-                (JSlider) cont.waitSubComponent(ComponentPredicates.of(JSlider.class, chooser), index));
+                (JSlider) cont.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     /**
@@ -113,7 +113,7 @@ public class JSliderOperator extends JComponentOperator {
      */
     @Deprecated
     public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSlider) cont.waitSubComponent(ComponentPredicates.of(JSlider.class, chooser), index));
+        this((JSlider) cont.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     @Deprecated
@@ -290,7 +290,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public static @Nullable JSlider findJSlider(Container cont, Predicate<Component> chooser, int index) {
-        return (JSlider) findComponent(cont, ComponentPredicates.of(JSlider.class, chooser), index);
+        return (JSlider) findComponent(cont, PredicatesJ.of(JSlider.class, chooser), index);
     }
 
     public static @Nullable JSlider findJSlider(Container cont, Predicate<Component> chooser) {
@@ -298,7 +298,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public static @Nullable JSlider findJSlider(Container cont, int index) {
-        return findJSlider(cont, ComponentPredicates.alwaysTrue(), index);
+        return findJSlider(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static @Nullable JSlider findJSlider(Container cont) {
@@ -306,7 +306,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public static JSlider waitJSlider(Container cont, Predicate<Component> chooser, int index) {
-        return (JSlider) waitComponent(cont, ComponentPredicates.of(JSlider.class, chooser), index);
+        return (JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class, chooser), index);
     }
 
     public static JSlider waitJSlider(Container cont, Predicate<Component> chooser) {
@@ -314,7 +314,7 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public static JSlider waitJSlider(Container cont, int index) {
-        return waitJSlider(cont, ComponentPredicates.alwaysTrue(), index);
+        return waitJSlider(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static JSlider waitJSlider(Container cont) {

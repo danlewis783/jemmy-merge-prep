@@ -28,7 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -63,7 +63,7 @@ class JToggleButtonOperatorTest {
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JToggleButtonOperator.waitFor(operator1);
-        JToggleButtonOperator.waitFor(operator1, ComponentPredicates.byName("JToggleButtonOperatorTest"));
+        JToggleButtonOperator.waitFor(operator1, PredicatesJ.byName("JToggleButtonOperatorTest"));
         JToggleButtonOperator.waitFor(operator1, StringComparators.strict(), "JToggleButtonOperatorTest");
     }
 
@@ -73,7 +73,7 @@ class JToggleButtonOperatorTest {
                 frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(toggleButton1).isNotNull();
         JToggleButton toggleButton2 =
-                JToggleButtonOperator.findJToggleButton(frame, ComponentPredicates.byName("JToggleButtonOperatorTest"));
+                JToggleButtonOperator.findJToggleButton(frame, PredicatesJ.byName("JToggleButtonOperatorTest"));
         assertThat(toggleButton2).isNotNull();
     }
 
@@ -81,7 +81,7 @@ class JToggleButtonOperatorTest {
     void testWaitJToggleButton() {
         JToggleButtonOperator.waitJToggleButton(
                 frame, "JToggleButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        JToggleButtonOperator.waitJToggleButton(frame, ComponentPredicates.byName("JToggleButtonOperatorTest"));
+        JToggleButtonOperator.waitJToggleButton(frame, PredicatesJ.byName("JToggleButtonOperatorTest"));
     }
 
     @Test

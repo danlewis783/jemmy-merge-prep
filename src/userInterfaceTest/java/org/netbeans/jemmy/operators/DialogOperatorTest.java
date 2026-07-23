@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -65,9 +65,9 @@ class DialogOperatorTest {
         FrameOperator operator = FrameOperator.waitFor();
         DialogOperator operator1 = DialogOperator.waitFor(operator);
         DialogOperator operator2 = DialogOperator.waitFor();
-        DialogOperator operator3 = DialogOperator.waitFor(ComponentPredicates.byName("DialogOperatorTest"));
+        DialogOperator operator3 = DialogOperator.waitFor(PredicatesJ.byName("DialogOperatorTest"));
         DialogOperator operator4 = DialogOperator.waitFor("DialogOperatorTest");
-        DialogOperator operator5 = DialogOperator.waitFor(operator, ComponentPredicates.byName("DialogOperatorTest"));
+        DialogOperator operator5 = DialogOperator.waitFor(operator, PredicatesJ.byName("DialogOperatorTest"));
         DialogOperator operator6 = DialogOperator.waitFor(operator, "DialogOperatorTest", StringComparators.strict());
     }
 

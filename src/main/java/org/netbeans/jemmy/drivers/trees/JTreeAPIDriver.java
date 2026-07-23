@@ -36,7 +36,7 @@ import org.netbeans.jemmy.drivers.TreeDriver;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeDriver {
     public JTreeAPIDriver() {
@@ -88,7 +88,7 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
         JTreeOperator jTreeOperator = (JTreeOperator) oper;
         jTreeOperator.startEditingAtPath(jTreeOperator.getPathForRow(index));
         JTextComponent jTextComponent = (JTextComponent)
-                jTreeOperator.waitSubComponent(ComponentPredicates.of(JTextComponent.class), waitEditorTime);
+                jTreeOperator.waitSubComponent(PredicatesJ.of(JTextComponent.class), waitEditorTime);
         return JTextComponentOperator.of(jTextComponent);
     }
 }

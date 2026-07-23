@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -62,14 +62,14 @@ class JCheckBoxOperatorTest {
     void testConstructor() {
         JFrameOperator operator1 = JFrameOperator.waitFor();
         JCheckBoxOperator.waitFor(operator1);
-        JCheckBoxOperator.waitFor(operator1, ComponentPredicates.byName("JCheckBoxOperatorTest"));
+        JCheckBoxOperator.waitFor(operator1, PredicatesJ.byName("JCheckBoxOperatorTest"));
         JCheckBoxOperator.waitFor(operator1, "JCheckBoxOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testFindJCheckBox() {
         JCheckBox checkBox1 =
-                JCheckBoxOperator.findJCheckBox(frame, ComponentPredicates.byName("JCheckBoxOperatorTest"));
+                JCheckBoxOperator.findJCheckBox(frame, PredicatesJ.byName("JCheckBoxOperatorTest"));
         assertThat(checkBox1).isNotNull();
         JCheckBox checkBox2 = JCheckBoxOperator.findJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -78,7 +78,7 @@ class JCheckBoxOperatorTest {
 
     @Test
     void testWaitJCheckBox() {
-        JCheckBoxOperator.waitJCheckBox(frame, ComponentPredicates.byName("JCheckBoxOperatorTest"));
+        JCheckBoxOperator.waitJCheckBox(frame, PredicatesJ.byName("JCheckBoxOperatorTest"));
         JCheckBoxOperator.waitJCheckBox(
                 frame, "JCheckBoxOperatorTest", StringComparators.caseInsensitiveSubstring());
     }

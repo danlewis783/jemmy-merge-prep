@@ -36,7 +36,7 @@ import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.plaf.ColorChooserUI;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
 /**
@@ -101,7 +101,7 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public static JColorChooserOperator waitFor(ContainerOperator cont, int index) {
         return new JColorChooserOperator(
-                (JColorChooser) waitComponent(cont, ComponentPredicates.of(JColorChooser.class), index));
+                (JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class), index));
     }
 
     /**
@@ -109,7 +109,7 @@ public class JColorChooserOperator extends JComponentOperator {
      */
     @Deprecated
     public JColorChooserOperator(ContainerOperator cont, int index) {
-        this((JColorChooser) waitComponent(cont, ComponentPredicates.of(JColorChooser.class), index));
+        this((JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class), index));
     }
 
     public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -126,7 +126,7 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JColorChooserOperator(
-                (JColorChooser) cont.waitSubComponent(ComponentPredicates.of(JColorChooser.class, chooser), index));
+                (JColorChooser) cont.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     /**
@@ -134,7 +134,7 @@ public class JColorChooserOperator extends JComponentOperator {
      */
     @Deprecated
     public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JColorChooser) cont.waitSubComponent(ComponentPredicates.of(JColorChooser.class, chooser), index));
+        this((JColorChooser) cont.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     public void switchToRGB() {
@@ -353,7 +353,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public static @Nullable JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser, int index) {
-        return (JColorChooser) findComponent(cont, ComponentPredicates.of(JColorChooser.class, chooser), index);
+        return (JColorChooser) findComponent(cont, PredicatesJ.of(JColorChooser.class, chooser), index);
     }
 
     public static @Nullable JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser) {
@@ -361,7 +361,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public static @Nullable JColorChooser findJColorChooser(Container cont, int index) {
-        return findJColorChooser(cont, ComponentPredicates.alwaysTrue(), index);
+        return findJColorChooser(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static @Nullable JColorChooser findJColorChooser(Container cont) {
@@ -369,7 +369,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public static JColorChooser waitJColorChooser(Container cont, Predicate<Component> chooser, int index) {
-        return (JColorChooser) waitComponent(cont, ComponentPredicates.of(JColorChooser.class, chooser), index);
+        return (JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class, chooser), index);
     }
 
     public static JColorChooser waitJColorChooser(Container cont, Predicate<Component> chooser) {
@@ -377,7 +377,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public static JColorChooser waitJColorChooser(Container cont, int index) {
-        return waitJColorChooser(cont, ComponentPredicates.alwaysTrue(), index);
+        return waitJColorChooser(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static JColorChooser waitJColorChooser(Container cont) {

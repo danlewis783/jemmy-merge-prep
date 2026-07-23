@@ -42,7 +42,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -78,13 +78,13 @@ class JListOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JListOperator.waitFor(operator);
-        JListOperator.waitFor(operator, ComponentPredicates.byName("JListOperatorTest"));
+        JListOperator.waitFor(operator, PredicatesJ.byName("JListOperatorTest"));
         JListOperator.waitFor(operator, "one", StringComparators.strict());
     }
 
     @Test
     void testFindJList() {
-        JList<?> list1 = JListOperator.findJList(frame, ComponentPredicates.byName("JListOperatorTest"));
+        JList<?> list1 = JListOperator.findJList(frame, PredicatesJ.byName("JListOperatorTest"));
         assertThat(list1).isNotNull();
         JList<?> list2 = JListOperator.findJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(list2).isNotNull();
@@ -92,7 +92,7 @@ class JListOperatorTest {
 
     @Test
     void testWaitJList() {
-        JListOperator.waitJList(frame, ComponentPredicates.byName("JListOperatorTest"));
+        JListOperator.waitJList(frame, PredicatesJ.byName("JListOperatorTest"));
         JListOperator.waitJList(frame, "one", StringComparators.caseInsensitiveSubstring(), 0);
     }
 

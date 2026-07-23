@@ -46,7 +46,7 @@ import javax.swing.border.Border;
 import javax.swing.event.AncestorListener;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
 import org.netbeans.jemmy.predicates.JToolTipWindowPredicate;
 import org.netbeans.jemmy.util.StringComparator;
@@ -78,7 +78,7 @@ public class JComponentOperator extends ContainerOperator {
 
     public static JComponentOperator waitFor(ContainerOperator cont, int index) {
         return new JComponentOperator((JComponent)
-                waitComponent(cont, ComponentPredicates.of(JComponent.class, ComponentPredicates.alwaysTrue()), index));
+                waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
     }
 
     /**
@@ -87,7 +87,7 @@ public class JComponentOperator extends ContainerOperator {
     @Deprecated
     public JComponentOperator(ContainerOperator cont, int index) {
         this((JComponent)
-                waitComponent(cont, ComponentPredicates.of(JComponent.class, ComponentPredicates.alwaysTrue()), index));
+                waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
     }
 
     public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -104,7 +104,7 @@ public class JComponentOperator extends ContainerOperator {
 
     public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JComponentOperator(
-                (JComponent) cont.waitSubComponent(ComponentPredicates.of(JComponent.class, chooser), index));
+                (JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     /**
@@ -112,7 +112,7 @@ public class JComponentOperator extends ContainerOperator {
      */
     @Deprecated
     public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JComponent) cont.waitSubComponent(ComponentPredicates.of(JComponent.class, chooser), index));
+        this((JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     @Override
@@ -138,7 +138,7 @@ public class JComponentOperator extends ContainerOperator {
 
     public JToolTip waitToolTip() {
         return (JToolTip) waitComponent(
-                WindowOperator.waitWindow(new JToolTipWindowPredicate(), 0), ComponentPredicates.of(JToolTip.class), 0);
+                WindowOperator.waitWindow(new JToolTipWindowPredicate(), 0), PredicatesJ.of(JToolTip.class), 0);
     }
 
     public ContainerOperator getWindowContainerOperator() {
@@ -146,7 +146,7 @@ public class JComponentOperator extends ContainerOperator {
         if (getSource() instanceof Window) {
             resultComp = getSource();
         } else {
-            resultComp = getContainer(ComponentPredicates.of(Window.class, JInternalFrame.class));
+            resultComp = getContainer(PredicatesJ.of(Window.class, JInternalFrame.class));
         }
 
         ContainerOperator result;
@@ -421,7 +421,7 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public static @Nullable JComponent findJComponent(Container cont, Predicate<Component> chooser, int index) {
-        return (JComponent) findComponent(cont, ComponentPredicates.of(JComponent.class, chooser), index);
+        return (JComponent) findComponent(cont, PredicatesJ.of(JComponent.class, chooser), index);
     }
 
     public static @Nullable JComponent findJComponent(Container cont, Predicate<Component> chooser) {
@@ -439,7 +439,7 @@ public class JComponentOperator extends ContainerOperator {
     }
 
     public static JComponent waitJComponent(Container cont, Predicate<Component> chooser, int index) {
-        return (JComponent) waitComponent(cont, ComponentPredicates.of(JComponent.class, chooser), index);
+        return (JComponent) waitComponent(cont, PredicatesJ.of(JComponent.class, chooser), index);
     }
 
     public static JComponent waitJComponent(Container cont, Predicate<Component> chooser) {

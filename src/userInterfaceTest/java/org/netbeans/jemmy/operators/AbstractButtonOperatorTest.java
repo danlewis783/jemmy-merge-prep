@@ -31,7 +31,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -65,14 +65,14 @@ class AbstractButtonOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         AbstractButtonOperator.waitFor(operator);
-        AbstractButtonOperator.waitFor(operator, ComponentPredicates.byName("AbstractButtonOperatorTest"));
+        AbstractButtonOperator.waitFor(operator, PredicatesJ.byName("AbstractButtonOperatorTest"));
         AbstractButtonOperator.waitFor(operator, "AbstractButtonOperatorTest", StringComparators.strict());
     }
 
     @Test
     void testFindAbstractButton() {
         AbstractButton button1 = AbstractButtonOperator.findAbstractButton(
-                frame, ComponentPredicates.byName("AbstractButtonOperatorTest"));
+                frame, PredicatesJ.byName("AbstractButtonOperatorTest"));
         assertThat(button1).isNotNull();
         AbstractButton button2 = AbstractButtonOperator.findAbstractButton(
                 frame, "AbstractButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -82,7 +82,7 @@ class AbstractButtonOperatorTest {
     @Test
     void testWaitAbstractButton() {
         AbstractButtonOperator.waitAbstractButton(
-                frame, ComponentPredicates.byName("AbstractButtonOperatorTest"));
+                frame, PredicatesJ.byName("AbstractButtonOperatorTest"));
         AbstractButtonOperator.waitAbstractButton(
                 frame, "AbstractButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
     }

@@ -36,7 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -82,13 +82,13 @@ class JTabbedPaneOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTabbedPaneOperator.waitFor(operator);
         JTabbedPaneOperator.waitFor(operator, "Tab1", StringComparators.strict());
-        JTabbedPaneOperator.waitFor(operator, ComponentPredicates.byName("JTabbedPaneOperatorTest"));
+        JTabbedPaneOperator.waitFor(operator, PredicatesJ.byName("JTabbedPaneOperatorTest"));
     }
 
     @Test
     void testFindJTabbedPane() {
         JTabbedPane tabbedPane1 =
-                JTabbedPaneOperator.findJTabbedPane(frame, ComponentPredicates.byName("JTabbedPaneOperatorTest"));
+                JTabbedPaneOperator.findJTabbedPane(frame, PredicatesJ.byName("JTabbedPaneOperatorTest"));
         assertThat(tabbedPane1).isNotNull();
         JTabbedPane tabbedPane2 =
                 JTabbedPaneOperator.findJTabbedPane(frame, "Tab1", StringComparators.caseInsensitiveSubstring(), 0);
@@ -104,13 +104,13 @@ class JTabbedPaneOperatorTest {
 
         EventQueue.invokeAndWait(() -> panel2 = new JPanel());
 
-        JTabbedPane tabbedPane2 = JTabbedPaneOperator.findJTabbedPaneUnder(panel2, ComponentPredicates.byName("Test"));
+        JTabbedPane tabbedPane2 = JTabbedPaneOperator.findJTabbedPaneUnder(panel2, PredicatesJ.byName("Test"));
         assertThat(tabbedPane2).isNull();
     }
 
     @Test
     void testWaitJTabbedPane() {
-        JTabbedPaneOperator.waitJTabbedPane(frame, ComponentPredicates.byName("JTabbedPaneOperatorTest"));
+        JTabbedPaneOperator.waitJTabbedPane(frame, PredicatesJ.byName("JTabbedPaneOperatorTest"));
         JTabbedPaneOperator.waitJTabbedPane(frame, "Tab1", StringComparators.caseInsensitiveSubstring(), 0);
     }
 

@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 import javax.swing.JRadioButton;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JRadioButtonOperator extends JToggleButtonOperator {
@@ -60,7 +60,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
 
     public static JRadioButtonOperator waitFor(ContainerOperator cont, int index) {
         return new JRadioButtonOperator(
-                (JRadioButton) waitComponent(cont, ComponentPredicates.of(JRadioButton.class), index));
+                (JRadioButton) waitComponent(cont, PredicatesJ.of(JRadioButton.class), index));
     }
 
     /**
@@ -68,7 +68,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
      */
     @Deprecated
     public JRadioButtonOperator(ContainerOperator cont, int index) {
-        this((JRadioButton) waitComponent(cont, ComponentPredicates.of(JRadioButton.class), index));
+        this((JRadioButton) waitComponent(cont, PredicatesJ.of(JRadioButton.class), index));
     }
 
     public static JRadioButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -97,7 +97,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
 
     public static JRadioButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JRadioButtonOperator(
-                (JRadioButton) cont.waitSubComponent(ComponentPredicates.of(JRadioButton.class, chooser), index));
+                (JRadioButton) cont.waitSubComponent(PredicatesJ.of(JRadioButton.class, chooser), index));
     }
 
     /**
@@ -105,14 +105,14 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
      */
     @Deprecated
     public JRadioButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JRadioButton) cont.waitSubComponent(ComponentPredicates.of(JRadioButton.class, chooser), index));
+        this((JRadioButton) cont.waitSubComponent(PredicatesJ.of(JRadioButton.class, chooser), index));
     }
 
     public static JRadioButtonOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JRadioButtonOperator((JRadioButton) waitComponent(
                 cont,
-                ComponentPredicates.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -123,12 +123,12 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
     public JRadioButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         this((JRadioButton) waitComponent(
                 cont,
-                ComponentPredicates.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
 
     public static @Nullable JRadioButton findJRadioButton(Container cont, Predicate<Component> chooser, int index) {
-        return (JRadioButton) findJToggleButton(cont, ComponentPredicates.of(JRadioButton.class, chooser), index);
+        return (JRadioButton) findJToggleButton(cont, PredicatesJ.of(JRadioButton.class, chooser), index);
     }
 
     public static @Nullable JRadioButton findJRadioButton(Container cont, Predicate<Component> chooser) {
@@ -139,7 +139,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return findJRadioButton(
                 cont,
-                ComponentPredicates.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -149,7 +149,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
     }
 
     public static JRadioButton waitJRadioButton(Container cont, Predicate<Component> chooser, int index) {
-        return (JRadioButton) waitJToggleButton(cont, ComponentPredicates.of(JRadioButton.class, chooser), index);
+        return (JRadioButton) waitJToggleButton(cont, PredicatesJ.of(JRadioButton.class, chooser), index);
     }
 
     public static JRadioButton waitJRadioButton(Container cont, Predicate<Component> chooser) {
@@ -160,7 +160,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
             Container cont, @Nullable String text, StringComparator stringComparator, int index) {
         return waitJRadioButton(
                 cont,
-                ComponentPredicates.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JRadioButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index);
     }
 

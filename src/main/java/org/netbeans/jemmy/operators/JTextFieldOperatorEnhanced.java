@@ -1,6 +1,6 @@
 package org.netbeans.jemmy.operators;
 
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 import javax.swing.JTextField;
 
@@ -15,7 +15,7 @@ public class JTextFieldOperatorEnhanced extends JTextFieldOperator {
     }
 
     public static JTextFieldOperatorEnhanced waitFor(ContainerOperator cont, int index) {
-        return of((JTextField) waitComponent(cont, ComponentPredicates.of(JTextField.class), index));
+        return of((JTextField) waitComponent(cont, PredicatesJ.of(JTextField.class), index));
     }
 
     @Override

@@ -27,7 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -66,7 +66,7 @@ class JRadioButtonOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JRadioButtonOperator.waitFor(operator);
         JRadioButtonOperator.waitFor(operator, "JRadioButtonOperatorTest", StringComparators.strict());
-        JRadioButtonOperator.waitFor(operator, ComponentPredicates.byName("JRadioButtonOperatorTest"));
+        JRadioButtonOperator.waitFor(operator, PredicatesJ.byName("JRadioButtonOperatorTest"));
         JRadioButtonOperator.of(radioButton);
     }
 
@@ -77,7 +77,7 @@ class JRadioButtonOperatorTest {
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
         assertThat(radioButton1).isNotNull();
         JRadioButton radioButton2 =
-                JRadioButtonOperator.findJRadioButton(frame, ComponentPredicates.byName("JRadioButtonOperatorTest"));
+                JRadioButtonOperator.findJRadioButton(frame, PredicatesJ.byName("JRadioButtonOperatorTest"));
         assertThat(radioButton2).isNotNull();
     }
 
@@ -86,6 +86,6 @@ class JRadioButtonOperatorTest {
         showFrame();
         JRadioButtonOperator.waitJRadioButton(
                 frame, "JRadioButtonOperatorTest", StringComparators.caseInsensitiveSubstring());
-        JRadioButtonOperator.waitJRadioButton(frame, ComponentPredicates.byName("JRadioButtonOperatorTest"));
+        JRadioButtonOperator.waitJRadioButton(frame, PredicatesJ.byName("JRadioButtonOperatorTest"));
     }
 }

@@ -52,7 +52,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.TextDriver;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.predicates.JTextComponentOperatorByTextPredicate;
 import org.netbeans.jemmy.util.EmptyVisualizer;
@@ -90,7 +90,7 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public static JTextComponentOperator waitFor(ContainerOperator cont, int index) {
         return new JTextComponentOperator(
-                (JTextComponent) waitComponent(cont, ComponentPredicates.of(JTextComponent.class), index));
+                (JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class), index));
     }
 
     /**
@@ -98,7 +98,7 @@ public class JTextComponentOperator extends JComponentOperator {
      */
     @Deprecated
     public JTextComponentOperator(ContainerOperator cont, int index) {
-        this((JTextComponent) waitComponent(cont, ComponentPredicates.of(JTextComponent.class), index));
+        this((JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class), index));
     }
 
     public static JTextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -128,7 +128,7 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public static JTextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JTextComponentOperator(
-                (JTextComponent) cont.waitSubComponent(ComponentPredicates.of(JTextComponent.class, chooser), index));
+                (JTextComponent) cont.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
     }
 
     /**
@@ -136,7 +136,7 @@ public class JTextComponentOperator extends JComponentOperator {
      */
     @Deprecated
     public JTextComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTextComponent) cont.waitSubComponent(ComponentPredicates.of(JTextComponent.class, chooser), index));
+        this((JTextComponent) cont.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
     }
 
     public static JTextComponentOperator waitFor(
@@ -156,7 +156,7 @@ public class JTextComponentOperator extends JComponentOperator {
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JTextComponentOperator((JTextComponent) waitComponent(
                 cont,
-                ComponentPredicates.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -167,7 +167,7 @@ public class JTextComponentOperator extends JComponentOperator {
     public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         this((JTextComponent) waitComponent(
                 cont,
-                ComponentPredicates.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -280,7 +280,7 @@ public class JTextComponentOperator extends JComponentOperator {
 
     public void scrollToPosition(int position) {
         makeComponentVisible();
-        JScrollPane scroll = (JScrollPane) getContainer(ComponentPredicates.of(JScrollPane.class));
+        JScrollPane scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
         if (scroll == null) {
             return;
         }
@@ -544,7 +544,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public static @Nullable JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextComponent) findComponent(cont, ComponentPredicates.of(JTextComponent.class, chooser), index);
+        return (JTextComponent) findComponent(cont, PredicatesJ.of(JTextComponent.class, chooser), index);
     }
 
     public static @Nullable JTextComponent findJTextComponent(Container cont, Predicate<Component> chooser) {
@@ -555,7 +555,7 @@ public class JTextComponentOperator extends JComponentOperator {
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJTextComponent(
                 cont,
-                ComponentPredicates.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -565,7 +565,7 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public static JTextComponent waitJTextComponent(Container cont, Predicate<Component> chooser, int index) {
-        return (JTextComponent) waitComponent(cont, ComponentPredicates.of(JTextComponent.class, chooser), index);
+        return (JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class, chooser), index);
     }
 
     public static JTextComponent waitJTextComponent(Container cont, Predicate<Component> chooser) {
@@ -576,7 +576,7 @@ public class JTextComponentOperator extends JComponentOperator {
             Container cont, String text, StringComparator stringComparator, int index) {
         return waitJTextComponent(
                 cont,
-                ComponentPredicates.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 

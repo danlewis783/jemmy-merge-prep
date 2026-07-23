@@ -26,7 +26,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -63,7 +63,7 @@ class FrameOperatorTest {
     void testConstructor() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator.waitFor();
-        FrameOperator.waitFor(ComponentPredicates.byName("FrameOperatorTest"));
+        FrameOperator.waitFor(PredicatesJ.byName("FrameOperatorTest"));
         FrameOperator.waitFor("FrameOperatorTest");
     }
 

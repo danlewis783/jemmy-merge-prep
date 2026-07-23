@@ -40,7 +40,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -78,13 +78,13 @@ class JComponentOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JComponentOperator.waitFor(operator);
-        JComponentOperator.waitFor(operator, ComponentPredicates.byName("JComponentOperatorTest"));
+        JComponentOperator.waitFor(operator, PredicatesJ.byName("JComponentOperatorTest"));
     }
 
     @Test
     void testFindJComponent() {
         JComponent component1 =
-                JComponentOperator.findJComponent(frame, ComponentPredicates.byName("JComponentOperatorTest"));
+                JComponentOperator.findJComponent(frame, PredicatesJ.byName("JComponentOperatorTest"));
         assertThat(component1).isNotNull();
         JComponent component2 = JComponentOperator.findJComponent(
                 frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
@@ -93,7 +93,7 @@ class JComponentOperatorTest {
 
     @Test
     void testWaitJComponent() {
-        JComponentOperator.waitJComponent(frame, ComponentPredicates.byName("JComponentOperatorTest"));
+        JComponentOperator.waitJComponent(frame, PredicatesJ.byName("JComponentOperatorTest"));
         JComponentOperator.waitJComponent(
                 frame, "JComponentOperatorTest", StringComparators.caseInsensitiveSubstring());
     }

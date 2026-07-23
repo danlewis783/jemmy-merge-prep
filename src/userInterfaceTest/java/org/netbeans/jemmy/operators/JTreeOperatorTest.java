@@ -38,7 +38,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.operators.JTreeOperator.NoSuchPathException;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
@@ -74,7 +74,7 @@ class JTreeOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTreeOperator.waitFor(operator);
-        JTreeOperator operator3 = JTreeOperator.waitFor(operator, ComponentPredicates.byName("JTreeOperatorTest"));
+        JTreeOperator operator3 = JTreeOperator.waitFor(operator, PredicatesJ.byName("JTreeOperatorTest"));
         operator3.selectRow(0);
         JTreeOperator.waitFor(operator, "JTree", StringComparators.strict());
     }
@@ -83,14 +83,14 @@ class JTreeOperatorTest {
     void testFindJTree() {
         JTree tree1 = JTreeOperator.findJTree(frame, "JTree", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(tree1).isNotNull();
-        JTree tree2 = JTreeOperator.findJTree(frame, ComponentPredicates.byName("JTreeOperatorTest"));
+        JTree tree2 = JTreeOperator.findJTree(frame, PredicatesJ.byName("JTreeOperatorTest"));
         assertThat(tree2).isNotNull();
     }
 
     @Test
     void testWaitJTree() {
         JTreeOperator.waitJTree(frame, "JTree", StringComparators.caseInsensitiveSubstring(), 0);
-        JTreeOperator.waitJTree(frame, ComponentPredicates.byName("JTreeOperatorTest"));
+        JTreeOperator.waitJTree(frame, PredicatesJ.byName("JTreeOperatorTest"));
     }
 
     @Test
@@ -178,7 +178,7 @@ class JTreeOperatorTest {
     void testFindRow() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
-        assertThat(operator2.findRow(ComponentPredicates.byName("colors"))).isEqualTo(-1);
+        assertThat(operator2.findRow(PredicatesJ.byName("colors"))).isEqualTo(-1);
         operator2.findRow("1", new StringComparatorTest(), 0);
     }
 

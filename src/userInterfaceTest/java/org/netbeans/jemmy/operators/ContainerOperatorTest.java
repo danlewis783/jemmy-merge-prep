@@ -32,7 +32,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -65,7 +65,7 @@ class ContainerOperatorTest {
     void testConstructor() {
         ContainerOperator operator = ContainerOperator.of(frame);
         ContainerOperator.waitFor(operator);
-        ContainerOperator.waitFor(operator, ComponentPredicates.byName("ContainerOperatorTest"));
+        ContainerOperator.waitFor(operator, PredicatesJ.byName("ContainerOperatorTest"));
     }
 
     @Test
@@ -73,7 +73,7 @@ class ContainerOperatorTest {
         Container container = ContainerOperator.findContainer(frame);
         assertThat(container).isNotNull();
         Container container1 =
-                ContainerOperator.findContainer(frame, ComponentPredicates.byName("ContainerOperatorTest"));
+                ContainerOperator.findContainer(frame, PredicatesJ.byName("ContainerOperatorTest"));
         assertThat(container1).isNotNull();
     }
 
@@ -86,20 +86,20 @@ class ContainerOperatorTest {
     @Test
     void testWaitContainer() {
         ContainerOperator.waitContainer(frame);
-        ContainerOperator.waitContainer(frame, ComponentPredicates.byName("ContainerOperatorTest"));
+        ContainerOperator.waitContainer(frame, PredicatesJ.byName("ContainerOperatorTest"));
     }
 
     @Test
     void testFindSubComponent() {
         FrameOperator operator = FrameOperator.waitFor();
-        Component component = operator.findSubComponent(ComponentPredicates.byName("ContainerOperatorTest"));
+        Component component = operator.findSubComponent(PredicatesJ.byName("ContainerOperatorTest"));
         assertThat(component).isNotNull();
     }
 
     @Test
     void testWaitSubComponent() {
         FrameOperator operator = FrameOperator.waitFor();
-        operator.waitSubComponent(ComponentPredicates.byName("ContainerOperatorTest"));
+        operator.waitSubComponent(PredicatesJ.byName("ContainerOperatorTest"));
     }
 
     @Test

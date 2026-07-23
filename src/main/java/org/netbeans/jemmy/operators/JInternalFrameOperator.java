@@ -52,7 +52,7 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.drivers.InternalFrameDriver;
 import org.netbeans.jemmy.drivers.WindowDriver;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
 import org.netbeans.jemmy.predicates.JInternalFrameByTitlePredicate;
 import org.netbeans.jemmy.predicates.JInternalFramePredicate;
@@ -247,9 +247,9 @@ public class JInternalFrameOperator extends JComponentOperator {
         makeComponentVisible();
         JScrollPane scroll;
         if (isIcon()) {
-            scroll = (JScrollPane) getIconOperator().getContainer(ComponentPredicates.of(JScrollPane.class));
+            scroll = (JScrollPane) getIconOperator().getContainer(PredicatesJ.of(JScrollPane.class));
         } else {
-            scroll = (JScrollPane) getContainer(ComponentPredicates.of(JScrollPane.class));
+            scroll = (JScrollPane) getContainer(PredicatesJ.of(JScrollPane.class));
         }
 
         if (scroll == null) {
@@ -552,7 +552,7 @@ public class JInternalFrameOperator extends JComponentOperator {
             if (titleOperator == null) {
                 ContainerOperator title = ContainerOperator.of(titlePane);
                 titleOperator = title;
-                if (getContainer(ComponentPredicates.of(JDesktopPane.class)) != null) {
+                if (getContainer(PredicatesJ.of(JDesktopPane.class)) != null) {
                     if (LookAndFeel.isMotif()) {
                         // Motif keeps the title actions in a popup menu behind the sole title button
                         popupButtonOper = JButtonOperator.waitFor(title, 0);

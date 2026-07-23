@@ -29,7 +29,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -69,7 +69,7 @@ class JCheckBoxMenuItemOperatorTest {
         JMenuBarOperator menuBarOp = JMenuBarOperator.waitFor(frameOp);
         JCheckBoxMenuItemOperator.waitFor(menuBarOp);
         JCheckBoxMenuItemOperator.waitFor(
-                menuBarOp, ComponentPredicates.byName("JCheckBoxMenuItemOperatorTest"));
+                menuBarOp, PredicatesJ.byName("JCheckBoxMenuItemOperatorTest"));
         JCheckBoxMenuItemOperator.waitFor(
                 menuBarOp, "JCheckBoxMenuItemOperatorTest", StringComparators.strict());
     }

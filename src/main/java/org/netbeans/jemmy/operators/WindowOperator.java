@@ -39,7 +39,7 @@ import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.WindowDriver;
 import org.netbeans.jemmy.functions.WindowFunction;
 import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class WindowOperator extends ContainerOperator {
     public static WindowOperator waitFor() {
@@ -55,7 +55,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static WindowOperator waitFor(int index) {
-        return new WindowOperator(waitWindow(ComponentPredicates.alwaysTrue(), index));
+        return new WindowOperator(waitWindow(PredicatesJ.alwaysTrue(), index));
     }
 
     /**
@@ -63,7 +63,7 @@ public class WindowOperator extends ContainerOperator {
      */
     @Deprecated
     public WindowOperator(int index) {
-        this(waitWindow(ComponentPredicates.alwaysTrue(), index));
+        this(waitWindow(PredicatesJ.alwaysTrue(), index));
     }
 
     /**
@@ -95,7 +95,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public static WindowOperator waitFor(WindowOperator owner, int index) {
-        return new WindowOperator(waitWindow(owner, ComponentPredicates.alwaysTrue(), index));
+        return new WindowOperator(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
     }
 
     /**
@@ -103,7 +103,7 @@ public class WindowOperator extends ContainerOperator {
      */
     @Deprecated
     public WindowOperator(WindowOperator owner, int index) {
-        this(waitWindow(owner, ComponentPredicates.alwaysTrue(), index));
+        this(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
     }
 
     public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {

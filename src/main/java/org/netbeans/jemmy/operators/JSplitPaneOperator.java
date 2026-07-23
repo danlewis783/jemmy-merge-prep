@@ -38,7 +38,7 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.ScrollDriver;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JSplitPaneOperator extends JComponentOperator {
@@ -74,7 +74,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public static JSplitPaneOperator waitFor(ContainerOperator cont, int index) {
         return new JSplitPaneOperator(
-                (JSplitPane) waitComponent(cont, ComponentPredicates.of(JSplitPane.class), index));
+                (JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class), index));
     }
 
     /**
@@ -82,7 +82,7 @@ public class JSplitPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JSplitPaneOperator(ContainerOperator cont, int index) {
-        this((JSplitPane) waitComponent(cont, ComponentPredicates.of(JSplitPane.class), index));
+        this((JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class), index));
     }
 
     public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -99,7 +99,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JSplitPaneOperator(
-                (JSplitPane) cont.waitSubComponent(ComponentPredicates.of(JSplitPane.class, chooser), index));
+                (JSplitPane) cont.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
     /**
@@ -107,11 +107,11 @@ public class JSplitPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSplitPane) cont.waitSubComponent(ComponentPredicates.of(JSplitPane.class, chooser), index));
+        this((JSplitPane) cont.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
     public BasicSplitPaneDivider findDivider() {
-        return (BasicSplitPaneDivider) waitSubComponent(ComponentPredicates.of(BasicSplitPaneDivider.class));
+        return (BasicSplitPaneDivider) waitSubComponent(PredicatesJ.of(BasicSplitPaneDivider.class));
     }
 
     public ContainerOperator getDivider() {
@@ -264,13 +264,13 @@ public class JSplitPaneOperator extends JComponentOperator {
     private void expandTo(int index) {
         makeComponentVisible();
         JButtonOperator bo = JButtonOperator.of((JButton) getDivider()
-                .waitSubComponent(ComponentPredicates.of(JButton.class, ComponentPredicates.alwaysTrue()), index));
+                .waitSubComponent(PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         bo.setVisualizer(new EmptyVisualizer());
         bo.push();
     }
 
     public static @Nullable JSplitPane findJSplitPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JSplitPane) findComponent(cont, ComponentPredicates.of(JSplitPane.class, chooser), index);
+        return (JSplitPane) findComponent(cont, PredicatesJ.of(JSplitPane.class, chooser), index);
     }
 
     public static @Nullable JSplitPane findJSplitPane(Container cont, Predicate<Component> chooser) {
@@ -278,7 +278,7 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JSplitPane findJSplitPane(Container cont, int index) {
-        return findJSplitPane(cont, ComponentPredicates.alwaysTrue(), index);
+        return findJSplitPane(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static @Nullable JSplitPane findJSplitPane(Container cont) {
@@ -286,15 +286,15 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public static @Nullable JSplitPane findJSplitPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (JSplitPane) findContainerUnder(comp, ComponentPredicates.of(JSplitPane.class, chooser));
+        return (JSplitPane) findContainerUnder(comp, PredicatesJ.of(JSplitPane.class, chooser));
     }
 
     public static @Nullable JSplitPane findJSplitPaneUnder(Component comp) {
-        return findJSplitPaneUnder(comp, ComponentPredicates.of(JSplitPane.class));
+        return findJSplitPaneUnder(comp, PredicatesJ.of(JSplitPane.class));
     }
 
     public static JSplitPane waitJSplitPane(Container cont, Predicate<Component> chooser, int index) {
-        return (JSplitPane) waitComponent(cont, ComponentPredicates.of(JSplitPane.class, chooser), index);
+        return (JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class, chooser), index);
     }
 
     public static JSplitPane waitJSplitPane(Container cont, Predicate<Component> chooser) {
@@ -302,7 +302,7 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public static JSplitPane waitJSplitPane(Container cont, int index) {
-        return waitJSplitPane(cont, ComponentPredicates.alwaysTrue(), index);
+        return waitJSplitPane(cont, PredicatesJ.alwaysTrue(), index);
     }
 
     public static JSplitPane waitJSplitPane(Container cont) {

@@ -1,7 +1,7 @@
 package org.netbeans.jemmy.operators;
 
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 import javax.swing.JTree;
@@ -33,7 +33,7 @@ public class JTreeOperatorCustomNodeToString extends JTreeOperator {
         if (index < 0) {
             throw new IllegalArgumentException("index must not be negative");
         }
-        Component component = waitComponent(containerOp, ComponentPredicates.of(JTree.class), index);
+        Component component = waitComponent(containerOp, PredicatesJ.of(JTree.class), index);
         JTree componentAsTree = (JTree) component;
         JTreeOperatorCustomNodeToString result = new JTreeOperatorCustomNodeToString(componentAsTree, customToStringFunc);
         return result;

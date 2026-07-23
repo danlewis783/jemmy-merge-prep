@@ -31,7 +31,7 @@ import java.util.function.Predicate;
 import javax.swing.JPasswordField;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
@@ -63,7 +63,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
 
     public static JPasswordFieldOperator waitFor(ContainerOperator cont, int index) {
         return new JPasswordFieldOperator(
-                (JPasswordField) waitComponent(cont, ComponentPredicates.of(JPasswordField.class), index));
+                (JPasswordField) waitComponent(cont, PredicatesJ.of(JPasswordField.class), index));
     }
 
     /**
@@ -71,7 +71,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
      */
     @Deprecated
     public JPasswordFieldOperator(ContainerOperator cont, int index) {
-        this((JPasswordField) waitComponent(cont, ComponentPredicates.of(JPasswordField.class), index));
+        this((JPasswordField) waitComponent(cont, PredicatesJ.of(JPasswordField.class), index));
     }
 
     public static JPasswordFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
@@ -101,7 +101,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
 
     public static JPasswordFieldOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
         return new JPasswordFieldOperator(
-                (JPasswordField) cont.waitSubComponent(ComponentPredicates.of(JPasswordField.class, chooser), index));
+                (JPasswordField) cont.waitSubComponent(PredicatesJ.of(JPasswordField.class, chooser), index));
     }
 
     /**
@@ -109,14 +109,14 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
      */
     @Deprecated
     public JPasswordFieldOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JPasswordField) cont.waitSubComponent(ComponentPredicates.of(JPasswordField.class, chooser), index));
+        this((JPasswordField) cont.waitSubComponent(PredicatesJ.of(JPasswordField.class, chooser), index));
     }
 
     public static JPasswordFieldOperator waitFor(
             ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         return new JPasswordFieldOperator((JPasswordField) waitComponent(
                 cont,
-                ComponentPredicates.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -127,7 +127,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
     public JPasswordFieldOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
         this((JPasswordField) waitComponent(
                 cont,
-                ComponentPredicates.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
 
@@ -149,7 +149,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
     }
 
     public static @Nullable JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser, int index) {
-        return (JPasswordField) findJTextComponent(cont, ComponentPredicates.of(JPasswordField.class, chooser), index);
+        return (JPasswordField) findJTextComponent(cont, PredicatesJ.of(JPasswordField.class, chooser), index);
     }
 
     public static @Nullable JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser) {
@@ -160,7 +160,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
             Container cont, String text, StringComparator stringComparator, int index) {
         return findJPasswordField(
                 cont,
-                ComponentPredicates.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 
@@ -170,7 +170,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
     }
 
     public static JPasswordField waitJPasswordField(Container cont, Predicate<Component> chooser, int index) {
-        return (JPasswordField) waitJTextComponent(cont, ComponentPredicates.of(JPasswordField.class, chooser), index);
+        return (JPasswordField) waitJTextComponent(cont, PredicatesJ.of(JPasswordField.class, chooser), index);
     }
 
     public static JPasswordField waitJPasswordField(Container cont, Predicate<Component> chooser) {
@@ -181,7 +181,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
             Container cont, String text, StringComparator stringComparator, int index) {
         return waitJPasswordField(
                 cont,
-                ComponentPredicates.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
+                PredicatesJ.of(JPasswordField.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index);
     }
 

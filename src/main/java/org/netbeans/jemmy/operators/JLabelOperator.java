@@ -32,7 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.plaf.LabelUI;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JLabelByTextPredicate;
 import org.netbeans.jemmy.predicates.JLabelOperatorByLabelPredicate;
 import org.netbeans.jemmy.util.StringComparator;
@@ -64,7 +64,7 @@ public class JLabelOperator extends JComponentOperator {
     }
 
     public static JLabelOperator waitFor(ContainerOperator cont, int index) {
-        return new JLabelOperator((JLabel) waitComponent(cont, ComponentPredicates.of(JLabel.class), index));
+        return new JLabelOperator((JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class), index));
     }
 
     /**
@@ -72,7 +72,7 @@ public class JLabelOperator extends JComponentOperator {
      */
     @Deprecated
     public JLabelOperator(ContainerOperator cont, int index) {
-        this((JLabel) waitComponent(cont, ComponentPredicates.of(JLabel.class), index));
+        this((JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class), index));
     }
 
     public static JLabelOperator waitFor(ContainerOperator cont, Predicate<Component> predicate) {
@@ -101,7 +101,7 @@ public class JLabelOperator extends JComponentOperator {
 
     public static JLabelOperator waitFor(ContainerOperator cont, Predicate<Component> predicate, int index) {
         return new JLabelOperator(
-                (JLabel) cont.waitSubComponent(ComponentPredicates.of(JLabel.class, predicate), index));
+                (JLabel) cont.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
     }
 
     /**
@@ -109,7 +109,7 @@ public class JLabelOperator extends JComponentOperator {
      */
     @Deprecated
     public JLabelOperator(ContainerOperator cont, Predicate<Component> predicate, int index) {
-        this((JLabel) cont.waitSubComponent(ComponentPredicates.of(JLabel.class, predicate), index));
+        this((JLabel) cont.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
     }
 
     public static JLabelOperator waitFor(
@@ -223,7 +223,7 @@ public class JLabelOperator extends JComponentOperator {
     }
 
     public static @Nullable JLabel findJLabel(Container cont, Predicate<Component> chooser, int index) {
-        return (JLabel) findComponent(cont, ComponentPredicates.of(JLabel.class, chooser), index);
+        return (JLabel) findComponent(cont, PredicatesJ.of(JLabel.class, chooser), index);
     }
 
     public static @Nullable JLabel findJLabel(Container cont, Predicate<Component> chooser) {
@@ -241,7 +241,7 @@ public class JLabelOperator extends JComponentOperator {
     }
 
     public static JLabel waitJLabel(Container cont, Predicate<Component> chooser, int index) {
-        return (JLabel) waitComponent(cont, ComponentPredicates.of(JLabel.class, chooser), index);
+        return (JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class, chooser), index);
     }
 
     public static JLabel waitJLabel(Container cont, Predicate<Component> chooser) {

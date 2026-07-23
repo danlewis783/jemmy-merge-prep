@@ -25,7 +25,7 @@ public final class JInternalFramePredicate implements Predicate<Component> {
     private final Predicate<Component> predicate;
 
     public JInternalFramePredicate() {
-        this(ComponentPredicates.alwaysTrue());
+        this(PredicatesJ.alwaysTrue());
     }
 
     public JInternalFramePredicate(Predicate<Component> predicate) {

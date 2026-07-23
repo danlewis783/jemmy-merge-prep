@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -64,7 +64,7 @@ class JSplitPaneOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSplitPaneOperator.waitFor(operator);
-        JSplitPaneOperator.waitFor(operator, ComponentPredicates.byName("JSplitPane"));
+        JSplitPaneOperator.waitFor(operator, PredicatesJ.byName("JSplitPane"));
         JSplitPaneOperator.of(splitPane);
     }
 
@@ -72,7 +72,7 @@ class JSplitPaneOperatorTest {
     void testFindJSplitPane() {
         JSplitPane pane1 = JSplitPaneOperator.findJSplitPane(frame);
         assertThat(pane1).isNotNull();
-        JSplitPane pane2 = JSplitPaneOperator.findJSplitPane(frame, ComponentPredicates.byName("JSplitPane"));
+        JSplitPane pane2 = JSplitPaneOperator.findJSplitPane(frame, PredicatesJ.byName("JSplitPane"));
         assertThat(pane2).isNotNull();
     }
 
@@ -80,14 +80,14 @@ class JSplitPaneOperatorTest {
     void testFindJSplitPaneUnder() {
         JSplitPane pane1 = JSplitPaneOperator.findJSplitPaneUnder(frame);
         assertThat(pane1).isNull();
-        JSplitPane pane2 = JSplitPaneOperator.findJSplitPaneUnder(frame, ComponentPredicates.byName("JSplitPane"));
+        JSplitPane pane2 = JSplitPaneOperator.findJSplitPaneUnder(frame, PredicatesJ.byName("JSplitPane"));
         assertThat(pane2).isNull();
     }
 
     @Test
     void testWaitJSplitPane() {
         JSplitPaneOperator.waitJSplitPane(frame);
-        JSplitPaneOperator.waitJSplitPane(frame, ComponentPredicates.byName("JSplitPane"));
+        JSplitPaneOperator.waitJSplitPane(frame, PredicatesJ.byName("JSplitPane"));
     }
 
     @Test

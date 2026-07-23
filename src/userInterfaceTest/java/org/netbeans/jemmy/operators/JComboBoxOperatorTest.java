@@ -35,7 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -73,7 +73,7 @@ class JComboBoxOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JComboBoxOperator.waitFor(operator);
-        JComboBoxOperator.waitFor(operator, ComponentPredicates.byName("JComboBoxOperatorTest"));
+        JComboBoxOperator.waitFor(operator, PredicatesJ.byName("JComboBoxOperatorTest"));
         JComboBoxOperator.waitFor(operator, "JComboBoxOperatorTest", StringComparators.strict());
     }
 
@@ -83,7 +83,7 @@ class JComboBoxOperatorTest {
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
         assertThat(comboBox1).isNotNull();
         JComboBox<?> comboBox2 =
-                JComboBoxOperator.findJComboBox(frame, ComponentPredicates.byName("JComboBoxOperatorTest"));
+                JComboBoxOperator.findJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
         assertThat(comboBox2).isNotNull();
     }
 
@@ -91,7 +91,7 @@ class JComboBoxOperatorTest {
     void testWaitJComboBox() {
         JComboBoxOperator.waitJComboBox(
                 frame, "JComboBoxOperatorTest", StringComparators.caseInsensitiveSubstring(), 0);
-        JComboBoxOperator.waitJComboBox(frame, ComponentPredicates.byName("JComboBoxOperatorTest"));
+        JComboBoxOperator.waitJComboBox(frame, PredicatesJ.byName("JComboBoxOperatorTest"));
     }
 
     @Test

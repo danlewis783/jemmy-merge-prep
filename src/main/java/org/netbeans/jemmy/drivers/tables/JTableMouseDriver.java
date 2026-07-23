@@ -40,7 +40,7 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.operators.JTextComponentOperator;
 import org.netbeans.jemmy.operators.Operator;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JTableMouseDriver extends LightSupportiveDriver implements TableDriver {
     public JTableMouseDriver() {
@@ -62,7 +62,7 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
         }
 
         JTextComponentOperator textoper = JTextComponentOperator.of(
-                (JTextComponent) toper.waitSubComponent(ComponentPredicates.of(JTextComponent.class)));
+                (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));
         TextDriver text =
                 DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);

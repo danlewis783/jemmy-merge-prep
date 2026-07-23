@@ -38,7 +38,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.TestWindows;
 
 @Timeout(value=1, unit=TimeUnit.SECONDS)
@@ -83,7 +83,7 @@ class JTableHeaderOperatorTest {
     void testConstructor() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableHeaderOperator.waitFor(operator);
-        JTableHeaderOperator.waitFor(operator, ComponentPredicates.byName("JTableHeaderOperatorTest"));
+        JTableHeaderOperator.waitFor(operator, PredicatesJ.byName("JTableHeaderOperatorTest"));
     }
 
     @Test

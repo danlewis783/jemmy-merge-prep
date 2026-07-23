@@ -47,7 +47,7 @@ import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JFileChooserOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JTextFieldOperator;
-import org.netbeans.jemmy.predicates.ComponentPredicates;
+import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JFileChooserJDialogPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
@@ -123,7 +123,7 @@ class FileChooserDialogWorkflowTest {
         launchFileChooserButtonOp.pushNoBlock();
         JDialog cont = JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
         JFileChooser jFileChooser =
-                (JFileChooser) JFileChooserOperator.waitComponent(cont, ComponentPredicates.of(JFileChooser.class));
+                (JFileChooser) JFileChooserOperator.waitComponent(cont, PredicatesJ.of(JFileChooser.class));
         JFileChooserOperator toReturn = JFileChooserOperator.of(jFileChooser);
         return toReturn;
     }
