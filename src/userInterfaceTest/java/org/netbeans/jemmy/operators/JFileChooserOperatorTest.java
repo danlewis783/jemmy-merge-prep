@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.ComponentStreamer;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -644,21 +644,11 @@ final class JFileChooserOperatorTest {
     // Blocks until the chooser has been reparented into a new, showing window (the dialog
     // created by show*Dialog) rather than still sitting in the plain @BeforeEach frame - see the
     // race explained above the three show*Dialog tests.
-    private void waitForModalDialog(TimeoutKey budgetKey) throws InterruptedException {
-        long budget = Timeouts.get(budgetKey);
-        long deadline = System.currentTimeMillis() + budget;
-        do {
-            boolean dialogShowing = onQueue(() -> {
-                Window ancestor = SwingUtilities.getWindowAncestor(fileChooser);
-                return ancestor != null && ancestor != frame && ancestor.isShowing();
-            });
-            if (dialogShowing) {
-                return;
-            }
-            Thread.sleep(10L);
-        } while (System.currentTimeMillis() < deadline);
-        throw new TimeoutExpiredException(
-                String.format("modal dialog for file chooser did not appear within \"%s\" (%d ms)", budgetKey, budget));
+    private void waitForModalDialog(TimeoutKey budgetKey) {
+        BooleanSupplierRepeater.waitFor(() -> onQueue(() -> {
+            Window ancestor = SwingUtilities.getWindowAncestor(fileChooser);
+            return ancestor != null && ancestor != frame && ancestor.isShowing();
+        }), budgetKey);
     }
 
     // if the Cancel click failed to land (or the future timed out) the modal dialog created by

@@ -21,8 +21,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.JemmyQueue;
 import org.netbeans.jemmy.QueueUtils;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.TimeoutOverride;
+import org.netbeans.jemmy.Timeouts;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -85,11 +89,9 @@ class JemmyQueueInstallInterruptTest {
                     () -> installFailure.set(catchThrowable(() -> JemmyQueue.getInstance().install())),
                     "jemmy-queue-installer");
             installer.start();
-            long deadline = System.currentTimeMillis() + 5_000L;
-            while (installer.getState() != Thread.State.WAITING
-                    && installer.getState() != Thread.State.TERMINATED
-                    && System.currentTimeMillis() < deadline) {
-                Thread.sleep(10L);
+            try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.Testing_A, 5_000L)) {
+                BooleanSupplierRepeater.waitFor(() -> installer.getState() == Thread.State.WAITING
+                        || installer.getState() == Thread.State.TERMINATED, TimeoutKey.Testing_A);
             }
             installer.interrupt();
             installer.join(5_000L);

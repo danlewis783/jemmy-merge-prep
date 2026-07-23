@@ -182,13 +182,9 @@ class QueueToolAbandonedCallerTest {
         return blocked;
     }
 
-    private static void awaitParked(Thread thread) throws InterruptedException {
-        long deadline = System.currentTimeMillis() + LATCH_WAIT_TIME;
-        while (thread.getState() != Thread.State.TIMED_WAITING
-                && thread.getState() != Thread.State.TERMINATED
-                && System.currentTimeMillis() < deadline) {
-            Thread.sleep(10L);
-        }
+    private static void awaitParked(Thread thread) {
+        BooleanSupplierRepeater.waitFor(() -> thread.getState() == Thread.State.TIMED_WAITING
+                || thread.getState() == Thread.State.TERMINATED);
     }
 
     /**
