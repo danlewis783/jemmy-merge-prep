@@ -20,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.JemmyQueue;
 import org.netbeans.jemmy.QueueUtils;
 
@@ -45,6 +46,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  * the queue to itself — a {@code nextQueue} cycle that spins every chain walk forever while
  * holding AWT's {@code pushPopLock}, freezing the whole process.
  */
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value = 10, unit = TimeUnit.SECONDS)
 class JemmyQueueInstallInterruptTest {
 

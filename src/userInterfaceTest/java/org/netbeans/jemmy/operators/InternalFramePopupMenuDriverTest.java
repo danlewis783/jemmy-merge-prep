@@ -33,6 +33,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
+import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 
 /**
@@ -42,6 +43,7 @@ import org.netbeans.jemmy.testing.TestWindows;
  * look and feel and drivers after the class, so other classes sharing the JVM are unaffected.
  */
 @ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class InternalFramePopupMenuDriverTest {
 

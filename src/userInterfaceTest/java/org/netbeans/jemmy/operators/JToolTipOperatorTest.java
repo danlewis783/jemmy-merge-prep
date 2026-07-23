@@ -38,6 +38,7 @@ import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -45,6 +46,7 @@ import org.netbeans.jemmy.util.StringComparators;
  * Exercises {@code JToolTipOperator}, ported from openjdk/jemmy-v2 (CODETOOLS-7902278, CODETOOLS-7902342).
  */
 @ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
 class JToolTipOperatorTest {
 

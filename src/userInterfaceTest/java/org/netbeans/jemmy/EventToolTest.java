@@ -37,10 +37,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 
 // formerly scenario test jemmy_030
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=15, unit=TimeUnit.SECONDS)
 class EventToolTest {
 

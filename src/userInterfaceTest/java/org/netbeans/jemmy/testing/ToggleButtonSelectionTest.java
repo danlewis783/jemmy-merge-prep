@@ -35,6 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.FunctionRunner;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
@@ -52,6 +53,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_011
 // operator fields are assigned mid-test before the checker lambdas read them
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class ToggleButtonSelectionTest {
 

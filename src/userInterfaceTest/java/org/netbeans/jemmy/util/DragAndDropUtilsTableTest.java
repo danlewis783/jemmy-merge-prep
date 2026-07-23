@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.DumpOnFailure;
 import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 
 import javax.swing.JFrame;
@@ -44,6 +45,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
  * columns and asserting the resulting column order in the column model.
  */
 @ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value = 20, unit = TimeUnit.SECONDS)
 class DragAndDropUtilsTableTest {
 

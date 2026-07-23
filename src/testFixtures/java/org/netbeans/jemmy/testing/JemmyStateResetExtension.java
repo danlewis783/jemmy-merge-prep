@@ -53,9 +53,8 @@ import org.slf4j.LoggerFactory;
  * <li>forget the events observed while settling, so the next class starts with no last-event
  * memory</li>
  * </ol>
- * The UI suite registers this for every class via {@code META-INF/services} plus JUnit's extension
- * autodetection ({@code junit-platform.properties}); a consumer build can do the same, or apply it
- * to individual classes with {@code @ExtendWith(JemmyStateResetExtension.class)}.
+ * Every class in the UI suite registers this explicitly with
+ * {@code @ExtendWith(JemmyStateResetExtension.class)}; consumer test classes should do the same.
  */
 public final class JemmyStateResetExtension implements BeforeAllCallback, AfterAllCallback {
     private static final Logger logger = LoggerFactory.getLogger(JemmyStateResetExtension.class);

@@ -34,6 +34,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
@@ -48,6 +49,7 @@ import org.netbeans.jemmy.util.DefaultVisualizer;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_029
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class ModalDialogVisualizerTest {
 

@@ -20,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
@@ -50,6 +51,7 @@ import static org.netbeans.jemmy.util.StringComparators.caseInsensitiveSubstring
 import static org.netbeans.jemmy.util.StringComparators.strict;
 
 // formerly scenario test jemmy_002
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class MenuNavigationTest {
     public static final String FRAME_TITLE = "MenuNavigationTest";

@@ -25,8 +25,10 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.LookAndFeel;
 
@@ -36,6 +38,7 @@ import org.netbeans.jemmy.util.LookAndFeel;
  * skipped: it keeps title actions in a popup menu instead of buttons (covered by
  * {@link InternalFramePopupMenuDriverTest}).
  */
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class InternalFrameTitleButtonsLafTest {
 

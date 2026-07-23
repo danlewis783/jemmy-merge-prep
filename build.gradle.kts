@@ -74,8 +74,8 @@ testing {
                 all {
                     testTask.configure {
                         // one sequential JVM for the whole suite; JemmyStateResetExtension
-                        // (auto-registered via this suite's junit-platform.properties) restores
-                        // all process-wide state between classes, replacing the former
+                        // (registered via @ExtendWith on every test class) restores all
+                        // process-wide state between classes, replacing the former
                         // forkEvery = 1 jtreg-othervm-style isolation
                         maxParallelForks = 1
                         shouldRunAfter(tasks.test)

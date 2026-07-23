@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.JComboBoxOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
@@ -39,6 +40,7 @@ import org.netbeans.jemmy.util.StringComparators;
 import javax.swing.*;
 
 // formerly scenario test jemmy_042
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=3, unit=TimeUnit.SECONDS)
 class MenuInDialogTest {
 

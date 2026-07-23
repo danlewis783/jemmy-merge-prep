@@ -39,6 +39,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.DispatchingModel;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.JemmyContext;
@@ -54,6 +55,7 @@ import javax.swing.*;
 // formerly scenario test jemmy_043
 // 20s rather than 5s: on scaled displays the first robot action pays the one-time
 // robot-coordinate calibration (a few seconds of probing) inside this budget
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=20, unit=TimeUnit.SECONDS)
 final class RobotVsQueueDispatchTest {
 

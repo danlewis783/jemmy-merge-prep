@@ -21,6 +21,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -56,6 +57,7 @@ import static org.netbeans.jemmy.util.StringComparators.regex;
 import static org.netbeans.jemmy.util.StringComparators.substring;
 
 // formerly scenario test jemmy_024
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=20, unit=TimeUnit.SECONDS)
 final class TabbedComponentsWorkflowTest {
     private static final String FRAME_TITLE = "TabbedComponentsWorkflowTest";

@@ -21,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.util.Display;
 
 /**
@@ -28,6 +30,7 @@ import org.netbeans.jemmy.util.Display;
  * this exercises the full probe-fit-verify machinery and must come back with the identity; on a
  * scaled display it exercises the correction the robot drivers rely on.
  */
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value = 30, unit = TimeUnit.SECONDS)
 final class RobotCalibrationTest {
 

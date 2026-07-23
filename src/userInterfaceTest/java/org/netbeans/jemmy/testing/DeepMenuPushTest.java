@@ -20,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -36,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.util.StringComparators.strict;
 
 // formerly scenario test jemmy_040
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
 class DeepMenuPushTest {
 

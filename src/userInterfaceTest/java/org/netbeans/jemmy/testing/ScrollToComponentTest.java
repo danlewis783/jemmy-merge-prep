@@ -28,6 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -40,6 +41,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_018
 // 10s rather than 2s: at higher display scaling the scaled content leaves the small viewport
 // proportionally more to scroll through
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {
     private JFrame jFrame;

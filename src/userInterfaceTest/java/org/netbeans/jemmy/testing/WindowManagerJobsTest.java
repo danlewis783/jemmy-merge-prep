@@ -31,6 +31,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
@@ -46,6 +47,7 @@ import org.netbeans.jemmy.util.WindowManager;
 // formerly scenario test jemmy_017
 // 20s rather than 5s: the MouseVisualizer's real robot click pays the one-time
 // robot-coordinate calibration (a few seconds of probing) on scaled displays
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=20, unit=TimeUnit.SECONDS)
 class WindowManagerJobsTest {
 

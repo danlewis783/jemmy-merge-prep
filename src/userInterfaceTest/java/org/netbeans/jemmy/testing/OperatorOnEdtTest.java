@@ -20,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
@@ -44,6 +45,7 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
  * without it they would park the EDT for the whole operator budget while the background action
  * waits on the very thread the caller occupies.
  */
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value = 10, unit = TimeUnit.SECONDS)
 class OperatorOnEdtTest {
     public static final String FRAME_TITLE = "OperatorOnEdtTest";

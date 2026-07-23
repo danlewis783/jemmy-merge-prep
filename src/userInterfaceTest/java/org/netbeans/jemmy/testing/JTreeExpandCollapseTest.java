@@ -21,6 +21,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.operators.JFrameOperator;
@@ -39,6 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // formerly scenario test jemmy_006
 // fields are assigned at the start of the test before the checker reads them
+@ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=3, unit=TimeUnit.SECONDS)
 class JTreeExpandCollapseTest {
 
