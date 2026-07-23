@@ -34,7 +34,7 @@ public class FailOnThreadViolationRepaintManager extends CheckThreadViolationRep
 
     @Override
     protected void violationFound(JComponent c, StackTraceElement[] stackTraceElements) {
-        EdtViolationException e = new EdtViolationException("EDT violation detected");
+        EdtViolationException e = new EdtViolationException("EDT violation detected on " + c);
         e.setStackTrace(stackTraceElements);
         throw e;
     }

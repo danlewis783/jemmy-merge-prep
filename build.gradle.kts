@@ -45,7 +45,7 @@ testing {
             dependencies {
                 implementation(libs.assertj.core)
                 implementation(testFixtures(project()))
-                runtimeOnly(libs.logback.classic)
+                implementation(libs.logback.classic)
                 compileOnly(libs.jetbrains.annotations)
             }
 

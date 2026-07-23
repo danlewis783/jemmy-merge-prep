@@ -36,7 +36,7 @@ public class WarnOnThreadViolationRepaintManager extends CheckThreadViolationRep
     @Override
     protected void violationFound(JComponent c, StackTraceElement[] stackTraceElements) {
         if (logger.isWarnEnabled()) {
-            logger.warn("EDT violation detected\n{}", asString(stackTraceElements));
+            logger.warn("EDT violation detected on {}\n{}", c, asString(stackTraceElements));
         }
     }
 

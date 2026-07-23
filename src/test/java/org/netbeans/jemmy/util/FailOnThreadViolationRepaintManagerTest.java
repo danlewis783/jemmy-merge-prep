@@ -51,6 +51,7 @@ class FailOnThreadViolationRepaintManagerTest {
 
         assertThatExceptionOfType(EdtViolationException.class)
                 .isThrownBy(() -> manager.addInvalidComponent(label))
+                .withMessageContaining("EDT violation detected on javax.swing.JLabel")
                 .satisfies(e -> assertThat(e.getStackTrace()).isNotEmpty());
     }
 
@@ -60,7 +61,8 @@ class FailOnThreadViolationRepaintManagerTest {
         FailOnThreadViolationRepaintManager manager = new FailOnThreadViolationRepaintManager();
 
         assertThatExceptionOfType(EdtViolationException.class)
-                .isThrownBy(() -> manager.addDirtyRegion(label, 0, 0, 10, 10));
+                .isThrownBy(() -> manager.addDirtyRegion(label, 0, 0, 10, 10))
+                .withMessageContaining("EDT violation detected on javax.swing.JLabel");
     }
 
     /** repaint() is documented thread-safe; a stack that came through repaint() must not report. */
