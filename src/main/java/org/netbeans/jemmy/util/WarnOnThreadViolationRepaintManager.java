@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WarnOnThreadViolationRepaintManager extends CheckThreadViolationRepaintManager {
     private static final Logger logger = LoggerFactory.getLogger(WarnOnThreadViolationRepaintManager.class);
-    private static volatile boolean enableInstallOptimization = true;
 
     public WarnOnThreadViolationRepaintManager() {}
 
@@ -52,14 +51,7 @@ public class WarnOnThreadViolationRepaintManager extends CheckThreadViolationRep
         return sb.toString();
     }
 
-    public static void setEnableInstallOptimization(boolean val) {
-        WarnOnThreadViolationRepaintManager.enableInstallOptimization = val;
-    }
-
     public static WarnOnThreadViolationRepaintManager install() {
-        return install(
-                WarnOnThreadViolationRepaintManager.class,
-                enableInstallOptimization,
-                WarnOnThreadViolationRepaintManager::new);
+        return install(WarnOnThreadViolationRepaintManager.class, WarnOnThreadViolationRepaintManager::new);
     }
 }

@@ -54,13 +54,13 @@ public abstract class CheckThreadViolationRepaintManager extends RepaintManager 
 
     /**
      * Makes an instance of {@code type} the current repaint manager and remembers the manager it
-     * replaced. When {@code reuseCurrent} is true and the current manager is already a
-     * {@code type} doing the complete check, it is returned unchanged.
+     * replaced. When the current manager is already a {@code type} doing the complete check, it
+     * is returned unchanged.
      */
     static synchronized <T extends CheckThreadViolationRepaintManager> T install(
-            Class<T> type, boolean reuseCurrent, Supplier<T> factory) {
+            Class<T> type, Supplier<T> factory) {
         RepaintManager current = currentManager(null);
-        if (reuseCurrent && type.isInstance(current) && type.cast(current).isCompleteCheck()) {
+        if (type.isInstance(current) && type.cast(current).isCompleteCheck()) {
             return type.cast(current);
         }
 

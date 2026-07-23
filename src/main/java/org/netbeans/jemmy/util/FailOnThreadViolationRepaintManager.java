@@ -25,7 +25,6 @@ import javax.swing.JComponent;
  * the test unless that thread's exceptions are observed.
  */
 public class FailOnThreadViolationRepaintManager extends CheckThreadViolationRepaintManager {
-    private static volatile boolean enableInstallOptimization = true;
 
     public FailOnThreadViolationRepaintManager() {}
 
@@ -40,14 +39,7 @@ public class FailOnThreadViolationRepaintManager extends CheckThreadViolationRep
         throw e;
     }
 
-    public static void setEnableInstallOptimization(boolean val) {
-        FailOnThreadViolationRepaintManager.enableInstallOptimization = val;
-    }
-
     public static FailOnThreadViolationRepaintManager install() {
-        return install(
-                FailOnThreadViolationRepaintManager.class,
-                enableInstallOptimization,
-                FailOnThreadViolationRepaintManager::new);
+        return install(FailOnThreadViolationRepaintManager.class, FailOnThreadViolationRepaintManager::new);
     }
 }

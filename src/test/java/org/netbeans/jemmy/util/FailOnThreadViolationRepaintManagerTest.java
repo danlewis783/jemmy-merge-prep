@@ -37,8 +37,6 @@ class FailOnThreadViolationRepaintManagerTest {
     @AfterEach
     void restoreRepaintManager() {
         CheckThreadViolationRepaintManager.uninstall();
-        FailOnThreadViolationRepaintManager.setEnableInstallOptimization(true);
-        WarnOnThreadViolationRepaintManager.setEnableInstallOptimization(true);
     }
 
     @Test
