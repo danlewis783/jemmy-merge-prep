@@ -56,6 +56,18 @@ public final class ComponentStreamer {
         return stream(container).filter(clazz::isInstance).map(clazz::cast);
     }
 
+    public static <T extends Component> Stream<T> streamOfTypeNamed(Container container, Class<T> clazz, String name) {
+        return streamOfType(container, clazz).filter(ctn -> ctn.getName().equals(name));
+    }
+
+    public static <T extends Component> Stream<T> streamShowingAndVisibleOfType(Container container, Class<T> clazz) {
+        return streamOfType(container, clazz).filter(Component::isShowing).filter(Component::isVisible);
+    }
+
+    public static <T extends Component> Stream<T> streamShowingAndVisibleAndEnabledOfType(Container container, Class<T> clazz) {
+        return streamShowingAndVisibleOfType(container, clazz).filter(Component::isEnabled);
+    }
+
     private static final class DescendantSpliterator extends Spliterators.AbstractSpliterator<Component> {
         private final Deque<Component> pending = new ArrayDeque<>();
 

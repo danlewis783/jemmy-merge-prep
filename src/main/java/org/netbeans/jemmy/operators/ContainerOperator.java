@@ -52,6 +52,11 @@ public class ContainerOperator extends ComponentOperator {
         searcher = new ComponentSearcher(b);
     }
 
+    @Override
+    public Container getSource() {
+        return (Container) super.getSource();
+    }
+
     public static ContainerOperator of(Container b) {
         return new ContainerOperator(b);
     }
@@ -132,87 +137,87 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public Component add(Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).add(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(component));
     }
 
     public Component add(Component component, int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).add(component, i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(component, i));
     }
 
     public void add(Component component, @Nullable Object object) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).add(component, object));
+        QueueTool.getInstance().runOnQueue(() -> getSource().add(component, object));
     }
 
     public void add(Component component, @Nullable Object object, int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).add(component, object, i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().add(component, object, i));
     }
 
     public Component add(String string, Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).add(string, component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(string, component));
     }
 
     public void addContainerListener(ContainerListener containerListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).addContainerListener(containerListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addContainerListener(containerListener));
     }
 
     public Component findComponentAt(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).findComponentAt(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().findComponentAt(i, i1));
     }
 
     public Component findComponentAt(Point point) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).findComponentAt(point));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().findComponentAt(point));
     }
 
     public Component getComponent(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getComponent(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponent(i));
     }
 
     public int getComponentCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getComponentCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentCount());
     }
 
     public Component[] getComponents() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getComponents());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponents());
     }
 
     public Insets getInsets() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getInsets());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getInsets());
     }
 
     public LayoutManager getLayout() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).getLayout());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLayout());
     }
 
     public boolean isAncestorOf(Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((Container) getSource()).isAncestorOf(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isAncestorOf(component));
     }
 
     public void paintComponents(Graphics graphics) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).paintComponents(graphics));
+        QueueTool.getInstance().runOnQueue(() -> getSource().paintComponents(graphics));
     }
 
     public void printComponents(Graphics graphics) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).printComponents(graphics));
+        QueueTool.getInstance().runOnQueue(() -> getSource().printComponents(graphics));
     }
 
     public void remove(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).remove(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().remove(i));
     }
 
     public void remove(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).remove(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().remove(component));
     }
 
     public void removeAll() {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).removeAll());
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeAll());
     }
 
     public void removeContainerListener(ContainerListener containerListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).removeContainerListener(containerListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeContainerListener(containerListener));
     }
 
     public void setLayout(LayoutManager layoutManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((Container) getSource()).setLayout(layoutManager));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLayout(layoutManager));
     }
 
     public static @Nullable Container findContainer(Container cont, Predicate<Component> chooser, int index) {
