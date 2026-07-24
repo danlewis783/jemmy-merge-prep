@@ -288,6 +288,16 @@ public class ComponentOperator extends Operator {
     }
 
     /**
+     * The component's geometric center as one EDT snapshot: both coordinates come from the same
+     * geometry read, so they cannot mix pre- and post-resize values the way separate
+     * {@link #getCenterX()}/{@link #getCenterY()} calls can. See {@link #getClickCenter()} for
+     * the click-target center, which subclasses may place elsewhere.
+     */
+    public Point getCenter() {
+        return queueTool.callOnQueue(() -> new Point(getCenterX(), getCenterY()));
+    }
+
+    /**
      * The component's click center as one EDT snapshot: both coordinates come from the same
      * geometry read (honoring subclass overrides of the center getters), so they cannot mix
      * pre- and post-resize values the way separate getCenterXForClick()/getCenterYForClick()

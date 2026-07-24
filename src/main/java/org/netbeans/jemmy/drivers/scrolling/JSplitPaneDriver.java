@@ -66,14 +66,12 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     private void moveDividerTo(JSplitPaneOperator oper, ScrollAdjuster adj) {
         ContainerOperator divOper = oper.getDivider();
         if (oper.getDividerLocation() == -1) {
-            Point nearCenter = QueueTool.getInstance()
-                    .callOnQueue(() -> new Point(divOper.getCenterX() - 1, divOper.getCenterY() - 1));
-            moveTo(oper, divOper, nearCenter.x, nearCenter.y);
+            Point center = divOper.getCenter();
+            moveTo(divOper, center, center.x - 1, center.y - 1);
 
             if (oper.getDividerLocation() == -1) {
-                Point farCenter = QueueTool.getInstance()
-                        .callOnQueue(() -> new Point(divOper.getCenterX() + 1, divOper.getCenterY() + 1));
-                moveTo(oper, divOper, farCenter.x, farCenter.y);
+                Point retryCenter = divOper.getCenter();
+                moveTo(divOper, retryCenter, retryCenter.x + 1, retryCenter.y + 1);
             }
         }
 
@@ -128,10 +126,11 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
         });
     }
 
-    private void moveTo(JSplitPaneOperator oper, ComponentOperator divOper, int x, int y) {
+    // start is passed in rather than re-read: every caller already holds the divider center from
+    // its own snapshot, and re-reading it here would both cost a second hop and risk disagreeing
+    // with the destination the caller computed from it
+    private void moveTo(ComponentOperator divOper, Point start, int x, int y) {
         DriverManager manager = DriverManager.newInstance(JemmyContext.getInstance());
-        Point start =
-                QueueTool.getInstance().callOnQueue(() -> new Point(divOper.getCenterX(), divOper.getCenterY()));
         manager.getMouseDriver(divOper)
                 .dragNDrop(
                         divOper,
@@ -146,12 +145,11 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     }
 
     private void moveToPosition(JSplitPaneOperator oper, ComponentOperator divOper, int nextPosition) {
-        Point center =
-                QueueTool.getInstance().callOnQueue(() -> new Point(divOper.getCenterX(), divOper.getCenterY()));
+        Point center = divOper.getCenter();
         if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-            moveTo(oper, divOper, center.x + nextPosition, center.y);
+            moveTo(divOper, center, center.x + nextPosition, center.y);
         } else {
-            moveTo(oper, divOper, center.x, center.y + nextPosition);
+            moveTo(divOper, center, center.x, center.y + nextPosition);
         }
     }
 

@@ -28,7 +28,6 @@ package org.netbeans.jemmy.drivers.input;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.MouseDriver;
@@ -104,9 +103,9 @@ public final class MouseEventDriver extends EventDriver implements MouseDriver {
 
     @Override
     public void enterMouse(ComponentOperator oper) {
-        // getCenterX()/getCenterY() (not the ForClick variants) form the torn pair here, so
-        // getClickCenter() is not a substitute; snapshot both in one hop instead.
-        Point center = QueueTool.getInstance().callOnQueue(() -> new Point(oper.getCenterX(), oper.getCenterY()));
+        // the geometric center, not getClickCenter(): enter/exit events target the component
+        // itself rather than the click target a subclass may place elsewhere
+        Point center = oper.getCenter();
         dispatchEvent(
                 oper.getSource(),
                 MouseEvent.MOUSE_ENTERED,
@@ -119,7 +118,7 @@ public final class MouseEventDriver extends EventDriver implements MouseDriver {
 
     @Override
     public void exitMouse(ComponentOperator oper) {
-        Point center = QueueTool.getInstance().callOnQueue(() -> new Point(oper.getCenterX(), oper.getCenterY()));
+        Point center = oper.getCenter();
         dispatchEvent(
                 oper.getSource(),
                 MouseEvent.MOUSE_EXITED,

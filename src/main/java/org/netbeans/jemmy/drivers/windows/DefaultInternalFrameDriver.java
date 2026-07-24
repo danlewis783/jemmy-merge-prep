@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.windows;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.util.Collections;
 import java.util.Objects;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
@@ -78,10 +79,12 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
         // one EDT snapshot: the title-bar center and the frame origin must come from the same
         // layout, since all four dragNDrop coordinates are derived from them together
         DragCoordinates drag = QueueTool.getInstance().callOnQueue(() -> {
+            // the title bar's center Y is used for both start coordinates, as it always has been
             int centerY = titleOperator.getCenterY();
-            return new DragCoordinates(centerY, centerY, x - oper.getX() + centerY, y - oper.getY() + centerY);
+            return new DragCoordinates(
+                    new Point(centerY, centerY), new Point(x - oper.getX() + centerY, y - oper.getY() + centerY));
         });
-        titleOperator.dragNDrop(drag.startX, drag.startY, drag.endX, drag.endY);
+        titleOperator.dragNDrop(drag.start.x, drag.start.y, drag.end.x, drag.end.y);
     }
 
     @Override
@@ -161,18 +164,14 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
         }
     }
 
-    /** Holder for the four coordinates {@link #move} computes from one EDT snapshot. */
+    /** Holder for the drag endpoints {@link #move} computes from one EDT snapshot. */
     private static final class DragCoordinates {
-        private final int startX;
-        private final int startY;
-        private final int endX;
-        private final int endY;
+        private final Point start;
+        private final Point end;
 
-        DragCoordinates(int startX, int startY, int endX, int endY) {
-            this.startX = startX;
-            this.startY = startY;
-            this.endX = endX;
-            this.endY = endY;
+        DragCoordinates(Point start, Point end) {
+            this.start = start;
+            this.end = end;
         }
     }
 }
