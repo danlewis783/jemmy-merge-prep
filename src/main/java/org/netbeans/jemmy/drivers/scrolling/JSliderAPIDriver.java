@@ -141,11 +141,10 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
         return (oper.getMajorTickSpacing() == 0) ? 1 : oper.getMajorTickSpacing();
     }
 
-    // NOTE: pre-existing bug, preserved as-is: both conjuncts compare getMajorTickSpacing();
-    // minor spacing is never consulted. Not fixed here per instructions.
     private boolean isSmallIncrement(JSliderOperator oper) {
+        // one EDT snapshot: both tick-spacing reads must describe the same moment
         return QueueTool.getInstance()
                 .callOnQueue(() -> (oper.getMajorTickSpacing() <= SMALL_INCREMENT)
-                        && (oper.getMajorTickSpacing() <= SMALL_INCREMENT));
+                        && (oper.getMinorTickSpacing() <= SMALL_INCREMENT));
     }
 }
