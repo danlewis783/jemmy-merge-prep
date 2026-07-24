@@ -32,50 +32,24 @@ import org.jetbrains.annotations.Nullable;
 
 public final class ComponentSearcher {
     private final Container container;
-    private int ordinalIndex;
 
     public ComponentSearcher(Container container) {
         this.container = Objects.requireNonNull(container, "container");
     }
 
     public @Nullable Component findComponent(Predicate<Component> predicate, int index) {
-        ordinalIndex = 0;
-
-        return findComponentInContainer(container, predicate, index);
-    }
-
-    public @Nullable Component findComponent(Predicate<Component> predicate) {
-        return findComponent(predicate, 0);
-    }
-
-    // Depth-First Search
-    private @Nullable Component findComponentInContainer(
-            Container container, Predicate<Component> predicate, int index) {
-
         if (index < 0) {
             throw new IllegalArgumentException("index must not be negative");
         }
 
-        Component[] components = container.getComponents();
-        Component ret;
-        for (Component component : components) {
-            if (component != null) {
-                if (predicate.test(component)) {
-                    if (ordinalIndex == index) {
-                        return component;
-                    } else {
-                        ordinalIndex++;
-                    }
-                }
+        return ComponentStreamer.stream(container)
+                .filter(predicate)
+                .skip(index)
+                .findFirst()
+                .orElse(null);
+    }
 
-                if (component instanceof Container) {
-                    if ((ret = findComponentInContainer((Container) component, predicate, index)) != null) {
-                        return ret;
-                    }
-                }
-            }
-        }
-
-        return null;
+    public @Nullable Component findComponent(Predicate<Component> predicate) {
+        return findComponent(predicate, 0);
     }
 }

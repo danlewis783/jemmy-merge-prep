@@ -18,96 +18,71 @@ package org.netbeans.jemmy;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
+/**
+ * Streams the component hierarchy under a container. Traversal is lazy
+ * pre-order depth-first over the descendants of the root (the root itself is
+ * not included), so short-circuiting operations such as {@code findFirst()}
+ * stop walking the hierarchy as soon as they are satisfied. The hierarchy is
+ * read live as the stream is consumed: each {@code getComponents()} read is
+ * consistent under the tree lock, but the walk as a whole is not atomic —
+ * the same semantics as walking the tree by hand. Consume the stream
+ * promptly rather than holding it across UI changes.
+ */
 public final class ComponentStreamer {
 
     private ComponentStreamer() {
         // non-instantiable utility class
     }
 
-    public static Stream<Component> stream(Component component) {
-        return stream((Container) component);
-    }
-
     public static Stream<Component> stream(Container container) {
-        Stream.Builder<Component> streamBuilder = Stream.builder();
-        buildStream(container, streamBuilder);
-        return streamBuilder.build();
-    }
-
-    public static <T extends Component> Stream<T> streamOfType(Component component, Class<T> clazz) {
-        return streamOfType((Container) component, clazz);
+        Objects.requireNonNull(container, "container");
+        return StreamSupport.stream(new DescendantSpliterator(container), false);
     }
 
     public static <T extends Component> Stream<T> streamOfType(Container container, Class<T> clazz) {
-        Stream.Builder<Component> streamBuilder = Stream.builder();
-        buildStream(container, streamBuilder);
-        return streamBuilder.build().filter(clazz::isInstance).map(clazz::cast);
-    }
-
-    public static <T extends Component> Stream<T> streamOfTypeNamed(Component component, Class<T> clazz, String name) {
-        return streamOfTypeNamed((Container) component, clazz, name);
-    }
-
-    public static <T extends Component> Stream<T> streamOfTypeNamed(Container container, Class<T> clazz, String name) {
-        Objects.requireNonNull(container, "container");
         Objects.requireNonNull(clazz, "clazz");
-        Objects.requireNonNull(name, "name");
-        if (name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name must not be blank or whitespace");
+        return stream(container).filter(clazz::isInstance).map(clazz::cast);
+    }
+
+    private static final class DescendantSpliterator extends Spliterators.AbstractSpliterator<Component> {
+        private final Deque<Component> pending = new ArrayDeque<>();
+
+        private DescendantSpliterator(Container root) {
+            super(Long.MAX_VALUE, Spliterator.ORDERED | Spliterator.NONNULL);
+            pushChildren(root);
         }
-        Stream.Builder<Component> streamBuilder = Stream.builder();
-        buildStream(container, streamBuilder);
-        return streamBuilder
-                .build()
-                .filter(clazz::isInstance)
-                .filter(c -> name.equalsIgnoreCase(c.getName()))
-                .map(clazz::cast);
-    }
 
-    public static Stream<Component> streamShowing(Component component) {
-        return streamShowing((Container) component);
-    }
-
-    public static Stream<Component> streamShowing(Container container) {
-        Stream.Builder<Component> streamBuilder = Stream.builder();
-        buildStream(container, streamBuilder);
-        return streamBuilder.build().filter(Component::isShowing);
-    }
-
-    public static <T extends Component> Stream<T> streamShowingAndVisibleOfType(Component component, Class<T> clazz) {
-        return streamShowingAndVisibleOfType((Container) component, clazz);
-    }
-
-    public static <T extends Component> Stream<T> streamShowingAndVisibleOfType(Container container, Class<T> clazz) {
-        Stream.Builder<Component> streamBuilder = Stream.builder();
-        buildStream(container, streamBuilder);
-        return streamBuilder
-                .build()
-                .filter(c -> clazz.isInstance(c) && c.isShowing() && c.isVisible())
-                .map(clazz::cast);
-    }
-
-    public static <T extends Component> Stream<T> streamShowingAndVisibleAndEnabledOfType(
-            Container container, Class<T> clazz) {
-        Stream.Builder<Component> streamBuilder = Stream.builder();
-        buildStream(container, streamBuilder);
-        return streamBuilder
-                .build()
-                .filter(c -> clazz.isInstance(c) && c.isShowing() && c.isVisible() && c.isEnabled())
-                .map(clazz::cast);
-    }
-
-    private static void buildStream(Container container, Stream.Builder<Component> streamBuilder) {
-        for (Component component : container.getComponents()) {
-            if (component == null) {
-                continue;
+        @Override
+        public boolean tryAdvance(Consumer<? super Component> action) {
+            Component next = pending.pollFirst();
+            if (next == null) {
+                return false;
             }
-            streamBuilder.add(component);
-            if (component instanceof Container) {
-                buildStream((Container) component, streamBuilder);
+            if (next instanceof Container) {
+                pushChildren((Container) next);
+            }
+            action.accept(next);
+            return true;
+        }
+
+        // children go in front of the current node's unvisited siblings, in
+        // reverse so the first child is visited first: pre-order
+        private void pushChildren(Container container) {
+            Component[] children = container.getComponents();
+            for (int i = children.length - 1; i >= 0; i--) {
+                Component child = children[i];
+                if (child != null) {
+                    pending.addFirst(child);
+                }
             }
         }
     }
