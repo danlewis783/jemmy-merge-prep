@@ -90,28 +90,14 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
             ScrollAdjuster adj,
             int leftPosition,
             int rightPosition) {
-        int currentPosition = QueueTool.getInstance().callOnQueue(() -> {
-            if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-                return (int) (divOper.getLocationOnScreen().getX()
-                        - oper.getLocationOnScreen().getX());
-            } else {
-                return (int) (divOper.getLocationOnScreen().getY()
-                        - oper.getLocationOnScreen().getY());
-            }
-        });
+        int currentPosition = dividerPosition(oper, divOper);
 
         int nextPosition;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             nextPosition = (currentPosition + leftPosition) / 2;
             moveToPosition(oper, divOper, nextPosition - currentPosition);
 
-            // NOTE: pre-existing bug, preserved as-is: this stuck-check always reads .getY(),
-            // even when the split pane is HORIZONTAL_SPLIT (see currentPosition above, which
-            // correctly branches on orientation). Not fixed here per instructions.
-            int newPosition = QueueTool.getInstance()
-                    .callOnQueue(() -> (int) (divOper.getLocationOnScreen().getY()
-                            - oper.getLocationOnScreen().getY()));
-            if (currentPosition == newPosition) {
+            if (currentPosition == dividerPosition(oper, divOper)) {
                 return;
             }
 
@@ -120,16 +106,26 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
             nextPosition = (currentPosition + rightPosition) / 2;
             moveToPosition(oper, divOper, nextPosition - currentPosition);
 
-            // NOTE: pre-existing bug, preserved as-is: see the comment in the DECREASE branch above.
-            int newPosition = QueueTool.getInstance()
-                    .callOnQueue(() -> (int) (divOper.getLocationOnScreen().getY()
-                            - oper.getLocationOnScreen().getY()));
-            if (currentPosition == newPosition) {
+            if (currentPosition == dividerPosition(oper, divOper)) {
                 return;
             }
 
             moveOnce(oper, divOper, adj, currentPosition, rightPosition);
         }
+    }
+
+    // divider offset along the split axis, as one EDT snapshot; used for both the position
+    // computation and the stuck-check so they always agree on the axis
+    private int dividerPosition(JSplitPaneOperator oper, ContainerOperator divOper) {
+        return QueueTool.getInstance().callOnQueue(() -> {
+            if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+                return (int) (divOper.getLocationOnScreen().getX()
+                        - oper.getLocationOnScreen().getX());
+            } else {
+                return (int) (divOper.getLocationOnScreen().getY()
+                        - oper.getLocationOnScreen().getY());
+            }
+        });
     }
 
     private void moveTo(JSplitPaneOperator oper, ComponentOperator divOper, int x, int y) {
