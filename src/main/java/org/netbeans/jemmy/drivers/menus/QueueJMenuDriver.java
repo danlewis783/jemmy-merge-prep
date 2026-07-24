@@ -97,13 +97,15 @@ public final class QueueJMenuDriver extends LightSupportiveDriver implements Men
     }
 
     public static boolean isMenuBarSelected(JMenuBar jMenuBar) {
-        MenuElement[] subElements = jMenuBar.getSubElements();
-        for (MenuElement subElement : subElements) {
-            if ((subElement instanceof JMenu) && ((JMenu) subElement).isPopupMenuVisible()) {
-                return true;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            MenuElement[] subElements = jMenuBar.getSubElements();
+            for (MenuElement subElement : subElements) {
+                if ((subElement instanceof JMenu) && ((JMenu) subElement).isPopupMenuVisible()) {
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        });
     }
 }

@@ -27,6 +27,7 @@ package org.netbeans.jemmy.drivers.input;
 
 import java.awt.Component;
 import java.awt.event.KeyEvent;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.KeyDriver;
@@ -81,15 +82,17 @@ public final class KeyEventDriver extends EventDriver implements KeyDriver {
     }
 
     private Component findNativeParent(Component source) {
-        Component nativeOne = source;
-        while (nativeOne != null) {
-            if (!nativeOne.isLightweight()) {
-                return nativeOne;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            Component nativeOne = source;
+            while (nativeOne != null) {
+                if (!nativeOne.isLightweight()) {
+                    return nativeOne;
+                }
+
+                nativeOne = nativeOne.getParent();
             }
 
-            nativeOne = nativeOne.getParent();
-        }
-
-        return source;
+            return source;
+        });
     }
 }

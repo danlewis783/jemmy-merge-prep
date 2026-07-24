@@ -270,43 +270,45 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Point findCell(TableCellChooser chooser, int @Nullable [] rows, int @Nullable [] columns, int index) {
-        TableModel model = getModel();
-        int[] realRows;
-        if (rows != null) {
-            realRows = rows;
-        } else {
-            realRows = new int[model.getRowCount()];
+        return QueueTool.getInstance().callOnQueue(() -> {
+            TableModel model = ((JTable) getSource()).getModel();
+            int[] realRows;
+            if (rows != null) {
+                realRows = rows;
+            } else {
+                realRows = new int[model.getRowCount()];
 
-            for (int i = 0; i < model.getRowCount(); i++) {
-                realRows[i] = i;
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    realRows[i] = i;
+                }
             }
-        }
 
-        int[] realColumns;
-        if (columns != null) {
-            realColumns = columns;
-        } else {
-            realColumns = new int[model.getColumnCount()];
+            int[] realColumns;
+            if (columns != null) {
+                realColumns = columns;
+            } else {
+                realColumns = new int[model.getColumnCount()];
 
-            for (int i = 0; i < model.getColumnCount(); i++) {
-                realColumns[i] = i;
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    realColumns[i] = i;
+                }
             }
-        }
 
-        int count = 0;
-        for (int realRow : realRows) {
-            for (int realColumn : realColumns) {
-                if (chooser.checkCell(this, realRow, realColumn)) {
-                    if (count == index) {
-                        return new Point(realColumn, realRow);
-                    } else {
-                        count++;
+            int count = 0;
+            for (int realRow : realRows) {
+                for (int realColumn : realColumns) {
+                    if (chooser.checkCell(this, realRow, realColumn)) {
+                        if (count == index) {
+                            return new Point(realColumn, realRow);
+                        } else {
+                            count++;
+                        }
                     }
                 }
             }
-        }
 
-        return new Point(-1, -1);
+            return new Point(-1, -1);
+        });
     }
 
     public int findCellRow(TableCellChooser chooser) {
@@ -387,9 +389,13 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(int row, int column, boolean isSelected, boolean cellHasFocus) {
-        return getCellRenderer(row, column)
-                .getTableCellRendererComponent(
-                        (JTable) getSource(), getValueAt(row, column), isSelected, cellHasFocus, row, column);
+        return QueueTool.getInstance().callOnQueue(() -> {
+            JTable table = (JTable) getSource();
+
+            return table.getCellRenderer(row, column)
+                    .getTableCellRendererComponent(
+                            table, table.getValueAt(row, column), isSelected, cellHasFocus, row, column);
+        });
     }
 
     public Component getRenderedComponent(int row, int column) {
@@ -911,6 +917,9 @@ public class JTableOperator extends JComponentOperator {
 
         @Override
         public boolean checkCell(JTableOperator oper, int row, int column) {
+            // model coordinates, deliberately: findCell must keep finding cells at their model
+            // position after view-column reordering. EDT-safe because findCell evaluates every
+            // chooser inside its callOnQueue loop.
             Object value = ((JTable) oper.getSource()).getModel().getValueAt(row, column);
 
             return comparator.equals((value != null) ? value.toString() : null, expectedToString);
@@ -930,13 +939,15 @@ public class JTableOperator extends JComponentOperator {
 
         @Override
         public @Nullable Component apply(Component obj) {
-            Point point = getPointToClick(row, column);
-            Component component = getComponentAt(point.x, point.y);
-            if ((component != null) && predicate.test(component)) {
-                return component;
-            } else {
-                return null;
-            }
+            return QueueTool.getInstance().callOnQueue(() -> {
+                Point point = getPointToClick(row, column);
+                Component component = getComponentAt(point.x, point.y);
+                if ((component != null) && predicate.test(component)) {
+                    return component;
+                } else {
+                    return null;
+                }
+            });
         }
     }
 }

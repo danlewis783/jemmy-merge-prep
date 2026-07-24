@@ -53,7 +53,7 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
 
             @Override
             public int getScrollDirection() {
-                if (((JSpinnerOperator) oper).getModel().getPreviousValue() != null) {
+                if (((JSpinnerOperator) oper).getPreviousValue() != null) {
                     return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
                 } else {
                     return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
@@ -77,7 +77,7 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
 
             @Override
             public int getScrollDirection() {
-                if (((JSpinnerOperator) oper).getModel().getNextValue() != null) {
+                if (((JSpinnerOperator) oper).getNextValue() != null) {
                     return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
                 } else {
                     return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;

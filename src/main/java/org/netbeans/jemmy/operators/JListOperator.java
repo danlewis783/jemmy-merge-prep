@@ -175,14 +175,13 @@ public class JListOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(int itemIndex, boolean isSelected, boolean cellHasFocus) {
-        return getRenderedComponent((JList<?>) getSource(), itemIndex, isSelected, cellHasFocus);
-    }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            JList<Object> list = getJList();
 
-    private static <E> Component getRenderedComponent(
-            JList<E> list, int itemIndex, boolean isSelected, boolean cellHasFocus) {
-        return list.getCellRenderer()
-                .getListCellRendererComponent(
-                        list, list.getModel().getElementAt(itemIndex), itemIndex, isSelected, cellHasFocus);
+            return list.getCellRenderer()
+                    .getListCellRendererComponent(
+                            list, list.getModel().getElementAt(itemIndex), itemIndex, isSelected, cellHasFocus);
+        });
     }
 
     public Component getRenderedComponent(int itemIndex) {
@@ -190,23 +189,25 @@ public class JListOperator extends JComponentOperator {
     }
 
     public int findItemIndex(ListItemChooser chooser, int index) {
-        ListModel<?> model = getModel();
-        int count = 0;
-        if (model == null) {
-            throw new NullPointerException("model null");
-        }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            ListModel<?> model = getJList().getModel();
+            int count = 0;
+            if (model == null) {
+                throw new NullPointerException("model null");
+            }
 
-        for (int i = 0, j = model.getSize(); i < j; i++) {
-            if (chooser.checkItem(this, i)) {
-                if (count == index) {
-                    return i;
-                } else {
-                    count++;
+            for (int i = 0, j = model.getSize(); i < j; i++) {
+                if (chooser.checkItem(this, i)) {
+                    if (count == index) {
+                        return i;
+                    } else {
+                        count++;
+                    }
                 }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public int findItemIndex(ListItemChooser chooser) {
@@ -238,32 +239,48 @@ public class JListOperator extends JComponentOperator {
             logger.warn("", e);
         }
 
-        JList<?> source = (JList<?>) getSource();
-        if (source.getModel().getSize() <= itemIndex) {
+        // reads the model size, and - if needed - scrolls (a Swing mutation) to the item; both
+        // must happen on the EDT, so this hop covers "validate index, then scroll if needed"
+        boolean hasItem = queueTool.callOnQueue(() -> {
+            if (getModel().getSize() <= itemIndex) {
+                return false;
+            }
+
+            if (getJList().getAutoscrolls()) {
+                ensureIndexIsVisible(itemIndex);
+            }
+
+            return true;
+        });
+
+        if (!hasItem) {
             logger.warn("JList \"{}\" does not contain {}'th item", getSourceToString(), itemIndex);
 
             return null;
         }
 
-        if (source.getAutoscrolls()) {
-            source.ensureIndexIsVisible(itemIndex);
-        }
-
-        return queueTool.callOnQueue(() -> {
+        // click coordinates are computed after the scroll above, in their own hop
+        Point point = queueTool.callOnQueue(() -> {
             Rectangle rect = getCellBounds(itemIndex, itemIndex);
             if (rect == null) {
-                logger.warn("Impossible to determine click point for {}'th", itemIndex);
-
                 return null;
             }
 
-            Point point =
-                    new Point((int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
-            Object result = getModel().getElementAt(itemIndex);
-            clickMouse(point.x, point.y, clickCount);
-
-            return result;
+            return new Point((int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
         });
+
+        if (point == null) {
+            logger.warn("Impossible to determine click point for {}'th", itemIndex);
+
+            return null;
+        }
+
+        Object result = queueTool.callOnQueue(() -> getModel().getElementAt(itemIndex));
+
+        // the actual mouse click is robot input and stays off the EDT
+        clickMouse(point.x, point.y, clickCount);
+
+        return result;
     }
 
     public Object clickOnItem(String item, StringComparator comparator, int clickCount) {
@@ -580,7 +597,8 @@ public class JListOperator extends JComponentOperator {
     }
 
     private void checkIndex(int index) {
-        if ((index < 0) || (index >= getModel().getSize())) {
+        boolean outOfBounds = queueTool.callOnQueue(() -> (index < 0) || (index >= getModel().getSize()));
+        if (outOfBounds) {
             throw new NoSuchItemException(index);
         }
     }

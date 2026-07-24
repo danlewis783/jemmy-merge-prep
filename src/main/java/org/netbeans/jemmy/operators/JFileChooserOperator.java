@@ -108,7 +108,8 @@ public class JFileChooserOperator extends JComponentOperator {
     public JButton getApproveButton() {
         String aText = getApproveButtonText();
         if (aText == null) {
-            aText = getUI().getApproveButtonText((JFileChooser) getSource());
+            aText = QueueTool.getInstance()
+                    .callOnQueue(() -> getUI().getApproveButtonText((JFileChooser) getSource()));
         }
 
         if (aText != null) {
@@ -288,43 +289,71 @@ public class JFileChooserOperator extends JComponentOperator {
     public boolean checkFileDisplayed(String file, StringComparator comparator) {
         waitPainted(-1);
 
-        return findFileIndex(file, comparator) != -1;
+        return fileIndexNow(file, comparator) != -1;
     }
 
     public int getFileCount() {
         waitPainted(-1);
+
+        return fileCountNow();
+    }
+
+    // pure read: no waiting, safe to evaluate inside an EDT-dispatched wait predicate
+    private int fileCountNow() {
         Component list = getFileList();
-        if (list instanceof JList) {
-            return ((JList<?>) list).getModel().getSize();
-        } else if (list instanceof JTable) {
-            return ((JTable) list).getModel().getRowCount();
-        } else {
-            throw new IllegalStateException("Wrong component type");
-        }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            if (list instanceof JList) {
+                return ((JList<?>) list).getModel().getSize();
+            } else if (list instanceof JTable) {
+                return ((JTable) list).getModel().getRowCount();
+            } else {
+                throw new IllegalStateException("Wrong component type");
+            }
+        });
     }
 
     public File[] getFiles() {
         waitPainted(-1);
+
+        return filesNow();
+    }
+
+    // pure read: no waiting, safe to evaluate inside an EDT-dispatched wait predicate
+    private File[] filesNow() {
         Component list = getFileList();
-        if (list instanceof JList) {
-            ListModel<?> listModel = ((JList<?>) list).getModel();
-            File[] result = new File[listModel.getSize()];
-            for (int i = 0; i < result.length; i++) {
-                result[i] = (File) listModel.getElementAt(i);
-            }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            if (list instanceof JList) {
+                ListModel<?> listModel = ((JList<?>) list).getModel();
+                File[] result = new File[listModel.getSize()];
+                for (int i = 0; i < result.length; i++) {
+                    result[i] = (File) listModel.getElementAt(i);
+                }
 
-            return result;
-        } else if (list instanceof JTable) {
-            TableModel tableModel = ((JTable) list).getModel();
-            File[] result = new File[tableModel.getRowCount()];
-            for (int i = 0; i < result.length; i++) {
-                result[i] = (File) tableModel.getValueAt(i, 0);
-            }
+                return result;
+            } else if (list instanceof JTable) {
+                TableModel tableModel = ((JTable) list).getModel();
+                File[] result = new File[tableModel.getRowCount()];
+                for (int i = 0; i < result.length; i++) {
+                    result[i] = (File) tableModel.getValueAt(i, 0);
+                }
 
-            return result;
-        } else {
-            throw new IllegalStateException("Wrong component type");
+                return result;
+            } else {
+                throw new IllegalStateException("Wrong component type");
+            }
+        });
+    }
+
+    // pure read: single scan of the current file list, -1 when absent
+    private int fileIndexNow(String file, StringComparator comparator) {
+        File[] files = filesNow();
+        for (int i = 0, iMax = files.length; i < iMax; i++) {
+            if (comparator.equals(files[i].getName(), file)) {
+                return i;
+            }
         }
+
+        return -1;
     }
 
     public void waitFileCount(int count) {
@@ -591,40 +620,39 @@ public class JFileChooserOperator extends JComponentOperator {
 
     private int findFileIndex(String file, StringComparator comparator) {
         return SupplierRepeater.on(() -> {
-                    File[] files = getFiles();
-                    for (int i = 0, iMax = files.length; i < iMax; i++) {
-                        if (comparator.equals(files[i].getName(), file)) {
-                            return i;
-                        }
-                    }
+                    int index = fileIndexNow(file, comparator);
 
-                    return null;
+                    return (index != -1) ? index : null;
                 })
                 .runUntilNotNull();
     }
 
     private int findDirIndex(String dir, StringComparator comparator) {
-        ComboBoxModel<?> cbModel = getPathCombo().getModel();
-        for (int i = cbModel.getSize() - 1; i >= 0; i--) {
-            if (comparator.equals(((File) cbModel.getElementAt(i)).getName(), dir)) {
-                return i;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            ComboBoxModel<?> cbModel = getPathCombo().getModel();
+            for (int i = cbModel.getSize() - 1; i >= 0; i--) {
+                if (comparator.equals(((File) cbModel.getElementAt(i)).getName(), dir)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     private int findFileTypeIndex(String fileType, StringComparator comparator) {
-        ComboBoxModel<?> cbModel = getFileTypesCombo().getModel();
-        for (int i = 0, iMax = cbModel.getSize(); i < iMax; i++) {
-            Object elementAt = cbModel.getElementAt(i);
-            if (elementAt instanceof FileFilter
-                    && comparator.equals(((FileFilter) elementAt).getDescription(), fileType)) {
-                return i;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            ComboBoxModel<?> cbModel = getFileTypesCombo().getModel();
+            for (int i = 0, iMax = cbModel.getSize(); i < iMax; i++) {
+                Object elementAt = cbModel.getElementAt(i);
+                if (elementAt instanceof FileFilter
+                        && comparator.equals(((FileFilter) elementAt).getDescription(), fileType)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public static @Nullable JDialog findJFileChooserDialog() {
@@ -669,7 +697,8 @@ public class JFileChooserOperator extends JComponentOperator {
 
         @Override
         public boolean test(JFileChooserOperator jFileChooserOp) {
-            return jFileChooserOp.getFileCount() == count;
+            // pure read: runs on the EDT via waitState's dispatch, so it must not wait
+            return jFileChooserOp.fileCountNow() == count;
         }
     }
 
@@ -684,7 +713,8 @@ public class JFileChooserOperator extends JComponentOperator {
 
         @Override
         public boolean test(JFileChooserOperator jFileChooserOp) {
-            return jFileChooserOp.checkFileDisplayed(fileName, stringComparator);
+            // pure read: runs on the EDT via waitState's dispatch, so it must not wait
+            return jFileChooserOp.fileIndexNow(fileName, stringComparator) != -1;
         }
     }
 

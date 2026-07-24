@@ -201,7 +201,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         if (!parentPath.isEmpty()) {
             menu = (JMenu) pushMenu(getParentPath(predicates));
             JMenu menuNonNull = Objects.requireNonNull(menu);
-            menuCont = ContainerOperator.of(menuNonNull.getPopupMenu());
+            menuCont = ContainerOperator.of(JMenuOperator.of(menuNonNull).getPopupMenu());
         } else {
             menuCont = this;
         }
@@ -216,7 +216,7 @@ public class JPopupMenuOperator extends JComponentOperator {
         if (parentPath.length > 0) {
             menu = (JMenu) pushMenu(getParentPath(path), comparator);
             JMenu menuNonNull = Objects.requireNonNull(menu);
-            menuCont = ContainerOperator.of(menuNonNull.getPopupMenu());
+            menuCont = ContainerOperator.of(JMenuOperator.of(menuNonNull).getPopupMenu());
         } else {
             menuCont = this;
         }

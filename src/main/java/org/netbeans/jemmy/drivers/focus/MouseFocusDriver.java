@@ -25,6 +25,7 @@
 
 package org.netbeans.jemmy.drivers.focus;
 
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Collections;
 import org.netbeans.jemmy.JemmyContext;
@@ -60,21 +61,21 @@ public final class MouseFocusDriver extends LightSupportiveDriver implements Foc
     @Override
     public void giveFocus(ComponentOperator compOp) {
         if (!compOp.hasFocus()) {
-            QueueTool.getInstance().runOnQueue(() -> {
-                DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
-                MouseDriver mouseDriver = driverManager.getMouseDriver(compOp);
-                int defaultMouseButton = Operator.getDefaultMouseButton();
-                int centerXForClick = compOp.getCenterXForClick();
-                int centerYForClick = compOp.getCenterYForClick();
-                mouseDriver.clickMouse(
-                        compOp,
-                        centerXForClick,
-                        centerYForClick,
-                        1,
-                        defaultMouseButton,
-                        0,
-                        TimeoutKey.ComponentOperator_MouseClickTimeout);
-            });
+            DriverManager driverManager = DriverManager.newInstance(JemmyContext.getInstance());
+            MouseDriver mouseDriver = driverManager.getMouseDriver(compOp);
+            int defaultMouseButton = Operator.getDefaultMouseButton();
+            // Only the click-point reads need the EDT hop; clickMouse itself drives the Robot
+            // and sleeps, so it must run on the calling thread, not the dispatch thread.
+            Point clickPoint = QueueTool.getInstance()
+                    .callOnQueue(() -> new Point(compOp.getCenterXForClick(), compOp.getCenterYForClick()));
+            mouseDriver.clickMouse(
+                    compOp,
+                    clickPoint.x,
+                    clickPoint.y,
+                    1,
+                    defaultMouseButton,
+                    0,
+                    TimeoutKey.ComponentOperator_MouseClickTimeout);
             compOp.waitHasFocus();
         }
     }

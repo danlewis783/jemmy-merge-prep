@@ -26,6 +26,7 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Objects;
@@ -125,7 +126,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+        if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
             hScrollBarOper.scrollToValue(value);
         }
     }
@@ -134,7 +135,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+        if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
             hScrollBarOper.scrollToValue(proportionalValue);
         }
     }
@@ -143,7 +144,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+        if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
             vScrollBarOper.scrollToValue(value);
         }
     }
@@ -152,7 +153,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+        if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
             vScrollBarOper.scrollToValue(proportionalValue);
         }
     }
@@ -171,7 +172,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+        if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
             vScrollBarOper.scrollToMinimum();
         }
     }
@@ -180,7 +181,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+        if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
             vScrollBarOper.scrollToMaximum();
         }
     }
@@ -189,7 +190,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+        if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
             hScrollBarOper.scrollToMinimum();
         }
     }
@@ -198,7 +199,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+        if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
             hScrollBarOper.scrollToMaximum();
         }
     }
@@ -207,11 +208,11 @@ public class JScrollPaneOperator extends JComponentOperator {
         initOperators();
         makeComponentVisible();
 
-        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
+        if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
             hScrollBarOper.scrollTo(new ComponentRectChecker(comp, x, y, width, height, JScrollBar.HORIZONTAL));
         }
 
-        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
+        if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
             vScrollBarOper.scrollTo(new ComponentRectChecker(comp, x, y, width, height, JScrollBar.VERTICAL));
         }
     }
@@ -222,7 +223,8 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public void scrollToComponent(Component comp) {
-        scrollToComponentRectangle(comp, 0, 0, comp.getWidth(), comp.getHeight());
+        Dimension size = QueueTool.getInstance().callOnQueue(comp::getSize);
+        scrollToComponentRectangle(comp, 0, 0, size.width, size.height);
     }
 
     public JScrollBarOperator getHScrollBarOperator() {
@@ -238,39 +240,45 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public boolean checkInside(Component comp, int x, int y, int width, int height) {
-        Component view = getViewport().getView();
-        Point toPoint = SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
         initOperators();
 
-        if ((hScrollBarOper != null) && hScrollBarOper.getSource().isVisible()) {
-            if (toPoint.x < hScrollBarOper.getValue()) {
-                return false;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            Component view = getViewport().getView();
+            Point toPoint = SwingUtilities.convertPoint(comp, x, y, view);
+
+            if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
+                int value = hScrollBarOper.getValue();
+                if (toPoint.x < value) {
+                    return false;
+                }
+
+                if (comp.getWidth() > view.getWidth()) {
+                    return toPoint.x > 0;
+                } else {
+                    return toPoint.x + comp.getWidth() > value + view.getWidth();
+                }
             }
 
-            if (comp.getWidth() > view.getWidth()) {
-                return toPoint.x > 0;
-            } else {
-                return toPoint.x + comp.getWidth() > hScrollBarOper.getValue() + view.getWidth();
-            }
-        }
+            if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
+                int value = vScrollBarOper.getValue();
+                if (toPoint.y < value) {
+                    return false;
+                }
 
-        if ((vScrollBarOper != null) && vScrollBarOper.getSource().isVisible()) {
-            if (toPoint.y < vScrollBarOper.getValue()) {
-                return false;
+                if (comp.getHeight() > view.getHeight()) {
+                    return toPoint.y > 0;
+                } else {
+                    return toPoint.y + comp.getHeight() > value + view.getHeight();
+                }
             }
 
-            if (comp.getHeight() > view.getHeight()) {
-                return toPoint.y > 0;
-            } else {
-                return toPoint.y + comp.getHeight() > vScrollBarOper.getValue() + view.getHeight();
-            }
-        }
-
-        return true;
+            return true;
+        });
     }
 
     public boolean checkInside(Component comp) {
-        return checkInside(comp, 0, 0, comp.getWidth(), comp.getHeight());
+        return QueueTool.getInstance()
+                .callOnQueue(() -> checkInside(comp, 0, 0, comp.getWidth(), comp.getHeight()));
     }
 
     public JScrollBar createHorizontalScrollBar() {
@@ -378,18 +386,26 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     private void initOperators() {
-        if ((hScrollBarOper == null)
-                && (getHorizontalScrollBar() != null)
-                && getHorizontalScrollBar().isVisible()) {
-            hScrollBarOper = JScrollBarOperator.of(getHorizontalScrollBar());
-            hScrollBarOper.setVisualizer(new EmptyVisualizer());
+        if (hScrollBarOper == null) {
+            JScrollBar hBar = QueueTool.getInstance().callOnQueue(() -> {
+                JScrollBar bar = ((JScrollPane) getSource()).getHorizontalScrollBar();
+                return (bar != null && bar.isVisible()) ? bar : null;
+            });
+            if (hBar != null) {
+                hScrollBarOper = JScrollBarOperator.of(hBar);
+                hScrollBarOper.setVisualizer(new EmptyVisualizer());
+            }
         }
 
-        if ((vScrollBarOper == null)
-                && (getVerticalScrollBar() != null)
-                && getVerticalScrollBar().isVisible()) {
-            vScrollBarOper = JScrollBarOperator.of(getVerticalScrollBar());
-            vScrollBarOper.setVisualizer(new EmptyVisualizer());
+        if (vScrollBarOper == null) {
+            JScrollBar vBar = QueueTool.getInstance().callOnQueue(() -> {
+                JScrollBar bar = ((JScrollPane) getSource()).getVerticalScrollBar();
+                return (bar != null && bar.isVisible()) ? bar : null;
+            });
+            if (vBar != null) {
+                vScrollBarOper = JScrollBarOperator.of(vBar);
+                vScrollBarOper.setVisualizer(new EmptyVisualizer());
+            }
         }
     }
 
@@ -452,21 +468,22 @@ public class JScrollPaneOperator extends JComponentOperator {
 
         @Override
         public int getScrollDirection(JScrollBarOperator oper) {
-            Point toPoint =
-                    SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
-            int to = (orientation == JScrollBar.HORIZONTAL) ? toPoint.x : toPoint.y;
-            int ln = (orientation == JScrollBar.HORIZONTAL) ? width : height;
-            int lv = (orientation == JScrollBar.HORIZONTAL)
-                    ? getViewport().getWidth()
-                    : getViewport().getHeight();
-            int vl = oper.getValue();
-            if (to < vl) {
-                return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
-            } else if ((to + ln - 1 > vl + lv) && (to > vl)) {
-                return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
-            } else {
-                return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
-            }
+            return QueueTool.getInstance().callOnQueue(() -> {
+                Point toPoint = SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
+                int to = (orientation == JScrollBar.HORIZONTAL) ? toPoint.x : toPoint.y;
+                int ln = (orientation == JScrollBar.HORIZONTAL) ? width : height;
+                int lv = (orientation == JScrollBar.HORIZONTAL)
+                        ? getViewport().getWidth()
+                        : getViewport().getHeight();
+                int vl = oper.getValue();
+                if (to < vl) {
+                    return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
+                } else if ((to + ln - 1 > vl + lv) && (to > vl)) {
+                    return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
+                } else {
+                    return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
+                }
+            });
         }
     }
 }

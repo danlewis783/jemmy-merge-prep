@@ -25,6 +25,7 @@
 
 package org.netbeans.jemmy.drivers.input;
 
+import java.awt.Point;
 import java.util.List;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.MouseDriver;
@@ -60,7 +61,9 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
 
     @Override
     public void moveMouse(ComponentOperator oper, int x, int y) {
-        moveMouse(getAbsoluteX(oper, x), getAbsoluteY(oper, y));
+        // one EDT-read origin so x and y come from the same snapshot
+        Point origin = oper.getLocationOnScreen();
+        moveMouse(origin.x + x, origin.y + y);
     }
 
     @Override
@@ -72,12 +75,14 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
             int mouseButton,
             int modifiers,
             TimeoutKey mouseClick) {
-        clickMouse(getAbsoluteX(oper, x), getAbsoluteY(oper, y), clickCount, mouseButton, modifiers, mouseClick);
+        Point origin = oper.getLocationOnScreen();
+        clickMouse(origin.x + x, origin.y + y, clickCount, mouseButton, modifiers, mouseClick);
     }
 
     @Override
     public void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
-        moveMouse(getAbsoluteX(oper, x), getAbsoluteY(oper, y));
+        Point origin = oper.getLocationOnScreen();
+        moveMouse(origin.x + x, origin.y + y);
     }
 
     @Override
@@ -91,11 +96,12 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
             int modifiers,
             TimeoutKey before,
             TimeoutKey after) {
+        Point origin = oper.getLocationOnScreen();
         dragNDrop(
-                getAbsoluteX(oper, startX),
-                getAbsoluteY(oper, startY),
-                getAbsoluteX(oper, endX),
-                getAbsoluteY(oper, endY),
+                origin.x + startX,
+                origin.y + startY,
+                origin.x + endX,
+                origin.y + endY,
                 mouseButton,
                 modifiers,
                 before,
@@ -109,12 +115,4 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
 
     @Override
     public void exitMouse(ComponentOperator oper) {}
-
-    private int getAbsoluteX(ComponentOperator oper, int x) {
-        return oper.getSource().getLocationOnScreen().x + x;
-    }
-
-    private int getAbsoluteY(ComponentOperator oper, int y) {
-        return oper.getSource().getLocationOnScreen().y + y;
-    }
 }

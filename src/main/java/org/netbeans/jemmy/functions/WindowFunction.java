@@ -22,6 +22,7 @@ import java.awt.Window;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.IndexPredicate;
 
 public class WindowFunction<T extends Window> implements Function<Void, T> {
@@ -41,8 +42,13 @@ public class WindowFunction<T extends Window> implements Function<Void, T> {
         return (T) WindowFunction.getWindow(owner, predicate, index);
     }
 
+    // The entire enumeration + recursion + predicate evaluation happens inside one hop so the
+    // whole window tree is read between events, while it is quiescent; the private doGetWindow
+    // overloads recurse directly instead of back through this method, so descending into owned
+    // windows never re-enters the queue (nesting would be safe, but is pointless once already
+    // on the dispatch thread).
     public static @Nullable Window getWindow(@Nullable Window owner, Predicate<Component> predicate, int index) {
-        return doGetWindow(owner, new IndexPredicate(predicate, index));
+        return QueueTool.getInstance().callOnQueue(() -> doGetWindow(owner, new IndexPredicate(predicate, index)));
     }
 
     private static @Nullable Window doGetWindow(@Nullable Window owner, Predicate<Component> predicate) {
@@ -56,7 +62,7 @@ public class WindowFunction<T extends Window> implements Function<Void, T> {
                     return window;
                 }
 
-                if ((result = getWindow(window, predicate, 0)) != null) {
+                if ((result = doGetWindow(window, new IndexPredicate(predicate, 0))) != null) {
                     return result;
                 }
             }
@@ -73,7 +79,7 @@ public class WindowFunction<T extends Window> implements Function<Void, T> {
                 return frame;
             }
 
-            if ((result = getWindow(frame, predicate, 0)) != null) {
+            if ((result = doGetWindow(frame, new IndexPredicate(predicate, 0))) != null) {
                 return result;
             }
         }

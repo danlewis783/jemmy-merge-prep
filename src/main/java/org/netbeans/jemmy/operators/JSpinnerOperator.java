@@ -190,33 +190,37 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public @Nullable Object getMinimum() {
-        SpinnerModel model = getModel();
-        if (model instanceof SpinnerNumberModel) {
-            return ((SpinnerNumberModel) model).getMinimum();
-        } else if (model instanceof SpinnerDateModel) {
-            return ((SpinnerDateModel) model).getEnd();
-        } else if (model instanceof SpinnerListModel) {
-            List<?> list = ((SpinnerListModel) model).getList();
+        return QueueTool.getInstance().callOnQueue(() -> {
+            SpinnerModel model = getModel();
+            if (model instanceof SpinnerNumberModel) {
+                return ((SpinnerNumberModel) model).getMinimum();
+            } else if (model instanceof SpinnerDateModel) {
+                return ((SpinnerDateModel) model).getEnd();
+            } else if (model instanceof SpinnerListModel) {
+                List<?> list = ((SpinnerListModel) model).getList();
 
-            return list.get(list.size() - 1);
-        } else {
-            return null;
-        }
+                return list.get(list.size() - 1);
+            } else {
+                return null;
+            }
+        });
     }
 
     public @Nullable Object getMaximum() {
-        SpinnerModel model = getModel();
-        if (model instanceof SpinnerNumberModel) {
-            return ((SpinnerNumberModel) model).getMaximum();
-        } else if (model instanceof SpinnerDateModel) {
-            return ((SpinnerDateModel) model).getEnd();
-        } else if (model instanceof SpinnerListModel) {
-            List<?> list = ((SpinnerListModel) model).getList();
+        return QueueTool.getInstance().callOnQueue(() -> {
+            SpinnerModel model = getModel();
+            if (model instanceof SpinnerNumberModel) {
+                return ((SpinnerNumberModel) model).getMaximum();
+            } else if (model instanceof SpinnerDateModel) {
+                return ((SpinnerDateModel) model).getEnd();
+            } else if (model instanceof SpinnerListModel) {
+                List<?> list = ((SpinnerListModel) model).getList();
 
-            return list.get(list.size() - 1);
-        } else {
-            return null;
-        }
+                return list.get(list.size() - 1);
+            } else {
+                return null;
+            }
+        });
     }
 
     public Object getValue() {
@@ -327,9 +331,10 @@ public class JSpinnerOperator extends JComponentOperator {
 
         @Override
         public int getScrollDirection() {
-            if (date.after(model.getDate())) {
+            Date modelDate = QueueTool.getInstance().callOnQueue(model::getDate);
+            if (date.after(modelDate)) {
                 return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
-            } else if (date.before(model.getDate())) {
+            } else if (date.before(modelDate)) {
                 return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
             } else {
                 return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
@@ -366,7 +371,7 @@ public class JSpinnerOperator extends JComponentOperator {
                 throw new IllegalArgumentException("JSpinner model is not a " + SpinnerListModel.class.getName());
             }
             model = (SpinnerListModel) oper.getModel();
-            elements = model.getList();
+            elements = QueueTool.getInstance().callOnQueue(model::getList);
         }
 
         public ListScrollAdjuster(JSpinnerOperator oper, int itemIndex) {
@@ -381,7 +386,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
         @Override
         public int getScrollDirection() {
-            Object value = model.getValue();
+            Object value = QueueTool.getInstance().callOnQueue(model::getValue);
             int curIndex = elements.indexOf(value);
             return Integer.compare(itemIndex, curIndex);
         }
@@ -417,7 +422,8 @@ public class JSpinnerOperator extends JComponentOperator {
 
         @Override
         public int getScrollDirection() {
-            return Double.compare(value, model.getNumber().doubleValue());
+            Number modelNumber = QueueTool.getInstance().callOnQueue(model::getNumber);
+            return Double.compare(value, modelNumber.doubleValue());
         }
 
         @Override
@@ -439,15 +445,18 @@ public class JSpinnerOperator extends JComponentOperator {
 
         @Override
         public int getScrollDirection() {
-            if (matches(model.getValue())) {
-                return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
-            } else if (((direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) && (model.getNextValue() != null))
-                    || ((direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION)
-                            && (model.getPreviousValue() != null))) {
-                return direction;
-            } else {
-                return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
-            }
+            return QueueTool.getInstance().callOnQueue(() -> {
+                if (matches(model.getValue())) {
+                    return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
+                } else if (((direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION)
+                                && (model.getNextValue() != null))
+                        || ((direction == ScrollAdjuster.DECREASE_SCROLL_DIRECTION)
+                                && (model.getPreviousValue() != null))) {
+                    return direction;
+                } else {
+                    return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
+                }
+            });
         }
 
         @Override

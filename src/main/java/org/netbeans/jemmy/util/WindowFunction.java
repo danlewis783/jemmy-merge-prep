@@ -20,6 +20,14 @@ import java.awt.Component;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * A window job for {@link WindowManager}: {@link #getPredicate()} selects the window,
+ * {@link Function#apply} processes it. The predicate is evaluated on the event dispatch
+ * thread (inside the hopped window search); {@code apply} is invoked on a background
+ * worker thread — like test code, it must access the window only through operator
+ * methods (which dispatch to the EDT internally), and it may block, wait, and drive
+ * robot input there.
+ */
 public interface WindowFunction<F> extends Function<F, Void> {
     Predicate<Component> getPredicate();
 }

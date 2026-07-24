@@ -56,6 +56,8 @@ import java.awt.image.ImageProducer;
 import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -365,44 +367,31 @@ public class ComponentOperator extends Operator {
     }
 
     public Container[] getContainers() {
-        int counter = 0;
-        Container cont = getSource().getParent();
-        if (cont == null) {
-            return new Container[0];
-        }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            List<Container> res = new ArrayList<>();
+            Container cont = getSource().getParent();
+            while (cont != null) {
+                res.add(cont);
+                cont = cont.getParent();
+            }
 
-        do {
-            counter++;
-        } while ((cont = cont.getParent()) != null);
-
-        Container[] res = new Container[counter];
-        cont = getSource().getParent();
-        counter = 0;
-
-        do {
-            counter++;
-            res[counter - 1] = cont;
-        } while ((cont = cont.getParent()) != null);
-
-        return res;
+            return res.toArray(new Container[0]);
+        });
     }
 
     public @Nullable Container getContainer(Predicate<Component> chooser) {
-        int counter = 0;
-        Container cont = getSource().getParent();
-        if (cont == null) {
-            return null;
-        }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            Container cont = getSource().getParent();
+            while (cont != null) {
+                if (chooser.test(cont)) {
+                    return cont;
+                }
 
-        do {
-            if (chooser.test(cont)) {
-                return cont;
+                cont = cont.getParent();
             }
 
-            counter++;
-        } while ((cont = cont.getParent()) != null);
-
-        return null;
+            return null;
+        });
     }
 
     public Window getWindow() {

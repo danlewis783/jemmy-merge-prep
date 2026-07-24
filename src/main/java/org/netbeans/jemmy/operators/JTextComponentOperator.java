@@ -293,13 +293,15 @@ public class JTextComponentOperator extends JComponentOperator {
     }
 
     public String getDisplayedText() {
-        try {
-            Document doc = getDocument();
+        return QueueTool.getInstance().callOnQueue(() -> {
+            try {
+                Document doc = getDocument();
 
-            return doc.getText(0, doc.getLength());
-        } catch (BadLocationException e) {
-            throw new JemmyException("Exception during text operation with\n    : " + getSourceToString(), e);
-        }
+                return doc.getText(0, doc.getLength());
+            } catch (BadLocationException e) {
+                throw new JemmyException("Exception during text operation with\n    : " + getSourceToString(), e);
+            }
+        });
     }
 
     public void waitText(String text, int position) {

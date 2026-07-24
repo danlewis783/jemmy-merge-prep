@@ -40,16 +40,16 @@ class OperatorTest {
     }
 
     @Test
-    void waitStateEvaluatesPredicateOffEventDispatchThread() {
+    void waitStateEvaluatesPredicateOnEventDispatchThread() {
         ComponentOperator operator = ComponentOperator.of(new JLabel());
-        AtomicBoolean ranOnQueue = new AtomicBoolean(true);
+        AtomicBoolean ranOnQueue = new AtomicBoolean();
         operator.waitState(op -> {
             ranOnQueue.set(SwingUtilities.isEventDispatchThread());
 
             return true;
         });
         assertThat(ranOnQueue)
-                .as("plain waitState evaluates the predicate on the jemmy action thread")
-                .isFalse();
+                .as("plain waitState also evaluates the predicate on the event dispatch thread")
+                .isTrue();
     }
 }

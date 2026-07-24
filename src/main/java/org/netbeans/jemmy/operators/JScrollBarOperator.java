@@ -283,24 +283,13 @@ public class JScrollBarOperator extends JComponentOperator {
             return;
         }
 
-        JButton minButt, maxButt;
-        if (((JScrollBar) getSource()).getOrientation() == JScrollBar.HORIZONTAL) {
-            if (butt0.getX() < butt1.getX()) {
-                minButt = butt0;
-                maxButt = butt1;
-            } else {
-                minButt = butt1;
-                maxButt = butt0;
-            }
-        } else {
-            if (butt0.getY() < butt1.getY()) {
-                minButt = butt0;
-                maxButt = butt1;
-            } else {
-                minButt = butt1;
-                maxButt = butt0;
-            }
-        }
+        boolean butt0First = QueueTool.getInstance()
+                .callOnQueue(() -> (getOrientation() == JScrollBar.HORIZONTAL)
+                        ? (butt0.getX() < butt1.getX())
+                        : (butt0.getY() < butt1.getY()));
+
+        JButton minButt = butt0First ? butt0 : butt1;
+        JButton maxButt = butt0First ? butt1 : butt0;
 
         minButtOperator = JButtonOperator.of(minButt);
         maxButtOperator = JButtonOperator.of(maxButt);

@@ -546,7 +546,7 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     protected void initOperators() {
-        iconOperator = new JDesktopIconOperator(((JInternalFrame) getSource()).getDesktopIcon());
+        iconOperator = new JDesktopIconOperator(getDesktopIcon());
         Container titlePane = findTitlePane();
         if (!isIcon() && (titlePane != null)) {
             if (titleOperator == null) {

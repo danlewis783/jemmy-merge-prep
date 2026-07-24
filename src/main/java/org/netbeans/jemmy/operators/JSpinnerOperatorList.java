@@ -20,6 +20,7 @@ import java.util.List;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
 import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JSpinnerOperatorList extends JSpinnerOperator {
@@ -35,14 +36,16 @@ public class JSpinnerOperatorList extends JSpinnerOperator {
     }
 
     public int findItem(String pattern, StringComparator comparator) {
-        List<?> list = getListModel().getList();
-        for (int i = 0, iMax = list.size(); i < iMax; i++) {
-            if (comparator.equals(list.get(i).toString(), pattern)) {
-                return i;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            List<?> list = getListModel().getList();
+            for (int i = 0, iMax = list.size(); i < iMax; i++) {
+                if (comparator.equals(list.get(i).toString(), pattern)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public void scrollToIndex(int index) {

@@ -148,32 +148,38 @@ public class JToolTipOperator extends JComponentOperator {
      * Searches for a showing {@code JToolTip} conforming to the given chooser. When {@code comp} is given, the search
      * is restricted to the windows owned by (or being) {@code comp}'s window, and the tooltip must belong to
      * {@code comp}'s source component.
+     *
+     * <p>The whole search - window enumeration, descent, and match check - runs in one hop to the dispatch
+     * thread, the same funnel {@link ComponentSearcher} uses; the per-window {@code ComponentSearcher} call
+     * below runs inline once already there.
      */
     public static @Nullable JToolTip findJToolTip(@Nullable ComponentOperator comp, Predicate<Component> chooser) {
-        List<Window> windowList;
-        Window compWindow = (comp == null) ? null : findSourceWindow(comp.getSource());
-        if (compWindow != null) {
-            windowList = new ArrayList<>(Arrays.asList(compWindow.getOwnedWindows()));
-            windowList.add(compWindow);
-        } else {
-            windowList = Arrays.asList(Window.getWindows());
-        }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            List<Window> windowList;
+            Window compWindow = (comp == null) ? null : findSourceWindow(comp.getSource());
+            if (compWindow != null) {
+                windowList = new ArrayList<>(Arrays.asList(compWindow.getOwnedWindows()));
+                windowList.add(compWindow);
+            } else {
+                windowList = Arrays.asList(Window.getWindows());
+            }
 
-        Predicate<Component> toolTipChooser = PredicatesJ.ofShowing(JToolTip.class, chooser);
-        for (Window window : windowList) {
-            Component found = new ComponentSearcher(window).findComponent(toolTipChooser);
-            if (found != null) {
-                if (comp != null) {
-                    if (comp.getSource().equals(((JToolTip) found).getComponent())) {
+            Predicate<Component> toolTipChooser = PredicatesJ.ofShowing(JToolTip.class, chooser);
+            for (Window window : windowList) {
+                Component found = new ComponentSearcher(window).findComponent(toolTipChooser);
+                if (found != null) {
+                    if (comp != null) {
+                        if (comp.getSource().equals(((JToolTip) found).getComponent())) {
+                            return (JToolTip) found;
+                        }
+                    } else {
                         return (JToolTip) found;
                     }
-                } else {
-                    return (JToolTip) found;
                 }
             }
-        }
 
-        return null;
+            return null;
+        });
     }
 
     public static @Nullable JToolTip findJToolTip() {

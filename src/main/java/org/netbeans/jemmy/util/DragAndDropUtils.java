@@ -10,6 +10,7 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JTableHeaderOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -53,15 +54,20 @@ public final class DragAndDropUtils {
 
         // Oddly enough, JTableOperator.findColumn does not correctly return the column indices.
         // Need to go directly to the table column model for correct column indices.
-        TableColumnModel columnModel = table.getColumnModel();
+        int[] indices = QueueTool.getInstance().callOnQueue(() -> {
+            TableColumnModel columnModel = table.getColumnModel();
+            try {
+                return new int[] {
+                    columnModel.getColumnIndex(startColumnName), columnModel.getColumnIndex(destColumnName)
+                };
+            } catch (IllegalArgumentException notFound) {
+                // TableColumnModel.getColumnIndex() throws IAE on not found!
+                return null;
+            }
+        });
 
-        try {
-            int startColumnIndex = columnModel.getColumnIndex(startColumnName);
-            int destColumnIndex = columnModel.getColumnIndex(destColumnName);
-
-            dragAndDropTableColumn(table, startColumnIndex, destColumnIndex, toLeftOfDestColumn);
-        } catch (IllegalArgumentException ignored) {
-            // TableColumnModel.getColumnIndex() throws IAE on not found!
+        if (indices != null) {
+            dragAndDropTableColumn(table, indices[0], indices[1], toLeftOfDestColumn);
         }
     }
 
@@ -80,13 +86,9 @@ public final class DragAndDropUtils {
 
         // Oddly enough, JTableOperator.findColumn does not correctly return the column indices.
         // Need to go directly to the table column model for correct column indices.
-        TableColumnModel columnModel = table.getColumnModel();
-        try {
-            int startColumnIndex = columnModel.getColumnIndex(startColumnName);
-
+        Integer startColumnIndex = columnIndexOrNull(table, startColumnName);
+        if (startColumnIndex != null) {
             dragAndDropTableColumn(table, startColumnIndex, destColumnIndex, toLeftOfDestColumn);
-        } catch (IllegalArgumentException ignored) {
-            // TableColumnModel.getColumnIndex() throws IAE on not found!
         }
     }
 
@@ -105,14 +107,21 @@ public final class DragAndDropUtils {
 
         // Oddly enough, JTableOperator.findColumn does not correctly return the column indices.
         // Need to go directly to the table column model for correct column indices.
-        TableColumnModel columnModel = table.getColumnModel();
-        try {
-            int destColumnIndex = columnModel.getColumnIndex(destColumnName);
-
-            dragAndDropTableColumn(table, startColumnIndex, destColumnIndex, toLeftOfDestColumn);
-        } catch (IllegalArgumentException ignored) {
-            // TableColumnModel.getColumnIndex() throws IAE on not found!
+        Integer destIndex = columnIndexOrNull(table, destColumnName);
+        if (destIndex != null) {
+            dragAndDropTableColumn(table, startColumnIndex, destIndex, toLeftOfDestColumn);
         }
+    }
+
+    private static @Nullable Integer columnIndexOrNull(JTable table, String columnName) {
+        return QueueTool.getInstance().callOnQueue(() -> {
+            try {
+                return table.getColumnModel().getColumnIndex(columnName);
+            } catch (IllegalArgumentException notFound) {
+                // TableColumnModel.getColumnIndex() throws IAE on not found!
+                return null;
+            }
+        });
     }
 
     /**
@@ -126,7 +135,8 @@ public final class DragAndDropUtils {
     public static void dragAndDropTableColumn(JTable table, int startColumnIndex,
                                               int destColumnIndex, boolean toLeftOfDestColumn) {
         Objects.requireNonNull(table, "table");
-        JTableHeaderOperator headerOper = JTableHeaderOperator.of(table.getTableHeader());
+        JTableHeaderOperator headerOper =
+                JTableHeaderOperator.of(QueueTool.getInstance().callOnQueue(table::getTableHeader));
 
         Point startPt = headerOper.getPointToClick(startColumnIndex);
 

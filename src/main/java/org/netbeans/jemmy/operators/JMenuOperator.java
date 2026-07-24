@@ -196,7 +196,7 @@ public class JMenuOperator extends JMenuItemOperator {
         }
 
         JMenu nonNullMenu = Objects.requireNonNull(menu);
-        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.of(nonNullMenu.getPopupMenu());
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.of(JMenuOperator.of(nonNullMenu).getPopupMenu());
 
         Predicate<Component> lastPred = predicates.get(predicates.size() - 1);
         JMenuItemOperator result = JMenuItemOperator.waitFor(popupMenuOp, lastPred);
@@ -214,7 +214,7 @@ public class JMenuOperator extends JMenuItemOperator {
         }
 
         JMenu nonNullMenu = Objects.requireNonNull(menu);
-        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.of(nonNullMenu.getPopupMenu());
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.of(JMenuOperator.of(nonNullMenu).getPopupMenu());
 
         String lastPathElem = path[path.length - 1];
         JMenuItemOperator result = JMenuItemOperator.waitFor(popupMenuOp, lastPathElem, comparator);

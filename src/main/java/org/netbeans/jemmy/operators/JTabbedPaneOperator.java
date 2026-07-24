@@ -154,13 +154,15 @@ public class JTabbedPaneOperator extends JComponentOperator {
 
     @Deprecated
     public int findPage(TabPageChooser chooser) {
-        for (int i = 0, iMax = getTabCount(); i < iMax; i++) {
-            if (chooser.checkPage(this, i)) {
-                return i;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            for (int i = 0, iMax = getTabCount(); i < iMax; i++) {
+                if (chooser.checkPage(this, i)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public int findPage(String title, StringComparator comparator) {

@@ -245,7 +245,8 @@ public class JTreeOperator extends JComponentOperator {
     public Object getRoot() {
         FunctionRepeater<Void, Object> waiter = FunctionRepeater.on(
                 obj -> {
-                    Object root = getModel().getRoot();
+                    Object root = QueueTool.getInstance()
+                            .callOnQueue(() -> ((JTree) getSource()).getModel().getRoot());
                     if ((root == null) || (root.toString() == null) || "null".equals(root.toString())) {
                         return null;
                     } else {
@@ -268,18 +269,20 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public int findRow(TreeRowChooser chooser, int index) {
-        int count = 0;
-        for (int i = 0; i < getRowCount(); i++) {
-            if (chooser.checkRow(this, i)) {
-                if (count == index) {
-                    return i;
-                } else {
-                    count++;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            int count = 0;
+            for (int i = 0; i < getRowCount(); i++) {
+                if (chooser.checkRow(this, i)) {
+                    if (count == index) {
+                        return i;
+                    } else {
+                        count++;
+                    }
                 }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public int findRow(TreeRowChooser chooser) {
@@ -502,15 +505,19 @@ public class JTreeOperator extends JComponentOperator {
 
     public Component getRenderedComponent(TreePath path, boolean isSelected, boolean isExpanded, boolean cellHasFocus) {
         if (path != null) {
-            return getCellRenderer()
-                    .getTreeCellRendererComponent(
-                            (JTree) getSource(),
-                            path.getLastPathComponent(),
-                            isSelected,
-                            isExpanded,
-                            getModel().isLeaf(path.getLastPathComponent()),
-                            getRowForPath(path),
-                            cellHasFocus);
+            return QueueTool.getInstance().callOnQueue(() -> {
+                JTree tree = (JTree) getSource();
+
+                return tree.getCellRenderer()
+                        .getTreeCellRendererComponent(
+                                tree,
+                                path.getLastPathComponent(),
+                                isSelected,
+                                isExpanded,
+                                tree.getModel().isLeaf(path.getLastPathComponent()),
+                                getRowForPath(path),
+                                cellHasFocus);
+            });
         } else {
             throw new NoSuchPathException();
         }

@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import javax.swing.JList;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.operators.JListOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +38,23 @@ public class JListCellIndexIsPaintedFunction implements Function<Integer, Boolea
     public @Nullable Boolean apply(Integer cellIdx) {
         JList<?> jList = fileListSupplier.get();
         JListOperator jListOperator = JListOperator.of(jList);
-        int cellIdxLast = jListOperator.getModel().getSize() - 1;
-        if (cellIdxLast == -1) {
-            return true;
-        }
-
         int cellIdxCurrent = (cellIdx < 0) ? 0 : cellIdx;
+
         try {
-            if (jListOperator.getCellBounds(cellIdxCurrent, cellIdxCurrent) != null) {
-                return jListOperator.getCellBounds(cellIdxLast, cellIdxLast) != null;
-            } else {
-                return null;
-            }
+            // model size and both getCellBounds reads must happen together on the EDT, so the
+            // whole read sequence for this apply() call is one hop
+            return QueueTool.getInstance().callOnQueue(() -> {
+                int cellIdxLast = jListOperator.getModel().getSize() - 1;
+                if (cellIdxLast == -1) {
+                    return true;
+                }
+
+                if (jListOperator.getCellBounds(cellIdxCurrent, cellIdxCurrent) != null) {
+                    return jListOperator.getCellBounds(cellIdxLast, cellIdxLast) != null;
+                } else {
+                    return null;
+                }
+            });
         } catch (NullPointerException e) {
             logger.warn("sometimes thrown from JList.getCellBounds when item exists but not painted", e);
             return null;

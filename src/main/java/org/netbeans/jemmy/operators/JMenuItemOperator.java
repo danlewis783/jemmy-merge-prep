@@ -276,11 +276,11 @@ public class JMenuItemOperator extends AbstractButtonOperator {
     }
 
     static JMenuItemOperator[] getMenuItems(MenuElement parent) {
-        return getMenuItems(parent.getSubElements());
+        return QueueTool.getInstance().callOnQueue(() -> getMenuItems(parent.getSubElements()));
     }
 
     static JMenuItemOperator[] getMenuItems(JMenu parent) {
-        return getMenuItems(parent.getMenuComponents());
+        return QueueTool.getInstance().callOnQueue(() -> getMenuItems(parent.getMenuComponents()));
     }
 
     static List<Predicate<Component>> createPredicates(String[] names, StringComparator comparator) {

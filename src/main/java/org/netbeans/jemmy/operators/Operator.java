@@ -164,26 +164,31 @@ public abstract class Operator {
         waitState(predicate, TimeoutKey.Waiter_WaitingTime);
     }
 
+    /**
+     * Waits until the predicate accepts this operator. Each poll evaluates the predicate on the
+     * event dispatch thread, so it can safely read Swing component state; it must therefore be a
+     * pure, non-blocking read — a predicate that waits fails fast.
+     */
     @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
     public <T extends Operator> void waitState(Predicate<T> predicate, TimeoutKey timeoutKey) {
-        FunctionRepeater.on(new OperatorPredicateFunction<>(predicate, (T) this), timeoutKey)
+        FunctionRepeater.on(new OperatorPredicateFunction<>(new OnQueuePredicate<>(predicate), (T) this), timeoutKey)
                 .runUntilNotNull(null);
     }
 
     /**
-     * Like {@link #waitState(Predicate)}, but evaluates the predicate on the event dispatch thread, so it can safely
-     * read Swing component state.
+     * Identical to {@link #waitState(Predicate)}, which now always evaluates the predicate on the
+     * event dispatch thread.
      */
     public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate) {
-        waitState(new OnQueuePredicate<>(predicate));
+        waitState(predicate);
     }
 
     /**
-     * Like {@link #waitState(Predicate, TimeoutKey)}, but evaluates the predicate on the event dispatch thread, so it
-     * can safely read Swing component state.
+     * Identical to {@link #waitState(Predicate, TimeoutKey)}, which now always evaluates the
+     * predicate on the event dispatch thread.
      */
     public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate, TimeoutKey timeoutKey) {
-        waitState(new OnQueuePredicate<>(predicate), timeoutKey);
+        waitState(predicate, timeoutKey);
     }
 
     @SuppressWarnings("SameParameterValue")

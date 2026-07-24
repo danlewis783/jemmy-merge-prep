@@ -36,6 +36,7 @@ import javax.swing.JMenuItem;
 import javax.swing.MenuElement;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
@@ -57,9 +58,10 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
         activateMenu(bar);
         MenuElement menuObject;
         long startTime = System.currentTimeMillis();
-        // nothing may be selected yet; keep stepping right until the predicate accepts a selection
-        while ((menuObject = getSelectedElement(bar)) == null
-                || !predicates.get(0).test((Component) menuObject)) {
+        // nothing may be selected yet; keep stepping right until the predicate accepts a selection.
+        // The selection lookup and predicate test run in a single EDT snapshot, since the menu
+        // highlight could otherwise move between two separately-hopped reads.
+        while ((menuObject = getMatchingSelectedElement(bar, predicates)) == null) {
             pressKey(KeyEvent.VK_RIGHT, 0);
             releaseKey(KeyEvent.VK_RIGHT, 0);
 
@@ -87,7 +89,9 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
             } else {
                 pressKey(KeyEvent.VK_RIGHT, 0);
                 releaseKey(KeyEvent.VK_RIGHT, 0);
-                selected = selected.getSubElements()[0].getSubElements()[elementIndex];
+                MenuElement selectedSnapshot = selected;
+                selected = QueueTool.getInstance()
+                        .callOnQueue(() -> selectedSnapshot.getSubElements()[0].getSubElements()[elementIndex]);
             }
         }
 
@@ -115,6 +119,18 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
     }
 
     private static @Nullable MenuElement getSelectedElement(MenuElement bar) {
+        return QueueTool.getInstance().callOnQueue(() -> selectedElementOf(bar));
+    }
+
+    private static @Nullable MenuElement getMatchingSelectedElement(
+            JMenuBar bar, List<Predicate<Component>> predicates) {
+        return QueueTool.getInstance().callOnQueue(() -> {
+            MenuElement selected = selectedElementOf(bar);
+            return (selected != null && predicates.get(0).test((Component) selected)) ? selected : null;
+        });
+    }
+
+    private static @Nullable MenuElement selectedElementOf(MenuElement bar) {
         MenuElement[] subElements = bar.getSubElements();
         for (MenuElement subElement : subElements) {
             if ((subElement instanceof JMenu) && ((JMenu) subElement).isSelected()) {
@@ -128,21 +144,23 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
     }
 
     private static int getDesiredElementIndex(MenuElement bar, List<Predicate<Component>> predicates, int depth) {
-        MenuElement[] subElements = bar.getSubElements()[0].getSubElements();
-        int realIndex = 0;
-        for (MenuElement subElement : subElements) {
-            if (subElement instanceof JMenuItem) {
-                JMenuItem subMenuItem = (JMenuItem) subElement;
-                if (subMenuItem.isVisible() && subMenuItem.isEnabled()) {
-                    if (predicates.get(depth).test((Component) subElement)) {
-                        return realIndex;
-                    }
+        return QueueTool.getInstance().callOnQueue(() -> {
+            MenuElement[] subElements = bar.getSubElements()[0].getSubElements();
+            int realIndex = 0;
+            for (MenuElement subElement : subElements) {
+                if (subElement instanceof JMenuItem) {
+                    JMenuItem subMenuItem = (JMenuItem) subElement;
+                    if (subMenuItem.isVisible() && subMenuItem.isEnabled()) {
+                        if (predicates.get(depth).test((Component) subElement)) {
+                            return realIndex;
+                        }
 
-                    realIndex++;
+                        realIndex++;
+                    }
                 }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 }

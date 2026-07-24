@@ -26,6 +26,7 @@
 package org.netbeans.jemmy.drivers.menus;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +39,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.MenuElement;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.SupplierRepeater;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -145,34 +147,48 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
             return;
         }
 
-        long lastXl, lastXr, lastYl, lastYr;
-        lastXl = (long) last.getSource().getLocationOnScreen().getX();
-        lastXr = lastXl + last.getSource().getWidth();
-        lastYl = (long) last.getSource().getLocationOnScreen().getY();
-        lastYr = lastYl + last.getSource().getHeight();
-        long operXl, operXr, operYl, operYr;
-        operXl = (long) oper.getSource().getLocationOnScreen().getX();
-        operXr = operXl + oper.getSource().getWidth();
-        operYl = (long) oper.getSource().getLocationOnScreen().getY();
-        operYr = operYl + oper.getSource().getHeight();
-        long overXl, overXr, overYl, overYr;
-        overXl = Math.max(lastXl, operXl);
-        overXr = Math.min(lastXr, operXr);
-        overYl = Math.max(lastYl, operYl);
-        overYr = Math.min(lastYr, operYr);
+        // Single EDT snapshot: the overlap geometry and both target points must come from
+        // the same instant, so the whole decision is computed here and only the resulting
+        // points are used once we are back on the caller thread.
+        SmartMoveTargets targets = QueueTool.getInstance().callOnQueue(() -> {
+            long lastXl, lastXr, lastYl, lastYr;
+            lastXl = (long) last.getSource().getLocationOnScreen().getX();
+            lastXr = lastXl + last.getSource().getWidth();
+            lastYl = (long) last.getSource().getLocationOnScreen().getY();
+            lastYr = lastYl + last.getSource().getHeight();
+            long operXl, operXr, operYl, operYr;
+            operXl = (long) oper.getSource().getLocationOnScreen().getX();
+            operXr = operXl + oper.getSource().getWidth();
+            operYl = (long) oper.getSource().getLocationOnScreen().getY();
+            operYr = operYl + oper.getSource().getHeight();
+            long overXl, overXr, overYl, overYr;
+            overXl = Math.max(lastXl, operXl);
+            overXr = Math.min(lastXr, operXr);
+            overYl = Math.max(lastYl, operYl);
+            overYr = Math.min(lastYr, operYr);
 
-        if (overXl < overXr) {
-            last.moveMouse((int) ((overXr - overXl) / 2 - lastXl), last.getCenterY());
-            oper.moveMouse((int) ((overXr - overXl) / 2 - operXl), oper.getCenterY());
-            oper.enterMouse();
-            return;
-        }
+            int lastCenterX = last.getSource().getWidth() / 2;
+            int lastCenterY = last.getSource().getHeight() / 2;
+            int operCenterY = oper.getSource().getHeight() / 2;
 
-        if (overYl < overYr) {
-            last.moveMouse(last.getCenterX(), (int) ((overYr - overYl) / 2 - lastYl));
-            oper.moveMouse(last.getCenterX(), (int) ((overYr - overYl) / 2 - operYl));
-            oper.enterMouse();
-            return;
+            if (overXl < overXr) {
+                return new SmartMoveTargets(
+                        new Point((int) ((overXr - overXl) / 2 - lastXl), lastCenterY),
+                        new Point((int) ((overXr - overXl) / 2 - operXl), operCenterY));
+            }
+
+            if (overYl < overYr) {
+                return new SmartMoveTargets(
+                        new Point(lastCenterX, (int) ((overYr - overYl) / 2 - lastYl)),
+                        new Point(lastCenterX, (int) ((overYr - overYl) / 2 - operYl)));
+            }
+
+            return null;
+        });
+
+        if (targets != null) {
+            last.moveMouse(targets.lastTarget.x, targets.lastTarget.y);
+            oper.moveMouse(targets.operTarget.x, targets.operTarget.y);
         }
 
         oper.enterMouse();
@@ -190,14 +206,27 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
     }
 
     private static @Nullable Object getSelectedElement(JMenuBar bar) {
-        MenuElement[] subElements = bar.getSubElements();
-        for (MenuElement subElement : subElements) {
-            if ((subElement instanceof JMenu) && ((JMenu) subElement).isPopupMenuVisible()) {
-                return subElement;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            MenuElement[] subElements = bar.getSubElements();
+            for (MenuElement subElement : subElements) {
+                if ((subElement instanceof JMenu) && ((JMenu) subElement).isPopupMenuVisible()) {
+                    return subElement;
+                }
             }
-        }
 
-        return null;
+            return null;
+        });
+    }
+
+    /** The two mouse-move targets {@link #smartMove} computed from one EDT snapshot. */
+    private static final class SmartMoveTargets {
+        private final Point lastTarget;
+        private final Point operTarget;
+
+        SmartMoveTargets(Point lastTarget, Point operTarget) {
+            this.lastTarget = lastTarget;
+            this.operTarget = operTarget;
+        }
     }
 
     private static class IsPopupMenuShowingPredicate implements Predicate<Component> {
@@ -226,21 +255,26 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
 
         @Override
         public @Nullable MenuElement get() {
-            if (!((Component) cont).isShowing()) {
-                return null;
-            }
-
-            MenuElement[] subElements = cont.getSubElements();
-            for (MenuElement subElement : subElements) {
-                Component subElementComp = (Component) subElement;
-                if (subElementComp.isShowing()
-                        && subElementComp.isEnabled()
-                        && predicates.get(depth).test(subElementComp)) {
-                    return subElement;
+            // The whole tree walk plus predicate evaluation runs as one EDT snapshot per
+            // poll: this is reached from SupplierRepeater on the test thread, and MenuElement
+            // trees are live Swing state that must only be read on the dispatch thread.
+            return QueueTool.getInstance().callOnQueue(() -> {
+                if (!((Component) cont).isShowing()) {
+                    return null;
                 }
-            }
 
-            return null;
+                MenuElement[] subElements = cont.getSubElements();
+                for (MenuElement subElement : subElements) {
+                    Component subElementComp = (Component) subElement;
+                    if (subElementComp.isShowing()
+                            && subElementComp.isEnabled()
+                            && predicates.get(depth).test(subElementComp)) {
+                        return subElement;
+                    }
+                }
+
+                return null;
+            });
         }
     }
 }

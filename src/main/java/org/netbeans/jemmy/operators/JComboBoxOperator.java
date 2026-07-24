@@ -173,7 +173,7 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public @Nullable JTextFieldOperator getTextField() {
-        if (getJComboBox().isEditable()) {
+        if (isEditable()) {
             text = JTextFieldOperator.of(findJTextField());
         }
 
@@ -191,14 +191,16 @@ public class JComboBoxOperator extends JComponentOperator {
     }
 
     public int findItemIndex(String item, StringComparator comparator) {
-        ComboBoxModel<?> model = getModel();
-        for (int i = 0, iMax = model.getSize(); i < iMax; i++) {
-            if (comparator.equals(model.getElementAt(i).toString(), item)) {
-                return i;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            ComboBoxModel<?> model = getJComboBox().getModel();
+            for (int i = 0, iMax = model.getSize(); i < iMax; i++) {
+                if (comparator.equals(model.getElementAt(i).toString(), item)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public int waitItem(String item, StringComparator comparator) {
