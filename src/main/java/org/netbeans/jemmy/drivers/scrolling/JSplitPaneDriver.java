@@ -25,10 +25,12 @@
 
 package org.netbeans.jemmy.drivers.scrolling;
 
+import java.awt.Point;
 import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.ButtonDriver;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -64,10 +66,14 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     private void moveDividerTo(JSplitPaneOperator oper, ScrollAdjuster adj) {
         ContainerOperator divOper = oper.getDivider();
         if (oper.getDividerLocation() == -1) {
-            moveTo(oper, divOper, divOper.getCenterX() - 1, divOper.getCenterY() - 1);
+            Point nearCenter = QueueTool.getInstance()
+                    .callOnQueue(() -> new Point(divOper.getCenterX() - 1, divOper.getCenterY() - 1));
+            moveTo(oper, divOper, nearCenter.x, nearCenter.y);
 
             if (oper.getDividerLocation() == -1) {
-                moveTo(oper, divOper, divOper.getCenterX() + 1, divOper.getCenterY() + 1);
+                Point farCenter = QueueTool.getInstance()
+                        .callOnQueue(() -> new Point(divOper.getCenterX() + 1, divOper.getCenterY() + 1));
+                moveTo(oper, divOper, farCenter.x, farCenter.y);
             }
         }
 
@@ -84,23 +90,28 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
             ScrollAdjuster adj,
             int leftPosition,
             int rightPosition) {
-        int currentPosition;
-        if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-            currentPosition = (int) (divOper.getLocationOnScreen().getX()
-                    - oper.getLocationOnScreen().getX());
-        } else {
-            currentPosition = (int) (divOper.getLocationOnScreen().getY()
-                    - oper.getLocationOnScreen().getY());
-        }
+        int currentPosition = QueueTool.getInstance().callOnQueue(() -> {
+            if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+                return (int) (divOper.getLocationOnScreen().getX()
+                        - oper.getLocationOnScreen().getX());
+            } else {
+                return (int) (divOper.getLocationOnScreen().getY()
+                        - oper.getLocationOnScreen().getY());
+            }
+        });
 
         int nextPosition;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             nextPosition = (currentPosition + leftPosition) / 2;
             moveToPosition(oper, divOper, nextPosition - currentPosition);
 
-            if (currentPosition
-                    == (int) (divOper.getLocationOnScreen().getY()
-                            - oper.getLocationOnScreen().getY())) {
+            // NOTE: pre-existing bug, preserved as-is: this stuck-check always reads .getY(),
+            // even when the split pane is HORIZONTAL_SPLIT (see currentPosition above, which
+            // correctly branches on orientation). Not fixed here per instructions.
+            int newPosition = QueueTool.getInstance()
+                    .callOnQueue(() -> (int) (divOper.getLocationOnScreen().getY()
+                            - oper.getLocationOnScreen().getY()));
+            if (currentPosition == newPosition) {
                 return;
             }
 
@@ -109,9 +120,11 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
             nextPosition = (currentPosition + rightPosition) / 2;
             moveToPosition(oper, divOper, nextPosition - currentPosition);
 
-            if (currentPosition
-                    == (int) (divOper.getLocationOnScreen().getY()
-                            - oper.getLocationOnScreen().getY())) {
+            // NOTE: pre-existing bug, preserved as-is: see the comment in the DECREASE branch above.
+            int newPosition = QueueTool.getInstance()
+                    .callOnQueue(() -> (int) (divOper.getLocationOnScreen().getY()
+                            - oper.getLocationOnScreen().getY()));
+            if (currentPosition == newPosition) {
                 return;
             }
 
@@ -121,11 +134,13 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
 
     private void moveTo(JSplitPaneOperator oper, ComponentOperator divOper, int x, int y) {
         DriverManager manager = DriverManager.newInstance(JemmyContext.getInstance());
+        Point start =
+                QueueTool.getInstance().callOnQueue(() -> new Point(divOper.getCenterX(), divOper.getCenterY()));
         manager.getMouseDriver(divOper)
                 .dragNDrop(
                         divOper,
-                        divOper.getCenterX(),
-                        divOper.getCenterY(),
+                        start.x,
+                        start.y,
                         x,
                         y,
                         Operator.getDefaultMouseButton(),
@@ -135,10 +150,12 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     }
 
     private void moveToPosition(JSplitPaneOperator oper, ComponentOperator divOper, int nextPosition) {
+        Point center =
+                QueueTool.getInstance().callOnQueue(() -> new Point(divOper.getCenterX(), divOper.getCenterY()));
         if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-            moveTo(oper, divOper, divOper.getCenterX() + nextPosition, divOper.getCenterY());
+            moveTo(oper, divOper, center.x + nextPosition, center.y);
         } else {
-            moveTo(oper, divOper, divOper.getCenterX(), divOper.getCenterY() + nextPosition);
+            moveTo(oper, divOper, center.x, center.y + nextPosition);
         }
     }
 

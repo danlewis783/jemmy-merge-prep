@@ -150,20 +150,24 @@ public final class DragAndDropUtils {
                 // right, skip last column destination
             }
             for (int i = startColumnIndex + 1; i <= destColumnIndex; i++) {
-                Point destPt = headerOper.getPointToClick(i);
-                headerOper.dragNDrop(startPt.x, startPt.y, destPt.x, destPt.y);
-                startPt = headerOper.getPointToClick(i);
+                // one EDT snapshot: this iteration's drag target and the following iteration's
+                // start point both describe column i's current header position, so read it once
+                Point columnPt = headerOper.getPointToClick(i);
+                headerOper.dragNDrop(startPt.x, startPt.y, columnPt.x, columnPt.y);
+                startPt = columnPt;
             }
         } else {
             for (int i = startColumnIndex - 1; i >= destColumnIndex; i--) {
-                Point destPt = headerOper.getPointToClick(i);
-                destPt.x -= 3; // just left of center
+                // one EDT snapshot: this iteration's drag target and the following iteration's
+                // start point both describe column i's current header position, so read it once
+                Point columnPt = headerOper.getPointToClick(i);
+                Point destPt = new Point(columnPt.x - 3, columnPt.y); // just left of center
                 if (!toLeftOfDestColumn) {
                     ++destColumnIndex; // since drop is to left of destination column, if dragging
                     // to right, skip last column destination
                 }
                 headerOper.dragNDrop(startPt.x, startPt.y, destPt.x, destPt.y);
-                startPt = headerOper.getPointToClick(i);
+                startPt = columnPt;
             }
         }
     }
@@ -183,9 +187,14 @@ public final class DragAndDropUtils {
         Objects.requireNonNull(treeOper, "treeOper");
         Objects.requireNonNull(dropPosition, "dropPosition");
 
-        Point srcStartPt = treeOper.getPointToClick(srcStartRow);
-        Point srcEndPt = treeOper.getPointToClick(srcEndRow);
-        Point destPt = treeOper.getPointToClick(destRow);
+        // one EDT snapshot: all three row positions must come from the same layout, since
+        // reading them across separate hops could straddle a relayout
+        DragRowPoints rowPoints = QueueTool.getInstance().callOnQueue(() -> new DragRowPoints(
+                treeOper.getPointToClick(srcStartRow), treeOper.getPointToClick(srcEndRow),
+                treeOper.getPointToClick(destRow)));
+        Point srcStartPt = rowPoints.srcStart;
+        Point srcEndPt = rowPoints.srcEnd;
+        Point destPt = rowPoints.dest;
 
         // default cursor position is DROP_INTO, so need to shift cursor down 8
         // pixels
@@ -401,6 +410,19 @@ public final class DragAndDropUtils {
             throw new RuntimeException("interrupted during run on the EDT", e);
         } catch (InvocationTargetException e) {
             throw new RuntimeException("exception occurred inside run on EDT (see cause)", e);
+        }
+    }
+
+    /** Holder for the three row points {@link #dragAndDrop} reads from one EDT snapshot. */
+    private static final class DragRowPoints {
+        private final Point srcStart;
+        private final Point srcEnd;
+        private final Point dest;
+
+        DragRowPoints(Point srcStart, Point srcEnd, Point dest) {
+            this.srcStart = srcStart;
+            this.srcEnd = srcEnd;
+            this.dest = dest;
         }
     }
 }

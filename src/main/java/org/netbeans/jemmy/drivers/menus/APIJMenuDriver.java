@@ -32,6 +32,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.MenuDriver;
 import org.netbeans.jemmy.operators.AbstractButtonOperator;
 import org.netbeans.jemmy.operators.ComponentOperator;
@@ -76,7 +77,9 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
             JMenuOperator mo = JMenuOperator.of((JMenu) item);
             Object result = push(mo, null, predicates, depth + 1, false);
             if (result instanceof JMenu) {
-                if (!((JMenu) result).isPopupMenuVisible()) {
+                boolean popupVisible =
+                        QueueTool.getInstance().callOnQueue(() -> ((JMenu) result).isPopupMenuVisible());
+                if (!popupVisible) {
                     ((JMenuOperator) oper).setPopupMenuVisible(false);
                 }
             } else {

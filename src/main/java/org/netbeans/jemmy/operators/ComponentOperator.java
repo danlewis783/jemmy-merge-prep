@@ -178,15 +178,10 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers, boolean forPopup) {
-        queueTool.runOnQueue(() -> mouseDriver()
-                .clickMouse(
-                        ComponentOperator.this,
-                        x,
-                        y,
-                        clickCount,
-                        mouseButton,
-                        modifiers,
-                        TimeoutKey.ComponentOperator_MouseClickTimeout));
+        // driver call stays on the test thread: it drives robot input and sleeps, which must
+        // never run on the EDT (the driver hops its own coordinate reads internally)
+        mouseDriver()
+                .clickMouse(this, x, y, clickCount, mouseButton, modifiers, TimeoutKey.ComponentOperator_MouseClickTimeout);
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers) {
@@ -257,7 +252,8 @@ public class ComponentOperator extends Operator {
     }
 
     public void clickMouse(int clickCount, int mouseButton) {
-        queueTool.runOnQueue(() -> clickMouse(getCenterXForClick(), getCenterYForClick(), clickCount, mouseButton));
+        Point center = getClickCenter();
+        clickMouse(center.x, center.y, clickCount, mouseButton);
     }
 
     public void clickMouse(int clickCount) {
@@ -277,15 +273,28 @@ public class ComponentOperator extends Operator {
     }
 
     public void pressMouse() {
-        queueTool.runOnQueue(() -> pressMouse(getCenterXForClick(), getCenterYForClick()));
+        Point center = getClickCenter();
+        pressMouse(center.x, center.y);
     }
 
     public void releaseMouse() {
-        queueTool.runOnQueue(() -> releaseMouse(getCenterXForClick(), getCenterYForClick()));
+        Point center = getClickCenter();
+        releaseMouse(center.x, center.y);
     }
 
     public void clickForPopup(int mouseButton) {
-        clickForPopup(getCenterXForClick(), getCenterYForClick(), mouseButton);
+        Point center = getClickCenter();
+        clickForPopup(center.x, center.y, mouseButton);
+    }
+
+    /**
+     * The component's click center as one EDT snapshot: both coordinates come from the same
+     * geometry read (honoring subclass overrides of the center getters), so they cannot mix
+     * pre- and post-resize values the way separate getCenterXForClick()/getCenterYForClick()
+     * calls can.
+     */
+    public Point getClickCenter() {
+        return queueTool.callOnQueue(() -> new Point(getCenterXForClick(), getCenterYForClick()));
     }
 
     public void clickForPopup() {

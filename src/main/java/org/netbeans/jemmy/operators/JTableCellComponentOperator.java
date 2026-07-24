@@ -1,6 +1,7 @@
 package org.netbeans.jemmy.operators;
 
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.JTableByCellTooltipPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
@@ -41,16 +42,18 @@ public class JTableCellComponentOperator extends ComponentOperator {
     }
 
     private static int[] findRowAndColumnForTooltip(JTableOperator tableOp, String tooltip, StringComparator stringComparator) {
-        int rowCount = tableOp.getRowCount();
-        int columnCount = tableOp.getColumnCount();
-        for (int row = 0; row < rowCount; row++) {
-            for (int column = 0; column < columnCount; column++) {
-                if (JTableByCellTooltipPredicate.isMatchingTable(tableOp, row, column, tooltip, stringComparator)) {
-                    return new int [] {row, column};
+        return QueueTool.getInstance().callOnQueue(() -> {
+            int rowCount = tableOp.getRowCount();
+            int columnCount = tableOp.getColumnCount();
+            for (int row = 0; row < rowCount; row++) {
+                for (int column = 0; column < columnCount; column++) {
+                    if (JTableByCellTooltipPredicate.isMatchingTable(tableOp, row, column, tooltip, stringComparator)) {
+                        return new int [] {row, column};
+                    }
                 }
             }
-        }
-        return null;
+            return null;
+        });
     }
 
     @Override

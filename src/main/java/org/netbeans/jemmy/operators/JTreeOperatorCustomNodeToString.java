@@ -1,11 +1,12 @@
 package org.netbeans.jemmy.operators;
 
-import org.netbeans.jemmy.JemmyException;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 import java.awt.Component;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -48,31 +49,30 @@ public class JTreeOperatorCustomNodeToString extends JTreeOperator {
      */
     @Override
     public Object chooseSubnode(Object parent, String text, int index, StringComparator comparator) {
-        int count = -1;
-        DefaultMutableTreeNode node;
-        for (int i = 0, iMax = this.getChildCount(parent); i < iMax; i++) {
-            try {
-                node = (DefaultMutableTreeNode) this.getChild(parent, i);
-            } catch (JemmyException e) {
-                if (e.getCause() instanceof IndexOutOfBoundsException) {
+        return QueueTool.getInstance().callOnQueue(() -> {
+            TreeModel md = ((JTree) getSource()).getModel();
+            int count = -1;
+            DefaultMutableTreeNode node;
+            for (int i = 0, iMax = md.getChildCount(parent); i < iMax; i++) {
+                try {
+                    node = (DefaultMutableTreeNode) md.getChild(parent, i);
+                } catch (IndexOutOfBoundsException e) {
                     return null;
-                } else {
-                    throw e;
+                }
+
+                String value = customNodeToStringFunc.apply(node);
+
+                if (comparator.equals(value, text)) {
+                    count++;
+
+                    if (count == index) {
+                        return node;
+                    }
                 }
             }
 
-            String value = customNodeToStringFunc.apply(node);
-
-            if (comparator.equals(value, text)) {
-                count++;
-
-                if (count == index) {
-                    return node;
-                }
-            }
-        }
-
-        return null;
+            return null;
+        });
     }
 
 

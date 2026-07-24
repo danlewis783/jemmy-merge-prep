@@ -40,14 +40,13 @@ public class JTableCellIndexIsPaintedFunction implements Function<Integer, Boole
 
     @Override
     public @Nullable Boolean apply(Integer cellIdx) {
-        JTable jTable = fileTableSupplier.get();
-        JTableOperator jTableOperator = JTableOperator.of(jTable);
         int rowIdxCurrent = (cellIdx < 0) ? 0 : cellIdx;
 
         try {
-            // row count and both getCellRect reads must happen together on the EDT, so the
-            // whole read sequence for this apply() call is one hop
+            // the component fetch, row count, and both getCellRect reads must happen together
+            // on the EDT, so the whole read sequence for this apply() call is one hop
             return QueueTool.getInstance().callOnQueue(() -> {
+                JTableOperator jTableOperator = JTableOperator.of(fileTableSupplier.get());
                 int rowIdxLast = jTableOperator.getModel().getRowCount() - 1;
                 if (rowIdxLast == -1) {
                     return true;

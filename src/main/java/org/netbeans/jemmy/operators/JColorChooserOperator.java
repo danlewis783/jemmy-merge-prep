@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
+import javax.swing.JTabbedPane;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.plaf.ColorChooserUI;
@@ -138,7 +139,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public void switchToRGB() {
-        if (!tabbed.getTitleAt(tabbed.getSelectedIndex()).equals(RGB_TITLE)) {
+        if (!selectedTabTitle().equals(RGB_TITLE)) {
             tabbed.selectPage(RGB_TITLE, StringComparators.strict());
         }
 
@@ -286,7 +287,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     public @Nullable JTextFieldOperator getColorCodeTextFieldOperator() {
-        if (tabbed.getTitleAt(tabbed.getSelectedIndex()).equals(RGB_TITLE)) {
+        if (selectedTabTitle().equals(RGB_TITLE)) {
             return JTextFieldOperator.waitFor(this, RGB_COLORCODE_TEXT_FIELD_INDEX);
         }
 
@@ -403,7 +404,7 @@ public class JColorChooserOperator extends JComponentOperator {
     }
 
     private int getSelectedTabIndex(String[] tabs) {
-        String selectedTitle = tabbed.getTitleAt(tabbed.getSelectedIndex());
+        String selectedTitle = selectedTabTitle();
         for (int i = 0; i < tabs.length; i++) {
             if (selectedTitle.equals(tabs[i])) {
                 return i;
@@ -411,5 +412,12 @@ public class JColorChooserOperator extends JComponentOperator {
         }
 
         return -1;
+    }
+
+    // one EDT snapshot: reading the selected index and its title separately can straddle a
+    // tab switch and answer for the wrong tab
+    private String selectedTabTitle() {
+        JTabbedPane pane = (JTabbedPane) tabbed.getSource();
+        return QueueTool.getInstance().callOnQueue(() -> pane.getTitleAt(pane.getSelectedIndex()));
     }
 }

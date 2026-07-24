@@ -31,6 +31,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import org.netbeans.jemmy.JemmyInputException;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
@@ -64,7 +65,8 @@ public class DefaultVisualizer implements ComponentVisualizer {
     }
 
     protected boolean isWindowActive(WindowOperator winOp) {
-        return winOp.isFocused() && winOp.isActive();
+        // one EDT snapshot: focused and active must describe the same instant
+        return QueueTool.getInstance().callOnQueue(() -> winOp.isFocused() && winOp.isActive());
     }
 
     protected void makeWindowActive(WindowOperator winOp) {
@@ -93,16 +95,23 @@ public class DefaultVisualizer implements ComponentVisualizer {
     }
 
     protected void switchTab(JTabbedPaneOperator jtpOp, Component target) {
-        int tabInd = 0;
-        for (int j = 0, maxJ = jtpOp.getTabCount(); j < maxJ; j++) {
-            if (target == jtpOp.getComponentAt(j)) {
-                tabInd = j;
+        // one EDT snapshot: the tab count, each tab's component, and the current selection
+        // must describe the same tab layout, since separate hops could straddle a tab change;
+        // -1 means the target tab is already selected, so no action is needed
+        int tabInd = QueueTool.getInstance().callOnQueue(() -> {
+            int found = 0;
+            for (int j = 0, maxJ = jtpOp.getTabCount(); j < maxJ; j++) {
+                if (target == jtpOp.getComponentAt(j)) {
+                    found = j;
 
-                break;
+                    break;
+                }
             }
-        }
 
-        if (jtpOp.getSelectedIndex() != tabInd) {
+            return (jtpOp.getSelectedIndex() != found) ? found : -1;
+        });
+
+        if (tabInd != -1) {
             jtpOp.selectPage(tabInd);
         }
     }

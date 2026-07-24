@@ -30,7 +30,6 @@ import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.util.Collections;
 import org.netbeans.jemmy.JemmyContext;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -67,18 +66,17 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
             oper.scrollToItem(index);
         }
 
-        QueueTool.getInstance().runOnQueue(() -> {
-            Rectangle rect = oper.getCellBounds(index, index);
-            DriverManager.newInstance(JemmyContext.getInstance())
-                    .getMouseDriver(oper)
-                    .clickMouse(
-                            oper,
-                            rect.x + rect.width / 2,
-                            rect.y + rect.height / 2,
-                            1,
-                            Operator.getDefaultMouseButton(),
-                            modifiers,
-                            TimeoutKey.ComponentOperator_MouseClickTimeout);
-        });
+        // getCellBounds is one EDT snapshot; the click (robot input + sleep) must stay off-EDT
+        Rectangle rect = oper.getCellBounds(index, index);
+        DriverManager.newInstance(JemmyContext.getInstance())
+                .getMouseDriver(oper)
+                .clickMouse(
+                        oper,
+                        rect.x + rect.width / 2,
+                        rect.y + rect.height / 2,
+                        1,
+                        Operator.getDefaultMouseButton(),
+                        modifiers,
+                        TimeoutKey.ComponentOperator_MouseClickTimeout);
     }
 }

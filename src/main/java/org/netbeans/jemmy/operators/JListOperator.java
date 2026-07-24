@@ -291,14 +291,14 @@ public class JListOperator extends JComponentOperator {
 
         scrollToItem(itemIndex);
 
-        return queueTool.callOnQueue(() -> {
-            int index = findItemIndex(new ByListItemElementChooser(item, comparator), 0);
-            if (index != -1) {
-                return clickOnItem(index, clickCount);
-            } else {
-                throw new NoSuchItemException(item);
-            }
-        });
+        // re-find after the scroll (findItemIndex is a single EDT snapshot), but click from the
+        // test thread: the click drives robot input and sleeps, which must never run on the EDT
+        int index = findItemIndex(new ByListItemElementChooser(item, comparator), 0);
+        if (index == -1) {
+            throw new NoSuchItemException(item);
+        }
+
+        return clickOnItem(index, clickCount);
     }
 
     public Object clickOnItem(String item, StringComparator comparator) {

@@ -41,11 +41,12 @@ public class ComboBoxPopupListFunction implements Function<Void, Component> {
 
     @Override
     public @Nullable Component apply(Void obj) {
+        Window comboWindow = jComboBoxOperator.getWindow();
         Window popupWindow;
-        if (popupWindowChooser.test(jComboBoxOperator.getWindow())) {
-            popupWindow = jComboBoxOperator.getWindow();
+        if (popupWindowChooser.test(comboWindow)) {
+            popupWindow = comboWindow;
         } else {
-            popupWindow = WindowFunction.getWindow(jComboBoxOperator.getWindow(), popupWindowChooser, 0);
+            popupWindow = WindowFunction.getWindow(comboWindow, popupWindowChooser, 0);
         }
 
         if (popupWindow != null) {

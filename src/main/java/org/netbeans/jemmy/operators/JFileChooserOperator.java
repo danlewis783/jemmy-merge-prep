@@ -298,10 +298,11 @@ public class JFileChooserOperator extends JComponentOperator {
         return fileCountNow();
     }
 
-    // pure read: no waiting, safe to evaluate inside an EDT-dispatched wait predicate
+    // pure read: no waiting, safe to evaluate inside an EDT-dispatched wait predicate.
+    // One hop: locating the list and reading its model must see the same UI state.
     private int fileCountNow() {
-        Component list = getFileList();
         return QueueTool.getInstance().callOnQueue(() -> {
+            Component list = getFileList();
             if (list instanceof JList) {
                 return ((JList<?>) list).getModel().getSize();
             } else if (list instanceof JTable) {
@@ -318,10 +319,11 @@ public class JFileChooserOperator extends JComponentOperator {
         return filesNow();
     }
 
-    // pure read: no waiting, safe to evaluate inside an EDT-dispatched wait predicate
+    // pure read: no waiting, safe to evaluate inside an EDT-dispatched wait predicate.
+    // One hop: locating the list and reading its model must see the same UI state.
     private File[] filesNow() {
-        Component list = getFileList();
         return QueueTool.getInstance().callOnQueue(() -> {
+            Component list = getFileList();
             if (list instanceof JList) {
                 ListModel<?> listModel = ((JList<?>) list).getModel();
                 File[] result = new File[listModel.getSize()];

@@ -82,21 +82,20 @@ public final class JSliderDriver extends AbstractScrollDriver {
     @Override
     protected void step(ComponentOperator oper, ScrollAdjuster adj) {
         if (adj.getScrollDirection() != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            QueueTool.getInstance().runOnQueue(() -> {
-                Point clickPoint = getClickPoint(oper, adj.getScrollDirection(), adj.getScrollOrientation());
-                if (clickPoint != null) {
-                    DriverManager.newInstance(JemmyContext.getInstance())
-                            .getMouseDriver(oper)
-                            .clickMouse(
-                                    oper,
-                                    clickPoint.x,
-                                    clickPoint.y,
-                                    1,
-                                    Operator.getDefaultMouseButton(),
-                                    0,
-                                    TimeoutKey.ComponentOperator_MouseClickTimeout);
-                }
-            });
+            Point clickPoint = QueueTool.getInstance()
+                    .callOnQueue(() -> getClickPoint(oper, adj.getScrollDirection(), adj.getScrollOrientation()));
+            if (clickPoint != null) {
+                DriverManager.newInstance(JemmyContext.getInstance())
+                        .getMouseDriver(oper)
+                        .clickMouse(
+                                oper,
+                                clickPoint.x,
+                                clickPoint.y,
+                                1,
+                                Operator.getDefaultMouseButton(),
+                                0,
+                                TimeoutKey.ComponentOperator_MouseClickTimeout);
+            }
         }
     }
 
@@ -105,27 +104,23 @@ public final class JSliderDriver extends AbstractScrollDriver {
 
     @Override
     protected void startPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        QueueTool.getInstance().runOnQueue(() -> {
-            Point clickPoint = getClickPoint(oper, direction, orientation);
-            if (clickPoint != null) {
-                MouseDriver mdriver =
-                        DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-                mdriver.moveMouse(oper, clickPoint.x, clickPoint.y);
-                mdriver.pressMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
-            }
-        });
+        Point clickPoint = QueueTool.getInstance().callOnQueue(() -> getClickPoint(oper, direction, orientation));
+        if (clickPoint != null) {
+            MouseDriver mdriver =
+                    DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
+            mdriver.moveMouse(oper, clickPoint.x, clickPoint.y);
+            mdriver.pressMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
+        }
     }
 
     @Override
     protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        QueueTool.getInstance().runOnQueue(() -> {
-            Point clickPoint = getClickPoint(oper, direction, orientation);
-            if (clickPoint != null) {
-                MouseDriver mdriver =
-                        DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-                mdriver.releaseMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
-            }
-        });
+        Point clickPoint = QueueTool.getInstance().callOnQueue(() -> getClickPoint(oper, direction, orientation));
+        if (clickPoint != null) {
+            MouseDriver mdriver =
+                    DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
+            mdriver.releaseMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
+        }
     }
 
     @Override

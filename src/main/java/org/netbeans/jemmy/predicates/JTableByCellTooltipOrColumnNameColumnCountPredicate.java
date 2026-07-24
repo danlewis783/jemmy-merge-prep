@@ -1,8 +1,5 @@
 package org.netbeans.jemmy.predicates;
 
-import org.jetbrains.annotations.Nullable;
-import org.netbeans.jemmy.SupplierRepeater;
-import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -29,11 +26,10 @@ public class JTableByCellTooltipOrColumnNameColumnCountPredicate extends JTableB
     @Override
     public boolean isMatchingTable(JTable table, int r, int c, String tooltip) {
         if (tabbedPaneName != null && !tabbedPaneName.equals("*default*")) {
-            JTabbedPane tabbedPane = waitForOptionalTabUnder(table, tabbedPaneName);
-
-            // JTabbedPane tabbedPane =
-            // JTabbedPaneOperator.findJTabbedPaneUnder(table,
-            // newTabbedPaneChooserByTabName(tabbedPaneName));
+            // single non-blocking lookup: predicates are evaluated on the EDT, where waiting is
+            // forbidden; the enclosing wait loop re-evaluates this predicate on every poll anyway
+            JTabbedPane tabbedPane = JTabbedPaneOperator.findJTabbedPaneUnder(
+                    table, newTabbedPaneChooserByTabName(tabbedPaneName));
             if (tabbedPane == null) {
                 return false;
             }
@@ -60,28 +56,6 @@ public class JTableByCellTooltipOrColumnNameColumnCountPredicate extends JTableB
     private boolean columnNameEquals(String tableColumnName, String expectedColumnName) {
         // Consider "\n\nSta\n " to be equal to "Sta"
         return getComparator().equals(strip(tableColumnName), strip(expectedColumnName));
-    }
-
-    private static @Nullable JTabbedPane waitForOptionalTabUnder(Component component, String tabTitle) {
-        Objects.requireNonNull(component, "c");
-        Objects.requireNonNull(tabTitle, "name");
-
-        try {
-            return waitForTabUnder(component, tabTitle);
-        } catch (TimeoutExpiredException ignored) {
-            return null;
-        }
-    }
-
-    private static JTabbedPane waitForTabUnder(Component component, String tabTitle) {
-        Objects.requireNonNull(component, "c");
-        Objects.requireNonNull(tabTitle, "name");
-
-        return SupplierRepeater
-                .on(() -> JTabbedPaneOperator.findJTabbedPaneUnder(
-                        component,
-                        newTabbedPaneChooserByTabName(tabTitle)))
-                .runUntilNotNull();
     }
 
     private static Predicate<Component> newTabbedPaneChooserByTabName(String tabName) {

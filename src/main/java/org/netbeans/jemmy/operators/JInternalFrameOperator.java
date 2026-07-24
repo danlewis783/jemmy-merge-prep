@@ -267,12 +267,9 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void scrollToFrame() {
-        if (isIcon()) {
-            scrollToRectangle(
-                    0, 0, getIconOperator().getWidth(), getIconOperator().getHeight());
-        } else {
-            scrollToRectangle(0, 0, getWidth(), getHeight());
-        }
+        // getSize() is one EDT snapshot; width and height must not straddle a resize
+        Dimension size = isIcon() ? getIconOperator().getSize() : getSize();
+        scrollToRectangle(0, 0, size.width, size.height);
     }
 
     public JButtonOperator getMinimizeButton() {

@@ -25,6 +25,7 @@
 
 package org.netbeans.jemmy.drivers.lists;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collections;
 import javax.swing.JTabbedPane;
@@ -46,20 +47,23 @@ public final class JTabMouseDriver extends LightSupportiveDriver implements List
     @Override
     public void selectItem(ComponentOperator oper, int index) {
         if (index != -1) {
-            QueueTool.getInstance().runOnQueue(() -> {
+            // one EDT snapshot for the tab center; the click (robot input + sleep) stays off-EDT
+            Point center = QueueTool.getInstance().callOnQueue(() -> {
                 Rectangle rect =
                         ((JTabbedPaneOperator) oper).getUI().getTabBounds((JTabbedPane) oper.getSource(), index);
-                DriverManager.newInstance(JemmyContext.getInstance())
-                        .getMouseDriver(oper)
-                        .clickMouse(
-                                oper,
-                                (int) (rect.getX() + rect.getWidth() / 2),
-                                (int) (rect.getY() + rect.getHeight() / 2),
-                                1,
-                                Operator.getDefaultMouseButton(),
-                                0,
-                                TimeoutKey.ComponentOperator_MouseClickTimeout);
+                return new Point(
+                        (int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
             });
+            DriverManager.newInstance(JemmyContext.getInstance())
+                    .getMouseDriver(oper)
+                    .clickMouse(
+                            oper,
+                            center.x,
+                            center.y,
+                            1,
+                            Operator.getDefaultMouseButton(),
+                            0,
+                            TimeoutKey.ComponentOperator_MouseClickTimeout);
         }
     }
 }

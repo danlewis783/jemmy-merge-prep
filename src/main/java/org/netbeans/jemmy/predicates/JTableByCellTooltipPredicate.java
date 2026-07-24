@@ -1,6 +1,7 @@
 package org.netbeans.jemmy.predicates;
 
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.operators.JTableOperator;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
@@ -77,10 +78,12 @@ public class JTableByCellTooltipPredicate implements Predicate<Component> {
 
         Component source = tableOp.getSource();
         JTable table = (JTable) source;
-        final Point point = tableOp.getPointToClick(r, c);
-        final MouseEvent event = new MouseEvent(table, MouseEvent.MOUSE_ENTERED, 0, 0,
-                (int) point.getX(), (int) point.getY(), 1, false);
-        return stringComparator.equals(tableOp.getToolTipText(event), tooltip);
+        return QueueTool.getInstance().callOnQueue(() -> {
+            Point point = tableOp.getPointToClick(r, c);
+            MouseEvent event = new MouseEvent(table, MouseEvent.MOUSE_ENTERED, 0, 0,
+                    (int) point.getX(), (int) point.getY(), 1, false);
+            return stringComparator.equals(tableOp.getToolTipText(event), tooltip);
+        });
     }
 
     protected StringComparator getComparator() {

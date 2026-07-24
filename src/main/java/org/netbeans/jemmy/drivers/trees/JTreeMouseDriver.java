@@ -32,7 +32,6 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 import javax.swing.text.JTextComponent;
 import org.netbeans.jemmy.JemmyContext;
-import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
@@ -47,11 +46,8 @@ import org.netbeans.jemmy.operators.Operator;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public final class JTreeMouseDriver extends LightSupportiveDriver implements TreeDriver {
-    private final QueueTool queueTool;
-
     public JTreeMouseDriver() {
         super(Collections.singletonList(JTreeOperator.class));
-        queueTool = QueueTool.getInstance();
     }
 
     @Override
@@ -72,15 +68,16 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
                 toper.scrollToRow(indices[i]);
             }
 
+            // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
             Point p = toper.getPointToClick(indices[index]);
-            queueTool.runOnQueue(() -> mdriver.clickMouse(
+            mdriver.clickMouse(
                     oper,
                     p.x,
                     p.y,
                     1,
                     Operator.getDefaultMouseButton(),
                     (index == 0) ? 0 : InputEvent.CTRL_MASK,
-                    TimeoutKey.ComponentOperator_MouseClickTimeout));
+                    TimeoutKey.ComponentOperator_MouseClickTimeout);
         }
     }
 
@@ -91,17 +88,15 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         if (!toper.isExpanded(index)) {
-            queueTool.runOnQueue(() -> {
-                Point p = toper.getPointToClick(index);
-                mdriver.clickMouse(
-                        toper,
-                        p.x,
-                        p.y,
-                        2,
-                        Operator.getDefaultMouseButton(),
-                        0,
-                        TimeoutKey.ComponentOperator_MouseClickTimeout);
-            });
+            Point p = toper.getPointToClick(index);
+            mdriver.clickMouse(
+                    toper,
+                    p.x,
+                    p.y,
+                    2,
+                    Operator.getDefaultMouseButton(),
+                    0,
+                    TimeoutKey.ComponentOperator_MouseClickTimeout);
         }
     }
 
@@ -112,17 +107,15 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
         if (toper.isExpanded(index)) {
-            queueTool.runOnQueue(() -> {
-                Point p = toper.getPointToClick(index);
-                mdriver.clickMouse(
-                        toper,
-                        p.x,
-                        p.y,
-                        2,
-                        Operator.getDefaultMouseButton(),
-                        0,
-                        TimeoutKey.ComponentOperator_MouseClickTimeout);
-            });
+            Point p = toper.getPointToClick(index);
+            mdriver.clickMouse(
+                    toper,
+                    p.x,
+                    p.y,
+                    2,
+                    Operator.getDefaultMouseButton(),
+                    0,
+                    TimeoutKey.ComponentOperator_MouseClickTimeout);
         }
     }
 
@@ -149,29 +142,25 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
         JTreeOperator toper = (JTreeOperator) oper;
         MouseDriver mdriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-        queueTool.runOnQueue(() -> {
-            Point p = toper.getPointToClick(index);
-            mdriver.clickMouse(
-                    toper,
-                    p.x,
-                    p.y,
-                    1,
-                    Operator.getDefaultMouseButton(),
-                    0,
-                    TimeoutKey.ComponentOperator_MouseClickTimeout);
-        });
+        Point firstClick = toper.getPointToClick(index);
+        mdriver.clickMouse(
+                toper,
+                firstClick.x,
+                firstClick.y,
+                1,
+                Operator.getDefaultMouseButton(),
+                0,
+                TimeoutKey.ComponentOperator_MouseClickTimeout);
         Timeouts.sleep(TimeoutKey.JTreeOperator_BeforeEditTimeout);
-        queueTool.runOnQueue(() -> {
-            Point p = toper.getPointToClick(index);
-            mdriver.clickMouse(
-                    toper,
-                    p.x,
-                    p.y,
-                    1,
-                    Operator.getDefaultMouseButton(),
-                    0,
-                    TimeoutKey.ComponentOperator_MouseClickTimeout);
-        });
+        Point secondClick = toper.getPointToClick(index);
+        mdriver.clickMouse(
+                toper,
+                secondClick.x,
+                secondClick.y,
+                1,
+                Operator.getDefaultMouseButton(),
+                0,
+                TimeoutKey.ComponentOperator_MouseClickTimeout);
         return JTextComponentOperator.of(
                 (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class), waitEditorTime));
     }

@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.util.Collections;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JSliderOperator;
@@ -53,15 +54,17 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     protected void step(ComponentOperator oper, ScrollAdjuster adj) {
         JSliderOperator scroll = (JSliderOperator) oper;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() > scroll.getMinimum() + getUnitIncrement(scroll))
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + getUnitIncrement(scroll))
                             ? scroll.getValue() - getUnitIncrement(scroll)
                             : scroll.getMinimum());
+            scroll.setValue(target);
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() < scroll.getMaximum() - getUnitIncrement(scroll))
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue() < scroll.getMaximum() - getUnitIncrement(scroll))
                             ? scroll.getValue() + getUnitIncrement(scroll)
                             : scroll.getMaximum());
+            scroll.setValue(target);
         }
     }
 
@@ -79,15 +82,17 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
         JSliderOperator scroll = (JSliderOperator) oper;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() > scroll.getMinimum() + getBlockIncrement(scroll))
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + getBlockIncrement(scroll))
                             ? scroll.getValue() - getBlockIncrement(scroll)
                             : scroll.getMinimum());
+            scroll.setValue(target);
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() < scroll.getMaximum() - getBlockIncrement(scroll))
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue() < scroll.getMaximum() - getBlockIncrement(scroll))
                             ? scroll.getValue() + getBlockIncrement(scroll)
                             : scroll.getMaximum());
+            scroll.setValue(target);
         }
     }
 
@@ -136,7 +141,11 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
         return (oper.getMajorTickSpacing() == 0) ? 1 : oper.getMajorTickSpacing();
     }
 
+    // NOTE: pre-existing bug, preserved as-is: both conjuncts compare getMajorTickSpacing();
+    // minor spacing is never consulted. Not fixed here per instructions.
     private boolean isSmallIncrement(JSliderOperator oper) {
-        return (oper.getMajorTickSpacing() <= SMALL_INCREMENT) && (oper.getMajorTickSpacing() <= SMALL_INCREMENT);
+        return QueueTool.getInstance()
+                .callOnQueue(() -> (oper.getMajorTickSpacing() <= SMALL_INCREMENT)
+                        && (oper.getMajorTickSpacing() <= SMALL_INCREMENT));
     }
 }

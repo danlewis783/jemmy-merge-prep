@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.text;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -52,8 +53,11 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
         int start = Math.min(startPosition, finalPosition);
         int end = Math.max(startPosition, finalPosition);
         JTextComponentOperator toper = (JTextComponentOperator) oper;
-        toper.setSelectionStart(start);
-        toper.setSelectionEnd(end);
+        // one EDT hop: set both bounds together so no observer sees a mismatched selection
+        QueueTool.getInstance().runOnQueue(() -> {
+            toper.setSelectionStart(start);
+            toper.setSelectionEnd(end);
+        });
     }
 
     @Override
@@ -64,14 +68,18 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     @Override
     public void typeText(ComponentOperator oper, String text, int caretPosition) {
         checkSupported(oper);
-        String curtext = getText(oper);
+        // one EDT snapshot: the text and its selection bounds must describe the same moment,
+        // since reading them across separate hops could straddle a selection change
+        TextSnapshot snapshot = QueueTool.getInstance()
+                .callOnQueue(() -> new TextSnapshot(getText(oper), getSelectionStart(oper), getSelectionEnd(oper)));
+        String curtext = snapshot.text;
         int realPos = caretPosition;
-        if ((getSelectionStart(oper) == realPos) || (getSelectionEnd(oper) == realPos)) {
-            if (getSelectionEnd(oper) == realPos) {
-                realPos = realPos - (getSelectionEnd(oper) - getSelectionStart(oper));
+        if ((snapshot.selectionStart == realPos) || (snapshot.selectionEnd == realPos)) {
+            if (snapshot.selectionEnd == realPos) {
+                realPos = realPos - (snapshot.selectionEnd - snapshot.selectionStart);
             }
 
-            curtext = curtext.substring(0, getSelectionStart(oper)) + curtext.substring(getSelectionEnd(oper));
+            curtext = curtext.substring(0, snapshot.selectionStart) + curtext.substring(snapshot.selectionEnd);
         }
 
         changeText(oper, curtext.substring(0, realPos) + text + curtext.substring(realPos));
@@ -98,4 +106,17 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     public abstract int getSelectionStart(ComponentOperator oper);
 
     public abstract int getSelectionEnd(ComponentOperator oper);
+
+    /** Holder for the text and selection bounds {@link #typeText} reads from one EDT snapshot. */
+    private static final class TextSnapshot {
+        private final String text;
+        private final int selectionStart;
+        private final int selectionEnd;
+
+        TextSnapshot(String text, int selectionStart, int selectionEnd) {
+            this.text = text;
+            this.selectionStart = selectionStart;
+            this.selectionEnd = selectionEnd;
+        }
+    }
 }

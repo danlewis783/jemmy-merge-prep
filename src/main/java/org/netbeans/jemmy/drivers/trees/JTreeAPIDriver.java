@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.trees;
 import java.util.Collections;
 import javax.swing.text.JTextComponent;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -51,8 +52,12 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
     @Override
     public void selectItems(ComponentOperator oper, int[] indices) {
         checkSupported(oper);
-        ((JTreeOperator) oper).clearSelection();
-        ((JTreeOperator) oper).addSelectionRows(indices);
+        JTreeOperator jTreeOperator = (JTreeOperator) oper;
+        // one EDT hop: clear and re-select atomically so no observer sees the empty selection
+        QueueTool.getInstance().runOnQueue(() -> {
+            jTreeOperator.clearSelection();
+            jTreeOperator.addSelectionRows(indices);
+        });
     }
 
     @Override
@@ -86,7 +91,9 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
             ComponentOperator oper, int index, TimeoutKey waitEditorTime) {
         checkSupported(oper);
         JTreeOperator jTreeOperator = (JTreeOperator) oper;
-        jTreeOperator.startEditingAtPath(jTreeOperator.getPathForRow(index));
+        // one EDT hop: start editing on the row fetched in the same snapshot, so the path
+        // cannot go stale between the lookup and the edit
+        QueueTool.getInstance().runOnQueue(() -> jTreeOperator.startEditingAtPath(jTreeOperator.getPathForRow(index)));
         JTextComponent jTextComponent = (JTextComponent)
                 jTreeOperator.waitSubComponent(PredicatesJ.of(JTextComponent.class), waitEditorTime);
         return JTextComponentOperator.of(jTextComponent);

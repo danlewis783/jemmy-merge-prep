@@ -356,7 +356,8 @@ public class JTreeOperator extends JComponentOperator {
     public void selectPath(TreePath path) {
         if (path != null) {
             scrollToPath(path);
-            queueTool.runOnQueue(() -> driver().selectItem(JTreeOperator.this, getRowForPath(path)));
+            // the driver click must run off-EDT (robot input + sleep); getRowForPath hops itself
+            driver().selectItem(this, getRowForPath(path));
 
             if (getVerification()) {
                 waitSelected(path);
@@ -375,10 +376,14 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void selectPaths(TreePath[] paths) {
-        int[] rows = new int[paths.length];
-        for (int i = 0; i < paths.length; i++) {
-            rows[i] = getRowForPath(paths[i]);
-        }
+        int[] rows = QueueTool.getInstance().callOnQueue(() -> {
+            int[] result = new int[paths.length];
+            for (int i = 0; i < paths.length; i++) {
+                result[i] = ((JTree) getSource()).getRowForPath(paths[i]);
+            }
+
+            return result;
+        });
 
         driver().selectItems(this, rows);
 
@@ -524,7 +529,8 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(TreePath path) {
-        return getRenderedComponent(path, isPathSelected(path), isExpanded(path), false);
+        return QueueTool.getInstance()
+                .callOnQueue(() -> getRenderedComponent(path, isPathSelected(path), isExpanded(path), false));
     }
 
     @Deprecated
@@ -595,29 +601,28 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public @Nullable Object chooseSubnode(Object parent, String text, int index, StringComparator comparator) {
-        int count = -1;
-        Object node;
-        for (int i = 0, iMax = getChildCount(parent); i < iMax; i++) {
-            try {
-                node = getChild(parent, i);
-            } catch (JemmyException e) {
-                if (e.getCause() instanceof IndexOutOfBoundsException) {
+        return QueueTool.getInstance().callOnQueue(() -> {
+            TreeModel md = ((JTree) getSource()).getModel();
+            int count = -1;
+            Object node;
+            for (int i = 0, iMax = md.getChildCount(parent); i < iMax; i++) {
+                try {
+                    node = md.getChild(parent, i);
+                } catch (IndexOutOfBoundsException e) {
                     return null;
-                } else {
-                    throw e;
+                }
+
+                if (comparator.equals(node.toString(), text)) {
+                    count++;
+
+                    if (count == index) {
+                        return node;
+                    }
                 }
             }
 
-            if (comparator.equals(node.toString(), text)) {
-                count++;
-
-                if (count == index) {
-                    return node;
-                }
-            }
-        }
-
-        return null;
+            return null;
+        });
     }
 
     public @Nullable Object chooseSubnode(Object parent, String text, StringComparator comparator) {

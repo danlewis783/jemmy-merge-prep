@@ -131,7 +131,8 @@ public class JComponentOperator extends ContainerOperator {
 
     public JToolTip showToolTip() {
         enterMouse();
-        moveMouse(getCenterXForClick(), getCenterYForClick());
+        Point center = getClickCenter();
+        moveMouse(center.x, center.y);
 
         return waitToolTip();
     }

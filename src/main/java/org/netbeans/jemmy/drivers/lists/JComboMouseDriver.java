@@ -25,9 +25,11 @@
 
 package org.netbeans.jemmy.drivers.lists;
 
+import java.awt.Point;
 import java.util.Collections;
 import javax.swing.UIManager;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.ListDriver;
@@ -47,7 +49,10 @@ public final class JComboMouseDriver extends LightSupportiveDriver implements Li
         if (!coper.isPopupVisible()) {
             if ("com.sun.java.swing.plaf.motif.MotifLookAndFeel"
                     .equals(UIManager.getLookAndFeel().getClass().getName())) {
-                oper.clickMouse(oper.getWidth() - 2, oper.getHeight() / 2, 1);
+                // one EDT snapshot: width and height must come from the same geometry read
+                Point clickPoint = QueueTool.getInstance()
+                        .callOnQueue(() -> new Point(oper.getWidth() - 2, oper.getHeight() / 2));
+                oper.clickMouse(clickPoint.x, clickPoint.y, 1);
             } else {
                 DriverManager.newInstance(JemmyContext.getInstance())
                         .getButtonDriver(coper.getButton())

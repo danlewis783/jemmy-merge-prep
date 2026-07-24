@@ -133,8 +133,12 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public void moveDivider(double proportionalLocation) {
-        scrollTo(new ValueScrollAdjuster(getMinimumDividerLocation()
-                + (int) (proportionalLocation * (getMaximumDividerLocation() - getMinimumDividerLocation()))));
+        int target = QueueTool.getInstance().callOnQueue(() -> {
+            JSplitPane pane = (JSplitPane) getSource();
+            int minimum = pane.getMinimumDividerLocation();
+            return minimum + (int) (proportionalLocation * (pane.getMaximumDividerLocation() - minimum));
+        });
+        scrollTo(new ValueScrollAdjuster(target));
     }
 
     public void moveToMinimum() {

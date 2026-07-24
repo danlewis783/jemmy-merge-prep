@@ -25,6 +25,7 @@
 
 package org.netbeans.jemmy.drivers.buttons;
 
+import java.awt.Point;
 import java.util.Collections;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
@@ -44,31 +45,28 @@ public final class ButtonMouseDriver extends LightSupportiveDriver implements Bu
     public void press(ComponentOperator oper) {
         MouseDriver mouseDriver =
                 DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-        mouseDriver.moveMouse(oper, oper.getCenterXForClick(), oper.getCenterYForClick());
-        mouseDriver.pressMouse(
-                oper, oper.getCenterXForClick(), oper.getCenterYForClick(), Operator.getDefaultMouseButton(), 0);
+        Point center = oper.getClickCenter();
+        mouseDriver.moveMouse(oper, center.x, center.y);
+        mouseDriver.pressMouse(oper, center.x, center.y, Operator.getDefaultMouseButton(), 0);
     }
 
     @Override
     public void release(ComponentOperator oper) {
+        Point center = oper.getClickCenter();
         DriverManager.newInstance(JemmyContext.getInstance())
                 .getMouseDriver(oper)
-                .releaseMouse(
-                        oper,
-                        oper.getCenterXForClick(),
-                        oper.getCenterYForClick(),
-                        Operator.getDefaultMouseButton(),
-                        0);
+                .releaseMouse(oper, center.x, center.y, Operator.getDefaultMouseButton(), 0);
     }
 
     @Override
     public void push(ComponentOperator oper) {
+        Point center = oper.getClickCenter();
         DriverManager.newInstance(JemmyContext.getInstance())
                 .getMouseDriver(oper)
                 .clickMouse(
                         oper,
-                        oper.getCenterXForClick(),
-                        oper.getCenterYForClick(),
+                        center.x,
+                        center.y,
                         1,
                         Operator.getDefaultMouseButton(),
                         0,

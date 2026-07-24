@@ -27,10 +27,12 @@ package org.netbeans.jemmy.drivers.windows;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.util.Collections;
 import java.util.Objects;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import org.netbeans.jemmy.ComponentSearcher;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.drivers.InternalFrameDriver;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
@@ -73,17 +75,21 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
     public void move(ComponentOperator oper, int x, int y) {
         checkSupported(oper);
         ComponentOperator titleOperator = ((JInternalFrameOperator) oper).getTitleOperator();
-        titleOperator.dragNDrop(
-                titleOperator.getCenterY(),
-                titleOperator.getCenterY(),
-                x - oper.getX() + titleOperator.getCenterY(),
-                y - oper.getY() + titleOperator.getCenterY());
+        // one EDT snapshot: the title-bar center and the frame origin must come from the same
+        // layout, since all four dragNDrop coordinates are derived from them together
+        DragCoordinates drag = QueueTool.getInstance().callOnQueue(() -> {
+            int centerY = titleOperator.getCenterY();
+            return new DragCoordinates(centerY, centerY, x - oper.getX() + centerY, y - oper.getY() + centerY);
+        });
+        titleOperator.dragNDrop(drag.startX, drag.startY, drag.endX, drag.endY);
     }
 
     @Override
     public void resize(ComponentOperator oper, int width, int height) {
         checkSupported(oper);
-        oper.dragNDrop(oper.getWidth() - 1, oper.getHeight() - 1, width - 1, height - 1);
+        // getSize() is one EDT snapshot; width and height must not straddle a resize
+        Dimension size = oper.getSize();
+        oper.dragNDrop(size.width - 1, size.height - 1, width - 1, height - 1);
     }
 
     @Override
@@ -101,26 +107,30 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
     @Override
     public void maximize(ComponentOperator oper) {
         checkSupported(oper);
+        JInternalFrameOperator ifOper = (JInternalFrameOperator) oper;
+        FrameGateState state = gateState(ifOper);
 
-        if (!((JInternalFrameOperator) oper).isMaximum()) {
-            if (!((JInternalFrameOperator) oper).isSelected()) {
+        if (!state.maximum) {
+            if (!state.selected) {
                 activate(oper);
             }
 
-            ((JInternalFrameOperator) oper).getMaximizeButton().push();
+            ifOper.getMaximizeButton().push();
         }
     }
 
     @Override
     public void demaximize(ComponentOperator oper) {
         checkSupported(oper);
+        JInternalFrameOperator ifOper = (JInternalFrameOperator) oper;
+        FrameGateState state = gateState(ifOper);
 
-        if (((JInternalFrameOperator) oper).isMaximum()) {
-            if (!((JInternalFrameOperator) oper).isSelected()) {
+        if (state.maximum) {
+            if (!state.selected) {
                 activate(oper);
             }
 
-            ((JInternalFrameOperator) oper).getMaximizeButton().push();
+            ifOper.getMaximizeButton().push();
         }
     }
 
@@ -129,5 +139,40 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
         ComponentSearcher cs = new ComponentSearcher((Container) operator.getSource());
         return Objects.requireNonNull(
                 cs.findComponent(PredicatesJ.of(BasicInternalFrameTitlePane.class)), "title pane not found");
+    }
+
+    /**
+     * {@code isMaximum()} and {@code isSelected()}, read together as one EDT snapshot so the
+     * maximize/demaximize gate cannot straddle a state change between the two reads. Shared with
+     * {@link InternalFramePopupMenuDriver}, whose maximize/demaximize gates are identical.
+     */
+    static FrameGateState gateState(JInternalFrameOperator ifOper) {
+        return QueueTool.getInstance().callOnQueue(() -> new FrameGateState(ifOper.isMaximum(), ifOper.isSelected()));
+    }
+
+    /** Holder for {@link #gateState(JInternalFrameOperator)}. */
+    static final class FrameGateState {
+        final boolean maximum;
+        final boolean selected;
+
+        FrameGateState(boolean maximum, boolean selected) {
+            this.maximum = maximum;
+            this.selected = selected;
+        }
+    }
+
+    /** Holder for the four coordinates {@link #move} computes from one EDT snapshot. */
+    private static final class DragCoordinates {
+        private final int startX;
+        private final int startY;
+        private final int endX;
+        private final int endY;
+
+        DragCoordinates(int startX, int startY, int endX, int endY) {
+            this.startX = startX;
+            this.startY = startY;
+            this.endX = endX;
+            this.endY = endY;
+        }
     }
 }

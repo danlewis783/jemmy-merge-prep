@@ -140,8 +140,12 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public void scrollToValue(double proportionalValue) {
-        scrollTo(new ValueScrollAdjuster(
-                (int) (getMinimum() + (getMaximum() - getVisibleAmount() - getMinimum()) * proportionalValue)));
+        int target = QueueTool.getInstance().callOnQueue(() -> {
+            JScrollBar bar = (JScrollBar) getSource();
+            int minimum = bar.getMinimum();
+            return (int) (minimum + (bar.getMaximum() - bar.getVisibleAmount() - minimum) * proportionalValue);
+        });
+        scrollTo(new ValueScrollAdjuster(target));
     }
 
     public void scrollToMinimum() {

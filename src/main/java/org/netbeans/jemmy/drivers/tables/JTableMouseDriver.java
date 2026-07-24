@@ -57,8 +57,12 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
         JTableOperator toper = (JTableOperator) oper;
         toper.scrollToCell(row, column);
 
-        if (!toper.isEditing() || (toper.getEditingRow() != row) || (toper.getEditingColumn() != column)) {
-            clickOnCell((JTableOperator) oper, row, column, 2);
+        // one EDT snapshot: the three editing-state reads must describe the same moment
+        boolean needsEditClick = QueueTool.getInstance()
+                .callOnQueue(() ->
+                        !toper.isEditing() || (toper.getEditingRow() != row) || (toper.getEditingColumn() != column));
+        if (needsEditClick) {
+            clickOnCell(toper, row, column, 2);
         }
 
         JTextComponentOperator textoper = JTextComponentOperator.of(
@@ -73,18 +77,17 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
     }
 
     private void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
-        QueueTool.getInstance().runOnQueue(() -> {
-            Point point = oper.getPointToClick(row, column);
-            DriverManager.newInstance(JemmyContext.getInstance())
-                    .getMouseDriver(oper)
-                    .clickMouse(
-                            oper,
-                            point.x,
-                            point.y,
-                            clickCount,
-                            Operator.getDefaultMouseButton(),
-                            0,
-                            TimeoutKey.ComponentOperator_MouseClickTimeout);
-        });
+        // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
+        Point point = oper.getPointToClick(row, column);
+        DriverManager.newInstance(JemmyContext.getInstance())
+                .getMouseDriver(oper)
+                .clickMouse(
+                        oper,
+                        point.x,
+                        point.y,
+                        clickCount,
+                        Operator.getDefaultMouseButton(),
+                        0,
+                        TimeoutKey.ComponentOperator_MouseClickTimeout);
     }
 }

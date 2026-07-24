@@ -130,13 +130,22 @@ public class JTextAreaOperator extends JTextComponentOperator {
     }
 
     public void changeCaretRow(int row) {
-        changeCaretPosition(row, getCaretPosition() - getLineStartOffset(getLineOfOffset(getCaretPosition())));
+        int column = QueueTool.getInstance().callOnQueue(() -> {
+            JTextArea area = (JTextArea) getSource();
+            int caretPosition = area.getCaretPosition();
+            return caretPosition - area.getLineStartOffset(area.getLineOfOffset(caretPosition));
+        });
+        changeCaretPosition(row, column);
     }
 
     public void changeCaretPosition(int row, int column) {
-        int startOffset = getLineStartOffset(row);
-        int endOffset = getLineEndOffset(row);
-        super.changeCaretPosition(getLineStartOffset(row) + Math.min(column, endOffset - startOffset));
+        int offset = QueueTool.getInstance().callOnQueue(() -> {
+            JTextArea area = (JTextArea) getSource();
+            int startOffset = area.getLineStartOffset(row);
+            int endOffset = area.getLineEndOffset(row);
+            return startOffset + Math.min(column, endOffset - startOffset);
+        });
+        super.changeCaretPosition(offset);
     }
 
     public void typeText(String text, int row, int column) {

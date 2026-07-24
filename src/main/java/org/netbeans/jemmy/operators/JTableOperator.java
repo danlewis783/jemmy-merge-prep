@@ -326,10 +326,9 @@ public class JTableOperator extends JComponentOperator {
     public void clickOnCell(int row, int column, int clickCount, int button, int modifiers) {
         makeComponentVisible();
         scrollToCell(row, column);
-        queueTool.runOnQueue(() -> {
-            Point point = getPointToClick(row, column);
-            clickMouse(point.x, point.y, clickCount, button, modifiers);
-        });
+        // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
+        Point point = getPointToClick(row, column);
+        clickMouse(point.x, point.y, clickCount, button, modifiers);
     }
 
     public void clickOnCell(int row, int column, int clickCount, int button) {
@@ -371,14 +370,17 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public int findColumn(String name, StringComparator comparator) {
-        int columnCount = getColumnCount();
-        for (int i = 0; i < columnCount; i++) {
-            if (comparator.equals(getColumnName(i), name)) {
-                return i;
+        return QueueTool.getInstance().callOnQueue(() -> {
+            JTable table = (JTable) getSource();
+            int columnCount = table.getColumnCount();
+            for (int i = 0; i < columnCount; i++) {
+                if (comparator.equals(table.getColumnName(i), name)) {
+                    return i;
+                }
             }
-        }
 
-        return -1;
+            return -1;
+        });
     }
 
     public JPopupMenu callPopupOnCell(int row, int column) {
@@ -399,7 +401,8 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public Component getRenderedComponent(int row, int column) {
-        return getRenderedComponent(row, column, isCellSelected(row, column), false);
+        return QueueTool.getInstance()
+                .callOnQueue(() -> getRenderedComponent(row, column, isCellSelected(row, column), false));
     }
 
     public Point getPointToClick(int row, int column) {

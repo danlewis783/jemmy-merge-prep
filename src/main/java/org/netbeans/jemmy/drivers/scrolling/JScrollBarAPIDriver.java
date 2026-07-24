@@ -28,6 +28,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import java.awt.Point;
 import java.util.Collections;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JScrollBarOperator;
@@ -48,22 +49,26 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     @Override
     public void scrollToMaximum(ComponentOperator oper, int orientation) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
-        scroll.setValue(scroll.getMaximum() - scroll.getVisibleAmount());
+        int target = QueueTool.getInstance().callOnQueue(() -> scroll.getMaximum() - scroll.getVisibleAmount());
+        scroll.setValue(target);
     }
 
     @Override
     protected void step(ComponentOperator oper, ScrollAdjuster adj) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() > scroll.getMinimum() + scroll.getUnitIncrement())
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + scroll.getUnitIncrement())
                             ? scroll.getValue() - scroll.getUnitIncrement()
                             : scroll.getMinimum());
+            scroll.setValue(target);
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getUnitIncrement())
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue()
+                                    < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getUnitIncrement())
                             ? scroll.getValue() + scroll.getUnitIncrement()
                             : scroll.getMaximum());
+            scroll.setValue(target);
         }
     }
 
@@ -81,15 +86,18 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
         JScrollBarOperator scroll = (JScrollBarOperator) oper;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() > scroll.getMinimum() + scroll.getBlockIncrement())
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + scroll.getBlockIncrement())
                             ? scroll.getValue() - scroll.getBlockIncrement()
                             : scroll.getMinimum());
+            scroll.setValue(target);
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-            scroll.setValue(
-                    (scroll.getValue() < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getBlockIncrement())
+            int target = QueueTool.getInstance()
+                    .callOnQueue(() -> (scroll.getValue()
+                                    < scroll.getMaximum() - scroll.getVisibleAmount() - scroll.getBlockIncrement())
                             ? scroll.getValue() + scroll.getBlockIncrement()
                             : scroll.getMaximum());
+            scroll.setValue(target);
         }
     }
 
@@ -131,6 +139,9 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     }
 
     private boolean isSmallIncrement(JScrollBarOperator oper) {
-        return (oper.getUnitIncrement(-1) <= SMALL_INCREMENT) && (oper.getUnitIncrement(1) <= SMALL_INCREMENT);
+        // one EDT snapshot: both unit-increment reads must describe the same moment
+        return QueueTool.getInstance()
+                .callOnQueue(() -> (oper.getUnitIncrement(-1) <= SMALL_INCREMENT)
+                        && (oper.getUnitIncrement(1) <= SMALL_INCREMENT));
     }
 }

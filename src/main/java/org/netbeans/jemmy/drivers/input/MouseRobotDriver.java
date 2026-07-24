@@ -110,7 +110,8 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
 
     @Override
     public void enterMouse(ComponentOperator oper) {
-        moveMouse(oper, oper.getCenterXForClick(), oper.getCenterYForClick());
+        Point center = oper.getClickCenter();
+        moveMouse(oper, center.x, center.y);
     }
 
     @Override

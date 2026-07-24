@@ -47,9 +47,10 @@ public class InternalFramePopupMenuDriver extends DefaultInternalFrameDriver {
     @Override
     public void maximize(ComponentOperator oper) {
         checkSupported(oper);
+        FrameGateState state = gateState((JInternalFrameOperator) oper);
 
-        if (!((JInternalFrameOperator) oper).isMaximum()) {
-            if (!((JInternalFrameOperator) oper).isSelected()) {
+        if (!state.maximum) {
+            if (!state.selected) {
                 activate(oper);
             }
 
@@ -60,9 +61,10 @@ public class InternalFramePopupMenuDriver extends DefaultInternalFrameDriver {
     @Override
     public void demaximize(ComponentOperator oper) {
         checkSupported(oper);
+        FrameGateState state = gateState((JInternalFrameOperator) oper);
 
-        if (((JInternalFrameOperator) oper).isMaximum()) {
-            if (!((JInternalFrameOperator) oper).isSelected()) {
+        if (state.maximum) {
+            if (!state.selected) {
                 activate(oper);
             }
 

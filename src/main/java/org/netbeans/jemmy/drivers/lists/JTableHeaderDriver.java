@@ -59,9 +59,13 @@ public final class JTableHeaderDriver extends LightSupportiveDriver implements O
 
     @Override
     public void moveItem(ComponentOperator oper, int moveColumn, int moveTo) {
-        Point start = ((JTableHeaderOperator) oper).getPointToClick(moveColumn);
-        Point end = ((JTableHeaderOperator) oper).getPointToClick(moveTo);
-        oper.dragNDrop(start.x, start.y, end.x, end.y);
+        JTableHeaderOperator headerOper = (JTableHeaderOperator) oper;
+        // one EDT snapshot: the start and end click points must come from the same header
+        // layout, since dragNDrop needs both together
+        MovePoints points = QueueTool.getInstance()
+                .callOnQueue(() ->
+                        new MovePoints(headerOper.getPointToClick(moveColumn), headerOper.getPointToClick(moveTo)));
+        oper.dragNDrop(points.start.x, points.start.y, points.end.x, points.end.y);
     }
 
     private void clickOnHeader(JTableHeaderOperator oper, int index) {
@@ -69,18 +73,28 @@ public final class JTableHeaderDriver extends LightSupportiveDriver implements O
     }
 
     private void clickOnHeader(JTableHeaderOperator oper, int index, int modifiers) {
-        QueueTool.getInstance().runOnQueue(() -> {
-            Point toClick = oper.getPointToClick(index);
-            DriverManager.newInstance(JemmyContext.getInstance())
-                    .getMouseDriver(oper)
-                    .clickMouse(
-                            oper,
-                            toClick.x,
-                            toClick.y,
-                            1,
-                            Operator.getDefaultMouseButton(),
-                            modifiers,
-                            TimeoutKey.ComponentOperator_MouseClickTimeout);
-        });
+        // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
+        Point toClick = oper.getPointToClick(index);
+        DriverManager.newInstance(JemmyContext.getInstance())
+                .getMouseDriver(oper)
+                .clickMouse(
+                        oper,
+                        toClick.x,
+                        toClick.y,
+                        1,
+                        Operator.getDefaultMouseButton(),
+                        modifiers,
+                        TimeoutKey.ComponentOperator_MouseClickTimeout);
+    }
+
+    /** Holder for the two points {@link #moveItem} computes from one EDT snapshot. */
+    private static final class MovePoints {
+        private final Point start;
+        private final Point end;
+
+        MovePoints(Point start, Point end) {
+            this.start = start;
+            this.end = end;
+        }
     }
 }
