@@ -19,12 +19,16 @@ package org.netbeans.jemmy;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Predicate;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -65,11 +69,62 @@ class ComponentSearcherTest {
     }
 
     @Test
-    void negativeIndexThrowsEvenForAnEmptyContainer() {
+    void negativeIndexThrowsUnwrappedIllegalArgumentException() {
         Container empty = onQueue(() -> namedPanel("empty"));
         ComponentSearcher searcher = new ComponentSearcher(empty);
 
-        assertThatIllegalArgumentException().isThrownBy(() -> searcher.findComponent(c -> true, -1));
+        // thrown directly from the calling thread, not wrapped in JemmyException: index
+        // validation happens before the search is dispatched to the event dispatch thread
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> searcher.findComponent(c -> true, -1))
+                .withMessage("index must not be negative");
+    }
+
+    @Test
+    void searchRunsOnTheDispatchThreadWhenCalledFromTheTestThread() {
+        ParentChildFixture fixture = buildParentChildFixture();
+        ComponentSearcher searcher = new ComponentSearcher(fixture.root);
+        Queue<Boolean> observedOnDispatchThread = new ConcurrentLinkedQueue<>();
+        Predicate<Component> recordingMatch = c -> {
+            observedOnDispatchThread.add(EventQueue.isDispatchThread());
+            return NAME_STARTS_WITH_MATCH.test(c);
+        };
+
+        assertThat(searcher.findComponent(recordingMatch)).isSameAs(fixture.parent);
+        assertThat(observedOnDispatchThread).containsOnly(true);
+    }
+
+    @Test
+    void searchRunsInlineWhenAlreadyOnTheDispatchThread() {
+        ParentChildFixture fixture = buildParentChildFixture();
+        ComponentSearcher searcher = new ComponentSearcher(fixture.root);
+        Queue<Boolean> observedOnDispatchThread = new ConcurrentLinkedQueue<>();
+        Predicate<Component> recordingMatch = c -> {
+            observedOnDispatchThread.add(EventQueue.isDispatchThread());
+            return NAME_STARTS_WITH_MATCH.test(c);
+        };
+
+        // findComponent is invoked from inside the EDT itself: it must run inline (no nested
+        // dispatch-and-await, which would deadlock/error) and still only ever see the EDT
+        Component found = onQueue(() -> searcher.findComponent(recordingMatch));
+
+        assertThat(found).isSameAs(fixture.parent);
+        assertThat(observedOnDispatchThread).containsOnly(true);
+    }
+
+    @Test
+    void predicateExceptionSurfacesAsJemmyException() {
+        ParentChildFixture fixture = buildParentChildFixture();
+        ComponentSearcher searcher = new ComponentSearcher(fixture.root);
+        RuntimeException predicateFailure = new RuntimeException("boom from predicate");
+        Predicate<Component> throwing = c -> {
+            throw predicateFailure;
+        };
+
+        assertThatThrownBy(() -> searcher.findComponent(throwing))
+                .isInstanceOf(JemmyException.class)
+                .hasCauseInstanceOf(RuntimeException.class)
+                .hasRootCauseMessage("boom from predicate");
     }
 
     @Test

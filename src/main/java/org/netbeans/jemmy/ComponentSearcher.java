@@ -30,6 +30,16 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Finds components in a container's hierarchy by predicate. May be called from
+ * any thread: the search itself always executes on the event dispatch thread
+ * (directly when already on it, dispatched via {@link QueueTool#callOnQueue}
+ * otherwise), so the hierarchy is read between events, while it is quiescent.
+ * Predicates therefore run on the EDT and must be pure, non-blocking reads —
+ * a predicate that waits (for example, one that calls an operator wait method)
+ * fails fast. Exceptions thrown by a predicate surface per the
+ * {@link QueueTool#callOnQueue} contract.
+ */
 public final class ComponentSearcher {
     private final Container container;
 
@@ -42,11 +52,11 @@ public final class ComponentSearcher {
             throw new IllegalArgumentException("index must not be negative");
         }
 
-        return ComponentStreamer.stream(container)
+        return QueueTool.getInstance().callOnQueue(() -> ComponentStreamer.stream(container)
                 .filter(predicate)
                 .skip(index)
                 .findFirst()
-                .orElse(null);
+                .orElse(null));
     }
 
     public @Nullable Component findComponent(Predicate<Component> predicate) {

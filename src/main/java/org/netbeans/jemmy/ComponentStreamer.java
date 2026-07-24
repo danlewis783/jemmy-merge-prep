@@ -32,10 +32,13 @@ import java.util.stream.StreamSupport;
  * pre-order depth-first over the descendants of the root (the root itself is
  * not included), so short-circuiting operations such as {@code findFirst()}
  * stop walking the hierarchy as soon as they are satisfied. The hierarchy is
- * read live as the stream is consumed: each {@code getComponents()} read is
- * consistent under the tree lock, but the walk as a whole is not atomic —
- * the same semantics as walking the tree by hand. Consume the stream
- * promptly rather than holding it across UI changes.
+ * read live as the stream is consumed, via plain unsynchronized
+ * {@code getComponents()} reads — create <em>and</em> consume the stream on
+ * the event dispatch thread (for example, inside
+ * {@link QueueTool#callOnQueue}) so the walk runs between events against a
+ * quiescent hierarchy; {@link ComponentSearcher} does this automatically.
+ * Consuming off the EDT may observe stale or torn snapshots and is only
+ * appropriate inside a retry loop that tolerates them.
  */
 public final class ComponentStreamer {
 
