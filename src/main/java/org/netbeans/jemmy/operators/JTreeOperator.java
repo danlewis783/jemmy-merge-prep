@@ -64,16 +64,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JTreeOperator extends JComponentOperator {
 
-    public static JTreeOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JTreeOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JTreeOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -92,79 +92,79 @@ public class JTreeOperator extends JComponentOperator {
         return new JTreeOperator(b);
     }
 
-    public static JTreeOperator waitFor(ContainerOperator cont, int index) {
-        return new JTreeOperator((JTree) waitComponent(cont, PredicatesJ.of(JTree.class), index));
+    public static JTreeOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JTreeOperator((JTree) waitComponent(rootOp, PredicatesJ.of(JTree.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont, int index) {
-        this((JTree) waitComponent(cont, PredicatesJ.of(JTree.class), index));
+    public JTreeOperator(ContainerOperator rootOp, int index) {
+        this((JTree) waitComponent(rootOp, PredicatesJ.of(JTree.class), index));
     }
 
-    public static JTreeOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JTreeOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JTreeOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JTreeOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JTreeOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JTreeOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JTreeOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JTreeOperator((JTree) cont.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+    public static JTreeOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        return new JTreeOperator((JTree) rootOp.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTree) cont.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+    public JTreeOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JTree) rootOp.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
     }
 
     public static JTreeOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        return waitFor(cont, text, stringComparator, -1, index);
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        return waitFor(rootOp, text, stringComparator, -1, index);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
+    public JTreeOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        this(rootOp, text, stringComparator, -1, index);
     }
 
     public static JTreeOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int row, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int row, int index) {
         return new JTreeOperator(
-                (JTree) waitComponent(cont, new JTreeByItemPredicate(text, row, stringComparator), index));
+                (JTree) waitComponent(rootOp, new JTreeByItemPredicate(text, row, stringComparator), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int, int)} instead.
      */
     @Deprecated
-    public JTreeOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int index) {
-        this((JTree) waitComponent(cont, new JTreeByItemPredicate(text, row, stringComparator), index));
+    public JTreeOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int row, int index) {
+        this((JTree) waitComponent(rootOp, new JTreeByItemPredicate(text, row, stringComparator), index));
     }
 
     public void doExpandPath(TreePath path) {
@@ -1121,7 +1121,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public interface TreeRowChooser {
-        boolean checkRow(JTreeOperator oper, int row);
+        boolean checkRow(JTreeOperator op, int row);
     }
 
     private static class JTreeOperatorIsRowExpandedPredicate implements Predicate<JTreeOperator> {
@@ -1208,8 +1208,8 @@ public class JTreeOperator extends JComponentOperator {
         }
 
         @Override
-        public boolean checkRow(JTreeOperator oper, int row) {
-            return chooser.test(oper.getRenderedComponent(oper.getPathForRow(row)));
+        public boolean checkRow(JTreeOperator op, int row) {
+            return chooser.test(op.getRenderedComponent(op.getPathForRow(row)));
         }
     }
 
@@ -1223,9 +1223,9 @@ public class JTreeOperator extends JComponentOperator {
         }
 
         @Override
-        public boolean checkRow(JTreeOperator oper, int row) {
+        public boolean checkRow(JTreeOperator op, int row) {
             return comparator.equals(
-                    oper.getPathForRow(row).getLastPathComponent().toString(), subString);
+                    op.getPathForRow(row).getLastPathComponent().toString(), subString);
         }
     }
 

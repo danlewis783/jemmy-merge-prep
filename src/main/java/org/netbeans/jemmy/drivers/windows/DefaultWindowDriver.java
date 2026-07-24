@@ -45,47 +45,47 @@ public final class DefaultWindowDriver extends LightSupportiveDriver implements 
     }
 
     @Override
-    public void activate(ComponentOperator oper) {
-        checkSupported(oper);
+    public void activate(ComponentOperator op) {
+        checkSupported(op);
 
-        if (((WindowOperator) oper).getFocusOwner() == null) {
-            ((WindowOperator) oper).toFront();
+        if (((WindowOperator) op).getFocusOwner() == null) {
+            ((WindowOperator) op).toFront();
         }
 
         eventDriver.dispatchEvent(
-                oper.getSource(), new WindowEvent((Window) oper.getSource(), WindowEvent.WINDOW_ACTIVATED));
-        eventDriver.dispatchEvent(oper.getSource(), new FocusEvent(oper.getSource(), FocusEvent.FOCUS_GAINED));
+                op.getSource(), new WindowEvent((Window) op.getSource(), WindowEvent.WINDOW_ACTIVATED));
+        eventDriver.dispatchEvent(op.getSource(), new FocusEvent(op.getSource(), FocusEvent.FOCUS_GAINED));
     }
 
     @Override
-    public void requestClose(ComponentOperator oper) {
-        checkSupported(oper);
+    public void requestClose(ComponentOperator op) {
+        checkSupported(op);
         eventDriver.dispatchEvent(
-                oper.getSource(), new WindowEvent((Window) oper.getSource(), WindowEvent.WINDOW_CLOSING));
+                op.getSource(), new WindowEvent((Window) op.getSource(), WindowEvent.WINDOW_CLOSING));
     }
 
     @Override
-    public void requestCloseAndThenHide(ComponentOperator oper) {
-        requestClose(oper);
-        oper.setVisible(false);
+    public void requestCloseAndThenHide(ComponentOperator op) {
+        requestClose(op);
+        op.setVisible(false);
     }
 
     @Override
-    public void close(ComponentOperator oper) {
-        requestCloseAndThenHide(oper);
+    public void close(ComponentOperator op) {
+        requestCloseAndThenHide(op);
     }
 
     @Override
-    public void move(ComponentOperator oper, int x, int y) {
-        checkSupported(oper);
-        oper.setLocation(x, y);
+    public void move(ComponentOperator op, int x, int y) {
+        checkSupported(op);
+        op.setLocation(x, y);
     }
 
     @Override
-    public void resize(ComponentOperator oper, int width, int height) {
-        checkSupported(oper);
-        oper.setSize(width, height);
+    public void resize(ComponentOperator op, int width, int height) {
+        checkSupported(op);
+        op.setSize(width, height);
         eventDriver.dispatchEvent(
-                oper.getSource(), new ComponentEvent(oper.getSource(), ComponentEvent.COMPONENT_RESIZED));
+                op.getSource(), new ComponentEvent(op.getSource(), ComponentEvent.COMPONENT_RESIZED));
     }
 }

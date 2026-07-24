@@ -43,36 +43,36 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
 
     @Nullable
     private Object push(
-            ComponentOperator oper,
+            ComponentOperator op,
             @Nullable JMenuBar menuBar,
             List<Predicate<Component>> predicates,
             int depth,
             boolean pressMouse) {
-        oper.waitComponentVisible(true);
-        oper.waitComponentEnabled();
+        op.waitComponentVisible(true);
+        op.waitComponentEnabled();
 
         if (depth > predicates.size() - 1) {
-            if (oper instanceof JMenuOperator) {
-                if (((JMenuOperator) oper).isPopupMenuVisible()) {
-                    ((JMenuOperator) oper).setPopupMenuVisible(false);
+            if (op instanceof JMenuOperator) {
+                if (((JMenuOperator) op).isPopupMenuVisible()) {
+                    ((JMenuOperator) op).setPopupMenuVisible(false);
                 }
 
-                ((JMenuOperator) oper).setPopupMenuVisible(true);
-                waitPopupMenu(oper);
+                ((JMenuOperator) op).setPopupMenuVisible(true);
+                waitPopupMenu(op);
             }
 
-            ((AbstractButtonOperator) oper).doClick();
-            return oper.getSource();
+            ((AbstractButtonOperator) op).doClick();
+            return op.getSource();
         } else {
-            if (((JMenuOperator) oper).isPopupMenuVisible()) {
-                ((JMenuOperator) oper).setPopupMenuVisible(false);
+            if (((JMenuOperator) op).isPopupMenuVisible()) {
+                ((JMenuOperator) op).setPopupMenuVisible(false);
             }
 
-            ((JMenuOperator) oper).setPopupMenuVisible(true);
-            waitPopupMenu(oper);
+            ((JMenuOperator) op).setPopupMenuVisible(true);
+            waitPopupMenu(op);
         }
 
-        JMenuItem item = waitItem(oper, waitPopupMenu(oper), predicates, depth);
+        JMenuItem item = waitItem(op, waitPopupMenu(op), predicates, depth);
         if (item instanceof JMenu) {
             JMenuOperator mo = JMenuOperator.of((JMenu) item);
             Object result = push(mo, null, predicates, depth + 1, false);
@@ -80,11 +80,11 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
                 boolean popupVisible =
                         QueueTool.getInstance().callOnQueue(() -> ((JMenu) result).isPopupMenuVisible());
                 if (!popupVisible) {
-                    ((JMenuOperator) oper).setPopupMenuVisible(false);
+                    ((JMenuOperator) op).setPopupMenuVisible(false);
                 }
             } else {
-                ((JMenuOperator) oper).setPopupMenuVisible(false);
-                waitNoPopupMenu(oper);
+                ((JMenuOperator) op).setPopupMenuVisible(false);
+                waitNoPopupMenu(op);
             }
 
             return result;
@@ -93,14 +93,14 @@ public final class APIJMenuDriver extends DefaultJMenuDriver implements MenuDriv
             mio.waitComponentEnabled();
 
             mio.doClick();
-            ((JMenuOperator) oper).setPopupMenuVisible(false);
-            waitNoPopupMenu(oper);
+            ((JMenuOperator) op).setPopupMenuVisible(false);
+            waitNoPopupMenu(op);
             return item;
         }
     }
 
-    private void waitNoPopupMenu(ComponentOperator oper) {
-        oper.waitState(new JMenuOperatorPopupNotVisible());
+    private void waitNoPopupMenu(ComponentOperator op) {
+        op.waitState(new JMenuOperatorPopupNotVisible());
     }
 
     private static class JMenuOperatorPopupNotVisible implements Predicate<JMenuOperator> {

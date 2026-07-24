@@ -48,13 +48,13 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
     }
 
     @Override
-    public void selectCell(ComponentOperator oper, int row, int column) {
-        clickOnCell((JTableOperator) oper, row, column, 1);
+    public void selectCell(ComponentOperator op, int row, int column) {
+        clickOnCell((JTableOperator) op, row, column, 1);
     }
 
     @Override
-    public void editCell(ComponentOperator oper, int row, int column, Object value) {
-        JTableOperator toper = (JTableOperator) oper;
+    public void editCell(ComponentOperator op, int row, int column, Object value) {
+        JTableOperator toper = (JTableOperator) op;
         toper.scrollToCell(row, column);
 
         // one EDT snapshot: the three editing-state reads must describe the same moment
@@ -72,17 +72,17 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
         text.clearText(textoper);
         text.typeText(textoper, value.toString(), 0);
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getKeyDriver(oper)
+                .getKeyDriver(op)
                 .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
 
-    private void clickOnCell(JTableOperator oper, int row, int column, int clickCount) {
+    private void clickOnCell(JTableOperator op, int row, int column, int clickCount) {
         // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
-        Point point = oper.getPointToClick(row, column);
+        Point point = op.getPointToClick(row, column);
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getMouseDriver(oper)
+                .getMouseDriver(op)
                 .clickMouse(
-                        oper,
+                        op,
                         point.x,
                         point.y,
                         clickCount,

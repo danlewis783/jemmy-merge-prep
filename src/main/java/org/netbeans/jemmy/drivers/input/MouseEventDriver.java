@@ -36,53 +36,53 @@ import org.netbeans.jemmy.operators.Operator;
 
 public final class MouseEventDriver extends EventDriver implements MouseDriver {
     @Override
-    public void pressMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, x, y, 1, mouseButton);
+    public void pressMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, x, y, 1, mouseButton);
     }
 
     @Override
-    public void releaseMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, x, y, 1, mouseButton);
+    public void releaseMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, x, y, 1, mouseButton);
     }
 
     @Override
-    public void moveMouse(ComponentOperator oper, int x, int y) {
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_MOVED, 0, x, y, 0, Operator.getDefaultMouseButton());
+    public void moveMouse(ComponentOperator op, int x, int y) {
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_MOVED, 0, x, y, 0, Operator.getDefaultMouseButton());
     }
 
     @Override
     public void clickMouse(
-            ComponentOperator oper,
+            ComponentOperator op,
             int x,
             int y,
             int clickCount,
             int mouseButton,
             int modifiers,
             TimeoutKey mouseClick) {
-        moveMouse(oper, x, y);
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_ENTERED, 0, x, y, 0, Operator.getDefaultMouseButton());
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, x, y, 1, mouseButton);
+        moveMouse(op, x, y);
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_ENTERED, 0, x, y, 0, Operator.getDefaultMouseButton());
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, x, y, 1, mouseButton);
 
         for (int i = 1; i < clickCount; i++) {
-            dispatchEvent(oper.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, x, y, i, mouseButton);
-            dispatchEvent(oper.getSource(), MouseEvent.MOUSE_CLICKED, modifiers, x, y, i, mouseButton);
-            dispatchEvent(oper.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, x, y, i + 1, mouseButton);
+            dispatchEvent(op.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, x, y, i, mouseButton);
+            dispatchEvent(op.getSource(), MouseEvent.MOUSE_CLICKED, modifiers, x, y, i, mouseButton);
+            dispatchEvent(op.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, x, y, i + 1, mouseButton);
         }
 
         Timeouts.sleep(mouseClick);
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, x, y, clickCount, mouseButton);
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_CLICKED, modifiers, x, y, clickCount, mouseButton);
-        exitMouse(oper);
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, x, y, clickCount, mouseButton);
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_CLICKED, modifiers, x, y, clickCount, mouseButton);
+        exitMouse(op);
     }
 
     @Override
-    public void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_DRAGGED, modifiers, x, y, 1, mouseButton);
+    public void dragMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_DRAGGED, modifiers, x, y, 1, mouseButton);
     }
 
     @Override
     public void dragNDrop(
-            ComponentOperator oper,
+            ComponentOperator op,
             int startX,
             int startY,
             int endX,
@@ -92,22 +92,22 @@ public final class MouseEventDriver extends EventDriver implements MouseDriver {
             TimeoutKey before,
             TimeoutKey after) {
         dispatchEvent(
-                oper.getSource(), MouseEvent.MOUSE_ENTERED, 0, startX, startY, 0, Operator.getDefaultMouseButton());
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, startX, startY, 1, mouseButton);
+                op.getSource(), MouseEvent.MOUSE_ENTERED, 0, startX, startY, 0, Operator.getDefaultMouseButton());
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_PRESSED, modifiers, startX, startY, 1, mouseButton);
         Timeouts.sleep(before);
-        dragMouse(oper, endX, endY, mouseButton, modifiers);
+        dragMouse(op, endX, endY, mouseButton, modifiers);
         Timeouts.sleep(after);
-        dispatchEvent(oper.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, endX, endY, 1, mouseButton);
-        exitMouse(oper);
+        dispatchEvent(op.getSource(), MouseEvent.MOUSE_RELEASED, modifiers, endX, endY, 1, mouseButton);
+        exitMouse(op);
     }
 
     @Override
-    public void enterMouse(ComponentOperator oper) {
+    public void enterMouse(ComponentOperator op) {
         // the geometric center, not getClickCenter(): enter/exit events target the component
         // itself rather than the click target a subclass may place elsewhere
-        Point center = oper.getCenter();
+        Point center = op.getCenter();
         dispatchEvent(
-                oper.getSource(),
+                op.getSource(),
                 MouseEvent.MOUSE_ENTERED,
                 0,
                 center.x,
@@ -117,10 +117,10 @@ public final class MouseEventDriver extends EventDriver implements MouseDriver {
     }
 
     @Override
-    public void exitMouse(ComponentOperator oper) {
-        Point center = oper.getCenter();
+    public void exitMouse(ComponentOperator op) {
+        Point center = op.getCenter();
         dispatchEvent(
-                oper.getSource(),
+                op.getSource(),
                 MouseEvent.MOUSE_EXITED,
                 0,
                 center.x,

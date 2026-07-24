@@ -49,79 +49,79 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
     }
 
     @Override
-    public void scroll(ComponentOperator oper, ScrollAdjuster adj) {
-        moveDividerTo((JSplitPaneOperator) oper, adj);
+    public void scroll(ComponentOperator op, ScrollAdjuster adj) {
+        moveDividerTo((JSplitPaneOperator) op, adj);
     }
 
     @Override
-    public void scrollToMinimum(ComponentOperator oper, int orientation) {
-        expandTo((JSplitPaneOperator) oper, 0);
+    public void scrollToMinimum(ComponentOperator op, int orientation) {
+        expandTo((JSplitPaneOperator) op, 0);
     }
 
     @Override
-    public void scrollToMaximum(ComponentOperator oper, int orientation) {
-        expandTo((JSplitPaneOperator) oper, 1);
+    public void scrollToMaximum(ComponentOperator op, int orientation) {
+        expandTo((JSplitPaneOperator) op, 1);
     }
 
-    private void moveDividerTo(JSplitPaneOperator oper, ScrollAdjuster adj) {
-        ContainerOperator divOper = oper.getDivider();
-        if (oper.getDividerLocation() == -1) {
+    private void moveDividerTo(JSplitPaneOperator op, ScrollAdjuster adj) {
+        ContainerOperator divOper = op.getDivider();
+        if (op.getDividerLocation() == -1) {
             Point center = divOper.getCenter();
             moveTo(divOper, center, center.x - 1, center.y - 1);
 
-            if (oper.getDividerLocation() == -1) {
+            if (op.getDividerLocation() == -1) {
                 Point retryCenter = divOper.getCenter();
                 moveTo(divOper, retryCenter, retryCenter.x + 1, retryCenter.y + 1);
             }
         }
 
-        if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-            moveOnce(oper, divOper, adj, 0, oper.getWidth());
+        if (op.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+            moveOnce(op, divOper, adj, 0, op.getWidth());
         } else {
-            moveOnce(oper, divOper, adj, 0, oper.getHeight());
+            moveOnce(op, divOper, adj, 0, op.getHeight());
         }
     }
 
     private void moveOnce(
-            JSplitPaneOperator oper,
+            JSplitPaneOperator op,
             ContainerOperator divOper,
             ScrollAdjuster adj,
             int leftPosition,
             int rightPosition) {
-        int currentPosition = dividerPosition(oper, divOper);
+        int currentPosition = dividerPosition(op, divOper);
 
         int nextPosition;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             nextPosition = (currentPosition + leftPosition) / 2;
-            moveToPosition(oper, divOper, nextPosition - currentPosition);
+            moveToPosition(op, divOper, nextPosition - currentPosition);
 
-            if (currentPosition == dividerPosition(oper, divOper)) {
+            if (currentPosition == dividerPosition(op, divOper)) {
                 return;
             }
 
-            moveOnce(oper, divOper, adj, leftPosition, currentPosition);
+            moveOnce(op, divOper, adj, leftPosition, currentPosition);
         } else if (adj.getScrollDirection() == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
             nextPosition = (currentPosition + rightPosition) / 2;
-            moveToPosition(oper, divOper, nextPosition - currentPosition);
+            moveToPosition(op, divOper, nextPosition - currentPosition);
 
-            if (currentPosition == dividerPosition(oper, divOper)) {
+            if (currentPosition == dividerPosition(op, divOper)) {
                 return;
             }
 
-            moveOnce(oper, divOper, adj, currentPosition, rightPosition);
+            moveOnce(op, divOper, adj, currentPosition, rightPosition);
         }
     }
 
     // divider offset along the split axis, as one EDT snapshot; used for both the position
     // computation and the stuck-check so they always agree on the axis
-    private int dividerPosition(JSplitPaneOperator oper, ContainerOperator divOper) {
+    private int dividerPosition(JSplitPaneOperator op, ContainerOperator divOper) {
         return QueueTool.getInstance().callOnQueue(() -> {
-            if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+            if (op.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
                 return (int) (divOper.getLocationOnScreen().getX()
-                        - oper.getLocationOnScreen().getX());
+                        - op.getLocationOnScreen().getX());
             } else {
                 return (int) (divOper.getLocationOnScreen().getY()
-                        - oper.getLocationOnScreen().getY());
+                        - op.getLocationOnScreen().getY());
             }
         });
     }
@@ -144,17 +144,17 @@ public final class JSplitPaneDriver extends LightSupportiveDriver implements Scr
                         TimeoutKey.ComponentOperator_AfterDragTimeout);
     }
 
-    private void moveToPosition(JSplitPaneOperator oper, ComponentOperator divOper, int nextPosition) {
+    private void moveToPosition(JSplitPaneOperator op, ComponentOperator divOper, int nextPosition) {
         Point center = divOper.getCenter();
-        if (oper.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+        if (op.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
             moveTo(divOper, center, center.x + nextPosition, center.y);
         } else {
             moveTo(divOper, center, center.x, center.y + nextPosition);
         }
     }
 
-    private void expandTo(JSplitPaneOperator oper, int index) {
-        ContainerOperator divOper = oper.getDivider();
+    private void expandTo(JSplitPaneOperator op, int index) {
+        ContainerOperator divOper = op.getDivider();
         JButtonOperator bo = JButtonOperator.of((JButton) divOper.waitSubComponent(
                 PredicatesJ.of(JButton.class, PredicatesJ.alwaysTrue()), index));
         ButtonDriver bdriver =

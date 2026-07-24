@@ -45,19 +45,19 @@ public final class JTabMouseDriver extends LightSupportiveDriver implements List
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
+    public void selectItem(ComponentOperator op, int index) {
         if (index != -1) {
             // one EDT snapshot for the tab center; the click (robot input + sleep) stays off-EDT
             Point center = QueueTool.getInstance().callOnQueue(() -> {
                 Rectangle rect =
-                        ((JTabbedPaneOperator) oper).getUI().getTabBounds((JTabbedPane) oper.getSource(), index);
+                        ((JTabbedPaneOperator) op).getUI().getTabBounds((JTabbedPane) op.getSource(), index);
                 return new Point(
                         (int) (rect.getX() + rect.getWidth() / 2), (int) (rect.getY() + rect.getHeight() / 2));
             });
             DriverManager.newInstance(JemmyContext.getInstance())
-                    .getMouseDriver(oper)
+                    .getMouseDriver(op)
                     .clickMouse(
-                            oper,
+                            op,
                             center.x,
                             center.y,
                             1,

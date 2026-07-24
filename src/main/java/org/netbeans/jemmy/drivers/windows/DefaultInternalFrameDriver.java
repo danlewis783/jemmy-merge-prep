@@ -49,73 +49,73 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
     }
 
     @Override
-    public void activate(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).moveToFront();
-        ((JInternalFrameOperator) oper).getTitleOperator().clickMouse();
+    public void activate(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).moveToFront();
+        ((JInternalFrameOperator) op).getTitleOperator().clickMouse();
     }
 
     @Override
-    public void requestClose(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).moveToFront();
-        ((JInternalFrameOperator) oper).getCloseButton().push();
+    public void requestClose(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).moveToFront();
+        ((JInternalFrameOperator) op).getCloseButton().push();
     }
 
     @Override
-    public void requestCloseAndThenHide(ComponentOperator oper) {
+    public void requestCloseAndThenHide(ComponentOperator op) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void close(ComponentOperator oper) {
-        requestClose(oper);
+    public void close(ComponentOperator op) {
+        requestClose(op);
     }
 
     @Override
-    public void move(ComponentOperator oper, int x, int y) {
-        checkSupported(oper);
-        ComponentOperator titleOperator = ((JInternalFrameOperator) oper).getTitleOperator();
+    public void move(ComponentOperator op, int x, int y) {
+        checkSupported(op);
+        ComponentOperator titleOperator = ((JInternalFrameOperator) op).getTitleOperator();
         // one EDT snapshot: the title-bar center and the frame origin must come from the same
         // layout, since all four dragNDrop coordinates are derived from them together
         DragCoordinates drag = QueueTool.getInstance().callOnQueue(() -> {
             // the title bar's center Y is used for both start coordinates, as it always has been
             int centerY = titleOperator.getCenterY();
             return new DragCoordinates(
-                    new Point(centerY, centerY), new Point(x - oper.getX() + centerY, y - oper.getY() + centerY));
+                    new Point(centerY, centerY), new Point(x - op.getX() + centerY, y - op.getY() + centerY));
         });
         titleOperator.dragNDrop(drag.start.x, drag.start.y, drag.end.x, drag.end.y);
     }
 
     @Override
-    public void resize(ComponentOperator oper, int width, int height) {
-        checkSupported(oper);
+    public void resize(ComponentOperator op, int width, int height) {
+        checkSupported(op);
         // getSize() is one EDT snapshot; width and height must not straddle a resize
-        Dimension size = oper.getSize();
-        oper.dragNDrop(size.width - 1, size.height - 1, width - 1, height - 1);
+        Dimension size = op.getSize();
+        op.dragNDrop(size.width - 1, size.height - 1, width - 1, height - 1);
     }
 
     @Override
-    public void iconify(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).getMinimizeButton().clickMouse();
+    public void iconify(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).getMinimizeButton().clickMouse();
     }
 
     @Override
-    public void deiconify(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).getIconOperator().pushButton();
+    public void deiconify(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).getIconOperator().pushButton();
     }
 
     @Override
-    public void maximize(ComponentOperator oper) {
-        checkSupported(oper);
-        JInternalFrameOperator ifOper = (JInternalFrameOperator) oper;
+    public void maximize(ComponentOperator op) {
+        checkSupported(op);
+        JInternalFrameOperator ifOper = (JInternalFrameOperator) op;
         FrameGateState state = gateState(ifOper);
 
         if (!state.maximum) {
             if (!state.selected) {
-                activate(oper);
+                activate(op);
             }
 
             ifOper.getMaximizeButton().push();
@@ -123,14 +123,14 @@ public class DefaultInternalFrameDriver extends LightSupportiveDriver
     }
 
     @Override
-    public void demaximize(ComponentOperator oper) {
-        checkSupported(oper);
-        JInternalFrameOperator ifOper = (JInternalFrameOperator) oper;
+    public void demaximize(ComponentOperator op) {
+        checkSupported(op);
+        JInternalFrameOperator ifOper = (JInternalFrameOperator) op;
         FrameGateState state = gateState(ifOper);
 
         if (state.maximum) {
             if (!state.selected) {
-                activate(oper);
+                activate(op);
             }
 
             ifOper.getMaximizeButton().push();

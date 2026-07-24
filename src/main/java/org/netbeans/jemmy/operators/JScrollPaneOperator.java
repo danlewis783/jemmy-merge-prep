@@ -49,16 +49,16 @@ public class JScrollPaneOperator extends JComponentOperator {
     private @Nullable JScrollBarOperator hScrollBarOper = null;
     private @Nullable JScrollBarOperator vScrollBarOper = null;
 
-    public static JScrollPaneOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JScrollPaneOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JScrollPaneOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -73,42 +73,42 @@ public class JScrollPaneOperator extends JComponentOperator {
         return new JScrollPaneOperator(b);
     }
 
-    public static JScrollPaneOperator waitFor(ContainerOperator cont, int index) {
+    public static JScrollPaneOperator waitFor(ContainerOperator rootOp, int index) {
         return new JScrollPaneOperator(
-                (JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
+                (JScrollPane) waitComponent(rootOp, PredicatesJ.of(JScrollPane.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont, int index) {
-        this((JScrollPane) waitComponent(cont, PredicatesJ.of(JScrollPane.class), index));
+    public JScrollPaneOperator(ContainerOperator rootOp, int index) {
+        this((JScrollPane) waitComponent(rootOp, PredicatesJ.of(JScrollPane.class), index));
     }
 
-    public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JScrollPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JScrollPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JScrollPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JScrollPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JScrollPaneOperator(
-                (JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
+                (JScrollPane) rootOp.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JScrollPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollPane) cont.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
+    public JScrollPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JScrollPane) rootOp.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     public void setValues(int hValue, int vValue) {
@@ -467,7 +467,7 @@ public class JScrollPaneOperator extends JComponentOperator {
         }
 
         @Override
-        public int getScrollDirection(JScrollBarOperator oper) {
+        public int getScrollDirection(JScrollBarOperator op) {
             return QueueTool.getInstance().callOnQueue(() -> {
                 Point toPoint = SwingUtilities.convertPoint(comp, x, y, getViewport().getView());
                 int to = (orientation == JScrollBar.HORIZONTAL) ? toPoint.x : toPoint.y;
@@ -475,7 +475,7 @@ public class JScrollPaneOperator extends JComponentOperator {
                 int lv = (orientation == JScrollBar.HORIZONTAL)
                         ? getViewport().getWidth()
                         : getViewport().getHeight();
-                int vl = oper.getValue();
+                int vl = op.getValue();
                 if (to < vl) {
                     return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
                 } else if ((to + ln - 1 > vl + lv) && (to > vl)) {

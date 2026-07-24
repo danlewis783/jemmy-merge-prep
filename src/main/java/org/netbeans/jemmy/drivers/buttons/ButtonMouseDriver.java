@@ -42,29 +42,29 @@ public final class ButtonMouseDriver extends LightSupportiveDriver implements Bu
     }
 
     @Override
-    public void press(ComponentOperator oper) {
+    public void press(ComponentOperator op) {
         MouseDriver mouseDriver =
-                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-        Point center = oper.getClickCenter();
-        mouseDriver.moveMouse(oper, center.x, center.y);
-        mouseDriver.pressMouse(oper, center.x, center.y, Operator.getDefaultMouseButton(), 0);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
+        Point center = op.getClickCenter();
+        mouseDriver.moveMouse(op, center.x, center.y);
+        mouseDriver.pressMouse(op, center.x, center.y, Operator.getDefaultMouseButton(), 0);
     }
 
     @Override
-    public void release(ComponentOperator oper) {
-        Point center = oper.getClickCenter();
+    public void release(ComponentOperator op) {
+        Point center = op.getClickCenter();
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getMouseDriver(oper)
-                .releaseMouse(oper, center.x, center.y, Operator.getDefaultMouseButton(), 0);
+                .getMouseDriver(op)
+                .releaseMouse(op, center.x, center.y, Operator.getDefaultMouseButton(), 0);
     }
 
     @Override
-    public void push(ComponentOperator oper) {
-        Point center = oper.getClickCenter();
+    public void push(ComponentOperator op) {
+        Point center = op.getClickCenter();
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getMouseDriver(oper)
+                .getMouseDriver(op)
                 .clickMouse(
-                        oper,
+                        op,
                         center.x,
                         center.y,
                         1,

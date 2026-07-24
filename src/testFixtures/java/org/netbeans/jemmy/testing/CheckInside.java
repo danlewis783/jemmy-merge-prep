@@ -25,22 +25,22 @@ final class CheckInside {
     private CheckInside() {}
 
     static boolean isInside(
-            ComponentOperator comp,
-            ComponentOperator cont,
+            ComponentOperator compOp,
+            ComponentOperator containerOp,
             int compOffsetX,
             int compOffsetY,
             int compOffsetWidth,
             int compOffsetHeight) {
-        Point compLoc = comp.getLocationOnScreen();
+        Point compLoc = compOp.getLocationOnScreen();
         double compLeft = compLoc.getX() + compOffsetX;
         double compTop = compLoc.getY() + compOffsetY;
         double compRight = compLeft + compOffsetWidth;
         double compBottom = compTop + compOffsetHeight;
-        Point contLoc = cont.getLocationOnScreen();
+        Point contLoc = containerOp.getLocationOnScreen();
         double contLeft = contLoc.getX();
         double contTop = contLoc.getY();
-        double contRight = contLeft + cont.getWidth();
-        double contBottom = contTop + cont.getHeight();
+        double contRight = contLeft + containerOp.getWidth();
+        double contBottom = contTop + containerOp.getHeight();
         boolean ret = (compLeft >= contLeft)
                 && (compRight <= contRight)
                 && (compTop >= contTop)

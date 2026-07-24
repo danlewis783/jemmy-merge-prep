@@ -49,16 +49,16 @@ public class JScrollBarOperator extends JComponentOperator {
     private @Nullable JButtonOperator maxButtOperator;
     private @Nullable JButtonOperator minButtOperator;
 
-    public static JScrollBarOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JScrollBarOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JScrollBarOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JScrollBarOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -77,42 +77,42 @@ public class JScrollBarOperator extends JComponentOperator {
         return new JScrollBarOperator(b);
     }
 
-    public static JScrollBarOperator waitFor(ContainerOperator cont, int index) {
+    public static JScrollBarOperator waitFor(ContainerOperator rootOp, int index) {
         return new JScrollBarOperator(
-                (JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class), index));
+                (JScrollBar) waitComponent(rootOp, PredicatesJ.of(JScrollBar.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JScrollBarOperator(ContainerOperator cont, int index) {
-        this((JScrollBar) waitComponent(cont, PredicatesJ.of(JScrollBar.class), index));
+    public JScrollBarOperator(ContainerOperator rootOp, int index) {
+        this((JScrollBar) waitComponent(rootOp, PredicatesJ.of(JScrollBar.class), index));
     }
 
-    public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JScrollBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JScrollBarOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JScrollBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JScrollBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JScrollBarOperator(
-                (JScrollBar) cont.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
+                (JScrollBar) rootOp.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JScrollBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JScrollBar) cont.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
+    public JScrollBarOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JScrollBar) rootOp.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     @Deprecated
@@ -334,21 +334,21 @@ public class JScrollBarOperator extends JComponentOperator {
     }
 
     public interface ScrollChecker {
-        int getScrollDirection(JScrollBarOperator oper);
+        int getScrollDirection(JScrollBarOperator op);
     }
 
     private class CheckerAdjustable implements ScrollAdjuster {
         final ScrollChecker checker;
-        final JScrollBarOperator oper;
+        final JScrollBarOperator op;
 
-        public CheckerAdjustable(ScrollChecker checker, JScrollBarOperator oper) {
+        public CheckerAdjustable(ScrollChecker checker, JScrollBarOperator op) {
             this.checker = checker;
-            this.oper = oper;
+            this.op = op;
         }
 
         @Override
         public int getScrollDirection() {
-            return checker.getScrollDirection(oper);
+            return checker.getScrollDirection(op);
         }
 
         @Override
@@ -388,7 +388,7 @@ public class JScrollBarOperator extends JComponentOperator {
         final @Nullable Object waitParam;
 
         public WaitableChecker(
-                Function<Object, ?> function, @Nullable Object waitParam, boolean increase, JScrollBarOperator oper) {
+                Function<Object, ?> function, @Nullable Object waitParam, boolean increase, JScrollBarOperator op) {
             this.function = function;
             this.waitParam = waitParam;
             this.increase = increase;

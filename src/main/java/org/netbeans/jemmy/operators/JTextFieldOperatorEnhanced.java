@@ -15,8 +15,8 @@ public class JTextFieldOperatorEnhanced extends JTextFieldOperator {
         return new JTextFieldOperatorEnhanced(b);
     }
 
-    public static JTextFieldOperatorEnhanced waitFor(ContainerOperator cont, int index) {
-        return of((JTextField) waitComponent(cont, PredicatesJ.of(JTextField.class), index));
+    public static JTextFieldOperatorEnhanced waitFor(ContainerOperator rootOp, int index) {
+        return of((JTextField) waitComponent(rootOp, PredicatesJ.of(JTextField.class), index));
     }
 
     @Override

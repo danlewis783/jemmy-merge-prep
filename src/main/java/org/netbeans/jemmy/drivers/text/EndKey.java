@@ -28,13 +28,13 @@ package org.netbeans.jemmy.drivers.text;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 final class EndKey extends OffsetKey {
-    private final TextKeyboardDriver cont;
-    private final ComponentOperator oper;
+    private final TextKeyboardDriver driver;
+    private final ComponentOperator op;
 
-    public EndKey(int keyCode, int mods, TextKeyboardDriver cont, ComponentOperator oper) {
+    public EndKey(int keyCode, int mods, TextKeyboardDriver driver, ComponentOperator op) {
         super(keyCode, mods);
-        this.cont = cont;
-        this.oper = oper;
+        this.driver = driver;
+        this.op = op;
     }
 
     @Override
@@ -44,6 +44,6 @@ final class EndKey extends OffsetKey {
 
     @Override
     public int getExpectedPosition() {
-        return cont.getText(oper).length();
+        return driver.getText(op).length();
     }
 }

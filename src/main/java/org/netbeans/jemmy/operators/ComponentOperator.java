@@ -120,52 +120,52 @@ public class ComponentOperator extends Operator {
         return new ComponentOperator(source);
     }
 
-    public static ComponentOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static ComponentOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public ComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public ComponentOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
-    public static ComponentOperator waitFor(ContainerOperator cont, int index) {
-        return waitFor(cont, PredicatesJ.alwaysTrue(), index);
+    public static ComponentOperator waitFor(ContainerOperator rootOp, int index) {
+        return waitFor(rootOp, PredicatesJ.alwaysTrue(), index);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public ComponentOperator(ContainerOperator cont, int index) {
-        this(cont, PredicatesJ.alwaysTrue(), index);
+    public ComponentOperator(ContainerOperator rootOp, int index) {
+        this(rootOp, PredicatesJ.alwaysTrue(), index);
     }
 
-    public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static ComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public ComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public ComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static ComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return ComponentOperator.of(waitComponent((Container) cont.getSource(), chooser, index));
+    public static ComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        return ComponentOperator.of(waitComponent((Container) rootOp.getSource(), chooser, index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public ComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this(waitComponent((Container) cont.getSource(), chooser, index));
+    public ComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this(waitComponent((Container) rootOp.getSource(), chooser, index));
     }
 
     @Override
@@ -181,7 +181,8 @@ public class ComponentOperator extends Operator {
         // driver call stays on the test thread: it drives robot input and sleeps, which must
         // never run on the EDT (the driver hops its own coordinate reads internally)
         mouseDriver()
-                .clickMouse(this, x, y, clickCount, mouseButton, modifiers, TimeoutKey.ComponentOperator_MouseClickTimeout);
+                .clickMouse(
+                        this, x, y, clickCount, mouseButton, modifiers, TimeoutKey.ComponentOperator_MouseClickTimeout);
     }
 
     public void clickMouse(int x, int y, int clickCount, int mouseButton, int modifiers) {

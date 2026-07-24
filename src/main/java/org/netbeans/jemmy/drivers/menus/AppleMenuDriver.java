@@ -52,9 +52,9 @@ public final class AppleMenuDriver extends RobotDriver implements MenuDriver {
     }
 
     @Override
-    public @Nullable MenuElement pushMenu(ComponentOperator oper, List<Predicate<Component>> predicates) {
+    public @Nullable MenuElement pushMenu(ComponentOperator op, List<Predicate<Component>> predicates) {
         long maxTime = Timeouts.get(TimeoutKey.ComponentOperator_WaitComponentTimeout);
-        JMenuBar bar = (JMenuBar) oper.getSource();
+        JMenuBar bar = (JMenuBar) op.getSource();
         activateMenu(bar);
         MenuElement menuObject;
         long startTime = System.currentTimeMillis();

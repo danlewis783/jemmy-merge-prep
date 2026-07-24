@@ -41,18 +41,18 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
-    public void scrollToMinimum(ComponentOperator oper, int orientation) {
-        ((JSliderOperator) oper).setValue(((JSliderOperator) oper).getMinimum());
+    public void scrollToMinimum(ComponentOperator op, int orientation) {
+        ((JSliderOperator) op).setValue(((JSliderOperator) op).getMinimum());
     }
 
     @Override
-    public void scrollToMaximum(ComponentOperator oper, int orientation) {
-        ((JSliderOperator) oper).setValue(((JSliderOperator) oper).getMaximum());
+    public void scrollToMaximum(ComponentOperator op, int orientation) {
+        ((JSliderOperator) op).setValue(((JSliderOperator) op).getMaximum());
     }
 
     @Override
-    protected void step(ComponentOperator oper, ScrollAdjuster adj) {
-        JSliderOperator scroll = (JSliderOperator) oper;
+    protected void step(ComponentOperator op, ScrollAdjuster adj) {
+        JSliderOperator scroll = (JSliderOperator) op;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             int target = QueueTool.getInstance()
                     .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + getUnitIncrement(scroll))
@@ -69,18 +69,18 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
-    protected int position(ComponentOperator oper, int orientation) {
-        return ((JSliderOperator) oper).getValue();
+    protected int position(ComponentOperator op, int orientation) {
+        return ((JSliderOperator) op).getValue();
     }
 
     @Override
-    protected TimeoutKey getScrollDeltaTimeout(ComponentOperator oper) {
+    protected TimeoutKey getScrollDeltaTimeout(ComponentOperator op) {
         return TimeoutKey.JSliderOperator_ScrollingDelta;
     }
 
     @Override
-    protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
-        JSliderOperator scroll = (JSliderOperator) oper;
+    protected void jump(ComponentOperator op, ScrollAdjuster adj) {
+        JSliderOperator scroll = (JSliderOperator) op;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             int target = QueueTool.getInstance()
                     .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + getBlockIncrement(scroll))
@@ -97,54 +97,54 @@ public final class JSliderAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
-    protected void startPushAndWait(ComponentOperator oper, int direction, int orientation) {}
+    protected void startPushAndWait(ComponentOperator op, int direction, int orientation) {}
 
     @Override
-    protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {}
+    protected void stopPushAndWait(ComponentOperator op, int direction, int orientation) {}
 
     @Override
-    protected @Nullable Point startDragging(ComponentOperator oper) {
+    protected @Nullable Point startDragging(ComponentOperator op) {
         return null;
     }
 
     @Override
-    protected void drop(ComponentOperator oper, Point pnt) {}
+    protected void drop(ComponentOperator op, Point pnt) {}
 
     @Override
-    protected void drag(ComponentOperator oper, Point pnt) {}
+    protected void drag(ComponentOperator op, Point pnt) {}
 
     @Override
-    protected boolean canDragAndDrop(ComponentOperator oper) {
+    protected boolean canDragAndDrop(ComponentOperator op) {
         return false;
     }
 
     @Override
-    protected boolean canJump(ComponentOperator oper) {
-        return isSmallIncrement((JSliderOperator) oper);
+    protected boolean canJump(ComponentOperator op) {
+        return isSmallIncrement((JSliderOperator) op);
     }
 
     @Override
-    protected boolean canPushAndWait(ComponentOperator oper) {
+    protected boolean canPushAndWait(ComponentOperator op) {
         return false;
     }
 
     @Override
-    protected int getDragAndDropStepLength(ComponentOperator oper) {
+    protected int getDragAndDropStepLength(ComponentOperator op) {
         return 1;
     }
 
-    private int getUnitIncrement(JSliderOperator oper) {
-        return (oper.getMinorTickSpacing() == 0) ? 1 : oper.getMinorTickSpacing();
+    private int getUnitIncrement(JSliderOperator op) {
+        return (op.getMinorTickSpacing() == 0) ? 1 : op.getMinorTickSpacing();
     }
 
-    private int getBlockIncrement(JSliderOperator oper) {
-        return (oper.getMajorTickSpacing() == 0) ? 1 : oper.getMajorTickSpacing();
+    private int getBlockIncrement(JSliderOperator op) {
+        return (op.getMajorTickSpacing() == 0) ? 1 : op.getMajorTickSpacing();
     }
 
-    private boolean isSmallIncrement(JSliderOperator oper) {
+    private boolean isSmallIncrement(JSliderOperator op) {
         // one EDT snapshot: both tick-spacing reads must describe the same moment
         return QueueTool.getInstance()
-                .callOnQueue(() -> (oper.getMajorTickSpacing() <= SMALL_INCREMENT)
-                        && (oper.getMinorTickSpacing() <= SMALL_INCREMENT));
+                .callOnQueue(() -> (op.getMajorTickSpacing() <= SMALL_INCREMENT)
+                        && (op.getMinorTickSpacing() <= SMALL_INCREMENT));
     }
 }

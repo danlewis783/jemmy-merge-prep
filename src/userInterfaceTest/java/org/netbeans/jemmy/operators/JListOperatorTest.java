@@ -479,7 +479,7 @@ class JListOperatorTest {
 
     private static class FalseListItemChooser implements ListItemChooser {
         @Override
-        public boolean checkItem(JListOperator oper, int index) {
+        public boolean checkItem(JListOperator op, int index) {
             return false;
         }
     }

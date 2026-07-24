@@ -63,16 +63,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JTableOperator extends JComponentOperator {
 
-    public static JTableOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JTableOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JTableOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -91,84 +91,85 @@ public class JTableOperator extends JComponentOperator {
         return new JTableOperator(b);
     }
 
-    public static JTableOperator waitFor(ContainerOperator cont, int index) {
-        return new JTableOperator((JTable) waitComponent(cont, PredicatesJ.of(JTable.class), index));
+    public static JTableOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JTableOperator((JTable) waitComponent(rootOp, PredicatesJ.of(JTable.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont, int index) {
-        this((JTable) waitComponent(cont, PredicatesJ.of(JTable.class), index));
+    public JTableOperator(ContainerOperator rootOp, int index) {
+        this((JTable) waitComponent(rootOp, PredicatesJ.of(JTable.class), index));
     }
 
-    public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JTableOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JTableOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JTableOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JTableOperator((JTable) cont.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
+    public static JTableOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        return new JTableOperator((JTable) rootOp.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTable) cont.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
+    public JTableOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JTable) rootOp.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
     }
 
-    public static JTableOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JTableOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JTableOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
     public static JTableOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        return waitFor(cont, text, stringComparator, -1, -1, index);
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        return waitFor(rootOp, text, stringComparator, -1, -1, index);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, -1, index);
+    public JTableOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        this(rootOp, text, stringComparator, -1, -1, index);
     }
 
     public static JTableOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int row, int column) {
-        return waitFor(cont, text, stringComparator, row, column, 0);
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int row, int column) {
+        return waitFor(rootOp, text, stringComparator, row, column, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int, int)} instead.
      */
     @Deprecated
-    public JTableOperator(ContainerOperator cont, String text, StringComparator stringComparator, int row, int column) {
-        this(cont, text, stringComparator, row, column, 0);
+    public JTableOperator(
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int row, int column) {
+        this(rootOp, text, stringComparator, row, column, 0);
     }
 
     public static JTableOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int row, int column, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int row, int column, int index) {
         return new JTableOperator((JTable)
-                waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
+                waitComponent(rootOp, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
     }
 
     /**
@@ -176,8 +177,9 @@ public class JTableOperator extends JComponentOperator {
      */
     @Deprecated
     public JTableOperator(
-            ContainerOperator cont, String text, StringComparator stringComparator, int row, int column, int index) {
-        this((JTable) waitComponent(cont, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int row, int column, int index) {
+        this((JTable)
+                waitComponent(rootOp, new JTableByCellValuePredicate(text, row, column, stringComparator), index));
     }
 
     public Point findCell(String text, StringComparator comparator, int index) {
@@ -893,7 +895,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public interface TableCellChooser {
-        boolean checkCell(JTableOperator oper, int row, int column);
+        boolean checkCell(JTableOperator op, int row, int column);
     }
 
     private static class ByRenderedComponentTableCellChooser implements TableCellChooser {
@@ -904,8 +906,8 @@ public class JTableOperator extends JComponentOperator {
         }
 
         @Override
-        public boolean checkCell(JTableOperator oper, int row, int column) {
-            return chooser.test(oper.getRenderedComponent(row, column));
+        public boolean checkCell(JTableOperator op, int row, int column) {
+            return chooser.test(op.getRenderedComponent(row, column));
         }
     }
 
@@ -919,11 +921,11 @@ public class JTableOperator extends JComponentOperator {
         }
 
         @Override
-        public boolean checkCell(JTableOperator oper, int row, int column) {
+        public boolean checkCell(JTableOperator op, int row, int column) {
             // model coordinates, deliberately: findCell must keep finding cells at their model
             // position after view-column reordering. EDT-safe because findCell evaluates every
             // chooser inside its callOnQueue loop.
-            Object value = ((JTable) oper.getSource()).getModel().getValueAt(row, column);
+            Object value = ((JTable) op.getSource()).getModel().getValueAt(row, column);
 
             return comparator.equals((value != null) ? value.toString() : null, expectedToString);
         }

@@ -14,8 +14,8 @@ public final class FastJListSelDriver extends LightSupportiveDriver implements M
     }
 
     @Override
-    public void selectItems(ComponentOperator oper, int[] indices) {
-        final JListOperator jListOperator = (JListOperator) oper;
+    public void selectItems(ComponentOperator op, int[] indices) {
+        final JListOperator jListOperator = (JListOperator) op;
         // one EDT hop: clear and re-select atomically so no observer sees the empty selection
         QueueTool.getInstance().runOnQueue(() -> {
             jListOperator.clearSelection();
@@ -24,8 +24,8 @@ public final class FastJListSelDriver extends LightSupportiveDriver implements M
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
-        final JListOperator jListOperator = (JListOperator) oper;
+    public void selectItem(ComponentOperator op, int index) {
+        final JListOperator jListOperator = (JListOperator) op;
         jListOperator.setSelectedIndex(index);
     }
 }

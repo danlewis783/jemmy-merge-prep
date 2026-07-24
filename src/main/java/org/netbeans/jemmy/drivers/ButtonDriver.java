@@ -28,9 +28,9 @@ package org.netbeans.jemmy.drivers;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface ButtonDriver {
-    void press(ComponentOperator oper);
+    void press(ComponentOperator op);
 
-    void release(ComponentOperator oper);
+    void release(ComponentOperator op);
 
-    void push(ComponentOperator oper);
+    void push(ComponentOperator op);
 }

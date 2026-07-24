@@ -53,16 +53,16 @@ import org.netbeans.jemmy.predicates.TooltipForComponentPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JComponentOperator extends ContainerOperator {
-    public static JComponentOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JComponentOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JComponentOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -77,43 +77,43 @@ public class JComponentOperator extends ContainerOperator {
         return new JComponentOperator(b);
     }
 
-    public static JComponentOperator waitFor(ContainerOperator cont, int index) {
+    public static JComponentOperator waitFor(ContainerOperator rootOp, int index) {
         return new JComponentOperator((JComponent)
-                waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
+                waitComponent(rootOp, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JComponentOperator(ContainerOperator cont, int index) {
+    public JComponentOperator(ContainerOperator rootOp, int index) {
         this((JComponent)
-                waitComponent(cont, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
+                waitComponent(rootOp, PredicatesJ.of(JComponent.class, PredicatesJ.alwaysTrue()), index));
     }
 
-    public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JComponentOperator(
-                (JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
+                (JComponent) rootOp.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JComponent) cont.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
+    public JComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JComponent) rootOp.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     @Override

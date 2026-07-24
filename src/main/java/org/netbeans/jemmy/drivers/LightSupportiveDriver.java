@@ -37,8 +37,8 @@ public abstract class LightSupportiveDriver implements LightDriver {
         this.supported = Collections.unmodifiableList(new ArrayList<>(supported));
     }
 
-    public void checkSupported(ComponentOperator oper) {
-        UnsupportedOperatorException.checkSupported(getClass(), supported, oper.getClass());
+    public void checkSupported(ComponentOperator op) {
+        UnsupportedOperatorException.checkSupported(getClass(), supported, op.getClass());
     }
 
     @Override

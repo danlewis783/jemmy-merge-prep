@@ -29,11 +29,11 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface TreeDriver extends MultiSelListDriver {
-    void expandItem(ComponentOperator oper, int index);
+    void expandItem(ComponentOperator op, int index);
 
-    void collapseItem(ComponentOperator oper, int index);
+    void collapseItem(ComponentOperator op, int index);
 
-    void editItem(ComponentOperator oper, int index, Object newValue, TimeoutKey waitEditorTime);
+    void editItem(ComponentOperator op, int index, Object newValue, TimeoutKey waitEditorTime);
 
-    void startEditing(ComponentOperator oper, int index, TimeoutKey waitEditorTime);
+    void startEditing(ComponentOperator op, int index, TimeoutKey waitEditorTime);
 }

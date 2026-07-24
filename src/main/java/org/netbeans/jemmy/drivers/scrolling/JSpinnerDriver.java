@@ -39,13 +39,13 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
     }
 
     @Override
-    public void scrollToMinimum(ComponentOperator oper, int orientation) {
-        Object minimum = ((JSpinnerOperator) oper).getMinimum();
+    public void scrollToMinimum(ComponentOperator op, int orientation) {
+        Object minimum = ((JSpinnerOperator) op).getMinimum();
         if (minimum == null) {
             throw new RuntimeException("Impossible to get a minimum of JSpinner model");
         }
 
-        scroll(oper, new ScrollAdjuster() {
+        scroll(op, new ScrollAdjuster() {
             @Override
             public int getScrollOrientation() {
                 return SwingConstants.VERTICAL;
@@ -53,7 +53,7 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
 
             @Override
             public int getScrollDirection() {
-                if (((JSpinnerOperator) oper).getPreviousValue() != null) {
+                if (((JSpinnerOperator) op).getPreviousValue() != null) {
                     return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
                 } else {
                     return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
@@ -63,13 +63,13 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
     }
 
     @Override
-    public void scrollToMaximum(ComponentOperator oper, int orientation) {
-        Object maximum = ((JSpinnerOperator) oper).getMaximum();
+    public void scrollToMaximum(ComponentOperator op, int orientation) {
+        Object maximum = ((JSpinnerOperator) op).getMaximum();
         if (maximum == null) {
             throw new RuntimeException("Impossible to get a maximum of JSpinner model");
         }
 
-        scroll(oper, new ScrollAdjuster() {
+        scroll(op, new ScrollAdjuster() {
             @Override
             public int getScrollOrientation() {
                 return SwingConstants.VERTICAL;
@@ -77,7 +77,7 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
 
             @Override
             public int getScrollDirection() {
-                if (((JSpinnerOperator) oper).getNextValue() != null) {
+                if (((JSpinnerOperator) op).getNextValue() != null) {
                     return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
                 } else {
                     return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;
@@ -87,13 +87,13 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
     }
 
     @Override
-    public void scroll(ComponentOperator oper, ScrollAdjuster adj) {
+    public void scroll(ComponentOperator op, ScrollAdjuster adj) {
         if (adj.getScrollDirection() == ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
             return;
         }
 
-        JButtonOperator increaseButton = ((JSpinnerOperator) oper).getIncreaseOperator();
-        JButtonOperator decreaseButton = ((JSpinnerOperator) oper).getDecreaseOperator();
+        JButtonOperator increaseButton = ((JSpinnerOperator) op).getIncreaseOperator();
+        JButtonOperator decreaseButton = ((JSpinnerOperator) op).getDecreaseOperator();
 
         int originalDirection = adj.getScrollDirection();
         while (adj.getScrollDirection() == originalDirection) {

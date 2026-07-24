@@ -51,16 +51,16 @@ public class JSliderOperator extends JComponentOperator {
 
     private int scrollModel = CLICK_SCROLL_MODEL;
 
-    public static JSliderOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JSliderOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JSliderOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JSliderOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -79,41 +79,41 @@ public class JSliderOperator extends JComponentOperator {
         return new JSliderOperator(b);
     }
 
-    public static JSliderOperator waitFor(ContainerOperator cont, int index) {
-        return new JSliderOperator((JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class), index));
+    public static JSliderOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JSliderOperator((JSlider) waitComponent(rootOp, PredicatesJ.of(JSlider.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JSliderOperator(ContainerOperator cont, int index) {
-        this((JSlider) waitComponent(cont, PredicatesJ.of(JSlider.class), index));
+    public JSliderOperator(ContainerOperator rootOp, int index) {
+        this((JSlider) waitComponent(rootOp, PredicatesJ.of(JSlider.class), index));
     }
 
-    public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JSliderOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JSliderOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JSliderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JSliderOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JSliderOperator(
-                (JSlider) cont.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
+                (JSlider) rootOp.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JSliderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSlider) cont.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
+    public JSliderOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JSlider) rootOp.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     @Deprecated

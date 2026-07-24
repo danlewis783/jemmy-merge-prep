@@ -44,16 +44,16 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 public class JSplitPaneOperator extends JComponentOperator {
     private @Nullable ContainerOperator divider;
 
-    public static JSplitPaneOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JSplitPaneOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JSplitPaneOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -72,42 +72,42 @@ public class JSplitPaneOperator extends JComponentOperator {
         return new JSplitPaneOperator(b);
     }
 
-    public static JSplitPaneOperator waitFor(ContainerOperator cont, int index) {
+    public static JSplitPaneOperator waitFor(ContainerOperator rootOp, int index) {
         return new JSplitPaneOperator(
-                (JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class), index));
+                (JSplitPane) waitComponent(rootOp, PredicatesJ.of(JSplitPane.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont, int index) {
-        this((JSplitPane) waitComponent(cont, PredicatesJ.of(JSplitPane.class), index));
+    public JSplitPaneOperator(ContainerOperator rootOp, int index) {
+        this((JSplitPane) waitComponent(rootOp, PredicatesJ.of(JSplitPane.class), index));
     }
 
-    public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JSplitPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JSplitPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JSplitPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JSplitPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JSplitPaneOperator(
-                (JSplitPane) cont.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
+                (JSplitPane) rootOp.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JSplitPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSplitPane) cont.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
+    public JSplitPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JSplitPane) rootOp.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
     public BasicSplitPaneDivider findDivider() {

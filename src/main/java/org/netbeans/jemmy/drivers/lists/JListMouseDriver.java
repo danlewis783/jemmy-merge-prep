@@ -44,34 +44,34 @@ public final class JListMouseDriver extends LightSupportiveDriver implements Mul
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
-        clickOnItem((JListOperator) oper, index);
+    public void selectItem(ComponentOperator op, int index) {
+        clickOnItem((JListOperator) op, index);
     }
 
     @Override
-    public void selectItems(ComponentOperator oper, int[] indices) {
-        clickOnItem((JListOperator) oper, indices[0]);
+    public void selectItems(ComponentOperator op, int[] indices) {
+        clickOnItem((JListOperator) op, indices[0]);
 
         for (int i = 1; i < indices.length; i++) {
-            clickOnItem((JListOperator) oper, indices[i], InputEvent.CTRL_MASK);
+            clickOnItem((JListOperator) op, indices[i], InputEvent.CTRL_MASK);
         }
     }
 
-    private void clickOnItem(JListOperator oper, int index) {
-        clickOnItem(oper, index, 0);
+    private void clickOnItem(JListOperator op, int index) {
+        clickOnItem(op, index, 0);
     }
 
-    private void clickOnItem(JListOperator oper, int index, int modifiers) {
+    private void clickOnItem(JListOperator op, int index, int modifiers) {
         if (!EventQueue.isDispatchThread()) {
-            oper.scrollToItem(index);
+            op.scrollToItem(index);
         }
 
         // getCellBounds is one EDT snapshot; the click (robot input + sleep) must stay off-EDT
-        Rectangle rect = oper.getCellBounds(index, index);
+        Rectangle rect = op.getCellBounds(index, index);
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getMouseDriver(oper)
+                .getMouseDriver(op)
                 .clickMouse(
-                        oper,
+                        op,
                         rect.x + rect.width / 2,
                         rect.y + rect.height / 2,
                         1,

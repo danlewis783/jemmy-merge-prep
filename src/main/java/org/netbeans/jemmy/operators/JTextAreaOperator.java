@@ -37,16 +37,16 @@ import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTextAreaOperator extends JTextComponentOperator {
-    public static JTextAreaOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JTextAreaOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JTextAreaOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JTextAreaOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -61,59 +61,59 @@ public class JTextAreaOperator extends JTextComponentOperator {
         return new JTextAreaOperator(b);
     }
 
-    public static JTextAreaOperator waitFor(ContainerOperator cont, int index) {
-        return new JTextAreaOperator((JTextArea) waitComponent(cont, PredicatesJ.of(JTextArea.class), index));
+    public static JTextAreaOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JTextAreaOperator((JTextArea) waitComponent(rootOp, PredicatesJ.of(JTextArea.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JTextAreaOperator(ContainerOperator cont, int index) {
-        this((JTextArea) waitComponent(cont, PredicatesJ.of(JTextArea.class), index));
+    public JTextAreaOperator(ContainerOperator rootOp, int index) {
+        this((JTextArea) waitComponent(rootOp, PredicatesJ.of(JTextArea.class), index));
     }
 
-    public static JTextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> predicate) {
-        return waitFor(cont, predicate, 0);
+    public static JTextAreaOperator waitFor(ContainerOperator rootOp, Predicate<Component> predicate) {
+        return waitFor(rootOp, predicate, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JTextAreaOperator(ContainerOperator cont, Predicate<Component> predicate) {
-        this(cont, predicate, 0);
+    public JTextAreaOperator(ContainerOperator rootOp, Predicate<Component> predicate) {
+        this(rootOp, predicate, 0);
     }
 
-    public static JTextAreaOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JTextAreaOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTextAreaOperator(
-                (JTextArea) cont.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
+                (JTextArea) rootOp.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JTextAreaOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTextArea) cont.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
+    public JTextAreaOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JTextArea) rootOp.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
     }
 
-    public static JTextAreaOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JTextAreaOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JTextAreaOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JTextAreaOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
     public static JTextAreaOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         return new JTextAreaOperator((JTextArea) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
@@ -122,9 +122,9 @@ public class JTextAreaOperator extends JTextComponentOperator {
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JTextAreaOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+    public JTextAreaOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         this((JTextArea) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JTextArea.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }

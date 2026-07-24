@@ -28,5 +28,5 @@ package org.netbeans.jemmy.drivers;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface EditorDriver {
-    void enterNewValue(ComponentOperator oper, Object newValue);
+    void enterNewValue(ComponentOperator op, Object newValue);
 }

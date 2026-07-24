@@ -28,11 +28,11 @@ package org.netbeans.jemmy.drivers;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface FrameDriver {
-    void iconify(ComponentOperator oper);
+    void iconify(ComponentOperator op);
 
-    void deiconify(ComponentOperator oper);
+    void deiconify(ComponentOperator op);
 
-    void maximize(ComponentOperator oper);
+    void maximize(ComponentOperator op);
 
-    void demaximize(ComponentOperator oper);
+    void demaximize(ComponentOperator op);
 }

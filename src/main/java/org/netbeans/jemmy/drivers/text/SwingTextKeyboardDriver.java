@@ -43,43 +43,43 @@ public final class SwingTextKeyboardDriver extends TextKeyboardDriver {
     }
 
     @Override
-    public void clearText(ComponentOperator oper) {
-        if ((oper instanceof JTextAreaOperator) || (oper instanceof JEditorPaneOperator)) {
+    public void clearText(ComponentOperator op) {
+        if ((op instanceof JTextAreaOperator) || (op instanceof JEditorPaneOperator)) {
             DriverManager.newInstance(JemmyContext.getInstance())
-                    .getFocusDriver(oper)
-                    .giveFocus(oper);
+                    .getFocusDriver(op)
+                    .giveFocus(op);
             KeyDriver kdriver =
-                    DriverManager.newInstance(JemmyContext.getInstance()).getKeyDriver(oper);
-            selectText(oper, 0, getText(oper).length());
-            kdriver.pushKey(oper, KeyEvent.VK_DELETE, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
+                    DriverManager.newInstance(JemmyContext.getInstance()).getKeyDriver(op);
+            selectText(op, 0, getText(op).length());
+            kdriver.pushKey(op, KeyEvent.VK_DELETE, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
         } else {
-            super.clearText(oper);
+            super.clearText(op);
         }
     }
 
     @Override
-    public String getText(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getDisplayedText();
+    public String getText(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getDisplayedText();
     }
 
     @Override
-    public int getCaretPosition(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getCaretPosition();
+    public int getCaretPosition(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getCaretPosition();
     }
 
     @Override
-    public int getSelectionStart(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getSelectionStart();
+    public int getSelectionStart(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getSelectionStart();
     }
 
     @Override
-    public int getSelectionEnd(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getSelectionEnd();
+    public int getSelectionEnd(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getSelectionEnd();
     }
 
     @Override
-    public NavigationKey[] getKeys(ComponentOperator oper) {
-        boolean multiString = (oper instanceof JTextAreaOperator) || (oper instanceof JEditorPaneOperator);
+    public NavigationKey[] getKeys(ComponentOperator op) {
+        boolean multiString = (op instanceof JTextAreaOperator) || (op instanceof JEditorPaneOperator);
         NavigationKey[] result = new NavigationKey[multiString ? 8 : 4];
         result[0] = new UpKey(KeyEvent.VK_LEFT, 0);
         result[1] = new DownKey(KeyEvent.VK_RIGHT, 0);
@@ -96,17 +96,17 @@ public final class SwingTextKeyboardDriver extends TextKeyboardDriver {
             ((UpKey) result[4]).setDownKey((DownKey) result[5]);
             ((DownKey) result[5]).setUpKey((UpKey) result[4]);
             result[6] = new HomeKey(KeyEvent.VK_HOME, InputEvent.CTRL_MASK);
-            result[7] = new EndKey(KeyEvent.VK_END, InputEvent.CTRL_MASK, this, oper);
+            result[7] = new EndKey(KeyEvent.VK_END, InputEvent.CTRL_MASK, this, op);
         } else {
             result[2] = new HomeKey(KeyEvent.VK_HOME, 0);
-            result[3] = new EndKey(KeyEvent.VK_END, 0, this, oper);
+            result[3] = new EndKey(KeyEvent.VK_END, 0, this, op);
         }
 
         return result;
     }
 
     @Override
-    public TimeoutKey getBetweenTimeout(ComponentOperator oper) {
+    public TimeoutKey getBetweenTimeout(ComponentOperator op) {
         return TimeoutKey.TextComponentOperator_BetweenKeysTimeout;
     }
 }

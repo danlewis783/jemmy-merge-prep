@@ -60,16 +60,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JTextComponentOperator extends JComponentOperator {
 
-    public static JTextComponentOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JTextComponentOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JTextComponentOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -88,74 +88,74 @@ public class JTextComponentOperator extends JComponentOperator {
         return new JTextComponentOperator(b);
     }
 
-    public static JTextComponentOperator waitFor(ContainerOperator cont, int index) {
+    public static JTextComponentOperator waitFor(ContainerOperator rootOp, int index) {
         return new JTextComponentOperator(
-                (JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class), index));
+                (JTextComponent) waitComponent(rootOp, PredicatesJ.of(JTextComponent.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont, int index) {
-        this((JTextComponent) waitComponent(cont, PredicatesJ.of(JTextComponent.class), index));
+    public JTextComponentOperator(ContainerOperator rootOp, int index) {
+        this((JTextComponent) waitComponent(rootOp, PredicatesJ.of(JTextComponent.class), index));
     }
 
-    public static JTextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JTextComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JTextComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
     public static JTextComponentOperator waitFor(
-            ContainerOperator cont, StringComparator stringComparator, String text) {
-        return waitFor(cont, text, stringComparator, 0);
+            ContainerOperator rootOp, StringComparator stringComparator, String text) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, StringComparator, String)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont, StringComparator stringComparator, String text) {
-        this(cont, text, stringComparator, 0);
+    public JTextComponentOperator(ContainerOperator rootOp, StringComparator stringComparator, String text) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JTextComponentOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JTextComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTextComponentOperator(
-                (JTextComponent) cont.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
+                (JTextComponent) rootOp.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTextComponent) cont.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
+    public JTextComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JTextComponent) rootOp.waitSubComponent(PredicatesJ.of(JTextComponent.class, chooser), index));
     }
 
     public static JTextComponentOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+            ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JTextComponentOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
     public static JTextComponentOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         return new JTextComponentOperator((JTextComponent) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }
@@ -164,9 +164,9 @@ public class JTextComponentOperator extends JComponentOperator {
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JTextComponentOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+    public JTextComponentOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         this((JTextComponent) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JTextComponent.class, new JTextComponentByTextPredicate(text, stringComparator)),
                 index));
     }

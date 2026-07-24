@@ -61,53 +61,53 @@ public class ContainerOperator extends ComponentOperator {
         return new ContainerOperator(b);
     }
 
-    public static ContainerOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static ContainerOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public ContainerOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public ContainerOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
-    public static ContainerOperator waitFor(ContainerOperator cont, int index) {
-        return new ContainerOperator((Container) waitComponent(cont, PredicatesJ.of(Container.class), index));
+    public static ContainerOperator waitFor(ContainerOperator rootOp, int index) {
+        return new ContainerOperator((Container) waitComponent(rootOp, PredicatesJ.of(Container.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public ContainerOperator(ContainerOperator cont, int index) {
-        this((Container) waitComponent(cont, PredicatesJ.of(Container.class), index));
+    public ContainerOperator(ContainerOperator rootOp, int index) {
+        this((Container) waitComponent(rootOp, PredicatesJ.of(Container.class), index));
     }
 
-    public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static ContainerOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public ContainerOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public ContainerOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static ContainerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static ContainerOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new ContainerOperator(
-                (Container) cont.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
+                (Container) rootOp.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public ContainerOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((Container) cont.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
+    public ContainerOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((Container) rootOp.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
     }
 
     public @Nullable Component findSubComponent(Predicate<Component> chooser, int index) {

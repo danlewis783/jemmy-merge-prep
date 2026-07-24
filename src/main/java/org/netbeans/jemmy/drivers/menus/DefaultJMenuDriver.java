@@ -58,15 +58,15 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
     }
 
     @Override
-    public @Nullable MenuElement pushMenu(ComponentOperator oper, List<Predicate<Component>> predicates) {
-        checkSupported(oper);
+    public @Nullable MenuElement pushMenu(ComponentOperator op, List<Predicate<Component>> predicates) {
+        checkSupported(op);
 
-        if ((oper instanceof JMenuBarOperator) || (oper instanceof JPopupMenuOperator)) {
+        if ((op instanceof JMenuBarOperator) || (op instanceof JPopupMenuOperator)) {
             JMenuItem item;
-            if (oper instanceof JMenuBarOperator) {
-                item = waitItem(oper, (JMenuBar) oper.getSource(), predicates, 0);
+            if (op instanceof JMenuBarOperator) {
+                item = waitItem(op, (JMenuBar) op.getSource(), predicates, 0);
             } else {
-                item = waitItem(oper, (JPopupMenu) oper.getSource(), predicates, 0);
+                item = waitItem(op, (JPopupMenu) op.getSource(), predicates, 0);
             }
 
             JMenuItemOperator itemOper;
@@ -81,69 +81,69 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
             return push(
                     itemOper,
                     null,
-                    (oper instanceof JMenuBarOperator) ? (JMenuBar) oper.getSource() : null,
+                    (op instanceof JMenuBarOperator) ? (JMenuBar) op.getSource() : null,
                     predicates,
                     1,
                     true);
         } else {
-            return push(oper, null, null, predicates, 0, true);
+            return push(op, null, null, predicates, 0, true);
         }
     }
 
     protected @Nullable MenuElement push(
-            ComponentOperator oper,
+            ComponentOperator op,
             @Nullable ComponentOperator lastItem,
             @Nullable JMenuBar menuBar,
             List<Predicate<Component>> predicates,
             int depth,
             boolean pressMouse) {
-        oper.waitComponentVisible(true);
-        oper.waitComponentEnabled();
+        op.waitComponentVisible(true);
+        op.waitComponentEnabled();
 
         MouseDriver mDriver =
-                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-        smartMove(lastItem, oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
+        smartMove(lastItem, op);
 
         if (depth > predicates.size() - 1) {
-            if ((oper instanceof JMenuOperator) && (menuBar != null) && (getSelectedElement(menuBar) != null)) {
+            if ((op instanceof JMenuOperator) && (menuBar != null) && (getSelectedElement(menuBar) != null)) {
             } else {
                 DriverManager.newInstance(JemmyContext.getInstance())
-                        .getButtonDriver(oper)
-                        .push(oper);
+                        .getButtonDriver(op)
+                        .push(op);
             }
 
-            return (MenuElement) oper.getSource();
+            return (MenuElement) op.getSource();
         }
 
         if (pressMouse
-                && !((JMenuOperator) oper).isPopupMenuVisible()
+                && !((JMenuOperator) op).isPopupMenuVisible()
                 && !((menuBar != null) && (getSelectedElement(menuBar) != null))) {
             DriverManager.newInstance(JemmyContext.getInstance())
-                    .getButtonDriver(oper)
-                    .push(oper);
+                    .getButtonDriver(op)
+                    .push(op);
         }
 
-        JMenuItem item = waitItem(oper, waitPopupMenu(oper), predicates, depth);
-        mDriver.exitMouse(oper);
+        JMenuItem item = waitItem(op, waitPopupMenu(op), predicates, depth);
+        mDriver.exitMouse(op);
 
         if (item instanceof JMenu) {
             JMenuOperator mo = JMenuOperator.of((JMenu) item);
-            return push(mo, oper, null, predicates, depth + 1, false);
+            return push(mo, op, null, predicates, depth + 1, false);
         } else {
             JMenuItemOperator mio = JMenuItemOperator.of(item);
             mio.waitComponentEnabled();
 
-            smartMove(oper, mio);
+            smartMove(op, mio);
             DriverManager.newInstance(JemmyContext.getInstance())
-                    .getButtonDriver(oper)
+                    .getButtonDriver(op)
                     .push(mio);
             return item;
         }
     }
 
-    private void smartMove(@Nullable ComponentOperator last, ComponentOperator oper) {
+    private void smartMove(@Nullable ComponentOperator last, ComponentOperator op) {
         if (last == null) {
-            oper.enterMouse();
+            op.enterMouse();
             return;
         }
 
@@ -157,10 +157,10 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
             lastYl = (long) last.getSource().getLocationOnScreen().getY();
             lastYr = lastYl + last.getSource().getHeight();
             long operXl, operXr, operYl, operYr;
-            operXl = (long) oper.getSource().getLocationOnScreen().getX();
-            operXr = operXl + oper.getSource().getWidth();
-            operYl = (long) oper.getSource().getLocationOnScreen().getY();
-            operYr = operYl + oper.getSource().getHeight();
+            operXl = (long) op.getSource().getLocationOnScreen().getX();
+            operXr = operXl + op.getSource().getWidth();
+            operYl = (long) op.getSource().getLocationOnScreen().getY();
+            operYr = operYl + op.getSource().getHeight();
             long overXl, overXr, overYl, overYr;
             overXl = Math.max(lastXl, operXl);
             overXr = Math.min(lastXr, operXr);
@@ -169,7 +169,7 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
 
             int lastCenterX = last.getSource().getWidth() / 2;
             int lastCenterY = last.getSource().getHeight() / 2;
-            int operCenterY = oper.getSource().getHeight() / 2;
+            int operCenterY = op.getSource().getHeight() / 2;
 
             if (overXl < overXr) {
                 return new SmartMoveTargets(
@@ -188,19 +188,19 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
 
         if (targets != null) {
             last.moveMouse(targets.lastTarget.x, targets.lastTarget.y);
-            oper.moveMouse(targets.operTarget.x, targets.operTarget.y);
+            op.moveMouse(targets.operTarget.x, targets.operTarget.y);
         }
 
-        oper.enterMouse();
+        op.enterMouse();
     }
 
-    protected JPopupMenu waitPopupMenu(ComponentOperator oper) {
-        return (JPopupMenu) JPopupMenuOperator.waitJPopupMenu(new IsPopupMenuShowingPredicate(oper))
+    protected JPopupMenu waitPopupMenu(ComponentOperator op) {
+        return (JPopupMenu) JPopupMenuOperator.waitJPopupMenu(new IsPopupMenuShowingPredicate(op))
                 .getSource();
     }
 
     protected JMenuItem waitItem(
-            ComponentOperator oper, MenuElement element, List<Predicate<Component>> predicates, int depth) {
+            ComponentOperator op, MenuElement element, List<Predicate<Component>> predicates, int depth) {
         return (JMenuItem) SupplierRepeater.on(new JMenuItemSupplier(element, predicates, depth))
                 .runUntilNotNull();
     }
@@ -230,15 +230,15 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
     }
 
     private static class IsPopupMenuShowingPredicate implements Predicate<Component> {
-        private final ComponentOperator oper;
+        private final ComponentOperator op;
 
-        public IsPopupMenuShowingPredicate(ComponentOperator oper) {
-            this.oper = oper;
+        public IsPopupMenuShowingPredicate(ComponentOperator op) {
+            this.op = op;
         }
 
         @Override
         public boolean test(Component comp) {
-            return (comp == ((JMenuOperator) oper).getPopupMenu()) && comp.isShowing();
+            return (comp == ((JMenuOperator) op).getPopupMenu()) && comp.isShowing();
         }
     }
 

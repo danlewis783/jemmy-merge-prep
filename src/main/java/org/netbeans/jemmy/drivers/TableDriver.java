@@ -28,7 +28,7 @@ package org.netbeans.jemmy.drivers;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface TableDriver {
-    void selectCell(ComponentOperator oper, int row, int column);
+    void selectCell(ComponentOperator op, int row, int column);
 
-    void editCell(ComponentOperator oper, int row, int column, Object value);
+    void editCell(ComponentOperator op, int row, int column, Object value);
 }

@@ -41,24 +41,24 @@ public final class KeyRobotDriver extends RobotDriver implements KeyDriver {
     }
 
     @Override
-    public void pushKey(ComponentOperator oper, int keyCode, int modifiers, TimeoutKey pushTime) {
-        pressKey(oper, keyCode, modifiers);
+    public void pushKey(ComponentOperator op, int keyCode, int modifiers, TimeoutKey pushTime) {
+        pressKey(op, keyCode, modifiers);
         Timeouts.sleep(pushTime);
-        releaseKey(oper, keyCode, modifiers);
+        releaseKey(op, keyCode, modifiers);
     }
 
     @Override
-    public void typeKey(ComponentOperator oper, int keyCode, char keyChar, int modifiers, TimeoutKey pushTime) {
-        pushKey(oper, keyCode, modifiers, pushTime);
+    public void typeKey(ComponentOperator op, int keyCode, char keyChar, int modifiers, TimeoutKey pushTime) {
+        pushKey(op, keyCode, modifiers, pushTime);
     }
 
     @Override
-    public void pressKey(ComponentOperator oper, int keyCode, int modifiers) {
+    public void pressKey(ComponentOperator op, int keyCode, int modifiers) {
         pressKey(keyCode, modifiers);
     }
 
     @Override
-    public void releaseKey(ComponentOperator oper, int keyCode, int modifiers) {
+    public void releaseKey(ComponentOperator op, int keyCode, int modifiers) {
         releaseKey(keyCode, modifiers);
     }
 }

@@ -39,16 +39,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JLabelOperator extends JComponentOperator {
 
-    public static JLabelOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JLabelOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JLabelOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JLabelOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -63,67 +63,67 @@ public class JLabelOperator extends JComponentOperator {
         return new JLabelOperator(b);
     }
 
-    public static JLabelOperator waitFor(ContainerOperator cont, int index) {
-        return new JLabelOperator((JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class), index));
+    public static JLabelOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JLabelOperator((JLabel) waitComponent(rootOp, PredicatesJ.of(JLabel.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JLabelOperator(ContainerOperator cont, int index) {
-        this((JLabel) waitComponent(cont, PredicatesJ.of(JLabel.class), index));
+    public JLabelOperator(ContainerOperator rootOp, int index) {
+        this((JLabel) waitComponent(rootOp, PredicatesJ.of(JLabel.class), index));
     }
 
-    public static JLabelOperator waitFor(ContainerOperator cont, Predicate<Component> predicate) {
-        return waitFor(cont, predicate, 0);
+    public static JLabelOperator waitFor(ContainerOperator rootOp, Predicate<Component> predicate) {
+        return waitFor(rootOp, predicate, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JLabelOperator(ContainerOperator cont, Predicate<Component> predicate) {
-        this(cont, predicate, 0);
+    public JLabelOperator(ContainerOperator rootOp, Predicate<Component> predicate) {
+        this(rootOp, predicate, 0);
     }
 
-    public static JLabelOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JLabelOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JLabelOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JLabelOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JLabelOperator waitFor(ContainerOperator cont, Predicate<Component> predicate, int index) {
+    public static JLabelOperator waitFor(ContainerOperator rootOp, Predicate<Component> predicate, int index) {
         return new JLabelOperator(
-                (JLabel) cont.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
+                (JLabel) rootOp.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JLabelOperator(ContainerOperator cont, Predicate<Component> predicate, int index) {
-        this((JLabel) cont.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
+    public JLabelOperator(ContainerOperator rootOp, Predicate<Component> predicate, int index) {
+        this((JLabel) rootOp.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
     }
 
     public static JLabelOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         return new JLabelOperator(
-                (JLabel) waitComponent(cont, new JLabelByTextPredicate(text, stringComparator), index));
+                (JLabel) waitComponent(rootOp, new JLabelByTextPredicate(text, stringComparator), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JLabelOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this((JLabel) waitComponent(cont, new JLabelByTextPredicate(text, stringComparator), index));
+    public JLabelOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        this((JLabel) waitComponent(rootOp, new JLabelByTextPredicate(text, stringComparator), index));
     }
 
     public void waitText(String text, StringComparator stringComparator) {

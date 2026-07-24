@@ -33,42 +33,42 @@ import org.netbeans.jemmy.util.StringComparators;
 public class InternalFramePopupMenuDriver extends DefaultInternalFrameDriver {
 
     @Override
-    public void requestClose(ComponentOperator oper) {
-        checkSupported(oper);
-        pushMenuItem(oper, titlePaneActionText("InternalFrameTitlePane.closeButtonText"));
+    public void requestClose(ComponentOperator op) {
+        checkSupported(op);
+        pushMenuItem(op, titlePaneActionText("InternalFrameTitlePane.closeButtonText"));
     }
 
     @Override
-    public void iconify(ComponentOperator oper) {
-        checkSupported(oper);
-        pushMenuItem(oper, titlePaneActionText("InternalFrameTitlePane.minimizeButtonText"));
+    public void iconify(ComponentOperator op) {
+        checkSupported(op);
+        pushMenuItem(op, titlePaneActionText("InternalFrameTitlePane.minimizeButtonText"));
     }
 
     @Override
-    public void maximize(ComponentOperator oper) {
-        checkSupported(oper);
-        FrameGateState state = gateState((JInternalFrameOperator) oper);
+    public void maximize(ComponentOperator op) {
+        checkSupported(op);
+        FrameGateState state = gateState((JInternalFrameOperator) op);
 
         if (!state.maximum) {
             if (!state.selected) {
-                activate(oper);
+                activate(op);
             }
 
-            pushMenuItem(oper, titlePaneActionText("InternalFrameTitlePane.maximizeButtonText"));
+            pushMenuItem(op, titlePaneActionText("InternalFrameTitlePane.maximizeButtonText"));
         }
     }
 
     @Override
-    public void demaximize(ComponentOperator oper) {
-        checkSupported(oper);
-        FrameGateState state = gateState((JInternalFrameOperator) oper);
+    public void demaximize(ComponentOperator op) {
+        checkSupported(op);
+        FrameGateState state = gateState((JInternalFrameOperator) op);
 
         if (state.maximum) {
             if (!state.selected) {
-                activate(oper);
+                activate(op);
             }
 
-            pushMenuItem(oper, titlePaneActionText("InternalFrameTitlePane.restoreButtonText"));
+            pushMenuItem(op, titlePaneActionText("InternalFrameTitlePane.restoreButtonText"));
         }
     }
 
@@ -76,8 +76,8 @@ public class InternalFramePopupMenuDriver extends DefaultInternalFrameDriver {
         return Objects.requireNonNull(UIManager.getString(key), key + " UI default");
     }
 
-    private static void pushMenuItem(ComponentOperator oper, String menuText) {
-        ((JInternalFrameOperator) oper).getPopupButton().push();
+    private static void pushMenuItem(ComponentOperator op, String menuText) {
+        ((JInternalFrameOperator) op).getPopupButton().push();
         JPopupMenuOperator popupMenu = JPopupMenuOperator.waitFor();
         JMenuItemOperator.waitFor(popupMenu, menuText, StringComparators.strict())
                 .push();

@@ -45,14 +45,14 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
-        selectItems(oper, new int[] {index});
+    public void selectItem(ComponentOperator op, int index) {
+        selectItems(op, new int[] {index});
     }
 
     @Override
-    public void selectItems(ComponentOperator oper, int[] indices) {
-        checkSupported(oper);
-        JTreeOperator jTreeOperator = (JTreeOperator) oper;
+    public void selectItems(ComponentOperator op, int[] indices) {
+        checkSupported(op);
+        JTreeOperator jTreeOperator = (JTreeOperator) op;
         // one EDT hop: clear and re-select atomically so no observer sees the empty selection
         QueueTool.getInstance().runOnQueue(() -> {
             jTreeOperator.clearSelection();
@@ -61,36 +61,36 @@ public final class JTreeAPIDriver extends LightSupportiveDriver implements TreeD
     }
 
     @Override
-    public void expandItem(ComponentOperator oper, int index) {
-        checkSupported(oper);
-        ((JTreeOperator) oper).expandRow(index);
+    public void expandItem(ComponentOperator op, int index) {
+        checkSupported(op);
+        ((JTreeOperator) op).expandRow(index);
     }
 
     @Override
-    public void collapseItem(ComponentOperator oper, int index) {
-        checkSupported(oper);
-        ((JTreeOperator) oper).collapseRow(index);
+    public void collapseItem(ComponentOperator op, int index) {
+        checkSupported(op);
+        ((JTreeOperator) op).collapseRow(index);
     }
 
     @Override
-    public void editItem(ComponentOperator oper, int index, Object newValue, TimeoutKey waitEditorTime) {
-        JTextComponentOperator textoper = startEditingAndReturnEditor(oper, index, waitEditorTime);
+    public void editItem(ComponentOperator op, int index, Object newValue, TimeoutKey waitEditorTime) {
+        JTextComponentOperator textoper = startEditingAndReturnEditor(op, index, waitEditorTime);
         TextDriver text =
                 DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);
         text.typeText(textoper, newValue.toString(), 0);
-        ((JTreeOperator) oper).stopEditing();
+        ((JTreeOperator) op).stopEditing();
     }
 
     @Override
-    public void startEditing(ComponentOperator oper, int index, TimeoutKey waitEditorTime) {
-        startEditingAndReturnEditor(oper, index, waitEditorTime);
+    public void startEditing(ComponentOperator op, int index, TimeoutKey waitEditorTime) {
+        startEditingAndReturnEditor(op, index, waitEditorTime);
     }
 
     private JTextComponentOperator startEditingAndReturnEditor(
-            ComponentOperator oper, int index, TimeoutKey waitEditorTime) {
-        checkSupported(oper);
-        JTreeOperator jTreeOperator = (JTreeOperator) oper;
+            ComponentOperator op, int index, TimeoutKey waitEditorTime) {
+        checkSupported(op);
+        JTreeOperator jTreeOperator = (JTreeOperator) op;
         // one EDT hop: start editing on the row fetched in the same snapshot, so the path
         // cannot go stale between the lookup and the edit
         QueueTool.getInstance().runOnQueue(() -> jTreeOperator.startEditingAtPath(jTreeOperator.getPathForRow(index)));

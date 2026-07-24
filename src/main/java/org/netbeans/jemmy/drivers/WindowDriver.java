@@ -28,16 +28,16 @@ package org.netbeans.jemmy.drivers;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface WindowDriver {
-    void activate(ComponentOperator oper);
+    void activate(ComponentOperator op);
 
-    void requestClose(ComponentOperator oper);
+    void requestClose(ComponentOperator op);
 
-    void requestCloseAndThenHide(ComponentOperator oper);
+    void requestCloseAndThenHide(ComponentOperator op);
 
     @Deprecated
-    void close(ComponentOperator oper);
+    void close(ComponentOperator op);
 
-    void move(ComponentOperator oper, int x, int y);
+    void move(ComponentOperator op, int x, int y);
 
-    void resize(ComponentOperator oper, int width, int height);
+    void resize(ComponentOperator op, int width, int height);
 }

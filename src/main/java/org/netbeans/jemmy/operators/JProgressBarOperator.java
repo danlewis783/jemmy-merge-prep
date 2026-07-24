@@ -38,16 +38,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JProgressBarOperator extends JComponentOperator {
 
-    public static JProgressBarOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JProgressBarOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JProgressBarOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JProgressBarOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -62,42 +62,42 @@ public class JProgressBarOperator extends JComponentOperator {
         return new JProgressBarOperator(b);
     }
 
-    public static JProgressBarOperator waitFor(ContainerOperator cont, int index) {
+    public static JProgressBarOperator waitFor(ContainerOperator rootOp, int index) {
         return new JProgressBarOperator(
-                (JProgressBar) waitComponent(cont, PredicatesJ.of(JProgressBar.class), index));
+                (JProgressBar) waitComponent(rootOp, PredicatesJ.of(JProgressBar.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JProgressBarOperator(ContainerOperator cont, int index) {
-        this((JProgressBar) waitComponent(cont, PredicatesJ.of(JProgressBar.class), index));
+    public JProgressBarOperator(ContainerOperator rootOp, int index) {
+        this((JProgressBar) waitComponent(rootOp, PredicatesJ.of(JProgressBar.class), index));
     }
 
-    public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JProgressBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JProgressBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JProgressBarOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JProgressBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JProgressBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JProgressBarOperator(
-                (JProgressBar) cont.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
+                (JProgressBar) rootOp.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JProgressBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JProgressBar) cont.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
+    public JProgressBarOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JProgressBar) rootOp.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
     }
 
     public void waitValue(int value) {

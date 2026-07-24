@@ -51,133 +51,133 @@ public abstract class AbstractScrollDriver extends LightSupportiveDriver impleme
     }
 
     @Override
-    public void scroll(ComponentOperator oper, ScrollAdjuster adj) {
-        if (canJump(oper)) {
-            doJumps(oper, adj);
+    public void scroll(ComponentOperator op, ScrollAdjuster adj) {
+        if (canJump(op)) {
+            doJumps(op, adj);
         }
 
-        if (canDragAndDrop(oper)) {
-            doDragAndDrop(oper, adj);
+        if (canDragAndDrop(op)) {
+            doDragAndDrop(op, adj);
         }
 
-        if (canPushAndWait(oper)) {
+        if (canPushAndWait(op)) {
             long freezeTimeout = Timeouts.get(TimeoutKey.AbstractScrollDriver_FreezeTimeout);
-            if (!doPushAndWait(oper, adj, freezeTimeout)) {
-                throw new JemmyException("Scrolling stuck for more than " + freezeTimeout + " ms on " + oper);
+            if (!doPushAndWait(op, adj, freezeTimeout)) {
+                throw new JemmyException("Scrolling stuck for more than " + freezeTimeout + " ms on " + op);
             }
         }
 
         for (int i = 0; i < ADJUST_CLICK_COUNT; i++) {
-            doSteps(oper, adj);
+            doSteps(op, adj);
         }
     }
 
-    protected abstract void step(ComponentOperator oper, ScrollAdjuster adj);
+    protected abstract void step(ComponentOperator op, ScrollAdjuster adj);
 
-    protected abstract void jump(ComponentOperator oper, ScrollAdjuster adj);
+    protected abstract void jump(ComponentOperator op, ScrollAdjuster adj);
 
-    protected abstract void startPushAndWait(ComponentOperator oper, int direction, int orientation);
+    protected abstract void startPushAndWait(ComponentOperator op, int direction, int orientation);
 
-    protected abstract void stopPushAndWait(ComponentOperator oper, int direction, int orientation);
+    protected abstract void stopPushAndWait(ComponentOperator op, int direction, int orientation);
 
-    protected abstract @Nullable Point startDragging(ComponentOperator oper);
+    protected abstract @Nullable Point startDragging(ComponentOperator op);
 
-    protected abstract void drop(ComponentOperator oper, Point pnt);
+    protected abstract void drop(ComponentOperator op, Point pnt);
 
-    protected abstract void drag(ComponentOperator oper, Point pnt);
+    protected abstract void drag(ComponentOperator op, Point pnt);
 
-    protected abstract TimeoutKey getScrollDeltaTimeout(ComponentOperator oper);
+    protected abstract TimeoutKey getScrollDeltaTimeout(ComponentOperator op);
 
-    protected abstract int position(ComponentOperator oper, int orientation);
+    protected abstract int position(ComponentOperator op, int orientation);
 
-    protected abstract boolean canDragAndDrop(ComponentOperator oper);
+    protected abstract boolean canDragAndDrop(ComponentOperator op);
 
-    protected abstract boolean canJump(ComponentOperator oper);
+    protected abstract boolean canJump(ComponentOperator op);
 
-    protected abstract boolean canPushAndWait(ComponentOperator oper);
+    protected abstract boolean canPushAndWait(ComponentOperator op);
 
-    protected abstract int getDragAndDropStepLength(ComponentOperator oper);
+    protected abstract int getDragAndDropStepLength(ComponentOperator op);
 
-    protected void doDragAndDrop(ComponentOperator oper, ScrollAdjuster adj) {
+    protected void doDragAndDrop(ComponentOperator op, ScrollAdjuster adj) {
         int direction = adj.getScrollDirection();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            Point pnt = startDragging(oper);
+            Point pnt = startDragging(op);
             if (pnt == null) {
                 return;
             }
 
             int stalled = 0;
-            int position = position(oper, adj.getScrollOrientation());
+            int position = position(op, adj.getScrollOrientation());
             while ((adj.getScrollDirection() == direction) && (stalled < STALL_LIMIT)) {
-                drag(oper, pnt = increasePoint(oper, pnt, adj, direction));
-                int current = position(oper, adj.getScrollOrientation());
+                drag(op, pnt = increasePoint(op, pnt, adj, direction));
+                int current = position(op, adj.getScrollOrientation());
                 stalled = (current == position) ? (stalled + 1) : 0;
                 position = current;
             }
 
-            drop(oper, pnt);
+            drop(op, pnt);
         }
     }
 
-    protected void doJumps(ComponentOperator oper, ScrollAdjuster adj) {
+    protected void doJumps(ComponentOperator op, ScrollAdjuster adj) {
         int direction = adj.getScrollDirection();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
             int stalled = 0;
-            int position = position(oper, adj.getScrollOrientation());
+            int position = position(op, adj.getScrollOrientation());
             while ((adj.getScrollDirection() == direction) && (stalled < STALL_LIMIT)) {
-                jump(oper, adj);
-                int current = position(oper, adj.getScrollOrientation());
+                jump(op, adj);
+                int current = position(op, adj.getScrollOrientation());
                 stalled = (current == position) ? (stalled + 1) : 0;
                 position = current;
             }
         }
     }
 
-    protected boolean doPushAndWait(ComponentOperator oper, ScrollAdjuster adj, long freezeTimeout) {
+    protected boolean doPushAndWait(ComponentOperator op, ScrollAdjuster adj, long freezeTimeout) {
         int direction = adj.getScrollDirection();
         int orientation = adj.getScrollOrientation();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
-            TimeoutKey delta = getScrollDeltaTimeout(oper);
-            int position = position(oper, orientation);
+            TimeoutKey delta = getScrollDeltaTimeout(op);
+            int position = position(op, orientation);
             long lastChanged = System.currentTimeMillis();
-            startPushAndWait(oper, direction, orientation);
+            startPushAndWait(op, direction, orientation);
 
             while (adj.getScrollDirection() == direction) {
                 Timeouts.sleep(delta);
-                int curPosition = position(oper, orientation);
+                int curPosition = position(op, orientation);
                 if (curPosition != position) {
                     position = curPosition;
                     lastChanged = System.currentTimeMillis();
                 } else if ((System.currentTimeMillis() - lastChanged) > freezeTimeout) {
-                    stopPushAndWait(oper, direction, orientation);
+                    stopPushAndWait(op, direction, orientation);
 
                     return false;
                 }
             }
 
-            stopPushAndWait(oper, direction, orientation);
+            stopPushAndWait(op, direction, orientation);
         }
 
         return true;
     }
 
-    protected void doSteps(ComponentOperator oper, ScrollAdjuster adj) {
+    protected void doSteps(ComponentOperator op, ScrollAdjuster adj) {
         int direction = adj.getScrollDirection();
         if (direction != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
             int stalled = 0;
-            int position = position(oper, adj.getScrollOrientation());
+            int position = position(op, adj.getScrollOrientation());
             while ((adj.getScrollDirection() == direction) && (stalled < STALL_LIMIT)) {
-                step(oper, adj);
-                int current = position(oper, adj.getScrollOrientation());
+                step(op, adj);
+                int current = position(op, adj.getScrollOrientation());
                 stalled = (current == position) ? (stalled + 1) : 0;
                 position = current;
             }
         }
     }
 
-    private Point increasePoint(ComponentOperator oper, Point pnt, ScrollAdjuster adj, int direction) {
+    private Point increasePoint(ComponentOperator op, Point pnt, ScrollAdjuster adj, int direction) {
         return (adj.getScrollOrientation() == Adjustable.HORIZONTAL)
-                ? new Point(pnt.x + ((direction == 1) ? 1 : -1) * getDragAndDropStepLength(oper), pnt.y)
-                : new Point(pnt.x, pnt.y + ((direction == 1) ? 1 : -1) * getDragAndDropStepLength(oper));
+                ? new Point(pnt.x + ((direction == 1) ? 1 : -1) * getDragAndDropStepLength(op), pnt.y)
+                : new Point(pnt.x, pnt.y + ((direction == 1) ? 1 : -1) * getDragAndDropStepLength(op));
     }
 }

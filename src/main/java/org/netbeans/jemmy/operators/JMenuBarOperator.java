@@ -55,16 +55,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuBarOperator extends JComponentOperator {
 
-    public static JMenuBarOperator waitFor(ContainerOperator cont) {
-        return new JMenuBarOperator((JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class), 0));
+    public static JMenuBarOperator waitFor(ContainerOperator rootOp) {
+        return new JMenuBarOperator((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), 0));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JMenuBarOperator(ContainerOperator cont) {
-        this((JMenuBar) waitComponent(cont, PredicatesJ.of(JMenuBar.class), 0));
+    public JMenuBarOperator(ContainerOperator rootOp) {
+        this((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), 0));
     }
 
     /**
@@ -83,29 +83,29 @@ public class JMenuBarOperator extends JComponentOperator {
         return new JMenuBarOperator(b);
     }
 
-    public static JMenuBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JMenuBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JMenuBarOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JMenuBarOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JMenuBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JMenuBarOperator(
-                (JMenuBar) cont.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
+                (JMenuBar) rootOp.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JMenuBarOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JMenuBar) cont.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
+    public JMenuBarOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JMenuBar) rootOp.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     public @Nullable JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -223,8 +223,8 @@ public class JMenuBarOperator extends JComponentOperator {
     public void closeSubmenus() {
         JMenu menu = (JMenu) findSubComponent(new IsJMenuAndPopupIsVisiblePredicate());
         if (menu != null) {
-            JMenuOperator oper = JMenuOperator.of(menu);
-            oper.push();
+            JMenuOperator menuOp = JMenuOperator.of(menu);
+            menuOp.push();
         }
     }
 

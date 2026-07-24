@@ -57,16 +57,16 @@ public class JSpinnerOperator extends JComponentOperator {
     private @Nullable JButtonOperator decreaseOperator = null;
     private @Nullable JButtonOperator increaseOperator = null;
 
-    public static JSpinnerOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JSpinnerOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JSpinnerOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JSpinnerOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -85,67 +85,67 @@ public class JSpinnerOperator extends JComponentOperator {
         return new JSpinnerOperator(b);
     }
 
-    public static JSpinnerOperator waitFor(ContainerOperator cont, int index) {
-        return new JSpinnerOperator((JSpinner) waitComponent(cont, PredicatesJ.of(JSpinner.class), index));
+    public static JSpinnerOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JSpinnerOperator((JSpinner) waitComponent(rootOp, PredicatesJ.of(JSpinner.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, int index) {
-        this((JSpinner) waitComponent(cont, PredicatesJ.of(JSpinner.class), index));
+    public JSpinnerOperator(ContainerOperator rootOp, int index) {
+        this((JSpinner) waitComponent(rootOp, PredicatesJ.of(JSpinner.class), index));
     }
 
-    public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JSpinnerOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JSpinnerOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JSpinnerOperator waitFor(ContainerOperator cont, String text, StringComparator comparator) {
-        return waitFor(cont, text, comparator, 0);
+    public static JSpinnerOperator waitFor(ContainerOperator rootOp, String text, StringComparator comparator) {
+        return waitFor(rootOp, text, comparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, String text, StringComparator comparator) {
-        this(cont, text, comparator, 0);
+    public JSpinnerOperator(ContainerOperator rootOp, String text, StringComparator comparator) {
+        this(rootOp, text, comparator, 0);
     }
 
-    public static JSpinnerOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JSpinnerOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JSpinnerOperator(
-                (JSpinner) cont.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+                (JSpinner) rootOp.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JSpinner) cont.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+    public JSpinnerOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JSpinner) rootOp.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
     }
 
     public static JSpinnerOperator waitFor(
-            ContainerOperator cont, String text, StringComparator comparator, int index) {
+            ContainerOperator rootOp, String text, StringComparator comparator, int index) {
         return new JSpinnerOperator(
-                (JSpinner) waitComponent(cont, new JSpinnerByTextPredicate(text, comparator), index));
+                (JSpinner) waitComponent(rootOp, new JSpinnerByTextPredicate(text, comparator), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JSpinnerOperator(ContainerOperator cont, String text, StringComparator comparator, int index) {
-        this((JSpinner) waitComponent(cont, new JSpinnerByTextPredicate(text, comparator), index));
+    public JSpinnerOperator(ContainerOperator rootOp, String text, StringComparator comparator, int index) {
+        this((JSpinner) waitComponent(rootOp, new JSpinnerByTextPredicate(text, comparator), index));
     }
 
     public void scrollTo(ScrollAdjuster adj) {
@@ -321,11 +321,11 @@ public class JSpinnerOperator extends JComponentOperator {
         private final Date date;
         private final SpinnerDateModel model;
 
-        public DateScrollAdjuster(JSpinnerOperator oper, Date date) {
-            if (!(Objects.requireNonNull(oper).getModel() instanceof SpinnerDateModel)) {
+        public DateScrollAdjuster(JSpinnerOperator op, Date date) {
+            if (!(Objects.requireNonNull(op).getModel() instanceof SpinnerDateModel)) {
                 throw new IllegalArgumentException("JSpinner model is not a " + SpinnerDateModel.class.getName());
             }
-            model = (SpinnerDateModel) oper.getModel();
+            model = (SpinnerDateModel) op.getModel();
             this.date = Objects.requireNonNull(date);
         }
 
@@ -350,8 +350,8 @@ public class JSpinnerOperator extends JComponentOperator {
     public static class ExactScrollAdjuster extends ObjectScrollAdjuster {
         private final Object obj;
 
-        public ExactScrollAdjuster(JSpinnerOperator oper, Object obj, int direction) {
-            super(oper, direction);
+        public ExactScrollAdjuster(JSpinnerOperator op, Object obj, int direction) {
+            super(op, direction);
             this.obj = obj;
         }
 
@@ -366,21 +366,21 @@ public class JSpinnerOperator extends JComponentOperator {
         private int itemIndex;
         private final SpinnerListModel model;
 
-        private ListScrollAdjuster(JSpinnerOperator oper) {
-            if (!(Objects.requireNonNull(oper).getModel() instanceof SpinnerListModel)) {
+        private ListScrollAdjuster(JSpinnerOperator op) {
+            if (!(Objects.requireNonNull(op).getModel() instanceof SpinnerListModel)) {
                 throw new IllegalArgumentException("JSpinner model is not a " + SpinnerListModel.class.getName());
             }
-            model = (SpinnerListModel) oper.getModel();
+            model = (SpinnerListModel) op.getModel();
             elements = QueueTool.getInstance().callOnQueue(model::getList);
         }
 
-        public ListScrollAdjuster(JSpinnerOperator oper, int itemIndex) {
-            this(oper);
+        public ListScrollAdjuster(JSpinnerOperator op, int itemIndex) {
+            this(op);
             this.itemIndex = itemIndex;
         }
 
-        public ListScrollAdjuster(JSpinnerOperator oper, Object value) {
-            this(oper);
+        public ListScrollAdjuster(JSpinnerOperator op, Object value) {
+            this(op);
             this.itemIndex = elements.indexOf(value);
         }
 
@@ -401,7 +401,7 @@ public class JSpinnerOperator extends JComponentOperator {
         private final SpinnerNumberModel model;
         private final double value;
 
-        public NumberScrollAdjuster(JSpinnerOperator oper, double value) {
+        public NumberScrollAdjuster(JSpinnerOperator op, double value) {
             if (Double.isNaN(value)) {
                 throw new IllegalArgumentException("value may not be NaN");
             }
@@ -410,14 +410,14 @@ public class JSpinnerOperator extends JComponentOperator {
             }
 
             this.value = value;
-            if (!(Objects.requireNonNull(oper).getModel() instanceof SpinnerNumberModel)) {
+            if (!(Objects.requireNonNull(op).getModel() instanceof SpinnerNumberModel)) {
                 throw new IllegalArgumentException("JSpinner model is not a " + SpinnerNumberModel.class.getName());
             }
-            model = (SpinnerNumberModel) oper.getModel();
+            model = (SpinnerNumberModel) op.getModel();
         }
 
-        public NumberScrollAdjuster(JSpinnerOperator oper, Number value) {
-            this(oper, value.doubleValue());
+        public NumberScrollAdjuster(JSpinnerOperator op, Number value) {
+            this(op, value.doubleValue());
         }
 
         @Override
@@ -436,9 +436,9 @@ public class JSpinnerOperator extends JComponentOperator {
         private final int direction;
         private final SpinnerModel model;
 
-        public ObjectScrollAdjuster(JSpinnerOperator oper, int direction) {
+        public ObjectScrollAdjuster(JSpinnerOperator op, int direction) {
             this.direction = direction;
-            model = oper.getModel();
+            model = op.getModel();
         }
 
         public abstract boolean matches(Object obj);
@@ -470,8 +470,8 @@ public class JSpinnerOperator extends JComponentOperator {
         private final String pattern;
 
         public ToStringScrollAdjuster(
-                JSpinnerOperator oper, String pattern, StringComparator comparator, int direction) {
-            super(oper, direction);
+                JSpinnerOperator op, String pattern, StringComparator comparator, int direction) {
+            super(op, direction);
             this.pattern = pattern;
             this.comparator = comparator;
         }

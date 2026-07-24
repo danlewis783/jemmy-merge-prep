@@ -44,15 +44,15 @@ public final class JComboMouseDriver extends LightSupportiveDriver implements Li
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
-        JComboBoxOperator coper = (JComboBoxOperator) oper;
+    public void selectItem(ComponentOperator op, int index) {
+        JComboBoxOperator coper = (JComboBoxOperator) op;
         if (!coper.isPopupVisible()) {
             if ("com.sun.java.swing.plaf.motif.MotifLookAndFeel"
                     .equals(UIManager.getLookAndFeel().getClass().getName())) {
                 // one EDT snapshot: width and height must come from the same geometry read
                 Point clickPoint = QueueTool.getInstance()
-                        .callOnQueue(() -> new Point(oper.getWidth() - 2, oper.getHeight() / 2));
-                oper.clickMouse(clickPoint.x, clickPoint.y, 1);
+                        .callOnQueue(() -> new Point(op.getWidth() - 2, op.getHeight() / 2));
+                op.clickMouse(clickPoint.x, clickPoint.y, 1);
             } else {
                 DriverManager.newInstance(JemmyContext.getInstance())
                         .getButtonDriver(coper.getButton())

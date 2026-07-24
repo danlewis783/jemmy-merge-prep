@@ -40,75 +40,75 @@ public final class InternalFrameAPIDriver extends LightSupportiveDriver
     }
 
     @Override
-    public void activate(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).moveToFront();
-        ((JInternalFrameOperator) oper).setSelected(true);
+    public void activate(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).moveToFront();
+        ((JInternalFrameOperator) op).setSelected(true);
     }
 
     @Override
-    public void maximize(ComponentOperator oper) {
-        checkSupported(oper);
-        if (!((JInternalFrameOperator) oper).isSelected()) {
-            activate(oper);
+    public void maximize(ComponentOperator op) {
+        checkSupported(op);
+        if (!((JInternalFrameOperator) op).isSelected()) {
+            activate(op);
         }
 
-        ((JInternalFrameOperator) oper).setMaximum(true);
+        ((JInternalFrameOperator) op).setMaximum(true);
     }
 
     @Override
-    public void demaximize(ComponentOperator oper) {
-        checkSupported(oper);
-        if (!((JInternalFrameOperator) oper).isSelected()) {
-            activate(oper);
+    public void demaximize(ComponentOperator op) {
+        checkSupported(op);
+        if (!((JInternalFrameOperator) op).isSelected()) {
+            activate(op);
         }
 
-        ((JInternalFrameOperator) oper).setMaximum(false);
+        ((JInternalFrameOperator) op).setMaximum(false);
     }
 
     @Override
-    public void iconify(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).setIcon(true);
+    public void iconify(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).setIcon(true);
     }
 
     @Override
-    public void deiconify(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).setIcon(false);
+    public void deiconify(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).setIcon(false);
     }
 
     @Override
-    public void requestClose(ComponentOperator oper) {
-        checkSupported(oper);
-        ((JInternalFrameOperator) oper).setClosed(true);
+    public void requestClose(ComponentOperator op) {
+        checkSupported(op);
+        ((JInternalFrameOperator) op).setClosed(true);
     }
 
     @Override
-    public void requestCloseAndThenHide(ComponentOperator oper) {
+    public void requestCloseAndThenHide(ComponentOperator op) {
         throw new UnsupportedOperationException();
     }
 
     @Deprecated
     @Override
-    public void close(ComponentOperator oper) {
-        requestClose(oper);
+    public void close(ComponentOperator op) {
+        requestClose(op);
     }
 
     @Override
-    public void move(ComponentOperator oper, int x, int y) {
-        checkSupported(oper);
-        oper.setLocation(x, y);
+    public void move(ComponentOperator op, int x, int y) {
+        checkSupported(op);
+        op.setLocation(x, y);
     }
 
     @Override
-    public void resize(ComponentOperator oper, int width, int height) {
-        checkSupported(oper);
-        oper.setSize(width, height);
+    public void resize(ComponentOperator op, int width, int height) {
+        checkSupported(op);
+        op.setSize(width, height);
     }
 
     @Override
-    public Component getTitlePane(ComponentOperator oper) {
+    public Component getTitlePane(ComponentOperator op) {
         throw new UnsupportedOperationException("There is no way to get the title pane of an internal frame.");
     }
 }

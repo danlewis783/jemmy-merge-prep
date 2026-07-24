@@ -35,26 +35,26 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 
 public final class KeyEventDriver extends EventDriver implements KeyDriver {
     @Override
-    public void pressKey(ComponentOperator oper, int keyCode, int modifiers) {
-        pressKey(findNativeParent(oper.getSource()), keyCode, modifiers);
+    public void pressKey(ComponentOperator op, int keyCode, int modifiers) {
+        pressKey(findNativeParent(op.getSource()), keyCode, modifiers);
     }
 
     @Override
-    public void releaseKey(ComponentOperator oper, int keyCode, int modifiers) {
-        releaseKey(findNativeParent(oper.getSource()), keyCode, modifiers);
+    public void releaseKey(ComponentOperator op, int keyCode, int modifiers) {
+        releaseKey(findNativeParent(op.getSource()), keyCode, modifiers);
     }
 
     @Override
-    public void pushKey(ComponentOperator oper, int keyCode, int modifiers, TimeoutKey pushTime) {
-        Component nativeContainer = findNativeParent(oper.getSource());
+    public void pushKey(ComponentOperator op, int keyCode, int modifiers, TimeoutKey pushTime) {
+        Component nativeContainer = findNativeParent(op.getSource());
         pressKey(nativeContainer, keyCode, modifiers);
         Timeouts.sleep(pushTime);
         releaseKey(nativeContainer, keyCode, modifiers);
     }
 
     @Override
-    public void typeKey(ComponentOperator oper, int keyCode, char keyChar, int modifiers, TimeoutKey pushTime) {
-        Component nativeContainer = findNativeParent(oper.getSource());
+    public void typeKey(ComponentOperator op, int keyCode, char keyChar, int modifiers, TimeoutKey pushTime) {
+        Component nativeContainer = findNativeParent(op.getSource());
         pressKey(nativeContainer, keyCode, modifiers);
         Timeouts.sleep(pushTime);
         dispatchEvent(

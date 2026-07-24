@@ -29,11 +29,11 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface KeyDriver {
-    void pressKey(ComponentOperator oper, int keyCode, int modifiers);
+    void pressKey(ComponentOperator op, int keyCode, int modifiers);
 
-    void releaseKey(ComponentOperator oper, int keyCode, int modifiers);
+    void releaseKey(ComponentOperator op, int keyCode, int modifiers);
 
-    void pushKey(ComponentOperator oper, int keyCode, int modifiers, TimeoutKey pushTime);
+    void pushKey(ComponentOperator op, int keyCode, int modifiers, TimeoutKey pushTime);
 
-    void typeKey(ComponentOperator oper, int keyCode, char keyChar, int modifiers, TimeoutKey pushTime);
+    void typeKey(ComponentOperator op, int keyCode, char keyChar, int modifiers, TimeoutKey pushTime);
 }

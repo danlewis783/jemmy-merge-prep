@@ -46,16 +46,16 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class JTableHeaderOperator extends JComponentOperator {
 
-    public static JTableHeaderOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JTableHeaderOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JTableHeaderOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -74,42 +74,42 @@ public class JTableHeaderOperator extends JComponentOperator {
         return new JTableHeaderOperator(b);
     }
 
-    public static JTableHeaderOperator waitFor(ContainerOperator cont, int index) {
+    public static JTableHeaderOperator waitFor(ContainerOperator rootOp, int index) {
         return new JTableHeaderOperator(
-                (JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
+                (JTableHeader) waitComponent(rootOp, PredicatesJ.of(JTableHeader.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont, int index) {
-        this((JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class), index));
+    public JTableHeaderOperator(ContainerOperator rootOp, int index) {
+        this((JTableHeader) waitComponent(rootOp, PredicatesJ.of(JTableHeader.class), index));
     }
 
-    public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JTableHeaderOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JTableHeaderOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JTableHeaderOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JTableHeaderOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTableHeaderOperator(
-                (JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
+                (JTableHeader) rootOp.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JTableHeaderOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTableHeader) cont.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
+    public JTableHeaderOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JTableHeader) rootOp.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
     }
 
     public void selectColumn(int columnIndex) {

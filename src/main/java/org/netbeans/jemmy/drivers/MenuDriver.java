@@ -34,5 +34,5 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface MenuDriver {
     @Nullable
-    MenuElement pushMenu(ComponentOperator oper, List<Predicate<Component>> predicates);
+    MenuElement pushMenu(ComponentOperator op, List<Predicate<Component>> predicates);
 }

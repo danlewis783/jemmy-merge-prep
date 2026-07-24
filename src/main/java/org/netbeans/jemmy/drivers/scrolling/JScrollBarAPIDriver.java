@@ -41,21 +41,21 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
-    public void scrollToMinimum(ComponentOperator oper, int orientation) {
-        JScrollBarOperator scroll = (JScrollBarOperator) oper;
+    public void scrollToMinimum(ComponentOperator op, int orientation) {
+        JScrollBarOperator scroll = (JScrollBarOperator) op;
         scroll.setValue(scroll.getMinimum());
     }
 
     @Override
-    public void scrollToMaximum(ComponentOperator oper, int orientation) {
-        JScrollBarOperator scroll = (JScrollBarOperator) oper;
+    public void scrollToMaximum(ComponentOperator op, int orientation) {
+        JScrollBarOperator scroll = (JScrollBarOperator) op;
         int target = QueueTool.getInstance().callOnQueue(() -> scroll.getMaximum() - scroll.getVisibleAmount());
         scroll.setValue(target);
     }
 
     @Override
-    protected void step(ComponentOperator oper, ScrollAdjuster adj) {
-        JScrollBarOperator scroll = (JScrollBarOperator) oper;
+    protected void step(ComponentOperator op, ScrollAdjuster adj) {
+        JScrollBarOperator scroll = (JScrollBarOperator) op;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             int target = QueueTool.getInstance()
                     .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + scroll.getUnitIncrement())
@@ -73,18 +73,18 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
-    protected TimeoutKey getScrollDeltaTimeout(ComponentOperator oper) {
+    protected TimeoutKey getScrollDeltaTimeout(ComponentOperator op) {
         return TimeoutKey.JScrollBarOperator_DragAndDropScrollingDelta;
     }
 
     @Override
-    protected int position(ComponentOperator oper, int orientation) {
-        return ((JScrollBarOperator) oper).getValue();
+    protected int position(ComponentOperator op, int orientation) {
+        return ((JScrollBarOperator) op).getValue();
     }
 
     @Override
-    protected void jump(ComponentOperator oper, ScrollAdjuster adj) {
-        JScrollBarOperator scroll = (JScrollBarOperator) oper;
+    protected void jump(ComponentOperator op, ScrollAdjuster adj) {
+        JScrollBarOperator scroll = (JScrollBarOperator) op;
         if (adj.getScrollDirection() == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
             int target = QueueTool.getInstance()
                     .callOnQueue(() -> (scroll.getValue() > scroll.getMinimum() + scroll.getBlockIncrement())
@@ -102,46 +102,46 @@ public final class JScrollBarAPIDriver extends AbstractScrollDriver {
     }
 
     @Override
-    protected void startPushAndWait(ComponentOperator oper, int direction, int orientation) {}
+    protected void startPushAndWait(ComponentOperator op, int direction, int orientation) {}
 
     @Override
-    protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {}
+    protected void stopPushAndWait(ComponentOperator op, int direction, int orientation) {}
 
     @Override
-    protected @Nullable Point startDragging(ComponentOperator oper) {
+    protected @Nullable Point startDragging(ComponentOperator op) {
         return null;
     }
 
     @Override
-    protected void drop(ComponentOperator oper, Point pnt) {}
+    protected void drop(ComponentOperator op, Point pnt) {}
 
     @Override
-    protected void drag(ComponentOperator oper, Point pnt) {}
+    protected void drag(ComponentOperator op, Point pnt) {}
 
     @Override
-    protected boolean canDragAndDrop(ComponentOperator oper) {
+    protected boolean canDragAndDrop(ComponentOperator op) {
         return false;
     }
 
     @Override
-    protected boolean canJump(ComponentOperator oper) {
-        return isSmallIncrement((JScrollBarOperator) oper);
+    protected boolean canJump(ComponentOperator op) {
+        return isSmallIncrement((JScrollBarOperator) op);
     }
 
     @Override
-    protected boolean canPushAndWait(ComponentOperator oper) {
+    protected boolean canPushAndWait(ComponentOperator op) {
         return false;
     }
 
     @Override
-    protected int getDragAndDropStepLength(ComponentOperator oper) {
+    protected int getDragAndDropStepLength(ComponentOperator op) {
         return 1;
     }
 
-    private boolean isSmallIncrement(JScrollBarOperator oper) {
+    private boolean isSmallIncrement(JScrollBarOperator op) {
         // one EDT snapshot: both unit-increment reads must describe the same moment
         return QueueTool.getInstance()
-                .callOnQueue(() -> (oper.getUnitIncrement(-1) <= SMALL_INCREMENT)
-                        && (oper.getUnitIncrement(1) <= SMALL_INCREMENT));
+                .callOnQueue(() -> (op.getUnitIncrement(-1) <= SMALL_INCREMENT)
+                        && (op.getUnitIncrement(1) <= SMALL_INCREMENT));
     }
 }

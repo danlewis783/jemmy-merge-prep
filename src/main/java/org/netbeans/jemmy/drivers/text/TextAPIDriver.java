@@ -42,17 +42,17 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     }
 
     @Override
-    public void changeCaretPosition(ComponentOperator oper, int position) {
-        checkSupported(oper);
-        ((JTextComponentOperator) oper).setCaretPosition(position);
+    public void changeCaretPosition(ComponentOperator op, int position) {
+        checkSupported(op);
+        ((JTextComponentOperator) op).setCaretPosition(position);
     }
 
     @Override
-    public void selectText(ComponentOperator oper, int startPosition, int finalPosition) {
-        checkSupported(oper);
+    public void selectText(ComponentOperator op, int startPosition, int finalPosition) {
+        checkSupported(op);
         int start = Math.min(startPosition, finalPosition);
         int end = Math.max(startPosition, finalPosition);
-        JTextComponentOperator toper = (JTextComponentOperator) oper;
+        JTextComponentOperator toper = (JTextComponentOperator) op;
         // one EDT hop: set both bounds together so no observer sees a mismatched selection
         QueueTool.getInstance().runOnQueue(() -> {
             toper.setSelectionStart(start);
@@ -61,17 +61,17 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
     }
 
     @Override
-    public void clearText(ComponentOperator oper) {
-        ((JTextComponentOperator) oper).setText("");
+    public void clearText(ComponentOperator op) {
+        ((JTextComponentOperator) op).setText("");
     }
 
     @Override
-    public void typeText(ComponentOperator oper, String text, int caretPosition) {
-        checkSupported(oper);
+    public void typeText(ComponentOperator op, String text, int caretPosition) {
+        checkSupported(op);
         // one EDT snapshot: the text and its selection bounds must describe the same moment,
         // since reading them across separate hops could straddle a selection change
         TextSnapshot snapshot = QueueTool.getInstance()
-                .callOnQueue(() -> new TextSnapshot(getText(oper), getSelectionStart(oper), getSelectionEnd(oper)));
+                .callOnQueue(() -> new TextSnapshot(getText(op), getSelectionStart(op), getSelectionEnd(op)));
         String curtext = snapshot.text;
         int realPos = caretPosition;
         if ((snapshot.selectionStart == realPos) || (snapshot.selectionEnd == realPos)) {
@@ -82,30 +82,30 @@ public abstract class TextAPIDriver extends LightSupportiveDriver implements Tex
             curtext = curtext.substring(0, snapshot.selectionStart) + curtext.substring(snapshot.selectionEnd);
         }
 
-        changeText(oper, curtext.substring(0, realPos) + text + curtext.substring(realPos));
+        changeText(op, curtext.substring(0, realPos) + text + curtext.substring(realPos));
     }
 
     @Override
-    public void changeText(ComponentOperator oper, String text) {
-        checkSupported(oper);
-        ((JTextComponentOperator) oper).setText(text);
+    public void changeText(ComponentOperator op, String text) {
+        checkSupported(op);
+        ((JTextComponentOperator) op).setText(text);
     }
 
     @Override
-    public void enterText(ComponentOperator oper, String text) {
-        changeText(oper, text);
+    public void enterText(ComponentOperator op, String text) {
+        changeText(op, text);
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getKeyDriver(oper)
-                .pushKey(oper, KeyEvent.VK_ENTER, 0, TimeoutKey.TextApiDriver_EnterText);
+                .getKeyDriver(op)
+                .pushKey(op, KeyEvent.VK_ENTER, 0, TimeoutKey.TextApiDriver_EnterText);
     }
 
-    public abstract String getText(ComponentOperator oper);
+    public abstract String getText(ComponentOperator op);
 
-    public abstract int getCaretPosition(ComponentOperator oper);
+    public abstract int getCaretPosition(ComponentOperator op);
 
-    public abstract int getSelectionStart(ComponentOperator oper);
+    public abstract int getSelectionStart(ComponentOperator op);
 
-    public abstract int getSelectionEnd(ComponentOperator oper);
+    public abstract int getSelectionEnd(ComponentOperator op);
 
     /** Holder for the text and selection bounds {@link #typeText} reads from one EDT snapshot. */
     private static final class TextSnapshot {

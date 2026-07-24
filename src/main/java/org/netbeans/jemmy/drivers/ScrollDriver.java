@@ -29,9 +29,9 @@ import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface ScrollDriver {
-    void scrollToMinimum(ComponentOperator oper, int orientation);
+    void scrollToMinimum(ComponentOperator op, int orientation);
 
-    void scrollToMaximum(ComponentOperator oper, int orientation);
+    void scrollToMaximum(ComponentOperator op, int orientation);
 
-    void scroll(ComponentOperator oper, ScrollAdjuster adj);
+    void scroll(ComponentOperator op, ScrollAdjuster adj);
 }

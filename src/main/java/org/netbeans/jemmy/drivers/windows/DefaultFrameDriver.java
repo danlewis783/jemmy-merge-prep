@@ -44,30 +44,30 @@ public final class DefaultFrameDriver extends LightSupportiveDriver implements F
     }
 
     @Override
-    public void iconify(ComponentOperator oper) {
-        checkSupported(oper);
+    public void iconify(ComponentOperator op) {
+        checkSupported(op);
         eventDriver.dispatchEvent(
-                oper.getSource(), new WindowEvent((Window) oper.getSource(), WindowEvent.WINDOW_ICONIFIED));
-        ((FrameOperator) oper).setState(Frame.ICONIFIED);
+                op.getSource(), new WindowEvent((Window) op.getSource(), WindowEvent.WINDOW_ICONIFIED));
+        ((FrameOperator) op).setState(Frame.ICONIFIED);
     }
 
     @Override
-    public void deiconify(ComponentOperator oper) {
-        checkSupported(oper);
+    public void deiconify(ComponentOperator op) {
+        checkSupported(op);
         eventDriver.dispatchEvent(
-                oper.getSource(), new WindowEvent((Window) oper.getSource(), WindowEvent.WINDOW_DEICONIFIED));
-        ((FrameOperator) oper).setState(Frame.NORMAL);
+                op.getSource(), new WindowEvent((Window) op.getSource(), WindowEvent.WINDOW_DEICONIFIED));
+        ((FrameOperator) op).setState(Frame.NORMAL);
     }
 
     @Override
-    public void maximize(ComponentOperator oper) {
-        checkSupported(oper);
-        ((FrameOperator) oper).setExtendedState(Frame.MAXIMIZED_BOTH);
+    public void maximize(ComponentOperator op) {
+        checkSupported(op);
+        ((FrameOperator) op).setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
     @Override
-    public void demaximize(ComponentOperator oper) {
-        checkSupported(oper);
-        ((FrameOperator) oper).setExtendedState(Frame.NORMAL);
+    public void demaximize(ComponentOperator op) {
+        checkSupported(op);
+        ((FrameOperator) op).setExtendedState(Frame.NORMAL);
     }
 }

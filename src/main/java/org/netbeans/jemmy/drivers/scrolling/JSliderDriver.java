@@ -44,51 +44,51 @@ public final class JSliderDriver extends AbstractScrollDriver {
     }
 
     @Override
-    public void scrollToMinimum(ComponentOperator oper, int orientation) {
-        checkSupported(oper);
-        scroll(oper, new ScrollAdjuster() {
+    public void scrollToMinimum(ComponentOperator op, int orientation) {
+        checkSupported(op);
+        scroll(op, new ScrollAdjuster() {
             @Override
             public int getScrollDirection() {
-                return ((JSliderOperator) oper).getMinimum() < ((JSliderOperator) oper).getValue()
+                return ((JSliderOperator) op).getMinimum() < ((JSliderOperator) op).getValue()
                         ? DECREASE_SCROLL_DIRECTION
                         : DO_NOT_TOUCH_SCROLL_DIRECTION;
             }
 
             @Override
             public int getScrollOrientation() {
-                return ((JSliderOperator) oper).getOrientation();
+                return ((JSliderOperator) op).getOrientation();
             }
         });
     }
 
     @Override
-    public void scrollToMaximum(ComponentOperator oper, int orientation) {
-        checkSupported(oper);
-        scroll(oper, new ScrollAdjuster() {
+    public void scrollToMaximum(ComponentOperator op, int orientation) {
+        checkSupported(op);
+        scroll(op, new ScrollAdjuster() {
             @Override
             public int getScrollDirection() {
-                return ((JSliderOperator) oper).getMaximum() > ((JSliderOperator) oper).getValue()
+                return ((JSliderOperator) op).getMaximum() > ((JSliderOperator) op).getValue()
                         ? INCREASE_SCROLL_DIRECTION
                         : DO_NOT_TOUCH_SCROLL_DIRECTION;
             }
 
             @Override
             public int getScrollOrientation() {
-                return ((JSliderOperator) oper).getOrientation();
+                return ((JSliderOperator) op).getOrientation();
             }
         });
     }
 
     @Override
-    protected void step(ComponentOperator oper, ScrollAdjuster adj) {
+    protected void step(ComponentOperator op, ScrollAdjuster adj) {
         if (adj.getScrollDirection() != ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION) {
             Point clickPoint = QueueTool.getInstance()
-                    .callOnQueue(() -> getClickPoint(oper, adj.getScrollDirection(), adj.getScrollOrientation()));
+                    .callOnQueue(() -> getClickPoint(op, adj.getScrollDirection(), adj.getScrollOrientation()));
             if (clickPoint != null) {
                 DriverManager.newInstance(JemmyContext.getInstance())
-                        .getMouseDriver(oper)
+                        .getMouseDriver(op)
                         .clickMouse(
-                                oper,
+                                op,
                                 clickPoint.x,
                                 clickPoint.y,
                                 1,
@@ -100,73 +100,73 @@ public final class JSliderDriver extends AbstractScrollDriver {
     }
 
     @Override
-    protected void jump(ComponentOperator oper, ScrollAdjuster adj) {}
+    protected void jump(ComponentOperator op, ScrollAdjuster adj) {}
 
     @Override
-    protected void startPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        Point clickPoint = QueueTool.getInstance().callOnQueue(() -> getClickPoint(oper, direction, orientation));
+    protected void startPushAndWait(ComponentOperator op, int direction, int orientation) {
+        Point clickPoint = QueueTool.getInstance().callOnQueue(() -> getClickPoint(op, direction, orientation));
         if (clickPoint != null) {
             MouseDriver mdriver =
-                    DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-            mdriver.moveMouse(oper, clickPoint.x, clickPoint.y);
-            mdriver.pressMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
+                    DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
+            mdriver.moveMouse(op, clickPoint.x, clickPoint.y);
+            mdriver.pressMouse(op, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
         }
     }
 
     @Override
-    protected void stopPushAndWait(ComponentOperator oper, int direction, int orientation) {
-        Point clickPoint = QueueTool.getInstance().callOnQueue(() -> getClickPoint(oper, direction, orientation));
+    protected void stopPushAndWait(ComponentOperator op, int direction, int orientation) {
+        Point clickPoint = QueueTool.getInstance().callOnQueue(() -> getClickPoint(op, direction, orientation));
         if (clickPoint != null) {
             MouseDriver mdriver =
-                    DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-            mdriver.releaseMouse(oper, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
+                    DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
+            mdriver.releaseMouse(op, clickPoint.x, clickPoint.y, Operator.getDefaultMouseButton(), 0);
         }
     }
 
     @Override
-    protected @Nullable Point startDragging(ComponentOperator oper) {
+    protected @Nullable Point startDragging(ComponentOperator op) {
         return null;
     }
 
     @Override
-    protected void drop(ComponentOperator oper, Point pnt) {}
+    protected void drop(ComponentOperator op, Point pnt) {}
 
     @Override
-    protected void drag(ComponentOperator oper, Point pnt) {}
+    protected void drag(ComponentOperator op, Point pnt) {}
 
     @Override
-    protected TimeoutKey getScrollDeltaTimeout(ComponentOperator oper) {
+    protected TimeoutKey getScrollDeltaTimeout(ComponentOperator op) {
         return TimeoutKey.JSliderOperator_ScrollingDelta;
     }
 
     @Override
-    protected int position(ComponentOperator oper, int orientation) {
-        return ((JSliderOperator) oper).getValue();
+    protected int position(ComponentOperator op, int orientation) {
+        return ((JSliderOperator) op).getValue();
     }
 
     @Override
-    protected boolean canDragAndDrop(ComponentOperator oper) {
+    protected boolean canDragAndDrop(ComponentOperator op) {
         return false;
     }
 
     @Override
-    protected boolean canJump(ComponentOperator oper) {
+    protected boolean canJump(ComponentOperator op) {
         return false;
     }
 
     @Override
-    protected boolean canPushAndWait(ComponentOperator oper) {
+    protected boolean canPushAndWait(ComponentOperator op) {
         return true;
     }
 
     @Override
-    protected int getDragAndDropStepLength(ComponentOperator oper) {
+    protected int getDragAndDropStepLength(ComponentOperator op) {
         return 0;
     }
 
-    private @Nullable Point getClickPoint(ComponentOperator oper, int direction, int orientation) {
+    private @Nullable Point getClickPoint(ComponentOperator op, int direction, int orientation) {
         int x, y;
-        boolean inverted = ((JSliderOperator) oper).getInverted();
+        boolean inverted = ((JSliderOperator) op).getInverted();
         int realDirection;
         if (inverted) {
             if (direction == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
@@ -182,24 +182,24 @@ public final class JSliderDriver extends AbstractScrollDriver {
 
         if (orientation == JSlider.HORIZONTAL) {
             if (realDirection == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
-                x = oper.getWidth() - 1;
+                x = op.getWidth() - 1;
             } else if (realDirection == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
                 x = 0;
             } else {
                 return null;
             }
 
-            y = oper.getHeight() / 2;
+            y = op.getHeight() / 2;
         } else if (orientation == JSlider.VERTICAL) {
             if (realDirection == ScrollAdjuster.INCREASE_SCROLL_DIRECTION) {
                 y = 0;
             } else if (realDirection == ScrollAdjuster.DECREASE_SCROLL_DIRECTION) {
-                y = oper.getHeight() - 1;
+                y = op.getHeight() - 1;
             } else {
                 return null;
             }
 
-            x = oper.getWidth() / 2;
+            x = op.getWidth() / 2;
         } else {
             return null;
         }

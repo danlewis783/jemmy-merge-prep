@@ -59,16 +59,16 @@ import org.slf4j.LoggerFactory;
 public class JListOperator extends JComponentOperator {
     private static final Logger logger = LoggerFactory.getLogger(JListOperator.class);
 
-    public static JListOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JListOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JListOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JListOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -87,71 +87,71 @@ public class JListOperator extends JComponentOperator {
         return new JListOperator(b);
     }
 
-    public static JListOperator waitFor(ContainerOperator cont, int index) {
-        return new JListOperator((JList<?>) waitComponent(cont, PredicatesJ.of(JList.class), index));
+    public static JListOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JListOperator((JList<?>) waitComponent(rootOp, PredicatesJ.of(JList.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JListOperator(ContainerOperator cont, int index) {
-        this((JList<?>) waitComponent(cont, PredicatesJ.of(JList.class), index));
+    public JListOperator(ContainerOperator rootOp, int index) {
+        this((JList<?>) waitComponent(rootOp, PredicatesJ.of(JList.class), index));
     }
 
-    public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JListOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JListOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JListOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JListOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JListOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JListOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JListOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        return new JListOperator((JList<?>) cont.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
+    public static JListOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        return new JListOperator((JList<?>) rootOp.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JListOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JList<?>) cont.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
+    public JListOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JList<?>) rootOp.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
     }
 
     public static JListOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        return waitFor(cont, text, stringComparator, -1, index);
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        return waitFor(rootOp, text, stringComparator, -1, index);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JListOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
+    public JListOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        this(rootOp, text, stringComparator, -1, index);
     }
 
     public static JListOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int itemIndex, int index) {
         return new JListOperator(
-                (JList<?>) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
+                (JList<?>) waitComponent(rootOp, new JListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
     /**
@@ -159,8 +159,8 @@ public class JListOperator extends JComponentOperator {
      */
     @Deprecated
     public JListOperator(
-            ContainerOperator cont, String text, StringComparator stringComparator, int itemIndex, int index) {
-        this((JList<?>) waitComponent(cont, new JListByItemPredicate(text, itemIndex, stringComparator), index));
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int itemIndex, int index) {
+        this((JList<?>) waitComponent(rootOp, new JListByItemPredicate(text, itemIndex, stringComparator), index));
     }
 
     @SuppressWarnings("unchecked") // erased access; same behavior as the original raw-typed Jemmy API
@@ -646,7 +646,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public interface ListItemChooser {
-        boolean checkItem(JListOperator oper, int index);
+        boolean checkItem(JListOperator op, int index);
     }
 
     public class NoSuchItemException extends JemmyInputException {

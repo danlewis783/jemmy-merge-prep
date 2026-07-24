@@ -128,18 +128,18 @@ class JemmyContextDispatchingModelTest {
         }
 
         @Override
-        public void pressMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
+        public void pressMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
             throw new UnsupportedOperationException("stub");
         }
 
         @Override
-        public void releaseMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
+        public void releaseMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
             throw new UnsupportedOperationException("stub");
         }
 
         @Override
         public void clickMouse(
-                ComponentOperator oper,
+                ComponentOperator op,
                 int x,
                 int y,
                 int clickCount,
@@ -150,18 +150,18 @@ class JemmyContextDispatchingModelTest {
         }
 
         @Override
-        public void moveMouse(ComponentOperator oper, int x, int y) {
+        public void moveMouse(ComponentOperator op, int x, int y) {
             throw new UnsupportedOperationException("stub");
         }
 
         @Override
-        public void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
+        public void dragMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
             throw new UnsupportedOperationException("stub");
         }
 
         @Override
         public void dragNDrop(
-                ComponentOperator oper,
+                ComponentOperator op,
                 int startX,
                 int startY,
                 int endX,
@@ -174,12 +174,12 @@ class JemmyContextDispatchingModelTest {
         }
 
         @Override
-        public void enterMouse(ComponentOperator oper) {
+        public void enterMouse(ComponentOperator op) {
             throw new UnsupportedOperationException("stub");
         }
 
         @Override
-        public void exitMouse(ComponentOperator oper) {
+        public void exitMouse(ComponentOperator op) {
             throw new UnsupportedOperationException("stub");
         }
     }

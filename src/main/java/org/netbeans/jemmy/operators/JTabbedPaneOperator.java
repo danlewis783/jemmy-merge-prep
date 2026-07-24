@@ -45,16 +45,16 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JTabbedPaneOperator extends JComponentOperator {
 
-    public static JTabbedPaneOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JTabbedPaneOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JTabbedPaneOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JTabbedPaneOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -73,73 +73,74 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return new JTabbedPaneOperator(b);
     }
 
-    public static JTabbedPaneOperator waitFor(ContainerOperator cont, int index) {
+    public static JTabbedPaneOperator waitFor(ContainerOperator rootOp, int index) {
         return new JTabbedPaneOperator(
-                (JTabbedPane) waitComponent(cont, PredicatesJ.of(JTabbedPane.class), index));
+                (JTabbedPane) waitComponent(rootOp, PredicatesJ.of(JTabbedPane.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JTabbedPaneOperator(ContainerOperator cont, int index) {
-        this((JTabbedPane) waitComponent(cont, PredicatesJ.of(JTabbedPane.class), index));
+    public JTabbedPaneOperator(ContainerOperator rootOp, int index) {
+        this((JTabbedPane) waitComponent(rootOp, PredicatesJ.of(JTabbedPane.class), index));
     }
 
-    public static JTabbedPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JTabbedPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JTabbedPaneOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JTabbedPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JTabbedPaneOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JTabbedPaneOperator waitFor(
+            ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JTabbedPaneOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JTabbedPaneOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JTabbedPaneOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JTabbedPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTabbedPaneOperator(
-                (JTabbedPane) cont.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
+                (JTabbedPane) rootOp.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JTabbedPaneOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JTabbedPane) cont.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
+    public JTabbedPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JTabbedPane) rootOp.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
     }
 
     public static JTabbedPaneOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        return waitFor(cont, text, stringComparator, -1, index);
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        return waitFor(rootOp, text, stringComparator, -1, index);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JTabbedPaneOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
-        this(cont, text, stringComparator, -1, index);
+    public JTabbedPaneOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
+        this(rootOp, text, stringComparator, -1, index);
     }
 
     public static JTabbedPaneOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int tabIndex, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int tabIndex, int index) {
         return new JTabbedPaneOperator((JTabbedPane)
-                waitComponent(cont, new JTabbedPaneByItemPredicate(text, tabIndex, stringComparator), index));
+                waitComponent(rootOp, new JTabbedPaneByItemPredicate(text, tabIndex, stringComparator), index));
     }
 
     /**
@@ -147,9 +148,9 @@ public class JTabbedPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JTabbedPaneOperator(
-            ContainerOperator cont, String text, StringComparator stringComparator, int tabIndex, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int tabIndex, int index) {
         this((JTabbedPane)
-                waitComponent(cont, new JTabbedPaneByItemPredicate(text, tabIndex, stringComparator), index));
+                waitComponent(rootOp, new JTabbedPaneByItemPredicate(text, tabIndex, stringComparator), index));
     }
 
     @Deprecated
@@ -403,7 +404,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public interface TabPageChooser {
-        boolean checkPage(JTabbedPaneOperator oper, int index);
+        boolean checkPage(JTabbedPaneOperator op, int index);
     }
 
     private static class JTabbedPaneOperatorPredicate implements Predicate<JTabbedPaneOperator> {
@@ -442,8 +443,8 @@ public class JTabbedPaneOperator extends JComponentOperator {
         }
 
         @Override
-        public boolean checkPage(JTabbedPaneOperator oper, int index) {
-            return comparator.equals(oper.getTitleAt(index), title);
+        public boolean checkPage(JTabbedPaneOperator op, int index) {
+            return comparator.equals(op.getTitleAt(index), title);
         }
     }
 }

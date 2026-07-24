@@ -35,22 +35,22 @@ public final class SwingTextAPIDriver extends TextAPIDriver {
     }
 
     @Override
-    public String getText(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getDisplayedText();
+    public String getText(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getDisplayedText();
     }
 
     @Override
-    public int getCaretPosition(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getCaretPosition();
+    public int getCaretPosition(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getCaretPosition();
     }
 
     @Override
-    public int getSelectionStart(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getSelectionStart();
+    public int getSelectionStart(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getSelectionStart();
     }
 
     @Override
-    public int getSelectionEnd(ComponentOperator oper) {
-        return ((JTextComponentOperator) oper).getSelectionEnd();
+    public int getSelectionEnd(ComponentOperator op) {
+        return ((JTextComponentOperator) op).getSelectionEnd();
     }
 }

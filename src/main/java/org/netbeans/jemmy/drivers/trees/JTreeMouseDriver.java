@@ -51,17 +51,17 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
-        selectItems(oper, new int[] {index});
+    public void selectItem(ComponentOperator op, int index) {
+        selectItems(op, new int[] {index});
     }
 
     @Override
-    public void selectItems(ComponentOperator oper, int[] indices) {
-        ((JTreeOperator) oper).clearSelection();
-        checkSupported(oper);
+    public void selectItems(ComponentOperator op, int[] indices) {
+        ((JTreeOperator) op).clearSelection();
+        checkSupported(op);
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
-        JTreeOperator toper = (JTreeOperator) oper;
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
+        JTreeOperator toper = (JTreeOperator) op;
         for (int i = 0; i < indices.length; i++) {
             int index = i;
             if (!EventQueue.isDispatchThread()) {
@@ -71,7 +71,7 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
             // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
             Point p = toper.getPointToClick(indices[index]);
             mdriver.clickMouse(
-                    oper,
+                    op,
                     p.x,
                     p.y,
                     1,
@@ -82,11 +82,11 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
     }
 
     @Override
-    public void expandItem(ComponentOperator oper, int index) {
-        checkSupported(oper);
-        JTreeOperator toper = (JTreeOperator) oper;
+    public void expandItem(ComponentOperator op, int index) {
+        checkSupported(op);
+        JTreeOperator toper = (JTreeOperator) op;
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
         if (!toper.isExpanded(index)) {
             Point p = toper.getPointToClick(index);
             mdriver.clickMouse(
@@ -101,11 +101,11 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
     }
 
     @Override
-    public void collapseItem(ComponentOperator oper, int index) {
-        checkSupported(oper);
-        JTreeOperator toper = (JTreeOperator) oper;
+    public void collapseItem(ComponentOperator op, int index) {
+        checkSupported(op);
+        JTreeOperator toper = (JTreeOperator) op;
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
         if (toper.isExpanded(index)) {
             Point p = toper.getPointToClick(index);
             mdriver.clickMouse(
@@ -120,28 +120,28 @@ public final class JTreeMouseDriver extends LightSupportiveDriver implements Tre
     }
 
     @Override
-    public void editItem(ComponentOperator oper, int index, Object newValue, TimeoutKey waitEditorTime) {
-        JTextComponentOperator textoper = startEditingAndReturnEditor(oper, index, waitEditorTime);
+    public void editItem(ComponentOperator op, int index, Object newValue, TimeoutKey waitEditorTime) {
+        JTextComponentOperator textoper = startEditingAndReturnEditor(op, index, waitEditorTime);
         TextDriver text =
                 DriverManager.newInstance(JemmyContext.getInstance()).getTextDriver(JTextComponentOperator.class);
         text.clearText(textoper);
         text.typeText(textoper, newValue.toString(), 0);
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getKeyDriver(oper)
+                .getKeyDriver(op)
                 .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
     }
 
     @Override
-    public void startEditing(ComponentOperator oper, int index, TimeoutKey waitEditorTime) {
-        startEditingAndReturnEditor(oper, index, waitEditorTime);
+    public void startEditing(ComponentOperator op, int index, TimeoutKey waitEditorTime) {
+        startEditingAndReturnEditor(op, index, waitEditorTime);
     }
 
     private JTextComponentOperator startEditingAndReturnEditor(
-            ComponentOperator oper, int index, TimeoutKey waitEditorTime) {
-        checkSupported(oper);
-        JTreeOperator toper = (JTreeOperator) oper;
+            ComponentOperator op, int index, TimeoutKey waitEditorTime) {
+        checkSupported(op);
+        JTreeOperator toper = (JTreeOperator) op;
         MouseDriver mdriver =
-                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(oper);
+                DriverManager.newInstance(JemmyContext.getInstance()).getMouseDriver(op);
         Point firstClick = toper.getPointToClick(index);
         mdriver.clickMouse(
                 toper,

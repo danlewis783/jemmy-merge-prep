@@ -50,44 +50,44 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
     }
 
     @Override
-    public void pressMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
+    public void pressMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
         pressMouse(mouseButton, modifiers);
     }
 
     @Override
-    public void releaseMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
+    public void releaseMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
         releaseMouse(mouseButton, modifiers);
     }
 
     @Override
-    public void moveMouse(ComponentOperator oper, int x, int y) {
+    public void moveMouse(ComponentOperator op, int x, int y) {
         // one EDT-read origin so x and y come from the same snapshot
-        Point origin = oper.getLocationOnScreen();
+        Point origin = op.getLocationOnScreen();
         moveMouse(origin.x + x, origin.y + y);
     }
 
     @Override
     public void clickMouse(
-            ComponentOperator oper,
+            ComponentOperator op,
             int x,
             int y,
             int clickCount,
             int mouseButton,
             int modifiers,
             TimeoutKey mouseClick) {
-        Point origin = oper.getLocationOnScreen();
+        Point origin = op.getLocationOnScreen();
         clickMouse(origin.x + x, origin.y + y, clickCount, mouseButton, modifiers, mouseClick);
     }
 
     @Override
-    public void dragMouse(ComponentOperator oper, int x, int y, int mouseButton, int modifiers) {
-        Point origin = oper.getLocationOnScreen();
+    public void dragMouse(ComponentOperator op, int x, int y, int mouseButton, int modifiers) {
+        Point origin = op.getLocationOnScreen();
         moveMouse(origin.x + x, origin.y + y);
     }
 
     @Override
     public void dragNDrop(
-            ComponentOperator oper,
+            ComponentOperator op,
             int startX,
             int startY,
             int endX,
@@ -96,7 +96,7 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
             int modifiers,
             TimeoutKey before,
             TimeoutKey after) {
-        Point origin = oper.getLocationOnScreen();
+        Point origin = op.getLocationOnScreen();
         dragNDrop(
                 origin.x + startX,
                 origin.y + startY,
@@ -109,11 +109,11 @@ public final class MouseRobotDriver extends RobotDriver implements MouseDriver {
     }
 
     @Override
-    public void enterMouse(ComponentOperator oper) {
-        Point center = oper.getClickCenter();
-        moveMouse(oper, center.x, center.y);
+    public void enterMouse(ComponentOperator op) {
+        Point center = op.getClickCenter();
+        moveMouse(op, center.x, center.y);
     }
 
     @Override
-    public void exitMouse(ComponentOperator oper) {}
+    public void exitMouse(ComponentOperator op) {}
 }

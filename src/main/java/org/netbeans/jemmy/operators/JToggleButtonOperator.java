@@ -34,16 +34,16 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JToggleButtonOperator extends AbstractButtonOperator {
-    public static JToggleButtonOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JToggleButtonOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JToggleButtonOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JToggleButtonOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -58,61 +58,61 @@ public class JToggleButtonOperator extends AbstractButtonOperator {
         return new JToggleButtonOperator(b);
     }
 
-    public static JToggleButtonOperator waitFor(ContainerOperator cont, int index) {
+    public static JToggleButtonOperator waitFor(ContainerOperator rootOp, int index) {
         return new JToggleButtonOperator(
-                (JToggleButton) waitComponent(cont, PredicatesJ.of(JToggleButton.class), index));
+                (JToggleButton) waitComponent(rootOp, PredicatesJ.of(JToggleButton.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JToggleButtonOperator(ContainerOperator cont, int index) {
-        this((JToggleButton) waitComponent(cont, PredicatesJ.of(JToggleButton.class), index));
+    public JToggleButtonOperator(ContainerOperator rootOp, int index) {
+        this((JToggleButton) waitComponent(rootOp, PredicatesJ.of(JToggleButton.class), index));
     }
 
-    public static JToggleButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JToggleButtonOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JToggleButtonOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JToggleButtonOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
     public static JToggleButtonOperator waitFor(
-            ContainerOperator cont, StringComparator stringComparator, String text) {
-        return waitFor(cont, text, stringComparator, 0);
+            ContainerOperator rootOp, StringComparator stringComparator, String text) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, StringComparator, String)} instead.
      */
     @Deprecated
-    public JToggleButtonOperator(ContainerOperator cont, StringComparator stringComparator, String text) {
-        this(cont, text, stringComparator, 0);
+    public JToggleButtonOperator(ContainerOperator rootOp, StringComparator stringComparator, String text) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JToggleButtonOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JToggleButtonOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JToggleButtonOperator(
-                (JToggleButton) cont.waitSubComponent(PredicatesJ.of(JToggleButton.class, chooser), index));
+                (JToggleButton) rootOp.waitSubComponent(PredicatesJ.of(JToggleButton.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JToggleButtonOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JToggleButton) cont.waitSubComponent(PredicatesJ.of(JToggleButton.class, chooser), index));
+    public JToggleButtonOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JToggleButton) rootOp.waitSubComponent(PredicatesJ.of(JToggleButton.class, chooser), index));
     }
 
     public static JToggleButtonOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         return new JToggleButtonOperator((JToggleButton) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JToggleButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
@@ -121,9 +121,9 @@ public class JToggleButtonOperator extends AbstractButtonOperator {
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JToggleButtonOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+    public JToggleButtonOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         this((JToggleButton) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JToggleButton.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }

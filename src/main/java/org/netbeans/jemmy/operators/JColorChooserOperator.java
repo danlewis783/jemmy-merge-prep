@@ -75,16 +75,16 @@ public class JColorChooserOperator extends JComponentOperator {
     private @Nullable JTextFieldOperator red;
     private final JTabbedPaneOperator tabbed;
 
-    public static JColorChooserOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JColorChooserOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JColorChooserOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JColorChooserOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -100,42 +100,42 @@ public class JColorChooserOperator extends JComponentOperator {
         return new JColorChooserOperator(comp);
     }
 
-    public static JColorChooserOperator waitFor(ContainerOperator cont, int index) {
+    public static JColorChooserOperator waitFor(ContainerOperator rootOp, int index) {
         return new JColorChooserOperator(
-                (JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class), index));
+                (JColorChooser) waitComponent(rootOp, PredicatesJ.of(JColorChooser.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JColorChooserOperator(ContainerOperator cont, int index) {
-        this((JColorChooser) waitComponent(cont, PredicatesJ.of(JColorChooser.class), index));
+    public JColorChooserOperator(ContainerOperator rootOp, int index) {
+        this((JColorChooser) waitComponent(rootOp, PredicatesJ.of(JColorChooser.class), index));
     }
 
-    public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JColorChooserOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JColorChooserOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JColorChooserOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JColorChooserOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JColorChooserOperator(
-                (JColorChooser) cont.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
+                (JColorChooser) rootOp.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JColorChooserOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JColorChooser) cont.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
+    public JColorChooserOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JColorChooser) rootOp.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     public void switchToRGB() {

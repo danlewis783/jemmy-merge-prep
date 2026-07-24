@@ -44,41 +44,41 @@ public final class JTableHeaderDriver extends LightSupportiveDriver implements O
     }
 
     @Override
-    public void selectItem(ComponentOperator oper, int index) {
-        clickOnHeader((JTableHeaderOperator) oper, index);
+    public void selectItem(ComponentOperator op, int index) {
+        clickOnHeader((JTableHeaderOperator) op, index);
     }
 
     @Override
-    public void selectItems(ComponentOperator oper, int[] indices) {
-        clickOnHeader((JTableHeaderOperator) oper, indices[0]);
+    public void selectItems(ComponentOperator op, int[] indices) {
+        clickOnHeader((JTableHeaderOperator) op, indices[0]);
 
         for (int i = 1; i < indices.length; i++) {
-            clickOnHeader((JTableHeaderOperator) oper, indices[i], InputEvent.CTRL_MASK);
+            clickOnHeader((JTableHeaderOperator) op, indices[i], InputEvent.CTRL_MASK);
         }
     }
 
     @Override
-    public void moveItem(ComponentOperator oper, int moveColumn, int moveTo) {
-        JTableHeaderOperator headerOper = (JTableHeaderOperator) oper;
+    public void moveItem(ComponentOperator op, int moveColumn, int moveTo) {
+        JTableHeaderOperator headerOper = (JTableHeaderOperator) op;
         // one EDT snapshot: the start and end click points must come from the same header
         // layout, since dragNDrop needs both together
         MovePoints points = QueueTool.getInstance()
                 .callOnQueue(() ->
                         new MovePoints(headerOper.getPointToClick(moveColumn), headerOper.getPointToClick(moveTo)));
-        oper.dragNDrop(points.start.x, points.start.y, points.end.x, points.end.y);
+        op.dragNDrop(points.start.x, points.start.y, points.end.x, points.end.y);
     }
 
-    private void clickOnHeader(JTableHeaderOperator oper, int index) {
-        clickOnHeader(oper, index, 0);
+    private void clickOnHeader(JTableHeaderOperator op, int index) {
+        clickOnHeader(op, index, 0);
     }
 
-    private void clickOnHeader(JTableHeaderOperator oper, int index, int modifiers) {
+    private void clickOnHeader(JTableHeaderOperator op, int index, int modifiers) {
         // getPointToClick is one EDT snapshot; the click (robot input + sleep) stays off-EDT
-        Point toClick = oper.getPointToClick(index);
+        Point toClick = op.getPointToClick(index);
         DriverManager.newInstance(JemmyContext.getInstance())
-                .getMouseDriver(oper)
+                .getMouseDriver(op)
                 .clickMouse(
-                        oper,
+                        op,
                         toClick.x,
                         toClick.y,
                         1,

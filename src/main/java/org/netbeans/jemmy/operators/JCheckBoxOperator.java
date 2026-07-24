@@ -34,16 +34,16 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JCheckBoxOperator extends JToggleButtonOperator {
-    public static JCheckBoxOperator waitFor(ContainerOperator cont) {
-        return waitFor(cont, 0);
+    public static JCheckBoxOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator)} instead.
      */
     @Deprecated
-    public JCheckBoxOperator(ContainerOperator cont) {
-        this(cont, 0);
+    public JCheckBoxOperator(ContainerOperator rootOp) {
+        this(rootOp, 0);
     }
 
     /**
@@ -58,59 +58,59 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
         return new JCheckBoxOperator(b);
     }
 
-    public static JCheckBoxOperator waitFor(ContainerOperator cont, int index) {
-        return new JCheckBoxOperator((JCheckBox) waitComponent(cont, PredicatesJ.of(JCheckBox.class), index));
+    public static JCheckBoxOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JCheckBoxOperator((JCheckBox) waitComponent(rootOp, PredicatesJ.of(JCheckBox.class), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
      */
     @Deprecated
-    public JCheckBoxOperator(ContainerOperator cont, int index) {
-        this((JCheckBox) waitComponent(cont, PredicatesJ.of(JCheckBox.class), index));
+    public JCheckBoxOperator(ContainerOperator rootOp, int index) {
+        this((JCheckBox) waitComponent(rootOp, PredicatesJ.of(JCheckBox.class), index));
     }
 
-    public static JCheckBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser) {
-        return waitFor(cont, chooser, 0);
+    public static JCheckBoxOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate)} instead.
      */
     @Deprecated
-    public JCheckBoxOperator(ContainerOperator cont, Predicate<Component> chooser) {
-        this(cont, chooser, 0);
+    public JCheckBoxOperator(ContainerOperator rootOp, Predicate<Component> chooser) {
+        this(rootOp, chooser, 0);
     }
 
-    public static JCheckBoxOperator waitFor(ContainerOperator cont, String text, StringComparator stringComparator) {
-        return waitFor(cont, text, stringComparator, 0);
+    public static JCheckBoxOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        return waitFor(rootOp, text, stringComparator, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator)} instead.
      */
     @Deprecated
-    public JCheckBoxOperator(ContainerOperator cont, String text, StringComparator stringComparator) {
-        this(cont, text, stringComparator, 0);
+    public JCheckBoxOperator(ContainerOperator rootOp, String text, StringComparator stringComparator) {
+        this(rootOp, text, stringComparator, 0);
     }
 
-    public static JCheckBoxOperator waitFor(ContainerOperator cont, Predicate<Component> chooser, int index) {
+    public static JCheckBoxOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JCheckBoxOperator(
-                (JCheckBox) cont.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
+                (JCheckBox) rootOp.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(ContainerOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public JCheckBoxOperator(ContainerOperator cont, Predicate<Component> chooser, int index) {
-        this((JCheckBox) cont.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
+    public JCheckBoxOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        this((JCheckBox) rootOp.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
     }
 
     public static JCheckBoxOperator waitFor(
-            ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+            ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         return new JCheckBoxOperator((JCheckBox) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }
@@ -119,9 +119,9 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
      * @deprecated Use {@link #waitFor(ContainerOperator, String, StringComparator, int)} instead.
      */
     @Deprecated
-    public JCheckBoxOperator(ContainerOperator cont, String text, StringComparator stringComparator, int index) {
+    public JCheckBoxOperator(ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         this((JCheckBox) waitComponent(
-                cont,
+                rootOp,
                 PredicatesJ.of(JCheckBox.class, new AbstractButtonByTextPredicate(text, stringComparator)),
                 index));
     }

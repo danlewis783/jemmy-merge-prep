@@ -28,15 +28,15 @@ package org.netbeans.jemmy.drivers;
 import org.netbeans.jemmy.operators.ComponentOperator;
 
 public interface TextDriver {
-    void changeCaretPosition(ComponentOperator oper, int position);
+    void changeCaretPosition(ComponentOperator op, int position);
 
-    void selectText(ComponentOperator oper, int startPosition, int finalPosition);
+    void selectText(ComponentOperator op, int startPosition, int finalPosition);
 
-    void clearText(ComponentOperator oper);
+    void clearText(ComponentOperator op);
 
-    void typeText(ComponentOperator oper, String text, int caretPosition);
+    void typeText(ComponentOperator op, String text, int caretPosition);
 
-    void changeText(ComponentOperator oper, String text);
+    void changeText(ComponentOperator op, String text);
 
-    void enterText(ComponentOperator oper, String text);
+    void enterText(ComponentOperator op, String text);
 }
