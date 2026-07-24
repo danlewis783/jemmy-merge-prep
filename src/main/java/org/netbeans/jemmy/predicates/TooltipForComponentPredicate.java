@@ -18,27 +18,22 @@
 package org.netbeans.jemmy.predicates;
 
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Window;
+import java.util.Objects;
 import java.util.function.Predicate;
-import org.netbeans.jemmy.ComponentSearcher;
+import javax.swing.JToolTip;
 
-public final class JToolTipWindowPredicate implements Predicate<Component> {
-    private final Predicate<Component> componentChooser;
+public final class TooltipForComponentPredicate implements Predicate<Component> {
+    private final Component tipComponent;
 
-    public JToolTipWindowPredicate() {
-        componentChooser = new TooltipIsVisibleAndShowingPredicate();
-    }
-
-    /** Matches only windows showing a tooltip that describes the given component. */
-    public JToolTipWindowPredicate(Component tipComponent) {
-        componentChooser = new TooltipForComponentPredicate(tipComponent);
+    public TooltipForComponentPredicate(Component tipComponent) {
+        this.tipComponent = Objects.requireNonNull(tipComponent, "tipComponent");
     }
 
     @Override
     public boolean test(Component comp) {
-        return comp instanceof Window
+        return comp instanceof JToolTip
                 && comp.isShowing()
-                && new ComponentSearcher((Container) comp).findComponent(componentChooser) != null;
+                && comp.isVisible()
+                && ((JToolTip) comp).getComponent() == tipComponent;
     }
 }

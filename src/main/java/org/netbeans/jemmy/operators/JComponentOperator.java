@@ -49,6 +49,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JComponentByToolTipPredicate;
 import org.netbeans.jemmy.predicates.JToolTipWindowPredicate;
+import org.netbeans.jemmy.predicates.TooltipForComponentPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JComponentOperator extends ContainerOperator {
@@ -137,9 +138,17 @@ public class JComponentOperator extends ContainerOperator {
         return waitToolTip();
     }
 
+    /**
+     * Waits for a showing tooltip describing this component. A tooltip left showing for another
+     * component (for example one that popped for whatever sat under the pointer before a robot
+     * move) never satisfies this wait.
+     */
     public JToolTip waitToolTip() {
+        Component source = getSource();
         return (JToolTip) waitComponent(
-                WindowOperator.waitWindow(new JToolTipWindowPredicate(), 0), PredicatesJ.of(JToolTip.class), 0);
+                WindowOperator.waitWindow(new JToolTipWindowPredicate(source), 0),
+                new TooltipForComponentPredicate(source),
+                0);
     }
 
     public ContainerOperator getWindowContainerOperator() {
