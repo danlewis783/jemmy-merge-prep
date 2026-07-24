@@ -47,6 +47,10 @@ public final class StringComparators {
         return new AlwaysEqualStringComparator();
     }
 
+    public static StringComparator startsWith() {
+        return new StartsWithStringComparator();
+    }
+
     private static class AlwaysEqualStringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
@@ -73,6 +77,13 @@ public final class StringComparators {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || observed != null && Pattern.matches(expected, observed);
+        }
+    }
+
+    private static class StartsWithStringComparator implements StringComparator {
+        @Override
+        public boolean equals(@Nullable String observed, @Nullable String expected) {
+            return expected == null || observed != null && observed.startsWith(expected);
         }
     }
 
