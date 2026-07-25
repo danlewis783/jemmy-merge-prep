@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JToolTipOperator;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
@@ -77,7 +78,7 @@ class ShowToolTipTest {
         JButtonOperator leftOp = JButtonOperator.waitFor(frameOp, "left", strict());
         JButtonOperator rightOp = JButtonOperator.waitFor(frameOp, "right", strict());
 
-        assertThat(leftOp.showToolTip().getTipText()).isEqualTo("left tip");
-        assertThat(rightOp.showToolTip().getTipText()).isEqualTo("right tip");
+        assertThat(JToolTipOperator.of(leftOp.showToolTip()).getTipText()).isEqualTo("left tip");
+        assertThat(JToolTipOperator.of(rightOp.showToolTip()).getTipText()).isEqualTo("right tip");
     }
 }
