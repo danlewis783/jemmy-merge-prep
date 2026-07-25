@@ -29,6 +29,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.function.Predicate;
 import javax.swing.JPopupMenu;
@@ -1135,6 +1136,11 @@ public class JTreeOperator extends JComponentOperator {
         public boolean test(JTreeOperator jTreeOperator) {
             return jTreeOperator.isExpanded(row);
         }
+
+        @Override
+        public String toString() {
+            return "JTreeOperatorIsRowExpandedPredicate{row=" + row + "}";
+        }
     }
 
     private static class JTreeOperatorIsTreePathExpandedPredicate implements Predicate<JTreeOperator> {
@@ -1147,6 +1153,11 @@ public class JTreeOperator extends JComponentOperator {
         @Override
         public boolean test(JTreeOperator jTreeOperator) {
             return jTreeOperator.isCollapsed(path);
+        }
+
+        @Override
+        public String toString() {
+            return "JTreeOperatorIsTreePathExpandedPredicate{path=" + path + "}";
         }
     }
 
@@ -1161,6 +1172,11 @@ public class JTreeOperator extends JComponentOperator {
         public boolean test(JTreeOperator jTreeOperator) {
             return jTreeOperator.isCollapsed(row);
         }
+
+        @Override
+        public String toString() {
+            return "JTreeOperatorIsRowCollapsedPredicate{row=" + row + "}";
+        }
     }
 
     private static class JTreeOperatorIsPathVisiblePredicate implements Predicate<JTreeOperator> {
@@ -1173,6 +1189,11 @@ public class JTreeOperator extends JComponentOperator {
         @Override
         public boolean test(JTreeOperator jTreeOperator) {
             return jTreeOperator.isVisible(path);
+        }
+
+        @Override
+        public String toString() {
+            return "JTreeOperatorIsPathVisiblePredicate{path=" + path + "}";
         }
     }
 
@@ -1197,6 +1218,11 @@ public class JTreeOperator extends JComponentOperator {
             } else {
                 return false;
             }
+        }
+
+        @Override
+        public String toString() {
+            return "JTreeOperatorBySelectedPathsPredicate{paths=" + Arrays.toString(paths) + "}";
         }
     }
 

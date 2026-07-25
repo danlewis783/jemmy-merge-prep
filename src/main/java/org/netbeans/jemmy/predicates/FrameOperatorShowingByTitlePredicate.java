@@ -34,4 +34,9 @@ public final class FrameOperatorShowingByTitlePredicate<T extends FrameOperator>
     public boolean test(T frameOp) {
         return frameOp.isShowing() && comparator.equals((frameOp).getTitle(), title);
     }
+
+    @Override
+    public String toString() {
+        return "FrameOperatorShowingByTitlePredicate{title=\"" + title + "\", comparator=" + comparator + "}";
+    }
 }

@@ -30,6 +30,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.Vector;
 import java.util.function.Predicate;
 import javax.swing.JList;
@@ -676,6 +677,11 @@ public class JListOperator extends JComponentOperator {
             }
 
             return true;
+        }
+
+        @Override
+        public String toString() {
+            return "JListOperatorItemsMatchPredicate{itemIndices=" + Arrays.toString(itemIndices) + "}";
         }
     }
 }

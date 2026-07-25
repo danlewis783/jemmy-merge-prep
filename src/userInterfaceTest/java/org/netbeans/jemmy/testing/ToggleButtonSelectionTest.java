@@ -53,6 +53,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_011
 // operator fields are assigned mid-test before the checker lambdas read them
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class ToggleButtonSelectionTest {

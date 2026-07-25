@@ -36,4 +36,9 @@ public final class JSpinnerByTextPredicate implements Predicate<Component> {
         return (comp instanceof JSpinner)
                 && comparator.equals(((JSpinner) comp).getValue().toString(), label);
     }
+
+    @Override
+    public String toString() {
+        return "JSpinnerByTextPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

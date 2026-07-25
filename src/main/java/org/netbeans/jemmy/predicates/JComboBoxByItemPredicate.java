@@ -68,4 +68,10 @@ public final class JComboBoxByItemPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JComboBoxByItemPredicate{label=" + (label == null ? "null" : "\"" + label + "\"") + ", itemIndex="
+                + itemIndex + ", comparator=" + comparator + "}";
+    }
 }

@@ -610,6 +610,12 @@ public class JTextComponentOperator extends JComponentOperator {
                 return observedText.contains(expectedText);
             }
         }
+
+        @Override
+        public String toString() {
+            return "JTextComponentOperatorDisplayedTextPredicate{beginIdx=" + beginIdx + ", expectedText=\""
+                    + expectedText + "\"}";
+        }
     }
 
     private static class JTextComponentOperatorCaretPositionPredicate implements Predicate<JTextComponentOperator> {
@@ -622,6 +628,11 @@ public class JTextComponentOperator extends JComponentOperator {
         @Override
         public boolean test(JTextComponentOperator jTextComponentOp) {
             return jTextComponentOp.getCaretPosition() == position;
+        }
+
+        @Override
+        public String toString() {
+            return "JTextComponentOperatorCaretPositionPredicate{position=" + position + "}";
         }
     }
 

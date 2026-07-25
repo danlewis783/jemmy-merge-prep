@@ -32,4 +32,9 @@ public final class FrameSubPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof Frame) && comp.isShowing() && comp.isVisible() && chooser.test(comp);
     }
+
+    @Override
+    public String toString() {
+        return "FrameSubPredicate{" + chooser + "}";
+    }
 }

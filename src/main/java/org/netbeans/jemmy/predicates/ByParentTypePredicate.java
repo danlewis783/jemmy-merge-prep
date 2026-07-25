@@ -20,4 +20,9 @@ public final class ByParentTypePredicate<T extends Component> implements Predica
         final Container parent = comp.getParent();
         return parent.getClass() == targetType;
     }
+
+    @Override
+    public String toString() {
+        return "ByParentTypePredicate{targetType=" + targetType.getSimpleName() + "}";
+    }
 }

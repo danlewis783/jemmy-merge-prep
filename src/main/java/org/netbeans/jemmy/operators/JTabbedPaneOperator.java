@@ -418,6 +418,11 @@ public class JTabbedPaneOperator extends JComponentOperator {
         public boolean test(JTabbedPaneOperator jTabbedPaneOp) {
             return jTabbedPaneOp.findPage(chooser) > -1;
         }
+
+        @Override
+        public String toString() {
+            return "JTabbedPaneOperatorPredicate{chooser=" + chooser + "}";
+        }
     }
 
     private static class JTabbedPaneOperatorSelectedIndexPredicate implements Predicate<JTabbedPaneOperator> {
@@ -430,6 +435,11 @@ public class JTabbedPaneOperator extends JComponentOperator {
         @Override
         public boolean test(JTabbedPaneOperator jTabbedPaneOp) {
             return jTabbedPaneOp.getSelectedIndex() == pageIndex;
+        }
+
+        @Override
+        public String toString() {
+            return "JTabbedPaneOperatorSelectedIndexPredicate{pageIndex=" + pageIndex + "}";
         }
     }
 

@@ -44,6 +44,7 @@ import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_016
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class TabbedPanePageSwitchTest {

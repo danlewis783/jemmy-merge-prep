@@ -59,4 +59,10 @@ public final class JTabbedPaneByItemPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JTabbedPaneByItemPredicate{title=" + (title == null ? "null" : "\"" + title + "\"") + ", itemIndex="
+                + itemIndex + ", comparator=" + comparator + "}";
+    }
 }

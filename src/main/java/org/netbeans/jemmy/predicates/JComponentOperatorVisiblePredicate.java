@@ -30,4 +30,9 @@ public final class JComponentOperatorVisiblePredicate implements Predicate<JComp
     public boolean test(JComponentOperator jComponentOp) {
         return jComponentOp.isVisible() == expectedVisibility;
     }
+
+    @Override
+    public String toString() {
+        return "isVisible=" + expectedVisibility;
+    }
 }

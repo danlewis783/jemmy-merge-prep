@@ -37,4 +37,10 @@ public final class ComponentSearcherFunction implements Function<Void, Component
     public @Nullable Component apply(Void obj) {
         return searcher.findComponent(predicate, index);
     }
+
+    @Override
+    public String toString() {
+        // surfaces in timeout messages: which component was being searched for
+        return "component matching " + predicate + ((index > 0) ? " [" + index + ']' : "");
+    }
 }

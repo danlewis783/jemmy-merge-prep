@@ -41,4 +41,9 @@ public final class ChoiceBySelectedItemPredicate implements Predicate<Component>
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "ChoiceBySelectedItemPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

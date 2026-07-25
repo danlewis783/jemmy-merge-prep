@@ -33,4 +33,10 @@ public final class JToolTipOperatorByTipTextPredicate implements Predicate<JTool
     public boolean test(JToolTipOperator toolTipOp) {
         return comparator.equals(toolTipOp.getTipText(), tipText);
     }
+
+    @Override
+    public String toString() {
+        return "JToolTipOperatorByTipTextPredicate{tipText=" + (tipText == null ? "null" : "\"" + tipText + "\"")
+                + ", comparator=" + comparator + "}";
+    }
 }

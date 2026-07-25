@@ -40,11 +40,13 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.JTreeOperator.NoSuchPathException;
 import org.netbeans.jemmy.predicates.PredicatesJ;
+import org.netbeans.jemmy.testing.DumpOnFailure;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class JTreeOperatorTest {

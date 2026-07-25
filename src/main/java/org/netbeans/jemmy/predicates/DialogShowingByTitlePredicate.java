@@ -39,4 +39,9 @@ public final class DialogShowingByTitlePredicate implements Predicate<Component>
     public boolean test(Component comp) {
         return comp.isShowing() && comparator.equals(((Dialog) comp).getTitle(), title);
     }
+
+    @Override
+    public String toString() {
+        return "DialogShowingByTitlePredicate{title=\"" + title + "\", comparator=" + comparator + "}";
+    }
 }

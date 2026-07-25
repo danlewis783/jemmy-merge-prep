@@ -35,4 +35,9 @@ public final class TextComponentByTextPredicate implements Predicate<Component> 
     public boolean test(Component comp) {
         return (comp instanceof TextComponent) && comparator.equals(((TextComponent) comp).getText(), label);
     }
+
+    @Override
+    public String toString() {
+        return "TextComponentByTextPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

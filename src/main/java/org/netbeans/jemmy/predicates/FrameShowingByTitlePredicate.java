@@ -35,4 +35,9 @@ public final class FrameShowingByTitlePredicate implements Predicate<Component> 
     public boolean test(Component comp) {
         return comp instanceof Frame && comp.isShowing() && comparator.equals(((Frame) comp).getTitle(), title);
     }
+
+    @Override
+    public String toString() {
+        return "FrameShowingByTitlePredicate{title=\"" + title + "\", comparator=" + comparator + "}";
+    }
 }

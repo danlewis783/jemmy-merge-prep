@@ -158,9 +158,10 @@ public final class QueueTool {
                 // cancel before throwing: the still-queued event must no-op when the EDT gets
                 // to it, not replay clicks and reads long after this caller gave up on them
                 caller.cancel();
+                // the EDT never started our task: capture what it was doing instead
                 throw new TimeoutExpiredException(String.format(
-                        "QueueTool_PreInvocationTimeout timeout (%d) exceeded waiting for start latch of caller",
-                        preInvocationTimeout));
+                        "QueueTool_PreInvocationTimeout timeout (%d) exceeded waiting for start latch of caller%n%s",
+                        preInvocationTimeout, WaitDiagnostics.capture()));
             }
         } catch (InterruptedException e) {
             caller.cancel();
@@ -169,9 +170,10 @@ public final class QueueTool {
 
         try {
             if (!caller.getEndGate().await(invocationTimeout, TimeUnit.MILLISECONDS)) {
+                // the EDT started our task but never finished it: the stack shows where it hangs
                 throw new TimeoutExpiredException(String.format(
-                        "QueueTool_InvocationTimeout timeout (%d) exceeded waiting for end latch of caller",
-                        invocationTimeout));
+                        "QueueTool_InvocationTimeout timeout (%d) exceeded waiting for end latch of caller%n%s",
+                        invocationTimeout, WaitDiagnostics.capture()));
             }
         } catch (InterruptedException e) {
             throw new JemmyException("InterruptedException raised while waiting for end latch of caller", e);

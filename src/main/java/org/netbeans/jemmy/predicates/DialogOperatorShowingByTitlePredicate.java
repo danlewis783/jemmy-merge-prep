@@ -38,4 +38,9 @@ public final class DialogOperatorShowingByTitlePredicate implements Predicate<Di
     public boolean test(DialogOperator dialogOp) {
         return dialogOp.isShowing() && comparator.equals((dialogOp).getTitle(), title);
     }
+
+    @Override
+    public String toString() {
+        return "DialogOperatorShowingByTitlePredicate{title=\"" + title + "\", comparator=" + comparator + "}";
+    }
 }

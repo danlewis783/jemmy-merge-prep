@@ -32,4 +32,9 @@ public final class ContainerSearcherPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return comp instanceof Container && new ComponentSearcher((Container) comp).findComponent(subPredicate) != null;
     }
+
+    @Override
+    public String toString() {
+        return "ContainerSearcherPredicate{" + subPredicate + "}";
+    }
 }

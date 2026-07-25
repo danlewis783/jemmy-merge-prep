@@ -57,4 +57,10 @@ public final class JListByItemPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JListByItemPredicate{label=" + (label == null ? "null" : "\"" + label + "\"") + ", itemIndex="
+                + itemIndex + ", comparator=" + comparator + "}";
+    }
 }

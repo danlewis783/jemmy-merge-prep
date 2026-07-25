@@ -35,4 +35,9 @@ public final class JMenuByLabelPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof JMenu) && comparator.equals(((JMenu) comp).getText(), label);
     }
+
+    @Override
+    public String toString() {
+        return "JMenuByLabelPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

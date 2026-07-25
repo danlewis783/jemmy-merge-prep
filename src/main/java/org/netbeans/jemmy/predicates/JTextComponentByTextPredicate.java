@@ -35,4 +35,10 @@ public final class JTextComponentByTextPredicate implements Predicate<Component>
     public boolean test(Component comp) {
         return comparator.equals(((JTextComponent) (comp)).getText(), expectedText);
     }
+
+    @Override
+    public String toString() {
+        return "JTextComponentByTextPredicate{expectedText="
+                + (expectedText == null ? "null" : "\"" + expectedText + "\"") + ", comparator=" + comparator + "}";
+    }
 }

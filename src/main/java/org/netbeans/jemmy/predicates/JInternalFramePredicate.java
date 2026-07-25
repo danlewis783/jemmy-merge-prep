@@ -37,4 +37,9 @@ public final class JInternalFramePredicate implements Predicate<Component> {
         return ((comp instanceof JInternalFrame) || (comp instanceof JInternalFrame.JDesktopIcon))
                 && predicate.test(comp);
     }
+
+    @Override
+    public String toString() {
+        return "JInternalFramePredicate{" + predicate + "}";
+    }
 }

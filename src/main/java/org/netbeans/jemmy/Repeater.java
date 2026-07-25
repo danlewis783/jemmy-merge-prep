@@ -18,6 +18,7 @@ package org.netbeans.jemmy;
 
 import java.awt.EventQueue;
 import java.util.function.BooleanSupplier;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,16 @@ final class Repeater {
     private Repeater() {}
 
     static void repeatUntilTrue(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
+        repeatUntilTrue(condition, waitKey, waitDelta, null);
+    }
+
+    /**
+     * @param describedTarget the object being waited on, purely for the timeout message; its
+     *     {@code toString()} is evaluated only on the timeout path, and undescriptive defaults
+     *     (lambdas, plain Object identity strings) are dropped rather than printed
+     */
+    static void repeatUntilTrue(
+            BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta, @Nullable Object describedTarget) {
         if (EventQueue.isDispatchThread()) {
             throw new RuntimeException(NO_WAITING_ALLOWED_ON_EDT);
         }
@@ -52,7 +63,44 @@ final class Repeater {
 
         while (!condition.getAsBoolean()) {
             Timeouts.sleep(waitDelta);
-            Timeouts.check(waitKey, startTime);
+            try {
+                Timeouts.check(waitKey, startTime);
+            } catch (TimeoutExpiredException e) {
+                throw enrich(e, describedTarget);
+            }
+        }
+    }
+
+    // failure path only: the message must carry everything needed to diagnose a timeout from
+    // the test report alone, because failure artifacts often cannot leave the machine
+    private static TimeoutExpiredException enrich(TimeoutExpiredException e, @Nullable Object describedTarget) {
+        StringBuilder message = new StringBuilder(e.getMessage());
+        String target = describe(describedTarget);
+        if (target != null) {
+            message.append(" waiting for: ").append(target);
+        }
+
+        message.append('\n').append(WaitDiagnostics.capture());
+
+        return new TimeoutExpiredException(message.toString(), e);
+    }
+
+    private static @Nullable String describe(@Nullable Object describedTarget) {
+        if (describedTarget == null) {
+            return null;
+        }
+
+        try {
+            String text = describedTarget.toString();
+            String identityDefault = describedTarget.getClass().getName()
+                    + "@" + Integer.toHexString(describedTarget.hashCode());
+            if (text == null || text.isEmpty() || text.equals(identityDefault) || text.contains("$$Lambda")) {
+                return null;
+            }
+
+            return text;
+        } catch (RuntimeException toStringFailure) {
+            return null;
         }
     }
 }

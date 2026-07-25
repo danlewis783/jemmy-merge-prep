@@ -32,4 +32,9 @@ public final class ButtonByTextPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof JButton) && text.equals(((JButton) comp).getText());
     }
+
+    @Override
+    public String toString() {
+        return "ButtonByTextPredicate{text=\"" + text + "\"}";
+    }
 }

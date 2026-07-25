@@ -71,4 +71,10 @@ public final class JTableByCellValuePredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JTableByCellValuePredicate{label=" + (label == null ? "null" : "\"" + label + "\"") + ", row=" + row
+                + ", column=" + column + ", comparator=" + comparator + "}";
+    }
 }

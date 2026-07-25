@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.netbeans.jemmy.DumpOnFailure;
 import org.netbeans.jemmy.FunctionRepeater;
+import org.netbeans.jemmy.testing.DumpOnFailure;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 

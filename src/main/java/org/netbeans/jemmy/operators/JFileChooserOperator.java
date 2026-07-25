@@ -702,6 +702,11 @@ public class JFileChooserOperator extends JComponentOperator {
             // pure read: runs on the EDT via waitState's dispatch, so it must not wait
             return jFileChooserOp.fileCountNow() == count;
         }
+
+        @Override
+        public String toString() {
+            return "JFileChooserOperatorByFileCountPredicate{count=" + count + "}";
+        }
     }
 
     private static class JFileChooserOperatorFileDisplayedPredicate implements Predicate<JFileChooserOperator> {
@@ -718,6 +723,12 @@ public class JFileChooserOperator extends JComponentOperator {
             // pure read: runs on the EDT via waitState's dispatch, so it must not wait
             return jFileChooserOp.fileIndexNow(fileName, stringComparator) != -1;
         }
+
+        @Override
+        public String toString() {
+            return "JFileChooserOperatorFileDisplayedPredicate{fileName=\"" + fileName + "\", comparator="
+                    + stringComparator + "}";
+        }
     }
 
     private static class IsJButtonNotInsideComboWithTextPredicate implements Predicate<Component> {
@@ -727,6 +738,11 @@ public class JFileChooserOperator extends JComponentOperator {
                     && !(comp.getParent() instanceof JComboBox)
                     && (((JButton) comp).getText() == null
                             || ((JButton) comp).getText().isEmpty());
+        }
+
+        @Override
+        public String toString() {
+            return "IsJButtonNotInsideComboWithTextPredicate";
         }
     }
 
@@ -738,6 +754,11 @@ public class JFileChooserOperator extends JComponentOperator {
                     && !(comp.getParent() instanceof JComboBox)
                     && (((JButton) comp).getText() != null)
                     && !((JButton) comp).getText().isEmpty();
+        }
+
+        @Override
+        public String toString() {
+            return "IsJButtonWithTextNotInsideComboPredicate";
         }
     }
 
@@ -754,6 +775,12 @@ public class JFileChooserOperator extends JComponentOperator {
                             && (fileListName != null)
                             && fileListName.equals(comp.getAccessibleContext().getAccessibleName()))
                     || (comp instanceof JTable);
+        }
+
+        @Override
+        public String toString() {
+            return "FileListPredicate{fileListName="
+                    + (fileListName == null ? "null" : "\"" + fileListName + "\"") + "}";
         }
     }
 }

@@ -41,6 +41,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_018
 // 10s rather than 2s: at higher display scaling the scaled content leaves the small viewport
 // proportionally more to scroll through
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {

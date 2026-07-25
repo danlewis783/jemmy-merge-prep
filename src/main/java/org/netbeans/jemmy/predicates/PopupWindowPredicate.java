@@ -33,4 +33,9 @@ public final class PopupWindowPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return new ComponentSearcher((Container) comp).findComponent(predicate) != null;
     }
+
+    @Override
+    public String toString() {
+        return "PopupWindowPredicate{" + predicate + "}";
+    }
 }

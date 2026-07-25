@@ -55,10 +55,10 @@ public final class BooleanSupplierRepeater {
     }
 
     public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        Repeater.repeatUntilTrue(condition, waitKey, waitDelta);
+        Repeater.repeatUntilTrue(condition, waitKey, waitDelta, condition);
     }
 
     public void runUntilTrue() {
-        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta);
+        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta, booleanSupplier);
     }
 }

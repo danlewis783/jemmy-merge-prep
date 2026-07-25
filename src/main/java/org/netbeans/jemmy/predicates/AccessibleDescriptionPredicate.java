@@ -38,4 +38,9 @@ public final class AccessibleDescriptionPredicate extends AccessibilityPredicate
     public boolean checkContext(AccessibleContext context) {
         return comparator.equals(context.getAccessibleDescription(), description);
     }
+
+    @Override
+    public String toString() {
+        return "AccessibleDescriptionPredicate{description=\"" + description + "\", comparator=" + comparator + "}";
+    }
 }

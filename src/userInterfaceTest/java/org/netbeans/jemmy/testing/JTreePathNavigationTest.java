@@ -52,6 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 // formerly scenario test jemmy_005
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=20, unit=TimeUnit.SECONDS)
 class JTreePathNavigationTest {

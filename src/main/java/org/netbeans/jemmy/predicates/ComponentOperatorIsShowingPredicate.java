@@ -30,4 +30,9 @@ public final class ComponentOperatorIsShowingPredicate implements Predicate<Comp
     public boolean test(ComponentOperator componentOp) {
         return componentOp.isShowing() == visibility;
     }
+
+    @Override
+    public String toString() {
+        return "isShowing=" + visibility;
+    }
 }

@@ -45,6 +45,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_041
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class TreeSelectionUnderChangeTest {

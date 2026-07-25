@@ -44,6 +44,7 @@ import org.netbeans.jemmy.operators.JInternalFrameOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_022
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class InternalFrameWorkflowTest {

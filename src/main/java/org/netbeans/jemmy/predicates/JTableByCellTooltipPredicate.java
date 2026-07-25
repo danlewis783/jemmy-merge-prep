@@ -89,4 +89,14 @@ public class JTableByCellTooltipPredicate implements Predicate<Component> {
     protected StringComparator getComparator() {
         return comparator;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" + fieldsToString() + "}";
+    }
+
+    protected String fieldsToString() {
+        return "tooltip=" + (tooltip == null ? "null" : "\"" + tooltip + "\"") + ", row=" + row + ", column="
+                + column;
+    }
 }

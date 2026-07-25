@@ -19,6 +19,7 @@ package org.netbeans.jemmy.predicates;
 
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.ClassReference;
@@ -92,6 +93,12 @@ public class PropertyPredicate implements Predicate<Component> {
 
     boolean checkProperty(Object value, Object etalon) {
         return value.equals(etalon);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{propNames=" + Arrays.toString(propNames) + ", results="
+                + Arrays.toString(results) + "}";
     }
 
     private boolean isField(Component comp, String propName, Class<?>[] params) throws SecurityException {

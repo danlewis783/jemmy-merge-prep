@@ -33,4 +33,10 @@ public final class AbstractButtonOperatorByTextPredicate<T extends AbstractButto
     public boolean test(T absButtonOp) {
         return comparator.equals((absButtonOp).getText(), expectedText);
     }
+
+    @Override
+    public String toString() {
+        return "AbstractButtonOperatorByTextPredicate{expectedText=\"" + expectedText + "\", comparator=" + comparator
+                + "}";
+    }
 }

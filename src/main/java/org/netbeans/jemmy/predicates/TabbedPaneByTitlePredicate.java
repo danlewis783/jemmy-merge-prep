@@ -49,4 +49,9 @@ public final class TabbedPaneByTitlePredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "TabbedPaneByTitlePredicate{title=\"" + title + "\", comparator=" + comparator + "}";
+    }
 }

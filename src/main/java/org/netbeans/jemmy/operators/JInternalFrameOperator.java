@@ -691,6 +691,11 @@ public class JInternalFrameOperator extends JComponentOperator {
         public boolean test(JInternalFrameOperator jInternalFrameOp) {
             return jInternalFrameOp.isIcon() == icon;
         }
+
+        @Override
+        public String toString() {
+            return "isIcon=" + icon;
+        }
     }
 
     private static class JInternalFrameIsMaximumPredicate implements Predicate<JInternalFrameOperator> {
@@ -703,6 +708,11 @@ public class JInternalFrameOperator extends JComponentOperator {
         @Override
         public boolean test(JInternalFrameOperator jInternalFrameOp) {
             return jInternalFrameOp.isMaximum() == isMaximum;
+        }
+
+        @Override
+        public String toString() {
+            return "isMaximum=" + isMaximum;
         }
     }
 
@@ -717,6 +727,11 @@ public class JInternalFrameOperator extends JComponentOperator {
         public boolean test(JInternalFrameOperator jInternalFrameOp) {
             return jInternalFrameOp.isSelected() == isSelected;
         }
+
+        @Override
+        public String toString() {
+            return "isSelected=" + isSelected;
+        }
     }
 
     private static class JInternalFrameIsClosedPredicate implements Predicate<JInternalFrameOperator> {
@@ -729,6 +744,11 @@ public class JInternalFrameOperator extends JComponentOperator {
         @Override
         public boolean test(JInternalFrameOperator jInternalFrameOp) {
             return jInternalFrameOp.isClosed() == isClosed;
+        }
+
+        @Override
+        public String toString() {
+            return "isClosed=" + isClosed;
         }
     }
 

@@ -46,4 +46,9 @@ public final class JPopupWindowPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JPopupWindowPredicate{" + subFinder + "}";
+    }
 }

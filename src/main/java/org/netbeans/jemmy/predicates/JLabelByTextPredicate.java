@@ -35,4 +35,10 @@ public final class JLabelByTextPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof JLabel) && comparator.equals(((JLabel) comp).getText(), text);
     }
+
+    @Override
+    public String toString() {
+        return "JLabelByTextPredicate{text=" + (text == null ? "null" : "\"" + text + "\"") + ", comparator="
+                + comparator + "}";
+    }
 }

@@ -343,5 +343,10 @@ public class JMenuBarOperator extends JComponentOperator {
         public boolean test(Component comp) {
             return (comp instanceof JMenu) && ((JMenu) comp).isPopupMenuVisible();
         }
+
+        @Override
+        public String toString() {
+            return "IsJMenuAndPopupIsVisiblePredicate";
+        }
     }
 }

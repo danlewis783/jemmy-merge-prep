@@ -32,7 +32,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
+@ExtendWith(FastToolTips.class)
 @Timeout(value = 30, unit = TimeUnit.SECONDS)
 class ShowToolTipTest {
 

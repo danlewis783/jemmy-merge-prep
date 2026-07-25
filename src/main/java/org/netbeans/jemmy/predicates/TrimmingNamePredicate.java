@@ -43,4 +43,9 @@ public final class TrimmingNamePredicate implements Predicate<Component> {
 
         return comparator.equals(componentName.trim(), name);
     }
+
+    @Override
+    public String toString() {
+        return "TrimmingNamePredicate{name=\"" + name + "\", comparator=" + comparator + "}";
+    }
 }

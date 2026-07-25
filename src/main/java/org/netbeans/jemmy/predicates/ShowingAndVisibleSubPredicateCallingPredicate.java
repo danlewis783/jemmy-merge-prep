@@ -30,4 +30,9 @@ public final class ShowingAndVisibleSubPredicateCallingPredicate implements Pred
     public boolean test(Component comp) {
         return comp.isShowing() && comp.isVisible() && subFinder.test(comp);
     }
+
+    @Override
+    public String toString() {
+        return "ShowingAndVisibleSubPredicateCallingPredicate{" + subFinder + "}";
+    }
 }

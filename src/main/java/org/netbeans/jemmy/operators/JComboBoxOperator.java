@@ -491,6 +491,11 @@ public class JComboBoxOperator extends JComponentOperator {
         public boolean test(JComboBoxOperator jComboBoxOperator) {
             return jComboBoxOperator.findItemIndex(item, comparator) > -1;
         }
+
+        @Override
+        public String toString() {
+            return "JComboBoxOperatorByItemPredicate{item=\"" + item + "\", comparator=" + comparator + "}";
+        }
     }
 
     private class JComboBoxOperatorBySelectedIndexPredicate implements Predicate<JComboBoxOperator> {
@@ -503,6 +508,11 @@ public class JComboBoxOperator extends JComponentOperator {
         @Override
         public boolean test(JComboBoxOperator comp) {
             return getSelectedIndex() == index;
+        }
+
+        @Override
+        public String toString() {
+            return "JComboBoxOperatorBySelectedIndexPredicate{index=" + index + "}";
         }
     }
 }

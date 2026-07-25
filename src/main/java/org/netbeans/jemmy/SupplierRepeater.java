@@ -57,7 +57,8 @@ public final class SupplierRepeater<R> {
                     return r != null;
                 },
                 waitKey,
-                waitDelta);
+                waitDelta,
+                supplier);
 
         return Objects.requireNonNull(result.get());
     }

@@ -36,4 +36,9 @@ public final class TooltipForComponentPredicate implements Predicate<Component> 
                 && comp.isVisible()
                 && ((JToolTip) comp).getComponent() == tipComponent;
     }
+
+    @Override
+    public String toString() {
+        return "TooltipForComponentPredicate{tipComponent=" + tipComponent.getClass().getSimpleName() + "}";
+    }
 }

@@ -42,4 +42,9 @@ public final class ComponentOperatorLocationPredicate<T extends ComponentOperato
                 && (location.y >= minLocation.y)
                 && (location.y <= maxLocation.y);
     }
+
+    @Override
+    public String toString() {
+        return "location=" + minLocation + (minLocation.equals(maxLocation) ? "" : ".." + maxLocation);
+    }
 }

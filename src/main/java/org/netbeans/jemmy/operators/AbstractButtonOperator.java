@@ -455,5 +455,10 @@ public class AbstractButtonOperator extends JComponentOperator {
         public boolean test(T absButtonOp) {
             return absButtonOp.isSelected() == selected;
         }
+
+        @Override
+        public String toString() {
+            return "isSelected=" + selected;
+        }
     }
 }

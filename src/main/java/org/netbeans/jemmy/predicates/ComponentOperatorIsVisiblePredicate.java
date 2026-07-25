@@ -30,4 +30,9 @@ public final class ComponentOperatorIsVisiblePredicate<T extends ComponentOperat
     public boolean test(T compOp) {
         return compOp.isVisible() == expectedVisibility;
     }
+
+    @Override
+    public String toString() {
+        return "isVisible=" + expectedVisibility;
+    }
 }

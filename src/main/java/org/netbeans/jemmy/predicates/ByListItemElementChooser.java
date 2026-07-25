@@ -36,4 +36,10 @@ public final class ByListItemElementChooser implements JListOperator.ListItemCho
 
         return comparator.equals(elementAt.toString(), expectedElementToString);
     }
+
+    @Override
+    public String toString() {
+        return "ByListItemElementChooser{expectedElementToString=\"" + expectedElementToString + "\", comparator="
+                + comparator + "}";
+    }
 }

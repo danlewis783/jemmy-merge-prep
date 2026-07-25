@@ -35,4 +35,9 @@ public final class TextAreaByTextPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof TextArea) && comparator.equals(((TextArea) comp).getText(), label);
     }
+
+    @Override
+    public String toString() {
+        return "TextAreaByTextPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

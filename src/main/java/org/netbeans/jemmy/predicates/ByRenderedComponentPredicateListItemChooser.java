@@ -31,4 +31,9 @@ public final class ByRenderedComponentPredicateListItemChooser implements JListO
     public boolean checkItem(JListOperator jListOperator, int index) {
         return predicate.test(jListOperator.getRenderedComponent(index));
     }
+
+    @Override
+    public String toString() {
+        return "ByRenderedComponentPredicateListItemChooser{" + predicate + "}";
+    }
 }

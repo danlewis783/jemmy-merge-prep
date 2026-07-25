@@ -42,4 +42,9 @@ public final class IndexPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "IndexPredicate{" + predicate + ", index=" + index + "}";
+    }
 }

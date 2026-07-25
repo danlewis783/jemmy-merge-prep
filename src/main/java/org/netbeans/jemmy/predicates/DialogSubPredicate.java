@@ -32,4 +32,9 @@ public final class DialogSubPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof Dialog) && comp.isShowing() && comp.isVisible() && predicate.test(comp);
     }
+
+    @Override
+    public String toString() {
+        return "DialogSubPredicate{" + predicate + "}";
+    }
 }

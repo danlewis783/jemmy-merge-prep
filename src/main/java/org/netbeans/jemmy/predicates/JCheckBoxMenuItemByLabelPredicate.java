@@ -41,4 +41,9 @@ public final class JCheckBoxMenuItemByLabelPredicate implements Predicate<Compon
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JCheckBoxMenuItemByLabelPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

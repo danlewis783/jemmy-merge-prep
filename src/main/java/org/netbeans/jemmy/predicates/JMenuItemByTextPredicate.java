@@ -35,4 +35,9 @@ public final class JMenuItemByTextPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof JMenuItem) && stringComparator.equals(((JMenuItem) comp).getText(), text);
     }
+
+    @Override
+    public String toString() {
+        return "JMenuItemByTextPredicate{text=\"" + text + "\", comparator=" + stringComparator + "}";
+    }
 }

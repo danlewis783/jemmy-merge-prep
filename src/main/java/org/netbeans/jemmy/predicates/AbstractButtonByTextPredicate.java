@@ -36,4 +36,11 @@ public final class AbstractButtonByTextPredicate implements Predicate<Component>
         return (comp instanceof AbstractButton)
                 && stringComparator.equals(((AbstractButton) comp).getText(), expectedText);
     }
+
+    @Override
+    public String toString() {
+        return "AbstractButtonByTextPredicate{expectedText="
+                + (expectedText == null ? "null" : "\"" + expectedText + "\"")
+                + ", comparator=" + stringComparator + "}";
+    }
 }

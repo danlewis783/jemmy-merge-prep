@@ -36,4 +36,9 @@ public final class JRadioButtonMenuItemByLabelPredicate implements Predicate<Com
         return comp instanceof JRadioButtonMenuItem
                 && comparator.equals(((JRadioButtonMenuItem) comp).getText(), label);
     }
+
+    @Override
+    public String toString() {
+        return "JRadioButtonMenuItemByLabelPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

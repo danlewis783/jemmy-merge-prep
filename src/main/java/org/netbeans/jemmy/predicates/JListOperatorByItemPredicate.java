@@ -52,4 +52,10 @@ public final class JListOperatorByItemPredicate<T extends JListOperator> impleme
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JListOperatorByItemPredicate{label=" + (label == null ? "null" : "\"" + label + "\"") + ", itemIndex="
+                + itemIndex + ", comparator=" + comparator + "}";
+    }
 }

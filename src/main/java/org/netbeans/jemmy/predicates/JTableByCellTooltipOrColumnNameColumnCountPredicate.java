@@ -90,4 +90,11 @@ public class JTableByCellTooltipOrColumnNameColumnCountPredicate extends JTableB
 
         return value.substring(start, end);
     }
+
+    @Override
+    protected String fieldsToString() {
+        return super.fieldsToString() + ", columnName=" + (columnName == null ? "null" : "\"" + columnName + "\"")
+                + ", columnCount=" + columnCount + ", tabbedPaneName="
+                + (tabbedPaneName == null ? "null" : "\"" + tabbedPaneName + "\"");
+    }
 }

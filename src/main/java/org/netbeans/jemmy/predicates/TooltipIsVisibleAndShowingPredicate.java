@@ -26,4 +26,9 @@ public final class TooltipIsVisibleAndShowingPredicate implements Predicate<Comp
     public boolean test(Component comp) {
         return comp instanceof JToolTip && comp.isShowing() && comp.isVisible();
     }
+
+    @Override
+    public String toString() {
+        return "TooltipIsVisibleAndShowingPredicate";
+    }
 }

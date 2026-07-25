@@ -42,4 +42,9 @@ public final class ComponentOperatorSizePredicate<T extends ComponentOperator> i
                 && (size.height >= minSize.height)
                 && (size.height <= maxSize.height);
     }
+
+    @Override
+    public String toString() {
+        return "size=" + minSize + (minSize.equals(maxSize) ? "" : ".." + maxSize);
+    }
 }

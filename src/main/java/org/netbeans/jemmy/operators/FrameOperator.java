@@ -245,6 +245,11 @@ public class FrameOperator extends WindowOperator {
         public boolean test(FrameOperator frameOp) {
             return frameOp.getState() == state;
         }
+
+        @Override
+        public String toString() {
+            return "FrameOperatorState{state=" + state + "}";
+        }
     }
 
     private static class FrameOperatorExtendedState implements Predicate<FrameOperator> {
@@ -257,6 +262,11 @@ public class FrameOperator extends WindowOperator {
         @Override
         public boolean test(FrameOperator frameOp) {
             return frameOp.getExtendedState() == state;
+        }
+
+        @Override
+        public String toString() {
+            return "FrameOperatorExtendedState{state=" + state + "}";
         }
     }
 }

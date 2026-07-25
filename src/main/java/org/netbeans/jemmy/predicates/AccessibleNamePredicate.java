@@ -38,4 +38,9 @@ public final class AccessibleNamePredicate extends AccessibilityPredicate {
     public boolean checkContext(AccessibleContext context) {
         return comparator.equals(context.getAccessibleName(), name);
     }
+
+    @Override
+    public String toString() {
+        return "AccessibleNamePredicate{name=\"" + name + "\", comparator=" + comparator + "}";
+    }
 }

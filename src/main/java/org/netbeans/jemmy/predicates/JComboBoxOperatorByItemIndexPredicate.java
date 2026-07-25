@@ -31,4 +31,9 @@ public final class JComboBoxOperatorByItemIndexPredicate implements Predicate<JC
     public boolean test(JComboBoxOperator jComboBoxOperator) {
         return jComboBoxOperator.getModel().getSize() > itemIndex;
     }
+
+    @Override
+    public String toString() {
+        return "JComboBoxOperatorByItemIndexPredicate{itemIndex=" + itemIndex + "}";
+    }
 }

@@ -34,6 +34,7 @@ import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_010
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class ModalDialogWaitingTest {

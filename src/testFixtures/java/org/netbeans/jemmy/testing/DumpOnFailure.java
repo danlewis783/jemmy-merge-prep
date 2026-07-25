@@ -14,7 +14,7 @@
  * 2 along with this work; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package org.netbeans.jemmy;
+package org.netbeans.jemmy.testing;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -29,12 +29,23 @@ import javax.swing.UIManager;
 import javax.swing.text.JTextComponent;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.netbeans.jemmy.WaitDiagnostics;
 
 /**
  * Prints a snapshot of the live component hierarchy to stderr when a UI test fails, so post-mortems can see which
  * component held focus, what was visible, and what text was selected at failure time. Implemented as a
  * {@link TestExecutionExceptionHandler} rather than a {@code TestWatcher} so the snapshot is taken before
- * {@code @AfterEach} tears the UI down. Register with {@code @ExtendWith(DumpOnFailure.class)}.
+ * {@code @AfterEach} tears the UI down.
+ * <p>
+ * Appends {@link WaitDiagnostics#capture()} at the end of the dump. Jemmy's own timeout exceptions
+ * ({@code QueueTool}, {@code Repeater}, and the waits built on them) already embed
+ * {@link WaitDiagnostics#capture()} in their message, but a JUnit {@code @Timeout} interrupts the test thread
+ * directly and bypasses that enrichment entirely: its failure carries only a stack trace at the interrupt point.
+ * Appending the capture here means a {@code @Timeout} failure still gets the EDT stack, an EDT-responsiveness
+ * probe, a window/focus summary, and the mouse position, in addition to - not instead of - this class's own dump,
+ * whose window tree goes deeper than {@link WaitDiagnostics}' summary.
+ * <p>
+ * Register with {@code @ExtendWith(DumpOnFailure.class)}.
  */
 public final class DumpOnFailure implements TestExecutionExceptionHandler {
 
@@ -53,7 +64,8 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
             snapshot(dump);
         }
 
-        dump.append("===== end DumpOnFailure =====");
+        dump.append("===== end DumpOnFailure =====\n")
+                .append(WaitDiagnostics.capture());
         System.err.println(dump);
 
         throw cause;

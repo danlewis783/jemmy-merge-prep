@@ -56,12 +56,22 @@ public final class StringComparators {
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || observed != null;
         }
+
+        @Override
+        public String toString() {
+            return "AlwaysEqualStringComparator";
+        }
     }
 
     private static class CaseInsensitiveStringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || expected.equalsIgnoreCase(observed);
+        }
+
+        @Override
+        public String toString() {
+            return "CaseInsensitiveStringComparator";
         }
     }
 
@@ -71,12 +81,22 @@ public final class StringComparators {
             return expected == null
                     || observed != null && observed.toUpperCase().contains(expected.toUpperCase());
         }
+
+        @Override
+        public String toString() {
+            return "CaseInsensitiveSubstringComparator";
+        }
     }
 
     private static class RegexStringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || observed != null && Pattern.matches(expected, observed);
+        }
+
+        @Override
+        public String toString() {
+            return "RegexStringComparator";
         }
     }
 
@@ -85,6 +105,11 @@ public final class StringComparators {
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || observed != null && observed.startsWith(expected);
         }
+
+        @Override
+        public String toString() {
+            return "StartsWithStringComparator";
+        }
     }
 
     private static class StrictStringComparator implements StringComparator {
@@ -92,12 +117,22 @@ public final class StringComparators {
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || expected.equals(observed);
         }
+
+        @Override
+        public String toString() {
+            return "StrictStringComparator";
+        }
     }
 
     private static class SubstringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
             return expected == null || observed != null && observed.contains(expected);
+        }
+
+        @Override
+        public String toString() {
+            return "SubstringComparator";
         }
     }
 }

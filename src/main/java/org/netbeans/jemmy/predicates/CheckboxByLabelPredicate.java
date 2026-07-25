@@ -41,4 +41,9 @@ public final class CheckboxByLabelPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "CheckboxByLabelPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

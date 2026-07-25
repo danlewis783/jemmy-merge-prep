@@ -33,4 +33,10 @@ public final class JTextComponentOperatorByTextPredicate implements Predicate<JT
     public boolean test(JTextComponentOperator jTextComponentOp) {
         return comparator.equals((jTextComponentOp).getText(), expectedText);
     }
+
+    @Override
+    public String toString() {
+        return "JTextComponentOperatorByTextPredicate{expectedText=\"" + expectedText + "\", comparator=" + comparator
+                + "}";
+    }
 }

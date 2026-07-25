@@ -28,11 +28,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.netbeans.jemmy.DumpOnFailure;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.DriverType;
 import org.netbeans.jemmy.drivers.windows.InternalFramePopupMenuDriver;
+import org.netbeans.jemmy.testing.DumpOnFailure;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 

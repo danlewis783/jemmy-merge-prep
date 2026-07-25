@@ -68,4 +68,11 @@ public final class JTableOperatorByCellValuePredicate implements Predicate<JTabl
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JTableOperatorByCellValuePredicate{expectedCellValue="
+                + (expectedCellValue == null ? "null" : "\"" + expectedCellValue + "\"") + ", row=" + row
+                + ", column=" + column + ", comparator=" + comparator + "}";
+    }
 }

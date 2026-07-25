@@ -35,4 +35,9 @@ public class JPopupMenuContainsComponentWithTextPredicate implements Predicate<C
         return (component instanceof JPopupMenu)
                 && (new ComponentSearcher((Container) component).findComponent(predicate) != null);
     }
+
+    @Override
+    public String toString() {
+        return "JPopupMenuContainsComponentWithTextPredicate{" + predicate + "}";
+    }
 }

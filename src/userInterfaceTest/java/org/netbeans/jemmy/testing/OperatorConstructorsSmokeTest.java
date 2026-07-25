@@ -66,6 +66,7 @@ import org.netbeans.jemmy.operators.WindowOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_032
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class OperatorConstructorsSmokeTest {

@@ -17,4 +17,9 @@ public class JTextAreaByRegexFinder implements Predicate<Component> {
         JTextArea jText = (JTextArea) comp;
         return regExpPattern.matcher(jText.getText()).matches();
     }
+
+    @Override
+    public String toString() {
+        return "JTextAreaByRegexFinder{regex=\"" + regExpPattern.pattern() + "\"}";
+    }
 }

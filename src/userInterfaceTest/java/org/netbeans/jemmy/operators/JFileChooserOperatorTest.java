@@ -33,6 +33,7 @@ import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.testing.DumpOnFailure;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.LookAndFeel;
@@ -55,6 +56,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=500, unit=TimeUnit.MILLISECONDS)
 final class JFileChooserOperatorTest {

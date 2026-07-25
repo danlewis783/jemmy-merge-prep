@@ -51,4 +51,9 @@ public final class JInternalFrameByTitlePredicate implements Predicate<Component
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JInternalFrameByTitlePredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

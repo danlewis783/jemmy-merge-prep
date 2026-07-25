@@ -63,4 +63,10 @@ public final class JTreeByItemPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JTreeByItemPredicate{label=" + (label == null ? "null" : "\"" + label + "\"") + ", rowIndex="
+                + rowIndex + ", comparator=" + comparator + "}";
+    }
 }

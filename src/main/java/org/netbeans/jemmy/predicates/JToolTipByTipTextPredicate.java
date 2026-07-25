@@ -34,4 +34,10 @@ public final class JToolTipByTipTextPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp instanceof JToolTip) && comparator.equals(((JToolTip) comp).getTipText(), tipText);
     }
+
+    @Override
+    public String toString() {
+        return "JToolTipByTipTextPredicate{tipText=" + (tipText == null ? "null" : "\"" + tipText + "\"")
+                + ", comparator=" + comparator + "}";
+    }
 }

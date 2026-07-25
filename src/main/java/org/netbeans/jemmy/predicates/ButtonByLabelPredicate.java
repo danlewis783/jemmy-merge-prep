@@ -35,4 +35,9 @@ public final class ButtonByLabelPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return comp instanceof Button && comparator.equals(((Button) comp).getLabel(), label);
     }
+
+    @Override
+    public String toString() {
+        return "ButtonByLabelPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

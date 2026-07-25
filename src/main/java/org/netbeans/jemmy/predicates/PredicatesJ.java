@@ -38,26 +38,27 @@ public final class PredicatesJ {
     }
 
     public static Predicate<Component> of(Class<?> clazz, Predicate<Component> predicate) {
-        return new IsInstancePredicate(clazz).and(predicate);
+        return new AndPredicate<Component>(new IsInstancePredicate(clazz), predicate);
     }
 
     public static Predicate<Component> ofParentOf(
             Class<?> clazz, Class<?> parentClass, Predicate<Component> predicate) {
-        return new IsInstancePredicate(clazz)
-                .and(new WithParentOfTypePredicate<>(parentClass))
-                .and(predicate);
+        return new AndPredicate<Component>(
+                new AndPredicate<Component>(new IsInstancePredicate(clazz), new WithParentOfTypePredicate<>(parentClass)),
+                predicate);
     }
 
     public static Predicate<Component> ofShowing(Class<?> clazz) {
-        return new IsInstancePredicate(clazz).and(new IsShowingPredicate<>());
+        return new AndPredicate<Component>(new IsInstancePredicate(clazz), new IsShowingPredicate<>());
     }
 
     public static Predicate<Component> ofShowing(Class<?> clazz, Predicate<Component> predicate) {
-        return new IsInstancePredicate(clazz).and(new IsShowingPredicate<>()).and(predicate);
+        return new AndPredicate<Component>(
+                new AndPredicate<Component>(new IsInstancePredicate(clazz), new IsShowingPredicate<>()), predicate);
     }
 
     public static Predicate<Component> ofShowing(Predicate<Component> predicate) {
-        return isShowing().and(predicate);
+        return new AndPredicate<Component>(isShowing(), predicate);
     }
 
     public static Predicate<Component> isShowing() {
@@ -128,6 +129,11 @@ public final class PredicatesJ {
             Container parent = comp.getParent();
             return clazz.isInstance(comp) || ((parent != null) && isAncestorInstanceOf(clazz, parent));
         }
+
+        @Override
+        public String toString() {
+            return "AncestorInstanceOfPredicate{clazz=" + clazz.getSimpleName() + "}";
+        }
     }
 
     private static class ByIndexPredicate<T extends Component> implements Predicate<T> {
@@ -143,6 +149,11 @@ public final class PredicatesJ {
         public boolean test(T input) {
             return count++ == i;
         }
+
+        @Override
+        public String toString() {
+            return "ByIndexPredicate{index=" + i + "}";
+        }
     }
 
     private static class ClassNamePredicate<T extends Component> implements Predicate<T> {
@@ -155,6 +166,11 @@ public final class PredicatesJ {
         @Override
         public boolean test(T input) {
             return input.getClass().getName().equals(className);
+        }
+
+        @Override
+        public String toString() {
+            return "ClassNamePredicate{className=\"" + className + "\"}";
         }
     }
 
@@ -169,6 +185,11 @@ public final class PredicatesJ {
         public boolean test(Component comp) {
             return clazz.isAssignableFrom(comp.getClass());
         }
+
+        @Override
+        public String toString() {
+            return "IsAssignableFromPredicate{clazz=" + clazz.getSimpleName() + "}";
+        }
     }
 
     private static class IsInstancePredicate implements Predicate<Component> {
@@ -181,6 +202,11 @@ public final class PredicatesJ {
         @Override
         public boolean test(Component input) {
             return clazz.isInstance(input);
+        }
+
+        @Override
+        public String toString() {
+            return "instanceof " + clazz.getSimpleName();
         }
     }
 
@@ -201,12 +227,30 @@ public final class PredicatesJ {
 
             return false;
         }
+
+        @Override
+        public String toString() {
+            StringBuilder names = new StringBuilder();
+            for (int i = 0; i < classes.length; i++) {
+                if (i > 0) {
+                    names.append(", ");
+                }
+                names.append(classes[i].getSimpleName());
+            }
+
+            return "instanceof any of [" + names + "]";
+        }
     }
 
     private static class IsShowingPredicate<T extends Component> implements Predicate<T> {
         @Override
         public boolean test(T input) {
             return input.isShowing();
+        }
+
+        @Override
+        public String toString() {
+            return "isShowing";
         }
     }
 
@@ -220,6 +264,11 @@ public final class PredicatesJ {
         @Override
         public boolean test(T input) {
             return input.getComponents().length == i;
+        }
+
+        @Override
+        public String toString() {
+            return "NumChildrenPredicate{count=" + i + "}";
         }
     }
 
@@ -243,6 +292,11 @@ public final class PredicatesJ {
             String tooltipText = ((JComponent) input).getToolTipText();
             return (tooltipText != null) && tooltipText.equals(tooltip);
         }
+
+        @Override
+        public String toString() {
+            return "TooltipPredicate{tooltip=\"" + tooltip + "\"}";
+        }
     }
 
     private static class TooltipRegexPredicate<T extends Component> implements Predicate<T> {
@@ -265,6 +319,11 @@ public final class PredicatesJ {
             String tooltipText = ((JComponent) input).getToolTipText();
             return (tooltipText != null) && Pattern.matches(regex, tooltipText);
         }
+
+        @Override
+        public String toString() {
+            return "TooltipRegexPredicate{regex=\"" + regex + "\"}";
+        }
     }
 
     private static class BooleanFunctionPredicate<T> implements Predicate<T> {
@@ -278,12 +337,22 @@ public final class PredicatesJ {
         public boolean test(T input) {
             return function.apply(input);
         }
+
+        @Override
+        public String toString() {
+            return "BooleanFunctionPredicate{function=" + function + "}";
+        }
     }
 
     private static class IsEnabledPredicate<T extends Component> implements Predicate<T> {
         @Override
         public boolean test(T input) {
             return input.isEnabled();
+        }
+
+        @Override
+        public String toString() {
+            return "isEnabled";
         }
     }
 
@@ -297,6 +366,11 @@ public final class PredicatesJ {
         @Override
         public boolean test(T input) {
             return clazz.isInstance(input.getParent());
+        }
+
+        @Override
+        public String toString() {
+            return "WithParentOfTypePredicate{parentType=" + clazz.getSimpleName() + "}";
         }
     }
 
@@ -312,6 +386,36 @@ public final class PredicatesJ {
         @Override
         public boolean test(T comp) {
             return comparator.equals(comp.getName(), requestedName);
+        }
+
+        @Override
+        public String toString() {
+            return "ByNamePredicate{name=\"" + requestedName + "\", comparator=" + comparator + "}";
+        }
+    }
+
+    /**
+     * Short-circuiting AND of two predicates, kept as its own class (rather than
+     * {@link Predicate#and}) purely so timeout messages can render both sides instead of a
+     * synthetic lambda name.
+     */
+    private static class AndPredicate<T> implements Predicate<T> {
+        private final Predicate<? super T> left;
+        private final Predicate<? super T> right;
+
+        AndPredicate(Predicate<? super T> left, Predicate<? super T> right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public boolean test(T input) {
+            return left.test(input) && right.test(input);
+        }
+
+        @Override
+        public String toString() {
+            return left + " && " + right;
         }
     }
 }

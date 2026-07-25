@@ -26,4 +26,9 @@ public final class ComponentOperatorIsEnabledPredicate<T extends ComponentOperat
     public boolean test(T compOp) {
         return compOp.isEnabled();
     }
+
+    @Override
+    public String toString() {
+        return "isEnabled";
+    }
 }

@@ -57,6 +57,7 @@ import static org.netbeans.jemmy.util.StringComparators.regex;
 import static org.netbeans.jemmy.util.StringComparators.substring;
 
 // formerly scenario test jemmy_024
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=20, unit=TimeUnit.SECONDS)
 final class TabbedComponentsWorkflowTest {

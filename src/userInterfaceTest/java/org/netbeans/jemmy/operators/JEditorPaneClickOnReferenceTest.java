@@ -37,6 +37,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.testing.DumpOnFailure;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 
@@ -44,6 +45,7 @@ import org.netbeans.jemmy.testing.TestWindows;
  * Exercises {@code JEditorPaneOperator.clickOnReference}, ported from openjdk/jemmy-v2 (CODETOOLS-7902156), with
  * and without an enclosing scroll pane. The HTML fixtures link to each other by named anchors.
  */
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=1, unit=TimeUnit.SECONDS)
 class JEditorPaneClickOnReferenceTest {

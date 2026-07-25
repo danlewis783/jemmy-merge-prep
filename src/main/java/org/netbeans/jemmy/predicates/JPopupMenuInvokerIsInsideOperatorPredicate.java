@@ -40,4 +40,10 @@ public final class JPopupMenuInvokerIsInsideOperatorPredicate implements Predica
     private boolean isInside(Component compA, Component compB) {
         return (compB instanceof Container) && ((Container) compB).isAncestorOf(compA);
     }
+
+    @Override
+    public String toString() {
+        return "JPopupMenuInvokerIsInsideOperatorPredicate{componentOp="
+                + componentOp.getClass().getSimpleName() + "}";
+    }
 }

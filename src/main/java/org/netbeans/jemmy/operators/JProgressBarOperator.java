@@ -235,6 +235,11 @@ public class JProgressBarOperator extends JComponentOperator {
         public boolean test(JProgressBarOperator jProgressBarOperator) {
             return jProgressBarOperator.getValue() >= value;
         }
+
+        @Override
+        public String toString() {
+            return "JProgressBarOperatorByValuePredicate{value=" + value + "}";
+        }
     }
 
     private static class JProgressBarOperatorByStringPredicate implements Predicate<JProgressBarOperator> {
@@ -249,6 +254,12 @@ public class JProgressBarOperator extends JComponentOperator {
         @Override
         public boolean test(JProgressBarOperator jProgressBarOperator) {
             return stringComparator.equals(jProgressBarOperator.getString(), value);
+        }
+
+        @Override
+        public String toString() {
+            return "JProgressBarOperatorByStringPredicate{value=\"" + value + "\", comparator=" + stringComparator
+                    + "}";
         }
     }
 }

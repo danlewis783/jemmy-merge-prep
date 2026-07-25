@@ -33,4 +33,9 @@ public final class JLabelOperatorByLabelPredicate implements Predicate<JLabelOpe
     public boolean test(JLabelOperator jLabelOp) {
         return comparator.equals(jLabelOp.getText(), label);
     }
+
+    @Override
+    public String toString() {
+        return "JLabelOperatorByLabelPredicate{label=\"" + label + "\", comparator=" + comparator + "}";
+    }
 }

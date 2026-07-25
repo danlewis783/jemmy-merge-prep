@@ -42,4 +42,9 @@ public final class ComponentOperatorLocationOnScreenPredicate<T extends Componen
                 && (location.y >= minLocation.y)
                 && (location.y <= maxLocation.y);
     }
+
+    @Override
+    public String toString() {
+        return "locationOnScreen=" + minLocation + (minLocation.equals(maxLocation) ? "" : ".." + maxLocation);
+    }
 }

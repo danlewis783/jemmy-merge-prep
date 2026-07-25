@@ -41,4 +41,9 @@ public final class JToolTipWindowPredicate implements Predicate<Component> {
                 && comp.isShowing()
                 && new ComponentSearcher((Container) comp).findComponent(componentChooser) != null;
     }
+
+    @Override
+    public String toString() {
+        return "JToolTipWindowPredicate{" + componentChooser + "}";
+    }
 }

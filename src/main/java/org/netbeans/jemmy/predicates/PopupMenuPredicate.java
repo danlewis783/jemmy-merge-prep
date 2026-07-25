@@ -32,4 +32,10 @@ public final class PopupMenuPredicate implements Predicate<Component> {
     public boolean test(Component comp) {
         return (comp == menu.getPopupMenu()) && comp.isShowing() && comp.isEnabled();
     }
+
+    @Override
+    public String toString() {
+        return "PopupMenuPredicate{menuText=" + (menu.getText() == null ? "null" : "\"" + menu.getText() + "\"")
+                + "}";
+    }
 }

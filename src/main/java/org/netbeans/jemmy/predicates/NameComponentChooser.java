@@ -23,4 +23,9 @@ public final class NameComponentChooser<T extends JComponent> implements Predica
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "NameComponentChooser{class=" + clazz.getSimpleName() + ", name=\"" + name + "\"}";
+    }
 }

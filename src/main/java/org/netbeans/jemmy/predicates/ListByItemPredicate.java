@@ -57,4 +57,10 @@ public final class ListByItemPredicate implements Predicate<Component> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "ListByItemPredicate{label=" + (label == null ? "null" : "\"" + label + "\"") + ", itemIndex="
+                + itemIndex + ", comparator=" + comparator + "}";
+    }
 }

@@ -57,7 +57,8 @@ public final class FunctionRepeater<T, R> {
                     return r != null;
                 },
                 waitKey,
-                waitDelta);
+                waitDelta,
+                function);
 
         return Objects.requireNonNull(result.get());
     }

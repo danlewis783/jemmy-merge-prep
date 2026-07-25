@@ -61,4 +61,9 @@ public final class TrimmingTooltipPredicate implements Predicate<Component> {
 
         return comparator.equals(toolTipText.trim(), tooltip);
     }
+
+    @Override
+    public String toString() {
+        return "TrimmingTooltipPredicate{tooltip=\"" + tooltip + "\", comparator=" + comparator + "}";
+    }
 }

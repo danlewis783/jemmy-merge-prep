@@ -59,4 +59,11 @@ public final class JTreeOperatorByItemPredicate implements Predicate<JTreeOperat
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "JTreeOperatorByItemPredicate{expectedPathComponentToString="
+                + (expectedPathComponentToString == null ? "null" : "\"" + expectedPathComponentToString + "\"")
+                + ", rowIndex=" + rowIndex + ", comparator=" + comparator + "}";
+    }
 }

@@ -34,4 +34,10 @@ public final class OperatorPredicateFunction<T extends Operator> implements Func
     public @Nullable Boolean apply(Void obj) {
         return predicate.test(operator) ? true : null;
     }
+
+    @Override
+    public String toString() {
+        // surfaces in timeout messages: which predicate, against which operator
+        return predicate + " on " + operator.getClass().getSimpleName();
+    }
 }

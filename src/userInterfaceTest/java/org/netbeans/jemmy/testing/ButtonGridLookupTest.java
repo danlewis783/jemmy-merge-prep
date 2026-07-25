@@ -39,7 +39,9 @@ import org.netbeans.jemmy.predicates.AbstractButtonByTextPredicate;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_003
+@ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
+@ExtendWith(FastToolTips.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class ButtonGridLookupTest {
 
