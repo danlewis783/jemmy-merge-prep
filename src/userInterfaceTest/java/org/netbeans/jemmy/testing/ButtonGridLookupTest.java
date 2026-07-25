@@ -54,7 +54,7 @@ import static org.netbeans.jemmy.util.StringComparators.substring;
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class ButtonGridLookupTest {
     private static final int NUM_ROWS = 4;
-    private static final int NUM_COLS = 4;
+    private static final int NUM_COLS = 5;
     private JFrame jFrame;
 
     @BeforeEach
@@ -73,25 +73,26 @@ class ButtonGridLookupTest {
             JPanel panel = new JPanel();
             panel.setLayout(new GridLayout(NUM_ROWS, NUM_COLS));
             contentPane.add(panel, BorderLayout.CENTER);
-            JButton butt;
+            JButton cellButton;
             for (int i = 0; i < NUM_ROWS; i++) {
                 for (int j = 0; j < NUM_COLS; j++) {
-                    butt = new JButton(i + "-" + j);
-                    butt.setToolTipText(butt.getText() + " button");
-                    butt.addActionListener(event -> {
-                        JButton btt = (JButton) event.getSource();
-                        String text = btt.getText();
-                        statusLabel.setText("Button \"" + text + "\" has been pushed");
-                        int i1 = Integer.parseInt(text.substring(0, 1));
-                        int j1 = Integer.parseInt(text.substring(2));
-                        progress.setValue(i1 * 4 + j1 + 1);
-                        progress.setString(text);
+                    cellButton = new JButton(i + "-" + j);
+                    cellButton.setToolTipText(cellButton.getText() + " button");
+                    cellButton.addActionListener(event -> {
+                        JButton eventButton = (JButton) event.getSource();
+                        String eventButtonText = eventButton.getText();
+                        statusLabel.setText("Button \"" + eventButtonText + "\" has been pushed");
+                        int hyphenPosition = eventButtonText.indexOf('-');
+                        int eventButtonRowIdx = Integer.parseInt(eventButtonText.substring(0, hyphenPosition));
+                        int eventButtonColIdx = Integer.parseInt(eventButtonText.substring(hyphenPosition + 1));
+                        progress.setValue(eventButtonRowIdx * NUM_COLS + eventButtonColIdx + 1);
+                        progress.setString(eventButtonText);
                     });
-                    panel.add(butt);
+                    panel.add(cellButton);
                 }
             }
 
-            jFrame.setSize(400, 400);
+            jFrame.setSize(80 * NUM_COLS, 80 * NUM_ROWS);
             jFrame.setVisible(true);
         });
     }
@@ -113,7 +114,7 @@ class ButtonGridLookupTest {
             for (int j = 0; j < NUM_COLS; j++) {
                 String buttonText = i + "-" + j;
                 JButtonOperator byTextButtonOp = JButtonOperator.waitFor(frameOp, new AbstractButtonByTextPredicate(buttonText, substring()));
-                int buttonIndex = i * NUM_ROWS + j;
+                int buttonIndex = i * NUM_COLS + j;
                 AbstractButtonOperator byIndexButtonOp = AbstractButtonOperator.waitFor(frameOp, buttonIndex);
                 assertThat(byTextButtonOp.getSource()).isSameAs(byIndexButtonOp.getSource());
                 JToolTip buttonToolTip = byTextButtonOp.showToolTip();
@@ -122,7 +123,7 @@ class ButtonGridLookupTest {
                 byTextButtonOp.push();
                 statusLabelOp.waitText("Button \"" + buttonText + "\" has been pushed", strict());
                 progressBarOp.waitValue(buttonText, strict());
-                progressBarOp.waitValue(buttonIndex++);
+                progressBarOp.waitValue(buttonIndex + 1);
             }
         }
 
