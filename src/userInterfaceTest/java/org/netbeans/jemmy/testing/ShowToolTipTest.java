@@ -35,7 +35,6 @@ import org.netbeans.jemmy.operators.JToolTipOperator;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@ExtendWith(FastToolTips.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class ShowToolTipTest {
 

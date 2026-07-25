@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
  * lookups</li>
  * <li>restore the look and feel captured at suite start - before the driver reset, because the
  * default driver registry is chosen partly by look and feel</li>
+ * <li>clear Swing's global tooltip state and apply short tooltip delays for the next class</li>
  * <li>{@link JemmyContext#resetAllState()}: window jobs, repaint manager, dispatching model,
  * drivers, queue installation, timeouts, event listeners</li>
  * <li>wait for the event queue to settle, best effort</li>
@@ -63,6 +65,11 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
     private static final AtomicReference<@Nullable String> pristineLookAndFeel = new AtomicReference<>();
 
     private static @Nullable Robot robot;
+    private static boolean pristineToolTipStateCaptured;
+    private static int pristineToolTipInitialDelay;
+    private static int pristineToolTipReshowDelay;
+    private static int pristineToolTipDismissDelay;
+    private static boolean pristineToolTipsEnabled;
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
@@ -71,6 +78,7 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
         }
 
         capturePristineLookAndFeel();
+        capturePristineToolTipState();
         resetEverything();
     }
 
@@ -81,6 +89,7 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
         }
 
         resetEverything();
+        restoreToolTipState();
     }
 
     /** A {@code @Nested} class runs inside its enclosing class; resetting there would sabotage it. */
@@ -102,6 +111,7 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
         releaseStrayMouseButton();
         TestWindows.disposeAll();
         restoreLookAndFeel();
+        resetToolTipState();
         JemmyContext.resetAllState();
         settleEventQueue();
         // disposal events that dispatched while the queue settled must not be remembered as the
@@ -133,6 +143,47 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
             } catch (ReflectiveOperationException | UnsupportedLookAndFeelException e) {
                 throw new IllegalStateException("could not restore look and feel " + pristine, e);
             }
+        });
+    }
+
+    private static void capturePristineToolTipState() throws Exception {
+        if (pristineToolTipStateCaptured) {
+            return;
+        }
+
+        EventQueue.invokeAndWait(() -> {
+            ToolTipManager manager = ToolTipManager.sharedInstance();
+            pristineToolTipInitialDelay = manager.getInitialDelay();
+            pristineToolTipReshowDelay = manager.getReshowDelay();
+            pristineToolTipDismissDelay = manager.getDismissDelay();
+            pristineToolTipsEnabled = manager.isEnabled();
+            pristineToolTipStateCaptured = true;
+        });
+    }
+
+    private static void resetToolTipState() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            ToolTipManager manager = ToolTipManager.sharedInstance();
+
+            // Toggling enabled clears any pending/current tooltip and leaves Swing's singleton in
+            // a known state. The test suite deliberately uses short delays because tooltip tests
+            // exercise the popup, not the platform's human-facing hover delay.
+            manager.setEnabled(false);
+            manager.setInitialDelay(50);
+            manager.setReshowDelay(0);
+            manager.setDismissDelay(pristineToolTipDismissDelay);
+            manager.setEnabled(true);
+        });
+    }
+
+    private static void restoreToolTipState() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            ToolTipManager manager = ToolTipManager.sharedInstance();
+            manager.setEnabled(false);
+            manager.setInitialDelay(pristineToolTipInitialDelay);
+            manager.setReshowDelay(pristineToolTipReshowDelay);
+            manager.setDismissDelay(pristineToolTipDismissDelay);
+            manager.setEnabled(pristineToolTipsEnabled);
         });
     }
 

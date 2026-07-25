@@ -50,7 +50,6 @@ import static org.netbeans.jemmy.util.StringComparators.substring;
 // formerly scenario test jemmy_003
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@ExtendWith(FastToolTips.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class ButtonGridLookupTest {
     private static final int NUM_ROWS = 4;

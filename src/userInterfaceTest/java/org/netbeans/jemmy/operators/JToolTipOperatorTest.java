@@ -38,7 +38,6 @@ import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.testing.DumpOnFailure;
-import org.netbeans.jemmy.testing.FastToolTips;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
@@ -48,7 +47,6 @@ import org.netbeans.jemmy.util.StringComparators;
  */
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@ExtendWith(FastToolTips.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class JToolTipOperatorTest {
 
