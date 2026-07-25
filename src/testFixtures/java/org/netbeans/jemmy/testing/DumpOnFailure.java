@@ -45,6 +45,11 @@ import org.netbeans.jemmy.WaitDiagnostics;
  * probe, a window/focus summary, and the mouse position, in addition to - not instead of - this class's own dump,
  * whose window tree goes deeper than {@link WaitDiagnostics}' summary.
  * <p>
+ * The compact {@link WaitDiagnostics} capture is also attached to the failure as a suppressed throwable:
+ * failure-summary views (the Gradle HTML report's "Failure details", Jenkins test pages) render only the
+ * exception's own message and stack trace, not stderr, and suppressed throwables print inline there. The deep
+ * window-tree dump stays on stderr (the "error output" tab), where its size is not a problem.
+ * <p>
  * Register with {@code @ExtendWith(DumpOnFailure.class)}.
  */
 public final class DumpOnFailure implements TestExecutionExceptionHandler {
@@ -64,11 +69,21 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
             snapshot(dump);
         }
 
-        dump.append("===== end DumpOnFailure =====\n")
-                .append(WaitDiagnostics.capture());
+        String diagnostics = WaitDiagnostics.capture();
+        dump.append("===== end DumpOnFailure =====\n").append(diagnostics);
         System.err.println(dump);
 
+        cause.addSuppressed(new Diagnostics(diagnostics));
+
         throw cause;
+    }
+
+    /** Rides the compact diagnostics into failure-summary views; not an error in its own right. */
+    private static final class Diagnostics extends Throwable {
+        Diagnostics(String diagnostics) {
+            // no cause, no suppression of its own, no stack trace: renders as just the text
+            super(diagnostics, null, false, false);
+        }
     }
 
     private static boolean snapshotOnQueue(StringBuilder dump) {
