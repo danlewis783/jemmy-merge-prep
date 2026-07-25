@@ -36,7 +36,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_010
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class ModalDialogWaitingTest {
     private static final String TITLE = "StagedDialogsApp";
 

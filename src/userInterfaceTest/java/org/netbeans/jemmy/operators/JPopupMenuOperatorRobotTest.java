@@ -50,7 +50,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // robot-coordinate calibration (a few seconds of probing) inside this budget
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=20, unit=TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 final class JPopupMenuOperatorRobotTest {
 
     private JFrame frame;

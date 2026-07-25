@@ -46,7 +46,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class JFrameOperatorTest {
     private JFrame mainFrame;
 
@@ -86,7 +86,7 @@ class JFrameOperatorTest {
     }
 
     @Test
-    @Timeout(value=2, unit=TimeUnit.SECONDS)
+    @Timeout(value=10, unit=TimeUnit.SECONDS)
     void waitJFrame() throws InterruptedException, InvocationTargetException {
         JFrame frameOpByName = JFrameOperator.waitJFrame(PredicatesJ.byName("JFrameOperatorTest"));
         JFrame frameOpByTitle = JFrameOperator.waitJFrame("JFrameOperatorTest");

@@ -49,7 +49,7 @@ import org.netbeans.jemmy.util.StringComparators;
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @ExtendWith(FastToolTips.class)
-@Timeout(value=10, unit=TimeUnit.SECONDS)
+@Timeout(value=30, unit=TimeUnit.SECONDS)
 class JToolTipOperatorTest {
 
     private static final String TOOLTIP_TEXT = "A simple Tooltip";

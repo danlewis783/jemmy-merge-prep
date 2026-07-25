@@ -42,7 +42,7 @@ import javax.swing.*;
 // formerly scenario test jemmy_042
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=3, unit=TimeUnit.SECONDS)
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class MenuInDialogTest {
 
     private static final String DELIM = "|";

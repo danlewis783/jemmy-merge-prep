@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class JFrameOperatorIndexedFramesTest {
     private static final int NUM_FRAMES = 3;
     private JFrame[] frames;

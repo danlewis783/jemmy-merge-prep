@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // fields are assigned at the start of the test before the checker reads them
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=3, unit=TimeUnit.SECONDS)
+@Timeout(value=10, unit=TimeUnit.SECONDS)
 class JTreeExpandCollapseTest {
 
     private static final String FRAME_TITLE = "JTreeExpandCollapseTest";

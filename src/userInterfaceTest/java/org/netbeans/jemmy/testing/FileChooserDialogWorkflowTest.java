@@ -56,7 +56,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_031
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class FileChooserDialogWorkflowTest {
     private static final StringComparator STRICT = StringComparators.strict();
     private static final long PREEMPTIVE_TIMEOUT_SEC = 2;

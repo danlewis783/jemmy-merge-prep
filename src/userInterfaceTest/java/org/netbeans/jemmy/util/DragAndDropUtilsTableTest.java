@@ -46,7 +46,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
  */
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value = 20, unit = TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 class DragAndDropUtilsTableTest {
 
     private static final List<Object> STARTING_ORDER = Arrays.asList("A", "B", "C", "D", "E", "F");

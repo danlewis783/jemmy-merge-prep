@@ -65,7 +65,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class JSpinnerOperatorTest {
     private static final StringComparator STRICT = StringComparators.strict();
 
@@ -162,31 +162,31 @@ class JSpinnerOperatorTest {
     void scrollTo() {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1_000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 5_000L)) {
             jSpinnerOp.scrollTo(new NullScrollAdjuster());
         }
     }
 
     @Test
-    @Timeout(value=4, unit=TimeUnit.SECONDS)
+    @Timeout(value=15, unit=TimeUnit.SECONDS)
     void scrollToMaximum() {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 100, 1);
         jSpinnerOp.setModel(model);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3_000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 10_000L)) {
             jSpinnerOp.scrollToMaximum();
         }
     }
 
     @Test
-    @Timeout(value=4, unit=TimeUnit.SECONDS)
+    @Timeout(value=15, unit=TimeUnit.SECONDS)
     void scrollToMinimum() {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         SpinnerNumberModel model = new SpinnerNumberModel(100, 1, 100, 1);
         jSpinnerOp.setModel(model);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 3_000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 10_000L)) {
             jSpinnerOp.scrollToMinimum();
         }
     }
@@ -196,7 +196,7 @@ class JSpinnerOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1_000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 5_000L)) {
             jSpinnerOpNumber.scrollToObject(11, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
         }
     }
@@ -206,7 +206,7 @@ class JSpinnerOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JSpinnerOperator jSpinnerOp = JSpinnerOperator.waitFor(jFrameOp);
         JSpinnerOperatorNumber jSpinnerOpNumber = new JSpinnerOperatorNumber(jSpinnerOp);
-        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 1_000L)) {
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.JSpinnerOperator_WholeScrollTimeout, 5_000L)) {
             jSpinnerOpNumber.scrollToString("11", STRICT, ScrollAdjuster.INCREASE_SCROLL_DIRECTION);
         }
     }

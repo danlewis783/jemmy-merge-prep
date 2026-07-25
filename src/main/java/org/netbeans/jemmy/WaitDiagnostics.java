@@ -91,6 +91,12 @@ public final class WaitDiagnostics {
         }
 
         out.append("\nEDT stack at timeout:\n").append(stackAtTimeout);
+
+        String actionStacks = threadStacks("jemmy-action");
+        if (!actionStacks.isEmpty()) {
+            // a stuck operator action lives on a jemmy-action thread, not the EDT
+            out.append("\naction thread stack at timeout:\n").append(actionStacks);
+        }
     }
 
     private static boolean awaitPreservingInterrupt(CountDownLatch done) {
@@ -170,9 +176,19 @@ public final class WaitDiagnostics {
     }
 
     private static String edtStack() {
+        String stacks = threadStacks("AWT-EventQueue");
+
+        return stacks.isEmpty() ? "  (no AWT-EventQueue thread found)" : stacks;
+    }
+
+    private static String threadStacks(String namePrefix) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
-            if (entry.getKey().getName().startsWith("AWT-EventQueue")) {
+            if (entry.getKey().getName().startsWith(namePrefix)) {
+                if (sb.length() > 0) {
+                    sb.append('\n');
+                }
+
                 sb.append("  ").append(entry.getKey().getName()).append(':');
                 for (StackTraceElement frame : entry.getValue()) {
                     sb.append("\n    at ").append(frame);
@@ -180,6 +196,6 @@ public final class WaitDiagnostics {
             }
         }
 
-        return (sb.length() > 0) ? sb.toString() : "  (no AWT-EventQueue thread found)";
+        return sb.toString();
     }
 }

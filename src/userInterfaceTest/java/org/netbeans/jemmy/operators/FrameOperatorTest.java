@@ -35,7 +35,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class FrameOperatorTest {
 
     private Frame frame;

@@ -41,7 +41,7 @@ import org.netbeans.jemmy.operators.JLabelOperator;
 // formerly scenario test jemmy_048
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class LateComponentDiscoveryTest {
 
     private final AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();

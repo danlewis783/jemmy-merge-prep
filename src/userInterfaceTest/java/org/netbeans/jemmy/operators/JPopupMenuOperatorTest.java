@@ -49,7 +49,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=500, unit=TimeUnit.MILLISECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 final class JPopupMenuOperatorTest {
 
     private JFrame jFrame;
@@ -117,7 +117,7 @@ final class JPopupMenuOperatorTest {
 
 
     @Test
-    @Timeout(value=4, unit=TimeUnit.SECONDS)
+    @Timeout(value=15, unit=TimeUnit.SECONDS)
     void pushMenu() throws InterruptedException, InvocationTargetException {
         JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
         assertThat(popupMenuOp.pushMenu("1", StringComparators.strict())).isNotNull();
@@ -133,7 +133,7 @@ final class JPopupMenuOperatorTest {
     }
 
     @Test
-    @Timeout(value=5, unit=TimeUnit.SECONDS)
+    @Timeout(value=15, unit=TimeUnit.SECONDS)
     void showMenuItems() {
         JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
         popupMenuOp.showMenuItems("1234", StringComparators.strict());

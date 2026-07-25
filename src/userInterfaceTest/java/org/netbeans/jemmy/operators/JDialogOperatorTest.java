@@ -53,7 +53,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class JDialogOperatorTest {
 
     private JDialog dialog;
@@ -108,7 +108,7 @@ class JDialogOperatorTest {
     }
 
     @Test
-    @Timeout(value=2, unit=TimeUnit.SECONDS)
+    @Timeout(value=10, unit=TimeUnit.SECONDS)
     void waitJDialog() {
         JDialogOperator.waitJDialog("JDialogOperatorTest", StringComparators.strict());
         JDialogOperator.waitJDialog(frame, "JDialogOperatorTest", StringComparators.strict());

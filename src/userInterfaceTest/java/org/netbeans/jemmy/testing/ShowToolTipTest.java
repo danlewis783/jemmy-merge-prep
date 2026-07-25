@@ -35,7 +35,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @ExtendWith(FastToolTips.class)
-@Timeout(value = 30, unit = TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 class ShowToolTipTest {
 
     private JFrame jFrame;

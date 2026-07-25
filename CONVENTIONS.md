@@ -88,3 +88,25 @@ mouseDriver.clickMouse(op, p.x, p.y, ...); // input on the test thread
   `QueueTool.getInstance().callOnQueue(...)` or the `onQueue` test-fixture helper.
 - Unit tests live in `src/test` (headless, no windows); tests that show real windows and
   drive input live in `src/userInterfaceTest`.
+
+### `@Timeout` is a hang guard, not a performance assertion
+
+A JUnit `@Timeout` exists to kill a genuinely stuck test so the suite finishes and the
+failure is attributable. It is **not** a statement about how fast the test should run —
+performance expectations do not belong in the kill switch. A budget tuned close to the
+fast development machine's nominal time converts every slower machine into a wall of
+timeout failures that carry no diagnostic value (the interrupt lands mid-action, before
+Jemmy's own enriched wait timeouts can fire).
+
+Policy: set `@Timeout` to **at least 5× the fast-machine nominal duration**, with a floor
+of 5 seconds for UI tests. A guard at 5s instead of 1s costs nothing when tests pass — it
+only delays the report of a test that was already dead. Waits inside the test are governed
+by `Timeouts`/`TimeoutKey` and fail with self-describing messages long before a
+well-sized `@Timeout` fires; if the `@Timeout` is what triggers, that itself is the
+signal that something hung outside a Jemmy wait.
+
+(History: budgets of 1s tuned on a fast desktop caused seven scroll-heavy tests to fail
+on a laptop running 1.5–3.5× slower — each failing at exactly its cap, none of them
+actually broken. This is also distinct from the removed `jemmy.timeouts.scale`
+multiplier: that silently stretched *waits* and distorted behavior; sizing the hang
+guard changes nothing about what the test does.)

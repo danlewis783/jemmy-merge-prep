@@ -65,7 +65,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 // displays, and the drag sequence itself is a dozen real mouse gestures with queue waits
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value = 60, unit = TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 class DragAndDropUtilsTreeTest {
 
     private static final String FRAME_TITLE = "DragAndDropUtilsTreeTest";

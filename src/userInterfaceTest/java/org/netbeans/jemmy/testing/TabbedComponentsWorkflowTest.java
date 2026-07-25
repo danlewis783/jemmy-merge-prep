@@ -59,7 +59,7 @@ import static org.netbeans.jemmy.util.StringComparators.substring;
 // formerly scenario test jemmy_024
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=20, unit=TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 final class TabbedComponentsWorkflowTest {
     private static final String FRAME_TITLE = "TabbedComponentsWorkflowTest";
     private static final StringComparator STRICT = StringComparators.strict();

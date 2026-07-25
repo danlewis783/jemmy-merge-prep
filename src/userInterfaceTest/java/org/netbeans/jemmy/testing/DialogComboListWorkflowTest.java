@@ -55,7 +55,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_001
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=10, unit=TimeUnit.SECONDS)
+@Timeout(value=30, unit=TimeUnit.SECONDS)
 class DialogComboListWorkflowTest {
     private JFrame jFrame;
     private JDialog jDialog;

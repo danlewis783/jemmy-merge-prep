@@ -46,7 +46,7 @@ import org.netbeans.jemmy.testing.TestWindows;
 // formerly scenario test jemmy_030
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=15, unit=TimeUnit.SECONDS)
+@Timeout(value=45, unit=TimeUnit.SECONDS)
 class EventToolTest {
 
     private JFrame jFrame;

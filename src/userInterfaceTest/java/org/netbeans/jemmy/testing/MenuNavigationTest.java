@@ -53,7 +53,7 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
 // formerly scenario test jemmy_002
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=5, unit=TimeUnit.SECONDS)
+@Timeout(value=15, unit=TimeUnit.SECONDS)
 class MenuNavigationTest {
     public static final String FRAME_TITLE = "MenuNavigationTest";
     private JFrame jFrame;

@@ -33,7 +33,7 @@ import org.netbeans.jemmy.util.Display;
  */
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value = 30, unit = TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 final class RobotCalibrationTest {
 
     @Test

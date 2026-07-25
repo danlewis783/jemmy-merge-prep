@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  */
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value = 10, unit = TimeUnit.SECONDS)
+@Timeout(value=30, unit=TimeUnit.SECONDS)
 class JemmyQueueInstallInterruptTest {
 
     @BeforeEach

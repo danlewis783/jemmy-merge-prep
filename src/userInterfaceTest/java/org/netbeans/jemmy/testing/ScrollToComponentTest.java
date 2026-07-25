@@ -43,7 +43,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // proportionally more to scroll through
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=10, unit=TimeUnit.SECONDS)
+@Timeout(value=30, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {
     private JFrame jFrame;
 

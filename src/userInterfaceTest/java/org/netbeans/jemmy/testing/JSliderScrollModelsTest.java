@@ -37,7 +37,7 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_025
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=10, unit=TimeUnit.SECONDS)
+@Timeout(value=30, unit=TimeUnit.SECONDS)
 class JSliderScrollModelsTest {
     private static final String FRAME_TITLE = "JSliderScrollModelsTest";
     private JFrame jFrame;

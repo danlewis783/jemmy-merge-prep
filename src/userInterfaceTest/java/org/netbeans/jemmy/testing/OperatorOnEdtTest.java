@@ -47,7 +47,7 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
  */
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value = 10, unit = TimeUnit.SECONDS)
+@Timeout(value=30, unit=TimeUnit.SECONDS)
 class OperatorOnEdtTest {
     public static final String FRAME_TITLE = "OperatorOnEdtTest";
     private JFrame jFrame;

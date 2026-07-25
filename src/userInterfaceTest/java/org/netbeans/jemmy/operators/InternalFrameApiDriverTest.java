@@ -46,7 +46,7 @@ import org.netbeans.jemmy.testing.TestWindows;
  */
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=1, unit=TimeUnit.SECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 class InternalFrameApiDriverTest {
 
     private JFrame frame;

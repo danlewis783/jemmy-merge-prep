@@ -54,7 +54,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 // formerly scenario test jemmy_005
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=20, unit=TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 class JTreePathNavigationTest {
 
     private static final String FRAME_TITLE = "JTreePathNavigationTest";

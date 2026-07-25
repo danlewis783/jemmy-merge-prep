@@ -49,7 +49,7 @@ import org.netbeans.jemmy.util.WindowManager;
 // robot-coordinate calibration (a few seconds of probing) on scaled displays
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=20, unit=TimeUnit.SECONDS)
+@Timeout(value=60, unit=TimeUnit.SECONDS)
 class WindowManagerJobsTest {
 
     @BeforeEach

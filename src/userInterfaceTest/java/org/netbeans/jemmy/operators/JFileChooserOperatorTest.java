@@ -58,7 +58,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 @ExtendWith(DumpOnFailure.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=500, unit=TimeUnit.MILLISECONDS)
+@Timeout(value=5, unit=TimeUnit.SECONDS)
 final class JFileChooserOperatorTest {
 
     private static final String FN2 = "showit.txt";
@@ -226,7 +226,7 @@ final class JFileChooserOperatorTest {
     }
 
     @Test
-    @Timeout(value=1, unit=TimeUnit.SECONDS)
+    @Timeout(value=5, unit=TimeUnit.SECONDS)
     void testDetailsViewUsesTableOnMetalLookAndFeel() throws InterruptedException {
         assumeThat(LookAndFeel.isMetal())
                 .as("check that swing is running metal look and feel")
@@ -246,7 +246,7 @@ final class JFileChooserOperatorTest {
     }
 
     @Test
-    @Timeout(value=1, unit=TimeUnit.SECONDS)
+    @Timeout(value=5, unit=TimeUnit.SECONDS)
     void testDesktopViewOnWindowsLookAndFeel() throws InterruptedException {
         assumeThat(LookAndFeel.isWindows())
                 .as("check that swing is running windows look and feel")
@@ -590,7 +590,7 @@ final class JFileChooserOperatorTest {
     // chooser's window ancestor actually changes to the new (showing) dialog, which only happens
     // once show*Dialog has reached that wiring, closing the race.
     @Test
-    @Timeout(value = 3, unit = TimeUnit.SECONDS)
+    @Timeout(value=10, unit=TimeUnit.SECONDS)
     void testShowDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
@@ -608,7 +608,7 @@ final class JFileChooserOperatorTest {
     }
 
     @Test
-    @Timeout(value = 3, unit = TimeUnit.SECONDS)
+    @Timeout(value=10, unit=TimeUnit.SECONDS)
     void testShowOpenDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         try (TimeoutOverride overrideC = Timeouts.override(TimeoutKey.Testing_C, 1_000L)) {
@@ -626,7 +626,7 @@ final class JFileChooserOperatorTest {
     }
 
     @Test
-    @Timeout(value = 3, unit = TimeUnit.SECONDS)
+    @Timeout(value=10, unit=TimeUnit.SECONDS)
     void testShowSaveDialog() throws Exception {
         JFileChooserOperator op = JFileChooserOperator.of(fileChooser);
         try (TimeoutOverride overrideA = Timeouts.override(TimeoutKey.Testing_A, 1_000L)) {
