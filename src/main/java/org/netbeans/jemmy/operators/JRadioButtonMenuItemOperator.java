@@ -32,6 +32,11 @@ import org.netbeans.jemmy.predicates.JRadioButtonMenuItemByLabelPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JRadioButtonMenuItemOperator extends JMenuItemOperator {
+    @Override
+    public JRadioButtonMenuItem getSource() {
+        return (JRadioButtonMenuItem) super.getSource();
+    }
+
     public static JRadioButtonMenuItemOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
     }

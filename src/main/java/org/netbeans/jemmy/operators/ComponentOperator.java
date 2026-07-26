@@ -89,7 +89,9 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
  * component, blocking until one appears or the wait times out. Constructors are package-private and
  * do no searching, so no operator is ever half-constructed while a wait is in progress. Subclasses
  * must declare their own {@code waitFor}/{@code of} overload set: the factories are static, so an
- * omitted overload silently resolves to the superclass variant and returns the supertype.
+ * omitted overload silently resolves to the superclass variant and returns the supertype. Each
+ * source-specific subclass also overrides {@link #getSource()} covariantly so its component type is
+ * available without repeated casts.
  */
 public class ComponentOperator extends Operator {
     private final EventDispatcher dispatcher;
@@ -157,7 +159,7 @@ public class ComponentOperator extends Operator {
     }
 
     public static ComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        return ComponentOperator.of(waitComponent((Container) rootOp.getSource(), chooser, index));
+        return ComponentOperator.of(waitComponent(rootOp.getSource(), chooser, index));
     }
 
     /**
@@ -165,7 +167,7 @@ public class ComponentOperator extends Operator {
      */
     @Deprecated
     public ComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this(waitComponent((Container) rootOp.getSource(), chooser, index));
+        this(waitComponent(rootOp.getSource(), chooser, index));
     }
 
     @Override
@@ -914,7 +916,7 @@ public class ComponentOperator extends Operator {
     }
 
     protected static Component waitComponent(ContainerOperator contOper, Predicate<Component> chooser, int index) {
-        return waitComponent((Container) contOper.getSource(), chooser, index);
+        return waitComponent(contOper.getSource(), chooser, index);
     }
 
     protected static Component waitComponent(Container cont, Predicate<Component> predicate, int index) {

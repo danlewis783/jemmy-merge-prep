@@ -34,6 +34,11 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JRadioButtonOperator extends JToggleButtonOperator {
+    @Override
+    public JRadioButton getSource() {
+        return (JRadioButton) super.getSource();
+    }
+
     public static JRadioButtonOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
     }

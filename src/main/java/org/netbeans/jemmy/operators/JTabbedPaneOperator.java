@@ -44,6 +44,10 @@ import org.netbeans.jemmy.predicates.JTabbedPaneByItemPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTabbedPaneOperator extends JComponentOperator {
+    @Override
+    public JTabbedPane getSource() {
+        return (JTabbedPane) super.getSource();
+    }
 
     public static JTabbedPaneOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -207,152 +211,152 @@ public class JTabbedPaneOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).addChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addChangeListener(changeListener));
     }
 
     public void addTab(String string, Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).addTab(string, component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addTab(string, component));
     }
 
     public void addTab(String string, Icon icon, Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).addTab(string, icon, component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addTab(string, icon, component));
     }
 
     public void addTab(String string, Icon icon, Component component, String string1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).addTab(string, icon, component, string1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addTab(string, icon, component, string1));
     }
 
     public Color getBackgroundAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getBackgroundAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getBackgroundAt(i));
     }
 
     public Rectangle getBoundsAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getBoundsAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getBoundsAt(i));
     }
 
     public Component getComponentAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getComponentAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentAt(i));
     }
 
     public Icon getDisabledIconAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getDisabledIconAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDisabledIconAt(i));
     }
 
     public Color getForegroundAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getForegroundAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getForegroundAt(i));
     }
 
     public Icon getIconAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getIconAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getIconAt(i));
     }
 
     public SingleSelectionModel getModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getModel());
     }
 
     public Component getSelectedComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getSelectedComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedComponent());
     }
 
     public int getSelectedIndex() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getSelectedIndex());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedIndex());
     }
 
     public int getTabCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getTabCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTabCount());
     }
 
     public int getTabPlacement() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getTabPlacement());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTabPlacement());
     }
 
     public int getTabRunCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getTabRunCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTabRunCount());
     }
 
     public String getTitleAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getTitleAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTitleAt(i));
     }
 
     public TabbedPaneUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public int indexOfComponent(Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).indexOfComponent(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().indexOfComponent(component));
     }
 
     public int indexOfTab(String string) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).indexOfTab(string));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().indexOfTab(string));
     }
 
     public int indexOfTab(Icon icon) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).indexOfTab(icon));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().indexOfTab(icon));
     }
 
     public void insertTab(String string, @Nullable Icon icon, Component component, @Nullable String string1, int i) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JTabbedPane) getSource()).insertTab(string, icon, component, string1, i));
+                .runOnQueue(() -> getSource().insertTab(string, icon, component, string1, i));
     }
 
     public boolean isEnabledAt(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTabbedPane) getSource()).isEnabledAt(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isEnabledAt(i));
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).removeChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeChangeListener(changeListener));
     }
 
     public void removeTabAt(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).removeTabAt(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeTabAt(i));
     }
 
     public void setBackgroundAt(int i, Color color) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setBackgroundAt(i, color));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBackgroundAt(i, color));
     }
 
     public void setComponentAt(int i, Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setComponentAt(i, component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setComponentAt(i, component));
     }
 
     public void setDisabledIconAt(int i, Icon icon) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setDisabledIconAt(i, icon));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDisabledIconAt(i, icon));
     }
 
     public void setEnabledAt(int i, boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setEnabledAt(i, b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEnabledAt(i, b));
     }
 
     public void setForegroundAt(int i, Color color) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setForegroundAt(i, color));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setForegroundAt(i, color));
     }
 
     public void setIconAt(int i, Icon icon) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setIconAt(i, icon));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setIconAt(i, icon));
     }
 
     public void setModel(SingleSelectionModel singleSelectionModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setModel(singleSelectionModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setModel(singleSelectionModel));
     }
 
     public void setSelectedComponent(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setSelectedComponent(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectedComponent(component));
     }
 
     public void setSelectedIndex(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setSelectedIndex(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectedIndex(i));
     }
 
     public void setTabPlacement(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setTabPlacement(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTabPlacement(i));
     }
 
     public void setTitleAt(int i, String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setTitleAt(i, string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTitleAt(i, string));
     }
 
     public void setUI(TabbedPaneUI tabbedPaneUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTabbedPane) getSource()).setUI(tabbedPaneUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(tabbedPaneUI));
     }
 
     public static @Nullable JTabbedPane findJTabbedPane(Container cont, Predicate<Component> chooser, int index) {

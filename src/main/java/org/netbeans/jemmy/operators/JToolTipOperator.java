@@ -44,6 +44,10 @@ import org.netbeans.jemmy.util.StringComparator;
  * CODETOOLS-7902342).
  */
 public class JToolTipOperator extends JComponentOperator {
+    @Override
+    public JToolTip getSource() {
+        return (JToolTip) super.getSource();
+    }
 
     public static JToolTipOperator waitFor() {
         return JToolTipOperator.waitFor(PredicatesJ.alwaysTrue());
@@ -222,23 +226,23 @@ public class JToolTipOperator extends JComponentOperator {
     }
 
     public String getTipText() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JToolTip) getSource()).getTipText());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTipText());
     }
 
     public JComponent getComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JToolTip) getSource()).getComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponent());
     }
 
     public ToolTipUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JToolTip) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public void setTipText(String tipText) {
-        QueueTool.getInstance().runOnQueue(() -> ((JToolTip) getSource()).setTipText(tipText));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTipText(tipText));
     }
 
     public void setComponent(JComponent component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JToolTip) getSource()).setComponent(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setComponent(component));
     }
 
     private static @Nullable Window findSourceWindow(Component source) {

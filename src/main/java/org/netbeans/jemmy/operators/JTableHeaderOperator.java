@@ -45,6 +45,10 @@ import org.netbeans.jemmy.drivers.OrderedListDriver;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class JTableHeaderOperator extends JComponentOperator {
+    @Override
+    public JTableHeader getSource() {
+        return (JTableHeader) super.getSource();
+    }
 
     public static JTableHeaderOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -131,115 +135,115 @@ public class JTableHeaderOperator extends JComponentOperator {
     }
 
     public void setTable(JTable jTable) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setTable(jTable));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTable(jTable));
     }
 
     public JTable getTable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getTable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTable());
     }
 
     public void setReorderingAllowed(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setReorderingAllowed(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setReorderingAllowed(b));
     }
 
     public boolean getReorderingAllowed() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getReorderingAllowed());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getReorderingAllowed());
     }
 
     public void setResizingAllowed(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setResizingAllowed(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setResizingAllowed(b));
     }
 
     public boolean getResizingAllowed() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getResizingAllowed());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getResizingAllowed());
     }
 
     public TableColumn getDraggedColumn() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getDraggedColumn());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDraggedColumn());
     }
 
     public int getDraggedDistance() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getDraggedDistance());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDraggedDistance());
     }
 
     public TableColumn getResizingColumn() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getResizingColumn());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getResizingColumn());
     }
 
     public void setUpdateTableInRealTime(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setUpdateTableInRealTime(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUpdateTableInRealTime(b));
     }
 
     public boolean getUpdateTableInRealTime() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getUpdateTableInRealTime());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUpdateTableInRealTime());
     }
 
     public void setDefaultRenderer(@Nullable TableCellRenderer tableCellRenderer) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setDefaultRenderer(tableCellRenderer));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDefaultRenderer(tableCellRenderer));
     }
 
     public @Nullable TableCellRenderer getDefaultRenderer() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getDefaultRenderer());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDefaultRenderer());
     }
 
     public int columnAtPoint(Point point) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).columnAtPoint(point));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().columnAtPoint(point));
     }
 
     public Rectangle getHeaderRect(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getHeaderRect(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHeaderRect(i));
     }
 
     public TableHeaderUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public void setUI(TableHeaderUI tableHeaderUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setUI(tableHeaderUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(tableHeaderUI));
     }
 
     public void setColumnModel(TableColumnModel tableColumnModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setColumnModel(tableColumnModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColumnModel(tableColumnModel));
     }
 
     public TableColumnModel getColumnModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTableHeader) getSource()).getColumnModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnModel());
     }
 
     public void columnAdded(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).columnAdded(tableColumnModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnAdded(tableColumnModelEvent));
     }
 
     public void columnRemoved(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).columnRemoved(tableColumnModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnRemoved(tableColumnModelEvent));
     }
 
     public void columnMoved(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).columnMoved(tableColumnModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnMoved(tableColumnModelEvent));
     }
 
     public void columnMarginChanged(ChangeEvent changeEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).columnMarginChanged(changeEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnMarginChanged(changeEvent));
     }
 
     public void columnSelectionChanged(ListSelectionEvent listSelectionEvent) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JTableHeader) getSource()).columnSelectionChanged(listSelectionEvent));
+                .runOnQueue(() -> getSource().columnSelectionChanged(listSelectionEvent));
     }
 
     public void resizeAndRepaint() {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).resizeAndRepaint());
+        QueueTool.getInstance().runOnQueue(() -> getSource().resizeAndRepaint());
     }
 
     public void setDraggedColumn(TableColumn tableColumn) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setDraggedColumn(tableColumn));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDraggedColumn(tableColumn));
     }
 
     public void setDraggedDistance(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setDraggedDistance(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDraggedDistance(i));
     }
 
     public void setResizingColumn(TableColumn tableColumn) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTableHeader) getSource()).setResizingColumn(tableColumn));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setResizingColumn(tableColumn));
     }
 }

@@ -51,6 +51,10 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuItemOperator extends AbstractButtonOperator {
+    @Override
+    public JMenuItem getSource() {
+        return (JMenuItem) super.getSource();
+    }
 
     public static JMenuItemOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -153,73 +157,73 @@ public class JMenuItemOperator extends AbstractButtonOperator {
 
     public void addMenuDragMouseListener(MenuDragMouseListener menuDragMouseListener) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JMenuItem) getSource()).addMenuDragMouseListener(menuDragMouseListener));
+                .runOnQueue(() -> getSource().addMenuDragMouseListener(menuDragMouseListener));
     }
 
     public void addMenuKeyListener(MenuKeyListener menuKeyListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).addMenuKeyListener(menuKeyListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addMenuKeyListener(menuKeyListener));
     }
 
     public @Nullable KeyStroke getAccelerator() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuItem) getSource()).getAccelerator());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAccelerator());
     }
 
     public Component getComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuItem) getSource()).getComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponent());
     }
 
     public MenuElement[] getSubElements() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuItem) getSource()).getSubElements());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSubElements());
     }
 
     public boolean isArmed() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuItem) getSource()).isArmed());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isArmed());
     }
 
     public void menuSelectionChanged(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).menuSelectionChanged(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().menuSelectionChanged(b));
     }
 
     public void processKeyEvent(
             KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource())
+        QueueTool.getInstance().runOnQueue(() -> getSource()
                 .processKeyEvent(keyEvent, menuElement, menuSelectionManager));
     }
 
     public void processMenuDragMouseEvent(MenuDragMouseEvent menuDragMouseEvent) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JMenuItem) getSource()).processMenuDragMouseEvent(menuDragMouseEvent));
+                .runOnQueue(() -> getSource().processMenuDragMouseEvent(menuDragMouseEvent));
     }
 
     public void processMenuKeyEvent(MenuKeyEvent menuKeyEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).processMenuKeyEvent(menuKeyEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().processMenuKeyEvent(menuKeyEvent));
     }
 
     public void processMouseEvent(
             MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource())
+        QueueTool.getInstance().runOnQueue(() -> getSource()
                 .processMouseEvent(mouseEvent, menuElement, menuSelectionManager));
     }
 
     public void removeMenuDragMouseListener(MenuDragMouseListener menuDragMouseListener) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JMenuItem) getSource()).removeMenuDragMouseListener(menuDragMouseListener));
+                .runOnQueue(() -> getSource().removeMenuDragMouseListener(menuDragMouseListener));
     }
 
     public void removeMenuKeyListener(MenuKeyListener menuKeyListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).removeMenuKeyListener(menuKeyListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeMenuKeyListener(menuKeyListener));
     }
 
     public void setAccelerator(KeyStroke keyStroke) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).setAccelerator(keyStroke));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setAccelerator(keyStroke));
     }
 
     public void setArmed(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).setArmed(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setArmed(b));
     }
 
     public void setUI(MenuItemUI menuItemUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuItem) getSource()).setUI(menuItemUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(menuItemUI));
     }
 
     public static @Nullable JMenuItem findJMenuItem(Container menu, Predicate<Component> chooser, int index) {

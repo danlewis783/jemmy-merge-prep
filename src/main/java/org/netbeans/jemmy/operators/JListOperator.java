@@ -58,6 +58,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JListOperator extends JComponentOperator {
+    @Override
+    public JList<?> getSource() {
+        return (JList<?>) super.getSource();
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(JListOperator.class);
 
     public static JListOperator waitFor(ContainerOperator rootOp) {

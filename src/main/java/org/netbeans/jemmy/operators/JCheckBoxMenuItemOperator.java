@@ -33,6 +33,11 @@ import org.netbeans.jemmy.predicates.JCheckBoxMenuItemByLabelPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
+    @Override
+    public JCheckBoxMenuItem getSource() {
+        return (JCheckBoxMenuItem) super.getSource();
+    }
+
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
     }
@@ -126,10 +131,10 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
     }
 
     public boolean getState() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JCheckBoxMenuItem) getSource()).getState());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getState());
     }
 
     public void setState(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JCheckBoxMenuItem) getSource()).setState(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setState(b));
     }
 }

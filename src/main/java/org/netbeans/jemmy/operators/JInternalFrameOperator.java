@@ -62,6 +62,11 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
 public class JInternalFrameOperator extends JComponentOperator {
+    @Override
+    public JInternalFrame getSource() {
+        return (JInternalFrame) super.getSource();
+    }
+
     private @Nullable JButtonOperator closeOper;
     private @Nullable JDesktopIconOperator iconOperator;
     private @Nullable JButtonOperator maxOper;
@@ -330,118 +335,118 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public void addInternalFrameListener(InternalFrameListener internalFrameListener) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JInternalFrame) getSource()).addInternalFrameListener(internalFrameListener));
+                .runOnQueue(() -> getSource().addInternalFrameListener(internalFrameListener));
     }
 
     public void dispose() {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).dispose());
+        QueueTool.getInstance().runOnQueue(() -> getSource().dispose());
     }
 
     public Container getContentPane() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getContentPane());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getContentPane());
     }
 
     public int getDefaultCloseOperation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getDefaultCloseOperation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDefaultCloseOperation());
     }
 
     public JDesktopIcon getDesktopIcon() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getDesktopIcon());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDesktopIcon());
     }
 
     public JDesktopPane getDesktopPane() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getDesktopPane());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDesktopPane());
     }
 
     public Icon getFrameIcon() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getFrameIcon());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFrameIcon());
     }
 
     public Component getGlassPane() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getGlassPane());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getGlassPane());
     }
 
     public JMenuBar getJMenuBar() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getJMenuBar());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getJMenuBar());
     }
 
     public int getLayer() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getLayer());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLayer());
     }
 
     public JLayeredPane getLayeredPane() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getLayeredPane());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLayeredPane());
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getTitle());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTitle());
     }
 
     public InternalFrameUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public @Nullable String getWarningString() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).getWarningString());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getWarningString());
     }
 
     public boolean isClosable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isClosable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isClosable());
     }
 
     public boolean isClosed() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isClosed());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isClosed());
     }
 
     public boolean isIcon() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isIcon());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isIcon());
     }
 
     public boolean isIconifiable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isIconifiable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isIconifiable());
     }
 
     public boolean isMaximizable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isMaximizable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isMaximizable());
     }
 
     public boolean isMaximum() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isMaximum());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isMaximum());
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isResizable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isResizable());
     }
 
     public boolean isSelected() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JInternalFrame) getSource()).isSelected());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isSelected());
     }
 
     public void moveToBack() {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).moveToBack());
+        QueueTool.getInstance().runOnQueue(() -> getSource().moveToBack());
     }
 
     public void moveToFront() {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).moveToFront());
+        QueueTool.getInstance().runOnQueue(() -> getSource().moveToFront());
     }
 
     public void pack() {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).pack());
+        QueueTool.getInstance().runOnQueue(() -> getSource().pack());
     }
 
     public void removeInternalFrameListener(InternalFrameListener internalFrameListener) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JInternalFrame) getSource()).removeInternalFrameListener(internalFrameListener));
+                .runOnQueue(() -> getSource().removeInternalFrameListener(internalFrameListener));
     }
 
     public void setClosable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setClosable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setClosable(b));
     }
 
     public void setClosed(boolean b) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JInternalFrame) getSource()).setClosed(b);
+                getSource().setClosed(b);
             } catch (PropertyVetoException e) {
                 throw new JemmyException("setClosed vetoed", e);
             }
@@ -449,29 +454,29 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setContentPane(Container container) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setContentPane(container));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setContentPane(container));
     }
 
     public void setDefaultCloseOperation(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setDefaultCloseOperation(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDefaultCloseOperation(i));
     }
 
     public void setDesktopIcon(JDesktopIcon jDesktopIcon) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setDesktopIcon(jDesktopIcon));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDesktopIcon(jDesktopIcon));
     }
 
     public void setFrameIcon(Icon icon) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setFrameIcon(icon));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFrameIcon(icon));
     }
 
     public void setGlassPane(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setGlassPane(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setGlassPane(component));
     }
 
     public void setIcon(boolean b) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JInternalFrame) getSource()).setIcon(b);
+                getSource().setIcon(b);
             } catch (PropertyVetoException e) {
                 throw new JemmyException("setIcon vetoed", e);
             }
@@ -479,29 +484,29 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setIconifiable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setIconifiable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setIconifiable(b));
     }
 
     public void setJMenuBar(JMenuBar jMenuBar) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setJMenuBar(jMenuBar));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setJMenuBar(jMenuBar));
     }
 
     public void setLayer(Integer integer) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setLayer(integer));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLayer(integer));
     }
 
     public void setLayeredPane(JLayeredPane jLayeredPane) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setLayeredPane(jLayeredPane));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLayeredPane(jLayeredPane));
     }
 
     public void setMaximizable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setMaximizable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMaximizable(b));
     }
 
     public void setMaximum(boolean b) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JInternalFrame) getSource()).setMaximum(b);
+                getSource().setMaximum(b);
             } catch (PropertyVetoException e) {
                 throw new JemmyException("setMaximum vetoed", e);
             }
@@ -509,13 +514,13 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setResizable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setResizable(b));
     }
 
     public void setSelected(boolean b) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JInternalFrame) getSource()).setSelected(b);
+                getSource().setSelected(b);
             } catch (PropertyVetoException e) {
                 throw new JemmyException("setSelected vetoed", e);
             }
@@ -523,19 +528,19 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setTitle(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTitle(string));
     }
 
     public void setUI(InternalFrameUI internalFrameUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).setUI(internalFrameUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(internalFrameUI));
     }
 
     public void toBack() {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).toBack());
+        QueueTool.getInstance().runOnQueue(() -> getSource().toBack());
     }
 
     public void toFront() {
-        QueueTool.getInstance().runOnQueue(() -> ((JInternalFrame) getSource()).toFront());
+        QueueTool.getInstance().runOnQueue(() -> getSource().toFront());
     }
 
     protected Container findTitlePane() {

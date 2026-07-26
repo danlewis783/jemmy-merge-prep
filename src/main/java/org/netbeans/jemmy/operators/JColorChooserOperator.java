@@ -46,6 +46,11 @@ import org.netbeans.jemmy.util.StringComparators;
  * openjdk/jemmy-v2 (CODETOOLS-7901925).
  */
 public class JColorChooserOperator extends JComponentOperator {
+    @Override
+    public JColorChooser getSource() {
+        return (JColorChooser) super.getSource();
+    }
+
     private static final String RGB_TITLE = "RGB";
     private static final String HSV_TITLE = "HSV";
     private static final String HSL_TITLE = "HSL";
@@ -296,61 +301,61 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public void addChooserPanel(AbstractColorChooserPanel abstractColorChooserPanel) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JColorChooser) getSource()).addChooserPanel(abstractColorChooserPanel));
+                .runOnQueue(() -> getSource().addChooserPanel(abstractColorChooserPanel));
     }
 
     public AbstractColorChooserPanel[] getChooserPanels() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getChooserPanels());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getChooserPanels());
     }
 
     public Color getColor() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getColor());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColor());
     }
 
     public JComponent getPreviewPanel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getPreviewPanel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPreviewPanel());
     }
 
     public ColorSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getSelectionModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectionModel());
     }
 
     public ColorChooserUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JColorChooser) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public AbstractColorChooserPanel removeChooserPanel(AbstractColorChooserPanel abstractColorChooserPanel) {
         return QueueTool.getInstance()
-                .callOnQueue(() -> ((JColorChooser) getSource()).removeChooserPanel(abstractColorChooserPanel));
+                .callOnQueue(() -> getSource().removeChooserPanel(abstractColorChooserPanel));
     }
 
     public void setChooserPanels(AbstractColorChooserPanel[] abstractColorChooserPanel) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JColorChooser) getSource()).setChooserPanels(abstractColorChooserPanel));
+                .runOnQueue(() -> getSource().setChooserPanels(abstractColorChooserPanel));
     }
 
     public void setColor(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setColor(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColor(i));
     }
 
     public void setColor(int i, int i1, int i2) {
-        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setColor(i, i1, i2));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColor(i, i1, i2));
     }
 
     public void setColor(Color color) {
-        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setColor(color));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColor(color));
     }
 
     public void setPreviewPanel(JComponent jComponent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setPreviewPanel(jComponent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPreviewPanel(jComponent));
     }
 
     public void setSelectionModel(ColorSelectionModel colorSelectionModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setSelectionModel(colorSelectionModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionModel(colorSelectionModel));
     }
 
     public void setUI(ColorChooserUI colorChooserUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JColorChooser) getSource()).setUI(colorChooserUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(colorChooserUI));
     }
 
     public static @Nullable JColorChooser findJColorChooser(Container cont, Predicate<Component> chooser, int index) {
@@ -417,7 +422,7 @@ public class JColorChooserOperator extends JComponentOperator {
     // one EDT snapshot: reading the selected index and its title separately can straddle a
     // tab switch and answer for the wrong tab
     private String selectedTabTitle() {
-        JTabbedPane pane = (JTabbedPane) tabbed.getSource();
+        JTabbedPane pane = tabbed.getSource();
         return QueueTool.getInstance().callOnQueue(() -> pane.getTitleAt(pane.getSelectedIndex()));
     }
 }

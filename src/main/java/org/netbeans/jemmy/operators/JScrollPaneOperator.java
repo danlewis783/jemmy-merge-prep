@@ -44,6 +44,11 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JScrollPaneOperator extends JComponentOperator {
+    @Override
+    public JScrollPane getSource() {
+        return (JScrollPane) super.getSource();
+    }
+
     private static final int X_POINT_RECT_SIZE = 6;
     private static final int Y_POINT_RECT_SIZE = 4;
     private @Nullable JScrollBarOperator hScrollBarOper = null;
@@ -282,113 +287,113 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public JScrollBar createHorizontalScrollBar() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).createHorizontalScrollBar());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().createHorizontalScrollBar());
     }
 
     public JScrollBar createVerticalScrollBar() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).createVerticalScrollBar());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().createVerticalScrollBar());
     }
 
     public @Nullable JViewport getColumnHeader() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getColumnHeader());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnHeader());
     }
 
     public Component getCorner(String string) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getCorner(string));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCorner(string));
     }
 
     public JScrollBar getHorizontalScrollBar() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getHorizontalScrollBar());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHorizontalScrollBar());
     }
 
     public int getHorizontalScrollBarPolicy() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getHorizontalScrollBarPolicy());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHorizontalScrollBarPolicy());
     }
 
     public JViewport getRowHeader() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getRowHeader());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getRowHeader());
     }
 
     public ScrollPaneUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public JScrollBar getVerticalScrollBar() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getVerticalScrollBar());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getVerticalScrollBar());
     }
 
     public int getVerticalScrollBarPolicy() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getVerticalScrollBarPolicy());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getVerticalScrollBarPolicy());
     }
 
     public JViewport getViewport() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getViewport());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getViewport());
     }
 
     public Border getViewportBorder() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getViewportBorder());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getViewportBorder());
     }
 
     public Rectangle getViewportBorderBounds() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JScrollPane) getSource()).getViewportBorderBounds());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getViewportBorderBounds());
     }
 
     public void setColumnHeader(@Nullable JViewport jViewport) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setColumnHeader(jViewport));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColumnHeader(jViewport));
     }
 
     public void setColumnHeaderView(@Nullable Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setColumnHeaderView(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColumnHeaderView(component));
     }
 
     public void setCorner(String string, Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setCorner(string, component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setCorner(string, component));
     }
 
     public void setHorizontalScrollBar(JScrollBar jScrollBar) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setHorizontalScrollBar(jScrollBar));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setHorizontalScrollBar(jScrollBar));
     }
 
     public void setHorizontalScrollBarPolicy(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setHorizontalScrollBarPolicy(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setHorizontalScrollBarPolicy(i));
     }
 
     public void setRowHeader(@Nullable JViewport jViewport) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setRowHeader(jViewport));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRowHeader(jViewport));
     }
 
     public void setRowHeaderView(@Nullable Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setRowHeaderView(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRowHeaderView(component));
     }
 
     public void setUI(ScrollPaneUI scrollPaneUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setUI(scrollPaneUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(scrollPaneUI));
     }
 
     public void setVerticalScrollBar(JScrollBar jScrollBar) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setVerticalScrollBar(jScrollBar));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setVerticalScrollBar(jScrollBar));
     }
 
     public void setVerticalScrollBarPolicy(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setVerticalScrollBarPolicy(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setVerticalScrollBarPolicy(i));
     }
 
     public void setViewport(@Nullable JViewport jViewport) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setViewport(jViewport));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setViewport(jViewport));
     }
 
     public void setViewportBorder(@Nullable Border border) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setViewportBorder(border));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setViewportBorder(border));
     }
 
     public void setViewportView(@Nullable Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JScrollPane) getSource()).setViewportView(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setViewportView(component));
     }
 
     private void initOperators() {
         if (hScrollBarOper == null) {
             JScrollBar hBar = QueueTool.getInstance().callOnQueue(() -> {
-                JScrollBar bar = ((JScrollPane) getSource()).getHorizontalScrollBar();
+                JScrollBar bar = getSource().getHorizontalScrollBar();
                 return (bar != null && bar.isVisible()) ? bar : null;
             });
             if (hBar != null) {
@@ -399,7 +404,7 @@ public class JScrollPaneOperator extends JComponentOperator {
 
         if (vScrollBarOper == null) {
             JScrollBar vBar = QueueTool.getInstance().callOnQueue(() -> {
-                JScrollBar bar = ((JScrollPane) getSource()).getVerticalScrollBar();
+                JScrollBar bar = getSource().getVerticalScrollBar();
                 return (bar != null && bar.isVisible()) ? bar : null;
             });
             if (vBar != null) {

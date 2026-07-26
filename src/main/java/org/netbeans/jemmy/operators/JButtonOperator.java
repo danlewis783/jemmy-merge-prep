@@ -35,6 +35,10 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JButtonOperator extends AbstractButtonOperator {
+    @Override
+    public JButton getSource() {
+        return (JButton) super.getSource();
+    }
 
     public static JButtonOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -129,15 +133,15 @@ public class JButtonOperator extends AbstractButtonOperator {
     }
 
     public boolean isDefaultButton() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JButton) getSource()).isDefaultButton());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isDefaultButton());
     }
 
     public boolean isDefaultCapable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JButton) getSource()).isDefaultCapable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isDefaultCapable());
     }
 
     public void setDefaultCapable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JButton) getSource()).setDefaultCapable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDefaultCapable(b));
     }
 
     protected void prepareToClick() {

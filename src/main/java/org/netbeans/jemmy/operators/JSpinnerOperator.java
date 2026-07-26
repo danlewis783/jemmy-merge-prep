@@ -54,6 +54,11 @@ import org.netbeans.jemmy.predicates.JSpinnerByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JSpinnerOperator extends JComponentOperator {
+    @Override
+    public JSpinner getSource() {
+        return (JSpinner) super.getSource();
+    }
+
     private @Nullable JButtonOperator decreaseOperator = null;
     private @Nullable JButtonOperator increaseOperator = null;
 
@@ -224,61 +229,61 @@ public class JSpinnerOperator extends JComponentOperator {
     }
 
     public Object getValue() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getValue());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getValue());
     }
 
     public void setValue(Object object) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setValue(object));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setValue(object));
     }
 
     public SpinnerUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public void setUI(SpinnerUI spinnerUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setUI(spinnerUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(spinnerUI));
     }
 
     public void setModel(SpinnerModel spinnerModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setModel(spinnerModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setModel(spinnerModel));
     }
 
     public SpinnerModel getModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getModel());
     }
 
     public Object getNextValue() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getNextValue());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getNextValue());
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).addChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addChangeListener(changeListener));
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).removeChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeChangeListener(changeListener));
     }
 
     public ChangeListener[] getChangeListeners() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getChangeListeners());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getChangeListeners());
     }
 
     public Object getPreviousValue() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getPreviousValue());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPreviousValue());
     }
 
     public void setEditor(JComponent jComponent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSpinner) getSource()).setEditor(jComponent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEditor(jComponent));
     }
 
     public JComponent getEditor() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSpinner) getSource()).getEditor());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getEditor());
     }
 
     public void commitEdit() {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JSpinner) getSource()).commitEdit();
+                getSource().commitEdit();
             } catch (ParseException e) {
                 throw new JemmyException("Exception when committing edit", e);
             }

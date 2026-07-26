@@ -37,6 +37,10 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JProgressBarOperator extends JComponentOperator {
+    @Override
+    public JProgressBar getSource() {
+        return (JProgressBar) super.getSource();
+    }
 
     public static JProgressBarOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -109,87 +113,87 @@ public class JProgressBarOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).addChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addChangeListener(changeListener));
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getMaximum());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMaximum());
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getMinimum());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMinimum());
     }
 
     public BoundedRangeModel getModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getModel());
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getOrientation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getOrientation());
     }
 
     public double getPercentComplete() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getPercentComplete());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPercentComplete());
     }
 
     public String getString() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getString());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getString());
     }
 
     public ProgressBarUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public int getValue() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).getValue());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getValue());
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).isBorderPainted());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isBorderPainted());
     }
 
     public boolean isStringPainted() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JProgressBar) getSource()).isStringPainted());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isStringPainted());
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).removeChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeChangeListener(changeListener));
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setBorderPainted(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBorderPainted(b));
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setMaximum(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMaximum(i));
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setMinimum(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMinimum(i));
     }
 
     public void setModel(BoundedRangeModel boundedRangeModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setModel(boundedRangeModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setModel(boundedRangeModel));
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setOrientation(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setOrientation(i));
     }
 
     public void setString(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setString(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setString(string));
     }
 
     public void setStringPainted(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setStringPainted(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setStringPainted(b));
     }
 
     public void setUI(ProgressBarUI progressBarUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setUI(progressBarUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(progressBarUI));
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JProgressBar) getSource()).setValue(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setValue(i));
     }
 
     public static @Nullable JProgressBar findJProgressBar(Container cont, Predicate<Component> chooser, int index) {

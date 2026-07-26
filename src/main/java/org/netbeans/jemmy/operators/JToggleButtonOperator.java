@@ -34,6 +34,11 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JToggleButtonOperator extends AbstractButtonOperator {
+    @Override
+    public JToggleButton getSource() {
+        return (JToggleButton) super.getSource();
+    }
+
     public static JToggleButtonOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
     }

@@ -62,6 +62,10 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JTableOperator extends JComponentOperator {
+    @Override
+    public JTable getSource() {
+        return (JTable) super.getSource();
+    }
 
     public static JTableOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -273,7 +277,7 @@ public class JTableOperator extends JComponentOperator {
 
     public Point findCell(TableCellChooser chooser, int @Nullable [] rows, int @Nullable [] columns, int index) {
         return QueueTool.getInstance().callOnQueue(() -> {
-            TableModel model = ((JTable) getSource()).getModel();
+            TableModel model = getSource().getModel();
             int[] realRows;
             if (rows != null) {
                 realRows = rows;
@@ -373,7 +377,7 @@ public class JTableOperator extends JComponentOperator {
 
     public int findColumn(String name, StringComparator comparator) {
         return QueueTool.getInstance().callOnQueue(() -> {
-            JTable table = (JTable) getSource();
+            JTable table = getSource();
             int columnCount = table.getColumnCount();
             for (int i = 0; i < columnCount; i++) {
                 if (comparator.equals(table.getColumnName(i), name)) {
@@ -394,7 +398,7 @@ public class JTableOperator extends JComponentOperator {
 
     public Component getRenderedComponent(int row, int column, boolean isSelected, boolean cellHasFocus) {
         return QueueTool.getInstance().callOnQueue(() -> {
-            JTable table = (JTable) getSource();
+            JTable table = getSource();
 
             return table.getCellRenderer(row, column)
                     .getTableCellRendererComponent(
@@ -427,435 +431,435 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public void addColumn(TableColumn tableColumn) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).addColumn(tableColumn));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addColumn(tableColumn));
     }
 
     public void addColumnSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).addColumnSelectionInterval(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addColumnSelectionInterval(i, i1));
     }
 
     public void addRowSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).addRowSelectionInterval(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addRowSelectionInterval(i, i1));
     }
 
     public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JTable) getSource()).changeSelection(rowIndex, columnIndex, toggle, extend));
+                .runOnQueue(() -> getSource().changeSelection(rowIndex, columnIndex, toggle, extend));
     }
 
     public void clearSelection() {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).clearSelection());
+        QueueTool.getInstance().runOnQueue(() -> getSource().clearSelection());
     }
 
     public void columnAdded(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).columnAdded(tableColumnModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnAdded(tableColumnModelEvent));
     }
 
     public int columnAtPoint(Point point) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).columnAtPoint(point));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().columnAtPoint(point));
     }
 
     public void columnMarginChanged(ChangeEvent changeEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).columnMarginChanged(changeEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnMarginChanged(changeEvent));
     }
 
     public void columnMoved(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).columnMoved(tableColumnModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnMoved(tableColumnModelEvent));
     }
 
     public void columnRemoved(TableColumnModelEvent tableColumnModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).columnRemoved(tableColumnModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnRemoved(tableColumnModelEvent));
     }
 
     public void columnSelectionChanged(ListSelectionEvent listSelectionEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).columnSelectionChanged(listSelectionEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().columnSelectionChanged(listSelectionEvent));
     }
 
     public int convertColumnIndexToModel(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).convertColumnIndexToModel(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().convertColumnIndexToModel(i));
     }
 
     public int convertColumnIndexToView(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).convertColumnIndexToView(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().convertColumnIndexToView(i));
     }
 
     public void createDefaultColumnsFromModel() {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).createDefaultColumnsFromModel());
+        QueueTool.getInstance().runOnQueue(() -> getSource().createDefaultColumnsFromModel());
     }
 
     public boolean editCellAt(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).editCellAt(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().editCellAt(i, i1));
     }
 
     public boolean editCellAt(int i, int i1, @Nullable EventObject eventObject) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).editCellAt(i, i1, eventObject));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().editCellAt(i, i1, eventObject));
     }
 
     public void editingCanceled(ChangeEvent changeEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).editingCanceled(changeEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().editingCanceled(changeEvent));
     }
 
     public void editingStopped(ChangeEvent changeEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).editingStopped(changeEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().editingStopped(changeEvent));
     }
 
     public boolean getAutoCreateColumnsFromModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getAutoCreateColumnsFromModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAutoCreateColumnsFromModel());
     }
 
     public int getAutoResizeMode() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getAutoResizeMode());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAutoResizeMode());
     }
 
     public TableCellEditor getCellEditor() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getCellEditor());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCellEditor());
     }
 
     public TableCellEditor getCellEditor(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getCellEditor(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCellEditor(i, i1));
     }
 
     public Rectangle getCellRect(int i, int i1, boolean b) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getCellRect(i, i1, b));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCellRect(i, i1, b));
     }
 
     public TableCellRenderer getCellRenderer(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getCellRenderer(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCellRenderer(i, i1));
     }
 
     public boolean getCellSelectionEnabled() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getCellSelectionEnabled());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCellSelectionEnabled());
     }
 
     public TableColumn getColumn(Object object) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getColumn(object));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumn(object));
     }
 
     public Class<?> getColumnClass(int i) {
-        return QueueTool.getInstance().callOnQueue((Callable<Class<?>>) () -> ((JTable) getSource()).getColumnClass(i));
+        return QueueTool.getInstance().callOnQueue((Callable<Class<?>>) () -> getSource().getColumnClass(i));
     }
 
     public int getColumnCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getColumnCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnCount());
     }
 
     public TableColumnModel getColumnModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getColumnModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnModel());
     }
 
     public String getColumnName(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getColumnName(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnName(i));
     }
 
     public boolean getColumnSelectionAllowed() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getColumnSelectionAllowed());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnSelectionAllowed());
     }
 
     public TableCellEditor getDefaultEditor(Class<?> clss) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getDefaultEditor(clss));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDefaultEditor(clss));
     }
 
     public @Nullable TableCellRenderer getDefaultRenderer(Class<?> clss) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getDefaultRenderer(clss));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDefaultRenderer(clss));
     }
 
     public int getEditingColumn() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getEditingColumn());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getEditingColumn());
     }
 
     public int getEditingRow() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getEditingRow());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getEditingRow());
     }
 
     public @Nullable Component getEditorComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getEditorComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getEditorComponent());
     }
 
     public Color getGridColor() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getGridColor());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getGridColor());
     }
 
     public Dimension getIntercellSpacing() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getIntercellSpacing());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getIntercellSpacing());
     }
 
     public TableModel getModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getModel());
     }
 
     public Dimension getPreferredScrollableViewportSize() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getPreferredScrollableViewportSize());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPreferredScrollableViewportSize());
     }
 
     public int getRowCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getRowCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getRowCount());
     }
 
     public int getRowHeight() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getRowHeight());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getRowHeight());
     }
 
     public int getRowMargin() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getRowMargin());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getRowMargin());
     }
 
     public boolean getRowSelectionAllowed() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getRowSelectionAllowed());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getRowSelectionAllowed());
     }
 
     public int getScrollableBlockIncrement(Rectangle rectangle, int i, int i1) {
         return QueueTool.getInstance()
-                .callOnQueue(() -> ((JTable) getSource()).getScrollableBlockIncrement(rectangle, i, i1));
+                .callOnQueue(() -> getSource().getScrollableBlockIncrement(rectangle, i, i1));
     }
 
     public boolean getScrollableTracksViewportHeight() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getScrollableTracksViewportHeight());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getScrollableTracksViewportHeight());
     }
 
     public boolean getScrollableTracksViewportWidth() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getScrollableTracksViewportWidth());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getScrollableTracksViewportWidth());
     }
 
     public int getScrollableUnitIncrement(Rectangle rectangle, int i, int i1) {
         return QueueTool.getInstance()
-                .callOnQueue(() -> ((JTable) getSource()).getScrollableUnitIncrement(rectangle, i, i1));
+                .callOnQueue(() -> getSource().getScrollableUnitIncrement(rectangle, i, i1));
     }
 
     public int getSelectedColumn() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectedColumn());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedColumn());
     }
 
     public int getSelectedColumnCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectedColumnCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedColumnCount());
     }
 
     public int[] getSelectedColumns() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectedColumns());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedColumns());
     }
 
     public int getSelectedRow() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectedRow());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedRow());
     }
 
     public int getSelectedRowCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectedRowCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedRowCount());
     }
 
     public int[] getSelectedRows() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectedRows());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedRows());
     }
 
     public Color getSelectionBackground() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectionBackground());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectionBackground());
     }
 
     public Color getSelectionForeground() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectionForeground());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectionForeground());
     }
 
     public ListSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getSelectionModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectionModel());
     }
 
     public boolean getShowHorizontalLines() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getShowHorizontalLines());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getShowHorizontalLines());
     }
 
     public boolean getShowVerticalLines() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getShowVerticalLines());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getShowVerticalLines());
     }
 
     public JTableHeader getTableHeader() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getTableHeader());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTableHeader());
     }
 
     public TableUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public @Nullable Object getValueAt(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).getValueAt(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getValueAt(i, i1));
     }
 
     public boolean isCellEditable(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).isCellEditable(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isCellEditable(i, i1));
     }
 
     public boolean isCellSelected(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).isCellSelected(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isCellSelected(i, i1));
     }
 
     public boolean isColumnSelected(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).isColumnSelected(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isColumnSelected(i));
     }
 
     public boolean isEditing() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).isEditing());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isEditing());
     }
 
     public boolean isRowSelected(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).isRowSelected(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isRowSelected(i));
     }
 
     public void moveColumn(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).moveColumn(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().moveColumn(i, i1));
     }
 
     public Component prepareEditor(TableCellEditor tableCellEditor, int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).prepareEditor(tableCellEditor, i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().prepareEditor(tableCellEditor, i, i1));
     }
 
     public Component prepareRenderer(TableCellRenderer tableCellRenderer, int i, int i1) {
         return QueueTool.getInstance()
-                .callOnQueue(() -> ((JTable) getSource()).prepareRenderer(tableCellRenderer, i, i1));
+                .callOnQueue(() -> getSource().prepareRenderer(tableCellRenderer, i, i1));
     }
 
     public void removeColumn(TableColumn tableColumn) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).removeColumn(tableColumn));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeColumn(tableColumn));
     }
 
     public void removeColumnSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).removeColumnSelectionInterval(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeColumnSelectionInterval(i, i1));
     }
 
     public void removeEditor() {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).removeEditor());
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeEditor());
     }
 
     public void removeRowSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).removeRowSelectionInterval(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeRowSelectionInterval(i, i1));
     }
 
     public int rowAtPoint(Point point) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JTable) getSource()).rowAtPoint(point));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().rowAtPoint(point));
     }
 
     public void selectAll() {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).selectAll());
+        QueueTool.getInstance().runOnQueue(() -> getSource().selectAll());
     }
 
     public void setAutoCreateColumnsFromModel(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setAutoCreateColumnsFromModel(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setAutoCreateColumnsFromModel(b));
     }
 
     public void setAutoResizeMode(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setAutoResizeMode(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setAutoResizeMode(i));
     }
 
     public void setCellEditor(TableCellEditor tableCellEditor) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setCellEditor(tableCellEditor));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setCellEditor(tableCellEditor));
     }
 
     public void setCellSelectionEnabled(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setCellSelectionEnabled(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setCellSelectionEnabled(b));
     }
 
     public void setColumnModel(TableColumnModel tableColumnModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setColumnModel(tableColumnModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColumnModel(tableColumnModel));
     }
 
     public void setColumnSelectionAllowed(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setColumnSelectionAllowed(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColumnSelectionAllowed(b));
     }
 
     public void setColumnSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setColumnSelectionInterval(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setColumnSelectionInterval(i, i1));
     }
 
     public void setDefaultEditor(Class<?> clss, TableCellEditor tableCellEditor) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setDefaultEditor(clss, tableCellEditor));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDefaultEditor(clss, tableCellEditor));
     }
 
     public void setDefaultRenderer(Class<?> clss, @Nullable TableCellRenderer tableCellRenderer) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setDefaultRenderer(clss, tableCellRenderer));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDefaultRenderer(clss, tableCellRenderer));
     }
 
     public void setEditingColumn(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setEditingColumn(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEditingColumn(i));
     }
 
     public void setEditingRow(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setEditingRow(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEditingRow(i));
     }
 
     public void setGridColor(Color color) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setGridColor(color));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setGridColor(color));
     }
 
     public void setIntercellSpacing(Dimension dimension) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setIntercellSpacing(dimension));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setIntercellSpacing(dimension));
     }
 
     public void setModel(TableModel tableModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setModel(tableModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setModel(tableModel));
     }
 
     public void setPreferredScrollableViewportSize(Dimension dimension) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setPreferredScrollableViewportSize(dimension));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPreferredScrollableViewportSize(dimension));
     }
 
     public void setRowHeight(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setRowHeight(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRowHeight(i));
     }
 
     public void setRowMargin(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setRowMargin(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRowMargin(i));
     }
 
     public void setRowSelectionAllowed(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setRowSelectionAllowed(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRowSelectionAllowed(b));
     }
 
     public void setRowSelectionInterval(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setRowSelectionInterval(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRowSelectionInterval(i, i1));
     }
 
     public void setSelectionBackground(Color color) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setSelectionBackground(color));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionBackground(color));
     }
 
     public void setSelectionForeground(Color color) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setSelectionForeground(color));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionForeground(color));
     }
 
     public void setSelectionMode(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setSelectionMode(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionMode(i));
     }
 
     public void setSelectionModel(ListSelectionModel listSelectionModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setSelectionModel(listSelectionModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionModel(listSelectionModel));
     }
 
     public void setShowGrid(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setShowGrid(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setShowGrid(b));
     }
 
     public void setShowHorizontalLines(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setShowHorizontalLines(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setShowHorizontalLines(b));
     }
 
     public void setShowVerticalLines(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setShowVerticalLines(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setShowVerticalLines(b));
     }
 
     public void setTableHeader(JTableHeader jTableHeader) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setTableHeader(jTableHeader));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTableHeader(jTableHeader));
     }
 
     public void setUI(TableUI tableUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setUI(tableUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(tableUI));
     }
 
     public void setValueAt(Object object, int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).setValueAt(object, i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setValueAt(object, i, i1));
     }
 
     public void tableChanged(@Nullable TableModelEvent tableModelEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).tableChanged(tableModelEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().tableChanged(tableModelEvent));
     }
 
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JTable) getSource()).valueChanged(listSelectionEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().valueChanged(listSelectionEvent));
     }
 
     public static @Nullable JTable findJTable(Container cont, Predicate<Component> chooser, int index) {
@@ -925,7 +929,7 @@ public class JTableOperator extends JComponentOperator {
             // model coordinates, deliberately: findCell must keep finding cells at their model
             // position after view-column reordering. EDT-safe because findCell evaluates every
             // chooser inside its callOnQueue loop.
-            Object value = ((JTable) op.getSource()).getModel().getValueAt(row, column);
+            Object value = op.getSource().getModel().getValueAt(row, column);
 
             return comparator.equals((value != null) ? value.toString() : null, expectedToString);
         }

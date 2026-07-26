@@ -16,12 +16,11 @@
  */
 package org.netbeans.jemmy.operators;
 
-import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 public class JSpinnerOperatorNumber extends JSpinnerOperator {
     public JSpinnerOperatorNumber(JSpinnerOperator spinner) {
-        super((JSpinner) spinner.getSource());
+        super(spinner.getSource());
         if (!(getModel() instanceof SpinnerNumberModel)) {
             throw new IllegalArgumentException("JSpinner model is not a " + SpinnerNumberModel.class.getName());
         }

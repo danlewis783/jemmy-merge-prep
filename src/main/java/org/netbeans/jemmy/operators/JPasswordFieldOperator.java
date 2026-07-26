@@ -36,6 +36,10 @@ import org.netbeans.jemmy.predicates.JTextComponentByTextPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JPasswordFieldOperator extends JTextFieldOperator {
+    @Override
+    public JPasswordField getSource() {
+        return (JPasswordField) super.getSource();
+    }
 
     public static JPasswordFieldOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -132,20 +136,20 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
     }
 
     public boolean echoCharIsSet() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPasswordField) getSource()).echoCharIsSet());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().echoCharIsSet());
     }
 
     public char getEchoChar() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPasswordField) getSource()).getEchoChar());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getEchoChar());
     }
 
     public char[] getPassword() {
         return (char[]) QueueTool.getInstance()
-                .callOnQueue((Callable<Object>) () -> ((JPasswordField) getSource()).getPassword());
+                .callOnQueue((Callable<Object>) () -> getSource().getPassword());
     }
 
     public void setEchoChar(char c) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPasswordField) getSource()).setEchoChar(c));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEchoChar(c));
     }
 
     public static @Nullable JPasswordField findJPasswordField(Container cont, Predicate<Component> chooser, int index) {

@@ -34,6 +34,11 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JCheckBoxOperator extends JToggleButtonOperator {
+    @Override
+    public JCheckBox getSource() {
+        return (JCheckBox) super.getSource();
+    }
+
     public static JCheckBoxOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
     }

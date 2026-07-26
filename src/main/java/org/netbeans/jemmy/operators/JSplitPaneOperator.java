@@ -42,6 +42,11 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.EmptyVisualizer;
 
 public class JSplitPaneOperator extends JComponentOperator {
+    @Override
+    public JSplitPane getSource() {
+        return (JSplitPane) super.getSource();
+    }
+
     private @Nullable ContainerOperator divider;
 
     public static JSplitPaneOperator waitFor(ContainerOperator rootOp) {
@@ -134,7 +139,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public void moveDivider(double proportionalLocation) {
         int target = QueueTool.getInstance().callOnQueue(() -> {
-            JSplitPane pane = (JSplitPane) getSource();
+            JSplitPane pane = getSource();
             int minimum = pane.getMinimumDividerLocation();
             return minimum + (int) (proportionalLocation * (pane.getMaximumDividerLocation() - minimum));
         });
@@ -162,107 +167,107 @@ public class JSplitPaneOperator extends JComponentOperator {
     }
 
     public Component getBottomComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getBottomComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getBottomComponent());
     }
 
     public int getDividerLocation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getDividerLocation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDividerLocation());
     }
 
     public int getDividerSize() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getDividerSize());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDividerSize());
     }
 
     public int getLastDividerLocation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getLastDividerLocation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLastDividerLocation());
     }
 
     public Component getLeftComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getLeftComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLeftComponent());
     }
 
     public int getMaximumDividerLocation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getMaximumDividerLocation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMaximumDividerLocation());
     }
 
     public int getMinimumDividerLocation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getMinimumDividerLocation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMinimumDividerLocation());
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getOrientation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getOrientation());
     }
 
     public Component getRightComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getRightComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getRightComponent());
     }
 
     public Component getTopComponent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getTopComponent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTopComponent());
     }
 
     public SplitPaneUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public boolean isContinuousLayout() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).isContinuousLayout());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isContinuousLayout());
     }
 
     public boolean isOneTouchExpandable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSplitPane) getSource()).isOneTouchExpandable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isOneTouchExpandable());
     }
 
     public void resetToPreferredSizes() {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).resetToPreferredSizes());
+        QueueTool.getInstance().runOnQueue(() -> getSource().resetToPreferredSizes());
     }
 
     public void setBottomComponent(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setBottomComponent(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBottomComponent(component));
     }
 
     public void setContinuousLayout(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setContinuousLayout(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setContinuousLayout(b));
     }
 
     public void setDividerLocation(double d) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setDividerLocation(d));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDividerLocation(d));
     }
 
     public void setDividerLocation(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setDividerLocation(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDividerLocation(i));
     }
 
     public void setDividerSize(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setDividerSize(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDividerSize(i));
     }
 
     public void setLastDividerLocation(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setLastDividerLocation(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLastDividerLocation(i));
     }
 
     public void setLeftComponent(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setLeftComponent(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLeftComponent(component));
     }
 
     public void setOneTouchExpandable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setOneTouchExpandable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setOneTouchExpandable(b));
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setOrientation(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setOrientation(i));
     }
 
     public void setRightComponent(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setRightComponent(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setRightComponent(component));
     }
 
     public void setTopComponent(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setTopComponent(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTopComponent(component));
     }
 
     public void setUI(SplitPaneUI splitPaneUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSplitPane) getSource()).setUI(splitPaneUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(splitPaneUI));
     }
 
     private void expandTo(int index) {

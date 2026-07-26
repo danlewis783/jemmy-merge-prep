@@ -54,6 +54,10 @@ import org.netbeans.jemmy.util.Platform;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JMenuBarOperator extends JComponentOperator {
+    @Override
+    public JMenuBar getSource() {
+        return (JMenuBar) super.getSource();
+    }
 
     public static JMenuBarOperator waitFor(ContainerOperator rootOp) {
         return new JMenuBarOperator((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), 0));
@@ -148,7 +152,7 @@ public class JMenuBarOperator extends JComponentOperator {
     public JMenuItemOperator[] showMenuItems(List<Predicate<Component>> predicate) {
         Objects.requireNonNull(predicate, "predicate");
         if (predicate.isEmpty()) {
-            return JMenuItemOperator.getMenuItems((MenuElement) getSource());
+            return JMenuItemOperator.getMenuItems(getSource());
         } else {
             JMenuItem menuItemNonNull = Objects.requireNonNull(pushMenu(predicate));
             return JMenuItemOperator.getMenuItems((JMenu) menuItemNonNull);
@@ -158,7 +162,7 @@ public class JMenuBarOperator extends JComponentOperator {
     public JMenuItemOperator[] showMenuItems(String[] path, StringComparator comparator) {
         Objects.requireNonNull(path, "path");
         if (path.length == 0) {
-            return JMenuItemOperator.getMenuItems((MenuElement) getSource());
+            return JMenuItemOperator.getMenuItems(getSource());
         } else {
             JMenuItem menuItemNonNull = Objects.requireNonNull(pushMenu(path, comparator));
             return JMenuItemOperator.getMenuItems((JMenu) menuItemNonNull);
@@ -202,7 +206,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
         JMenuItemOperator result;
         if (Platform.isOSX()) {
-            ComponentSearcher searcher = new ComponentSearcher((Container) menuCont.getSource());
+            ComponentSearcher searcher = new ComponentSearcher(menuCont.getSource());
             Component c = searcher.findComponent(new JMenuItemByTextPredicate(path[path.length - 1], comparator));
             result = JMenuItemOperator.of((JMenuItem) Objects.requireNonNull(c, "menu item not found"));
         } else {
@@ -229,89 +233,89 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public JMenu add(JMenu jMenu) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).add(jMenu));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(jMenu));
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public int getComponentIndex(Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getComponentIndex(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentIndex(component));
     }
 
     public JMenu getHelpMenu() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getHelpMenu());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHelpMenu());
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getMargin());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMargin());
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public JMenu getMenu(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getMenu(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMenu(i));
     }
 
     public int getMenuCount() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getMenuCount());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMenuCount());
     }
 
     public SingleSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getSelectionModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectionModel());
     }
 
     public MenuElement[] getSubElements() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getSubElements());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSubElements());
     }
 
     public MenuBarUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).isBorderPainted());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isBorderPainted());
     }
 
     public boolean isSelected() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JMenuBar) getSource()).isSelected());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isSelected());
     }
 
     public void menuSelectionChanged(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).menuSelectionChanged(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().menuSelectionChanged(b));
     }
 
     public void processKeyEvent(
             KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource())
+        QueueTool.getInstance().runOnQueue(() -> getSource()
                 .processKeyEvent(keyEvent, menuElement, menuSelectionManager));
     }
 
     public void processMouseEvent(
             MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource())
+        QueueTool.getInstance().runOnQueue(() -> getSource()
                 .processMouseEvent(mouseEvent, menuElement, menuSelectionManager));
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).setBorderPainted(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBorderPainted(b));
     }
 
     public void setHelpMenu(JMenu jMenu) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).setHelpMenu(jMenu));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setHelpMenu(jMenu));
     }
 
     public void setMargin(Insets insets) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).setMargin(insets));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMargin(insets));
     }
 
     public void setSelected(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).setSelected(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelected(component));
     }
 
     public void setSelectionModel(SingleSelectionModel singleSelectionModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).setSelectionModel(singleSelectionModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionModel(singleSelectionModel));
     }
 
     public void setUI(MenuBarUI menuBarUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JMenuBar) getSource()).setUI(menuBarUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(menuBarUI));
     }
 
     public static @Nullable JMenuBar findJMenuBar(JFrame frame) {

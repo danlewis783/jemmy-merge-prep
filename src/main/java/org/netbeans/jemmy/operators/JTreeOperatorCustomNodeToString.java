@@ -50,7 +50,7 @@ public class JTreeOperatorCustomNodeToString extends JTreeOperator {
     @Override
     public Object chooseSubnode(Object parent, String text, int index, StringComparator comparator) {
         return QueueTool.getInstance().callOnQueue(() -> {
-            TreeModel md = ((JTree) getSource()).getModel();
+            TreeModel md = getSource().getModel();
             int count = -1;
             DefaultMutableTreeNode node;
             for (int i = 0, iMax = md.getChildCount(parent); i < iMax; i++) {

@@ -38,6 +38,10 @@ import org.netbeans.jemmy.predicates.DialogShowingByTitlePredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class DialogOperator extends WindowOperator {
+    @Override
+    public Dialog getSource() {
+        return (Dialog) super.getSource();
+    }
 
     public static DialogOperator waitFor() {
         return waitFor(0);
@@ -201,27 +205,27 @@ public class DialogOperator extends WindowOperator {
     }
 
     public String getTitle() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Dialog) getSource()).getTitle());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTitle());
     }
 
     public boolean isModal() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Dialog) getSource()).isModal());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isModal());
     }
 
     public boolean isResizable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((Dialog) getSource()).isResizable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isResizable());
     }
 
     public void setModal(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((Dialog) getSource()).setModal(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setModal(b));
     }
 
     public void setResizable(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((Dialog) getSource()).setResizable(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setResizable(b));
     }
 
     public void setTitle(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((Dialog) getSource()).setTitle(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setTitle(string));
     }
 
     protected static Dialog waitDialog(Predicate<Component> chooser, int index) {
@@ -232,7 +236,7 @@ public class DialogOperator extends WindowOperator {
     }
 
     protected static Dialog waitDialog(WindowOperator owner, Predicate<Component> chooser, int index) {
-        return waitDialog((Window) owner.getSource(), chooser, index);
+        return waitDialog(owner.getSource(), chooser, index);
     }
 
     protected static Dialog waitDialog(Window owner, Predicate<Component> chooser, int index) {

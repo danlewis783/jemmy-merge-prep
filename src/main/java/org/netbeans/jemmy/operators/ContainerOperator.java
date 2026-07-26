@@ -131,7 +131,7 @@ public class ContainerOperator extends ComponentOperator {
     }
 
     public Component waitSubComponent(Predicate<Component> chooser, int index, TimeoutKey timeoutKey) {
-        ComponentSearcher searcher = new ComponentSearcher((Container) getSource());
+        ComponentSearcher searcher = new ComponentSearcher(getSource());
         return FunctionRepeater.on(new ComponentSearcherFunction(searcher, chooser, index), timeoutKey)
                 .runUntilNotNull(null);
     }

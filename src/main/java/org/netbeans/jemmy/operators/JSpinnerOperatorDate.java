@@ -17,12 +17,11 @@
 package org.netbeans.jemmy.operators;
 
 import java.util.Date;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
 public class JSpinnerOperatorDate extends JSpinnerOperator {
     public JSpinnerOperatorDate(JSpinnerOperator spinner) {
-        super((JSpinner) spinner.getSource());
+        super(spinner.getSource());
         if (!(getModel() instanceof SpinnerDateModel)) {
             throw new IllegalArgumentException("JSpinner model is not a " + SpinnerDateModel.class.getName());
         }

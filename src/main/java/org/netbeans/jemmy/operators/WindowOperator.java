@@ -42,6 +42,11 @@ import org.netbeans.jemmy.predicates.ComponentOperatorIsVisiblePredicate;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class WindowOperator extends ContainerOperator {
+    @Override
+    public Window getSource() {
+        return (Window) super.getSource();
+    }
+
     public static WindowOperator waitFor() {
         return waitFor(0);
     }
@@ -164,7 +169,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public @Nullable Window findSubWindow(Predicate<Component> predicate, int index) {
-        return findWindow((Window) getSource(), predicate, index);
+        return findWindow(getSource(), predicate, index);
     }
 
     public @Nullable Window findSubWindow(Predicate<Component> predicate) {
@@ -173,7 +178,7 @@ public class WindowOperator extends ContainerOperator {
 
     public Window waitSubWindow(Predicate<Component> predicate, int index) {
         return FunctionRepeater.on(
-                        new WindowFunction<>(index, (Window) getSource(), predicate),
+                        new WindowFunction<>(index, getSource(), predicate),
                         TimeoutKey.WindowWaiter_WaitWindowTimeout)
                 .runUntilNotNull(null);
     }
@@ -214,59 +219,59 @@ public class WindowOperator extends ContainerOperator {
     }
 
     public void addWindowListener(WindowListener windowListener) {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().addWindowListener(windowListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addWindowListener(windowListener));
     }
 
     public void applyResourceBundle(String string) {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().applyResourceBundle(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().applyResourceBundle(string));
     }
 
     public void applyResourceBundle(ResourceBundle resourceBundle) {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().applyResourceBundle(resourceBundle));
+        QueueTool.getInstance().runOnQueue(() -> getSource().applyResourceBundle(resourceBundle));
     }
 
     public void dispose() {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().dispose());
+        QueueTool.getInstance().runOnQueue(() -> getSource().dispose());
     }
 
     public @Nullable Component getFocusOwner() {
-        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().getFocusOwner());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFocusOwner());
     }
 
     public Window[] getOwnedWindows() {
-        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().getOwnedWindows());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getOwnedWindows());
     }
 
     public @Nullable Window getOwner() {
-        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().getOwner());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getOwner());
     }
 
     public @Nullable String getWarningString() {
-        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().getWarningString());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getWarningString());
     }
 
     public void pack() {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().pack());
+        QueueTool.getInstance().runOnQueue(() -> getSource().pack());
     }
 
     public void removeWindowListener(WindowListener windowListener) {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().removeWindowListener(windowListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeWindowListener(windowListener));
     }
 
     public void toBack() {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().toBack());
+        QueueTool.getInstance().runOnQueue(() -> getSource().toBack());
     }
 
     public void toFront() {
-        QueueTool.getInstance().runOnQueue(() -> getSourceAsWindow().toFront());
+        QueueTool.getInstance().runOnQueue(() -> getSource().toFront());
     }
 
     public boolean isFocused() {
-        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().isFocused());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isFocused());
     }
 
     public boolean isActive() {
-        return QueueTool.getInstance().callOnQueue(() -> getSourceAsWindow().isActive());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isActive());
     }
 
     public static @Nullable Window findWindow(Predicate<Component> chooser, int index) {
@@ -300,7 +305,7 @@ public class WindowOperator extends ContainerOperator {
     }
 
     protected static Window waitWindow(WindowOperator owner, Predicate<Component> chooser, int index) {
-        return waitWindow((Window) owner.getSource(), chooser, index);
+        return waitWindow(owner.getSource(), chooser, index);
     }
 
     protected static Window waitWindow(Window owner, Predicate<Component> chooser, int index) {
@@ -309,7 +314,4 @@ public class WindowOperator extends ContainerOperator {
                 .runUntilNotNull(null);
     }
 
-    private Window getSourceAsWindow() {
-        return (Window) getSource();
-    }
 }

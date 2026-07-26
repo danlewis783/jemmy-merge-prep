@@ -51,6 +51,11 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JEditorPaneOperator extends JTextComponentOperator {
+    @Override
+    public JEditorPane getSource() {
+        return (JEditorPane) super.getSource();
+    }
+
     public static JEditorPaneOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
     }
@@ -179,7 +184,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
 
     private int getCaretPositionOfReference(String reference) {
         int pos = QueueTool.getInstance().callOnQueue(() -> {
-            Document doc = ((JEditorPane) getSource()).getDocument();
+            Document doc = getSource().getDocument();
             if (doc instanceof HTMLDocument) {
                 for (HTMLDocument.Iterator iter = ((HTMLDocument) doc).getIterator(HTML.Tag.A);
                         iter.isValid();
@@ -202,38 +207,38 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     }
 
     public void scrollToReference(String reference) {
-        QueueTool.getInstance().runOnQueue(() -> ((JEditorPane) getSource()).scrollToReference(reference));
+        QueueTool.getInstance().runOnQueue(() -> getSource().scrollToReference(reference));
     }
 
     public void addHyperlinkListener(HyperlinkListener hyperlinkListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JEditorPane) getSource()).addHyperlinkListener(hyperlinkListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addHyperlinkListener(hyperlinkListener));
     }
 
     public void fireHyperlinkUpdate(HyperlinkEvent hyperlinkEvent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JEditorPane) getSource()).fireHyperlinkUpdate(hyperlinkEvent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().fireHyperlinkUpdate(hyperlinkEvent));
     }
 
     public String getContentType() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JEditorPane) getSource()).getContentType());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getContentType());
     }
 
     public EditorKit getEditorKit() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JEditorPane) getSource()).getEditorKit());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getEditorKit());
     }
 
     public EditorKit getEditorKitForContentType(String string) {
         return QueueTool.getInstance()
-                .callOnQueue(() -> ((JEditorPane) getSource()).getEditorKitForContentType(string));
+                .callOnQueue(() -> getSource().getEditorKitForContentType(string));
     }
 
     public URL getPage() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JEditorPane) getSource()).getPage());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPage());
     }
 
     public void read(InputStream inputStream, Object object) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JEditorPane) getSource()).read(inputStream, object);
+                getSource().read(inputStream, object);
             } catch (IOException e) {
                 throw new JemmyException("Exception when reading", e);
             }
@@ -242,26 +247,26 @@ public class JEditorPaneOperator extends JTextComponentOperator {
 
     public void removeHyperlinkListener(HyperlinkListener hyperlinkListener) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JEditorPane) getSource()).removeHyperlinkListener(hyperlinkListener));
+                .runOnQueue(() -> getSource().removeHyperlinkListener(hyperlinkListener));
     }
 
     public void setContentType(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JEditorPane) getSource()).setContentType(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setContentType(string));
     }
 
     public void setEditorKit(EditorKit editorKit) {
-        QueueTool.getInstance().runOnQueue(() -> ((JEditorPane) getSource()).setEditorKit(editorKit));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setEditorKit(editorKit));
     }
 
     public void setEditorKitForContentType(String string, EditorKit editorKit) {
         QueueTool.getInstance()
-                .runOnQueue(() -> ((JEditorPane) getSource()).setEditorKitForContentType(string, editorKit));
+                .runOnQueue(() -> getSource().setEditorKitForContentType(string, editorKit));
     }
 
     public void setPage(String string) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JEditorPane) getSource()).setPage(string);
+                getSource().setPage(string);
             } catch (IOException e) {
                 throw new JemmyException("Exception when setting page", e);
             }
@@ -271,7 +276,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
     public void setPage(URL uRL) {
         QueueTool.getInstance().runOnQueue(() -> {
             try {
-                ((JEditorPane) getSource()).setPage(uRL);
+                getSource().setPage(uRL);
             } catch (IOException e) {
                 throw new JemmyException("Exception when setting page", e);
             }

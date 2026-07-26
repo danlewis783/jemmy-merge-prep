@@ -66,6 +66,11 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
 public class JFileChooserOperator extends JComponentOperator {
+    @Override
+    public JFileChooser getSource() {
+        return (JFileChooser) super.getSource();
+    }
+
     private final ComponentSearcher innerSearcher;
 
     public static JFileChooserOperator waitFor() {
@@ -109,7 +114,7 @@ public class JFileChooserOperator extends JComponentOperator {
         String aText = getApproveButtonText();
         if (aText == null) {
             aText = QueueTool.getInstance()
-                    .callOnQueue(() -> getUI().getApproveButtonText((JFileChooser) getSource()));
+                    .callOnQueue(() -> getUI().getApproveButtonText(getSource()));
         }
 
         if (aText != null) {
@@ -371,224 +376,224 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public boolean accept(File file) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).accept(file));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().accept(file));
     }
 
     public void addActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).addActionListener(actionListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addActionListener(actionListener));
     }
 
     public void addChoosableFileFilter(FileFilter fileFilter) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).addChoosableFileFilter(fileFilter));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addChoosableFileFilter(fileFilter));
     }
 
     public void approveSelection() {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).approveSelection());
+        QueueTool.getInstance().runOnQueue(() -> getSource().approveSelection());
     }
 
     public void cancelSelection() {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).cancelSelection());
+        QueueTool.getInstance().runOnQueue(() -> getSource().cancelSelection());
     }
 
     public void changeToParentDirectory() {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).changeToParentDirectory());
+        QueueTool.getInstance().runOnQueue(() -> getSource().changeToParentDirectory());
     }
 
     public void ensureFileIsVisible(File file) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).ensureFileIsVisible(file));
+        QueueTool.getInstance().runOnQueue(() -> getSource().ensureFileIsVisible(file));
     }
 
     public FileFilter getAcceptAllFileFilter() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getAcceptAllFileFilter());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAcceptAllFileFilter());
     }
 
     public JComponent getAccessory() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getAccessory());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getAccessory());
     }
 
     public int getApproveButtonMnemonic() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getApproveButtonMnemonic());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getApproveButtonMnemonic());
     }
 
     public String getApproveButtonText() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getApproveButtonText());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getApproveButtonText());
     }
 
     public String getApproveButtonToolTipText() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getApproveButtonToolTipText());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getApproveButtonToolTipText());
     }
 
     public FileFilter[] getChoosableFileFilters() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getChoosableFileFilters());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getChoosableFileFilters());
     }
 
     public File getCurrentDirectory() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getCurrentDirectory());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getCurrentDirectory());
     }
 
     public String getDescription(File file) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getDescription(file));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDescription(file));
     }
 
     public String getDialogTitle() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getDialogTitle());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDialogTitle());
     }
 
     public int getDialogType() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getDialogType());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDialogType());
     }
 
     public FileFilter getFileFilter() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getFileFilter());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFileFilter());
     }
 
     public int getFileSelectionMode() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getFileSelectionMode());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFileSelectionMode());
     }
 
     public FileSystemView getFileSystemView() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getFileSystemView());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFileSystemView());
     }
 
     public FileView getFileView() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getFileView());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getFileView());
     }
 
     public Icon getIcon(File file) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getIcon(file));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getIcon(file));
     }
 
     public String getName(File file) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getName(file));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getName(file));
     }
 
     public @Nullable File getSelectedFile() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getSelectedFile());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedFile());
     }
 
     public File[] getSelectedFiles() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getSelectedFiles());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectedFiles());
     }
 
     public String getTypeDescription(File file) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getTypeDescription(file));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getTypeDescription(file));
     }
 
     public FileChooserUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public boolean isDirectorySelectionEnabled() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).isDirectorySelectionEnabled());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isDirectorySelectionEnabled());
     }
 
     public boolean isFileHidingEnabled() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).isFileHidingEnabled());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isFileHidingEnabled());
     }
 
     public boolean isFileSelectionEnabled() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).isFileSelectionEnabled());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isFileSelectionEnabled());
     }
 
     public boolean isMultiSelectionEnabled() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).isMultiSelectionEnabled());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isMultiSelectionEnabled());
     }
 
     public boolean isTraversable(File file) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).isTraversable(file));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isTraversable(file));
     }
 
     public void removeActionListener(ActionListener actionListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).removeActionListener(actionListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeActionListener(actionListener));
     }
 
     public boolean removeChoosableFileFilter(FileFilter fileFilter) {
         return QueueTool.getInstance()
-                .callOnQueue(() -> ((JFileChooser) getSource()).removeChoosableFileFilter(fileFilter));
+                .callOnQueue(() -> getSource().removeChoosableFileFilter(fileFilter));
     }
 
     public void rescanCurrentDirectory() {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).rescanCurrentDirectory());
+        QueueTool.getInstance().runOnQueue(() -> getSource().rescanCurrentDirectory());
     }
 
     public void resetChoosableFileFilters() {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).resetChoosableFileFilters());
+        QueueTool.getInstance().runOnQueue(() -> getSource().resetChoosableFileFilters());
     }
 
     public void setAccessory(JComponent jComponent) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setAccessory(jComponent));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setAccessory(jComponent));
     }
 
     public void setApproveButtonMnemonic(char c) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setApproveButtonMnemonic(c));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setApproveButtonMnemonic(c));
     }
 
     public void setApproveButtonMnemonic(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setApproveButtonMnemonic(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setApproveButtonMnemonic(i));
     }
 
     public void setApproveButtonText(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setApproveButtonText(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setApproveButtonText(string));
     }
 
     public void setApproveButtonToolTipText(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setApproveButtonToolTipText(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setApproveButtonToolTipText(string));
     }
 
     public void setCurrentDirectory(@Nullable File file) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setCurrentDirectory(file));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setCurrentDirectory(file));
     }
 
     public void setDialogTitle(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setDialogTitle(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDialogTitle(string));
     }
 
     public void setDialogType(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setDialogType(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDialogType(i));
     }
 
     public void setFileFilter(FileFilter fileFilter) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setFileFilter(fileFilter));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFileFilter(fileFilter));
     }
 
     public void setFileHidingEnabled(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setFileHidingEnabled(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFileHidingEnabled(b));
     }
 
     public void setFileSelectionMode(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setFileSelectionMode(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFileSelectionMode(i));
     }
 
     public void setFileSystemView(FileSystemView fileSystemView) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setFileSystemView(fileSystemView));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFileSystemView(fileSystemView));
     }
 
     public void setFileView(FileView fileView) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setFileView(fileView));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setFileView(fileView));
     }
 
     public void setMultiSelectionEnabled(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setMultiSelectionEnabled(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMultiSelectionEnabled(b));
     }
 
     public void setSelectedFile(@Nullable File file) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setSelectedFile(file));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectedFile(file));
     }
 
     public void setSelectedFiles(File[] file) {
-        QueueTool.getInstance().runOnQueue(() -> ((JFileChooser) getSource()).setSelectedFiles(file));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectedFiles(file));
     }
 
     public int showDialog(@Nullable Component component, String string) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).showDialog(component, string));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().showDialog(component, string));
     }
 
     public int showOpenDialog(@Nullable Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).showOpenDialog(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().showOpenDialog(component));
     }
 
     public int showSaveDialog(@Nullable Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JFileChooser) getSource()).showSaveDialog(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().showSaveDialog(component));
     }
 
     private void waitPainted(int index) {

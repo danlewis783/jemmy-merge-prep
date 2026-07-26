@@ -56,6 +56,11 @@ import org.netbeans.jemmy.util.EmptyVisualizer;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JComboBoxOperator extends JComponentOperator {
+    @Override
+    public JComboBox<?> getSource() {
+        return (JComboBox<?>) super.getSource();
+    }
+
     private @Nullable JButtonOperator button;
     private @Nullable JTextFieldOperator text;
 

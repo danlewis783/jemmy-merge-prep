@@ -38,6 +38,10 @@ import org.netbeans.jemmy.predicates.JLabelOperatorByLabelPredicate;
 import org.netbeans.jemmy.util.StringComparator;
 
 public class JLabelOperator extends JComponentOperator {
+    @Override
+    public JLabel getSource() {
+        return (JLabel) super.getSource();
+    }
 
     public static JLabelOperator waitFor(ContainerOperator rootOp) {
         return waitFor(rootOp, 0);
@@ -131,95 +135,95 @@ public class JLabelOperator extends JComponentOperator {
     }
 
     public @Nullable Icon getDisabledIcon() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getDisabledIcon());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDisabledIcon());
     }
 
     public int getDisplayedMnemonic() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getDisplayedMnemonic());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getDisplayedMnemonic());
     }
 
     public int getHorizontalAlignment() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getHorizontalAlignment());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHorizontalAlignment());
     }
 
     public int getHorizontalTextPosition() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getHorizontalTextPosition());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getHorizontalTextPosition());
     }
 
     public @Nullable Icon getIcon() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getIcon());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getIcon());
     }
 
     public int getIconTextGap() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getIconTextGap());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getIconTextGap());
     }
 
     public Component getLabelFor() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getLabelFor());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLabelFor());
     }
 
     public String getText() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getText());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getText());
     }
 
     public LabelUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public int getVerticalAlignment() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getVerticalAlignment());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getVerticalAlignment());
     }
 
     public int getVerticalTextPosition() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JLabel) getSource()).getVerticalTextPosition());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getVerticalTextPosition());
     }
 
     public void setDisabledIcon(@Nullable Icon icon) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setDisabledIcon(icon));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDisabledIcon(icon));
     }
 
     public void setDisplayedMnemonic(char c) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setDisplayedMnemonic(c));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDisplayedMnemonic(c));
     }
 
     public void setDisplayedMnemonic(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setDisplayedMnemonic(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setDisplayedMnemonic(i));
     }
 
     public void setHorizontalAlignment(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setHorizontalAlignment(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setHorizontalAlignment(i));
     }
 
     public void setHorizontalTextPosition(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setHorizontalTextPosition(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setHorizontalTextPosition(i));
     }
 
     public void setIcon(@Nullable Icon icon) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setIcon(icon));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setIcon(icon));
     }
 
     public void setIconTextGap(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setIconTextGap(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setIconTextGap(i));
     }
 
     public void setLabelFor(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setLabelFor(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLabelFor(component));
     }
 
     public void setText(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setText(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setText(string));
     }
 
     public void setUI(LabelUI labelUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setUI(labelUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(labelUI));
     }
 
     public void setVerticalAlignment(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setVerticalAlignment(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setVerticalAlignment(i));
     }
 
     public void setVerticalTextPosition(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JLabel) getSource()).setVerticalTextPosition(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setVerticalTextPosition(i));
     }
 
     public static @Nullable JLabel findJLabel(Container cont, Predicate<Component> chooser, int index) {

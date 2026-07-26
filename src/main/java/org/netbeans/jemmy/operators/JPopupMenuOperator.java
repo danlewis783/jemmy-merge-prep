@@ -60,6 +60,10 @@ import org.netbeans.jemmy.util.StringComparator;
 import org.netbeans.jemmy.util.StringComparators;
 
 public class JPopupMenuOperator extends JComponentOperator {
+    @Override
+    public JPopupMenu getSource() {
+        return (JPopupMenu) super.getSource();
+    }
 
     public static JPopupMenuOperator waitFor() {
         return new JPopupMenuOperator((JPopupMenu) waitComponent(
@@ -169,7 +173,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     public JMenuItemOperator[] showMenuItems(List<Predicate<Component>> predicates) {
         Objects.requireNonNull(predicates, "predicates");
         if (predicates.isEmpty()) {
-            return JMenuItemOperator.getMenuItems((MenuElement) getSource());
+            return JMenuItemOperator.getMenuItems(getSource());
         } else {
             JMenuItem menuItemNonNull = Objects.requireNonNull(pushMenu(predicates));
             return JMenuItemOperator.getMenuItems((JMenu) menuItemNonNull);
@@ -179,7 +183,7 @@ public class JPopupMenuOperator extends JComponentOperator {
     public JMenuItemOperator[] showMenuItems(String[] path, StringComparator comparator) {
         Objects.requireNonNull(path, "path");
         if (path.length == 0) {
-            return JMenuItemOperator.getMenuItems((MenuElement) getSource());
+            return JMenuItemOperator.getMenuItems(getSource());
         } else {
             JMenuItem menuItemNonNull = Objects.requireNonNull(pushMenu(path, comparator));
             return JMenuItemOperator.getMenuItems((JMenu) menuItemNonNull);
@@ -233,131 +237,131 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public JMenuItem add(String string) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).add(string));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(string));
     }
 
     public JMenuItem add(javax.swing.Action action) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).add(action));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(action));
     }
 
     public JMenuItem add(JMenuItem jMenuItem) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).add(jMenuItem));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().add(jMenuItem));
     }
 
     public void addPopupMenuListener(PopupMenuListener popupMenuListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).addPopupMenuListener(popupMenuListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addPopupMenuListener(popupMenuListener));
     }
 
     public void addSeparator() {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).addSeparator());
+        QueueTool.getInstance().runOnQueue(() -> getSource().addSeparator());
     }
 
     public int getComponentIndex(Component component) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getComponentIndex(component));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getComponentIndex(component));
     }
 
     public Component getInvoker() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getInvoker());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getInvoker());
     }
 
     public String getLabel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getLabel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLabel());
     }
 
     public Insets getMargin() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getMargin());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMargin());
     }
 
     public SingleSelectionModel getSelectionModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getSelectionModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSelectionModel());
     }
 
     public MenuElement[] getSubElements() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getSubElements());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSubElements());
     }
 
     public PopupMenuUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public void insert(Component component, int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).insert(component, i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().insert(component, i));
     }
 
     public void insert(javax.swing.Action action, int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).insert(action, i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().insert(action, i));
     }
 
     public boolean isBorderPainted() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).isBorderPainted());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isBorderPainted());
     }
 
     public boolean isLightWeightPopupEnabled() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JPopupMenu) getSource()).isLightWeightPopupEnabled());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().isLightWeightPopupEnabled());
     }
 
     public void menuSelectionChanged(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).menuSelectionChanged(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().menuSelectionChanged(b));
     }
 
     public void pack() {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).pack());
+        QueueTool.getInstance().runOnQueue(() -> getSource().pack());
     }
 
     public void processKeyEvent(
             KeyEvent keyEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource())
+        QueueTool.getInstance().runOnQueue(() -> getSource()
                 .processKeyEvent(keyEvent, menuElement, menuSelectionManager));
     }
 
     public void processMouseEvent(
             MouseEvent mouseEvent, MenuElement[] menuElement, MenuSelectionManager menuSelectionManager) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource())
+        QueueTool.getInstance().runOnQueue(() -> getSource()
                 .processMouseEvent(mouseEvent, menuElement, menuSelectionManager));
     }
 
     public void removePopupMenuListener(PopupMenuListener popupMenuListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).removePopupMenuListener(popupMenuListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removePopupMenuListener(popupMenuListener));
     }
 
     public void setBorderPainted(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setBorderPainted(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setBorderPainted(b));
     }
 
     public void setInvoker(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setInvoker(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setInvoker(component));
     }
 
     public void setLabel(String string) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setLabel(string));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLabel(string));
     }
 
     public void setLightWeightPopupEnabled(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setLightWeightPopupEnabled(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLightWeightPopupEnabled(b));
     }
 
     public void setPopupSize(int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setPopupSize(i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPopupSize(i, i1));
     }
 
     public void setPopupSize(Dimension dimension) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setPopupSize(dimension));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPopupSize(dimension));
     }
 
     public void setSelected(Component component) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setSelected(component));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelected(component));
     }
 
     public void setSelectionModel(SingleSelectionModel singleSelectionModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setSelectionModel(singleSelectionModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSelectionModel(singleSelectionModel));
     }
 
     public void setUI(PopupMenuUI popupMenuUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).setUI(popupMenuUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(popupMenuUI));
     }
 
     public void show(Component component, int i, int i1) {
-        QueueTool.getInstance().runOnQueue(() -> ((JPopupMenu) getSource()).show(component, i, i1));
+        QueueTool.getInstance().runOnQueue(() -> getSource().show(component, i, i1));
     }
 
     public static @Nullable JPopupMenu findJPopupMenu(Container cont, Predicate<Component> chooser, int index) {

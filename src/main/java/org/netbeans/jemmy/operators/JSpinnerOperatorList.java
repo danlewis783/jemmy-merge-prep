@@ -17,7 +17,6 @@
 package org.netbeans.jemmy.operators;
 
 import java.util.List;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
@@ -25,7 +24,7 @@ import org.netbeans.jemmy.util.StringComparator;
 
 public class JSpinnerOperatorList extends JSpinnerOperator {
     public JSpinnerOperatorList(JSpinnerOperator spinner) {
-        super((JSpinner) spinner.getSource());
+        super(spinner.getSource());
         if (!(getModel() instanceof SpinnerListModel)) {
             throw new IllegalArgumentException("JSpinner model is not a " + SpinnerListModel.class.getName());
         }

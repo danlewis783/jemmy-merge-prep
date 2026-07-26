@@ -43,6 +43,11 @@ import org.netbeans.jemmy.drivers.scrolling.ScrollAdjuster;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 
 public class JSliderOperator extends JComponentOperator {
+    @Override
+    public JSlider getSource() {
+        return (JSlider) super.getSource();
+    }
+
     @Deprecated
     public static final int CLICK_SCROLL_MODEL = 1;
 
@@ -146,147 +151,147 @@ public class JSliderOperator extends JComponentOperator {
     }
 
     public void addChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).addChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().addChangeListener(changeListener));
     }
 
     public Hashtable<?, ?> createStandardLabels(int i) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).createStandardLabels(i));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().createStandardLabels(i));
     }
 
     public Hashtable<?, ?> createStandardLabels(int i, int i1) {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).createStandardLabels(i, i1));
+        return QueueTool.getInstance().callOnQueue(() -> getSource().createStandardLabels(i, i1));
     }
 
     public int getExtent() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getExtent());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getExtent());
     }
 
     public boolean getInverted() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getInverted());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getInverted());
     }
 
     public Dictionary<?, ?> getLabelTable() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getLabelTable());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getLabelTable());
     }
 
     public int getMajorTickSpacing() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMajorTickSpacing());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMajorTickSpacing());
     }
 
     public int getMaximum() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMaximum());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMaximum());
     }
 
     public int getMinimum() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMinimum());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMinimum());
     }
 
     public int getMinorTickSpacing() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getMinorTickSpacing());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getMinorTickSpacing());
     }
 
     public BoundedRangeModel getModel() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getModel());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getModel());
     }
 
     public int getOrientation() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getOrientation());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getOrientation());
     }
 
     public boolean getPaintLabels() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getPaintLabels());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPaintLabels());
     }
 
     public boolean getPaintTicks() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getPaintTicks());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPaintTicks());
     }
 
     public boolean getPaintTrack() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getPaintTrack());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getPaintTrack());
     }
 
     public boolean getSnapToTicks() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getSnapToTicks());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getSnapToTicks());
     }
 
     public SliderUI getUI() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getUI());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getUI());
     }
 
     public int getValue() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getValue());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getValue());
     }
 
     public boolean getValueIsAdjusting() {
-        return QueueTool.getInstance().callOnQueue(() -> ((JSlider) getSource()).getValueIsAdjusting());
+        return QueueTool.getInstance().callOnQueue(() -> getSource().getValueIsAdjusting());
     }
 
     public void removeChangeListener(ChangeListener changeListener) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).removeChangeListener(changeListener));
+        QueueTool.getInstance().runOnQueue(() -> getSource().removeChangeListener(changeListener));
     }
 
     public void setExtent(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setExtent(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setExtent(i));
     }
 
     public void setInverted(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setInverted(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setInverted(b));
     }
 
     public void setLabelTable(Dictionary<?, ?> dictionary) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setLabelTable(dictionary));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setLabelTable(dictionary));
     }
 
     public void setMajorTickSpacing(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMajorTickSpacing(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMajorTickSpacing(i));
     }
 
     public void setMaximum(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMaximum(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMaximum(i));
     }
 
     public void setMinimum(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMinimum(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMinimum(i));
     }
 
     public void setMinorTickSpacing(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setMinorTickSpacing(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setMinorTickSpacing(i));
     }
 
     public void setModel(BoundedRangeModel boundedRangeModel) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setModel(boundedRangeModel));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setModel(boundedRangeModel));
     }
 
     public void setOrientation(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setOrientation(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setOrientation(i));
     }
 
     public void setPaintLabels(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setPaintLabels(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPaintLabels(b));
     }
 
     public void setPaintTicks(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setPaintTicks(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPaintTicks(b));
     }
 
     public void setPaintTrack(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setPaintTrack(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setPaintTrack(b));
     }
 
     public void setSnapToTicks(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setSnapToTicks(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setSnapToTicks(b));
     }
 
     public void setUI(SliderUI sliderUI) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setUI(sliderUI));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setUI(sliderUI));
     }
 
     public void setValue(int i) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setValue(i));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setValue(i));
     }
 
     public void setValueIsAdjusting(boolean b) {
-        QueueTool.getInstance().runOnQueue(() -> ((JSlider) getSource()).setValueIsAdjusting(b));
+        QueueTool.getInstance().runOnQueue(() -> getSource().setValueIsAdjusting(b));
     }
 
     public static @Nullable JSlider findJSlider(Container cont, Predicate<Component> chooser, int index) {
