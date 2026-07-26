@@ -297,7 +297,7 @@ public class ComponentOperator extends Operator {
      * the click-target center, which subclasses may place elsewhere.
      */
     public Point getCenter() {
-        return queueTool.callOnQueue(() -> new Point(getCenterX(), getCenterY()));
+        return QueueTool.getInstance().callOnQueue(() -> new Point(getCenterX(), getCenterY()));
     }
 
     /**
@@ -307,7 +307,7 @@ public class ComponentOperator extends Operator {
      * calls can.
      */
     public Point getClickCenter() {
-        return queueTool.callOnQueue(() -> new Point(getCenterXForClick(), getCenterYForClick()));
+        return QueueTool.getInstance().callOnQueue(() -> new Point(getCenterXForClick(), getCenterYForClick()));
     }
 
     public void clickForPopup() {

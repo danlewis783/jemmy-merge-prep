@@ -247,6 +247,7 @@ public class JListOperator extends JComponentOperator {
 
         // reads the model size, and - if needed - scrolls (a Swing mutation) to the item; both
         // must happen on the EDT, so this hop covers "validate index, then scroll if needed"
+        QueueTool queueTool = QueueTool.getInstance();
         boolean hasItem = queueTool.callOnQueue(() -> {
             if (getModel().getSize() <= itemIndex) {
                 return false;
@@ -339,7 +340,8 @@ public class JListOperator extends JComponentOperator {
 
     public void selectItem(String item, StringComparator stringComparator) {
         scrollToItem(findItemIndex(item, stringComparator));
-        queueTool.runOnQueue(() -> driver().selectItem(JListOperator.this, findItemIndex(item, stringComparator)));
+        QueueTool.getInstance().runOnQueue(
+                () -> driver().selectItem(JListOperator.this, findItemIndex(item, stringComparator)));
     }
 
     public void selectItems(int[] indices) {
@@ -599,7 +601,8 @@ public class JListOperator extends JComponentOperator {
     }
 
     private void checkIndex(int index) {
-        boolean outOfBounds = queueTool.callOnQueue(() -> (index < 0) || (index >= getModel().getSize()));
+        boolean outOfBounds = QueueTool.getInstance().callOnQueue(
+                () -> (index < 0) || (index >= getModel().getSize()));
         if (outOfBounds) {
             throw new NoSuchItemException(index);
         }

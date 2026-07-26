@@ -33,17 +33,15 @@ import org.netbeans.jemmy.operators.ComponentOperator;
 import org.netbeans.jemmy.operators.JTabbedPaneOperator;
 
 public final class JTabAPIDriver extends LightSupportiveDriver implements ListDriver {
-    private final QueueTool queueTool;
 
     public JTabAPIDriver() {
         super(Collections.singletonList(JTabbedPaneOperator.class));
-        queueTool = QueueTool.getInstance();
     }
 
     @Override
     public void selectItem(ComponentOperator op, int index) {
         if (index != -1) {
-            queueTool.runOnQueue(() -> ((JTabbedPaneOperator) op).setSelectedIndex(index));
+            QueueTool.getInstance().runOnQueue(() -> ((JTabbedPaneOperator) op).setSelectedIndex(index));
         }
     }
 }

@@ -64,7 +64,6 @@ public abstract class Operator {
     private final CharBindingMap charBindingMap;
     private final PathParser pathParser;
     private ComponentVisualizer visualizer;
-    final QueueTool queueTool;
 
     /**
      * @deprecated Construct operators via the {@code of}/{@code waitFor} factory methods on the
@@ -72,7 +71,6 @@ public abstract class Operator {
      */
     @Deprecated
     public Operator() {
-        queueTool = QueueTool.getInstance();
         this.charBindingMap = JemmyContext.getInstance().getCharBindingMap();
         this.visualizer = getDefaultComponentVisualizer();
         this.pathParser = getDefaultPathParser();
@@ -246,7 +244,7 @@ public abstract class Operator {
     }
 
     public String getSourceToString() {
-        String result = queueTool.callOnQueue(Callables.toStringOfOperatorSource(this));
+        String result = QueueTool.getInstance().callOnQueue(Callables.toStringOfOperatorSource(this));
         //noinspection UnnecessaryLocalVariable
         String nonNullResult = Objects.requireNonNull(result);
         return nonNullResult;
