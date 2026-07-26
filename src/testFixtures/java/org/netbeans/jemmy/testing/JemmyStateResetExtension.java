@@ -18,6 +18,9 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.AWTException;
 import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.concurrent.atomic.AtomicReference;
@@ -44,6 +47,8 @@ import org.slf4j.LoggerFactory;
  * <li>release a stray left mouse button, so a test that failed mid-drag cannot turn every later
  * click into a drag (right button and keyboard are left alone: a synthetic release without a
  * preceding press can pop platform menus)</li>
+ * <li>park the physical pointer away from test windows and wait for its mouse-exit event, so
+ * Swing's tooltip manager cannot retain the previous component as the hover target</li>
  * <li>dispose every window still showing, so stale windows cannot satisfy the next class's
  * lookups</li>
  * <li>restore the look and feel captured at suite start - before the driver reset, because the
@@ -109,6 +114,7 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
 
     private static void resetEverything() throws Exception {
         releaseStrayMouseButton();
+        parkPointerAwayFromTestWindows();
         TestWindows.disposeAll();
         restoreLookAndFeel();
         resetToolTipState();
@@ -125,6 +131,57 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
         }
 
         robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+    }
+
+    /**
+     * Generates a real mouse-exit before test windows are disposed. Disabling {@link
+     * ToolTipManager} hides a current popup, but the manager has no public API to clear its
+     * private hover component and timer state. Moving the OS pointer away while the old component
+     * still exists supplies the normal Swing event that clears that state.
+     */
+    private static synchronized void parkPointerAwayFromTestWindows() throws AWTException {
+        if (robot == null) {
+            robot = new Robot();
+        }
+
+        Rectangle screenBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        Point parkingPoint = pointerParkingPoint(screenBounds, TestWindows.baseLocation());
+        robot.mouseMove(parkingPoint.x, parkingPoint.y);
+        robot.waitForIdle();
+    }
+
+    /**
+     * Chooses the usable-screen corner furthest from the test-window base location. Test windows
+     * are placed at or cascaded from that base, so the opposite corner is a stable parking spot
+     * even when the test location is overridden.
+     */
+    static Point pointerParkingPoint(Rectangle screenBounds, Point testWindowBase) {
+        int maxX = screenBounds.x + Math.max(0, screenBounds.width - 1);
+        int maxY = screenBounds.y + Math.max(0, screenBounds.height - 1);
+        Point[] candidates = {
+            new Point(screenBounds.x, screenBounds.y),
+            new Point(screenBounds.x, maxY),
+            new Point(maxX, screenBounds.y),
+            new Point(maxX, maxY)
+        };
+
+        Point result = candidates[0];
+        long greatestDistanceSquared = distanceSquared(result, testWindowBase);
+        for (int i = 1; i < candidates.length; i++) {
+            long distanceSquared = distanceSquared(candidates[i], testWindowBase);
+            if (distanceSquared > greatestDistanceSquared) {
+                result = candidates[i];
+                greatestDistanceSquared = distanceSquared;
+            }
+        }
+
+        return result;
+    }
+
+    private static long distanceSquared(Point first, Point second) {
+        long deltaX = (long) first.x - second.x;
+        long deltaY = (long) first.y - second.y;
+        return deltaX * deltaX + deltaY * deltaY;
     }
 
     private static void restoreLookAndFeel() throws Exception {
