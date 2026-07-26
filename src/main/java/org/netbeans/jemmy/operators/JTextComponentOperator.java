@@ -220,9 +220,7 @@ public class JTextComponentOperator extends JComponentOperator {
         runTimeRestricted(
                 () -> driver().changeCaretPosition(JTextComponentOperator.this, position),
                 TimeoutKey.JTextComponentOperator_ChangeCaretPositionTimeout);
-        if (getVerification()) {
-            waitCaretPosition(position);
-        }
+        waitCaretPosition(position);
     }
 
     public void changeCaretPosition(String text, int index, boolean before) {
@@ -245,9 +243,7 @@ public class JTextComponentOperator extends JComponentOperator {
         runTimeRestricted(
                 () -> driver().typeText(JTextComponentOperator.this, text, caretPosition),
                 TimeoutKey.JTextComponentOperator_TypeTextTimeout);
-        if (getVerification()) {
-            waitText(text, -1);
-        }
+        waitText(text, -1);
     }
 
     public void typeText(String text) {

@@ -178,18 +178,14 @@ public class JInternalFrameOperator extends JComponentOperator {
         makeComponentVisible();
         frameDriver().iconify(this);
 
-        if (getVerification()) {
-            waitIcon(true);
-        }
+        waitIcon(true);
     }
 
     public void deiconify() {
         checkIconified(true);
         frameDriver().deiconify(this);
 
-        if (getVerification()) {
-            waitIcon(false);
-        }
+        waitIcon(false);
     }
 
     public void maximize() {
@@ -197,9 +193,7 @@ public class JInternalFrameOperator extends JComponentOperator {
         makeComponentVisible();
         frameDriver().maximize(this);
 
-        if (getVerification()) {
-            waitMaximum(true);
-        }
+        waitMaximum(true);
     }
 
     public void demaximize() {
@@ -207,45 +201,35 @@ public class JInternalFrameOperator extends JComponentOperator {
         makeComponentVisible();
         frameDriver().demaximize(this);
 
-        if (getVerification()) {
-            waitMaximum(false);
-        }
+        waitMaximum(false);
     }
 
     public void move(int x, int y) {
         checkIconified(false);
         windowDriver().move(this, x, y);
 
-        if (getVerification()) {
-            waitComponentLocation(new Point(x, y));
-        }
+        waitComponentLocation(new Point(x, y));
     }
 
     public void resize(int width, int height) {
         checkIconified(false);
         windowDriver().resize(this, width, height);
 
-        if (getVerification()) {
-            waitComponentSize(new Dimension(width, height));
-        }
+        waitComponentSize(new Dimension(width, height));
     }
 
     public void activate() {
         checkIconified(false);
         windowDriver().activate(this);
 
-        if (getVerification()) {
-            waitActivate(true);
-        }
+        waitActivate(true);
     }
 
     public void close() {
         checkIconified(false);
         windowDriver().close(this);
 
-        if (getVerification()) {
-            waitClosed();
-        }
+        waitClosed();
     }
 
     public void scrollToRectangle(int x, int y, int width, int height) {

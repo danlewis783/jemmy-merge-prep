@@ -166,9 +166,7 @@ public class AbstractButtonOperator extends JComponentOperator {
             push();
         }
 
-        if (getVerification()) {
-            waitSelected(selected);
-        }
+        waitSelected(selected);
     }
 
     public void changeSelectionNoBlock(boolean selected) {

@@ -146,18 +146,14 @@ public class WindowOperator extends ContainerOperator {
     public void requestCloseAndThenHide() {
         driver().requestCloseAndThenHide(this);
 
-        if (getVerification()) {
-            waitClosed();
-        }
+        waitClosed();
     }
 
     @Deprecated
     public void close() {
         driver().close(this);
 
-        if (getVerification()) {
-            waitClosed();
-        }
+        waitClosed();
     }
 
     public void move(int x, int y) {

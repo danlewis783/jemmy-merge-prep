@@ -344,9 +344,7 @@ public class JTreeOperator extends JComponentOperator {
         if (path != null) {
             driver().collapseItem(this, getRowForPath(path));
 
-            if (getVerification()) {
-                waitCollapsed(path);
-            }
+            waitCollapsed(path);
         } else {
             throw new NoSuchPathException();
         }
@@ -355,18 +353,12 @@ public class JTreeOperator extends JComponentOperator {
     public void doCollapseRow(int row) {
         driver().collapseItem(this, row);
 
-        if (getVerification()) {
-            waitCollapsed(row);
-        }
+        waitCollapsed(row);
     }
 
     public void selectPath(TreePath path) {
         if (path != null) {
-            if (getVerification()) {
-                BooleanSupplierRepeater.on(new SelectPathAndVerify(path)).runUntilTrue();
-            } else {
-                selectPathOnce(path);
-            }
+            BooleanSupplierRepeater.on(new SelectPathAndVerify(path)).runUntilTrue();
         } else {
             throw new NoSuchPathException();
         }
@@ -375,17 +367,11 @@ public class JTreeOperator extends JComponentOperator {
     public void selectRow(int row) {
         driver().selectItem(this, row);
 
-        if (getVerification()) {
-            waitSelected(row);
-        }
+        waitSelected(row);
     }
 
     public void selectPaths(TreePath[] paths) {
-        if (getVerification()) {
-            BooleanSupplierRepeater.on(new SelectPathsAndVerify(paths)).runUntilTrue();
-        } else {
-            selectPathsOnce(paths);
-        }
+        BooleanSupplierRepeater.on(new SelectPathsAndVerify(paths)).runUntilTrue();
     }
 
     private void selectPathOnce(TreePath path) {

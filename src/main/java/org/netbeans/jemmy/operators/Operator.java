@@ -56,16 +56,13 @@ public abstract class Operator {
     // stateless, so one shared instance is safe; per-operator overrides go through setVisualizer
     private static final ComponentVisualizer DEFAULT_COMPONENT_VISUALIZER = new DefaultVisualizer();
     private static volatile @Nullable PathParser defaultPathParser;
-    private static volatile boolean defaultVerification;
 
     static {
         setDefaultPathParser(new DefaultPathParser("|"));
-        setDefaultVerification(true);
     }
 
     private final CharBindingMap charBindingMap;
     private final PathParser pathParser;
-    private boolean verification;
     private ComponentVisualizer visualizer;
     final QueueTool queueTool;
 
@@ -78,7 +75,6 @@ public abstract class Operator {
         queueTool = QueueTool.getInstance();
         this.charBindingMap = JemmyContext.getInstance().getCharBindingMap();
         this.visualizer = getDefaultComponentVisualizer();
-        this.verification = getDefaultVerification();
         this.pathParser = getDefaultPathParser();
     }
 
@@ -90,14 +86,6 @@ public abstract class Operator {
 
     public CharBindingMap getCharBindingMap() {
         return charBindingMap;
-    }
-
-    public boolean getVerification() {
-        return verification;
-    }
-
-    public void setVerification(boolean verification) {
-        this.verification = verification;
     }
 
     public String[] getParentPath(String[] path) {
@@ -280,16 +268,6 @@ public abstract class Operator {
 
     private static PathParser getDefaultPathParser() {
         return Objects.requireNonNull(defaultPathParser, "default path parser not set");
-    }
-
-    private static boolean setDefaultVerification(boolean verification) {
-        boolean previous = defaultVerification;
-        defaultVerification = verification;
-        return previous;
-    }
-
-    private static boolean getDefaultVerification() {
-        return defaultVerification;
     }
 
     public static boolean isCaptionEqual(String caption, String match, StringComparator comparator) {

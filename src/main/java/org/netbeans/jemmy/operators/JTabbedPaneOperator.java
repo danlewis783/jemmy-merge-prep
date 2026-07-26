@@ -178,9 +178,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
         makeComponentVisible();
         driver().selectItem(this, index);
 
-        if (getVerification()) {
-            waitSelected(index);
-        }
+        waitSelected(index);
 
         return getComponentAt(index);
     }

@@ -229,9 +229,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
         driver().selectItem(this, waitItem(index));
 
-        if (getVerification()) {
-            waitItemSelected(index);
-        }
+        waitItemSelected(index);
     }
 
     public void typeText(String text) {

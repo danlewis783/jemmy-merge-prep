@@ -143,33 +143,25 @@ public class FrameOperator extends WindowOperator {
     public void iconify() {
         driver().iconify(this);
 
-        if (getVerification()) {
-            waitState(Frame.ICONIFIED);
-        }
+        waitState(Frame.ICONIFIED);
     }
 
     public void deiconify() {
         driver().deiconify(this);
 
-        if (getVerification()) {
-            waitState(Frame.NORMAL);
-        }
+        waitState(Frame.NORMAL);
     }
 
     public void maximize() {
         driver().maximize(this);
 
-        if (getVerification()) {
-            waitExtendedState(Frame.MAXIMIZED_BOTH);
-        }
+        waitExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
     public void demaximize() {
         driver().demaximize(this);
 
-        if (getVerification()) {
-            waitExtendedState(Frame.NORMAL);
-        }
+        waitExtendedState(Frame.NORMAL);
     }
 
     public void waitState(int state) {

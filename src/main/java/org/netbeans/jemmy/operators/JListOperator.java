@@ -334,9 +334,7 @@ public class JListOperator extends JComponentOperator {
         checkIndex(index);
         driver().selectItem(this, index);
 
-        if (getVerification()) {
-            waitItemSelection(index, true);
-        }
+        waitItemSelection(index, true);
     }
 
     public void selectItem(String item, StringComparator stringComparator) {
@@ -348,9 +346,7 @@ public class JListOperator extends JComponentOperator {
         checkIndices(indices);
         driver().selectItems(this, indices);
 
-        if (getVerification()) {
-            waitItemsSelection(indices, true);
-        }
+        waitItemsSelection(indices, true);
     }
 
     public void selectItem(String[] items, StringComparator stringComparator) {
