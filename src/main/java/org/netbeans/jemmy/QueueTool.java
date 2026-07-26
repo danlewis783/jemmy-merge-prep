@@ -148,6 +148,17 @@ public final class QueueTool {
             throw new Error("Cannot dispatch and await from the event dispatcher thread");
         }
 
+        if (!ActionRunner.registerPendingCaller(caller)) {
+            throw new JemmyException("Action cancelled before its queue work could be posted");
+        }
+        try {
+            dispatchAndAwaitRegistered(caller);
+        } finally {
+            ActionRunner.unregisterPendingCaller(caller);
+        }
+    }
+
+    private void dispatchAndAwaitRegistered(Caller<?> caller) {
         long preInvocationTimeout = Timeouts.get(TimeoutKey.QueueTool_PreInvocationTimeout);
         long invocationTimeout = Timeouts.get(TimeoutKey.QueueTool_InvocationTimeout);
         InvocationEvent event = new InvocationEvent(Toolkit.getDefaultToolkit(), caller, null, true);

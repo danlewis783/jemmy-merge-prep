@@ -17,6 +17,8 @@
 package org.netbeans.jemmy;
 
 import java.awt.EventQueue;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -40,6 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 final class ActionRunner<R> {
     private static final Logger logger = LoggerFactory.getLogger(ActionRunner.class);
+    private static final ThreadLocal<ActionScope> CURRENT_ACTION_SCOPE = new ThreadLocal<>();
     private static final ExecutorService JEMMY_ACTION_SERVICE = Executors.newSingleThreadExecutor(new ThreadFactory() {
         final AtomicLong count = new AtomicLong(0);
 
@@ -67,7 +70,15 @@ final class ActionRunner<R> {
         if (EventQueue.isDispatchThread()) {
             throw new RuntimeException("no waiting allowed on EDT");
         }
-        Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(work);
+        ActionScope actionScope = new ActionScope();
+        Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(() -> {
+            CURRENT_ACTION_SCOPE.set(actionScope);
+            try {
+                return work.call();
+            } finally {
+                CURRENT_ACTION_SCOPE.remove();
+            }
+        });
         long timeout = Timeouts.get(timeoutKey);
         long startTime = System.currentTimeMillis();
         try {
@@ -91,9 +102,11 @@ final class ActionRunner<R> {
                             WaitDiagnostics.capture()),
                     e);
         } finally {
-            // cancel on timeout or caller interrupt; an abandoned action would otherwise
-            // occupy the single worker thread and starve every later submission
+            // Future.cancel(true) only requests an interrupt; it does not wait for the
+            // worker to observe it. Cancel pending EDT callers first so none can start
+            // after this method has already reported that the action was abandoned.
             if (!laFutura.isDone()) {
+                actionScope.cancelPendingCallers();
                 if (!laFutura.cancel(true)) {
                     logger.warn("abandoned action could not be cancelled");
                 }
@@ -113,5 +126,47 @@ final class ActionRunner<R> {
                 logger.warn("exception in no-blocking action", e);
             }
         });
+    }
+
+    static boolean registerPendingCaller(Caller<?> caller) {
+        ActionScope actionScope = CURRENT_ACTION_SCOPE.get();
+        return actionScope == null || actionScope.register(caller);
+    }
+
+    static void unregisterPendingCaller(Caller<?> caller) {
+        ActionScope actionScope = CURRENT_ACTION_SCOPE.get();
+        if (actionScope != null) {
+            actionScope.unregister(caller);
+        }
+    }
+
+    /**
+     * Tracks EDT work posted by one timed action. Synchronization makes cancellation and
+     * registration atomic with respect to each other, so a timeout cannot miss a caller that is
+     * about to be queued.
+     */
+    private static final class ActionScope {
+        private final Set<Caller<?>> pendingCallers = new HashSet<>();
+        private boolean cancelled;
+
+        synchronized boolean register(Caller<?> caller) {
+            if (cancelled) {
+                caller.cancel();
+                return false;
+            }
+            pendingCallers.add(caller);
+            return true;
+        }
+
+        synchronized void unregister(Caller<?> caller) {
+            pendingCallers.remove(caller);
+        }
+
+        synchronized void cancelPendingCallers() {
+            cancelled = true;
+            for (Caller<?> caller : pendingCallers) {
+                caller.cancel();
+            }
+        }
     }
 }
