@@ -30,7 +30,6 @@ import java.util.Objects;
 import org.netbeans.jemmy.drivers.DriverInstaller;
 import org.netbeans.jemmy.drivers.DriverMarker;
 import org.netbeans.jemmy.drivers.DriverType;
-import org.netbeans.jemmy.util.CheckThreadViolationRepaintManager;
 import org.netbeans.jemmy.util.WindowManager;
 
 /**
@@ -136,8 +135,7 @@ public final class JemmyContext {
 
     /**
      * Restores every kind of process-wide Jemmy state to its just-started condition: window jobs
-     * stopped ({@link WindowManager#removeAllJobs}), any thread-violation repaint manager
-     * uninstalled ({@link CheckThreadViolationRepaintManager#uninstall}), the dispatching model,
+     * stopped ({@link WindowManager#removeAllJobs}), the dispatching model,
      * drivers, and queue installation back to defaults ({@link #resetToDefaults}), timeout
      * overrides cleared ({@link Timeouts#resetToDefaults}), and the AWT event listeners
      * re-registered with their last-event memory forgotten ({@link EventTool#reset}). Intended for
@@ -147,7 +145,6 @@ public final class JemmyContext {
     public static void resetAllState() {
         // background window-job threads first, so nothing races the resets below
         WindowManager.removeAllJobs();
-        CheckThreadViolationRepaintManager.uninstall();
         getInstance().resetToDefaults();
         Timeouts.resetToDefaults();
         EventTool.getInstance().reset();
