@@ -1,11 +1,20 @@
 # Jemmy Swing UI test automation library
 
-## A note on naming
+Jemmy is a Java library for automating and testing Swing and AWT user
+interfaces. It finds components, wraps them in operators, drives keyboard and
+mouse interaction, and waits for observable UI state.
 
-You may notice a `Future<R>` here and there named `laFutura` instead of the
-usual `future`. This is definitely not a reference to the 2012 ZZ Top album
-of the same name — it's purely a coincidence that a variable representing
-work still pending, not yet resolved, somewhere out there being awaited, was
-given a name that happens to translate to "the future." Any resemblance to a
-bearded Texas blues-rock trio's tenth studio album is, we assure you, entirely
-asynchronous.
+This repository began as a fork of NetBeans Jemmy 2.2.7.5, downloaded
+around 2007 from revision 19 of the former java.net Subversion repository
+at `https://jemmy.dev.java.net/svn/jemmy/trunk/Jemmy2`.
+
+It has since diverged substantially.
+
+The current OpenJDK continuation,
+[openjdk/jemmy-v2](https://github.com/openjdk/jemmy-v2), was compared with
+this fork and their shared Jemmy 2.2.7.5 ancestor to identify and port
+upstream fixes and improvements missing here. The OpenJDK reference point
+for that comparison was commit
+[`6208363`](https://github.com/openjdk/jemmy-v2/commit/620836372c637f5eb36b1a5333df92eb698ed191).
+That reconciliation and subsequent development took place during the summer
+of 2026 with AI assistance.

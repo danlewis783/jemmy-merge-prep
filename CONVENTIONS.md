@@ -110,3 +110,8 @@ on a laptop running 1.5–3.5× slower — each failing at exactly its cap, none
 actually broken. This is also distinct from the removed `jemmy.timeouts.scale`
 multiplier: that silently stretched *waits* and distorted behavior; sizing the hang
 guard changes nothing about what the test does.)
+
+## `laFutura`
+
+Use `laFutura` for `Future<R>` values. It means “the future” and is, entirely
+coincidentally, also the title of ZZ Top's 2012 album.
