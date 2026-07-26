@@ -22,9 +22,11 @@ import java.awt.EventQueue;
 import java.awt.KeyboardFocusManager;
 import java.awt.TextComponent;
 import java.awt.Window;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.accessibility.AccessibleContext;
+import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.text.JTextComponent;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -156,6 +158,15 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
                 .append(comp.isEnabled() ? " enabled" : " !enabled");
         if (comp.hasFocus()) {
             line.append(" FOCUSED");
+        }
+        if (comp instanceof JTree) {
+            JTree tree = (JTree) comp;
+            line.append(" selection=")
+                    .append(Arrays.toString(tree.getSelectionPaths()))
+                    .append(" lead=")
+                    .append(tree.getLeadSelectionPath())
+                    .append(" anchor=")
+                    .append(tree.getAnchorSelectionPath());
         }
 
         AccessibleContext accessibleContext = comp.getAccessibleContext();

@@ -31,6 +31,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -46,6 +47,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
@@ -356,12 +358,10 @@ public class JTreeOperator extends JComponentOperator {
 
     public void selectPath(TreePath path) {
         if (path != null) {
-            scrollToPath(path);
-            // the driver click must run off-EDT (robot input + sleep); getRowForPath hops itself
-            driver().selectItem(this, getRowForPath(path));
-
             if (getVerification()) {
-                waitSelected(path);
+                BooleanSupplierRepeater.on(new SelectPathAndVerify(path)).runUntilTrue();
+            } else {
+                selectPathOnce(path);
             }
         } else {
             throw new NoSuchPathException();
@@ -377,6 +377,22 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void selectPaths(TreePath[] paths) {
+        if (getVerification()) {
+            BooleanSupplierRepeater.on(new SelectPathsAndVerify(paths)).runUntilTrue();
+        } else {
+            selectPathsOnce(paths);
+        }
+    }
+
+    private void selectPathOnce(TreePath path) {
+        scrollToPath(path);
+        // The driver click must run off-EDT (robot input + sleep). A changing model can
+        // invalidate this path-to-row snapshot before the click is processed, so verified
+        // selection retries this complete action rather than only polling the stale result.
+        driver().selectItem(this, getRowForPath(path));
+    }
+
+    private void selectPathsOnce(TreePath[] paths) {
         int[] rows = QueueTool.getInstance().callOnQueue(() -> {
             int[] result = new int[paths.length];
             for (int i = 0; i < paths.length; i++) {
@@ -387,10 +403,11 @@ public class JTreeOperator extends JComponentOperator {
         });
 
         driver().selectItems(this, rows);
+    }
 
-        if (getVerification()) {
-            waitSelected(paths);
-        }
+    private boolean selectedPathsEqual(TreePath[] expected) {
+        return QueueTool.getInstance()
+                .callOnQueue(() -> Arrays.equals(((JTree) getSource()).getSelectionPaths(), expected));
     }
 
     public Point getPointToClick(TreePath path) {
@@ -1206,23 +1223,51 @@ public class JTreeOperator extends JComponentOperator {
 
         @Override
         public boolean test(JTreeOperator jTreeOperator) {
-            TreePath[] rpaths = jTreeOperator.getSelectionModel().getSelectionPaths();
-            if (rpaths != null) {
-                for (int i = 0; i < rpaths.length; i++) {
-                    if (!rpaths[i].equals(paths[i])) {
-                        return false;
-                    }
-                }
-
-                return true;
-            } else {
-                return false;
-            }
+            return Arrays.equals(jTreeOperator.getSelectionModel().getSelectionPaths(), paths);
         }
 
         @Override
         public String toString() {
             return "JTreeOperatorBySelectedPathsPredicate{paths=" + Arrays.toString(paths) + "}";
+        }
+    }
+
+    private final class SelectPathAndVerify implements BooleanSupplier {
+        private final TreePath path;
+
+        private SelectPathAndVerify(TreePath path) {
+            this.path = path;
+        }
+
+        @Override
+        public boolean getAsBoolean() {
+            selectPathOnce(path);
+            return selectedPathsEqual(new TreePath[] {path});
+        }
+
+        @Override
+        public String toString() {
+            return "select path " + path + "; actual selection=" + Arrays.toString(getSelectionPaths());
+        }
+    }
+
+    private final class SelectPathsAndVerify implements BooleanSupplier {
+        private final TreePath[] paths;
+
+        private SelectPathsAndVerify(TreePath[] paths) {
+            this.paths = paths.clone();
+        }
+
+        @Override
+        public boolean getAsBoolean() {
+            selectPathsOnce(paths);
+            return selectedPathsEqual(paths);
+        }
+
+        @Override
+        public String toString() {
+            return "select paths " + Arrays.toString(paths)
+                    + "; actual selection=" + Arrays.toString(getSelectionPaths());
         }
     }
 
