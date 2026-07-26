@@ -36,46 +36,58 @@ class ComponentStreamerTest {
     void streamVisitsDescendantsInPreOrder() {
         Container root = buildPreOrderTree();
 
-        assertThat(ComponentStreamer.stream(root).map(Component::getName))
-                .containsExactly("a", "a1", "a2", "a2x", "b", "c", "c1");
+        List<String> names = onQueue(() -> ComponentStreamer.stream(root)
+                .map(Component::getName)
+                .collect(Collectors.toList()));
+
+        assertThat(names).containsExactly("a", "a1", "a2", "a2x", "b", "c", "c1");
     }
 
     @Test
     void streamExcludesTheRootItself() {
         Container root = buildPreOrderTree();
 
-        assertThat(ComponentStreamer.stream(root).map(Component::getName)).doesNotContain("root");
+        List<String> names = onQueue(() -> ComponentStreamer.stream(root)
+                .map(Component::getName)
+                .collect(Collectors.toList()));
+
+        assertThat(names).doesNotContain("root");
     }
 
     @Test
     void streamOfEmptyContainerIsEmpty() {
         Container empty = onQueue(() -> namedPanel("empty"));
 
-        assertThat(ComponentStreamer.stream(empty)).isEmpty();
+        boolean emptyStream = onQueue(() -> !ComponentStreamer.stream(empty).findAny().isPresent());
+
+        assertThat(emptyStream).isTrue();
     }
 
     @Test
     void streamOfTypeYieldsOnlyMatchingTypeInPreOrderAndIsTyped() {
         Container root = buildMixedTypeTree();
 
-        List<JButton> buttons = ComponentStreamer.streamOfType(root, JButton.class).collect(Collectors.toList());
+        List<String> buttonTexts = onQueue(() -> ComponentStreamer.streamOfType(root, JButton.class)
+                .map(JButton::getText)
+                .collect(Collectors.toList()));
 
-        // buttons is a List<JButton>: getText() below needs no cast, proving the stream is typed
-        assertThat(buttons).extracting(JButton::getText).containsExactly("one", "two", "three");
+        // getText() needs no cast above, proving the stream is typed
+        assertThat(buttonTexts).containsExactly("one", "two", "three");
     }
 
     @Test
     void findFirstStopsBeforeDescendingIntoALaterSiblingSubtree() {
         LazinessFixture fixture = buildLazinessFixture();
-        // Swing internals may have called getComponents() during setup; only what happens
-        // during the traversal under test matters
-        fixture.laterPanel.resetCounter();
-
-        Optional<Component> found =
-                ComponentStreamer.stream(fixture.root).filter(c -> "first".equals(c.getName())).findFirst();
+        Optional<Component> found = onQueue(() -> {
+            // Swing internals may have called getComponents() during setup; only what happens
+            // during the traversal under test matters
+            fixture.laterPanel.resetCounter();
+            return ComponentStreamer.stream(fixture.root).filter(c -> "first".equals(c.getName())).findFirst();
+        });
+        int getComponentsCallCount = onQueue(fixture.laterPanel::getComponentsCallCount);
 
         assertThat(found).contains(fixture.first);
-        assertThat(fixture.laterPanel.getComponentsCallCount())
+        assertThat(getComponentsCallCount)
                 .as("check that the later sibling subtree was never descended into")
                 .isZero();
     }
@@ -83,12 +95,14 @@ class ComponentStreamerTest {
     @Test
     void fullTraversalDoesDescendIntoTheLaterSiblingSubtree() {
         LazinessFixture fixture = buildLazinessFixture();
-        fixture.laterPanel.resetCounter();
-
-        long count = ComponentStreamer.stream(fixture.root).count();
+        long count = onQueue(() -> {
+            fixture.laterPanel.resetCounter();
+            return ComponentStreamer.stream(fixture.root).count();
+        });
+        int getComponentsCallCount = onQueue(fixture.laterPanel::getComponentsCallCount);
 
         assertThat(count).isEqualTo(3);
-        assertThat(fixture.laterPanel.getComponentsCallCount())
+        assertThat(getComponentsCallCount)
                 .as("check that a full traversal does descend into the later sibling subtree")
                 .isPositive();
     }
