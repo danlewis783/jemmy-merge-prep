@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -110,11 +111,11 @@ class ContainerOperatorTest {
     @Test
     void testAdd() {
         FrameOperator operator = FrameOperator.waitFor();
-        operator.add(new Panel());
-        operator.add("South", new Panel());
-        operator.add(new Panel(), null);
-        operator.add(new Panel(), 0);
-        operator.add(new Panel(), null, 0);
+        operator.add(newPanelOnQueue());
+        operator.add("South", newPanelOnQueue());
+        operator.add(newPanelOnQueue(), null);
+        operator.add(newPanelOnQueue(), 0);
+        operator.add(newPanelOnQueue(), null, 0);
     }
 
     @Test
@@ -186,8 +187,12 @@ class ContainerOperatorTest {
     void testRemove() {
         FrameOperator operator = FrameOperator.waitFor();
         operator.remove(panel);
-        operator.add(new Panel());
+        operator.add(newPanelOnQueue());
         operator.remove(0);
+    }
+
+    private static Panel newPanelOnQueue() {
+        return onQueue(Panel::new);
     }
 
     @Test

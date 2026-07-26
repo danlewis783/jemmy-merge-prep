@@ -36,16 +36,20 @@ class TrimmingTooltipPredicateTest {
             return label;
         });
 
-        assertThat(new TrimmingTooltipPredicate("Save the file", StringComparators.strict()))
-                .accepts(component);
+        TrimmingTooltipPredicate predicate =
+                new TrimmingTooltipPredicate("Save the file", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
 
     @Test
     void rejectsComponentWithoutTooltip() {
         Component component = onQueue(JLabel::new);
 
-        assertThat(new TrimmingTooltipPredicate("Save the file", StringComparators.strict()))
-                .rejects(component);
+        TrimmingTooltipPredicate predicate =
+                new TrimmingTooltipPredicate("Save the file", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }
 
     /** getToolTipText() is JComponent-only, so AWT components can never match. */
@@ -53,8 +57,10 @@ class TrimmingTooltipPredicateTest {
     void rejectsNonJComponent() {
         Component component = onQueue(Panel::new);
 
-        assertThat(new TrimmingTooltipPredicate("Save the file", StringComparators.strict()))
-                .rejects(component);
+        TrimmingTooltipPredicate predicate =
+                new TrimmingTooltipPredicate("Save the file", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }
 
     @SuppressWarnings("deprecation")
@@ -66,8 +72,10 @@ class TrimmingTooltipPredicateTest {
             return label;
         });
 
-        assertThat(new TrimmingTooltipPredicate("Save the file", StringComparators.strict(), 0))
-                .accepts(component);
+        TrimmingTooltipPredicate predicate =
+                new TrimmingTooltipPredicate("Save the file", StringComparators.strict(), 0);
+
+        assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
 
     /**

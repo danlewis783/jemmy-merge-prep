@@ -677,7 +677,7 @@ class JTableOperatorTest {
     void testPrepareRenderer() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
-        operator1.prepareRenderer(new DefaultTableCellRenderer(), 0, 0);
+        operator1.prepareRenderer(onQueue(DefaultTableCellRenderer::new), 0, 0);
     }
 
     @Test

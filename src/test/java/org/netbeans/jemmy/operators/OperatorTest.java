@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JLabel;
@@ -27,7 +28,7 @@ class OperatorTest {
 
     @Test
     void waitStateOnQueueEvaluatesPredicateOnEventDispatchThread() {
-        ComponentOperator operator = ComponentOperator.of(new JLabel());
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
         AtomicBoolean ranOnQueue = new AtomicBoolean();
         operator.waitStateOnQueue(op -> {
             ranOnQueue.set(SwingUtilities.isEventDispatchThread());
@@ -41,7 +42,7 @@ class OperatorTest {
 
     @Test
     void waitStateEvaluatesPredicateOnEventDispatchThread() {
-        ComponentOperator operator = ComponentOperator.of(new JLabel());
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
         AtomicBoolean ranOnQueue = new AtomicBoolean();
         operator.waitState(op -> {
             ranOnQueue.set(SwingUtilities.isEventDispatchThread());

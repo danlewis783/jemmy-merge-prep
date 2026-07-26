@@ -19,6 +19,7 @@ package org.netbeans.jemmy.drivers.scrolling;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Adjustable;
 import java.awt.Point;
@@ -39,7 +40,7 @@ class AbstractScrollDriverTest {
     @Test
     void scrollFailsWhenPositionStopsChanging() {
         StubScrollDriver driver = new StubScrollDriver(() -> 5);
-        ComponentOperator op = ComponentOperator.of(new JLabel());
+        ComponentOperator op = ComponentOperator.of(onQueue(JLabel::new));
         try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.AbstractScrollDriver_FreezeTimeout, 200L)) {
             assertThatExceptionOfType(JemmyException.class)
                     .isThrownBy(() -> driver.scroll(op, alwaysIncrease()))
@@ -55,7 +56,7 @@ class AbstractScrollDriverTest {
     void scrollCompletesWhilePositionKeepsChanging() {
         AtomicInteger position = new AtomicInteger();
         StubScrollDriver driver = new StubScrollDriver(position::incrementAndGet);
-        ComponentOperator op = ComponentOperator.of(new JLabel());
+        ComponentOperator op = ComponentOperator.of(onQueue(JLabel::new));
         ScrollAdjuster untilTen = new ScrollAdjuster() {
             @Override
             public int getScrollDirection() {

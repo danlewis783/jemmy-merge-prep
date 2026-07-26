@@ -25,6 +25,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -359,7 +360,7 @@ class ComponentOperatorTest {
     void testAdd() {
         FrameOperator operator = FrameOperator.waitFor();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
-        operator1.add(new PopupMenu());
+        operator1.add(onQueue(PopupMenu::new));
     }
 
     @Test
@@ -828,7 +829,7 @@ class ComponentOperatorTest {
     void testRemove() {
         FrameOperator operator = FrameOperator.waitFor();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);
-        PopupMenu popupMenu = new PopupMenu();
+        PopupMenu popupMenu = onQueue(PopupMenu::new);
         operator1.add(popupMenu);
         operator1.remove(popupMenu);
     }

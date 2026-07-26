@@ -452,7 +452,7 @@ class JInternalFrameOperatorTest {
     void testGetLayeredPane() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JInternalFrameOperator operator2 = JInternalFrameOperator.waitFor(operator);
-        JLayeredPane layeredPane = new JLayeredPane();
+        JLayeredPane layeredPane = onQueue(JLayeredPane::new);
         operator2.setLayeredPane(layeredPane);
         assertThat(operator2.getLayeredPane()).isEqualTo(layeredPane);
     }

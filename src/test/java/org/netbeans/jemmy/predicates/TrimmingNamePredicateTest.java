@@ -35,8 +35,10 @@ class TrimmingNamePredicateTest {
             return label;
         });
 
-        assertThat(new TrimmingNamePredicate("target", StringComparators.strict()))
-                .accepts(component);
+        TrimmingNamePredicate predicate =
+                new TrimmingNamePredicate("target", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
 
     /** getName() is java.awt.Component API; plain AWT components must be matchable too. */
@@ -48,16 +50,20 @@ class TrimmingNamePredicateTest {
             return panel;
         });
 
-        assertThat(new TrimmingNamePredicate("target", StringComparators.strict()))
-                .accepts(component);
+        TrimmingNamePredicate predicate =
+                new TrimmingNamePredicate("target", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
 
     @Test
     void rejectsComponentWithoutName() {
         Component component = onQueue(JLabel::new);
 
-        assertThat(new TrimmingNamePredicate("target", StringComparators.strict()))
-                .rejects(component);
+        TrimmingNamePredicate predicate =
+                new TrimmingNamePredicate("target", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }
 
     @Test
@@ -68,7 +74,9 @@ class TrimmingNamePredicateTest {
             return label;
         });
 
-        assertThat(new TrimmingNamePredicate("target", StringComparators.strict()))
-                .rejects(component);
+        TrimmingNamePredicate predicate =
+                new TrimmingNamePredicate("target", StringComparators.strict());
+
+        assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }
 }

@@ -179,7 +179,7 @@ class JDialogOperatorTest {
     @Test
     void getLayeredPane() {
         JDialogOperator operator = JDialogOperator.waitFor("JDialogOperatorTest");
-        operator.setLayeredPane(new JLayeredPane());
+        operator.setLayeredPane(onQueue(JLayeredPane::new));
         assertThat(onQueue(dialog::getLayeredPane)).isNotNull();
         assertThat(operator.getLayeredPane()).isNotNull();
     }

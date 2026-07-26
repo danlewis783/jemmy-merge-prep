@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -249,7 +250,7 @@ class JScrollPaneOperatorTest {
         showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
-        operator1.setCorner(JScrollPane.LOWER_LEFT_CORNER, new JPanel());
+        operator1.setCorner(JScrollPane.LOWER_LEFT_CORNER, onQueue(JPanel::new));
         assertThat(operator1.getCorner(JScrollPane.LOWER_LEFT_CORNER)).isNotNull();
     }
 
@@ -258,7 +259,7 @@ class JScrollPaneOperatorTest {
         showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
-        operator1.setHorizontalScrollBar(new JScrollBar());
+        operator1.setHorizontalScrollBar(onQueue(JScrollBar::new));
         operator1.getHorizontalScrollBar();
     }
 
@@ -295,7 +296,7 @@ class JScrollPaneOperatorTest {
         showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
-        operator1.setVerticalScrollBar(new JScrollBar());
+        operator1.setVerticalScrollBar(onQueue(JScrollBar::new));
         operator1.getVerticalScrollBar();
     }
 

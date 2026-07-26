@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -241,7 +242,7 @@ class JListOperatorTest {
     void testGetCellRenderer() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        operator1.setCellRenderer(new DefaultListCellRenderer());
+        operator1.setCellRenderer(onQueue(DefaultListCellRenderer::new));
         operator1.getCellRenderer();
     }
 

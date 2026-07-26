@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -117,7 +118,7 @@ class JToolTipOperatorTest {
         // and the constructors below would find it instead of timing out
         EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(false));
         try {
-            JLabelOperator dummyLabel = JLabelOperator.of(new JLabel());
+            JLabelOperator dummyLabel = JLabelOperator.of(onQueue(JLabel::new));
             try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> JToolTipOperator.waitFor(dummyLabel));
