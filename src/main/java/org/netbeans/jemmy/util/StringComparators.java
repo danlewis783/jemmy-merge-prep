@@ -78,8 +78,19 @@ public final class StringComparators {
     private static class CaseInsensitiveSubstringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
-            return expected == null
-                    || observed != null && observed.toUpperCase().contains(expected.toUpperCase());
+            if (expected == null) {
+                return true;
+            }
+            if (observed == null) {
+                return false;
+            }
+            int lastStart = observed.length() - expected.length();
+            for (int start = 0; start <= lastStart; start++) {
+                if (observed.regionMatches(true, start, expected, 0, expected.length())) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
