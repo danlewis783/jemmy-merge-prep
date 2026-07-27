@@ -92,7 +92,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
 
     public static JTextAreaOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTextAreaOperator(
-                (JTextArea) rootOp.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
+                (JTextArea) waitComponent(rootOp, PredicatesJ.of(JTextArea.class, chooser), index));
     }
 
     /**
@@ -100,7 +100,7 @@ public class JTextAreaOperator extends JTextComponentOperator {
      */
     @Deprecated
     public JTextAreaOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTextArea) rootOp.waitSubComponent(PredicatesJ.of(JTextArea.class, chooser), index));
+        this((JTextArea) waitComponent(rootOp, PredicatesJ.of(JTextArea.class, chooser), index));
     }
 
     public static JTextAreaOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {

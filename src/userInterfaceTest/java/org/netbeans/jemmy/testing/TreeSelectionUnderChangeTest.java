@@ -93,7 +93,7 @@ class TreeSelectionUnderChangeTest {
 
         @Override
         public @Nullable TreePath apply(String node) {
-            return tree.findPath(node, "|", StringComparators.strict());
+            return tree.waitPath(node, "|", StringComparators.strict());
         }
     }
 

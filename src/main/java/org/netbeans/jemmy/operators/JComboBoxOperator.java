@@ -131,7 +131,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public static JComboBoxOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JComboBoxOperator(
-                (JComboBox<?>) rootOp.waitSubComponent(PredicatesJ.of(JComboBox.class, chooser), index));
+                (JComboBox<?>) waitComponent(rootOp, PredicatesJ.of(JComboBox.class, chooser), index));
     }
 
     /**
@@ -139,7 +139,7 @@ public class JComboBoxOperator extends JComponentOperator {
      */
     @Deprecated
     public JComboBoxOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JComboBox<?>) rootOp.waitSubComponent(PredicatesJ.of(JComboBox.class, chooser), index));
+        this((JComboBox<?>) waitComponent(rootOp, PredicatesJ.of(JComboBox.class, chooser), index));
     }
 
     public static JComboBoxOperator waitFor(
@@ -161,17 +161,25 @@ public class JComboBoxOperator extends JComponentOperator {
         return (JComboBox<Object>) getSource();
     }
 
-    public JButton findJButton() {
+    public @Nullable JButton findJButton() {
+        return (JButton) findSubComponent(PredicatesJ.of(JButton.class));
+    }
+
+    public JButton waitJButton() {
         return (JButton) waitSubComponent(PredicatesJ.of(JButton.class));
     }
 
-    public JTextField findJTextField() {
+    public @Nullable JTextField findJTextField() {
+        return (JTextField) findSubComponent(PredicatesJ.of(JTextField.class));
+    }
+
+    public JTextField waitJTextField() {
         return (JTextField) waitSubComponent(PredicatesJ.of(JTextField.class));
     }
 
     public JButtonOperator getButton() {
         if (button == null) {
-            button = JButtonOperator.of(findJButton());
+            button = JButtonOperator.of(waitJButton());
         }
 
         return button;
@@ -179,7 +187,7 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public @Nullable JTextFieldOperator getTextField() {
         if (isEditable()) {
-            text = JTextFieldOperator.of(findJTextField());
+            text = JTextFieldOperator.of(waitJTextField());
         }
 
         return text;
@@ -208,26 +216,42 @@ public class JComboBoxOperator extends JComponentOperator {
         });
     }
 
-    public int waitItem(String item, StringComparator comparator) {
-        waitState(new JComboBoxOperatorByItemPredicate(item, comparator));
+    public int waitItemIndex(String item, StringComparator comparator) {
+        waitState((Predicate<JComboBoxOperator>) operator -> operator.findItemIndex(item, comparator) >= 0);
 
         return findItemIndex(item, comparator);
     }
 
-    public int waitItem(int itemIndex) {
+    public int waitItemIndex(int itemIndex) {
         waitState(new JComboBoxOperatorByItemIndexPredicate(itemIndex));
 
         return itemIndex;
     }
 
+    /**
+     * @deprecated Use {@link #waitItemIndex(String, StringComparator)}.
+     */
+    @Deprecated
+    public int waitItem(String item, StringComparator comparator) {
+        return waitItemIndex(item, comparator);
+    }
+
+    /**
+     * @deprecated Use {@link #waitItemIndex(int)}.
+     */
+    @Deprecated
+    public int waitItem(int itemIndex) {
+        return waitItemIndex(itemIndex);
+    }
+
     public void selectItem(String item, StringComparator comparator) {
-        selectItem(waitItem(item, comparator));
+        selectItem(waitItemIndex(item, comparator));
     }
 
     public void selectItem(int index) {
         waitComponentEnabled();
 
-        driver().selectItem(this, waitItem(index));
+        driver().selectItem(this, waitItemIndex(index));
 
         waitItemSelected(index);
     }
@@ -299,6 +323,11 @@ public class JComboBoxOperator extends JComponentOperator {
 
     public int getItemCount() {
         return QueueTool.getInstance().callOnQueue(() -> getJComboBox().getItemCount());
+    }
+
+    public void waitItemCount(int itemCount) {
+        waitState((Predicate<JComboBoxOperator>)
+                operator -> operator.getJComboBox().getModel().getSize() == itemCount);
     }
 
     public KeySelectionManager getKeySelectionManager() {

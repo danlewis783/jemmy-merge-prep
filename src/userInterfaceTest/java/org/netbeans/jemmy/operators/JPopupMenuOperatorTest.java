@@ -115,6 +115,19 @@ final class JPopupMenuOperatorTest {
         popupMenuOp.show(jFrame, 0, 0);
     }
 
+    @Test
+    void waitForLocatorOverloads() {
+        JPopupMenuOperator popupMenuOp = JPopupMenuOperator.waitFor();
+        Container popupParent = onQueue(() -> jPopupMenu.getParent());
+
+        assertThat(JPopupMenuOperator.waitFor(ContainerOperator.of(popupParent), 0).getSource())
+                .isSameAs(jPopupMenu);
+        assertThat(JPopupMenuOperator.waitFor(component -> component == jPopupMenu).getSource())
+                .isSameAs(jPopupMenu);
+        assertThat(JPopupMenuOperator.waitFor("123").getSource()).isSameAs(jPopupMenu);
+        assertThat(popupMenuOp.getSource()).isSameAs(jPopupMenu);
+    }
+
 
     @Test
     @Timeout(value=15, unit=TimeUnit.SECONDS)

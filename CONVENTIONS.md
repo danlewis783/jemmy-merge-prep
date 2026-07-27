@@ -51,17 +51,56 @@ All main-source Swing/AWT state access runs on the event dispatch thread. See th
 `ComponentSearcher`, `Operator.waitState`, and `WindowFunction.getWindow` funnels — fix
 threading at a chokepoint rather than at call sites.
 
-### Pure reads vs. waiting reads
+### Lookup and waiting vocabulary
 
 A predicate evaluated by `waitState` runs **on the EDT**, where waiting is forbidden and
-fails fast. So a read used by a wait predicate must not itself wait. Where both flavors are
-needed, the naming rule is:
+fails fast. A read used by a wait predicate must therefore be pure and non-blocking.
 
-- **`somethingNow()`** — private, pure, non-blocking read. Safe inside an EDT predicate.
-- **`getSomething()` / `findSomething()`** — the public waiting variant, test thread only.
+Public operator APIs use these contracts:
 
-`JFileChooserOperator` is the reference example: `fileCountNow()`, `filesNow()`,
-`fileIndexNow()` alongside `getFileCount()`, `getFiles()`, `findFileIndex()`.
+- **`of(component)`** — wraps a component the caller already has. It never searches or waits.
+- **`findSomething(...)`** — performs one EDT snapshot, never mutates the UI, and reports
+  absence with `null` or the type's documented sentinel.
+- **`SomethingOperator.waitFor(context, ...)`** — repeatedly searches within a typed context
+  and returns an operator, or throws `TimeoutExpiredException`.
+- **`waitSomething(...)`** — waits on an operator that is already bound. A property/state wait
+  normally returns `void`; a subordinate-discovery wait returns the value discovered. Pair a
+  returning wait with a one-shot `findSomething` method and use the same result representation.
+- **`somethingNow()`** — private pure read used to implement a public waiting operation. It is
+  safe inside an EDT-dispatched wait predicate.
+
+An action such as `select...`, `push...`, or `scroll...` may wait for its preconditions or
+postconditions, but getter and finder names must not conceal that wait. Legacy static
+`waitJX(Container, ...)` methods return raw components; new code should prefer the typed
+`XOperator.waitFor(...)` factories.
+
+`JFileChooserOperator` demonstrates the private-read half of the rule:
+`fileCountNow()`, `filesNow()`, and `fileIndexNow()` are pure reads used by public waits.
+
+### Waiting categories
+
+Use the narrowest waiting primitive that expresses the synchronization point:
+
+- **Acquisition** — wait for a matching object to exist, then return it. Operator factories use
+  `waitFor`; subordinate-object methods use names such as `waitPath` or `waitDivider`.
+- **Level/state** — wait until a predicate is true. Use `waitState`, normally through a
+  property-specific `void wait...` method.
+- **Edge/change** — wait until a predicate differs from its initial value. Use
+  `waitStateChange`; this does not complete merely because the initial state is true.
+- **Stability/quiescence** — require a predicate to remain true for an uninterrupted interval.
+  Use `waitStateStable`; a false observation restarts the interval.
+- **Cardinality** — wait for an exact number of matching children or model entries. Prefer
+  `wait...Count`, backed by a one-snapshot `count...` read.
+- **Absence** — wait for cardinality zero. Prefer an explicit `wait...Absent` method so callers
+  do not have to encode absence as an inverted acquisition predicate.
+
+All throwing waits use a `TimeoutKey`. Generic operator/container primitives expose a
+timeout-key overload; property-specific conveniences may select the established key for that
+property. A scoped `Timeouts.override(...)` changes that key when a caller needs a different
+budget.
+
+Use `findAncestorX` for upward parent-chain searches. Legacy `findXUnder` methods are deprecated
+because “under” normally describes a descendant search.
 
 ### One snapshot per decision
 

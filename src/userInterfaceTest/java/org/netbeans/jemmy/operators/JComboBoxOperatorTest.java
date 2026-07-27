@@ -27,8 +27,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.junit.jupiter.api.AfterEach;
@@ -103,14 +106,36 @@ class JComboBoxOperatorTest {
     void testFindJButton() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JComboBoxOperator operator1 = JComboBoxOperator.waitFor(operator);
-        operator1.findJButton();
+        assertThat(operator1.findJButton()).isNotNull();
+    }
+
+    @Test
+    void findJButtonLooksOnceAndWaitJButtonRetries() throws InterruptedException, InvocationTargetException {
+        JComboBoxOperator operator = JComboBoxOperator.of(comboBox);
+        EventQueue.invokeAndWait(comboBox::removeAll);
+
+        assertThat(operator.findJButton()).isNull();
+
+        EventQueue.invokeLater(() -> comboBox.add(new JButton()));
+        assertThat(operator.waitJButton()).isNotNull();
     }
 
     @Test
     void testFindJTextField() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JComboBoxOperator operator1 = JComboBoxOperator.waitFor(operator);
-        operator1.findJTextField();
+        assertThat(operator1.findJTextField()).isNotNull();
+    }
+
+    @Test
+    void findJTextFieldLooksOnceAndWaitJTextFieldRetries() throws InterruptedException, InvocationTargetException {
+        JComboBoxOperator operator = JComboBoxOperator.of(comboBox);
+        EventQueue.invokeAndWait(comboBox::removeAll);
+
+        assertThat(operator.findJTextField()).isNull();
+
+        EventQueue.invokeLater(() -> comboBox.add(new JTextField()));
+        assertThat(operator.waitJTextField()).isNotNull();
     }
 
     @Test
@@ -145,6 +170,21 @@ class JComboBoxOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JComboBoxOperator operator1 = JComboBoxOperator.waitFor(operator);
         operator1.findItemIndex("JComboBoxOperatorTest", StringComparators.alwaysEqual());
+    }
+
+    @Test
+    void waitsForItemIndexAndItemCount() {
+        JComboBoxOperator operator = JComboBoxOperator.of(comboBox);
+        EventQueue.invokeLater(() -> {
+            Timer timer = new Timer(100, event -> comboBox.addItem("later"));
+            timer.setRepeats(false);
+            timer.start();
+        });
+
+        assertThat(operator.waitItemIndex("later", StringComparators.strict())).isEqualTo(1);
+        assertThat(operator.waitItemIndex(1)).isEqualTo(1);
+        operator.waitItemCount(2);
+        assertThat(operator.getItemCount()).isEqualTo(2);
     }
 
     @Test

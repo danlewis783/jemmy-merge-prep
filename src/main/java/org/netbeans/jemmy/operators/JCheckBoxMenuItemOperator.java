@@ -25,8 +25,10 @@
 package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.util.function.Predicate;
 import javax.swing.JCheckBoxMenuItem;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.predicates.JCheckBoxMenuItemByLabelPredicate;
@@ -102,7 +104,7 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
 
     public static JCheckBoxMenuItemOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JCheckBoxMenuItemOperator((JCheckBoxMenuItem)
-                rootOp.waitSubComponent(PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
+                waitComponent(rootOp, PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
     }
 
     /**
@@ -111,7 +113,7 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
     @Deprecated
     public JCheckBoxMenuItemOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         this((JCheckBoxMenuItem)
-                rootOp.waitSubComponent(PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
+                waitComponent(rootOp, PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index));
     }
 
     public static JCheckBoxMenuItemOperator waitFor(
@@ -128,6 +130,50 @@ public class JCheckBoxMenuItemOperator extends JMenuItemOperator {
             ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
         this((JCheckBoxMenuItem)
                 waitComponent(rootOp, new JCheckBoxMenuItemByLabelPredicate(text, stringComparator), index));
+    }
+
+    public static @Nullable JCheckBoxMenuItem findJCheckBoxMenuItem(
+            Container cont, Predicate<Component> chooser, int index) {
+        return (JCheckBoxMenuItem)
+                findComponent(cont, PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index);
+    }
+
+    public static @Nullable JCheckBoxMenuItem findJCheckBoxMenuItem(
+            Container cont, Predicate<Component> chooser) {
+        return findJCheckBoxMenuItem(cont, chooser, 0);
+    }
+
+    public static @Nullable JCheckBoxMenuItem findJCheckBoxMenuItem(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return findJCheckBoxMenuItem(
+                cont, new JCheckBoxMenuItemByLabelPredicate(text, stringComparator), index);
+    }
+
+    public static @Nullable JCheckBoxMenuItem findJCheckBoxMenuItem(
+            Container cont, String text, StringComparator stringComparator) {
+        return findJCheckBoxMenuItem(cont, text, stringComparator, 0);
+    }
+
+    public static JCheckBoxMenuItem waitJCheckBoxMenuItem(
+            Container cont, Predicate<Component> chooser, int index) {
+        return (JCheckBoxMenuItem)
+                waitComponent(cont, PredicatesJ.of(JCheckBoxMenuItem.class, chooser), index);
+    }
+
+    public static JCheckBoxMenuItem waitJCheckBoxMenuItem(
+            Container cont, Predicate<Component> chooser) {
+        return waitJCheckBoxMenuItem(cont, chooser, 0);
+    }
+
+    public static JCheckBoxMenuItem waitJCheckBoxMenuItem(
+            Container cont, String text, StringComparator stringComparator, int index) {
+        return waitJCheckBoxMenuItem(
+                cont, new JCheckBoxMenuItemByLabelPredicate(text, stringComparator), index);
+    }
+
+    public static JCheckBoxMenuItem waitJCheckBoxMenuItem(
+            Container cont, String text, StringComparator stringComparator) {
+        return waitJCheckBoxMenuItem(cont, text, stringComparator, 0);
     }
 
     public boolean getState() {

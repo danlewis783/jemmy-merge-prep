@@ -103,7 +103,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
 
     public static JRadioButtonOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JRadioButtonOperator(
-                (JRadioButton) rootOp.waitSubComponent(PredicatesJ.of(JRadioButton.class, chooser), index));
+                (JRadioButton) waitComponent(rootOp, PredicatesJ.of(JRadioButton.class, chooser), index));
     }
 
     /**
@@ -111,7 +111,7 @@ public class JRadioButtonOperator extends JToggleButtonOperator {
      */
     @Deprecated
     public JRadioButtonOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JRadioButton) rootOp.waitSubComponent(PredicatesJ.of(JRadioButton.class, chooser), index));
+        this((JRadioButton) waitComponent(rootOp, PredicatesJ.of(JRadioButton.class, chooser), index));
     }
 
     public static JRadioButtonOperator waitFor(

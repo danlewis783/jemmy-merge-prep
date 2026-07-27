@@ -62,4 +62,11 @@ public final class ComponentSearcher {
     public @Nullable Component findComponent(Predicate<Component> predicate) {
         return findComponent(predicate, 0);
     }
+
+    public int countComponents(Predicate<Component> predicate) {
+        return QueueTool.getInstance()
+                .callOnQueue(() -> Math.toIntExact(ComponentStreamer.stream(container)
+                        .filter(predicate)
+                        .count()));
+    }
 }

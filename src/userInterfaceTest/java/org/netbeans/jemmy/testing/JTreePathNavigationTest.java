@@ -136,7 +136,7 @@ class JTreePathNavigationTest {
         JTree jTree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
         assertThat(jTree).isNotNull();
         JTreeOperator to = JTreeOperator.of(jTree);
-        TreePath pth = to.findPath("node00", "|", StringComparators.strict());
+        TreePath pth = to.waitPath("node00", "|", StringComparators.strict());
         assertThat(pth).isNotNull();
         assertThat(to.getChildCount(pth)).isEqualTo(2);
         assertThat(to.getChildCount(pth.getLastPathComponent())).isEqualTo(2);
@@ -161,11 +161,11 @@ class JTreePathNavigationTest {
                 .changeSelection(true);
 
         for (int i = 0; i < strPaths.length; i++) {
-            TreePath path = to.findPath(strPaths[i], "|", StringComparators.strict());
+            TreePath path = to.waitPath(strPaths[i], "|", StringComparators.strict());
             assertThat(path).isNotNull();
             paths[i] = path;
             to.callPopupOnPath(path);
-            pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
+            pmo = JPopupMenuOperator.waitFor("XXX");
 
             if (i == 0) {
                 assertMirrorsSource(pmo);
@@ -191,10 +191,10 @@ class JTreePathNavigationTest {
             FunctionRepeater.on(checker).runUntilNotNull(pths);
         }
 
-        pth = to.findPath(new String[] {"node", "node"}, new int[] {1, 1}, StringComparators.substring());
+        pth = to.waitPath(new String[] {"node", "node"}, new int[] {1, 1}, StringComparators.substring());
         assertThat(pth).isNotNull();
         to.callPopupOnPath(pth);
-        pmo = JPopupMenuOperator.waitJPopupMenu("XXX");
+        pmo = JPopupMenuOperator.waitFor("XXX");
         pmo.pushMenu("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict());
         FunctionRepeater.on(checker).runUntilNotNull(new TreePath[] {pth});
         JCheckBoxOperator.waitFor(JFrameOperator.of(frm), "Huge Popup", StringComparators.substring())

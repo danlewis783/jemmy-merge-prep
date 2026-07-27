@@ -104,7 +104,7 @@ public class JSplitPaneOperator extends JComponentOperator {
 
     public static JSplitPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JSplitPaneOperator(
-                (JSplitPane) rootOp.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
+                (JSplitPane) waitComponent(rootOp, PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
     /**
@@ -112,16 +112,20 @@ public class JSplitPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JSplitPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JSplitPane) rootOp.waitSubComponent(PredicatesJ.of(JSplitPane.class, chooser), index));
+        this((JSplitPane) waitComponent(rootOp, PredicatesJ.of(JSplitPane.class, chooser), index));
     }
 
-    public BasicSplitPaneDivider findDivider() {
+    public @Nullable BasicSplitPaneDivider findDivider() {
+        return (BasicSplitPaneDivider) findSubComponent(PredicatesJ.of(BasicSplitPaneDivider.class));
+    }
+
+    public BasicSplitPaneDivider waitDivider() {
         return (BasicSplitPaneDivider) waitSubComponent(PredicatesJ.of(BasicSplitPaneDivider.class));
     }
 
     public ContainerOperator getDivider() {
         if (divider == null) {
-            divider = ContainerOperator.of(findDivider());
+            divider = ContainerOperator.of(waitDivider());
         }
 
         return divider;
@@ -294,12 +298,31 @@ public class JSplitPaneOperator extends JComponentOperator {
         return findJSplitPane(cont, 0);
     }
 
-    public static @Nullable JSplitPane findJSplitPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (JSplitPane) findContainerUnder(comp, PredicatesJ.of(JSplitPane.class, chooser));
+    public static @Nullable JSplitPane findAncestorJSplitPane(
+            Component comp, Predicate<Component> chooser) {
+        return (JSplitPane)
+                findAncestorContainer(comp, PredicatesJ.of(JSplitPane.class, chooser));
     }
 
+    public static @Nullable JSplitPane findAncestorJSplitPane(Component comp) {
+        return findAncestorJSplitPane(comp, PredicatesJ.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJSplitPane(Component, Predicate)}.
+     */
+    @Deprecated
+    public static @Nullable JSplitPane findJSplitPaneUnder(
+            Component comp, Predicate<Component> chooser) {
+        return findAncestorJSplitPane(comp, chooser);
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJSplitPane(Component)}.
+     */
+    @Deprecated
     public static @Nullable JSplitPane findJSplitPaneUnder(Component comp) {
-        return findJSplitPaneUnder(comp, PredicatesJ.of(JSplitPane.class));
+        return findAncestorJSplitPane(comp);
     }
 
     public static JSplitPane waitJSplitPane(Container cont, Predicate<Component> chooser, int index) {

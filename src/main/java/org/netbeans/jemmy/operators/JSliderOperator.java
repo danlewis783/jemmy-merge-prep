@@ -110,7 +110,7 @@ public class JSliderOperator extends JComponentOperator {
 
     public static JSliderOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JSliderOperator(
-                (JSlider) rootOp.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
+                (JSlider) waitComponent(rootOp, PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     /**
@@ -118,7 +118,7 @@ public class JSliderOperator extends JComponentOperator {
      */
     @Deprecated
     public JSliderOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JSlider) rootOp.waitSubComponent(PredicatesJ.of(JSlider.class, chooser), index));
+        this((JSlider) waitComponent(rootOp, PredicatesJ.of(JSlider.class, chooser), index));
     }
 
     @Deprecated

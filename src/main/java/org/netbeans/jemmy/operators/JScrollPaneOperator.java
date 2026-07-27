@@ -105,7 +105,7 @@ public class JScrollPaneOperator extends JComponentOperator {
 
     public static JScrollPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JScrollPaneOperator(
-                (JScrollPane) rootOp.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
+                (JScrollPane) waitComponent(rootOp, PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     /**
@@ -113,7 +113,7 @@ public class JScrollPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JScrollPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JScrollPane) rootOp.waitSubComponent(PredicatesJ.of(JScrollPane.class, chooser), index));
+        this((JScrollPane) waitComponent(rootOp, PredicatesJ.of(JScrollPane.class, chooser), index));
     }
 
     public void setValues(int hValue, int vValue) {
@@ -430,12 +430,31 @@ public class JScrollPaneOperator extends JComponentOperator {
         return findJScrollPane(cont, 0);
     }
 
-    public static @Nullable JScrollPane findJScrollPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (JScrollPane) findContainerUnder(comp, PredicatesJ.of(JScrollPane.class, chooser));
+    public static @Nullable JScrollPane findAncestorJScrollPane(
+            Component comp, Predicate<Component> chooser) {
+        return (JScrollPane)
+                findAncestorContainer(comp, PredicatesJ.of(JScrollPane.class, chooser));
     }
 
+    public static @Nullable JScrollPane findAncestorJScrollPane(Component comp) {
+        return findAncestorJScrollPane(comp, PredicatesJ.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJScrollPane(Component, Predicate)}.
+     */
+    @Deprecated
+    public static @Nullable JScrollPane findJScrollPaneUnder(
+            Component comp, Predicate<Component> chooser) {
+        return findAncestorJScrollPane(comp, chooser);
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJScrollPane(Component)}.
+     */
+    @Deprecated
     public static @Nullable JScrollPane findJScrollPaneUnder(Component comp) {
-        return findJScrollPaneUnder(comp, PredicatesJ.of(JScrollPane.class));
+        return findAncestorJScrollPane(comp);
     }
 
     public static JScrollPane waitJScrollPane(Container cont, Predicate<Component> chooser, int index) {

@@ -105,17 +105,17 @@ class JTreeExpandCollapseTest {
         TreeChecker checker = new TreeChecker(jTreeOp, jTree);
         jTreeOp.selectRow(0);
         jTreeOp.waitSelected(0);
-        TreePath firstPath = jTreeOp.findPath("node00", "|", StringComparators.strict());
+        TreePath firstPath = jTreeOp.waitPath("node00", "|", StringComparators.strict());
         assertThat(firstPath).isNotNull();
         jTreeOp.doExpandPath(firstPath);
         FunctionRepeater.on(checker).runUntilNotNull("first expanded");
-        TreePath secondPath = jTreeOp.findPath("node00", "1", "|", StringComparators.strict());
+        TreePath secondPath = jTreeOp.waitPath("node00", "1", "|", StringComparators.strict());
         assertThat(secondPath).isNotNull();
         jTreeOp.doExpandPath(secondPath);
         FunctionRepeater.on(checker).runUntilNotNull("second expanded");
-        jTreeOp.collapsePath(jTreeOp.findPath("node00", "|", StringComparators.strict()));
+        jTreeOp.collapsePath(jTreeOp.waitPath("node00", "|", StringComparators.strict()));
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
-        jTreeOp.collapsePath(jTreeOp.findPath("node00", "1", "|", StringComparators.strict()));
+        jTreeOp.collapsePath(jTreeOp.waitPath("node00", "1", "|", StringComparators.strict()));
         FunctionRepeater.on(checker).runUntilNotNull("second collapsed");
         jTreeOp.doExpandRow(1);
         FunctionRepeater.on(checker).runUntilNotNull("first expanded");
@@ -125,7 +125,7 @@ class JTreeExpandCollapseTest {
         FunctionRepeater.on(checker).runUntilNotNull("first collapsed");
         jTreeOp.collapseRow(2);
         FunctionRepeater.on(checker).runUntilNotNull("second collapsed");
-        TreePath pathy = jTreeOp.findPath("node00", "1", "|", StringComparators.strict());
+        TreePath pathy = jTreeOp.waitPath("node00", "1", "|", StringComparators.strict());
         assertThat(pathy).isNotNull();
         jTreeOp.selectPath(pathy);
         jTreeOp.selectPath(pathy);
@@ -149,9 +149,9 @@ class JTreeExpandCollapseTest {
             TreePath path;
             try {
                 if (obj.startsWith("first")) {
-                    path = JTreeOperator.of(jTree).findPath("node00", "0", "|", StringComparators.strict());
+                    path = JTreeOperator.of(jTree).waitPath("node00", "0", "|", StringComparators.strict());
                 } else {
-                    path = JTreeOperator.of(jTree).findPath("node00", "1", "|", StringComparators.strict());
+                    path = JTreeOperator.of(jTree).waitPath("node00", "1", "|", StringComparators.strict());
                 }
             } catch (TimeoutExpiredException e) {
                 return null;

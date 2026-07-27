@@ -181,7 +181,7 @@ class DialogComboListWorkflowTest {
         JTextFieldOperator.waitJTextField(jDialog, "", StringComparators.strict());
         jComboOp1.typeText("editable_old");
         JTextFieldOperator.waitJTextField(jDialog, "editable_old", StringComparators.strict());
-        JTextFieldOperator jTextFieldOp = JTextFieldOperator.of(jComboOp1.findJTextField());
+        JTextFieldOperator jTextFieldOp = JTextFieldOperator.of(jComboOp1.waitJTextField());
         jTextFieldOp.selectText("old");
         jTextFieldOp.typeText("new");
         JTextFieldOperator.waitJTextField(jDialog, "editable_new", StringComparators.strict());

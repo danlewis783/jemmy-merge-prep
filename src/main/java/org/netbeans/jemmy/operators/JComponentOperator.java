@@ -110,7 +110,7 @@ public class JComponentOperator extends ContainerOperator {
 
     public static JComponentOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JComponentOperator(
-                (JComponent) rootOp.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
+                (JComponent) waitComponent(rootOp, PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     /**
@@ -118,7 +118,7 @@ public class JComponentOperator extends ContainerOperator {
      */
     @Deprecated
     public JComponentOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JComponent) rootOp.waitSubComponent(PredicatesJ.of(JComponent.class, chooser), index));
+        this((JComponent) waitComponent(rootOp, PredicatesJ.of(JComponent.class, chooser), index));
     }
 
     @Override

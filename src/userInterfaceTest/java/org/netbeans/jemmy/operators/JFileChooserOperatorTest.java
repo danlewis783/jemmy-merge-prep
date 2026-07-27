@@ -113,7 +113,63 @@ final class JFileChooserOperatorTest {
 
     @Test
     void testConstructJFileChooserOperator() {
-        JFileChooserOperator.waitFor();
+        assertThat(JFileChooserOperator.waitFor().getSource()).isSameAs(fileChooser);
+    }
+
+    @Test
+    void testWaitForRootLocatorOverloads() {
+        JFrameOperator frameOp = JFrameOperator.of(frame);
+
+        assertThat(JFileChooserOperator.waitFor(frameOp).getSource()).isSameAs(fileChooser);
+        assertThat(JFileChooserOperator.waitFor(frameOp, 0).getSource()).isSameAs(fileChooser);
+        assertThat(JFileChooserOperator.waitFor(frameOp, component -> component == fileChooser)
+                        .getSource())
+                .isSameAs(fileChooser);
+        assertThat(JFileChooserOperator.waitFor(
+                                frameOp, component -> component == fileChooser, 0)
+                        .getSource())
+                .isSameAs(fileChooser);
+    }
+
+    @Test
+    void testFrameSpecificLocators() {
+        assertThat(JFileChooserOperator.findJFileChooserFrame()).isSameAs(frame);
+        assertThat(JFileChooserOperator.waitJFileChooserFrame()).isSameAs(frame);
+        assertThat(JFileChooserOperator.findJFileChooserInFrame()).isSameAs(fileChooser);
+        assertThat(JFileChooserOperator.waitJFileChooserInFrame()).isSameAs(fileChooser);
+    }
+
+    @Test
+    void testDialogSpecificAndGlobalLocators() throws InterruptedException, InvocationTargetException {
+        AtomicReference<@Nullable JDialog> dialogRef = new AtomicReference<>();
+        AtomicReference<@Nullable JFileChooser> chooserRef = new AtomicReference<>();
+        EventQueue.invokeAndWait(() -> {
+            frame.setVisible(false);
+            JFileChooser dialogChooser = new JFileChooser();
+            JDialog dialog = new JDialog();
+            dialog.setModal(false);
+            dialog.getContentPane().add(dialogChooser);
+            dialog.pack();
+            TestWindows.place(dialog);
+            dialog.setVisible(true);
+            chooserRef.set(dialogChooser);
+            dialogRef.set(dialog);
+        });
+        try {
+            JDialog dialog = Objects.requireNonNull(dialogRef.get());
+            JFileChooser dialogChooser = Objects.requireNonNull(chooserRef.get());
+            assertThat(JFileChooserOperator.findJFileChooserDialog()).isSameAs(dialog);
+            assertThat(JFileChooserOperator.waitJFileChooserDialog()).isSameAs(dialog);
+            assertThat(JFileChooserOperator.findJFileChooserInDialog()).isSameAs(dialogChooser);
+            assertThat(JFileChooserOperator.waitJFileChooserInDialog()).isSameAs(dialogChooser);
+            assertThat(JFileChooserOperator.waitFor().getSource()).isSameAs(dialogChooser);
+        } finally {
+            EventQueue.invokeAndWait(() -> {
+                JDialog dialog = Objects.requireNonNull(dialogRef.get());
+                dialog.setVisible(false);
+                dialog.dispose();
+            });
+        }
     }
 
     @Test

@@ -118,7 +118,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
 
     public static JMenuItemOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JMenuItemOperator(
-                (JMenuItem) rootOp.waitSubComponent(PredicatesJ.of(JMenuItem.class, chooser), index));
+                (JMenuItem) waitComponent(rootOp, PredicatesJ.of(JMenuItem.class, chooser), index));
     }
 
     /**
@@ -126,7 +126,7 @@ public class JMenuItemOperator extends AbstractButtonOperator {
      */
     @Deprecated
     public JMenuItemOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JMenuItem) rootOp.waitSubComponent(PredicatesJ.of(JMenuItem.class, chooser), index));
+        this((JMenuItem) waitComponent(rootOp, PredicatesJ.of(JMenuItem.class, chooser), index));
     }
 
     public static JMenuItemOperator waitFor(

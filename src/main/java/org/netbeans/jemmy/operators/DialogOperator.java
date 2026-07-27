@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
@@ -228,10 +229,85 @@ public class DialogOperator extends WindowOperator {
         QueueTool.getInstance().runOnQueue(() -> getSource().setTitle(string));
     }
 
-    protected static Dialog waitDialog(Predicate<Component> chooser, int index) {
+    public static @Nullable Dialog findDialog(Predicate<Component> chooser, int index) {
+        return DialogFunction.getDialog(PredicatesJ.of(Dialog.class, chooser), index);
+    }
+
+    public static @Nullable Dialog findDialog(Predicate<Component> chooser) {
+        return findDialog(chooser, 0);
+    }
+
+    public static @Nullable Dialog findDialog(
+            String title, StringComparator stringComparator, int index) {
+        return DialogFunction.getDialog(
+                new DialogShowingByTitlePredicate(title, stringComparator), index);
+    }
+
+    public static @Nullable Dialog findDialog(
+            String title, StringComparator stringComparator) {
+        return findDialog(title, stringComparator, 0);
+    }
+
+    public static @Nullable Dialog findDialog(
+            Window owner, Predicate<Component> chooser, int index) {
+        return DialogFunction.getDialog(
+                owner, PredicatesJ.of(Dialog.class, chooser), index);
+    }
+
+    public static @Nullable Dialog findDialog(
+            Window owner, Predicate<Component> chooser) {
+        return findDialog(owner, chooser, 0);
+    }
+
+    public static @Nullable Dialog findDialog(
+            Window owner,
+            String title,
+            StringComparator stringComparator,
+            int index) {
+        return DialogFunction.getDialog(
+                owner, new DialogShowingByTitlePredicate(title, stringComparator), index);
+    }
+
+    public static @Nullable Dialog findDialog(
+            Window owner, String title, StringComparator stringComparator) {
+        return findDialog(owner, title, stringComparator, 0);
+    }
+
+    public static Dialog waitDialog(Predicate<Component> chooser) {
+        return waitDialog(chooser, 0);
+    }
+
+    public static Dialog waitDialog(
+            String title, StringComparator stringComparator, int index) {
+        return waitDialog(new DialogShowingByTitlePredicate(title, stringComparator), index);
+    }
+
+    public static Dialog waitDialog(String title, StringComparator stringComparator) {
+        return waitDialog(title, stringComparator, 0);
+    }
+
+    public static Dialog waitDialog(Window owner, Predicate<Component> chooser) {
+        return waitDialog(owner, chooser, 0);
+    }
+
+    public static Dialog waitDialog(
+            Window owner,
+            String title,
+            StringComparator stringComparator,
+            int index) {
+        return waitDialog(
+                owner, new DialogShowingByTitlePredicate(title, stringComparator), index);
+    }
+
+    public static Dialog waitDialog(
+            Window owner, String title, StringComparator stringComparator) {
+        return waitDialog(owner, title, stringComparator, 0);
+    }
+
+    public static Dialog waitDialog(Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
-                        new DialogFunction(index, null, PredicatesJ.of(Dialog.class, chooser)),
-                        TimeoutKey.DialogWaiter_WaitDialogTimeout)
+                new DialogFunction(index, null, PredicatesJ.of(Dialog.class, chooser)),
+                TimeoutKey.DialogWaiter_WaitDialogTimeout)
                 .runUntilNotNull(null);
     }
 
@@ -239,7 +315,7 @@ public class DialogOperator extends WindowOperator {
         return waitDialog(owner.getSource(), chooser, index);
     }
 
-    protected static Dialog waitDialog(Window owner, Predicate<Component> chooser, int index) {
+    public static Dialog waitDialog(Window owner, Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
                         new DialogFunction(index, owner, PredicatesJ.of(Dialog.class, chooser)),
                         TimeoutKey.DialogWaiter_WaitDialogTimeout)

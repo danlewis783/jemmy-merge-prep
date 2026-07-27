@@ -95,7 +95,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
 
     public static JTextPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTextPaneOperator(
-                (JTextPane) rootOp.waitSubComponent(PredicatesJ.of(JTextPane.class, chooser), index));
+                (JTextPane) waitComponent(rootOp, PredicatesJ.of(JTextPane.class, chooser), index));
     }
 
     /**
@@ -103,7 +103,7 @@ public class JTextPaneOperator extends JEditorPaneOperator {
      */
     @Deprecated
     public JTextPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTextPane) rootOp.waitSubComponent(PredicatesJ.of(JTextPane.class, chooser), index));
+        this((JTextPane) waitComponent(rootOp, PredicatesJ.of(JTextPane.class, chooser), index));
     }
 
     public static JTextPaneOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {

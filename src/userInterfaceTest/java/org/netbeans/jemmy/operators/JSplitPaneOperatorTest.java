@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,9 +84,11 @@ class JSplitPaneOperatorTest {
 
     @Test
     void testFindJSplitPaneUnder() {
-        JSplitPane pane1 = JSplitPaneOperator.findJSplitPaneUnder(frame);
+        JSplitPane pane1 = JSplitPaneOperator.findAncestorJSplitPane(frame);
         assertThat(pane1).isNull();
-        JSplitPane pane2 = JSplitPaneOperator.findJSplitPaneUnder(frame, PredicatesJ.byName("JSplitPane"));
+        JSplitPane pane2 =
+                JSplitPaneOperator.findAncestorJSplitPane(
+                        frame, PredicatesJ.byName("JSplitPane"));
         assertThat(pane2).isNull();
     }
 
@@ -99,7 +102,21 @@ class JSplitPaneOperatorTest {
     void testFindDivider() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSplitPaneOperator operator1 = JSplitPaneOperator.waitFor(operator);
-        operator1.findDivider();
+        assertThat(operator1.findDivider()).isNotNull();
+    }
+
+    @Test
+    void findDividerLooksOnceAndWaitDividerRetries() throws InterruptedException, InvocationTargetException {
+        EventQueue.invokeAndWait(() -> {
+            splitPane.setUI(null);
+            splitPane.removeAll();
+        });
+        JSplitPaneOperator operator = JSplitPaneOperator.of(splitPane);
+
+        assertThat(operator.findDivider()).isNull();
+
+        EventQueue.invokeLater(() -> splitPane.setUI(new BasicSplitPaneUI()));
+        assertThat(operator.waitDivider()).isNotNull();
     }
 
     @Test

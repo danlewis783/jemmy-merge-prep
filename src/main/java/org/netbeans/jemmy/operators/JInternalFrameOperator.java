@@ -47,7 +47,6 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.drivers.InternalFrameDriver;
@@ -111,7 +110,8 @@ public class JInternalFrameOperator extends JComponentOperator {
     }
 
     public static JInternalFrameOperator waitFor(ContainerOperator rootOp, int index) {
-        return new JInternalFrameOperator((JInternalFrame) waitComponent(rootOp, new JInternalFramePredicate(), index));
+        return new JInternalFrameOperator(
+                internalFrameOf(waitComponent(rootOp, new JInternalFramePredicate(), index)));
     }
 
     /**
@@ -119,7 +119,7 @@ public class JInternalFrameOperator extends JComponentOperator {
      */
     @Deprecated
     public JInternalFrameOperator(ContainerOperator rootOp, int index) {
-        this((JInternalFrame) waitComponent(rootOp, new JInternalFramePredicate(), index));
+        this(internalFrameOf(waitComponent(rootOp, new JInternalFramePredicate(), index)));
     }
 
     public static JInternalFrameOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
@@ -149,7 +149,7 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     public static JInternalFrameOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JInternalFrameOperator(
-                (JInternalFrame) rootOp.waitSubComponent(new JInternalFramePredicate(chooser), index));
+                internalFrameOf(waitComponent(rootOp, new JInternalFramePredicate(chooser), index)));
     }
 
     /**
@@ -157,7 +157,7 @@ public class JInternalFrameOperator extends JComponentOperator {
      */
     @Deprecated
     public JInternalFrameOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JInternalFrame) rootOp.waitSubComponent(new JInternalFramePredicate(chooser), index));
+        this(internalFrameOf(waitComponent(rootOp, new JInternalFramePredicate(chooser), index)));
     }
 
     public static JInternalFrameOperator waitFor(
@@ -603,23 +603,35 @@ public class JInternalFrameOperator extends JComponentOperator {
         return findJInternalFrame(cont, text, stringComparator, 0);
     }
 
-    public static @Nullable JInternalFrame findJInternalFrameUnder(Component comp, Predicate<Component> chooser) {
-        return (JInternalFrame) findContainerUnder(comp, new JInternalFramePredicate(chooser));
+    public static @Nullable JInternalFrame findAncestorJInternalFrame(
+            Component comp, Predicate<Component> chooser) {
+        Container result = findAncestorContainer(comp, new JInternalFramePredicate(chooser));
+        return result == null ? null : internalFrameOf(result);
     }
 
+    public static @Nullable JInternalFrame findAncestorJInternalFrame(Component comp) {
+        return findAncestorJInternalFrame(comp, PredicatesJ.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJInternalFrame(Component, Predicate)}.
+     */
+    @Deprecated
+    public static @Nullable JInternalFrame findJInternalFrameUnder(
+            Component comp, Predicate<Component> chooser) {
+        return findAncestorJInternalFrame(comp, chooser);
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJInternalFrame(Component)}.
+     */
+    @Deprecated
     public static @Nullable JInternalFrame findJInternalFrameUnder(Component comp) {
-        return findJInternalFrameUnder(comp, new JInternalFramePredicate());
+        return findAncestorJInternalFrame(comp);
     }
 
     public static JInternalFrame waitJInternalFrame(Container cont, Predicate<Component> chooser, int index) {
-        Component res = waitComponent(cont, new JInternalFramePredicate(chooser), index);
-        if (res instanceof JInternalFrame) {
-            return (JInternalFrame) res;
-        } else if (res instanceof JInternalFrame.JDesktopIcon) {
-            return ((JDesktopIcon) res).getInternalFrame();
-        } else {
-            throw new TimeoutExpiredException(chooser.toString());
-        }
+        return internalFrameOf(waitComponent(cont, new JInternalFramePredicate(chooser), index));
     }
 
     public static JInternalFrame waitJInternalFrame(Container cont, Predicate<Component> chooser) {
@@ -637,13 +649,17 @@ public class JInternalFrameOperator extends JComponentOperator {
 
     private static JInternalFrame findOne(
             ContainerOperator rootOp, String text, StringComparator stringComparator, int index) {
-        Component source = waitComponent(rootOp, new JInternalFrameByTitlePredicate(text, stringComparator), index);
-        if (source instanceof JInternalFrame) {
-            return (JInternalFrame) source;
-        } else if (source instanceof JInternalFrame.JDesktopIcon) {
-            return ((JDesktopIcon) source).getInternalFrame();
+        return internalFrameOf(
+                waitComponent(rootOp, new JInternalFrameByTitlePredicate(text, stringComparator), index));
+    }
+
+    private static JInternalFrame internalFrameOf(Component component) {
+        if (component instanceof JInternalFrame) {
+            return (JInternalFrame) component;
+        } else if (component instanceof JDesktopIcon) {
+            return ((JDesktopIcon) component).getInternalFrame();
         } else {
-            throw new TimeoutExpiredException("No internal frame was found");
+            throw new IllegalStateException("Wrong component type: " + component.getClass().getName());
         }
     }
 

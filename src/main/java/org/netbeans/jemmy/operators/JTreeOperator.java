@@ -136,7 +136,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public static JTreeOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        return new JTreeOperator((JTree) rootOp.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+        return new JTreeOperator((JTree) waitComponent(rootOp, PredicatesJ.of(JTree.class, chooser), index));
     }
 
     /**
@@ -144,7 +144,7 @@ public class JTreeOperator extends JComponentOperator {
      */
     @Deprecated
     public JTreeOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTree) rootOp.waitSubComponent(PredicatesJ.of(JTree.class, chooser), index));
+        this((JTree) waitComponent(rootOp, PredicatesJ.of(JTree.class, chooser), index));
     }
 
     public static JTreeOperator waitFor(
@@ -202,6 +202,11 @@ public class JTreeOperator extends JComponentOperator {
                 .callOnQueue(() -> getSource().getModel().getChildCount(node));
     }
 
+    public void waitChildCount(Object node, int childCount) {
+        waitState((Predicate<JTreeOperator>)
+                operator -> operator.getSource().getModel().getChildCount(node) == childCount);
+    }
+
     public Object[] getChildren(Object node) {
         return QueueTool.getInstance().callOnQueue(() -> {
             TreeModel md = getSource().getModel();
@@ -225,6 +230,14 @@ public class JTreeOperator extends JComponentOperator {
         } else {
             throw new NoSuchPathException();
         }
+    }
+
+    public void waitChildCount(TreePath path, int childCount) {
+        if (path == null) {
+            throw new NoSuchPathException();
+        }
+
+        waitChildCount(path.getLastPathComponent(), childCount);
     }
 
     public TreePath getChildPath(TreePath path, int index) {
@@ -265,6 +278,10 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public @Nullable TreePath findPath(TreePathChooser chooser) {
+        return QueueTool.getInstance().callOnQueue(() -> findPathSnapshot(chooser));
+    }
+
+    public TreePath waitPath(TreePathChooser chooser) {
         TreePath rootPath = new TreePath(getRoot());
         if (chooser.checkPath(rootPath, 0)) {
             return rootPath;
@@ -272,7 +289,7 @@ public class JTreeOperator extends JComponentOperator {
 
         FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter =
                 FunctionRepeater.on(new LoadedFunction(this), TimeoutKey.JTreeOperator_WaitNextNodeTimeout);
-        return findPathPrimitive(rootPath, chooser, waiter);
+        return waitPathPrimitive(rootPath, chooser, waiter);
     }
 
     public int findRow(TreeRowChooser chooser, int index) {
@@ -316,10 +333,20 @@ public class JTreeOperator extends JComponentOperator {
         return findPath(new StringArrayPathChooser(names, indexes, comparator));
     }
 
+    public TreePath waitPath(String[] names, int[] indexes, StringComparator comparator) {
+        return waitPath(new StringArrayPathChooser(names, indexes, comparator));
+    }
+
     public @Nullable TreePath findPath(String[] names, StringComparator comparator) {
         int[] indexes = new int[0];
 
         return findPath(names, indexes, comparator);
+    }
+
+    public TreePath waitPath(String[] names, StringComparator comparator) {
+        int[] indexes = new int[0];
+
+        return waitPath(names, indexes, comparator);
     }
 
     public @Nullable TreePath findPath(String path, String indexes, String delim, StringComparator comparator) {
@@ -332,12 +359,30 @@ public class JTreeOperator extends JComponentOperator {
         return findPath(parseString(path, delim), indInts, comparator);
     }
 
+    public TreePath waitPath(String path, String indexes, String delim, StringComparator comparator) {
+        String[] indexStrings = parseString(indexes, delim);
+        int[] indInts = new int[indexStrings.length];
+        for (int i = 0; i < indexStrings.length; i++) {
+            indInts[i] = Integer.parseInt(indexStrings[i]);
+        }
+
+        return waitPath(parseString(path, delim), indInts, comparator);
+    }
+
     public @Nullable TreePath findPath(String path, String delim, StringComparator comparator) {
         return findPath(parseString(path, delim), comparator);
     }
 
+    public TreePath waitPath(String path, String delim, StringComparator comparator) {
+        return waitPath(parseString(path, delim), comparator);
+    }
+
     public @Nullable TreePath findPath(String path, StringComparator comparator) {
         return findPath(parseString(path), comparator);
+    }
+
+    public TreePath waitPath(String path, StringComparator comparator) {
+        return waitPath(parseString(path), comparator);
     }
 
     public void doCollapsePath(@Nullable TreePath path) {
@@ -565,7 +610,7 @@ public class JTreeOperator extends JComponentOperator {
 
     public void waitCollapsed(TreePath path) {
         if (path != null) {
-            waitState(new JTreeOperatorIsTreePathExpandedPredicate(path));
+            waitState(new JTreeOperatorIsTreePathCollapsedPredicate(path));
         } else {
             throw new NoSuchPathException();
         }
@@ -805,6 +850,10 @@ public class JTreeOperator extends JComponentOperator {
 
     public int getRowCount() {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getRowCount());
+    }
+
+    public void waitRowCount(int rowCount) {
+        waitState((Predicate<JTreeOperator>) operator -> operator.getSource().getRowCount() == rowCount);
     }
 
     public int getRowForLocation(int i, int i1) {
@@ -1064,7 +1113,47 @@ public class JTreeOperator extends JComponentOperator {
         QueueTool.getInstance().runOnQueue(() -> getSource().treeDidChange());
     }
 
-    private @Nullable TreePath findPathPrimitive(
+    private @Nullable TreePath findPathSnapshot(TreePathChooser chooser) {
+        TreeModel model = getSource().getModel();
+        Object root = model.getRoot();
+        if ((root == null) || (root.toString() == null) || "null".equals(root.toString())) {
+            return null;
+        }
+
+        TreePath path = new TreePath(root);
+        if (chooser.checkPath(path, 0)) {
+            return path;
+        }
+
+        while (true) {
+            Object parent = path.getLastPathComponent();
+            TreePath nextPath = null;
+            int childCount = model.getChildCount(parent);
+            for (int i = 0; i < childCount; i++) {
+                Object child;
+                try {
+                    child = model.getChild(parent, i);
+                } catch (IndexOutOfBoundsException e) {
+                    return null;
+                }
+
+                TreePath childPath = path.pathByAddingChild(child);
+                if (chooser.checkPath(childPath, i)) {
+                    return childPath;
+                }
+                if ((nextPath == null) && chooser.hasAsParent(childPath, i)) {
+                    nextPath = childPath;
+                }
+            }
+
+            if (nextPath == null) {
+                return null;
+            }
+            path = nextPath;
+        }
+    }
+
+    private TreePath waitPathPrimitive(
             TreePath path,
             TreePathChooser chooser,
             FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter) {
@@ -1083,7 +1172,7 @@ public class JTreeOperator extends JComponentOperator {
         if (waitResult.isChecked()) {
             return nextPath;
         } else {
-            return findPathPrimitive(nextPath, chooser, waiter);
+            return waitPathPrimitive(nextPath, chooser, waiter);
         }
     }
 
@@ -1150,10 +1239,10 @@ public class JTreeOperator extends JComponentOperator {
         }
     }
 
-    private static class JTreeOperatorIsTreePathExpandedPredicate implements Predicate<JTreeOperator> {
+    private static class JTreeOperatorIsTreePathCollapsedPredicate implements Predicate<JTreeOperator> {
         private final TreePath path;
 
-        public JTreeOperatorIsTreePathExpandedPredicate(TreePath path) {
+        public JTreeOperatorIsTreePathCollapsedPredicate(TreePath path) {
             this.path = path;
         }
 
@@ -1164,7 +1253,7 @@ public class JTreeOperator extends JComponentOperator {
 
         @Override
         public String toString() {
-            return "JTreeOperatorIsTreePathExpandedPredicate{path=" + path + "}";
+            return "JTreeOperatorIsTreePathCollapsedPredicate{path=" + path + "}";
         }
     }
 

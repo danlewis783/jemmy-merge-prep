@@ -28,7 +28,7 @@ public class JTableByCellTooltipOrColumnNameColumnCountPredicate extends JTableB
         if (tabbedPaneName != null && !tabbedPaneName.equals("*default*")) {
             // single non-blocking lookup: predicates are evaluated on the EDT, where waiting is
             // forbidden; the enclosing wait loop re-evaluates this predicate on every poll anyway
-            JTabbedPane tabbedPane = JTabbedPaneOperator.findJTabbedPaneUnder(
+            JTabbedPane tabbedPane = JTabbedPaneOperator.findAncestorJTabbedPane(
                     table, newTabbedPaneChooserByTabName(tabbedPaneName));
             if (tabbedPane == null) {
                 return false;

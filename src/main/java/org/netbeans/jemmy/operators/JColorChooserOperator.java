@@ -132,7 +132,7 @@ public class JColorChooserOperator extends JComponentOperator {
 
     public static JColorChooserOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JColorChooserOperator(
-                (JColorChooser) rootOp.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
+                (JColorChooser) waitComponent(rootOp, PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     /**
@@ -140,7 +140,7 @@ public class JColorChooserOperator extends JComponentOperator {
      */
     @Deprecated
     public JColorChooserOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JColorChooser) rootOp.waitSubComponent(PredicatesJ.of(JColorChooser.class, chooser), index));
+        this((JColorChooser) waitComponent(rootOp, PredicatesJ.of(JColorChooser.class, chooser), index));
     }
 
     public void switchToRGB() {

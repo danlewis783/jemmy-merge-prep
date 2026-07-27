@@ -27,6 +27,7 @@ package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Objects;
@@ -74,9 +75,28 @@ public class JFileChooserOperator extends JComponentOperator {
     private final ComponentSearcher innerSearcher;
 
     public static JFileChooserOperator waitFor() {
-        return new JFileChooserOperator((JFileChooser) waitComponent(
-                JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()),
-                PredicatesJ.of(JFileChooser.class)));
+        Window window = WindowOperator.waitWindow(new JFileChooserJDialogPredicate());
+        return waitFor(WindowOperator.of(window));
+    }
+
+    public static JFileChooserOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
+    }
+
+    public static JFileChooserOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JFileChooserOperator(
+                (JFileChooser) waitComponent(rootOp, PredicatesJ.ofShowing(JFileChooser.class), index));
+    }
+
+    public static JFileChooserOperator waitFor(
+            ContainerOperator rootOp, Predicate<Component> chooser) {
+        return waitFor(rootOp, chooser, 0);
+    }
+
+    public static JFileChooserOperator waitFor(
+            ContainerOperator rootOp, Predicate<Component> chooser, int index) {
+        return new JFileChooserOperator((JFileChooser)
+                waitComponent(rootOp, PredicatesJ.ofShowing(JFileChooser.class, chooser), index));
     }
 
     /**
@@ -84,9 +104,7 @@ public class JFileChooserOperator extends JComponentOperator {
      */
     @Deprecated
     public JFileChooserOperator() {
-        this((JFileChooser) waitComponent(
-                JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate()),
-                PredicatesJ.of(JFileChooser.class)));
+        this(waitFor().getSource());
     }
 
     /**
@@ -229,7 +247,7 @@ public class JFileChooserOperator extends JComponentOperator {
     }
 
     public void clickOnFile(String file, StringComparator comparator, int clickCount) {
-        clickOnFile(findFileIndex(file, comparator), clickCount);
+        clickOnFile(waitFileIndex(file, comparator), clickCount);
     }
 
     public void clickOnFile(String file) {
@@ -247,7 +265,7 @@ public class JFileChooserOperator extends JComponentOperator {
     public File enterSubDir(String dir, StringComparator comparator) {
         setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         selectFile(dir, comparator);
-        int index = findFileIndex(dir, comparator);
+        int index = waitFileIndex(dir, comparator);
         waitPainted(index);
         setCurrentDirectory(getSelectedFile());
 
@@ -263,7 +281,7 @@ public class JFileChooserOperator extends JComponentOperator {
      * (CODETOOLS-7901960).
      */
     public void selectFile(String file, StringComparator comparator) {
-        int index = findFileIndex(file, comparator);
+        int index = waitFileIndex(file, comparator);
         waitPainted(index);
         Component list = getFileList();
         if (list instanceof JList) {
@@ -625,7 +643,7 @@ public class JFileChooserOperator extends JComponentOperator {
                 "toggle button not found");
     }
 
-    private int findFileIndex(String file, StringComparator comparator) {
+    private int waitFileIndex(String file, StringComparator comparator) {
         return SupplierRepeater.on(() -> {
                     int index = fileIndexNow(file, comparator);
 
@@ -670,6 +688,14 @@ public class JFileChooserOperator extends JComponentOperator {
         return JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
     }
 
+    public static @Nullable JFrame findJFileChooserFrame() {
+        return JFrameOperator.findJFrame(new JFileChooserJDialogPredicate());
+    }
+
+    public static JFrame waitJFileChooserFrame() {
+        return JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate());
+    }
+
     public static @Nullable JFileChooser findJFileChooser(Container cont) {
         return (JFileChooser) findComponent(cont, PredicatesJ.of(JFileChooser.class));
     }
@@ -678,21 +704,46 @@ public class JFileChooserOperator extends JComponentOperator {
         return (JFileChooser) waitComponent(cont, PredicatesJ.of(JFileChooser.class));
     }
 
-    public static @Nullable JFileChooser findJFileChooser() {
+    public static @Nullable JFileChooser findJFileChooserInDialog() {
         JDialog dialog = findJFileChooserDialog();
         return (dialog == null) ? null : findJFileChooser(dialog);
     }
 
-    public static JFileChooser waitJFileChooser2() {
-        JFrame jFrame = JFrameOperator.waitJFrame(new JFileChooserJDialogPredicate());
-        JFileChooser jFileChooser = (JFileChooser) waitComponent(jFrame, PredicatesJ.of(JFileChooser.class));
-        return jFileChooser;
+    public static JFileChooser waitJFileChooserInDialog() {
+        return waitJFileChooser(waitJFileChooserDialog());
     }
 
+    public static @Nullable JFileChooser findJFileChooserInFrame() {
+        JFrame frame = findJFileChooserFrame();
+        return (frame == null) ? null : findJFileChooser(frame);
+    }
+
+    public static JFileChooser waitJFileChooserInFrame() {
+        return waitJFileChooser(waitJFileChooserFrame());
+    }
+
+    /**
+     * @deprecated Use {@link #findJFileChooserInDialog()} instead.
+     */
+    @Deprecated
+    public static @Nullable JFileChooser findJFileChooser() {
+        return findJFileChooserInDialog();
+    }
+
+    /**
+     * @deprecated Use {@link #waitJFileChooserInFrame()} instead.
+     */
+    @Deprecated
+    public static JFileChooser waitJFileChooser2() {
+        return waitJFileChooserInFrame();
+    }
+
+    /**
+     * @deprecated Use {@link #waitJFileChooserInDialog()} instead.
+     */
+    @Deprecated
     public static JFileChooser waitJFileChooser() {
-        JDialog jDialog = JDialogOperator.waitJDialog(new JFileChooserJDialogPredicate());
-        JFileChooser jFileChooser = (JFileChooser) waitComponent(jDialog, PredicatesJ.of(JFileChooser.class));
-        return jFileChooser;
+        return waitJFileChooserInDialog();
     }
 
     private static class JFileChooserOperatorByFileCountPredicate implements Predicate<JFileChooserOperator> {

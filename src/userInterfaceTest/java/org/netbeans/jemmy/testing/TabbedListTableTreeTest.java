@@ -228,7 +228,7 @@ class TabbedListTableTreeTest {
         JTreeOperator treeOp = JTreeOperator.of(jTree);
         TreePath rootPath = treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
         treeOp.getPathForRow(treeOp.findRow("00", StringComparators.substring()));
-        TreePath lastPath = treeOp.findPath("40/44", "/", StringComparators.substring());
+        TreePath lastPath = treeOp.waitPath("40/44", "/", StringComparators.substring());
         assertThat(lastPath).isNotNull();
         treeOp.selectPath(lastPath);
         EventQueue.invokeAndWait(() -> compRef.set(treeOp.getRenderedComponent(lastPath)));

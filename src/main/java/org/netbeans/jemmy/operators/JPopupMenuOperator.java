@@ -84,8 +84,12 @@ public class JPopupMenuOperator extends JComponentOperator {
     }
 
     public static JPopupMenuOperator waitFor(ContainerOperator rootOp) {
+        return waitFor(rootOp, 0);
+    }
+
+    public static JPopupMenuOperator waitFor(ContainerOperator rootOp, int index) {
         return new JPopupMenuOperator(
-                (JPopupMenu) waitComponent(rootOp, PredicatesJ.ofShowing(JPopupMenu.class), 0));
+                (JPopupMenu) waitComponent(rootOp, PredicatesJ.ofShowing(JPopupMenu.class), index));
     }
 
     /**
@@ -126,7 +130,20 @@ public class JPopupMenuOperator extends JComponentOperator {
 
     public static JPopupMenuOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JPopupMenuOperator(
-                (JPopupMenu) rootOp.waitSubComponent(PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
+                (JPopupMenu) waitComponent(rootOp, PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
+    }
+
+    public static JPopupMenuOperator waitFor(Predicate<Component> popupChooser) {
+        Window result = FunctionRepeater.on(
+                        new WindowFunction<>(0, null, new ContainerSearcherPredicate(popupChooser)),
+                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
+                .runUntilNotNull(null);
+        return waitFor(WindowOperator.of(result));
+    }
+
+    public static JPopupMenuOperator waitFor(String menuItemText) {
+        return waitFor(
+                new JPopupMenuContainsComponentWithTextPredicate(menuItemText, StringComparators.strict()));
     }
 
     /**
@@ -134,7 +151,7 @@ public class JPopupMenuOperator extends JComponentOperator {
      */
     @Deprecated
     public JPopupMenuOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JPopupMenu) rootOp.waitSubComponent(PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
+        this((JPopupMenu) waitComponent(rootOp, PredicatesJ.ofShowing(JPopupMenu.class, chooser), index));
     }
 
     public @Nullable JMenuItem pushMenu(List<Predicate<Component>> predicates) {
@@ -391,19 +408,24 @@ public class JPopupMenuOperator extends JComponentOperator {
                 .runUntilNotNull(null);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(Predicate)} instead. The
+     *             {@code waitJPopupMenu} family otherwise returns raw
+     *             {@link JPopupMenu} instances.
+     */
+    @Deprecated
     public static JPopupMenuOperator waitJPopupMenu(Predicate<Component> popupChooser) {
-        Window result = FunctionRepeater.on(
-                        new WindowFunction<>(0, null, new ContainerSearcherPredicate(popupChooser)),
-                        TimeoutKey.WindowWaiter_WaitWindowTimeout)
-                .runUntilNotNull(null);
-        WindowOperator windowOperator = WindowOperator.of(result);
-
-        return JPopupMenuOperator.waitFor(windowOperator);
+        return waitFor(popupChooser);
     }
 
+    /**
+     * @deprecated Use {@link #waitFor(String)} instead. The
+     *             {@code waitJPopupMenu} family otherwise returns raw
+     *             {@link JPopupMenu} instances.
+     */
+    @Deprecated
     public static JPopupMenuOperator waitJPopupMenu(String menuItemText) {
-        return waitJPopupMenu(
-                new JPopupMenuContainsComponentWithTextPredicate(menuItemText, StringComparators.strict()));
+        return waitFor(menuItemText);
     }
 
     public static JPopupMenu callPopup(ComponentOperator op, int x, int y, int mouseButton) {

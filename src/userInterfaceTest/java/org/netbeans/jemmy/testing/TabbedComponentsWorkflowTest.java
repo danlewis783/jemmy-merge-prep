@@ -203,18 +203,18 @@ final class TabbedComponentsWorkflowTest {
         assertThat(jTree)
                 .isSameAs(JTreeOperator.waitFor(jFrameOp, "49", regex(), 50, 0)
                         .getSource());
-        TreePath path49 = jTreeOp.findPath("49", "/", STRICT);
+        TreePath path49 = jTreeOp.waitPath("49", "/", STRICT);
         assertThat(path49).isNotNull();
         jTreeOp.scrollToPath(path49);
         jTreeOp.doExpandPath(path49);
-        TreePath path4949 = jTreeOp.findPath("49/4949", "/", STRICT);
+        TreePath path4949 = jTreeOp.waitPath("49/4949", "/", STRICT);
         assertThat(path4949).isNotNull();
         jTreeOp.waitRow("4949", regex(), 100);
         jTreeOp.changePathObject(path4949, "-1-1");
-        TreePath pathMinus1Minus1 = jTreeOp.findPath("49/-1-1", "/", STRICT);
+        TreePath pathMinus1Minus1 = jTreeOp.waitPath("49/-1-1", "/", STRICT);
         assertThat(pathMinus1Minus1).isNotNull();
         jTreeOp.scrollToPath(pathMinus1Minus1);
-        TreePath path0 = jTreeOp.findPath("", "/", STRICT);
+        TreePath path0 = jTreeOp.waitPath("", "/", STRICT);
         assertThat(path0).isNotNull();
         jTreeOp.scrollToPath(path0);
         jTabbedPaneOp.selectPage("List Page", STRICT);

@@ -114,7 +114,7 @@ public class JMenuOperator extends JMenuItemOperator {
     }
 
     public static JMenuOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        return new JMenuOperator((JMenu) rootOp.waitSubComponent(PredicatesJ.of(JMenu.class, chooser), index));
+        return new JMenuOperator((JMenu) waitComponent(rootOp, PredicatesJ.of(JMenu.class, chooser), index));
     }
 
     /**
@@ -122,7 +122,7 @@ public class JMenuOperator extends JMenuItemOperator {
      */
     @Deprecated
     public JMenuOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JMenu) rootOp.waitSubComponent(PredicatesJ.of(JMenu.class, chooser), index));
+        this((JMenu) waitComponent(rootOp, PredicatesJ.of(JMenu.class, chooser), index));
     }
 
     public static JMenuOperator waitFor(
@@ -194,7 +194,9 @@ public class JMenuOperator extends JMenuItemOperator {
         List<Predicate<Component>> parentPath = getParentPath(predicates);
         JMenu menu;
         if (parentPath.isEmpty()) {
-            push();
+            if (!isPopupMenuVisible()) {
+                push();
+            }
             menu = getSource();
         } else {
             menu = (JMenu) pushMenu(parentPath);
@@ -214,7 +216,9 @@ public class JMenuOperator extends JMenuItemOperator {
         if (parentPath.length > 0) {
             menu = (JMenu) pushMenu(parentPath, comparator);
         } else {
-            push();
+            if (!isPopupMenuVisible()) {
+                push();
+            }
             menu = getSource();
         }
 

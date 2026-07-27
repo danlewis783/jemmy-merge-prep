@@ -128,7 +128,7 @@ public class JSpinnerOperator extends JComponentOperator {
 
     public static JSpinnerOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JSpinnerOperator(
-                (JSpinner) rootOp.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+                (JSpinner) waitComponent(rootOp, PredicatesJ.of(JSpinner.class, chooser), index));
     }
 
     /**
@@ -136,7 +136,7 @@ public class JSpinnerOperator extends JComponentOperator {
      */
     @Deprecated
     public JSpinnerOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JSpinner) rootOp.waitSubComponent(PredicatesJ.of(JSpinner.class, chooser), index));
+        this((JSpinner) waitComponent(rootOp, PredicatesJ.of(JSpinner.class, chooser), index));
     }
 
     public static JSpinnerOperator waitFor(

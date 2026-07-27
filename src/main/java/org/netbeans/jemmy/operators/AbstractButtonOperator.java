@@ -119,7 +119,7 @@ public class AbstractButtonOperator extends JComponentOperator {
 
     public static AbstractButtonOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new AbstractButtonOperator(
-                (AbstractButton) rootOp.waitSubComponent(PredicatesJ.of(AbstractButton.class, chooser), index));
+                (AbstractButton) waitComponent(rootOp, PredicatesJ.of(AbstractButton.class, chooser), index));
     }
 
     /**
@@ -127,7 +127,7 @@ public class AbstractButtonOperator extends JComponentOperator {
      */
     @Deprecated
     public AbstractButtonOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((AbstractButton) rootOp.waitSubComponent(PredicatesJ.of(AbstractButton.class, chooser), index));
+        this((AbstractButton) waitComponent(rootOp, PredicatesJ.of(AbstractButton.class, chooser), index));
     }
 
     public static AbstractButtonOperator waitFor(

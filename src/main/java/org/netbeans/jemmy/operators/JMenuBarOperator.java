@@ -60,7 +60,7 @@ public class JMenuBarOperator extends JComponentOperator {
     }
 
     public static JMenuBarOperator waitFor(ContainerOperator rootOp) {
-        return new JMenuBarOperator((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), 0));
+        return waitFor(rootOp, 0);
     }
 
     /**
@@ -68,7 +68,7 @@ public class JMenuBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JMenuBarOperator(ContainerOperator rootOp) {
-        this((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), 0));
+        this(rootOp, 0);
     }
 
     /**
@@ -87,6 +87,18 @@ public class JMenuBarOperator extends JComponentOperator {
         return new JMenuBarOperator(b);
     }
 
+    public static JMenuBarOperator waitFor(ContainerOperator rootOp, int index) {
+        return new JMenuBarOperator((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(ContainerOperator, int)} instead.
+     */
+    @Deprecated
+    public JMenuBarOperator(ContainerOperator rootOp, int index) {
+        this((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class), index));
+    }
+
     public static JMenuBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser) {
         return waitFor(rootOp, chooser, 0);
     }
@@ -101,7 +113,7 @@ public class JMenuBarOperator extends JComponentOperator {
 
     public static JMenuBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JMenuBarOperator(
-                (JMenuBar) rootOp.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
+                (JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     /**
@@ -109,7 +121,7 @@ public class JMenuBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JMenuBarOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JMenuBar) rootOp.waitSubComponent(PredicatesJ.of(JMenuBar.class, chooser), index));
+        this((JMenuBar) waitComponent(rootOp, PredicatesJ.of(JMenuBar.class, chooser), index));
     }
 
     public @Nullable JMenuItem pushMenu(List<Predicate<Component>> predicates) {

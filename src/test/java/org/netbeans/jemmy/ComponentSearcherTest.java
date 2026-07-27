@@ -69,6 +69,14 @@ class ComponentSearcherTest {
     }
 
     @Test
+    void countComponentsUsesTheSameDescendantTraversal() {
+        OrdinalFixture fixture = buildOrdinalFixture();
+        ComponentSearcher searcher = new ComponentSearcher(fixture.root);
+
+        assertThat(searcher.countComponents(NAME_STARTS_WITH_MATCH)).isEqualTo(4);
+    }
+
+    @Test
     void negativeIndexThrowsUnwrappedIllegalArgumentException() {
         Container empty = onQueue(() -> namedPanel("empty"));
         ComponentSearcher searcher = new ComponentSearcher(empty);

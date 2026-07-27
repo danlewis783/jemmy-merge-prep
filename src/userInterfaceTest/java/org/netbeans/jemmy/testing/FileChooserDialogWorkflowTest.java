@@ -164,7 +164,7 @@ class FileChooserDialogWorkflowTest {
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
             String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
-            assertThat(fcOp.getSource()).isSameAs(JFileChooserOperator.waitJFileChooser());
+            assertThat(fcOp.getSource()).isSameAs(JFileChooserOperator.waitJFileChooserInDialog());
             fcOp.chooseFile(fn);
             JTextFieldOperator.waitFor(frameOp, fn, STRICT);
         });

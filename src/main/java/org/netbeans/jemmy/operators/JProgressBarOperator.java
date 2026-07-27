@@ -93,7 +93,7 @@ public class JProgressBarOperator extends JComponentOperator {
 
     public static JProgressBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JProgressBarOperator(
-                (JProgressBar) rootOp.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
+                (JProgressBar) waitComponent(rootOp, PredicatesJ.of(JProgressBar.class, chooser), index));
     }
 
     /**
@@ -101,7 +101,7 @@ public class JProgressBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JProgressBarOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JProgressBar) rootOp.waitSubComponent(PredicatesJ.of(JProgressBar.class, chooser), index));
+        this((JProgressBar) waitComponent(rootOp, PredicatesJ.of(JProgressBar.class, chooser), index));
     }
 
     public void waitValue(int value) {

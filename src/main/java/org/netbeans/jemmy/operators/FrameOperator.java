@@ -29,6 +29,7 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuBar;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.QueueTool;
@@ -220,12 +221,47 @@ public class FrameOperator extends WindowOperator {
         QueueTool.getInstance().runOnQueue(() -> getSource().setTitle(string));
     }
 
-    protected static Frame waitFrame(Predicate<Component> predicate, int index) {
+    public static @Nullable Frame findFrame(Predicate<Component> chooser, int index) {
+        return FrameFunction.getFrame(PredicatesJ.of(Frame.class, chooser), index);
+    }
+
+    public static @Nullable Frame findFrame(Predicate<Component> chooser) {
+        return findFrame(chooser, 0);
+    }
+
+    public static @Nullable Frame findFrame(
+            String title, StringComparator stringComparator, int index) {
+        return FrameFunction.getFrame(
+                new FrameShowingByTitlePredicate(title, stringComparator), index);
+    }
+
+    public static @Nullable Frame findFrame(String title, StringComparator stringComparator) {
+        return findFrame(title, stringComparator, 0);
+    }
+
+    public static Frame waitFrame(Predicate<Component> chooser) {
+        return waitFrame(chooser, 0);
+    }
+
+    public static Frame waitFrame(String title) {
+        return waitFrame(title, StringComparators.strict());
+    }
+
+    public static Frame waitFrame(String title, StringComparator stringComparator) {
+        return waitFrame(title, stringComparator, 0);
+    }
+
+    public static Frame waitFrame(
+            String title, StringComparator stringComparator, int index) {
+        return waitFrame(new FrameShowingByTitlePredicate(title, stringComparator), index);
+    }
+
+    public static Frame waitFrame(Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
                         new FrameFunction(
                                 index,
                                 null,
-                                PredicatesJ.of(Frame.class, PredicatesJ.of(Frame.class, predicate))),
+                                PredicatesJ.of(Frame.class, PredicatesJ.of(Frame.class, chooser))),
                         TimeoutKey.FrameWaiter_WaitFrameTimeout,
                         TimeoutKey.Waiter_TimeDelta)
                 .runUntilNotNull(null);

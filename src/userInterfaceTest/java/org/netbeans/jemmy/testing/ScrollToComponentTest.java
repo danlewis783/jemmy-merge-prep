@@ -116,7 +116,7 @@ class ScrollToComponentTest {
         ComponentOperator butt40Op = ComponentOperator.of(butt40);
         JScrollPane scrollPane = JScrollPaneOperator.findJScrollPane(jFrame, PredicatesJ.alwaysTrue());
         assertThat(scrollPane).isNotNull();
-        assertThat(JScrollPaneOperator.findJScrollPaneUnder(butt00)).isSameAs(scrollPane);
+        assertThat(JScrollPaneOperator.findAncestorJScrollPane(butt00)).isSameAs(scrollPane);
         JScrollBarOperator hScrollBarOp = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame), 1);
         assertThat(hScrollBarOp.getOrientation()).isEqualTo(JScrollBar.HORIZONTAL);
         JScrollBarOperator vScrollBarOp = JScrollBarOperator.waitFor(JFrameOperator.of(jFrame));

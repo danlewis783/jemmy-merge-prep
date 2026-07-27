@@ -99,7 +99,7 @@ public class ContainerOperator extends ComponentOperator {
 
     public static ContainerOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new ContainerOperator(
-                (Container) rootOp.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
+                (Container) waitComponent(rootOp, PredicatesJ.of(Container.class, chooser), index));
     }
 
     /**
@@ -107,7 +107,7 @@ public class ContainerOperator extends ComponentOperator {
      */
     @Deprecated
     public ContainerOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((Container) rootOp.waitSubComponent(PredicatesJ.of(Container.class, chooser), index));
+        this((Container) waitComponent(rootOp, PredicatesJ.of(Container.class, chooser), index));
     }
 
     public @Nullable Component findSubComponent(Predicate<Component> chooser, int index) {
@@ -116,6 +116,22 @@ public class ContainerOperator extends ComponentOperator {
 
     public @Nullable Component findSubComponent(Predicate<Component> chooser) {
         return findSubComponent(chooser, 0);
+    }
+
+    public @Nullable Component findShowingSubComponent(Predicate<Component> chooser, int index) {
+        return searcher.findComponent(PredicatesJ.ofShowing(chooser), index);
+    }
+
+    public @Nullable Component findShowingSubComponent(Predicate<Component> chooser) {
+        return findShowingSubComponent(chooser, 0);
+    }
+
+    public int countSubComponents(Predicate<Component> chooser) {
+        return searcher.countComponents(chooser);
+    }
+
+    public int countShowingSubComponents(Predicate<Component> chooser) {
+        return countSubComponents(PredicatesJ.ofShowing(chooser));
     }
 
     public Component waitSubComponent(Predicate<Component> chooser, int index) {
@@ -134,6 +150,68 @@ public class ContainerOperator extends ComponentOperator {
         ComponentSearcher searcher = new ComponentSearcher(getSource());
         return FunctionRepeater.on(new ComponentSearcherFunction(searcher, chooser, index), timeoutKey)
                 .runUntilNotNull(null);
+    }
+
+    public Component waitShowingSubComponent(Predicate<Component> chooser, int index) {
+        return waitShowingSubComponent(chooser, index, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    public Component waitShowingSubComponent(Predicate<Component> chooser) {
+        return waitShowingSubComponent(chooser, 0);
+    }
+
+    public Component waitShowingSubComponent(Predicate<Component> chooser, TimeoutKey timeoutKey) {
+        return waitShowingSubComponent(chooser, 0, timeoutKey);
+    }
+
+    public Component waitShowingSubComponent(Predicate<Component> chooser, int index, TimeoutKey timeoutKey) {
+        return waitSubComponent(PredicatesJ.ofShowing(chooser), index, timeoutKey);
+    }
+
+    public void waitSubComponentCount(Predicate<Component> chooser, int count) {
+        waitSubComponentCount(chooser, count, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    public void waitSubComponentCount(
+            Predicate<Component> chooser, int count, TimeoutKey timeoutKey) {
+        if (count < 0) {
+            throw new IllegalArgumentException("count must not be negative");
+        }
+        waitState(
+                (Predicate<ContainerOperator>) op -> op.countSubComponents(chooser) == count,
+                timeoutKey);
+    }
+
+    public void waitShowingSubComponentCount(Predicate<Component> chooser, int count) {
+        waitShowingSubComponentCount(chooser, count, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    public void waitShowingSubComponentCount(
+            Predicate<Component> chooser, int count, TimeoutKey timeoutKey) {
+        if (count < 0) {
+            throw new IllegalArgumentException("count must not be negative");
+        }
+        waitState(
+                (Predicate<ContainerOperator>) op -> op.countShowingSubComponents(chooser) == count,
+                timeoutKey);
+    }
+
+    public void waitSubComponentAbsent(Predicate<Component> chooser) {
+        waitSubComponentAbsent(chooser, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    public void waitSubComponentAbsent(
+            Predicate<Component> chooser, TimeoutKey timeoutKey) {
+        waitSubComponentCount(chooser, 0, timeoutKey);
+    }
+
+    public void waitShowingSubComponentAbsent(Predicate<Component> chooser) {
+        waitShowingSubComponentAbsent(chooser, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    public void waitShowingSubComponentAbsent(
+            Predicate<Component> chooser, TimeoutKey timeoutKey) {
+        waitShowingSubComponentCount(chooser, 0, timeoutKey);
     }
 
     public Component add(Component component) {
@@ -160,11 +238,11 @@ public class ContainerOperator extends ComponentOperator {
         QueueTool.getInstance().runOnQueue(() -> getSource().addContainerListener(containerListener));
     }
 
-    public Component findComponentAt(int i, int i1) {
+    public @Nullable Component findComponentAt(int i, int i1) {
         return QueueTool.getInstance().callOnQueue(() -> getSource().findComponentAt(i, i1));
     }
 
-    public Component findComponentAt(Point point) {
+    public @Nullable Component findComponentAt(Point point) {
         return QueueTool.getInstance().callOnQueue(() -> getSource().findComponentAt(point));
     }
 
@@ -236,12 +314,32 @@ public class ContainerOperator extends ComponentOperator {
         return findContainer(cont, 0);
     }
 
-    public static @Nullable Container findContainerUnder(Component comp, Predicate<Component> chooser) {
+    public static @Nullable Container findAncestorContainer(
+            Component comp, Predicate<Component> chooser) {
         return ComponentOperator.of(comp).getContainer(PredicatesJ.of(Container.class, chooser));
     }
 
+    public static @Nullable Container findAncestorContainer(Component comp) {
+        return findAncestorContainer(comp, PredicatesJ.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorContainer(Component, Predicate)}. This method searches
+     *     upward through ancestors, not downward under the component.
+     */
+    @Deprecated
+    public static @Nullable Container findContainerUnder(
+            Component comp, Predicate<Component> chooser) {
+        return findAncestorContainer(comp, chooser);
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorContainer(Component)}. This method searches upward
+     *     through ancestors, not downward under the component.
+     */
+    @Deprecated
     public static @Nullable Container findContainerUnder(Component comp) {
-        return findContainerUnder(comp, PredicatesJ.alwaysTrue());
+        return findAncestorContainer(comp);
     }
 
     public static Container waitContainer(Container cont, Predicate<Component> chooser, int index) {

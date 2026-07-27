@@ -105,7 +105,7 @@ public class JLabelOperator extends JComponentOperator {
 
     public static JLabelOperator waitFor(ContainerOperator rootOp, Predicate<Component> predicate, int index) {
         return new JLabelOperator(
-                (JLabel) rootOp.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
+                (JLabel) waitComponent(rootOp, PredicatesJ.of(JLabel.class, predicate), index));
     }
 
     /**
@@ -113,7 +113,7 @@ public class JLabelOperator extends JComponentOperator {
      */
     @Deprecated
     public JLabelOperator(ContainerOperator rootOp, Predicate<Component> predicate, int index) {
-        this((JLabel) rootOp.waitSubComponent(PredicatesJ.of(JLabel.class, predicate), index));
+        this((JLabel) waitComponent(rootOp, PredicatesJ.of(JLabel.class, predicate), index));
     }
 
     public static JLabelOperator waitFor(

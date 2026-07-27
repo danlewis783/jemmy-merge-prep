@@ -139,7 +139,23 @@ class JInternalFrameOperatorTest {
     }
 
     @Test
-    void testFindJInternalFrameUnder() {}
+    void testFindJInternalFrameUnder() {
+        JPanel internalFrameChild = new JPanel();
+        JPanel desktopIconChild = new JPanel();
+        onQueue(() -> {
+            internalFrame.add(internalFrameChild);
+            internalFrame.getDesktopIcon().add(desktopIconChild);
+            return null;
+        });
+
+        assertThat(JInternalFrameOperator.findAncestorJInternalFrame(internalFrameChild))
+                .isSameAs(internalFrame);
+        assertThat(JInternalFrameOperator.findAncestorJInternalFrame(desktopIconChild))
+                .isSameAs(internalFrame);
+        assertThat(JInternalFrameOperator.findAncestorJInternalFrame(
+                        desktopIconChild, component -> component == internalFrame.getDesktopIcon()))
+                .isSameAs(internalFrame);
+    }
 
     @Test
     void testWaitJInternalFrame() {

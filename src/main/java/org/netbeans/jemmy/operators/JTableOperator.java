@@ -120,7 +120,7 @@ public class JTableOperator extends JComponentOperator {
     }
 
     public static JTableOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        return new JTableOperator((JTable) rootOp.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
+        return new JTableOperator((JTable) waitComponent(rootOp, PredicatesJ.of(JTable.class, chooser), index));
     }
 
     /**
@@ -128,7 +128,7 @@ public class JTableOperator extends JComponentOperator {
      */
     @Deprecated
     public JTableOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTable) rootOp.waitSubComponent(PredicatesJ.of(JTable.class, chooser), index));
+        this((JTable) waitComponent(rootOp, PredicatesJ.of(JTable.class, chooser), index));
     }
 
     public static JTableOperator waitFor(ContainerOperator rootOp, String text, StringComparator stringComparator) {
@@ -543,6 +543,11 @@ public class JTableOperator extends JComponentOperator {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnCount());
     }
 
+    public void waitColumnCount(int columnCount) {
+        waitState((Predicate<JTableOperator>)
+                operator -> operator.getSource().getModel().getColumnCount() == columnCount);
+    }
+
     public TableColumnModel getColumnModel() {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getColumnModel());
     }
@@ -593,6 +598,11 @@ public class JTableOperator extends JComponentOperator {
 
     public int getRowCount() {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getRowCount());
+    }
+
+    public void waitRowCount(int rowCount) {
+        waitState((Predicate<JTableOperator>)
+                operator -> operator.getSource().getModel().getRowCount() == rowCount);
     }
 
     public int getRowHeight() {

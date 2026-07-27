@@ -109,7 +109,7 @@ public class JScrollBarOperator extends JComponentOperator {
 
     public static JScrollBarOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JScrollBarOperator(
-                (JScrollBar) rootOp.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
+                (JScrollBar) waitComponent(rootOp, PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     /**
@@ -117,7 +117,7 @@ public class JScrollBarOperator extends JComponentOperator {
      */
     @Deprecated
     public JScrollBarOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JScrollBar) rootOp.waitSubComponent(PredicatesJ.of(JScrollBar.class, chooser), index));
+        this((JScrollBar) waitComponent(rootOp, PredicatesJ.of(JScrollBar.class, chooser), index));
     }
 
     @Deprecated

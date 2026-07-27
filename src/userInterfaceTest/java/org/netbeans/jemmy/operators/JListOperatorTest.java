@@ -34,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ListUI;
@@ -43,6 +44,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.TimeoutExpiredException;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.Timeouts;
+import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.DumpOnFailure;
@@ -131,6 +136,25 @@ class JListOperatorTest {
     }
 
     @Test
+    void waitsForItemIndexAndItemCount() {
+        JListOperator operator = JListOperator.waitFor(JFrameOperator.waitFor());
+        DefaultListModel<String> model = new DefaultListModel<>();
+        operator.setModel(model);
+        EventQueue.invokeLater(() -> {
+            Timer timer = new Timer(100, event -> model.addElement("later"));
+            timer.setRepeats(false);
+            timer.start();
+        });
+
+        assertThat(operator.waitItemIndex("later", StringComparators.strict())).isEqualTo(0);
+        assertThat(operator.waitItemIndex(
+                        input -> input instanceof JLabel && ((JLabel) input).getText().equals("later")))
+                .isEqualTo(0);
+        operator.waitItemCount(1);
+        assertThat(operator.getItemCount()).isEqualTo(1);
+    }
+
+    @Test
     void testClickOnItem() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JListOperator operator1 = JListOperator.waitFor(operator);
@@ -174,9 +198,23 @@ class JListOperatorTest {
     void testWaitItemsSelection() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        int[] items = new int[1];
-        items[0] = 0;
-        operator1.waitItemsSelection(items, true);
+        operator1.waitItemsSelection(new int[] {0}, true);
+
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 100L)) {
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> operator1.waitItemsSelection(new int[] {0, 1}, true));
+
+            operator1.clearSelection();
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> operator1.waitItemsSelection(new int[] {0}, true));
+
+            operator1.setSelectedIndices(new int[] {0, 1});
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> operator1.waitItemsSelection(new int[] {0}, true));
+        }
+
+        operator1.setSelectedIndices(new int[] {0, 1});
+        operator1.waitItemsSelection(new int[] {1, 0, 1}, true);
     }
 
     @Test
@@ -184,6 +222,15 @@ class JListOperatorTest {
         JFrameOperator operator = JFrameOperator.waitFor();
         JListOperator operator1 = JListOperator.waitFor(operator);
         operator1.waitItemSelection(0, true);
+
+        try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 100L)) {
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> operator1.waitItemSelection(0, false));
+        }
+
+        operator1.setSelectedIndex(1);
+        operator1.waitItemSelection(0, false);
+        operator1.waitItemsSelection(new int[] {0}, false);
     }
 
     @Test

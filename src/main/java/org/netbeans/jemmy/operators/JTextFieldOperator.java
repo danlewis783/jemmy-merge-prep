@@ -105,7 +105,7 @@ public class JTextFieldOperator extends JTextComponentOperator {
 
     public static JTextFieldOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTextFieldOperator(
-                (JTextField) rootOp.waitSubComponent(PredicatesJ.of(JTextField.class, chooser), index));
+                (JTextField) waitComponent(rootOp, PredicatesJ.of(JTextField.class, chooser), index));
     }
 
     /**
@@ -113,7 +113,7 @@ public class JTextFieldOperator extends JTextComponentOperator {
      */
     @Deprecated
     public JTextFieldOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTextField) rootOp.waitSubComponent(PredicatesJ.of(JTextField.class, chooser), index));
+        this((JTextField) waitComponent(rootOp, PredicatesJ.of(JTextField.class, chooser), index));
     }
 
     public static JTextFieldOperator waitFor(

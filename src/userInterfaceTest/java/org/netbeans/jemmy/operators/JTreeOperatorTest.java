@@ -26,12 +26,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JTree;
+import javax.swing.Timer;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -132,6 +135,32 @@ class JTreeOperatorTest {
     }
 
     @Test
+    void waitsForChildAndRowCounts() {
+        JTreeOperator operator = JTreeOperator.of(tree);
+        DefaultTreeModel model = (DefaultTreeModel) onQueue(tree::getModel);
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) onQueue(model::getRoot);
+        TreePath rootPath = new TreePath(root);
+        int initialChildCount = operator.getChildCount(root);
+        EventQueue.invokeLater(() -> {
+            Timer timer = new Timer(
+                    100, event -> model.insertNodeInto(new DefaultMutableTreeNode("later"), root, initialChildCount));
+            timer.setRepeats(false);
+            timer.start();
+        });
+
+        operator.waitChildCount(root, initialChildCount + 1);
+        operator.waitChildCount(rootPath, initialChildCount + 1);
+
+        EventQueue.invokeLater(() -> {
+            Timer timer = new Timer(100, event -> tree.collapseRow(0));
+            timer.setRepeats(false);
+            timer.start();
+        });
+        operator.waitRowCount(1);
+        assertThat(operator.getRowCount()).isEqualTo(1);
+    }
+
+    @Test
     void testGetChildren() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
@@ -176,7 +205,32 @@ class JTreeOperatorTest {
     void testFindPath() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
-        assertThat(operator2.findPath("colors", StringComparators.strict())).isNotNull();
+        TreePath colors = operator2.findPath("colors", StringComparators.strict());
+        assertThat(colors).isNotNull();
+        operator2.collapsePath(colors);
+        operator2.clearSelection();
+
+        TreePath red = operator2.findPath(new String[] {"colors", "red"}, StringComparators.strict());
+
+        assertThat(red).isNotNull();
+        assertThat(operator2.isCollapsed(colors)).isTrue();
+        assertThat(operator2.isSelectionEmpty()).isTrue();
+    }
+
+    @Test
+    void findPathLooksOnceAndWaitPathRetries() throws InterruptedException, InvocationTargetException {
+        JTreeOperator operator = JTreeOperator.of(tree);
+        assertThat(operator.findPath("later", StringComparators.strict())).isNull();
+
+        EventQueue.invokeAndWait(() -> {
+            DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+            DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+            Timer timer = new Timer(100, event -> model.insertNodeInto(new DefaultMutableTreeNode("later"), root, 0));
+            timer.setRepeats(false);
+            timer.start();
+        });
+
+        assertThat(operator.waitPath("later", StringComparators.strict())).isNotNull();
     }
 
     @Test

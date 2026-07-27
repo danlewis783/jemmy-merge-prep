@@ -32,11 +32,13 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.junit.jupiter.api.AfterEach;
@@ -160,6 +162,33 @@ class JTableOperatorTest {
         JTableOperator operator1 = JTableOperator.waitFor(operator);
         int index = operator1.findCellColumn("Mary", StringComparators.strict());
         assertThat(index).isEqualTo(0);
+    }
+
+    @Test
+    void waitsForTableCounts() {
+        JTableOperator operator = JTableOperator.of(table);
+        int initialRowCount = operator.getRowCount();
+        int initialColumnCount = operator.getColumnCount();
+        operator.setModel(new DefaultTableModel(initialRowCount, initialColumnCount));
+        EventQueue.invokeLater(() -> {
+            Timer timer = new Timer(100, event -> ((DefaultTableModel) table.getModel())
+                    .addRow(new Object[] {"Later", "Row", "Test", 0, Boolean.FALSE}));
+            timer.setRepeats(false);
+            timer.start();
+        });
+
+        operator.waitRowCount(initialRowCount + 1);
+        assertThat(operator.getRowCount()).isEqualTo(initialRowCount + 1);
+
+        EventQueue.invokeLater(() -> {
+            Timer timer = new Timer(
+                    100,
+                    event -> ((DefaultTableModel) table.getModel()).addColumn("Later Column"));
+            timer.setRepeats(false);
+            timer.start();
+        });
+        operator.waitColumnCount(initialColumnCount + 1);
+        assertThat(operator.getColumnCount()).isEqualTo(initialColumnCount + 1);
     }
 
     @Test

@@ -130,7 +130,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public static JListOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        return new JListOperator((JList<?>) rootOp.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
+        return new JListOperator((JList<?>) waitComponent(rootOp, PredicatesJ.of(JList.class, chooser), index));
     }
 
     /**
@@ -138,7 +138,7 @@ public class JListOperator extends JComponentOperator {
      */
     @Deprecated
     public JListOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JList<?>) rootOp.waitSubComponent(PredicatesJ.of(JList.class, chooser), index));
+        this((JList<?>) waitComponent(rootOp, PredicatesJ.of(JList.class, chooser), index));
     }
 
     public static JListOperator waitFor(
@@ -234,6 +234,32 @@ public class JListOperator extends JComponentOperator {
 
     public int findItemIndex(Predicate<Component> predicate) {
         return findItemIndex(predicate, 0);
+    }
+
+    public int waitItemIndex(ListItemChooser chooser, int index) {
+        waitState((Predicate<JListOperator>) operator -> operator.findItemIndex(chooser, index) >= 0);
+
+        return findItemIndex(chooser, index);
+    }
+
+    public int waitItemIndex(ListItemChooser chooser) {
+        return waitItemIndex(chooser, 0);
+    }
+
+    public int waitItemIndex(String item, StringComparator comparator, int index) {
+        return waitItemIndex(new ByListItemElementChooser(item, comparator), index);
+    }
+
+    public int waitItemIndex(String item, StringComparator comparator) {
+        return waitItemIndex(item, comparator, 0);
+    }
+
+    public int waitItemIndex(Predicate<Component> predicate, int index) {
+        return waitItemIndex(new ByRenderedComponentPredicateListItemChooser(predicate), index);
+    }
+
+    public int waitItemIndex(Predicate<Component> predicate) {
+        return waitItemIndex(predicate, 0);
     }
 
     public @Nullable Object clickOnItem(int itemIndex, int clickCount) {
@@ -361,7 +387,7 @@ public class JListOperator extends JComponentOperator {
     }
 
     public void waitItemsSelection(int[] itemIndices, boolean selected) {
-        waitState(new JListOperatorItemsMatchPredicate(itemIndices));
+        waitState(new JListOperatorItemsMatchPredicate(itemIndices, selected));
     }
 
     public void waitItemSelection(int itemIndex, boolean selected) {
@@ -414,6 +440,15 @@ public class JListOperator extends JComponentOperator {
 
     public int getLastVisibleIndex() {
         return QueueTool.getInstance().callOnQueue(() -> getJList().getLastVisibleIndex());
+    }
+
+    public int getItemCount() {
+        return QueueTool.getInstance().callOnQueue(() -> getJList().getModel().getSize());
+    }
+
+    public void waitItemCount(int itemCount) {
+        waitState((Predicate<JListOperator>)
+                operator -> operator.getJList().getModel().getSize() == itemCount);
     }
 
     public int getLeadSelectionIndex() {
@@ -666,16 +701,30 @@ public class JListOperator extends JComponentOperator {
 
     private static class JListOperatorItemsMatchPredicate implements Predicate<JListOperator> {
         private final int[] itemIndices;
+        private final boolean selected;
 
-        public JListOperatorItemsMatchPredicate(int[] itemIndices) {
-            this.itemIndices = itemIndices;
+        public JListOperatorItemsMatchPredicate(int[] itemIndices, boolean selected) {
+            int[] sortedIndices = Arrays.copyOf(itemIndices, itemIndices.length);
+            Arrays.sort(sortedIndices);
+            int uniqueCount = 0;
+            for (int itemIndex : sortedIndices) {
+                if (uniqueCount == 0 || itemIndex != sortedIndices[uniqueCount - 1]) {
+                    sortedIndices[uniqueCount++] = itemIndex;
+                }
+            }
+            this.itemIndices = Arrays.copyOf(sortedIndices, uniqueCount);
+            this.selected = selected;
         }
 
         @Override
         public boolean test(JListOperator jListOperator) {
             int[] indices = jListOperator.getSelectedIndices();
-            for (int i = 0, iMax = indices.length; i < iMax; i++) {
-                if (indices[i] != itemIndices[i]) {
+            if (selected) {
+                return Arrays.equals(indices, itemIndices);
+            }
+
+            for (int itemIndex : itemIndices) {
+                if (Arrays.binarySearch(indices, itemIndex) >= 0) {
                     return false;
                 }
             }
@@ -685,7 +734,8 @@ public class JListOperator extends JComponentOperator {
 
         @Override
         public String toString() {
-            return "JListOperatorItemsMatchPredicate{itemIndices=" + Arrays.toString(itemIndices) + "}";
+            return "JListOperatorItemsMatchPredicate{itemIndices=" + Arrays.toString(itemIndices)
+                    + ", selected=" + selected + "}";
         }
     }
 }

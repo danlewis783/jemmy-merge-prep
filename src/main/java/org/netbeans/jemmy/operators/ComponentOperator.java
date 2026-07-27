@@ -384,6 +384,10 @@ public class ComponentOperator extends Operator {
                 new ComponentOperatorIsEnabledPredicate<>(), TimeoutKey.ComponentOperator_WaitComponentEnabledTimeout);
     }
 
+    /**
+     * @deprecated Typo preserved for source compatibility. Use {@link #waitComponentEnabled()}.
+     */
+    @Deprecated
     public void wtComponentEnabled() {
         waitComponentEnabled();
     }

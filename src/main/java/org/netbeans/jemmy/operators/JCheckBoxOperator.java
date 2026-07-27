@@ -101,7 +101,7 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
 
     public static JCheckBoxOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JCheckBoxOperator(
-                (JCheckBox) rootOp.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
+                (JCheckBox) waitComponent(rootOp, PredicatesJ.of(JCheckBox.class, chooser), index));
     }
 
     /**
@@ -109,7 +109,7 @@ public class JCheckBoxOperator extends JToggleButtonOperator {
      */
     @Deprecated
     public JCheckBoxOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JCheckBox) rootOp.waitSubComponent(PredicatesJ.of(JCheckBox.class, chooser), index));
+        this((JCheckBox) waitComponent(rootOp, PredicatesJ.of(JCheckBox.class, chooser), index));
     }
 
     public static JCheckBoxOperator waitFor(

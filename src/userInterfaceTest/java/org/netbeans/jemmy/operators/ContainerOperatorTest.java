@@ -85,7 +85,7 @@ class ContainerOperatorTest {
 
     @Test
     void testFindContainerUnder() {
-        Container container = ContainerOperator.findContainerUnder(frame);
+        Container container = ContainerOperator.findAncestorContainer(frame);
         assertThat(container).isNull();
     }
 

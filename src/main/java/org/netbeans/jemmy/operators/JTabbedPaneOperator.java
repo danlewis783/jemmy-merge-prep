@@ -117,7 +117,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
 
     public static JTabbedPaneOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTabbedPaneOperator(
-                (JTabbedPane) rootOp.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
+                (JTabbedPane) waitComponent(rootOp, PredicatesJ.of(JTabbedPane.class, chooser), index));
     }
 
     /**
@@ -125,7 +125,7 @@ public class JTabbedPaneOperator extends JComponentOperator {
      */
     @Deprecated
     public JTabbedPaneOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTabbedPane) rootOp.waitSubComponent(PredicatesJ.of(JTabbedPane.class, chooser), index));
+        this((JTabbedPane) waitComponent(rootOp, PredicatesJ.of(JTabbedPane.class, chooser), index));
     }
 
     public static JTabbedPaneOperator waitFor(
@@ -375,12 +375,31 @@ public class JTabbedPaneOperator extends JComponentOperator {
         return findJTabbedPane(cont, text, stringComparator, itemIndex, 0);
     }
 
-    public static @Nullable JTabbedPane findJTabbedPaneUnder(Component comp, Predicate<Component> chooser) {
-        return (JTabbedPane) findContainerUnder(comp, PredicatesJ.of(JTabbedPane.class, chooser));
+    public static @Nullable JTabbedPane findAncestorJTabbedPane(
+            Component comp, Predicate<Component> chooser) {
+        return (JTabbedPane)
+                findAncestorContainer(comp, PredicatesJ.of(JTabbedPane.class, chooser));
     }
 
+    public static @Nullable JTabbedPane findAncestorJTabbedPane(Component comp) {
+        return findAncestorJTabbedPane(comp, PredicatesJ.alwaysTrue());
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJTabbedPane(Component, Predicate)}.
+     */
+    @Deprecated
+    public static @Nullable JTabbedPane findJTabbedPaneUnder(
+            Component comp, Predicate<Component> chooser) {
+        return findAncestorJTabbedPane(comp, chooser);
+    }
+
+    /**
+     * @deprecated Use {@link #findAncestorJTabbedPane(Component)}.
+     */
+    @Deprecated
     public static @Nullable JTabbedPane findJTabbedPaneUnder(Component comp) {
-        return findJTabbedPaneUnder(comp, PredicatesJ.of(JTabbedPane.class));
+        return findAncestorJTabbedPane(comp);
     }
 
     public static JTabbedPane waitJTabbedPane(Container cont, Predicate<Component> chooser, int index) {

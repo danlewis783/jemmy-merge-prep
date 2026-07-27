@@ -104,12 +104,14 @@ class JTabbedPaneOperatorTest {
     void testFindJTabbedPaneUnder() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> panel1 = new JPanel());
 
-        JTabbedPane tabbedPane1 = JTabbedPaneOperator.findJTabbedPaneUnder(panel1);
+        JTabbedPane tabbedPane1 = JTabbedPaneOperator.findAncestorJTabbedPane(panel1);
         assertThat(tabbedPane1).isNull();
 
         EventQueue.invokeAndWait(() -> panel2 = new JPanel());
 
-        JTabbedPane tabbedPane2 = JTabbedPaneOperator.findJTabbedPaneUnder(panel2, PredicatesJ.byName("Test"));
+        JTabbedPane tabbedPane2 =
+                JTabbedPaneOperator.findAncestorJTabbedPane(
+                        panel2, PredicatesJ.byName("Test"));
         assertThat(tabbedPane2).isNull();
     }
 

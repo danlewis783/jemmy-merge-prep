@@ -105,7 +105,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
 
     public static JPasswordFieldOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JPasswordFieldOperator(
-                (JPasswordField) rootOp.waitSubComponent(PredicatesJ.of(JPasswordField.class, chooser), index));
+                (JPasswordField) waitComponent(rootOp, PredicatesJ.of(JPasswordField.class, chooser), index));
     }
 
     /**
@@ -113,7 +113,7 @@ public class JPasswordFieldOperator extends JTextFieldOperator {
      */
     @Deprecated
     public JPasswordFieldOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JPasswordField) rootOp.waitSubComponent(PredicatesJ.of(JPasswordField.class, chooser), index));
+        this((JPasswordField) waitComponent(rootOp, PredicatesJ.of(JPasswordField.class, chooser), index));
     }
 
     public static JPasswordFieldOperator waitFor(

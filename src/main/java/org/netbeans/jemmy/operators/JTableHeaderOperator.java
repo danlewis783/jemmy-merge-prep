@@ -25,6 +25,7 @@
 package org.netbeans.jemmy.operators;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.function.Predicate;
@@ -105,7 +106,7 @@ public class JTableHeaderOperator extends JComponentOperator {
 
     public static JTableHeaderOperator waitFor(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
         return new JTableHeaderOperator(
-                (JTableHeader) rootOp.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
+                (JTableHeader) waitComponent(rootOp, PredicatesJ.of(JTableHeader.class, chooser), index));
     }
 
     /**
@@ -113,7 +114,27 @@ public class JTableHeaderOperator extends JComponentOperator {
      */
     @Deprecated
     public JTableHeaderOperator(ContainerOperator rootOp, Predicate<Component> chooser, int index) {
-        this((JTableHeader) rootOp.waitSubComponent(PredicatesJ.of(JTableHeader.class, chooser), index));
+        this((JTableHeader) waitComponent(rootOp, PredicatesJ.of(JTableHeader.class, chooser), index));
+    }
+
+    public static @Nullable JTableHeader findJTableHeader(
+            Container cont, Predicate<Component> chooser, int index) {
+        return (JTableHeader) findComponent(cont, PredicatesJ.of(JTableHeader.class, chooser), index);
+    }
+
+    public static @Nullable JTableHeader findJTableHeader(
+            Container cont, Predicate<Component> chooser) {
+        return findJTableHeader(cont, chooser, 0);
+    }
+
+    public static JTableHeader waitJTableHeader(
+            Container cont, Predicate<Component> chooser, int index) {
+        return (JTableHeader) waitComponent(cont, PredicatesJ.of(JTableHeader.class, chooser), index);
+    }
+
+    public static JTableHeader waitJTableHeader(
+            Container cont, Predicate<Component> chooser) {
+        return waitJTableHeader(cont, chooser, 0);
     }
 
     public void selectColumn(int columnIndex) {

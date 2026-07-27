@@ -17,9 +17,11 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.junit.jupiter.api.Test;
@@ -52,5 +54,38 @@ class OperatorTest {
         assertThat(ranOnQueue)
                 .as("plain waitState also evaluates the predicate on the event dispatch thread")
                 .isTrue();
+    }
+
+    @Test
+    void waitStateStableRestartsTheIntervalAfterFalse() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+        AtomicInteger evaluations = new AtomicInteger();
+
+        operator.waitStateStable(op -> evaluations.incrementAndGet() != 2, 1);
+
+        assertThat(evaluations)
+                .as("true, false, and a complete second stable interval must all be observed")
+                .hasValueGreaterThanOrEqualTo(4);
+    }
+
+    @Test
+    void waitStateStableRejectsNegativeDuration() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> operator.waitStateStable(op -> true, -1))
+                .withMessage("stableTimeMs must not be negative");
+    }
+
+    @Test
+    void waitStateChangeRequiresAnEdgeAfterTheInitialObservation() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+        AtomicInteger evaluations = new AtomicInteger();
+
+        operator.waitStateChange(op -> evaluations.incrementAndGet() == 1);
+
+        assertThat(evaluations)
+                .as("the initial true state and a later false state must both be observed")
+                .hasValueGreaterThanOrEqualTo(2);
     }
 }

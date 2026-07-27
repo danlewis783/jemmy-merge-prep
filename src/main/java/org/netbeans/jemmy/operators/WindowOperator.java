@@ -71,6 +71,30 @@ public class WindowOperator extends ContainerOperator {
         this(waitWindow(PredicatesJ.alwaysTrue(), index));
     }
 
+    public static WindowOperator waitFor(Predicate<Component> chooser) {
+        return waitFor(chooser, 0);
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(Predicate)} instead.
+     */
+    @Deprecated
+    public WindowOperator(Predicate<Component> chooser) {
+        this(chooser, 0);
+    }
+
+    public static WindowOperator waitFor(Predicate<Component> chooser, int index) {
+        return new WindowOperator(waitWindow(chooser, index));
+    }
+
+    /**
+     * @deprecated Use {@link #waitFor(Predicate, int)} instead.
+     */
+    @Deprecated
+    public WindowOperator(Predicate<Component> chooser, int index) {
+        this(waitWindow(chooser, index));
+    }
+
     /**
      * @deprecated Use {@link #of(Window)} instead.
      */
@@ -111,28 +135,28 @@ public class WindowOperator extends ContainerOperator {
         this(waitWindow(owner, PredicatesJ.alwaysTrue(), index));
     }
 
-    public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate) {
-        return waitFor(owner, predicate, 0);
+    public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> chooser) {
+        return waitFor(owner, chooser, 0);
     }
 
     /**
      * @deprecated Use {@link #waitFor(WindowOperator, Predicate)} instead.
      */
     @Deprecated
-    public WindowOperator(WindowOperator owner, Predicate<Component> predicate) {
-        this(owner, predicate, 0);
+    public WindowOperator(WindowOperator owner, Predicate<Component> chooser) {
+        this(owner, chooser, 0);
     }
 
-    public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> predicate, int index) {
-        return new WindowOperator(owner.waitSubWindow(predicate, index));
+    public static WindowOperator waitFor(WindowOperator owner, Predicate<Component> chooser, int index) {
+        return new WindowOperator(owner.waitSubWindow(chooser, index));
     }
 
     /**
      * @deprecated Use {@link #waitFor(WindowOperator, Predicate, int)} instead.
      */
     @Deprecated
-    public WindowOperator(WindowOperator owner, Predicate<Component> predicate, int index) {
-        this(owner.waitSubWindow(predicate, index));
+    public WindowOperator(WindowOperator owner, Predicate<Component> chooser, int index) {
+        this(owner.waitSubWindow(chooser, index));
     }
 
     public void activate() {
@@ -274,6 +298,14 @@ public class WindowOperator extends ContainerOperator {
         return WindowFunction.getWindow(null, chooser, index);
     }
 
+    public static @Nullable Window findWindow() {
+        return findWindow(0);
+    }
+
+    public static @Nullable Window findWindow(int index) {
+        return findWindow(PredicatesJ.alwaysTrue(), index);
+    }
+
     public static @Nullable Window findWindow(Predicate<Component> chooser) {
         return findWindow(chooser, 0);
     }
@@ -290,11 +322,19 @@ public class WindowOperator extends ContainerOperator {
         return waitWindow(chooser, 0);
     }
 
+    public static Window waitWindow() {
+        return waitWindow(0);
+    }
+
+    public static Window waitWindow(int index) {
+        return waitWindow(PredicatesJ.alwaysTrue(), index);
+    }
+
     public static Window waitWindow(Window owner, Predicate<Component> chooser) {
         return waitWindow(owner, chooser, 0);
     }
 
-    protected static Window waitWindow(Predicate<Component> chooser, int index) {
+    public static Window waitWindow(Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
                         new WindowFunction<>(index, null, chooser), TimeoutKey.WindowWaiter_WaitWindowTimeout)
                 .runUntilNotNull(null);
@@ -304,7 +344,7 @@ public class WindowOperator extends ContainerOperator {
         return waitWindow(owner.getSource(), chooser, index);
     }
 
-    protected static Window waitWindow(Window owner, Predicate<Component> chooser, int index) {
+    public static Window waitWindow(Window owner, Predicate<Component> chooser, int index) {
         return FunctionRepeater.on(
                         new WindowFunction<>(index, owner, chooser), TimeoutKey.WindowWaiter_WaitWindowTimeout)
                 .runUntilNotNull(null);

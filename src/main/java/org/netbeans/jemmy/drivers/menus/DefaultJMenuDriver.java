@@ -195,8 +195,7 @@ public class DefaultJMenuDriver extends LightSupportiveDriver implements MenuDri
     }
 
     protected JPopupMenu waitPopupMenu(ComponentOperator op) {
-        return (JPopupMenu) JPopupMenuOperator.waitJPopupMenu(new IsPopupMenuShowingPredicate(op))
-                .getSource();
+        return JPopupMenuOperator.waitFor(new IsPopupMenuShowingPredicate(op)).getSource();
     }
 
     protected JMenuItem waitItem(

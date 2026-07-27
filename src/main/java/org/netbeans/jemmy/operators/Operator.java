@@ -31,10 +31,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.CharBindingMap;
 import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.FunctionRunner;
@@ -161,10 +164,51 @@ public abstract class Operator {
                 .runUntilNotNull(null);
     }
 
+    public <T extends Operator> void waitStateStable(Predicate<T> predicate, long stableTimeMs) {
+        waitStateStable(predicate, stableTimeMs, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    /**
+     * Waits until the predicate has remained true for at least {@code stableTimeMs}. The predicate
+     * is evaluated on the event dispatch thread on every poll, just as it is for {@link
+     * #waitState(Predicate, TimeoutKey)}. Observing a false value restarts the stability interval.
+     */
+    @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
+    public <T extends Operator> void waitStateStable(
+            Predicate<T> predicate, long stableTimeMs, TimeoutKey timeoutKey) {
+        BooleanSupplierRepeater.on(
+                        new StableOnQueueCondition<>(new OnQueuePredicate<>(predicate), (T) this, stableTimeMs),
+                        timeoutKey)
+                .runUntilTrue();
+    }
+
+    public <T extends Operator> void waitStateChange(Predicate<T> predicate) {
+        waitStateChange(predicate, TimeoutKey.Waiter_WaitingTime);
+    }
+
+    /**
+     * Waits until the predicate's value differs from the value observed when this method starts.
+     * This is an edge wait: unlike {@link #waitState(Predicate)}, an initially true predicate does
+     * not complete immediately.
+     */
+    @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
+    public <T extends Operator> void waitStateChange(Predicate<T> predicate, TimeoutKey timeoutKey) {
+        OnQueuePredicate<T> onQueuePredicate = new OnQueuePredicate<>(predicate);
+        T operator = (T) this;
+        boolean initialState = onQueuePredicate.test(operator);
+        BooleanSupplierRepeater.on(
+                        () -> onQueuePredicate.test(operator) != initialState, timeoutKey)
+                .runUntilTrue();
+    }
+
     /**
      * Identical to {@link #waitState(Predicate)}, which now always evaluates the predicate on the
      * event dispatch thread.
+     *
+     * @deprecated Use {@link #waitState(Predicate)}. The queue-specific name describes a distinction
+     *     that no longer exists.
      */
+    @Deprecated
     public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate) {
         waitState(predicate);
     }
@@ -172,7 +216,11 @@ public abstract class Operator {
     /**
      * Identical to {@link #waitState(Predicate, TimeoutKey)}, which now always evaluates the
      * predicate on the event dispatch thread.
+     *
+     * @deprecated Use {@link #waitState(Predicate, TimeoutKey)}. The queue-specific name describes a
+     *     distinction that no longer exists.
      */
+    @Deprecated
     public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate, TimeoutKey timeoutKey) {
         waitState(predicate, timeoutKey);
     }
@@ -295,6 +343,43 @@ public abstract class Operator {
         @Override
         public String toString() {
             return predicate.toString();
+        }
+    }
+
+    private static final class StableOnQueueCondition<T extends Operator> implements BooleanSupplier {
+        private final Predicate<T> predicate;
+        private final T operator;
+        private final long stableTimeMs;
+        private final long stableTimeNanos;
+        private long trueSinceNanos = -1L;
+
+        StableOnQueueCondition(Predicate<T> predicate, T operator, long stableTimeMs) {
+            if (stableTimeMs < 0) {
+                throw new IllegalArgumentException("stableTimeMs must not be negative");
+            }
+            this.predicate = predicate;
+            this.operator = operator;
+            this.stableTimeMs = stableTimeMs;
+            this.stableTimeNanos = TimeUnit.MILLISECONDS.toNanos(stableTimeMs);
+        }
+
+        @Override
+        public boolean getAsBoolean() {
+            if (!predicate.test(operator)) {
+                trueSinceNanos = -1L;
+                return false;
+            }
+
+            long now = System.nanoTime();
+            if (trueSinceNanos < 0) {
+                trueSinceNanos = now;
+            }
+            return now - trueSinceNanos >= stableTimeNanos;
+        }
+
+        @Override
+        public String toString() {
+            return "state to remain true for " + stableTimeMs + " ms: " + predicate;
         }
     }
 }
