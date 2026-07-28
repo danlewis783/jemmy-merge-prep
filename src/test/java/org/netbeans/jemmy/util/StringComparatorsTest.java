@@ -35,7 +35,8 @@ class StringComparatorsTest {
                 StringComparators.substring(),
                 StringComparators.caseInsensitiveSubstring(),
                 StringComparators.alwaysEqual(),
-                StringComparators.startsWith());
+                StringComparators.startsWith(),
+                StringComparators.trimming());
     }
 
     static Stream<Arguments> comparatorNames() {
@@ -46,7 +47,8 @@ class StringComparatorsTest {
                 Arguments.of(StringComparators.substring(), "SubstringComparator"),
                 Arguments.of(StringComparators.caseInsensitiveSubstring(), "CaseInsensitiveSubstringComparator"),
                 Arguments.of(StringComparators.alwaysEqual(), "AlwaysEqualStringComparator"),
-                Arguments.of(StringComparators.startsWith(), "StartsWithStringComparator"));
+                Arguments.of(StringComparators.startsWith(), "StartsWithStringComparator"),
+                Arguments.of(StringComparators.trimming(), "TrimmingStringComparator"));
     }
 
     @ParameterizedTest(name = "{0}")

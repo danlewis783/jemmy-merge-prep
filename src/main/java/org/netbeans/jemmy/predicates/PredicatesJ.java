@@ -19,6 +19,7 @@ package org.netbeans.jemmy.predicates;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -77,7 +78,7 @@ public final class PredicatesJ {
         return new ClassNamePredicate<>(className);
     }
 
-    public static <T extends Component> Predicate<T> tooltipRegex(String regex) {
+    public static <T extends Component> Predicate<T> withToolTipRegex(String regex) {
         return new TooltipRegexPredicate<>(regex);
     }
 
@@ -89,8 +90,11 @@ public final class PredicatesJ {
         return new NumChildrenPredicate<>(i);
     }
 
-    public static <T extends Component> Predicate<T> tooltip(String tooltip) {
-        return new TooltipPredicate<>(tooltip);
+    public static <T extends Component> Predicate<T> withToolTip(String tooltip, StringComparator stringComparator) {
+        return new TooltipStringComparatorPredicate<>(tooltip, stringComparator);
+    }
+    public static <T extends Component> Predicate<T> withToolTip(String tooltip) {
+        return new TooltipStringComparatorPredicate<>(tooltip, StringComparators.strict());
     }
 
     public static <T> Predicate<T> forFunction(Function<T, Boolean> function) {
@@ -272,33 +276,6 @@ public final class PredicatesJ {
         }
     }
 
-    private static class TooltipPredicate<T extends Component> implements Predicate<T> {
-        private final String tooltip;
-
-        public TooltipPredicate(String tooltip) {
-            this.tooltip = tooltip;
-        }
-
-        @Override
-        public boolean test(T input) {
-            if (input == null) {
-                return false;
-            }
-
-            if (!(input instanceof JComponent)) {
-                return false;
-            }
-
-            String tooltipText = ((JComponent) input).getToolTipText();
-            return (tooltipText != null) && tooltipText.equals(tooltip);
-        }
-
-        @Override
-        public String toString() {
-            return "TooltipPredicate{tooltip=\"" + tooltip + "\"}";
-        }
-    }
-
     private static class TooltipRegexPredicate<T extends Component> implements Predicate<T> {
         private final String regex;
 
@@ -323,6 +300,35 @@ public final class PredicatesJ {
         @Override
         public String toString() {
             return "TooltipRegexPredicate{regex=\"" + regex + "\"}";
+        }
+    }
+
+    private static class TooltipStringComparatorPredicate<T extends Component> implements Predicate<T> {
+        private final String tooltip;
+        private final StringComparator stringComparator;
+
+        public TooltipStringComparatorPredicate(String tooltip, StringComparator stringComparator) {
+            this.tooltip = tooltip;
+            this.stringComparator = Objects.requireNonNull(stringComparator, "stringComparator");
+        }
+
+        @Override
+        public boolean test(T input) {
+            if (input == null) {
+                return false;
+            }
+
+            if (!(input instanceof JComponent)) {
+                return false;
+            }
+
+            String tooltipText = ((JComponent) input).getToolTipText();
+            return (tooltipText != null) && stringComparator.equals(tooltipText, tooltip);
+        }
+
+        @Override
+        public String toString() {
+            return "TooltipStringComparatorPredicate{" + "tooltip='" + tooltip + '\'' + ", stringComparator=" + stringComparator + '}';
         }
     }
 

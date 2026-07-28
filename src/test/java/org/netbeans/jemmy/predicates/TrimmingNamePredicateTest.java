@@ -21,6 +21,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Panel;
+import java.util.function.Predicate;
 import javax.swing.JLabel;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.util.StringComparators;
@@ -35,8 +36,8 @@ class TrimmingNamePredicateTest {
             return label;
         });
 
-        TrimmingNamePredicate predicate =
-                new TrimmingNamePredicate("target", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.byName("target", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
@@ -50,8 +51,8 @@ class TrimmingNamePredicateTest {
             return panel;
         });
 
-        TrimmingNamePredicate predicate =
-                new TrimmingNamePredicate("target", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.byName("target", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
@@ -60,8 +61,8 @@ class TrimmingNamePredicateTest {
     void rejectsComponentWithoutName() {
         Component component = onQueue(JLabel::new);
 
-        TrimmingNamePredicate predicate =
-                new TrimmingNamePredicate("target", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.byName("target", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }
@@ -74,8 +75,8 @@ class TrimmingNamePredicateTest {
             return label;
         });
 
-        TrimmingNamePredicate predicate =
-                new TrimmingNamePredicate("target", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.byName("target", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }

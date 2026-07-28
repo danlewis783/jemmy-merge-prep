@@ -51,6 +51,10 @@ public final class StringComparators {
         return new StartsWithStringComparator();
     }
 
+    public static StringComparator trimming() {
+        return new TrimmingStringComparator();
+    }
+
     private static class AlwaysEqualStringComparator implements StringComparator {
         @Override
         public boolean equals(@Nullable String observed, @Nullable String expected) {
@@ -132,6 +136,18 @@ public final class StringComparators {
         @Override
         public String toString() {
             return "StrictStringComparator";
+        }
+    }
+
+    private static class TrimmingStringComparator implements StringComparator {
+        @Override
+        public boolean equals(@Nullable String observed, @Nullable String expected) {
+            return expected == null || observed != null && expected.equals(observed.trim());
+        }
+
+        @Override
+        public String toString() {
+            return "TrimmingStringComparator";
         }
     }
 

@@ -17,11 +17,11 @@
 package org.netbeans.jemmy.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Panel;
+import java.util.function.Predicate;
 import javax.swing.JLabel;
 import org.junit.jupiter.api.Test;
 import org.netbeans.jemmy.util.StringComparators;
@@ -36,8 +36,8 @@ class TrimmingTooltipPredicateTest {
             return label;
         });
 
-        TrimmingTooltipPredicate predicate =
-                new TrimmingTooltipPredicate("Save the file", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.withToolTip("Save the file", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isTrue();
     }
@@ -46,8 +46,8 @@ class TrimmingTooltipPredicateTest {
     void rejectsComponentWithoutTooltip() {
         Component component = onQueue(JLabel::new);
 
-        TrimmingTooltipPredicate predicate =
-                new TrimmingTooltipPredicate("Save the file", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.withToolTip("Save the file", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isFalse();
     }
@@ -57,35 +57,9 @@ class TrimmingTooltipPredicateTest {
     void rejectsNonJComponent() {
         Component component = onQueue(Panel::new);
 
-        TrimmingTooltipPredicate predicate =
-                new TrimmingTooltipPredicate("Save the file", StringComparators.strict());
+        Predicate<Component> predicate =
+                PredicatesJ.withToolTip("Save the file", StringComparators.trimming());
 
         assertThat(onQueue(() -> predicate.test(component))).isFalse();
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    void deprecatedConstructorAcceptsIndexZero() {
-        Component component = onQueue(() -> {
-            JLabel label = new JLabel();
-            label.setToolTipText("Save the file");
-            return label;
-        });
-
-        TrimmingTooltipPredicate predicate =
-                new TrimmingTooltipPredicate("Save the file", StringComparators.strict(), 0);
-
-        assertThat(onQueue(() -> predicate.test(component))).isTrue();
-    }
-
-    /**
-     * The old skip-the-first-n-visited semantics never reset between wait retries; a nonzero
-     * index is rejected loudly instead of silently matching a different component.
-     */
-    @SuppressWarnings("deprecation")
-    @Test
-    void deprecatedConstructorRejectsNonzeroIndex() {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> new TrimmingTooltipPredicate("Save the file", StringComparators.strict(), 1));
     }
 }
