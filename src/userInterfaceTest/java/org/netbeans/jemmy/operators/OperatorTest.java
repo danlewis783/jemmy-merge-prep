@@ -30,6 +30,9 @@ import java.awt.Panel;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +43,13 @@ import org.netbeans.jemmy.testing.DumpOnFailure;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
+
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 
 @ExtendWith(DumpOnFailure.class)
@@ -109,5 +119,67 @@ class OperatorTest {
     void testRunMapping() {
         FrameOperator operator = FrameOperator.waitFor();
         ContainerOperator.waitFor(operator);
+    }
+
+
+    @Test
+    void waitStateOnQueueEvaluatesPredicateOnEventDispatchThread() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+        AtomicBoolean ranOnQueue = new AtomicBoolean();
+        operator.waitStateOnQueue(op -> {
+            ranOnQueue.set(SwingUtilities.isEventDispatchThread());
+
+            return true;
+        });
+        assertThat(ranOnQueue)
+                .as("predicate must be evaluated on the event dispatch thread")
+                .isTrue();
+    }
+
+    @Test
+    void waitStateEvaluatesPredicateOnEventDispatchThread() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+        AtomicBoolean ranOnQueue = new AtomicBoolean();
+        operator.waitState(op -> {
+            ranOnQueue.set(SwingUtilities.isEventDispatchThread());
+
+            return true;
+        });
+        assertThat(ranOnQueue)
+                .as("plain waitState also evaluates the predicate on the event dispatch thread")
+                .isTrue();
+    }
+
+    @Test
+    void waitStateStableRestartsTheIntervalAfterFalse() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+        AtomicInteger evaluations = new AtomicInteger();
+
+        operator.waitStateStable(op -> evaluations.incrementAndGet() != 2, 1);
+
+        assertThat(evaluations)
+                .as("true, false, and a complete second stable interval must all be observed")
+                .hasValueGreaterThanOrEqualTo(4);
+    }
+
+    @Test
+    void waitStateStableRejectsNegativeDuration() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> operator.waitStateStable(op -> true, -1))
+                .withMessage("stableTimeMs must not be negative");
+    }
+
+    @Test
+    void waitStateChangeRequiresAnEdgeAfterTheInitialObservation() {
+        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
+        AtomicInteger evaluations = new AtomicInteger();
+
+        operator.waitStateChange(op -> evaluations.incrementAndGet() == 1);
+
+        assertThat(evaluations)
+                .as("the initial true state and a later false state must both be observed")
+                .hasValueGreaterThanOrEqualTo(2);
     }
 }

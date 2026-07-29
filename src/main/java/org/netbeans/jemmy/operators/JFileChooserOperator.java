@@ -830,7 +830,7 @@ public class JFileChooserOperator extends JComponentOperator {
             return ((comp instanceof JList)
                             && (fileListName != null)
                             && fileListName.equals(comp.getAccessibleContext().getAccessibleName()))
-                    || (comp instanceof JTable);
+                    /*|| (comp instanceof JTable)*/;
         }
 
         @Override
