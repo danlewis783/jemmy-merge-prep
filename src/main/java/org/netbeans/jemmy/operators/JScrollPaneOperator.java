@@ -245,45 +245,22 @@ public class JScrollPaneOperator extends JComponentOperator {
     }
 
     public boolean checkInside(Component comp, int x, int y, int width, int height) {
-        initOperators();
-
         return QueueTool.getInstance().callOnQueue(() -> {
-            Component view = getViewport().getView();
+            JViewport viewport = getSource().getViewport();
+            Component view = viewport.getView();
+            if (view == null) {
+                return false;
+            }
+
             Point toPoint = SwingUtilities.convertPoint(comp, x, y, view);
-
-            if ((hScrollBarOper != null) && hScrollBarOper.isVisible()) {
-                int value = hScrollBarOper.getValue();
-                if (toPoint.x < value) {
-                    return false;
-                }
-
-                if (comp.getWidth() > view.getWidth()) {
-                    return toPoint.x > 0;
-                } else {
-                    return toPoint.x + comp.getWidth() > value + view.getWidth();
-                }
-            }
-
-            if ((vScrollBarOper != null) && vScrollBarOper.isVisible()) {
-                int value = vScrollBarOper.getValue();
-                if (toPoint.y < value) {
-                    return false;
-                }
-
-                if (comp.getHeight() > view.getHeight()) {
-                    return toPoint.y > 0;
-                } else {
-                    return toPoint.y + comp.getHeight() > value + view.getHeight();
-                }
-            }
-
-            return true;
+            Rectangle targetBounds = new Rectangle(toPoint.x, toPoint.y, width, height);
+            return viewport.getViewRect().contains(targetBounds);
         });
     }
 
     public boolean checkInside(Component comp) {
-        return QueueTool.getInstance()
-                .callOnQueue(() -> checkInside(comp, 0, 0, comp.getWidth(), comp.getHeight()));
+        Dimension size = QueueTool.getInstance().callOnQueue(comp::getSize);
+        return checkInside(comp, 0, 0, size.width, size.height);
     }
 
     public JScrollBar createHorizontalScrollBar() {

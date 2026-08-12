@@ -27,9 +27,14 @@ package org.netbeans.jemmy.util;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import org.netbeans.jemmy.JemmyInputException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
@@ -89,9 +94,46 @@ public class DefaultVisualizer implements ComponentVisualizer {
     }
 
     protected void scroll(JScrollPaneOperator jspOp, Component target) {
-        if (!jspOp.checkInside(target)) {
-            jspOp.scrollToComponent(target);
+        QueueTool.getInstance().runOnQueue(() -> {
+            JViewport viewport = jspOp.getSource().getViewport();
+            Component view = viewport.getView();
+            if (view == null) {
+                return;
+            }
+
+            Rectangle targetBounds = SwingUtilities.convertRectangle(
+                    target, new Rectangle(0, 0, target.getWidth(), target.getHeight()), view);
+            if (!viewport.getViewRect().contains(targetBounds)) {
+                if (view instanceof JComponent) {
+                    ((JComponent) view).scrollRectToVisible(targetBounds);
+                } else {
+                    scrollViewToRectangle(viewport, view, targetBounds);
+                }
+            }
+        });
+    }
+
+    private static void scrollViewToRectangle(JViewport viewport, Component view, Rectangle targetBounds) {
+        Rectangle visible = viewport.getViewRect();
+        int x = visible.x;
+        int y = visible.y;
+
+        if (targetBounds.x < visible.x) {
+            x = targetBounds.x;
+        } else if (targetBounds.x + targetBounds.width > visible.x + visible.width) {
+            x = targetBounds.x + targetBounds.width - visible.width;
         }
+
+        if (targetBounds.y < visible.y) {
+            y = targetBounds.y;
+        } else if (targetBounds.y + targetBounds.height > visible.y + visible.height) {
+            y = targetBounds.y + targetBounds.height - visible.height;
+        }
+
+        int maxX = Math.max(0, view.getWidth() - visible.width);
+        int maxY = Math.max(0, view.getHeight() - visible.height);
+        viewport.setViewPosition(
+                new Point(Math.max(0, Math.min(x, maxX)), Math.max(0, Math.min(y, maxY))));
     }
 
     protected void switchTab(JTabbedPaneOperator jtpOp, Component target) {

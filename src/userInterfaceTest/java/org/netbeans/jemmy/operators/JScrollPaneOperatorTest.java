@@ -21,6 +21,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Rectangle;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
@@ -52,6 +53,7 @@ class JScrollPaneOperatorTest {
             frame = new JFrame();
             textArea = new JTextArea("JTextArea");
             textArea.setSize(1_000, 1_000);
+            textArea.setPreferredSize(new Dimension(1_000, 1_000));
             textArea.setMaximumSize(new Dimension(1_000, 1_000));
             textArea.setMinimumSize(new Dimension(1_000, 1_000));
             JScrollPane scrollPane = new JScrollPane(textArea);
@@ -217,7 +219,20 @@ class JScrollPaneOperatorTest {
         showFrame();
         JFrameOperator operator = JFrameOperator.waitFor();
         JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
-        operator1.checkInside(textArea);
+        Rectangle initialView = onQueue(() -> operator1.getViewport().getViewRect());
+        assertThat(operator1.checkInside(textArea)).isFalse();
+        assertThat(operator1.checkInside(textArea, initialView.x, initialView.y, 10, 10)).isTrue();
+        assertThat(operator1.checkInside(
+                        textArea, initialView.x + initialView.width + 1, initialView.y, 10, 10))
+                .isFalse();
+
+        operator1.setValues(900, 900);
+
+        Rectangle scrolledView = onQueue(() -> operator1.getViewport().getViewRect());
+        assertThat(scrolledView.x).isGreaterThan(initialView.x);
+        assertThat(scrolledView.y).isGreaterThan(initialView.y);
+        assertThat(operator1.checkInside(textArea, initialView.x, initialView.y, 10, 10)).isFalse();
+        assertThat(operator1.checkInside(textArea, scrolledView.x, scrolledView.y, 10, 10)).isTrue();
     }
 
     @Test
