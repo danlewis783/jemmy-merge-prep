@@ -244,23 +244,41 @@ public class JScrollPaneOperator extends JComponentOperator {
         return Objects.requireNonNull(vScrollBarOper, "scroll pane has no vertical scroll bar");
     }
 
+    /**
+     * Checks whether the given rectangle in {@code comp}'s coordinate space is as visible as
+     * scrolling can make it: on each axis, either fully inside the viewport's view rectangle or,
+     * when larger than it, covering it entirely. A zero-width or zero-height rectangle acts as a
+     * point check.
+     */
     public boolean checkInside(Component comp, int x, int y, int width, int height) {
-        return QueueTool.getInstance().callOnQueue(() -> {
-            JViewport viewport = getSource().getViewport();
-            Component view = viewport.getView();
-            if (view == null) {
-                return false;
-            }
-
-            Point toPoint = SwingUtilities.convertPoint(comp, x, y, view);
-            Rectangle targetBounds = new Rectangle(toPoint.x, toPoint.y, width, height);
-            return viewport.getViewRect().contains(targetBounds);
-        });
+        return QueueTool.getInstance().callOnQueue(() -> checkInsideNow(comp, x, y, width, height));
     }
 
+    /**
+     * Checks {@code comp}'s whole bounds, per
+     * {@link #checkInside(Component, int, int, int, int)}.
+     */
     public boolean checkInside(Component comp) {
-        Dimension size = QueueTool.getInstance().callOnQueue(comp::getSize);
-        return checkInside(comp, 0, 0, size.width, size.height);
+        return QueueTool.getInstance()
+                .callOnQueue(() -> checkInsideNow(comp, 0, 0, comp.getWidth(), comp.getHeight()));
+    }
+
+    private boolean checkInsideNow(Component comp, int x, int y, int width, int height) {
+        JViewport viewport = getSource().getViewport();
+        Component view = (viewport == null) ? null : viewport.getView();
+        if (view == null) {
+            return false;
+        }
+
+        Point toPoint = SwingUtilities.convertPoint(comp, x, y, view);
+        Rectangle viewRect = viewport.getViewRect();
+        return axisInside(toPoint.x, width, viewRect.x, viewRect.width)
+                && axisInside(toPoint.y, height, viewRect.y, viewRect.height);
+    }
+
+    private static boolean axisInside(int pos, int extent, int viewPos, int viewExtent) {
+        return (pos >= viewPos && pos + extent <= viewPos + viewExtent)
+                || (pos <= viewPos && pos + extent >= viewPos + viewExtent);
     }
 
     public JScrollBar createHorizontalScrollBar() {
@@ -479,7 +497,7 @@ public class JScrollPaneOperator extends JComponentOperator {
                 int vl = op.getValue();
                 if (to < vl) {
                     return ScrollAdjuster.DECREASE_SCROLL_DIRECTION;
-                } else if ((to + ln - 1 > vl + lv) && (to > vl)) {
+                } else if ((to + ln > vl + lv) && (to > vl)) {
                     return ScrollAdjuster.INCREASE_SCROLL_DIRECTION;
                 } else {
                     return ScrollAdjuster.DO_NOT_TOUCH_SCROLL_DIRECTION;

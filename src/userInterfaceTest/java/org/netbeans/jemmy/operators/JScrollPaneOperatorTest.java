@@ -217,22 +217,26 @@ class JScrollPaneOperatorTest {
     @Test
     void testCheckInside() throws InterruptedException, InvocationTargetException {
         showFrame();
-        JFrameOperator operator = JFrameOperator.waitFor();
-        JScrollPaneOperator operator1 = JScrollPaneOperator.waitFor(operator);
-        Rectangle initialView = onQueue(() -> operator1.getViewport().getViewRect());
-        assertThat(operator1.checkInside(textArea)).isFalse();
-        assertThat(operator1.checkInside(textArea, initialView.x, initialView.y, 10, 10)).isTrue();
-        assertThat(operator1.checkInside(
+        JFrameOperator frameOp = JFrameOperator.waitFor();
+        JScrollPaneOperator scrollPaneOp = JScrollPaneOperator.waitFor(frameOp);
+        Rectangle initialView = onQueue(() -> scrollPaneOp.getViewport().getViewRect());
+        // the whole text area covers the viewport, so it is as visible as scrolling can make it
+        assertThat(scrollPaneOp.checkInside(textArea)).isTrue();
+        assertThat(scrollPaneOp.checkInside(textArea, initialView.x, initialView.y, 10, 10)).isTrue();
+        // a zero-size rectangle acts as a point check
+        assertThat(scrollPaneOp.checkInside(textArea, initialView.x, initialView.y, 0, 0)).isTrue();
+        assertThat(scrollPaneOp.checkInside(
                         textArea, initialView.x + initialView.width + 1, initialView.y, 10, 10))
                 .isFalse();
 
-        operator1.setValues(900, 900);
+        scrollPaneOp.setValues(900, 900);
 
-        Rectangle scrolledView = onQueue(() -> operator1.getViewport().getViewRect());
+        Rectangle scrolledView = onQueue(() -> scrollPaneOp.getViewport().getViewRect());
         assertThat(scrolledView.x).isGreaterThan(initialView.x);
         assertThat(scrolledView.y).isGreaterThan(initialView.y);
-        assertThat(operator1.checkInside(textArea, initialView.x, initialView.y, 10, 10)).isFalse();
-        assertThat(operator1.checkInside(textArea, scrolledView.x, scrolledView.y, 10, 10)).isTrue();
+        assertThat(scrollPaneOp.checkInside(textArea)).isTrue();
+        assertThat(scrollPaneOp.checkInside(textArea, initialView.x, initialView.y, 10, 10)).isFalse();
+        assertThat(scrollPaneOp.checkInside(textArea, scrolledView.x, scrolledView.y, 10, 10)).isTrue();
     }
 
     @Test
