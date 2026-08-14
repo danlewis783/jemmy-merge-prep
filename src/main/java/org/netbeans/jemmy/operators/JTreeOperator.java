@@ -329,6 +329,32 @@ public class JTreeOperator extends JComponentOperator {
         return findRow(chooser, 0);
     }
 
+    public int waitRow(TreeRowChooser chooser, int index) {
+        waitState((Predicate<JTreeOperator>) op -> op.findRow(chooser, index) != -1);
+
+        return findRow(chooser, index);
+    }
+
+    public int waitRow(TreeRowChooser chooser) {
+        return waitRow(chooser, 0);
+    }
+
+    public int waitRow(String item, StringComparator comparator, int index) {
+        return waitRow(new BySubStringTreeRowChooser(item, comparator), index);
+    }
+
+    public int waitRow(String item, StringComparator comparator) {
+        return waitRow(item, comparator, 0);
+    }
+
+    public int waitRow(Predicate<Component> chooser, int index) {
+        return waitRow(new ByRenderedComponentTreeRowChooser(chooser), index);
+    }
+
+    public int waitRow(Predicate<Component> chooser) {
+        return waitRow(chooser, 0);
+    }
+
     public @Nullable TreePath findPath(String[] names, int[] indexes, StringComparator comparator) {
         return findPath(new StringArrayPathChooser(names, indexes, comparator));
     }

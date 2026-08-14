@@ -329,6 +329,113 @@ public class JTableOperator extends JComponentOperator {
         return findCell(chooser, 0);
     }
 
+    public Point waitCell(String text, StringComparator comparator, int index) {
+        return waitCell(new ByTableCellResidentToStringChooser(text, comparator), index);
+    }
+
+    public Point waitCell(
+            String text, StringComparator comparator, int @Nullable [] rows, int @Nullable [] columns, int index) {
+        return waitCell(new ByTableCellResidentToStringChooser(text, comparator), rows, columns, index);
+    }
+
+    public int waitCellRow(String text, StringComparator comparator, int column, int index) {
+        return waitCell(text, comparator, null, new int[] {column}, index).y;
+    }
+
+    public int waitCellColumn(String text, StringComparator comparator, int index) {
+        return waitCell(text, comparator, index).x;
+    }
+
+    public int waitCellColumn(String text, StringComparator comparator, int row, int index) {
+        return waitCell(text, comparator, new int[] {row}, null, index).x;
+    }
+
+    public int waitCellRow(String text, StringComparator comparator) {
+        return waitCellRow(text, comparator, 0, 0);
+    }
+
+    public int waitCellColumn(String text, StringComparator comparator) {
+        return waitCellColumn(text, comparator, 0);
+    }
+
+    public int waitCellRow(String text, StringComparator comparator, int index) {
+        return waitCell(text, comparator, index).y;
+    }
+
+    public int waitCellRow(Predicate<Component> chooser, int index) {
+        return waitCell(chooser, index).y;
+    }
+
+    public int waitCellRow(Predicate<Component> chooser, int column, int index) {
+        return waitCell(chooser, null, new int[] {column}, index).y;
+    }
+
+    public int waitCellColumn(Predicate<Component> chooser, int index) {
+        return waitCell(chooser, index).x;
+    }
+
+    public int waitCellColumn(Predicate<Component> chooser, int row, int index) {
+        return waitCell(chooser, new int[] {row}, null, index).x;
+    }
+
+    public Point waitCell(Predicate<Component> chooser, int index) {
+        return waitCell(new ByRenderedComponentTableCellChooser(chooser), index);
+    }
+
+    public Point waitCell(Predicate<Component> chooser, int @Nullable [] rows, int @Nullable [] columns, int index) {
+        return waitCell(new ByRenderedComponentTableCellChooser(chooser), rows, columns, index);
+    }
+
+    public int waitCellRow(Predicate<Component> chooser) {
+        return waitCellRow(chooser, 0);
+    }
+
+    public int waitCellColumn(Predicate<Component> chooser) {
+        return waitCellColumn(chooser, 0);
+    }
+
+    public Point waitCell(Predicate<Component> chooser) {
+        return waitCell(chooser, 0);
+    }
+
+    public int waitCellRow(TableCellChooser chooser, int index) {
+        return waitCell(chooser, index).y;
+    }
+
+    public int waitCellRow(TableCellChooser chooser, int column, int index) {
+        return waitCell(chooser, null, new int[] {column}, index).y;
+    }
+
+    public int waitCellColumn(TableCellChooser chooser, int index) {
+        return waitCell(chooser, index).x;
+    }
+
+    public int waitCellColumn(TableCellChooser chooser, int row, int index) {
+        return waitCell(chooser, new int[] {row}, null, index).x;
+    }
+
+    public Point waitCell(TableCellChooser chooser, int index) {
+        return waitCell(chooser, null, null, index);
+    }
+
+    public Point waitCell(TableCellChooser chooser, int @Nullable [] rows, int @Nullable [] columns, int index) {
+        waitState((Predicate<JTableOperator>) op -> op.findCell(chooser, rows, columns, index).x != -1);
+
+        return findCell(chooser, rows, columns, index);
+    }
+
+    public int waitCellRow(TableCellChooser chooser) {
+        return waitCellRow(chooser, 0);
+    }
+
+    public int waitCellColumn(TableCellChooser chooser) {
+        return waitCellColumn(chooser, 0);
+    }
+
+    public Point waitCell(TableCellChooser chooser) {
+        return waitCell(chooser, 0);
+    }
+
     public void clickOnCell(int row, int column, int clickCount, int button, int modifiers) {
         makeComponentVisible();
         scrollToCell(row, column);

@@ -397,6 +397,13 @@ class JTreeOperatorTest {
     }
 
     @Test
+    void testWaitRow() {
+        JFrameOperator operator = JFrameOperator.waitFor();
+        JTreeOperator operator2 = JTreeOperator.waitFor(operator);
+        assertThat(operator2.waitRow("colors", StringComparators.strict())).isEqualTo(1);
+    }
+
+    @Test
     void testChooseSubnode() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTreeOperator.waitFor(operator);

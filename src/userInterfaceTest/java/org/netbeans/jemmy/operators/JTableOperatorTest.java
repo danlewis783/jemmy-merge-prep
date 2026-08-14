@@ -273,6 +273,15 @@ class JTableOperatorTest {
     }
 
     @Test
+    void testWaitCell() {
+        JFrameOperator operator = JFrameOperator.waitFor();
+        JTableOperator operator1 = JTableOperator.waitFor(operator);
+        assertThat(operator1.waitCell("Mary", StringComparators.strict(), 0)).isEqualTo(new Point(0, 0));
+        assertThat(operator1.waitCellRow("Mary", StringComparators.strict())).isEqualTo(0);
+        assertThat(operator1.waitCellColumn("Mary", StringComparators.strict())).isEqualTo(0);
+    }
+
+    @Test
     void testAddColumn() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
