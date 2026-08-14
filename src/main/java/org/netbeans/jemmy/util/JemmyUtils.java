@@ -109,22 +109,10 @@ public final class JemmyUtils {
 
     public static void useOpenDialog(String fileName) {
         Objects.requireNonNull(fileName, "fileName");
-        JDialogOperator openDialog = waitForDialog(OPEN, StringComparators.caseInsensitiveSubstring());
+        JDialogOperator openDialog = JDialogOperator.of(JDialogOperator.waitJDialog(OPEN, StringComparators.caseInsensitiveSubstring()));
         JTextFieldOperator jTextFieldOperator = JTextFieldOperator.waitFor(openDialog);
         jTextFieldOperator.setText(fileName);
         pushBlockingButton(openDialog, OPEN);
-    }
-
-    /**
-     * Waits for a showing dialog whose title matches exactly, consistent with
-     * {@link #waitForOptionalDialog(String, long)}. Pass a comparator for looser matching.
-     */
-    public static JDialogOperator waitForDialog(String title) {
-        return waitForDialog(title, StringComparators.strict());
-    }
-
-    public static JDialogOperator waitForDialog(String title, StringComparator comparator) {
-        return JDialogOperator.of(JDialogOperator.waitJDialog(title, comparator));
     }
 
     public static void pushBlockingButton(ContainerOperator parent, String text) {
