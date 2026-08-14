@@ -141,7 +141,7 @@ class JSpinnerOperatorTest {
         assertThat(jSpinnerOpList.getValue()).isEqualTo("2");
         jSpinnerOpList.scrollToIndex(0);
         assertThat(jSpinnerOpList.getValue()).isEqualTo("1");
-        assertThat(jSpinnerOpList.findItem("1", STRICT)).isEqualTo(0);
+        assertThat(jSpinnerOpList.findItemIndex("1", STRICT)).isEqualTo(0);
         assertThatExceptionOfType(JemmyException.class)
                 .isThrownBy(() -> jSpinnerOpList.scrollToString("-1", STRICT))
                 .withMessage("No \"-1\" item in JSpinner");

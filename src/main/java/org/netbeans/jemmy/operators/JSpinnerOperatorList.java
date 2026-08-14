@@ -34,7 +34,7 @@ public class JSpinnerOperatorList extends JSpinnerOperator {
         return (SpinnerListModel) getModel();
     }
 
-    public int findItem(String pattern, StringComparator comparator) {
+    public int findItemIndex(String pattern, StringComparator comparator) {
         return QueueTool.getInstance().callOnQueue(() -> {
             List<?> list = getListModel().getList();
             for (int i = 0, iMax = list.size(); i < iMax; i++) {
@@ -52,7 +52,7 @@ public class JSpinnerOperatorList extends JSpinnerOperator {
     }
 
     public void scrollToString(String pattern, StringComparator comparator) {
-        int index = findItem(pattern, comparator);
+        int index = findItemIndex(pattern, comparator);
         if (index != -1) {
             scrollToIndex(index);
         } else {
