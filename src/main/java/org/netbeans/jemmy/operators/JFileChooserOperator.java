@@ -722,30 +722,6 @@ public class JFileChooserOperator extends JComponentOperator {
         return waitJFileChooser(waitJFileChooserFrame());
     }
 
-    /**
-     * @deprecated Use {@link #findJFileChooserInDialog()} instead.
-     */
-    @Deprecated
-    public static @Nullable JFileChooser findJFileChooser() {
-        return findJFileChooserInDialog();
-    }
-
-    /**
-     * @deprecated Use {@link #waitJFileChooserInFrame()} instead.
-     */
-    @Deprecated
-    public static JFileChooser waitJFileChooser2() {
-        return waitJFileChooserInFrame();
-    }
-
-    /**
-     * @deprecated Use {@link #waitJFileChooserInDialog()} instead.
-     */
-    @Deprecated
-    public static JFileChooser waitJFileChooser() {
-        return waitJFileChooserInDialog();
-    }
-
     private static class JFileChooserOperatorByFileCountPredicate implements Predicate<JFileChooserOperator> {
         private final int count;
 
