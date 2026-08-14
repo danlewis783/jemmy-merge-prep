@@ -119,8 +119,8 @@ class TabbedPanePageSwitchTest {
             assertThat(list).isNotNull();
             JListOperator lo = JListOperator.of(list);
             assertThat(lo.clickOnItem(1, 1)).isNotNull();
-            lo.waitItem("two", StringComparators.strict(), 1);
-            lo.waitItem("two", StringComparators.strict(), -1);
+            lo.waitItemText("two", StringComparators.strict(), 1);
+            lo.waitItemText("two", StringComparators.strict(), -1);
             lo.waitItemSelection(1, true);
             assertThat(lo.getSelectedIndex()).isEqualTo(1);
             assertThat(lo.getSelectedValue()).isEqualTo("two");

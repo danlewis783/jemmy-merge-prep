@@ -180,7 +180,7 @@ final class TabbedComponentsWorkflowTest {
                 .isSameAs(JTableOperator.waitFor(jFrameOp, "4949", STRICT, 49, 49)
                         .getSource());
         jTableOp.changeCellObject(49, 49, "-1-1");
-        jTableOp.waitCell("-1-1", STRICT, 49, 49);
+        jTableOp.waitCellText("-1-1", STRICT, 49, 49);
         assertThat(jTableOp.getValueAt(49, 49)).hasToString("-1-1");
         jTableOp.scrollToCell(jTableOp.findCellRow("2424", STRICT), jTableOp.findCellColumn("2424", STRICT));
         EventQueue.invokeAndWait(() -> jTableOp.getModel().setValueAt(null, 24, 24));
@@ -188,7 +188,7 @@ final class TabbedComponentsWorkflowTest {
         jTableOp.scrollToCell(jTableOp.findCellRow("00", STRICT), jTableOp.findCellColumn("00", STRICT));
         jTableOp.scrollToCell(jTableOp.findCellRow("-1-1", STRICT), jTableOp.findCellColumn("-1-1", STRICT));
         jTableOp.changeCellObject(1, 0, "non null text");
-        jTableOp.waitCell("non null text", caseInsensitiveSubstring(), 1, 0);
+        jTableOp.waitCellText("non null text", caseInsensitiveSubstring(), 1, 0);
         assertThat(jTableOp.findCellRow("-1-1", STRICT)).isEqualTo(-1);
         jTabbedPaneOp.selectPage("Tree Page", STRICT);
         JTreeOperator jTreeOp = JTreeOperator.waitFor(JFrameOperator.of(jFrame));
@@ -209,7 +209,7 @@ final class TabbedComponentsWorkflowTest {
         jTreeOp.doExpandPath(path49);
         TreePath path4949 = jTreeOp.waitPath("49/4949", "/", STRICT);
         assertThat(path4949).isNotNull();
-        jTreeOp.waitRow("4949", regex(), 100);
+        jTreeOp.waitRowText("4949", regex(), 100);
         jTreeOp.changePathObject(path4949, "-1-1");
         TreePath pathMinus1Minus1 = jTreeOp.waitPath("49/-1-1", "/", STRICT);
         assertThat(pathMinus1Minus1).isNotNull();

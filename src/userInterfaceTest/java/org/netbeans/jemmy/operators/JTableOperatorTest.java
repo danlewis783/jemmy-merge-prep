@@ -266,10 +266,10 @@ class JTableOperatorTest {
     }
 
     @Test
-    void testWaitCell() {
+    void testWaitCellText() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
-        operator1.waitCell("Mary", StringComparators.strict(), 0, 0);
+        operator1.waitCellText("Mary", StringComparators.strict(), 0, 0);
     }
 
     @Test

@@ -234,10 +234,10 @@ class JListOperatorTest {
     }
 
     @Test
-    void testWaitItem() {
+    void testWaitItemText() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JListOperator operator1 = JListOperator.waitFor(operator);
-        operator1.waitItem("one", StringComparators.strict(), 0);
+        operator1.waitItemText("one", StringComparators.strict(), 0);
     }
 
     @Test

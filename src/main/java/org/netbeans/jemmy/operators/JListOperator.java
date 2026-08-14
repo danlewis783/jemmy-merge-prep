@@ -394,7 +394,7 @@ public class JListOperator extends JComponentOperator {
         waitItemsSelection(new int[] {itemIndex}, selected);
     }
 
-    public void waitItem(String item, StringComparator stringComparator, int itemIndex) {
+    public void waitItemText(String item, StringComparator stringComparator, int itemIndex) {
         waitState(new JListOperatorByItemPredicate<>(item, itemIndex, stringComparator));
     }
 

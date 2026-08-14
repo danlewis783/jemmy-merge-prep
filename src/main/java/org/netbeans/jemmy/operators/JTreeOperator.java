@@ -649,7 +649,7 @@ public class JTreeOperator extends JComponentOperator {
         waitSelected(new int[] {row});
     }
 
-    public void waitRow(String rowText, StringComparator comparator, int row) {
+    public void waitRowText(String rowText, StringComparator comparator, int row) {
         waitState(new JTreeOperatorByItemPredicate(rowText, row, comparator));
     }
 

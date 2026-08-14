@@ -426,7 +426,7 @@ public class JTableOperator extends JComponentOperator {
                 .runUntilNotNull(null);
     }
 
-    public void waitCell(String cellText, StringComparator comparator, int row, int column) {
+    public void waitCellText(String cellText, StringComparator comparator, int row, int column) {
         waitState(new JTableOperatorByCellValuePredicate(cellText, row, column, comparator));
     }
 

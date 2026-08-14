@@ -390,10 +390,10 @@ class JTreeOperatorTest {
     }
 
     @Test
-    void testWaitRow() {
+    void testWaitRowText() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTreeOperator operator2 = JTreeOperator.waitFor(operator);
-        operator2.waitRow("colors", StringComparators.strict(), 1);
+        operator2.waitRowText("colors", StringComparators.strict(), 1);
     }
 
     @Test
