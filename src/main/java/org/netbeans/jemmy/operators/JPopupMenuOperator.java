@@ -408,26 +408,6 @@ public class JPopupMenuOperator extends JComponentOperator {
                 .runUntilNotNull(null);
     }
 
-    /**
-     * @deprecated Use {@link #waitFor(Predicate)} instead. The
-     *             {@code waitJPopupMenu} family otherwise returns raw
-     *             {@link JPopupMenu} instances.
-     */
-    @Deprecated
-    public static JPopupMenuOperator waitJPopupMenu(Predicate<Component> popupChooser) {
-        return waitFor(popupChooser);
-    }
-
-    /**
-     * @deprecated Use {@link #waitFor(String)} instead. The
-     *             {@code waitJPopupMenu} family otherwise returns raw
-     *             {@link JPopupMenu} instances.
-     */
-    @Deprecated
-    public static JPopupMenuOperator waitJPopupMenu(String menuItemText) {
-        return waitFor(menuItemText);
-    }
-
     public static JPopupMenu callPopup(ComponentOperator op, int x, int y, int mouseButton) {
         op.makeComponentVisible();
         op.clickForPopup(x, y, mouseButton);
