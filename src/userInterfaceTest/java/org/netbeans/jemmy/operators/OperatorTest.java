@@ -123,20 +123,6 @@ class OperatorTest {
 
 
     @Test
-    void waitStateOnQueueEvaluatesPredicateOnEventDispatchThread() {
-        ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
-        AtomicBoolean ranOnQueue = new AtomicBoolean();
-        operator.waitStateOnQueue(op -> {
-            ranOnQueue.set(SwingUtilities.isEventDispatchThread());
-
-            return true;
-        });
-        assertThat(ranOnQueue)
-                .as("predicate must be evaluated on the event dispatch thread")
-                .isTrue();
-    }
-
-    @Test
     void waitStateEvaluatesPredicateOnEventDispatchThread() {
         ComponentOperator operator = ComponentOperator.of(onQueue(JLabel::new));
         AtomicBoolean ranOnQueue = new AtomicBoolean();

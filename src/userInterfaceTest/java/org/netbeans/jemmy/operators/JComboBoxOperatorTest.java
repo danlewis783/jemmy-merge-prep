@@ -188,11 +188,11 @@ class JComboBoxOperatorTest {
     }
 
     @Test
-    void testWaitItem() {
+    void testWaitItemIndex() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JComboBoxOperator operator1 = JComboBoxOperator.waitFor(operator);
-        operator1.waitItem(0);
-        operator1.waitItem("JComboBoxOperatorTest", StringComparators.alwaysEqual());
+        operator1.waitItemIndex(0);
+        operator1.waitItemIndex("JComboBoxOperatorTest", StringComparators.alwaysEqual());
     }
 
     @Test

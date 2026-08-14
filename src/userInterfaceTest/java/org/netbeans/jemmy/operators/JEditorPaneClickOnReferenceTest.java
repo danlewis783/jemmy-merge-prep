@@ -110,7 +110,7 @@ class JEditorPaneClickOnReferenceTest {
 
         // long page: the anchor must be scrolled to first
         operator.clickOnReference(PAGE1);
-        operator.waitStateOnQueue(op -> {
+        operator.waitState(op -> {
             URL page = ((JEditorPane) op.getSource()).getPage();
 
             return (page != null) && page.toString().contains(PAGE1);
@@ -152,11 +152,11 @@ class JEditorPaneClickOnReferenceTest {
     }
 
     private static void checkPageLoaded(JEditorPaneOperator operator, String page, String text) {
-        operator.waitStateOnQueue(op -> {
+        operator.waitState(op -> {
             URL current = ((JEditorPane) op.getSource()).getPage();
 
             return (current != null) && current.toString().contains(page);
         });
-        operator.waitStateOnQueue(op -> ((JEditorPane) op.getSource()).getText().contains(text));
+        operator.waitState(op -> ((JEditorPane) op.getSource()).getText().contains(text));
     }
 }

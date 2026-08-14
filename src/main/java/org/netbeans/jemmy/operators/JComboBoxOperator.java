@@ -228,22 +228,6 @@ public class JComboBoxOperator extends JComponentOperator {
         return itemIndex;
     }
 
-    /**
-     * @deprecated Use {@link #waitItemIndex(String, StringComparator)}.
-     */
-    @Deprecated
-    public int waitItem(String item, StringComparator comparator) {
-        return waitItemIndex(item, comparator);
-    }
-
-    /**
-     * @deprecated Use {@link #waitItemIndex(int)}.
-     */
-    @Deprecated
-    public int waitItem(int itemIndex) {
-        return waitItemIndex(itemIndex);
-    }
-
     public void selectItem(String item, StringComparator comparator) {
         selectItem(waitItemIndex(item, comparator));
     }

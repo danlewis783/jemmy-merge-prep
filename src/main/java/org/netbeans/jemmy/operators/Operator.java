@@ -201,30 +201,6 @@ public abstract class Operator {
                 .runUntilTrue();
     }
 
-    /**
-     * Identical to {@link #waitState(Predicate)}, which now always evaluates the predicate on the
-     * event dispatch thread.
-     *
-     * @deprecated Use {@link #waitState(Predicate)}. The queue-specific name describes a distinction
-     *     that no longer exists.
-     */
-    @Deprecated
-    public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate) {
-        waitState(predicate);
-    }
-
-    /**
-     * Identical to {@link #waitState(Predicate, TimeoutKey)}, which now always evaluates the
-     * predicate on the event dispatch thread.
-     *
-     * @deprecated Use {@link #waitState(Predicate, TimeoutKey)}. The queue-specific name describes a
-     *     distinction that no longer exists.
-     */
-    @Deprecated
-    public <T extends Operator> void waitStateOnQueue(Predicate<T> predicate, TimeoutKey timeoutKey) {
-        waitState(predicate, timeoutKey);
-    }
-
     @SuppressWarnings("SameParameterValue")
     <R> @Nullable R supplyTimeRestricted(Supplier<@Nullable R> supplier, TimeoutKey timeoutKey) {
         SupplierRunner<R> supplierRunner = SupplierRunner.on(supplier);

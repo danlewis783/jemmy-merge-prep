@@ -176,7 +176,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
                     "Component doesn't contain JScrollPane and Reference is out of visible area");
         }
 
-        waitStateOnQueue(op -> expectedCaretPosLoc.equals(
+        waitState(op -> expectedCaretPosLoc.equals(
                 ((JEditorPane) op.getSource()).getCaret().getMagicCaretPosition()));
         waitCaretPosition(expectedCaretPos);
         clickMouse(viewBounds.x, viewBounds.y, 1);
