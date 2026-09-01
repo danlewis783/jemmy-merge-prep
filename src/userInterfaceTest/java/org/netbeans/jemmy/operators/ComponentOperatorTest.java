@@ -605,6 +605,13 @@ class ComponentOperatorTest {
     }
 
     @Test
+    void testGetBoundsOnScreen() {
+        FrameOperator operator = FrameOperator.waitFor();
+        assertThat(operator.getBoundsOnScreen())
+                .isEqualTo(onQueue(() -> new Rectangle(frame.getLocationOnScreen(), frame.getSize())));
+    }
+
+    @Test
     void testGetMaximumSize() {
         FrameOperator operator = FrameOperator.waitFor();
         ComponentOperator operator1 = ComponentOperator.waitFor(operator);

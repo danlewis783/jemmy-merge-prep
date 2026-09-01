@@ -566,6 +566,16 @@ public class ComponentOperator extends Operator {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getBounds(rectangle));
     }
 
+    /**
+     * Returns the component bounds in absolute screen coordinates. The location and size are read
+     * together on the event dispatch thread so the result cannot combine values from different
+     * component states.
+     */
+    public Rectangle getBoundsOnScreen() {
+        return QueueTool.getInstance()
+                .callOnQueue(() -> new Rectangle(getSource().getLocationOnScreen(), getSource().getSize()));
+    }
+
     public ColorModel getColorModel() {
         return QueueTool.getInstance().callOnQueue(() -> getSource().getColorModel());
     }

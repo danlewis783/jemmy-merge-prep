@@ -25,7 +25,11 @@ import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -41,13 +45,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class WaitDiagnostics {
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
+    private static final String HEADER = "--- wait diagnostics ---";
 
     private WaitDiagnostics() {
         // non-instantiable utility class
     }
 
     public static String capture() {
-        StringBuilder out = new StringBuilder("--- wait diagnostics ---");
+        StringBuilder out = new StringBuilder(HEADER);
         try {
             captureInto(out);
         } catch (RuntimeException e) {
@@ -55,6 +60,35 @@ public final class WaitDiagnostics {
         }
 
         return out.toString();
+    }
+
+    /**
+     * Returns whether a failure or anything in its cause/suppressed tree already contains wait diagnostics.
+     */
+    public static boolean isPresentIn(Throwable failure) {
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        ArrayDeque<Throwable> pending = new ArrayDeque<>();
+        pending.add(failure);
+
+        while (!pending.isEmpty()) {
+            Throwable current = pending.removeFirst();
+            if (!visited.add(current)) {
+                continue;
+            }
+
+            String message = current.getMessage();
+            if (message != null && message.contains(HEADER)) {
+                return true;
+            }
+
+            Throwable cause = current.getCause();
+            if (cause != null) {
+                pending.addLast(cause);
+            }
+            Collections.addAll(pending, current.getSuppressed());
+        }
+
+        return false;
     }
 
     private static void captureInto(StringBuilder out) {

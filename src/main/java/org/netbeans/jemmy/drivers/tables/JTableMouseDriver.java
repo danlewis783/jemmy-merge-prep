@@ -62,8 +62,16 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
                 .callOnQueue(() ->
                         !toper.isEditing() || (toper.getEditingRow() != row) || (toper.getEditingColumn() != column));
         if (needsEditClick) {
-            clickOnCell(toper, row, column, 2);
+            clickOnCell(toper, row, column, 2); // double-click
         }
+
+        // If click-driven activation did not start the requested editor, start it directly
+        // before looking for its text component.
+        QueueTool.getInstance().runOnQueue(() -> {
+            if (!toper.isEditing() || toper.getEditingRow() != row || toper.getEditingColumn() != column) {
+                toper.getSource().editCellAt(row, column);
+            }
+        });
 
         JTextComponentOperator textoper = JTextComponentOperator.of(
                 (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));

@@ -35,10 +35,11 @@ public class JTableByCellTooltipPredicate implements Predicate<Component> {
         if (comp instanceof JTable) {
             final JTable table = (JTable) comp;
 
-            if (table.getRowCount() > row && table.getColumnCount() > column) {
+            if ((tooltip == null || table.getRowCount() > row)
+                    && table.getColumnCount() > column) {
                 int r = row;
 
-                if (r == -1) {
+                if (tooltip != null && r == -1) {
                     int[] rows = table.getSelectedRows();
 
                     if (rows.length != 0) {

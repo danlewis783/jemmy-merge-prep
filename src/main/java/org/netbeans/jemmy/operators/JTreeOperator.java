@@ -436,9 +436,18 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void selectRow(int row) {
-        driver().selectItem(this, row);
-
+        selectRowNoWait(row);
         waitSelected(row);
+    }
+
+    /**
+     * Performs the row-selection action without applying Jemmy's built-in verification.
+     * Callers are responsible for any application-specific waiting or verification.
+     *
+     * @param row row to select
+     */
+    public void selectRowNoWait(int row) {
+        driver().selectItem(this, row);
     }
 
     public void selectPaths(TreePath[] paths) {
@@ -663,12 +672,7 @@ public class JTreeOperator extends JComponentOperator {
     }
 
     public void waitSelected(int[] rows) {
-        TreePath[] paths = new TreePath[rows.length];
-        for (int i = 0; i < rows.length; i++) {
-            paths[i] = getPathForRow(rows[i]);
-        }
-
-        waitSelected(paths);
+        waitState(new JTreeOperatorBySelectedRowsPredicate(rows));
     }
 
     public void waitSelected(int row) {
@@ -1334,6 +1338,24 @@ public class JTreeOperator extends JComponentOperator {
         @Override
         public String toString() {
             return "JTreeOperatorBySelectedPathsPredicate{paths=" + Arrays.toString(paths) + "}";
+        }
+    }
+
+    private static class JTreeOperatorBySelectedRowsPredicate implements Predicate<JTreeOperator> {
+        private final int[] rows;
+
+        private JTreeOperatorBySelectedRowsPredicate(int[] rows) {
+            this.rows = rows.clone();
+        }
+
+        @Override
+        public boolean test(JTreeOperator jTreeOperator) {
+            return Arrays.equals(jTreeOperator.getSelectionRows(), rows);
+        }
+
+        @Override
+        public String toString() {
+            return "JTreeOperatorBySelectedRowsPredicate{rows=" + Arrays.toString(rows) + "}";
         }
     }
 

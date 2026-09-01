@@ -70,6 +70,20 @@ class JTreeOperatorSelectionTest {
         assertThat(driver.attempts).as("the first stale-row selection must be retried").hasValue(2);
     }
 
+    @Test
+    void selectRowVerifiesTheRowWhenSelectionReplacesTheNode() {
+        Fixture fixture = onQueue(Fixture::new);
+        JTreeOperator operator = JTreeOperator.of(fixture.tree);
+        operator.setVisualizer(new EmptyVisualizer());
+        ReplacingTreeDriver driver = new ReplacingTreeDriver(fixture.model, fixture.root);
+        DriverManager.newInstance(JemmyContext.getInstance()).setDriver(DriverType.Tree, driver);
+
+        operator.selectRow(1);
+
+        assertThat(onQueue(fixture.tree::getSelectionRows)).containsExactly(1);
+        assertThat(onQueue(fixture.tree::getSelectionPath)).isNotEqualTo(fixture.targetPath);
+    }
+
     private static final class Fixture {
         private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
         private final DefaultMutableTreeNode target = new DefaultMutableTreeNode("target");
@@ -119,6 +133,52 @@ class JTreeOperatorSelectionTest {
             JTreeOperator tree = (JTreeOperator) op;
             tree.clearSelection();
             tree.addSelectionRows(indices);
+        }
+
+        @Override
+        public void expandItem(ComponentOperator op, int index) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void collapseItem(ComponentOperator op, int index) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void editItem(ComponentOperator op, int index, Object newValue, TimeoutKey waitEditorTime) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void startEditing(ComponentOperator op, int index, TimeoutKey waitEditorTime) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private static final class ReplacingTreeDriver extends LightSupportiveDriver implements TreeDriver {
+        private final DefaultTreeModel model;
+        private final DefaultMutableTreeNode root;
+
+        private ReplacingTreeDriver(DefaultTreeModel model, DefaultMutableTreeNode root) {
+            super(Collections.singletonList(JTreeOperator.class));
+            this.model = model;
+            this.root = root;
+        }
+
+        @Override
+        public void selectItem(ComponentOperator op, int index) {
+            onQueue(() -> {
+                model.removeNodeFromParent((DefaultMutableTreeNode) root.getChildAt(0));
+                model.insertNodeInto(new DefaultMutableTreeNode("replacement"), root, 0);
+                ((JTreeOperator) op).getSource().setSelectionRow(index);
+                return null;
+            });
+        }
+
+        @Override
+        public void selectItems(ComponentOperator op, int[] indices) {
+            throw new UnsupportedOperationException();
         }
 
         @Override

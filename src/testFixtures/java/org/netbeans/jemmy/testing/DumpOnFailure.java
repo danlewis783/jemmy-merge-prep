@@ -58,6 +58,18 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable cause) throws Throwable {
+        dump(context, cause);
+        throw cause;
+    }
+
+    /**
+     * Captures and reports the same diagnostics as this extension without rethrowing the test failure.
+     * This allows another extension to include the diagnostics as part of its own failure handling.
+     *
+     * @param context the context of the failed test
+     * @param cause the test failure to which compact diagnostics are attached
+     */
+    public static void dump(ExtensionContext context, Throwable cause) {
         StringBuilder dump = new StringBuilder();
         dump.append("===== DumpOnFailure: ")
                 .append(context.getDisplayName())
@@ -71,13 +83,15 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
             snapshot(dump);
         }
 
-        String diagnostics = WaitDiagnostics.capture();
-        dump.append("===== end DumpOnFailure =====\n").append(diagnostics);
+        dump.append("===== end DumpOnFailure =====\n");
+        if (!WaitDiagnostics.isPresentIn(cause)) {
+            String diagnostics = WaitDiagnostics.capture();
+            dump.append(diagnostics);
+            cause.addSuppressed(new Diagnostics(diagnostics));
+        } else {
+            dump.append("(wait diagnostics already present on failure)");
+        }
         System.err.println(dump);
-
-        cause.addSuppressed(new Diagnostics(diagnostics));
-
-        throw cause;
     }
 
     /** Rides the compact diagnostics into failure-summary views; not an error in its own right. */
