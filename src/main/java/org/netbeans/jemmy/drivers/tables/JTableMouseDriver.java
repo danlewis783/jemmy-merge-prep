@@ -30,8 +30,10 @@ import java.awt.event.KeyEvent;
 import java.util.Collections;
 import javax.swing.text.JTextComponent;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.DriverManager;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.TableDriver;
@@ -57,21 +59,17 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
         JTableOperator toper = (JTableOperator) op;
         toper.scrollToCell(row, column);
 
-        // one EDT snapshot: the three editing-state reads must describe the same moment
-        boolean needsEditClick = QueueTool.getInstance()
-                .callOnQueue(() ->
-                        !toper.isEditing() || (toper.getEditingRow() != row) || (toper.getEditingColumn() != column));
-        if (needsEditClick) {
+        if (!isEditingCell(toper, row, column)) {
             clickOnCell(toper, row, column, 2); // double-click
-        }
-
-        // If click-driven activation did not start the requested editor, start it directly
-        // before looking for its text component.
-        QueueTool.getInstance().runOnQueue(() -> {
-            if (!toper.isEditing() || toper.getEditingRow() != row || toper.getEditingColumn() != column) {
-                toper.getSource().editCellAt(row, column);
+            // The click returns before its events have necessarily been dispatched (a Robot
+            // click is not synchronized with the queue), so give click-driven activation a
+            // bounded chance to start the editor first. Falling back while the click is still
+            // in flight would let the late click stop and restart the editor underneath the
+            // typing below.
+            if (!waitEditingCell(toper, row, column)) {
+                startEditingDirectly(toper, row, column);
             }
-        });
+        }
 
         JTextComponentOperator textoper = JTextComponentOperator.of(
                 (JTextComponent) toper.waitSubComponent(PredicatesJ.of(JTextComponent.class)));
@@ -82,6 +80,44 @@ public final class JTableMouseDriver extends LightSupportiveDriver implements Ta
         DriverManager.newInstance(JemmyContext.getInstance())
                 .getKeyDriver(op)
                 .pushKey(textoper, KeyEvent.VK_ENTER, 0, TimeoutKey.ComponentOperator_PushKeyTimeout);
+    }
+
+    /** One EDT snapshot: the three editing-state reads must describe the same moment. */
+    private static boolean isEditingCell(JTableOperator toper, int row, int column) {
+        return QueueTool.getInstance()
+                .callOnQueue(() ->
+                        toper.isEditing() && (toper.getEditingRow() == row) && (toper.getEditingColumn() == column));
+    }
+
+    /**
+     * Polls for the requested cell's editor for at most {@code JTableOperator_WaitClickEditingTimeout}.
+     * Deliberately not a {@code Repeater}: a miss here is an expected fallback trigger, not a failure,
+     * so it must not pay for (or emit) timeout diagnostics.
+     */
+    private static boolean waitEditingCell(JTableOperator toper, int row, int column) {
+        long startTime = System.currentTimeMillis();
+        long budget = Timeouts.get(TimeoutKey.JTableOperator_WaitClickEditingTimeout);
+        while (!isEditingCell(toper, row, column)) {
+            if (System.currentTimeMillis() - startTime > budget) {
+                return false;
+            }
+
+            Timeouts.sleep(TimeoutKey.Waiter_TimeDelta);
+        }
+
+        return true;
+    }
+
+    /** Fallback for editors the click cannot start (for example a {@code clickCountToStart} above two). */
+    private static void startEditingDirectly(JTableOperator toper, int row, int column) {
+        // re-check inside the same hop: the click may have landed since the last poll
+        boolean editing = QueueTool.getInstance()
+                .callOnQueue(() -> isEditingCell(toper, row, column) || toper.getSource().editCellAt(row, column));
+        if (!editing) {
+            throw new JemmyException(String.format(
+                    "table cell (%d, %d) did not start editing on double-click and cannot be edited directly",
+                    row, column));
+        }
     }
 
     private void clickOnCell(JTableOperator op, int row, int column, int clickCount) {

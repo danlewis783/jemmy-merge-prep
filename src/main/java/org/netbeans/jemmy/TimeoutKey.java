@@ -44,6 +44,9 @@ public enum TimeoutKey {
     JSliderOperator_ScrollingDelta(0L),
     JSpinnerOperator_WholeScrollTimeout(60_000L),
     JSplitPaneOperator_WholeScrollTimeout(60_000L),
+    // how long JTableMouseDriver.editCell gives a double-click to start the cell editor before
+    // starting it directly; a miss is a fallback trigger, not a failure
+    JTableOperator_WaitClickEditingTimeout(1_000L),
     JTextComponentOperator_ChangeCaretPositionTimeout(60_000L),
     JTextComponentOperator_TypeTextTimeout(60_000L),
     JToolTipOperator_WaitToolTipTimeout(60_000L),

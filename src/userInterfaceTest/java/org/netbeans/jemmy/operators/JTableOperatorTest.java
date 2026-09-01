@@ -215,6 +215,21 @@ class JTableOperatorTest {
     }
 
     @Test
+    void testChangeCellObjectStartsTheEditorWhenTheDoubleClickCannot() {
+        // an editor that needs three clicks never starts on the driver's double-click, so the
+        // edit can only succeed through the direct-start fallback
+        onQueue(() -> {
+            ((DefaultCellEditor) table.getDefaultEditor(Object.class)).setClickCountToStart(3);
+            return null;
+        });
+        JTableOperator operator = JTableOperator.waitFor(JFrameOperator.waitFor());
+
+        operator.changeCellObject(0, 0, "NewText");
+
+        assertThat(onQueue(() -> table.getValueAt(0, 0))).isEqualTo("NewText");
+    }
+
+    @Test
     void testScrollToCell() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JTableOperator operator1 = JTableOperator.waitFor(operator);
