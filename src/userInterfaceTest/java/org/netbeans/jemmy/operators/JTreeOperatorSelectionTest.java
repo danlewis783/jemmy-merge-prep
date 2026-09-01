@@ -22,6 +22,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JTree;
+import javax.swing.Timer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -71,17 +72,19 @@ class JTreeOperatorSelectionTest {
     }
 
     @Test
-    void selectRowVerifiesTheRowWhenSelectionReplacesTheNode() {
+    void selectRowVerifiesTheRowWhenTheSelectionLandsAfterTheWaitStarts() {
         Fixture fixture = onQueue(Fixture::new);
         JTreeOperator operator = JTreeOperator.of(fixture.tree);
         operator.setVisualizer(new EmptyVisualizer());
-        ReplacingTreeDriver driver = new ReplacingTreeDriver(fixture.model, fixture.root);
+        LateReplacingTreeDriver driver = new LateReplacingTreeDriver(fixture.model, fixture.root);
         DriverManager.newInstance(JemmyContext.getInstance()).setDriver(DriverType.Tree, driver);
 
         operator.selectRow(1);
 
         assertThat(onQueue(fixture.tree::getSelectionRows)).containsExactly(1);
-        assertThat(onQueue(fixture.tree::getSelectionPath)).isNotEqualTo(fixture.targetPath);
+        assertThat(onQueue(fixture.tree::getSelectionPath))
+                .as("the selection must be the replacement node, not the one the row held before")
+                .isNotEqualTo(fixture.targetPath);
     }
 
     private static final class Fixture {
@@ -156,11 +159,20 @@ class JTreeOperatorSelectionTest {
         }
     }
 
-    private static final class ReplacingTreeDriver extends LightSupportiveDriver implements TreeDriver {
+    /**
+     * Models input that lands after the operator has already started verifying: like a Robot
+     * click, {@link #selectItem} returns before its effect reaches the tree. By the time it lands,
+     * the node at the requested row has been replaced, so a path snapshotted when the wait began
+     * can never match while the row still can. The delay is well above the operator's snapshot
+     * latency, which is what makes the ordering deterministic rather than a race.
+     */
+    private static final class LateReplacingTreeDriver extends LightSupportiveDriver implements TreeDriver {
+        private static final int LANDING_DELAY_MS = 250;
+
         private final DefaultTreeModel model;
         private final DefaultMutableTreeNode root;
 
-        private ReplacingTreeDriver(DefaultTreeModel model, DefaultMutableTreeNode root) {
+        private LateReplacingTreeDriver(DefaultTreeModel model, DefaultMutableTreeNode root) {
             super(Collections.singletonList(JTreeOperator.class));
             this.model = model;
             this.root = root;
@@ -168,12 +180,14 @@ class JTreeOperatorSelectionTest {
 
         @Override
         public void selectItem(ComponentOperator op, int index) {
-            onQueue(() -> {
+            JTree tree = ((JTreeOperator) op).getSource();
+            Timer landing = new Timer(LANDING_DELAY_MS, e -> {
                 model.removeNodeFromParent((DefaultMutableTreeNode) root.getChildAt(0));
                 model.insertNodeInto(new DefaultMutableTreeNode("replacement"), root, 0);
-                ((JTreeOperator) op).getSource().setSelectionRow(index);
-                return null;
+                tree.setSelectionRow(index);
             });
+            landing.setRepeats(false);
+            landing.start();
         }
 
         @Override
