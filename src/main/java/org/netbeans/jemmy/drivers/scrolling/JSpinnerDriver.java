@@ -94,6 +94,9 @@ public final class JSpinnerDriver extends LightSupportiveDriver implements Scrol
 
         JButtonOperator increaseButton = ((JSpinnerOperator) op).getIncreaseOperator();
         JButtonOperator decreaseButton = ((JSpinnerOperator) op).getDecreaseOperator();
+        if (increaseButton == null || decreaseButton == null) {
+            return;
+        }
 
         int originalDirection = adj.getScrollDirection();
         while (adj.getScrollDirection() == originalDirection) {

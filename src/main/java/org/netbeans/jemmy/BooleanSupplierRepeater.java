@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy;
 
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -26,24 +27,34 @@ public final class BooleanSupplierRepeater {
     private final BooleanSupplier booleanSupplier;
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
+    private final Object describedTarget;
 
-    private BooleanSupplierRepeater(BooleanSupplier booleanSupplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
+    private BooleanSupplierRepeater(
+            BooleanSupplier booleanSupplier, TimeoutKey waitKey, TimeoutKey waitDelta, Object describedTarget) {
         this.booleanSupplier = booleanSupplier;
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
+        this.describedTarget = describedTarget;
     }
 
     public static BooleanSupplierRepeater on(BooleanSupplier booleanSupplier) {
-        return new BooleanSupplierRepeater(booleanSupplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta);
+        return new BooleanSupplierRepeater(
+                booleanSupplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, booleanSupplier);
     }
 
     public static BooleanSupplierRepeater on(BooleanSupplier booleanSupplier, TimeoutKey waitKey) {
-        return new BooleanSupplierRepeater(booleanSupplier, waitKey, TimeoutKey.Waiter_TimeDelta);
+        return new BooleanSupplierRepeater(booleanSupplier, waitKey, TimeoutKey.Waiter_TimeDelta, booleanSupplier);
     }
 
     public static BooleanSupplierRepeater on(
             BooleanSupplier booleanSupplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        return new BooleanSupplierRepeater(booleanSupplier, waitKey, waitDelta);
+        return new BooleanSupplierRepeater(booleanSupplier, waitKey, waitDelta, booleanSupplier);
+    }
+
+    /** Uses the supplied object's lazy {@code toString()} only when this wait times out. */
+    public BooleanSupplierRepeater describedAs(Object target) {
+        return new BooleanSupplierRepeater(
+                booleanSupplier, waitKey, waitDelta, Objects.requireNonNull(target, "target"));
     }
 
     public static void waitFor(BooleanSupplier condition) {
@@ -59,6 +70,6 @@ public final class BooleanSupplierRepeater {
     }
 
     public void runUntilTrue() {
-        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta, booleanSupplier);
+        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta, describedTarget);
     }
 }

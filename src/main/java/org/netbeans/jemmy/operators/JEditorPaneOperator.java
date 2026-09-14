@@ -187,7 +187,7 @@ public class JEditorPaneOperator extends JTextComponentOperator {
             Document doc = getSource().getDocument();
             if (doc instanceof HTMLDocument) {
                 for (HTMLDocument.Iterator iter = ((HTMLDocument) doc).getIterator(HTML.Tag.A);
-                        iter.isValid();
+                        iter != null && iter.isValid();
                         iter.next()) {
                     String nameAttr = (String) iter.getAttributes().getAttribute(HTML.Attribute.NAME);
                     if (reference.equals(nameAttr)) {

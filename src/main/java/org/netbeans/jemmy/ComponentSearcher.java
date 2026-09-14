@@ -69,4 +69,9 @@ public final class ComponentSearcher {
                         .filter(predicate)
                         .count()));
     }
+
+    /** Returns a stable description that does not read mutable component state. */
+    public String describeRoot() {
+        return container.getClass().getSimpleName();
+    }
 }

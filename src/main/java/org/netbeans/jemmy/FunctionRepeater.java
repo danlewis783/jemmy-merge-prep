@@ -29,23 +29,31 @@ public final class FunctionRepeater<T, R> {
     private final Function<T, R> function;
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
+    private final Object describedTarget;
 
-    private FunctionRepeater(Function<T, R> function, TimeoutKey waitKey, TimeoutKey waitDelta) {
+    private FunctionRepeater(Function<T, R> function, TimeoutKey waitKey, TimeoutKey waitDelta, Object describedTarget) {
         this.function = function;
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
+        this.describedTarget = describedTarget;
     }
 
     public static <T, R> FunctionRepeater<T, R> on(Function<T, R> function) {
-        return new FunctionRepeater<>(function, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta);
+        return new FunctionRepeater<>(
+                function, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, function);
     }
 
     public static <T, R> FunctionRepeater<T, R> on(Function<T, R> function, TimeoutKey waitKey) {
-        return new FunctionRepeater<>(function, waitKey, TimeoutKey.Waiter_TimeDelta);
+        return new FunctionRepeater<>(function, waitKey, TimeoutKey.Waiter_TimeDelta, function);
     }
 
     public static <T, R> FunctionRepeater<T, R> on(Function<T, R> function, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        return new FunctionRepeater<>(function, waitKey, waitDelta);
+        return new FunctionRepeater<>(function, waitKey, waitDelta, function);
+    }
+
+    /** Uses the supplied object's lazy {@code toString()} only when this wait times out. */
+    public FunctionRepeater<T, R> describedAs(Object target) {
+        return new FunctionRepeater<>(function, waitKey, waitDelta, Objects.requireNonNull(target, "target"));
     }
 
     public R runUntilNotNull(@Nullable T t) {
@@ -58,7 +66,7 @@ public final class FunctionRepeater<T, R> {
                 },
                 waitKey,
                 waitDelta,
-                function);
+                describedTarget);
 
         return Objects.requireNonNull(result.get());
     }

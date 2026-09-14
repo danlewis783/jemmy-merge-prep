@@ -66,23 +66,30 @@ final class Repeater {
             try {
                 Timeouts.check(waitKey, startTime);
             } catch (TimeoutExpiredException e) {
-                throw enrich(e, describedTarget);
+                throw enrich(e, waitKey, wait, describedTarget);
             }
         }
     }
 
-    // failure path only: the message must carry everything needed to diagnose a timeout from
-    // the test report alone, because failure artifacts often cannot leave the machine
-    private static TimeoutExpiredException enrich(TimeoutExpiredException e, @Nullable Object describedTarget) {
+    // Keep the primary message short because Jenkins renders it in both Error Message and
+    // Stacktrace. Full diagnostics ride on the failure once as a suppressed throwable.
+    private static TimeoutExpiredException enrich(
+            TimeoutExpiredException e,
+            TimeoutKey waitKey,
+            long waitMillis,
+            @Nullable Object describedTarget) {
         StringBuilder message = new StringBuilder(e.getMessage());
         String target = describe(describedTarget);
         if (target != null) {
             message.append(" waiting for: ").append(target);
         }
 
-        message.append('\n').append(WaitDiagnostics.capture());
-
-        return new TimeoutExpiredException(message.toString(), e);
+        return WaitDiagnostics.timeoutFailure(
+                message.toString(),
+                waitKey,
+                waitMillis,
+                target,
+                e);
     }
 
     private static @Nullable String describe(@Nullable Object describedTarget) {

@@ -29,23 +29,35 @@ public final class SupplierRepeater<R> {
     private final Supplier<R> supplier;
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
+    private final Object describedTarget;
 
-    private SupplierRepeater(Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
+    private SupplierRepeater(
+            Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta, Object describedTarget) {
         this.supplier = supplier;
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
+        this.describedTarget = describedTarget;
     }
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier) {
-        return new SupplierRepeater<>(supplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta);
+        return new SupplierRepeater<>(
+                supplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, supplier);
     }
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier, TimeoutKey waitKey) {
-        return new SupplierRepeater<>(supplier, waitKey, TimeoutKey.Waiter_TimeDelta);
+        return new SupplierRepeater<>(supplier, waitKey, TimeoutKey.Waiter_TimeDelta, supplier);
     }
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        return new SupplierRepeater<>(supplier, waitKey, waitDelta);
+        return new SupplierRepeater<>(supplier, waitKey, waitDelta, supplier);
+    }
+
+    /**
+     * Uses a meaningful object, such as a named predicate, to describe this wait if it times out.
+     * Its {@code toString()} is evaluated only on the failure path.
+     */
+    public SupplierRepeater<R> describedAs(Object target) {
+        return new SupplierRepeater<>(supplier, waitKey, waitDelta, Objects.requireNonNull(target, "target"));
     }
 
     public R runUntilNotNull() {
@@ -58,7 +70,7 @@ public final class SupplierRepeater<R> {
                 },
                 waitKey,
                 waitDelta,
-                supplier);
+                describedTarget);
 
         return Objects.requireNonNull(result.get());
     }

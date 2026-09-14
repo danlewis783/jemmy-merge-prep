@@ -435,7 +435,9 @@ public class ComponentOperator extends Operator {
     }
 
     public void waitHasFocus() {
-        BooleanSupplierRepeater.waitFor(this::hasFocus, TimeoutKey.ComponentOperator_WaitFocusTimeout);
+        BooleanSupplierRepeater.on(this::hasFocus, TimeoutKey.ComponentOperator_WaitFocusTimeout)
+                .describedAs(getClass().getSimpleName() + " to have focus")
+                .runUntilTrue();
     }
 
     public void waitComponentVisible(boolean visibility) {
@@ -934,8 +936,28 @@ public class ComponentOperator extends Operator {
     }
 
     protected static Component waitComponent(Container cont, Predicate<Component> predicate, int index) {
-        return SupplierRepeater.on(() -> findComponent(cont, PredicatesJ.ofShowing(predicate), index))
+        Predicate<Component> showingPredicate = PredicatesJ.ofShowing(predicate);
+        return SupplierRepeater.on(() -> findComponent(cont, predicate, index))
+                .describedAs(new ComponentWaitDescription(cont, showingPredicate, index))
                 .runUntilNotNull();
+    }
+
+    private static final class ComponentWaitDescription {
+        private final Container root;
+        private final Predicate<Component> predicate;
+        private final int index;
+
+        ComponentWaitDescription(Container root, Predicate<Component> predicate, int index) {
+            this.root = root;
+            this.predicate = predicate;
+            this.index = index;
+        }
+
+        @Override
+        public String toString() {
+            return "component matching " + predicate + " at index " + index
+                    + " under " + root.getClass().getSimpleName();
+        }
     }
 
     private static @Nullable Component findComponent(

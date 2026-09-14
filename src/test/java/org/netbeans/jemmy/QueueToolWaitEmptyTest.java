@@ -106,9 +106,8 @@ class QueueToolWaitEmptyTest {
 
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(qt::waitEmpty)
-                .withMessageContaining(String.format(
-                        "timeout \"%s\" (%d ms) exceeded after (",
-                        TimeoutKey.QueueTool_WaitQueueEmptyTimeout, QUEUE_EMPTY_BOUND));
+                .withMessageContaining("Timed out after 2 s")
+                .withMessageContaining("timeout key: " + TimeoutKey.QueueTool_WaitQueueEmptyTimeout);
     }
 
     @Test
@@ -137,9 +136,8 @@ class QueueToolWaitEmptyTest {
 
         assertThatExceptionOfType(TimeoutExpiredException.class)
                 .isThrownBy(() -> qt.waitEmpty(QUIET_PERIOD))
-                .withMessageContaining(String.format(
-                        "timeout \"%s\" (%d ms) exceeded after (",
-                        TimeoutKey.QueueTool_WaitQueueEmptyTimeout, QUEUE_EMPTY_BOUND));
+                .withMessageContaining("Timed out after 2 s")
+                .withMessageContaining("timeout key: " + TimeoutKey.QueueTool_WaitQueueEmptyTimeout);
     }
 
     private BlockedQueue postBlockedQueue() throws InterruptedException {

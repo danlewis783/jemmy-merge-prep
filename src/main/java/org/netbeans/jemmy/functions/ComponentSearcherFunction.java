@@ -41,6 +41,7 @@ public final class ComponentSearcherFunction implements Function<Void, Component
     @Override
     public String toString() {
         // surfaces in timeout messages: which component was being searched for
-        return "component matching " + predicate + ((index > 0) ? " [" + index + ']' : "");
+        return "component matching " + predicate + " at index " + index
+                + " under " + searcher.describeRoot();
     }
 }

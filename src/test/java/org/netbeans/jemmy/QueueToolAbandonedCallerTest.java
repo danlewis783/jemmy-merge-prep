@@ -105,7 +105,9 @@ class QueueToolAbandonedCallerTest {
                         staleWorkRan.set(true);
                         return null;
                     }))
-                    .withMessageContaining("start latch");
+                    .withMessageContaining("start latch")
+                    .withMessageNotContaining("--- wait diagnostics ---")
+                    .satisfies(failure -> assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue());
         }
 
         blocked.releaseEdt();
@@ -115,6 +117,25 @@ class QueueToolAbandonedCallerTest {
         assertThat(staleWorkRan)
                 .as("check that work abandoned on timeout never ran once the EDT recovered")
                 .isFalse();
+    }
+
+    @Test
+    void invocationTimeoutHasConciseMessageAndAttachedDiagnostics() throws Exception {
+        CountDownLatch releaseWork = new CountDownLatch(1);
+        try (TimeoutOverride ignored =
+                Timeouts.override(TimeoutKey.QueueTool_InvocationTimeout, SHORT_BUDGET)) {
+            assertThatExceptionOfType(TimeoutExpiredException.class)
+                    .isThrownBy(() -> QueueTool.getInstance().callOnQueue(() -> {
+                        releaseWork.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS);
+                        return null;
+                    }))
+                    .withMessageContaining("EDT to finish queued caller")
+                    .withMessageNotContaining("--- wait diagnostics ---")
+                    .satisfies(failure -> assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue());
+        } finally {
+            releaseWork.countDown();
+            EventQueue.invokeAndWait(() -> {});
+        }
     }
 
     @Test

@@ -198,6 +198,7 @@ public abstract class Operator {
         boolean initialState = onQueuePredicate.test(operator);
         BooleanSupplierRepeater.on(
                         () -> onQueuePredicate.test(operator) != initialState, timeoutKey)
+                .describedAs(new StateChangeDescription(predicate, getClass()))
                 .runUntilTrue();
     }
 
@@ -322,6 +323,25 @@ public abstract class Operator {
         }
     }
 
+    private static final class StateChangeDescription {
+        private final Predicate<?> predicate;
+        private final Class<?> operatorType;
+
+        StateChangeDescription(Predicate<?> predicate, Class<?> operatorType) {
+            this.predicate = predicate;
+            this.operatorType = operatorType;
+        }
+
+        @Override
+        public String toString() {
+            String description = predicate.toString();
+            if (description.contains("$$Lambda")) {
+                description = "observed state";
+            }
+            return description + " to change on " + operatorType.getSimpleName();
+        }
+    }
+
     private static final class StableOnQueueCondition<T extends Operator> implements BooleanSupplier {
         private final Predicate<T> predicate;
         private final T operator;
@@ -355,7 +375,11 @@ public abstract class Operator {
 
         @Override
         public String toString() {
-            return "state to remain true for " + stableTimeMs + " ms: " + predicate;
+            String description = predicate.toString();
+            if (description.contains("$$Lambda")) {
+                description = "requested state on " + operator.getClass().getSimpleName();
+            }
+            return "state to remain true for " + stableTimeMs + " ms: " + description;
         }
     }
 }

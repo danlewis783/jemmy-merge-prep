@@ -74,8 +74,11 @@ class FunctionRunnerTimeoutTest {
                             }
                         })
                         .submitAndGet(null, TimeoutKey.Testing_A))
-                .withMessageContaining(String.format(
-                        "timeout \"%s\" (%d ms) exceeded after (", TimeoutKey.Testing_A, MAX_ACTION_TIME));
+                .withMessageContaining("Timed out after 300 ms waiting for:")
+                .withMessageContaining("Jemmy action to complete")
+                .withMessageContaining("timeout key: " + TimeoutKey.Testing_A)
+                .withMessageNotContaining("--- wait diagnostics ---")
+                .satisfies(failure -> assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue());
 
         assertThat(functionExited.await(EXIT_WAIT_TIME, TimeUnit.MILLISECONDS))
                 .as("check that the timed-out function exited")

@@ -38,6 +38,10 @@ public final class OperatorPredicateFunction<T extends Operator> implements Func
     @Override
     public String toString() {
         // surfaces in timeout messages: which predicate, against which operator
-        return predicate + " on " + operator.getClass().getSimpleName();
+        String description = predicate.toString();
+        if (description.contains("$$Lambda")) {
+            description = "requested state";
+        }
+        return description + " on " + operator.getClass().getSimpleName();
     }
 }

@@ -9,52 +9,42 @@
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
  * version 2 for more details (a copy is included in the LICENSE file that
  * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 package org.netbeans.jemmy.testing;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.EventQueue;
-import java.awt.KeyboardFocusManager;
-import java.awt.TextComponent;
-import java.awt.Window;
-import java.util.Arrays;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import javax.accessibility.AccessibleContext;
-import javax.swing.JTree;
+import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 import javax.swing.UIManager;
-import javax.swing.text.JTextComponent;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.platform.commons.support.AnnotationSupport;
+import org.netbeans.jemmy.DiagnosticSensitivity;
+import org.netbeans.jemmy.WaitDiagnosticSnapshot;
 import org.netbeans.jemmy.WaitDiagnostics;
 
-/**
- * Prints a snapshot of the live component hierarchy to stderr when a UI test fails, so post-mortems can see which
- * component held focus, what was visible, and what text was selected at failure time. Implemented as a
- * {@link TestExecutionExceptionHandler} rather than a {@code TestWatcher} so the snapshot is taken before
- * {@code @AfterEach} tears the UI down.
- * <p>
- * Appends {@link WaitDiagnostics#capture()} at the end of the dump. Jemmy's own timeout exceptions
- * ({@code QueueTool}, {@code Repeater}, and the waits built on them) already embed
- * {@link WaitDiagnostics#capture()} in their message, but a JUnit {@code @Timeout} interrupts the test thread
- * directly and bypasses that enrichment entirely: its failure carries only a stack trace at the interrupt point.
- * Appending the capture here means a {@code @Timeout} failure still gets the EDT stack, an EDT-responsiveness
- * probe, a window/focus summary, and the mouse position, in addition to - not instead of - this class's own dump,
- * whose window tree goes deeper than {@link WaitDiagnostics}' summary.
- * <p>
- * The compact {@link WaitDiagnostics} capture is also attached to the failure as a suppressed throwable:
- * failure-summary views (the Gradle HTML report's "Failure details", Jenkins test pages) render only the
- * exception's own message and stack trace, not stderr, and suppressed throwables print inline there. The deep
- * window-tree dump stays on stderr (the "error output" tab), where its size is not a problem.
- * <p>
- * Register with {@code @ExtendWith(DumpOnFailure.class)}.
- */
-public final class DumpOnFailure implements TestExecutionExceptionHandler {
+/** Captures one UI snapshot, attaches bounded detail, and publishes the hierarchy separately. */
+public final class DumpOnFailure
+        implements BeforeEachCallback, AfterEachCallback, TestExecutionExceptionHandler {
+    private static final ExtensionContext.Namespace NAMESPACE =
+            ExtensionContext.Namespace.create(DumpOnFailure.class);
+    private static final String SCOPE_KEY = "diagnostic-sensitivity-scope";
+
+    @Override
+    public void beforeEach(ExtensionContext context) {
+        WaitDiagnostics.SensitivityScope scope = WaitDiagnostics.useSensitivity(sensitivityFor(context));
+        context.getStore(NAMESPACE).put(SCOPE_KEY, scope);
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) {
+        WaitDiagnostics.SensitivityScope scope =
+                context.getStore(NAMESPACE).remove(SCOPE_KEY, WaitDiagnostics.SensitivityScope.class);
+        if (scope != null) {
+            scope.close();
+        }
+    }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable cause) throws Throwable {
@@ -62,153 +52,86 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
         throw cause;
     }
 
-    /**
-     * Captures and reports the same diagnostics as this extension without rethrowing the test failure.
-     * This allows another extension to include the diagnostics as part of its own failure handling.
-     *
-     * @param context the context of the failed test
-     * @param cause the test failure to which compact diagnostics are attached
-     */
+    /** Reports diagnostics without ever replacing or hiding {@code cause}. */
     public static void dump(ExtensionContext context, Throwable cause) {
-        StringBuilder dump = new StringBuilder();
-        dump.append("===== DumpOnFailure: ")
-                .append(context.getDisplayName())
-                .append(" =====\n")
-                .append("look and feel: ")
-                .append(UIManager.getLookAndFeel().getClass().getSimpleName())
-                .append('\n');
-        boolean onQueue = snapshotOnQueue(dump);
-        if (!onQueue) {
-            dump.append("(event queue unresponsive for 5 s; state read off the dispatch thread)\n");
-            snapshot(dump);
+        DiagnosticSensitivity sensitivity = sensitivityFor(context);
+        if (sensitivity == DiagnosticSensitivity.NONE) {
+            return;
+        }
+        StringBuilder stderr = new StringBuilder();
+        stderr.append("===== DumpOnFailure: ")
+                .append(sensitivity == DiagnosticSensitivity.STANDARD
+                        ? context.getDisplayName()
+                        : "test invocation")
+                .append(" =====\n");
+
+        WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(cause);
+        if (snapshot == null) {
+            try (WaitDiagnostics.SensitivityScope ignored = WaitDiagnostics.useSensitivity(sensitivity)) {
+                snapshot = WaitDiagnostics.captureSnapshot(context.getDisplayName());
+                WaitDiagnostics.attachTo(cause, snapshot);
+            } catch (Throwable diagnosticFailure) {
+                stderr.append("(diagnostic capture failed: ")
+                        .append(diagnosticFailure.getClass().getSimpleName())
+                        .append(")\n");
+            }
         }
 
-        dump.append("===== end DumpOnFailure =====\n");
-        if (!WaitDiagnostics.isPresentIn(cause)) {
-            String diagnostics = WaitDiagnostics.capture();
-            dump.append(diagnostics);
-            cause.addSuppressed(new Diagnostics(diagnostics));
-        } else {
-            dump.append("(wait diagnostics already present on failure)");
+        if (snapshot != null) {
+            if (sensitivity == DiagnosticSensitivity.STANDARD) {
+                snapshot = snapshot.withTestDisplayName(context.getDisplayName());
+            }
+            stderr.append(snapshot.renderSummary(sensitivity)).append('\n');
+            stderr.append(WaitDiagnostics.isPresentIn(cause)
+                    ? "(wait diagnostics attached to failure)\n"
+                    : "(wait diagnostics unavailable)\n");
+            if (sensitivity != DiagnosticSensitivity.NO_COMPONENT_TREE) {
+                try {
+                    String fileName = JUnitAttachmentUtils.publishText(
+                            context,
+                            snapshot.renderComponentTree(sensitivity),
+                            "jemmy-diagnostics");
+                    stderr.append("(component hierarchy attached as ").append(fileName).append(")\n");
+                } catch (Throwable attachmentFailure) {
+                    stderr.append("(component hierarchy attachment failed: ")
+                            .append(attachmentFailure.getClass().getSimpleName())
+                            .append(")\n");
+                }
+            } else {
+                stderr.append("(component hierarchy disabled by diagnostic sensitivity policy)\n");
+            }
         }
-        System.err.println(dump);
-    }
 
-    /** Rides the compact diagnostics into failure-summary views; not an error in its own right. */
-    private static final class Diagnostics extends Throwable {
-        Diagnostics(String diagnostics) {
-            // no cause, no suppression of its own, no stack trace: renders as just the text
-            super(diagnostics, null, false, false);
-        }
-    }
-
-    private static boolean snapshotOnQueue(StringBuilder dump) {
-        CountDownLatch done = new CountDownLatch(1);
-        EventQueue.invokeLater(() -> {
-            snapshot(dump);
-            done.countDown();
-        });
         try {
-            return done.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-
-            return false;
+            stderr.append("look and feel: ")
+                    .append(UIManager.getLookAndFeel().getClass().getSimpleName())
+                    .append('\n');
+        } catch (RuntimeException lookAndFeelFailure) {
+            stderr.append("look and feel: unavailable\n");
         }
+        stderr.append("===== end DumpOnFailure =====");
+        System.err.println(stderr);
     }
 
-    private static void snapshot(StringBuilder dump) {
-        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        dump.append("focus owner: ")
-                .append(describe(focusManager.getFocusOwner()))
-                .append('\n')
-                .append("focused window: ")
-                .append(describe(focusManager.getFocusedWindow()))
-                .append('\n')
-                .append("active window: ")
-                .append(describe(focusManager.getActiveWindow()))
-                .append('\n');
-        for (Window window : Window.getWindows()) {
-            dump.append("window: ").append(describe(window)).append('\n');
-            appendChildren(dump, window, 1);
-        }
-    }
-
-    private static void appendChildren(StringBuilder dump, Container container, int depth) {
-        for (Component child : container.getComponents()) {
-            for (int i = 0; i < depth; i++) {
-                dump.append("  ");
-            }
-
-            dump.append(describe(child)).append('\n');
-            if (child instanceof Container) {
-                appendChildren(dump, (Container) child, depth + 1);
+    /** Resolves method policy first, then class policy, defaulting to standard diagnostics. */
+    public static DiagnosticSensitivity sensitivityFor(ExtensionContext context) {
+        DiagnosticSensitivity declaredSensitivity = DiagnosticSensitivity.STANDARD;
+        Optional<AnnotatedElement> element = context.getElement();
+        if (element.isPresent()) {
+            Optional<JemmyDiagnosticsPolicy> methodPolicy =
+                    AnnotationSupport.findAnnotation(element.get(), JemmyDiagnosticsPolicy.class);
+            if (methodPolicy.isPresent()) {
+                declaredSensitivity = methodPolicy.get().value();
+                return DiagnosticSensitivity.mostRestrictive(
+                        declaredSensitivity, DiagnosticSensitivity.configuredDefault());
             }
         }
-    }
-
-    private static String describe(Component comp) {
-        if (comp == null) {
-            return "null";
+        Optional<JemmyDiagnosticsPolicy> classPolicy =
+                AnnotationSupport.findAnnotation(context.getRequiredTestClass(), JemmyDiagnosticsPolicy.class);
+        if (classPolicy.isPresent()) {
+            declaredSensitivity = classPolicy.get().value();
         }
-
-        StringBuilder line = new StringBuilder();
-        line.append(comp.getClass().getSimpleName());
-        if (comp.getName() != null) {
-            line.append(" name=\"").append(comp.getName()).append('"');
-        }
-
-        line.append(" bounds=[")
-                .append(comp.getX())
-                .append(',')
-                .append(comp.getY())
-                .append(' ')
-                .append(comp.getWidth())
-                .append('x')
-                .append(comp.getHeight())
-                .append(']');
-        line.append(comp.isVisible() ? " visible" : " !visible")
-                .append(comp.isShowing() ? " showing" : " !showing")
-                .append(comp.isEnabled() ? " enabled" : " !enabled");
-        if (comp.hasFocus()) {
-            line.append(" FOCUSED");
-        }
-        if (comp instanceof JTree) {
-            JTree tree = (JTree) comp;
-            line.append(" selection=")
-                    .append(Arrays.toString(tree.getSelectionPaths()))
-                    .append(" lead=")
-                    .append(tree.getLeadSelectionPath())
-                    .append(" anchor=")
-                    .append(tree.getAnchorSelectionPath());
-        }
-
-        AccessibleContext accessibleContext = comp.getAccessibleContext();
-        if (accessibleContext != null) {
-            if (accessibleContext.getAccessibleName() != null) {
-                line.append(" accName=\"")
-                        .append(accessibleContext.getAccessibleName())
-                        .append('"');
-            }
-
-            if (accessibleContext.getAccessibleDescription() != null) {
-                line.append(" accDesc=\"")
-                        .append(accessibleContext.getAccessibleDescription())
-                        .append('"');
-            }
-        }
-
-        String selectedText = null;
-        if (comp instanceof JTextComponent) {
-            selectedText = ((JTextComponent) comp).getSelectedText();
-        } else if (comp instanceof TextComponent) {
-            selectedText = ((TextComponent) comp).getSelectedText();
-        }
-
-        if ((selectedText != null) && !selectedText.isEmpty()) {
-            line.append(" selectedText=\"").append(selectedText).append('"');
-        }
-
-        return line.toString();
+        return DiagnosticSensitivity.mostRestrictive(
+                declaredSensitivity, DiagnosticSensitivity.configuredDefault());
     }
 }

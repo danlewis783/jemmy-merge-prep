@@ -71,9 +71,10 @@ final class ActionRunner<R> {
             throw new RuntimeException("no waiting allowed on EDT");
         }
         ActionScope actionScope = new ActionScope();
+        DiagnosticSensitivity sensitivity = WaitDiagnostics.currentSensitivity();
         Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(() -> {
             CURRENT_ACTION_SCOPE.set(actionScope);
-            try {
+            try (WaitDiagnostics.SensitivityScope ignored = WaitDiagnostics.useSensitivity(sensitivity)) {
                 return work.call();
             } finally {
                 CURRENT_ACTION_SCOPE.remove();
@@ -93,13 +94,13 @@ final class ActionRunner<R> {
             throwable.set(e);
             // capture before the finally-block cancel below interrupts the action: the
             // jemmy-action stack in the diagnostics shows where the action was stuck
-            throw new TimeoutExpiredException(
+            throw WaitDiagnostics.timeoutFailure(
                     String.format(
-                            "timeout \"%s\" (%d ms) exceeded after (%d ms)%n%s",
-                            timeoutKey,
-                            timeout,
-                            (System.currentTimeMillis() - startTime),
-                            WaitDiagnostics.capture()),
+                            "timeout \"%s\" (%d ms) exceeded after (%d ms)",
+                            timeoutKey, timeout, (System.currentTimeMillis() - startTime)),
+                    timeoutKey,
+                    timeout,
+                    "Jemmy action to complete",
                     e);
         } finally {
             // Future.cancel(true) only requests an interrupt; it does not wait for the
@@ -117,8 +118,9 @@ final class ActionRunner<R> {
     }
 
     void submitLater(Runnable work) {
+        DiagnosticSensitivity sensitivity = WaitDiagnostics.currentSensitivity();
         JEMMY_ACTION_SERVICE.execute(() -> {
-            try {
+            try (WaitDiagnostics.SensitivityScope ignored = WaitDiagnostics.useSensitivity(sensitivity)) {
                 work.run();
             } catch (RuntimeException e) {
                 // the submitter has already returned and cannot be told; log so the failure

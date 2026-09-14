@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WaitDiagnosticsTest {
+    private static final String SENTINEL = "SENSITIVE-customer/project/material";
 
     @Test
     void findsDiagnosticsInFailureMessage() {
@@ -52,5 +53,68 @@ class WaitDiagnosticsTest {
         Throwable failure = new RuntimeException("ordinary failure");
 
         assertThat(WaitDiagnostics.isPresentIn(failure)).isFalse();
+    }
+
+    @Test
+    void attachesStacklessDiagnosticsOnlyOnce() {
+        Throwable failure = new RuntimeException("ordinary failure");
+
+        WaitDiagnostics.attachTo(failure);
+        WaitDiagnostics.attachTo(failure);
+
+        assertThat(failure.getSuppressed()).hasSize(1);
+        assertThat(failure.getSuppressed()[0].getMessage())
+                .startsWith("--- wait diagnostics ---")
+                .contains("EDT probe:");
+        assertThat(failure.getSuppressed()[0].getStackTrace()).isEmpty();
+    }
+
+    @Test
+    void attachesOnlySanitizedCaptureFailureMetadataUnderConservativePolicy() {
+        Throwable failure = new RuntimeException("timeout");
+        Throwable diagnosticsFailure = new AssertionError(SENTINEL);
+        diagnosticsFailure.setStackTrace(new StackTraceElement[] {
+            new StackTraceElement(SENTINEL, "capture", "Sensitive.java", 12)
+        });
+
+        WaitDiagnostics.attachCaptureFailure(
+                failure, diagnosticsFailure, DiagnosticSensitivity.CONSERVATIVE);
+
+        assertThat(failure.getSuppressed()).singleElement().satisfies(attachment -> {
+            assertThat(attachment)
+                    .hasMessage("diagnostic capture failed: java.lang.AssertionError")
+                    .hasNoCause();
+            assertThat(attachment.getStackTrace()).isEmpty();
+            assertThat(attachment.toString()).doesNotContain(SENTINEL);
+        });
+    }
+
+    @Test
+    void retainsRawCaptureFailureInStandardPolicy() {
+        Throwable failure = new RuntimeException("timeout");
+        Throwable diagnosticsFailure = new AssertionError(SENTINEL);
+
+        WaitDiagnostics.attachCaptureFailure(
+                failure, diagnosticsFailure, DiagnosticSensitivity.STANDARD);
+
+        assertThat(failure.getSuppressed()).containsExactly(diagnosticsFailure);
+    }
+
+    @Test
+    void nonePolicyLeavesTimeoutFailureWithoutDiagnostics() {
+        Throwable cause = new RuntimeException("original cause");
+        TimeoutExpiredException failure;
+
+        try (WaitDiagnostics.SensitivityScope ignored =
+                WaitDiagnostics.useSensitivity(DiagnosticSensitivity.NONE)) {
+            failure = WaitDiagnostics.timeoutFailure(
+                    "plain timeout", TimeoutKey.Waiter_WaitingTime, 50L, SENTINEL, cause);
+            WaitDiagnostics.attachTo(failure);
+        }
+
+        assertThat(failure)
+                .hasMessage("plain timeout")
+                .hasCause(cause);
+        assertThat(failure.getSuppressed()).isEmpty();
     }
 }

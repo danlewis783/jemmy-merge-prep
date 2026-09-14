@@ -21,15 +21,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 /**
- * Verifies that a timed-out wait describes what it was waiting for: {@link Repeater} appends
- * "waiting for: &lt;target.toString()&gt;" only when the target has a real description (a named
- * predicate), and always appends {@link WaitDiagnostics#capture()}.
+ * Verifies that a timed-out wait describes what it was waiting for in a concise primary message
+ * and attaches the full {@link WaitDiagnostics#capture()} separately.
  */
 // mutates global state (the Timeouts singleton) via Timeouts.override; never run in parallel
 @Isolated
@@ -46,8 +47,8 @@ class WaitTimeoutMessageTest {
                     .hasMessageContaining("Waiter_WaitingTime")
                     .hasMessageContaining("waiting for:")
                     .hasMessageContaining("label=\"this text never appears\"")
-                    .hasMessageContaining("--- wait diagnostics ---")
-                    .hasMessageContaining("EDT probe:");
+                    .hasMessageNotContaining("--- wait diagnostics ---")
+                    .satisfies(WaitTimeoutMessageTest::assertHasAttachedDiagnostics);
         }
 
         assertThat(Timeouts.get(TimeoutKey.Waiter_WaitingTime))
@@ -66,9 +67,9 @@ class WaitTimeoutMessageTest {
             assertThatThrownBy(() -> BooleanSupplierRepeater.waitFor(() -> false))
                     .isInstanceOf(TimeoutExpiredException.class)
                     .hasMessageContaining("Waiter_WaitingTime")
-                    .hasMessageContaining("--- wait diagnostics ---")
-                    .hasMessageContaining("EDT probe:")
-                    .hasMessageNotContaining("waiting for:");
+                    .hasMessageNotContaining("waiting for:")
+                    .hasMessageNotContaining("--- wait diagnostics ---")
+                    .satisfies(WaitTimeoutMessageTest::assertHasAttachedDiagnostics);
         }
 
         assertThat(Timeouts.get(TimeoutKey.Waiter_WaitingTime))
@@ -77,5 +78,29 @@ class WaitTimeoutMessageTest {
         assertThat(Timeouts.get(TimeoutKey.Waiter_TimeDelta))
                 .as("check that Waiter_TimeDelta override was restored")
                 .isEqualTo(TimeoutKey.Waiter_TimeDelta.getDefaultValue());
+    }
+
+    @Test
+    void componentWaitTimeoutDescribesTheMissingComponent() {
+        JPanel panel = onQueue(JPanel::new);
+
+        try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 200L);
+                TimeoutOverride delta = Timeouts.override(TimeoutKey.Waiter_TimeDelta, 20L)) {
+            assertThatThrownBy(() -> JLabelOperator.waitFor(
+                            ContainerOperator.of(panel), "this text never appears", StringComparators.strict()))
+                    .isInstanceOf(TimeoutExpiredException.class)
+                    .hasMessageContaining("waiting for:")
+                    .hasMessageContaining("JLabelByTextPredicate")
+                    .hasMessageContaining("text=\"this text never appears\"")
+                    .satisfies(WaitTimeoutMessageTest::assertHasAttachedDiagnostics);
+        }
+    }
+
+    private static void assertHasAttachedDiagnostics(Throwable failure) {
+        assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue();
+        assertThat(failure.getSuppressed()).hasSize(1);
+        assertThat(failure.getSuppressed()[0].getMessage())
+                .startsWith("--- wait diagnostics ---")
+                .contains("EDT probe:");
     }
 }
