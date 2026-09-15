@@ -8,12 +8,12 @@ descriptions win for scope; this file wins for sequencing and process.
 
 ## Mission context
 
-- **This repo** (`C:\dev\jemmy-merge-prep`): a company fork of NetBeans Jemmy,
+- **This repo** (`C:\dev\jemmy-merge-prep`): a fork of NetBeans Jemmy,
   diverged since ~2007 from Jemmy 2.2.7.5. Core engine was rewritten
   (`FunctionRunner`/`Predicate`-based; `Waiter`/`ComponentChooser`/`Dumper`
   deleted); operators and drivers layers retained. Long-term goal: converge
   with the jemmy fork below to enable an eventual merge.
-- **Reference repo** (`C:\dev\jemmy`): fork of openjdk/jemmy-v2 (`upstream`
+- **Reference repo**: fork of openjdk/jemmy-v2 (`upstream`
   remote), modernized with the same Gradle/Spotless/JSpecify conventions as
   this repo. Use it read-only: as the source for ports and for
   `coverage-parity`. **Never commit or push there.**
@@ -128,7 +128,7 @@ converted during phase 5. Keep `assertTimeoutPreemptively` (no AssertJ
 equivalent). Commit in class batches; suite must stay green per batch.
 
 ### Phase 7 — `internal-frame-api-driver`
-Port upstream `InternalFrameAPIDriver` (see `C:\dev\jemmy`
+Port upstream `InternalFrameAPIDriver` (see the reference repo's
 `src/main/.../drivers/windows/InternalFrameAPIDriver.java`), adapted to this
 repo's driver API (now `Class`-based after phase 1). Decision default:
 **install as the default internal frame driver** (as upstream does), keeping

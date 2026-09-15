@@ -1,6 +1,6 @@
 # TEST-COVERAGE-MAP — jemmy fork tests vs this repository
 
-Maps every test class in `C:\dev\jemmy` (the openjdk/jemmy-v2 fork) to its
+Maps every test class in the openjdk/jemmy-v2 fork to its
 equivalent here, per the `coverage-parity` plan. Statuses: **covered**
 (same or different name), **N/A** (subsystem replaced or behavior rejected,
 with rationale), **pending** (port planned). Update this file whenever a
