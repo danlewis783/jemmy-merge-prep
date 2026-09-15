@@ -8,11 +8,41 @@ package org.netbeans.jemmy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 class WaitDiagnosticSnapshotTest {
     private static final String SENTINEL = "SENSITIVE-customer/project/C:/material";
+
+    @Test
+    void attachedSnapshotSurvivesFailureGraphSerialization() throws Exception {
+        WaitDiagnosticSnapshot snapshot = snapshot(DiagnosticSensitivity.STANDARD);
+        TimeoutExpiredException timeout = new TimeoutExpiredException("timeout", new IllegalStateException("cause"));
+        Throwable failure = new RuntimeException("test failure", timeout);
+        WaitDiagnostics.attachTo(timeout, snapshot);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try (ObjectOutputStream output = new ObjectOutputStream(bytes)) {
+            output.writeObject(failure);
+        }
+        Throwable restored;
+        try (ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))) {
+            restored = (Throwable) input.readObject();
+        }
+        WaitDiagnosticSnapshot restoredSnapshot = WaitDiagnostics.findSnapshot(restored);
+        assertThat(restoredSnapshot).isNotNull();
+        assertThat(restoredSnapshot.renderSummary()).isEqualTo(snapshot.renderSummary());
+        assertThat(restoredSnapshot.renderFailureDetail()).isEqualTo(snapshot.renderFailureDetail());
+        assertThat(restoredSnapshot.renderComponentTree()).isEqualTo(snapshot.renderComponentTree());
+        assertThat(restored.getCause()).isInstanceOf(TimeoutExpiredException.class);
+        assertThat(restored.getCause().getCause()).hasMessage("cause");
+        assertThat(restored.getCause().getSuppressed()[0].getStackTrace()).isEmpty();
+        WaitDiagnostics.attachTo(restored, snapshot);
+        assertThat(restored.getSuppressed()).isEmpty();
+    }
 
     @Test
     void rendersAConciseSummarySeparatelyFromStacksAndTree() {

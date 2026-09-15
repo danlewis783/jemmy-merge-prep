@@ -12,13 +12,15 @@
  */
 package org.netbeans.jemmy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 /** Immutable, single-moment capture used by all Jemmy diagnostic renderers. */
-public final class WaitDiagnosticSnapshot {
+public final class WaitDiagnosticSnapshot implements Serializable {
+    private static final long serialVersionUID = 1L;
     static final String HEADER = "--- wait diagnostics ---";
     private static final String REDACTED = "<redacted>";
     private static final String DIAGNOSTICS_DISABLED = "Jemmy diagnostics disabled by policy.";
@@ -408,7 +410,8 @@ public final class WaitDiagnosticSnapshot {
         return Collections.unmodifiableList(new ArrayList<>(values));
     }
 
-    static final class ThreadSnapshot {
+    static final class ThreadSnapshot implements Serializable {
+        private static final long serialVersionUID = 1L;
         private final String name;
         private final Thread.State state;
         private final List<StackTraceElement> stack;
@@ -431,7 +434,8 @@ public final class WaitDiagnosticSnapshot {
         }
     }
 
-    static final class ComponentSnapshot {
+    static final class ComponentSnapshot implements Serializable {
+        private static final long serialVersionUID = 1L;
         private final String className;
         private final @Nullable String name;
         private final @Nullable String title;

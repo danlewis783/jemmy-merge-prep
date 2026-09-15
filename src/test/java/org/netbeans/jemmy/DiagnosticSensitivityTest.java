@@ -35,6 +35,46 @@ class DiagnosticSensitivityTest {
     }
 
     @Test
+    void automaticDiagnosticsHonorProcessSettingWithoutAnExtension() {
+        assertThat(WaitDiagnostics.currentSensitivity()).isEqualTo(DiagnosticSensitivity.STANDARD);
+        System.setProperty(DiagnosticSensitivity.SYSTEM_PROPERTY, "NONE");
+        TimeoutExpiredException disabled = WaitDiagnostics.timeoutFailure(
+                "plain timeout", TimeoutKey.Waiter_WaitingTime, 50L, "secret target", null);
+        WaitDiagnostics.attachTo(disabled);
+        assertThat(disabled).hasMessage("plain timeout");
+        assertThat(disabled.getSuppressed()).isEmpty();
+
+        System.setProperty(DiagnosticSensitivity.SYSTEM_PROPERTY, "CONSERVATIVE");
+        TimeoutExpiredException conservative = WaitDiagnostics.timeoutFailure(
+                "secret target", TimeoutKey.Waiter_WaitingTime, 50L, "secret target", null);
+        assertThat(conservative.getMessage()).doesNotContain("secret target");
+        assertThat(WaitDiagnostics.findSnapshot(conservative).getSensitivity())
+                .isEqualTo(DiagnosticSensitivity.CONSERVATIVE);
+    }
+
+    @Test
+    void explicitScopesAreInheritedAndRestoreTheConfiguredDefault() throws Exception {
+        System.setProperty(DiagnosticSensitivity.SYSTEM_PROPERTY, "NONE");
+        java.util.concurrent.atomic.AtomicReference<DiagnosticSensitivity> inherited =
+                new java.util.concurrent.atomic.AtomicReference<>();
+        try (WaitDiagnostics.SensitivityScope outer =
+                WaitDiagnostics.useSensitivity(DiagnosticSensitivity.CONSERVATIVE)) {
+            Thread child = new Thread(() -> inherited.set(WaitDiagnostics.currentSensitivity()));
+            child.start();
+            child.join();
+            assertThat(inherited.get()).isEqualTo(DiagnosticSensitivity.CONSERVATIVE);
+            try (WaitDiagnostics.SensitivityScope inner =
+                    WaitDiagnostics.useSensitivity(DiagnosticSensitivity.STANDARD)) {
+                assertThat(WaitDiagnostics.currentSensitivity()).isEqualTo(DiagnosticSensitivity.STANDARD);
+            }
+            assertThat(WaitDiagnostics.currentSensitivity()).isEqualTo(DiagnosticSensitivity.CONSERVATIVE);
+        }
+        assertThat(WaitDiagnostics.currentSensitivity()).isEqualTo(DiagnosticSensitivity.NONE);
+        System.setProperty(DiagnosticSensitivity.SYSTEM_PROPERTY, "CONSERVATIVE");
+        assertThat(WaitDiagnostics.currentSensitivity()).isEqualTo(DiagnosticSensitivity.CONSERVATIVE);
+    }
+
+    @Test
     void readsConfiguredDefaultCaseInsensitively() {
         System.setProperty(DiagnosticSensitivity.SYSTEM_PROPERTY, " none ");
 

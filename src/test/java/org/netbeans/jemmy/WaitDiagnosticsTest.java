@@ -16,6 +16,18 @@
  */
 package org.netbeans.jemmy;
 
+import java.awt.EventQueue;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.accessibility.AccessibleContext;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +35,143 @@ import static org.assertj.core.api.Assertions.assertThat;
 class WaitDiagnosticsTest {
     private static final String SENTINEL = "SENSITIVE-customer/project/material";
 
+    @Test
+    void restrictivePoliciesDoNotReadComponentValuesOrUnusedChildren() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            AtomicBoolean checking = new AtomicBoolean();
+            JLabel sensitive = new JLabel() {
+                @Override public String getText() {
+                    if (checking.get()) {
+                        throw new AssertionError("unbounded text read");
+                    }
+                    return super.getText();
+                }
+                @Override public String getName() { throw new AssertionError("sensitive name read"); }
+                @Override public AccessibleContext getAccessibleContext() {
+                    throw new AssertionError("sensitive accessibility read");
+                }
+            };
+            checking.set(true);
+            WaitDiagnostics.UiCapture conservative = capture(DiagnosticSensitivity.CONSERVATIVE);
+            assertThat(conservative.component(sensitive, 0)).isNotNull();
+            assertThat(capture(DiagnosticSensitivity.NO_COMPONENT_TREE).component(sensitive, 0)).isNotNull();
+            JPanel noTree = new JPanel() {
+                @Override public int getComponentCount() { throw new AssertionError("hierarchy visited"); }
+            };
+            assertThat(capture(DiagnosticSensitivity.NO_COMPONENT_TREE).component(noTree, 0)).isNotNull();
+            assertThat(capture(DiagnosticSensitivity.NONE).component(sensitive, 0)).isNull();
+        });
+    }
+
+    @Test
+    void boundsDocumentAndSelectionReadsBeforeAllocatingText() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            AtomicBoolean checking = new AtomicBoolean();
+            AtomicInteger reads = new AtomicInteger();
+            PlainDocument document = new PlainDocument() {
+                @Override public String getText(int offset, int length) throws BadLocationException {
+                    if (checking.get()) {
+                        assertThat(length).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_VALUE_LENGTH);
+                        reads.incrementAndGet();
+                    }
+                    return super.getText(offset, length);
+                }
+            };
+            JTextArea editor = new JTextArea(document) {
+                @Override public String getText() { throw new AssertionError("unbounded document read"); }
+                @Override public String getSelectedText() { throw new AssertionError("unbounded selection read"); }
+            };
+            char[] chars = new char[100_000];
+            Arrays.fill(chars, 'x');
+            try {
+                document.insertString(0, new String(chars), null);
+            } catch (BadLocationException e) {
+                throw new AssertionError(e);
+            }
+            editor.selectAll();
+            checking.set(true);
+            String tree = render(capture(DiagnosticSensitivity.STANDARD).component(editor, 0));
+            assertThat(reads.get()).isEqualTo(2);
+            assertThat(tree).contains("text=\"", "selectedText=\"", "...");
+            assertThat(tree).doesNotContain(new String(new char[501]).replace('\0', 'x'));
+        });
+    }
+
+    @Test
+    void boundsHierarchyWidthDepthAndStoredValues() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            AtomicInteger visited = new AtomicInteger();
+            JPanel wide = new JPanel();
+            char[] chars = new char[10_000];
+            Arrays.fill(chars, 'x');
+            for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
+                JLabel label = new JLabel(new String(chars)) {
+                    @Override public String getName() { visited.incrementAndGet(); return super.getName(); }
+                };
+                label.setToolTipText(new String(chars));
+                wide.add(label);
+            }
+            WaitDiagnostics.UiCapture capture = capture(DiagnosticSensitivity.STANDARD);
+            assertThat(capture.component(wide, 0)).isNotNull();
+            assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_COMPONENTS - 1);
+            assertThat(capture.warnings).contains("component capture truncated by hierarchy or time limit");
+            String values = render(capture(DiagnosticSensitivity.STANDARD).component(wide.getComponent(0), 0));
+            assertThat(values).contains("...").doesNotContain(new String(chars));
+
+            visited.set(0);
+            JPanel deep = new JPanel();
+            JPanel parent = deep;
+            for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_DEPTH * 2; i++) {
+                JPanel child = new JPanel() {
+                    @Override public String getName() { visited.incrementAndGet(); return super.getName(); }
+                };
+                parent.add(child);
+                parent = child;
+            }
+            WaitDiagnostics.UiCapture depthCapture = capture(DiagnosticSensitivity.STANDARD);
+            assertThat(depthCapture.component(deep, 0)).isNotNull();
+            assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_DEPTH - 1);
+            assertThat(depthCapture.warnings).contains("component capture truncated by hierarchy or time limit");
+        });
+    }
+
+    @Test
+    void stopsTraversalWhenProbeIsAbandonedOrDeadlineExpires() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            AtomicBoolean abandoned = new AtomicBoolean();
+            AtomicInteger visited = new AtomicInteger();
+            JPanel root = new JPanel();
+            for (int i = 0; i < 10; i++) {
+                root.add(new JLabel() {
+                    @Override public String getName() {
+                        visited.incrementAndGet();
+                        abandoned.set(true);
+                        return null;
+                    }
+                });
+            }
+            WaitDiagnostics.UiCapture capture = new WaitDiagnostics.UiCapture(
+                    DiagnosticSensitivity.STANDARD, abandoned, System.nanoTime());
+            assertThat(capture.component(root, 0)).isNotNull();
+            assertThat(visited.get()).isEqualTo(1);
+            WaitDiagnostics.UiCapture expired = new WaitDiagnostics.UiCapture(
+                    DiagnosticSensitivity.STANDARD, new AtomicBoolean(),
+                    System.nanoTime() - TimeUnit.SECONDS.toNanos(1));
+            assertThat(expired.component(root, 0)).isNull();
+            assertThat(visited.get()).isEqualTo(1);
+        });
+    }
+
+    private static WaitDiagnostics.UiCapture capture(DiagnosticSensitivity sensitivity) {
+        return new WaitDiagnostics.UiCapture(sensitivity, new AtomicBoolean(), System.nanoTime());
+    }
+
+    private static String render(WaitDiagnosticSnapshot.ComponentSnapshot component) {
+        return new WaitDiagnosticSnapshot(null, null, null, null,
+                WaitDiagnosticSnapshot.EdtStatus.UNAVAILABLE, null, null, Collections.emptyList(),
+                null, null, null, Collections.singletonList(component), "unknown", Collections.emptyList(),
+                DiagnosticSensitivity.STANDARD).renderComponentTree();
+    }
     @Test
     void findsDiagnosticsInFailureMessage() {
         Throwable failure = new RuntimeException("failure\n--- wait diagnostics ---\nmouse: unavailable");
