@@ -46,6 +46,8 @@ testing {
                 implementation(libs.assertj.core)
                 implementation(testFixtures(project()))
                 implementation(libs.logback.classic)
+                // DumpOnFailureTest drives the Launcher API directly; useJUnitJupiter only adds it at runtime
+                implementation(libs.junit.platform.launcher)
                 compileOnly(libs.jetbrains.annotations)
             }
 
