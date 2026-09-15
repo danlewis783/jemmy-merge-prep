@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.awt.image.BufferedImage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.netbeans.jemmy.DiagnosticSensitivity;
 
 class JUnitAttachmentUtilsTest {
 
@@ -51,20 +50,4 @@ class JUnitAttachmentUtilsTest {
         assertThat(second).isNotEqualTo(first);
     }
 
-    @Test
-    void usesAnOpaqueInvocationIdentifierForConservativeDiagnostics() {
-        String fileName = JUnitAttachmentUtils.uniqueFileName(
-                "Fixture",
-                "case 5: C:\\secret\\customer-project",
-                "[engine:test]/5",
-                "jemmy diagnostics",
-                "txt",
-                DiagnosticSensitivity.CONSERVATIVE);
-
-        assertThat(fileName)
-                .startsWith("Fixture-invocation-")
-                .endsWith("-jemmy-diagnostics.txt")
-                .doesNotContain("secret")
-                .doesNotContain("customer-project");
-    }
 }

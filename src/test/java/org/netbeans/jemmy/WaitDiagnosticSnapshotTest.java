@@ -16,11 +16,11 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 class WaitDiagnosticSnapshotTest {
-    private static final String SENTINEL = "SENSITIVE-customer/project/C:/material";
+    private static final String SENTINEL = "component value";
 
     @Test
     void attachedSnapshotSurvivesFailureGraphSerialization() throws Exception {
-        WaitDiagnosticSnapshot snapshot = snapshot(DiagnosticSensitivity.STANDARD);
+        WaitDiagnosticSnapshot snapshot = snapshot();
         TimeoutExpiredException timeout = new TimeoutExpiredException("timeout", new IllegalStateException("cause"));
         Throwable failure = new RuntimeException("test failure", timeout);
         WaitDiagnostics.attachTo(timeout, snapshot);
@@ -46,7 +46,7 @@ class WaitDiagnosticSnapshotTest {
 
     @Test
     void rendersAConciseSummarySeparatelyFromStacksAndTree() {
-        WaitDiagnosticSnapshot snapshot = snapshot(DiagnosticSensitivity.STANDARD);
+        WaitDiagnosticSnapshot snapshot = snapshot();
 
         assertThat(snapshot.renderSummary())
                 .containsSubsequence(
@@ -66,7 +66,11 @@ class WaitDiagnosticSnapshotTest {
         assertThat(snapshot.renderComponentTree())
                 .contains("Focused component ancestry:")
                 .contains("JPanel name=")
-                .contains("bounds=[1,2 3x4]");
+                .contains("bounds=[1,2 3x4]")
+                .contains("name=\"component value\"", "title=\"component value\"",
+                        "text=\"component value\"", "tooltip=\"component value\"",
+                        "accessibleName=\"component value\"", "accessibleDescription=\"component value\"",
+                        "selectedText=\"component value\"", "selection=\"component value\"");
     }
 
     @Test
@@ -97,50 +101,7 @@ class WaitDiagnosticSnapshotTest {
                 .contains("com.example.product.Editor.save");
     }
 
-    @Test
-    void conservativeRendererOmitsEverySensitiveValue() {
-        WaitDiagnosticSnapshot snapshot = snapshot(DiagnosticSensitivity.STANDARD);
-
-        assertThat(snapshot.renderComponentTree(DiagnosticSensitivity.CONSERVATIVE))
-                .contains("values=<redacted>")
-                .doesNotContain(SENTINEL);
-        assertThat(snapshot.renderComponentTree(DiagnosticSensitivity.STANDARD))
-                .contains(SENTINEL);
-    }
-
-    @Test
-    void conservativeRendererRedactsCaptureWarningDetails() {
-        WaitDiagnosticSnapshot snapshot = snapshot(
-                DiagnosticSensitivity.CONSERVATIVE,
-                "component capture failed: java.lang.IllegalStateException: " + SENTINEL);
-
-        assertThat(snapshot.renderFailureDetail())
-                .contains("diagnostic capture warning (details redacted by diagnostic sensitivity policy)")
-                .doesNotContain(SENTINEL);
-        assertThat(snapshot.renderComponentTree())
-                .contains("diagnostic capture warning (details redacted by diagnostic sensitivity policy)")
-                .doesNotContain(SENTINEL);
-    }
-
-    @Test
-    void noneRendererReturnsOnlyTheDisabledNotice() {
-        WaitDiagnosticSnapshot standard = snapshot(DiagnosticSensitivity.STANDARD);
-        WaitDiagnosticSnapshot disabled = snapshot(DiagnosticSensitivity.NONE);
-
-        assertThat(standard.renderSummary(DiagnosticSensitivity.NONE))
-                .isEqualTo("Jemmy diagnostics disabled by policy.");
-        assertThat(standard.renderComponentTree(DiagnosticSensitivity.NONE))
-                .isEqualTo("Jemmy diagnostics disabled by policy.\n");
-        assertThat(disabled.renderFailureDetail())
-                .isEqualTo("Jemmy diagnostics disabled by policy.");
-    }
-
-    private static WaitDiagnosticSnapshot snapshot(DiagnosticSensitivity sensitivity) {
-        return snapshot(sensitivity, null);
-    }
-
-    private static WaitDiagnosticSnapshot snapshot(
-            DiagnosticSensitivity sensitivity, String warning) {
+    private static WaitDiagnosticSnapshot snapshot() {
         WaitDiagnosticSnapshot.ComponentSnapshot focusedChild = component("JPanel", true, true);
         WaitDiagnosticSnapshot.ComponentSnapshot window = new WaitDiagnosticSnapshot.ComponentSnapshot(
                 "JFrame",
@@ -177,10 +138,7 @@ class WaitDiagnosticSnapshotTest {
                 window,
                 Collections.singletonList(window),
                 "java.awt.Point[x=1,y=2]",
-                warning == null
-                        ? Collections.<String>emptyList()
-                        : Collections.singletonList(warning),
-                sensitivity);
+                Collections.emptyList());
     }
 
     private static WaitDiagnosticSnapshot.ComponentSnapshot component(

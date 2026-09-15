@@ -71,10 +71,9 @@ final class ActionRunner<R> {
             throw new RuntimeException("no waiting allowed on EDT");
         }
         ActionScope actionScope = new ActionScope();
-        DiagnosticSensitivity sensitivity = WaitDiagnostics.currentSensitivity();
         Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(() -> {
             CURRENT_ACTION_SCOPE.set(actionScope);
-            try (WaitDiagnostics.SensitivityScope ignored = WaitDiagnostics.useSensitivity(sensitivity)) {
+            try {
                 return work.call();
             } finally {
                 CURRENT_ACTION_SCOPE.remove();
@@ -118,9 +117,8 @@ final class ActionRunner<R> {
     }
 
     void submitLater(Runnable work) {
-        DiagnosticSensitivity sensitivity = WaitDiagnostics.currentSensitivity();
         JEMMY_ACTION_SERVICE.execute(() -> {
-            try (WaitDiagnostics.SensitivityScope ignored = WaitDiagnostics.useSensitivity(sensitivity)) {
+            try {
                 work.run();
             } catch (RuntimeException e) {
                 // the submitter has already returned and cannot be told; log so the failure

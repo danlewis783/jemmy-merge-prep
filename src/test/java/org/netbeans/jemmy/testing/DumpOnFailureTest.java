@@ -25,9 +25,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -38,34 +35,10 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.netbeans.jemmy.BooleanSupplierRepeater;
-import org.netbeans.jemmy.DiagnosticSensitivity;
-import org.netbeans.jemmy.TimeoutKey;
-import org.netbeans.jemmy.TimeoutOverride;
-import org.netbeans.jemmy.Timeouts;
 
 @Isolated
 class DumpOnFailureTest {
     private static boolean nestedExecution;
-    private static final String SENSITIVE_SENTINEL = "SENSITIVE-customer/project/material";
-    private String previousConfiguredSensitivity;
-
-    @BeforeEach
-    void clearConfiguredSensitivity() {
-        previousConfiguredSensitivity =
-                System.clearProperty(DiagnosticSensitivity.SYSTEM_PROPERTY);
-    }
-
-    @AfterEach
-    void restoreConfiguredSensitivity() {
-        if (previousConfiguredSensitivity != null) {
-            System.setProperty(
-                    DiagnosticSensitivity.SYSTEM_PROPERTY, previousConfiguredSensitivity);
-        } else {
-            System.clearProperty(DiagnosticSensitivity.SYSTEM_PROPERTY);
-        }
-    }
-
     @Test
     void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce() throws Exception {
         PrintStream originalErr = System.err;
@@ -106,113 +79,8 @@ class DumpOnFailureTest {
                 .doesNotContain("--- wait diagnostics ---");
     }
 
-    @Test
-    void conservativeFixtureDoesNotRenderSensitiveWaitValues() throws Exception {
-        PrintStream originalErr = System.err;
-        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
-        SummaryGeneratingListener listener = new SummaryGeneratingListener();
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(SensitiveFailingFixture.class))
-                .build();
-
-        try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
-            System.setErr(replacement);
-            nestedExecution = true;
-            LauncherFactory.create().execute(request, listener);
-        } finally {
-            nestedExecution = false;
-            System.setErr(originalErr);
-        }
-
-        assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure -> {
-            StringWriter rendered = new StringWriter();
-            failure.getException().printStackTrace(new PrintWriter(rendered));
-            assertThat(rendered.toString())
-                    .contains("details redacted by diagnostic sensitivity policy")
-                    .doesNotContain(SENSITIVE_SENTINEL);
-        });
-        assertThat(capturedErr.toString(StandardCharsets.UTF_8.name()))
-                .contains("component hierarchy attached as")
-                .doesNotContain(SENSITIVE_SENTINEL);
-    }
-
-    @Test
-    void noneFixtureLeavesOnlyTheOriginalFailure() throws Exception {
-        PrintStream originalErr = System.err;
-        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
-        SummaryGeneratingListener listener = new SummaryGeneratingListener();
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(NoDiagnosticsFailingFixture.class))
-                .build();
-
-        try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
-            System.setErr(replacement);
-            nestedExecution = true;
-            LauncherFactory.create().execute(request, listener);
-        } finally {
-            nestedExecution = false;
-            System.setErr(originalErr);
-        }
-
-        assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure -> {
-            assertThat(failure.getException())
-                    .isInstanceOf(AssertionError.class)
-                    .hasMessage("deliberate failure");
-            assertThat(failure.getException().getSuppressed()).isEmpty();
-        });
-        assertThat(capturedErr.toString(StandardCharsets.UTF_8.name())).isEmpty();
-    }
-
-    @Test
-    void globalNoneOverrideWinsOverAnAnnotatedPolicy() throws Exception {
-        System.setProperty(DiagnosticSensitivity.SYSTEM_PROPERTY, "NONE");
-        PrintStream originalErr = System.err;
-        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
-        SummaryGeneratingListener listener = new SummaryGeneratingListener();
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(selectClass(SensitiveFailingFixture.class))
-                .build();
-
-        try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
-            System.setErr(replacement);
-            nestedExecution = true;
-            LauncherFactory.create().execute(request, listener);
-        } finally {
-            nestedExecution = false;
-            System.setErr(originalErr);
-        }
-
-        assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure ->
-                assertThat(failure.getException().getSuppressed()).isEmpty());
-        assertThat(capturedErr.toString(StandardCharsets.UTF_8.name())).isEmpty();
-    }
-
     @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})
     static class FailingFixture {
-        @Test
-        void deliberatelyFails() {
-            fail("deliberate failure");
-        }
-    }
-
-    @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})
-    @JemmyDiagnosticsPolicy(DiagnosticSensitivity.CONSERVATIVE)
-    static class SensitiveFailingFixture {
-        @Test
-        @DisplayName(SENSITIVE_SENTINEL)
-        void timesOutWithoutPublishingSensitiveValues() {
-            try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 100L);
-                    TimeoutOverride delta = Timeouts.override(TimeoutKey.Waiter_TimeDelta, 20L)) {
-                BooleanSupplierRepeater.on(() -> false)
-                        .describedAs(SENSITIVE_SENTINEL)
-                        .runUntilTrue();
-            }
-        }
-    }
-
-    @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})
-    @JemmyDiagnosticsPolicy(DiagnosticSensitivity.NONE)
-    static class NoDiagnosticsFailingFixture {
         @Test
         void deliberatelyFails() {
             fail("deliberate failure");

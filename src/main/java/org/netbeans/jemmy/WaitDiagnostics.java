@@ -46,9 +46,6 @@ import org.jetbrains.annotations.Nullable;
 /** Failure-safe capture and attachment entry point for Jemmy wait diagnostics. */
 public final class WaitDiagnostics {
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
-    // Null means no explicit scope: consult the process setting on each capture.
-    private static final ThreadLocal<DiagnosticSensitivity> SENSITIVITY =
-            new InheritableThreadLocal<>();
 
     private WaitDiagnostics() {}
 
@@ -71,12 +68,6 @@ public final class WaitDiagnostics {
             long waitMillis,
             @Nullable String target,
             @Nullable Throwable cause) {
-        DiagnosticSensitivity sensitivity = currentSensitivity();
-        if (sensitivity == DiagnosticSensitivity.NONE) {
-            return cause == null
-                    ? new TimeoutExpiredException(fallbackMessage)
-                    : new TimeoutExpiredException(fallbackMessage, cause);
-        }
         TimeoutExpiredException failure;
         try {
             WaitDiagnosticSnapshot snapshot = captureTimeout(waitMillis, timeoutKey, target);
@@ -85,30 +76,19 @@ public final class WaitDiagnostics {
                     : new TimeoutExpiredException(snapshot.renderSummary(), cause);
             attachTo(failure, snapshot);
         } catch (Throwable diagnosticsFailure) {
-            String safeFallback = sensitivity == DiagnosticSensitivity.STANDARD
-                    ? fallbackMessage
-                    : "Timed out after " + waitMillis + " ms (" + timeoutKey
-                            + "); details redacted by diagnostic sensitivity policy";
             failure = cause == null
-                    ? new TimeoutExpiredException(safeFallback)
-                    : new TimeoutExpiredException(safeFallback, cause);
-            attachCaptureFailure(failure, diagnosticsFailure, sensitivity);
+                    ? new TimeoutExpiredException(fallbackMessage)
+                    : new TimeoutExpiredException(fallbackMessage, cause);
+            attachCaptureFailure(failure, diagnosticsFailure);
         }
         return failure;
     }
 
     static void attachCaptureFailure(
             Throwable failure,
-            Throwable diagnosticsFailure,
-            DiagnosticSensitivity sensitivity) {
-        if (sensitivity == DiagnosticSensitivity.NONE) {
-            return;
-        }
-        Throwable attachment = sensitivity == DiagnosticSensitivity.STANDARD
-                ? diagnosticsFailure
-                : new DiagnosticCaptureFailure(diagnosticsFailure.getClass().getName());
+            Throwable diagnosticsFailure) {
         try {
-            failure.addSuppressed(attachment);
+            failure.addSuppressed(diagnosticsFailure);
         } catch (Throwable ignored) {
             // The primary failure wins even when recording the diagnostic failure fails.
         }
@@ -119,13 +99,6 @@ public final class WaitDiagnostics {
             @Nullable Long waitMillis,
             @Nullable String timeoutKey,
             @Nullable String target) {
-        DiagnosticSensitivity sensitivity = currentSensitivity();
-        if (sensitivity == DiagnosticSensitivity.NONE) {
-            return new WaitDiagnosticSnapshot(null, waitMillis, timeoutKey, null,
-                    WaitDiagnosticSnapshot.EdtStatus.UNAVAILABLE, null, null,
-                    Collections.emptyList(), null, null, null, Collections.emptyList(),
-                    "(unavailable)", Collections.emptyList(), sensitivity);
-        }
         List<String> warnings = new ArrayList<>();
         Map<Thread, StackTraceElement[]> threadStacks;
         try {
@@ -147,7 +120,7 @@ public final class WaitDiagnostics {
             EventQueue.invokeLater(() -> {
                 try {
                     if (!abandonedProbe.get()) {
-                        uiState.set(captureUiState(sensitivity, abandonedProbe, probeStart));
+                        uiState.set(captureUiState(abandonedProbe, probeStart));
                     }
                 } finally {
                     done.countDown();
@@ -173,14 +146,13 @@ public final class WaitDiagnostics {
             warnings.addAll(state.warnings);
         }
 
-        String safeTarget = sensitivity == DiagnosticSensitivity.STANDARD ? target : redact(target);
         WaitDiagnosticSnapshot.EdtStatus edtStatus =
                 WaitDiagnosticSnapshot.classifyEdt(responded, responseMillis, edt);
         return new WaitDiagnosticSnapshot(
-                sensitivity == DiagnosticSensitivity.STANDARD ? testDisplayName : null,
+                testDisplayName,
                 waitMillis,
                 timeoutKey,
-                safeTarget,
+                target,
                 edtStatus,
                 responseMillis,
                 edt,
@@ -190,15 +162,11 @@ public final class WaitDiagnostics {
                 state.activeWindow,
                 state.windows,
                 mouse,
-                warnings,
-                sensitivity);
+                warnings);
     }
 
     /** Attaches one structured, stackless diagnostic detail to the throwable graph. */
     public static void attachTo(Throwable failure) {
-        if (currentSensitivity() == DiagnosticSensitivity.NONE) {
-            return;
-        }
         try {
             attachTo(failure, captureSnapshot(null));
         } catch (Throwable ignored) {
@@ -207,10 +175,6 @@ public final class WaitDiagnostics {
     }
 
     public static void attachTo(Throwable failure, WaitDiagnosticSnapshot snapshot) {
-        if (currentSensitivity() == DiagnosticSensitivity.NONE
-                || snapshot.getSensitivity() == DiagnosticSensitivity.NONE) {
-            return;
-        }
         try {
             if (!isPresentIn(failure)) {
                 failure.addSuppressed(new Diagnostics(snapshot));
@@ -267,22 +231,6 @@ public final class WaitDiagnostics {
         return false;
     }
 
-    /** Installs a per-test policy; callers must close the returned scope. */
-    public static SensitivityScope useSensitivity(DiagnosticSensitivity sensitivity) {
-        DiagnosticSensitivity previous = SENSITIVITY.get();
-        SENSITIVITY.set(sensitivity);
-        return new SensitivityScope(previous);
-    }
-
-    static DiagnosticSensitivity currentSensitivity() {
-        DiagnosticSensitivity scoped = SENSITIVITY.get();
-        return scoped == null ? DiagnosticSensitivity.configuredDefault() : scoped;
-    }
-
-    private static @Nullable String redact(@Nullable String value) {
-        return value == null ? null : "details redacted by diagnostic sensitivity policy";
-    }
-
     private static boolean awaitPreservingInterrupt(CountDownLatch done) {
         try {
             return done.await(EDT_PROBE_TIMEOUT_MS, TimeUnit.MILLISECONDS);
@@ -303,8 +251,8 @@ public final class WaitDiagnostics {
     }
 
     private static UiState captureUiState(
-            DiagnosticSensitivity sensitivity, AtomicBoolean abandonedProbe, long probeStart) {
-        UiCapture capture = new UiCapture(sensitivity, abandonedProbe, probeStart);
+            AtomicBoolean abandonedProbe, long probeStart) {
+        UiCapture capture = new UiCapture(abandonedProbe, probeStart);
         try {
             KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             List<WaitDiagnosticSnapshot.ComponentSnapshot> windows = new ArrayList<>();
@@ -334,7 +282,6 @@ public final class WaitDiagnostics {
         static final int MAX_COMPONENTS = 256;
         static final int MAX_DEPTH = 32;
         static final int MAX_VALUE_LENGTH = 500;
-        private final DiagnosticSensitivity sensitivity;
         private final AtomicBoolean abandonedProbe;
         private final long probeStart;
         private final IdentityHashMap<Component, WaitDiagnosticSnapshot.ComponentSnapshot> captured =
@@ -343,8 +290,7 @@ public final class WaitDiagnostics {
         private int componentCount;
         private boolean reportedLimit;
 
-        UiCapture(DiagnosticSensitivity sensitivity, AtomicBoolean abandonedProbe, long probeStart) {
-            this.sensitivity = sensitivity;
+        UiCapture(AtomicBoolean abandonedProbe, long probeStart) {
             this.abandonedProbe = abandonedProbe;
             this.probeStart = probeStart;
         }
@@ -367,7 +313,7 @@ public final class WaitDiagnostics {
         }
 
         @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(@Nullable Component component, int depth) {
-            if (component == null || sensitivity == DiagnosticSensitivity.NONE) {
+            if (component == null) {
                 return null;
             }
             WaitDiagnosticSnapshot.ComponentSnapshot existing = captured.get(component);
@@ -383,7 +329,7 @@ public final class WaitDiagnostics {
             }
             componentCount++;
 
-            String name = null;
+            String name = bounded(component.getName());
             String title = null;
             String text = null;
             String tooltip = null;
@@ -391,43 +337,40 @@ public final class WaitDiagnostics {
             String accessibleDescription = null;
             String selectedText = null;
             String selection = null;
-            if (sensitivity == DiagnosticSensitivity.STANDARD) {
-                name = bounded(component.getName());
-                if (component instanceof Frame) {
-                    title = bounded(((Frame) component).getTitle());
-                } else if (component instanceof Dialog) {
-                    title = bounded(((Dialog) component).getTitle());
-                }
-                if (component instanceof JLabel) {
-                    text = bounded(((JLabel) component).getText());
-                } else if (component instanceof AbstractButton) {
-                    text = bounded(((AbstractButton) component).getText());
-                } else if (component instanceof JTextComponent) {
-                    JTextComponent editor = (JTextComponent) component;
-                    Document document = editor.getDocument();
-                    text = documentText(document, 0, document.getLength());
-                    selectedText = documentText(document, editor.getSelectionStart(), editor.getSelectionEnd());
-                } else if (component instanceof TextComponent) {
-                    // AWT only exposes unbounded native text reads, so omit its values.
-                    text = "<text omitted: bounded read unavailable>";
-                }
-                AccessibleContext accessibleContext = component.getAccessibleContext();
-                if (accessibleContext != null) {
-                    accessibleName = bounded(accessibleContext.getAccessibleName());
-                    accessibleDescription = bounded(accessibleContext.getAccessibleDescription());
-                }
-                if (component instanceof JComponent) {
-                    tooltip = bounded(((JComponent) component).getToolTipText());
-                }
-                if (component instanceof JTree) {
-                    // Avoid materializing all selected paths or arbitrary model values.
-                    JTree tree = (JTree) component;
-                    selection = "count=" + tree.getSelectionCount() + ", leadRow=" + tree.getLeadSelectionRow();
-                }
+            if (component instanceof Frame) {
+                title = bounded(((Frame) component).getTitle());
+            } else if (component instanceof Dialog) {
+                title = bounded(((Dialog) component).getTitle());
+            }
+            if (component instanceof JLabel) {
+                text = bounded(((JLabel) component).getText());
+            } else if (component instanceof AbstractButton) {
+                text = bounded(((AbstractButton) component).getText());
+            } else if (component instanceof JTextComponent) {
+                JTextComponent editor = (JTextComponent) component;
+                Document document = editor.getDocument();
+                text = documentText(document, 0, document.getLength());
+                selectedText = documentText(document, editor.getSelectionStart(), editor.getSelectionEnd());
+            } else if (component instanceof TextComponent) {
+                // AWT only exposes unbounded native text reads, so omit its values.
+                text = "<text omitted: bounded read unavailable>";
+            }
+            AccessibleContext accessibleContext = component.getAccessibleContext();
+            if (accessibleContext != null) {
+                accessibleName = bounded(accessibleContext.getAccessibleName());
+                accessibleDescription = bounded(accessibleContext.getAccessibleDescription());
+            }
+            if (component instanceof JComponent) {
+                tooltip = bounded(((JComponent) component).getToolTipText());
+            }
+            if (component instanceof JTree) {
+                // Avoid materializing all selected paths or arbitrary model values.
+                JTree tree = (JTree) component;
+                selection = "count=" + tree.getSelectionCount() + ", leadRow=" + tree.getLeadSelectionRow();
             }
 
             List<WaitDiagnosticSnapshot.ComponentSnapshot> children = new ArrayList<>();
-            if (sensitivity != DiagnosticSensitivity.NO_COMPONENT_TREE && component instanceof java.awt.Container) {
+            if (component instanceof java.awt.Container) {
                 java.awt.Container container = (java.awt.Container) component;
                 // Indexed access avoids allocating an array for a very wide hierarchy.
                 for (int i = 0; !exhausted() && i < container.getComponentCount(); i++) {
@@ -495,28 +438,6 @@ public final class WaitDiagnostics {
         return result;
     }
 
-    /** Restores the sensitivity in effect before {@link #useSensitivity}. */
-    public static final class SensitivityScope implements AutoCloseable {
-        private final @Nullable DiagnosticSensitivity previous;
-        private boolean closed;
-
-        private SensitivityScope(@Nullable DiagnosticSensitivity previous) {
-            this.previous = previous;
-        }
-
-        @Override
-        public void close() {
-            if (!closed) {
-                if (previous == null) {
-                    SENSITIVITY.remove();
-                } else {
-                    SENSITIVITY.set(previous);
-                }
-                closed = true;
-            }
-        }
-    }
-
     /** Rides structured diagnostics into failure-detail views; not an error in its own right. */
     private static final class Diagnostics extends Throwable {
         private static final long serialVersionUID = 1L;
@@ -525,13 +446,6 @@ public final class WaitDiagnostics {
         Diagnostics(WaitDiagnosticSnapshot snapshot) {
             super(snapshot.renderFailureDetail(), null, false, false);
             this.snapshot = snapshot;
-        }
-    }
-
-    /** Records capture failure type without retaining its potentially sensitive message or stack. */
-    private static final class DiagnosticCaptureFailure extends Throwable {
-        DiagnosticCaptureFailure(String failureType) {
-            super("diagnostic capture failed: " + failureType, null, false, false);
         }
     }
 

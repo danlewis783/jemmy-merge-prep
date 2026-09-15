@@ -22,10 +22,6 @@ import org.jetbrains.annotations.Nullable;
 public final class WaitDiagnosticSnapshot implements Serializable {
     private static final long serialVersionUID = 1L;
     static final String HEADER = "--- wait diagnostics ---";
-    private static final String REDACTED = "<redacted>";
-    private static final String DIAGNOSTICS_DISABLED = "Jemmy diagnostics disabled by policy.";
-    private static final String REDACTED_WARNING =
-            "diagnostic capture warning (details redacted by diagnostic sensitivity policy)";
 
     public enum EdtStatus {
         RESPONSIVE_IDLE,
@@ -49,7 +45,6 @@ public final class WaitDiagnosticSnapshot implements Serializable {
     private final List<ComponentSnapshot> windows;
     private final String mousePosition;
     private final List<String> warnings;
-    private final DiagnosticSensitivity sensitivity;
 
     WaitDiagnosticSnapshot(
             @Nullable String testDisplayName,
@@ -65,8 +60,7 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             @Nullable ComponentSnapshot activeWindow,
             List<ComponentSnapshot> windows,
             String mousePosition,
-            List<String> warnings,
-            DiagnosticSensitivity sensitivity) {
+            List<String> warnings) {
         this.testDisplayName = concise(testDisplayName);
         this.waitDurationMillis = waitDurationMillis;
         this.timeoutKey = timeoutKey;
@@ -81,11 +75,6 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         this.windows = immutableCopy(windows);
         this.mousePosition = mousePosition;
         this.warnings = immutableCopy(warnings);
-        this.sensitivity = sensitivity;
-    }
-
-    public DiagnosticSensitivity getSensitivity() {
-        return sensitivity;
     }
 
     /** Adds test metadata without recapturing any UI or thread state. */
@@ -104,33 +93,22 @@ public final class WaitDiagnosticSnapshot implements Serializable {
                 activeWindow,
                 windows,
                 mousePosition,
-                warnings,
-                sensitivity);
+                warnings);
     }
 
     public String renderSummary() {
-        return renderSummary(sensitivity);
-    }
-
-    public String renderSummary(DiagnosticSensitivity requestedSensitivity) {
-        DiagnosticSensitivity effective = moreConservative(sensitivity, requestedSensitivity);
-        if (effective == DiagnosticSensitivity.NONE) {
-            return DIAGNOSTICS_DISABLED;
-        }
         StringBuilder out = new StringBuilder();
         if (waitDurationMillis != null) {
             out.append("Timed out after ").append(formatDuration(waitDurationMillis));
             if (waitTarget != null) {
-                out.append(" waiting for:\n  ").append(effective == DiagnosticSensitivity.STANDARD
-                        ? waitTarget
-                        : "details redacted by diagnostic sensitivity policy");
+                out.append(" waiting for:\n  ").append(waitTarget);
             }
             if (timeoutKey != null) {
                 out.append("\n  timeout key: ").append(timeoutKey);
             }
         } else {
             out.append("UI failure diagnostics");
-            if (testDisplayName != null && effective == DiagnosticSensitivity.STANDARD) {
+            if (testDisplayName != null) {
                 out.append(" for ").append(testDisplayName);
             }
         }
@@ -139,32 +117,24 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         for (ThreadSnapshot actionThread : actionThreads) {
             out.append("\n  ").append(classifyActionThread(actionThread));
         }
-        out.append("\n  Active window: ").append(brief(activeWindow, DiagnosticSensitivity.CONSERVATIVE));
-        out.append("\n  Focus owner: ").append(brief(focusOwner, DiagnosticSensitivity.CONSERVATIVE));
+        out.append("\n  Active window: ").append(brief(activeWindow));
+        out.append("\n  Focus owner: ").append(brief(focusOwner));
         out.append("\n\nAdditional diagnostics:");
         out.append("\n  detailed wait diagnostics attached to the failure");
-        if (effective != DiagnosticSensitivity.NO_COMPONENT_TREE) {
-            out.append("\n  component hierarchy available as a JUnit text attachment");
-        } else {
-            out.append("\n  component hierarchy disabled by diagnostic sensitivity policy");
-        }
-        out.append("\n  failure screenshot attached only when permitted by policy");
+        out.append("\n  component hierarchy available as a JUnit text attachment");
         return out.toString();
     }
 
     public String renderFailureDetail() {
-        if (sensitivity == DiagnosticSensitivity.NONE) {
-            return DIAGNOSTICS_DISABLED;
-        }
         StringBuilder out = new StringBuilder(HEADER);
         out.append("\nEDT probe: ").append(renderEdtConclusion());
         out.append("\nmouse: ").append(mousePosition);
-        out.append("\nfocus: owner=").append(brief(focusOwner, DiagnosticSensitivity.CONSERVATIVE));
-        out.append(", focusedWindow=").append(brief(focusedWindow, DiagnosticSensitivity.CONSERVATIVE));
-        out.append(", activeWindow=").append(brief(activeWindow, DiagnosticSensitivity.CONSERVATIVE));
+        out.append("\nfocus: owner=").append(brief(focusOwner));
+        out.append(", focusedWindow=").append(brief(focusedWindow));
+        out.append(", activeWindow=").append(brief(activeWindow));
         out.append("\nwindows (").append(windows.size()).append("):");
         for (ComponentSnapshot window : windows) {
-            out.append("\n  ").append(window.describe(DiagnosticSensitivity.CONSERVATIVE));
+            out.append("\n  ").append(window.describe());
         }
 
         out.append("\nEDT stack at timeout:");
@@ -176,26 +146,14 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             }
         }
         for (String warning : warnings) {
-            out.append("\nwarning: ").append(renderWarning(warning, sensitivity));
+            out.append("\nwarning: ").append(warning);
         }
         return out.toString();
     }
 
     public String renderComponentTree() {
-        return renderComponentTree(sensitivity);
-    }
-
-    public String renderComponentTree(DiagnosticSensitivity requestedSensitivity) {
-        DiagnosticSensitivity effective = moreConservative(sensitivity, requestedSensitivity);
-        if (effective == DiagnosticSensitivity.NONE) {
-            return DIAGNOSTICS_DISABLED + '\n';
-        }
-        if (effective == DiagnosticSensitivity.NO_COMPONENT_TREE) {
-            return "Component hierarchy disabled by diagnostic sensitivity policy.\n";
-        }
-
         StringBuilder out = new StringBuilder("Jemmy component hierarchy");
-        if (testDisplayName != null && effective == DiagnosticSensitivity.STANDARD) {
+        if (testDisplayName != null) {
             out.append(" for ").append(testDisplayName);
         }
         out.append('\n');
@@ -204,11 +162,11 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         if (!focusPath.isEmpty()) {
             out.append("\nFocused component ancestry:\n");
             for (int i = 0; i < focusPath.size(); i++) {
-                indent(out, i).append(focusPath.get(i).describe(effective)).append('\n');
+                indent(out, i).append(focusPath.get(i).describe()).append('\n');
             }
         }
 
-        if (effective == DiagnosticSensitivity.STANDARD && waitTarget != null) {
+        if (waitTarget != null) {
             List<ComponentSnapshot> matches = new ArrayList<>();
             for (ComponentSnapshot window : windows) {
                 findTargetMatches(window, waitTarget, matches);
@@ -216,23 +174,19 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             if (!matches.isEmpty()) {
                 out.append("\nComponents related to wait target:\n");
                 for (ComponentSnapshot match : matches) {
-                    out.append("  MATCH: ").append(match.describe(effective)).append('\n');
+                    out.append("  MATCH: ").append(match.describe()).append('\n');
                 }
             }
         }
 
         out.append("\nWindows:\n");
         for (ComponentSnapshot window : windows) {
-            appendComponent(out, window, 0, effective, window.showing || containsFocus(window));
+            appendComponent(out, window, 0, window.showing || containsFocus(window));
         }
         for (String warning : warnings) {
-            out.append("warning: ").append(renderWarning(warning, effective)).append('\n');
+            out.append("warning: ").append(warning).append('\n');
         }
         return out.toString();
-    }
-
-    private static String renderWarning(String warning, DiagnosticSensitivity sensitivity) {
-        return sensitivity == DiagnosticSensitivity.STANDARD ? warning : REDACTED_WARNING;
     }
 
     private String renderEdtConclusion() {
@@ -363,14 +317,13 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             StringBuilder out,
             ComponentSnapshot component,
             int depth,
-            DiagnosticSensitivity sensitivity,
             boolean recurse) {
-        indent(out, depth).append(component.describe(sensitivity)).append('\n');
+        indent(out, depth).append(component.describe()).append('\n');
         if (!recurse) {
             return;
         }
         for (ComponentSnapshot child : component.children) {
-            appendComponent(out, child, depth + 1, sensitivity, true);
+            appendComponent(out, child, depth + 1, true);
         }
     }
 
@@ -381,9 +334,8 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         return out;
     }
 
-    private static String brief(
-            @Nullable ComponentSnapshot component, DiagnosticSensitivity diagnosticSensitivity) {
-        return component == null ? "none" : component.brief(diagnosticSensitivity);
+    private static String brief(@Nullable ComponentSnapshot component) {
+        return component == null ? "none" : component.brief();
     }
 
     private static String formatDuration(long millis) {
@@ -399,11 +351,6 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         }
         String singleLine = value.replace('\r', ' ').replace('\n', ' ').trim();
         return singleLine.length() <= 500 ? singleLine : singleLine.substring(0, 497) + "...";
-    }
-
-    private static DiagnosticSensitivity moreConservative(
-            DiagnosticSensitivity captured, DiagnosticSensitivity requested) {
-        return captured.ordinal() >= requested.ordinal() ? captured : requested;
     }
 
     private static <T> List<T> immutableCopy(List<T> values) {
@@ -488,17 +435,15 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             this.children = immutableCopy(children);
         }
 
-        private String brief(DiagnosticSensitivity sensitivity) {
+        private String brief() {
             StringBuilder out = new StringBuilder(className);
-            if (sensitivity == DiagnosticSensitivity.STANDARD) {
-                appendValue(out, "name", name);
-                appendValue(out, "title", title);
-            }
+            appendValue(out, "name", name);
+            appendValue(out, "title", title);
             return out.toString();
         }
 
-        private String describe(DiagnosticSensitivity sensitivity) {
-            StringBuilder out = new StringBuilder(brief(sensitivity));
+        private String describe() {
+            StringBuilder out = new StringBuilder(brief());
             out.append(" bounds=").append(bounds);
             out.append(visible ? " visible" : " !visible");
             out.append(showing ? " showing" : " !showing");
@@ -509,28 +454,13 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             if (active) {
                 out.append(" ACTIVE");
             }
-            if (sensitivity == DiagnosticSensitivity.STANDARD) {
-                appendValue(out, "text", text);
-                appendValue(out, "tooltip", tooltip);
-                appendValue(out, "accessibleName", accessibleName);
-                appendValue(out, "accessibleDescription", accessibleDescription);
-                appendValue(out, "selectedText", selectedText);
-                appendValue(out, "selection", selection);
-            } else if (hasSensitiveValue()) {
-                out.append(" values=").append(REDACTED);
-            }
+            appendValue(out, "text", text);
+            appendValue(out, "tooltip", tooltip);
+            appendValue(out, "accessibleName", accessibleName);
+            appendValue(out, "accessibleDescription", accessibleDescription);
+            appendValue(out, "selectedText", selectedText);
+            appendValue(out, "selection", selection);
             return out.toString();
-        }
-
-        private boolean hasSensitiveValue() {
-            return name != null
-                    || title != null
-                    || text != null
-                    || tooltip != null
-                    || accessibleName != null
-                    || accessibleDescription != null
-                    || selectedText != null
-                    || selection != null;
         }
 
         private boolean matchesTarget(String target) {

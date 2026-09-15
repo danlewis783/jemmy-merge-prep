@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import org.netbeans.jemmy.DiagnosticSensitivity;
 
 /** Publishes image and text files through JUnit Platform's native attachment mechanism. */
 public final class JUnitAttachmentUtils {
@@ -70,19 +69,7 @@ public final class JUnitAttachmentUtils {
                 context.getDisplayName(),
                 context.getUniqueId(),
                 suffix,
-                extension,
-                DumpOnFailure.sensitivityFor(context));
-    }
-
-    static String uniqueFileName(
-            String className, String invocation, String uniqueId, String suffix, String extension) {
-        return uniqueFileName(
-                className,
-                invocation,
-                uniqueId,
-                suffix,
-                extension,
-                DiagnosticSensitivity.STANDARD);
+                extension);
     }
 
     static String uniqueFileName(
@@ -90,14 +77,10 @@ public final class JUnitAttachmentUtils {
             String invocation,
             String uniqueId,
             String suffix,
-            String extension,
-            DiagnosticSensitivity sensitivity) {
+            String extension) {
         String unique = Integer.toUnsignedString(uniqueId.hashCode(), 36)
                 + '-' + Long.toUnsignedString(UNIQUE_FILE_SEQUENCE.incrementAndGet(), 36);
-        String invocationLabel = sensitivity == DiagnosticSensitivity.STANDARD
-                ? sanitize(invocation)
-                : "invocation";
-        return sanitize(className) + '-' + invocationLabel + '-' + unique + '-'
+        return sanitize(className) + '-' + sanitize(invocation) + '-' + unique + '-'
                 + sanitize(suffix) + '.' + sanitize(extension);
     }
 

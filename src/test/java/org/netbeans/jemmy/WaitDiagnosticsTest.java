@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.accessibility.AccessibleContext;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -33,35 +32,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WaitDiagnosticsTest {
-    private static final String SENTINEL = "SENSITIVE-customer/project/material";
-
-    @Test
-    void restrictivePoliciesDoNotReadComponentValuesOrUnusedChildren() throws Exception {
-        EventQueue.invokeAndWait(() -> {
-            AtomicBoolean checking = new AtomicBoolean();
-            JLabel sensitive = new JLabel() {
-                @Override public String getText() {
-                    if (checking.get()) {
-                        throw new AssertionError("unbounded text read");
-                    }
-                    return super.getText();
-                }
-                @Override public String getName() { throw new AssertionError("sensitive name read"); }
-                @Override public AccessibleContext getAccessibleContext() {
-                    throw new AssertionError("sensitive accessibility read");
-                }
-            };
-            checking.set(true);
-            WaitDiagnostics.UiCapture conservative = capture(DiagnosticSensitivity.CONSERVATIVE);
-            assertThat(conservative.component(sensitive, 0)).isNotNull();
-            assertThat(capture(DiagnosticSensitivity.NO_COMPONENT_TREE).component(sensitive, 0)).isNotNull();
-            JPanel noTree = new JPanel() {
-                @Override public int getComponentCount() { throw new AssertionError("hierarchy visited"); }
-            };
-            assertThat(capture(DiagnosticSensitivity.NO_COMPONENT_TREE).component(noTree, 0)).isNotNull();
-            assertThat(capture(DiagnosticSensitivity.NONE).component(sensitive, 0)).isNull();
-        });
-    }
+    private static final String SENTINEL = "capture failure details";
 
     @Test
     void boundsDocumentAndSelectionReadsBeforeAllocatingText() throws Exception {
@@ -90,7 +61,7 @@ class WaitDiagnosticsTest {
             }
             editor.selectAll();
             checking.set(true);
-            String tree = render(capture(DiagnosticSensitivity.STANDARD).component(editor, 0));
+            String tree = render(capture().component(editor, 0));
             assertThat(reads.get()).isEqualTo(2);
             assertThat(tree).contains("text=\"", "selectedText=\"", "...");
             assertThat(tree).doesNotContain(new String(new char[501]).replace('\0', 'x'));
@@ -111,11 +82,11 @@ class WaitDiagnosticsTest {
                 label.setToolTipText(new String(chars));
                 wide.add(label);
             }
-            WaitDiagnostics.UiCapture capture = capture(DiagnosticSensitivity.STANDARD);
+            WaitDiagnostics.UiCapture capture = capture();
             assertThat(capture.component(wide, 0)).isNotNull();
             assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_COMPONENTS - 1);
             assertThat(capture.warnings).contains("component capture truncated by hierarchy or time limit");
-            String values = render(capture(DiagnosticSensitivity.STANDARD).component(wide.getComponent(0), 0));
+            String values = render(capture().component(wide.getComponent(0), 0));
             assertThat(values).contains("...").doesNotContain(new String(chars));
 
             visited.set(0);
@@ -128,7 +99,7 @@ class WaitDiagnosticsTest {
                 parent.add(child);
                 parent = child;
             }
-            WaitDiagnostics.UiCapture depthCapture = capture(DiagnosticSensitivity.STANDARD);
+            WaitDiagnostics.UiCapture depthCapture = capture();
             assertThat(depthCapture.component(deep, 0)).isNotNull();
             assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_DEPTH - 1);
             assertThat(depthCapture.warnings).contains("component capture truncated by hierarchy or time limit");
@@ -151,26 +122,25 @@ class WaitDiagnosticsTest {
                 });
             }
             WaitDiagnostics.UiCapture capture = new WaitDiagnostics.UiCapture(
-                    DiagnosticSensitivity.STANDARD, abandoned, System.nanoTime());
+                    abandoned, System.nanoTime());
             assertThat(capture.component(root, 0)).isNotNull();
             assertThat(visited.get()).isEqualTo(1);
             WaitDiagnostics.UiCapture expired = new WaitDiagnostics.UiCapture(
-                    DiagnosticSensitivity.STANDARD, new AtomicBoolean(),
+                    new AtomicBoolean(),
                     System.nanoTime() - TimeUnit.SECONDS.toNanos(1));
             assertThat(expired.component(root, 0)).isNull();
             assertThat(visited.get()).isEqualTo(1);
         });
     }
 
-    private static WaitDiagnostics.UiCapture capture(DiagnosticSensitivity sensitivity) {
-        return new WaitDiagnostics.UiCapture(sensitivity, new AtomicBoolean(), System.nanoTime());
+    private static WaitDiagnostics.UiCapture capture() {
+        return new WaitDiagnostics.UiCapture(new AtomicBoolean(), System.nanoTime());
     }
 
     private static String render(WaitDiagnosticSnapshot.ComponentSnapshot component) {
         return new WaitDiagnosticSnapshot(null, null, null, null,
                 WaitDiagnosticSnapshot.EdtStatus.UNAVAILABLE, null, null, Collections.emptyList(),
-                null, null, null, Collections.singletonList(component), "unknown", Collections.emptyList(),
-                DiagnosticSensitivity.STANDARD).renderComponentTree();
+                null, null, null, Collections.singletonList(component), "unknown", Collections.emptyList()).renderComponentTree();
     }
     @Test
     void findsDiagnosticsInFailureMessage() {
@@ -219,51 +189,14 @@ class WaitDiagnosticsTest {
     }
 
     @Test
-    void attachesOnlySanitizedCaptureFailureMetadataUnderConservativePolicy() {
-        Throwable failure = new RuntimeException("timeout");
-        Throwable diagnosticsFailure = new AssertionError(SENTINEL);
-        diagnosticsFailure.setStackTrace(new StackTraceElement[] {
-            new StackTraceElement(SENTINEL, "capture", "Sensitive.java", 12)
-        });
-
-        WaitDiagnostics.attachCaptureFailure(
-                failure, diagnosticsFailure, DiagnosticSensitivity.CONSERVATIVE);
-
-        assertThat(failure.getSuppressed()).singleElement().satisfies(attachment -> {
-            assertThat(attachment)
-                    .hasMessage("diagnostic capture failed: java.lang.AssertionError")
-                    .hasNoCause();
-            assertThat(attachment.getStackTrace()).isEmpty();
-            assertThat(attachment.toString()).doesNotContain(SENTINEL);
-        });
-    }
-
-    @Test
-    void retainsRawCaptureFailureInStandardPolicy() {
+    void retainsCaptureFailure() {
         Throwable failure = new RuntimeException("timeout");
         Throwable diagnosticsFailure = new AssertionError(SENTINEL);
 
         WaitDiagnostics.attachCaptureFailure(
-                failure, diagnosticsFailure, DiagnosticSensitivity.STANDARD);
+                failure, diagnosticsFailure);
 
         assertThat(failure.getSuppressed()).containsExactly(diagnosticsFailure);
     }
 
-    @Test
-    void nonePolicyLeavesTimeoutFailureWithoutDiagnostics() {
-        Throwable cause = new RuntimeException("original cause");
-        TimeoutExpiredException failure;
-
-        try (WaitDiagnostics.SensitivityScope ignored =
-                WaitDiagnostics.useSensitivity(DiagnosticSensitivity.NONE)) {
-            failure = WaitDiagnostics.timeoutFailure(
-                    "plain timeout", TimeoutKey.Waiter_WaitingTime, 50L, SENTINEL, cause);
-            WaitDiagnostics.attachTo(failure);
-        }
-
-        assertThat(failure)
-                .hasMessage("plain timeout")
-                .hasCause(cause);
-        assertThat(failure.getSuppressed()).isEmpty();
-    }
 }
