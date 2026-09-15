@@ -33,9 +33,10 @@ descriptions win for scope; this file wins for sequencing and process.
   same commit** (for partially completed items, edit the item to reflect the
   remainder).
 - **Build/verify commands** (Windows, PowerShell, from repo root):
-  - `.\gradlew.bat spotlessApply` — run before every commit; code must be
-    palantir-java-format clean. NullAway/JSpecify `@NullMarked` runs during
-    `compileJava` — new main-source code must satisfy it.
+  - `.\gradlew.bat compileAll` — compiles every source set. Packages are
+    JSpecify `@NullMarked`, but nothing checks it at build time (no NullAway
+    or formatter in the build); keep new code consistent with the
+    annotations by hand.
   - `.\gradlew.bat test` — unit suite (`src/test`), fast, headless-safe.
   - `.\gradlew.bat userInterfaceTest --tests "*SomeTest"` — UI suite opens
     **real Swing windows on the desktop**; do not use targeted `--tests` runs
@@ -50,9 +51,6 @@ descriptions win for scope; this file wins for sequencing and process.
 - **Prove regression tests bite:** for any test added to pin a fix, verify it
   by temporarily reverting the fix (working tree only), watching the test
   fail, then restoring. Report this in the commit body.
-- **Spotless side effects:** `spotlessApply` sometimes rewrites unrelated
-  files with line-ending-only changes (content-identical, empty `git diff`).
-  `git restore` such files before committing.
 - **Known-flaky baseline** (verified on a clean tree 2026-07-05, not caused
   by any recent change): `jemmy_036` (focus handoff),
   `JPopupMenuOperatorTest.testRobot56091` (menu push timeout), and
@@ -62,7 +60,7 @@ descriptions win for scope; this file wins for sequencing and process.
 
 ## Phases
 
-Each phase ends: spotless clean → unit tests green → targeted UI classes
+Each phase ends: compileAll clean → unit tests green → targeted UI classes
 green → commit(s) → TODO.md updated → push.
 
 ### Phase 0 — preflight
