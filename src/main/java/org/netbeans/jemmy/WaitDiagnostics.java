@@ -45,9 +45,16 @@ import org.jetbrains.annotations.Nullable;
 
 /** Failure-safe capture and attachment entry point for Jemmy wait diagnostics. */
 public final class WaitDiagnostics {
+    public static final String ENABLED_PROPERTY = "jemmyDiagnosticsEnable";
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
 
     private WaitDiagnostics() {}
+
+    /** Returns whether automatic Jemmy failure diagnostics are enabled. */
+    public static boolean isEnabled() {
+        String configured = System.getProperty(ENABLED_PROPERTY);
+        return configured == null || !"false".equalsIgnoreCase(configured.trim());
+    }
 
     /** Captures and renders detail for compatibility with callers that need plain text. */
     public static String capture() {
@@ -68,6 +75,11 @@ public final class WaitDiagnostics {
             long waitMillis,
             @Nullable String target,
             @Nullable Throwable cause) {
+        if (!isEnabled()) {
+            return cause == null
+                    ? new TimeoutExpiredException(fallbackMessage)
+                    : new TimeoutExpiredException(fallbackMessage, cause);
+        }
         TimeoutExpiredException failure;
         try {
             WaitDiagnosticSnapshot snapshot = captureTimeout(waitMillis, timeoutKey, target);
@@ -167,6 +179,9 @@ public final class WaitDiagnostics {
 
     /** Attaches one structured, stackless diagnostic detail to the throwable graph. */
     public static void attachTo(Throwable failure) {
+        if (!isEnabled()) {
+            return;
+        }
         try {
             attachTo(failure, captureSnapshot(null));
         } catch (Throwable ignored) {
@@ -175,6 +190,9 @@ public final class WaitDiagnostics {
     }
 
     public static void attachTo(Throwable failure, WaitDiagnosticSnapshot snapshot) {
+        if (!isEnabled()) {
+            return;
+        }
         try {
             if (!isPresentIn(failure)) {
                 failure.addSuppressed(new Diagnostics(snapshot));

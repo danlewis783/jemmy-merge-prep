@@ -35,10 +35,12 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.netbeans.jemmy.WaitDiagnostics;
 
 @Isolated
 class DumpOnFailureTest {
     private static boolean nestedExecution;
+
     @Test
     void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce() throws Exception {
         PrintStream originalErr = System.err;
@@ -77,6 +79,37 @@ class DumpOnFailureTest {
                 .contains("===== end DumpOnFailure =====")
                 .contains("(wait diagnostics attached to failure)")
                 .doesNotContain("--- wait diagnostics ---");
+    }
+
+    @Test
+    void disabledDiagnosticsProduceNoAttachmentOrOutput() throws Exception {
+        String configured = System.getProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        PrintStream originalErr = System.err;
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        SummaryGeneratingListener listener = new SummaryGeneratingListener();
+        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+                .selectors(selectClass(FailingFixture.class))
+                .build();
+
+        try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
+            System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, "false");
+            System.setErr(replacement);
+            nestedExecution = true;
+            LauncherFactory.create().execute(request, listener);
+        } finally {
+            nestedExecution = false;
+            System.setErr(originalErr);
+            if (configured == null) {
+                System.clearProperty(WaitDiagnostics.ENABLED_PROPERTY);
+            } else {
+                System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, configured);
+            }
+        }
+
+        assertThat(listener.getSummary().getTestsFailedCount()).isEqualTo(1);
+        assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure ->
+                assertThat(failure.getException().getSuppressed()).isEmpty());
+        assertThat(capturedErr.toString(StandardCharsets.UTF_8.name())).isEmpty();
     }
 
     @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})

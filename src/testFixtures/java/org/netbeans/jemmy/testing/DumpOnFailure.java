@@ -28,6 +28,9 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
 
     /** Reports diagnostics without ever replacing or hiding {@code cause}. */
     public static void dump(ExtensionContext context, Throwable cause) {
+        if (!WaitDiagnostics.isEnabled()) {
+            return;
+        }
         StringBuilder stderr = new StringBuilder();
         stderr.append("===== DumpOnFailure: ")
                 .append(context.getDisplayName())

@@ -28,9 +28,11 @@ import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Isolated
 class WaitDiagnosticsTest {
     private static final String SENTINEL = "capture failure details";
 
@@ -142,6 +144,51 @@ class WaitDiagnosticsTest {
                 WaitDiagnosticSnapshot.EdtStatus.UNAVAILABLE, null, null, Collections.emptyList(),
                 null, null, null, Collections.singletonList(component), "unknown", Collections.emptyList()).renderComponentTree();
     }
+
+    @Test
+    void diagnosticsAreEnabledByDefault() {
+        String configured = System.getProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        try {
+            System.clearProperty(WaitDiagnostics.ENABLED_PROPERTY);
+
+            assertThat(WaitDiagnostics.isEnabled()).isTrue();
+        } finally {
+            restoreDiagnosticsProperty(configured);
+        }
+    }
+
+    @Test
+    void disabledDiagnosticsUseTheFallbackTimeoutAndDoNotAttach() {
+        String configured = System.getProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        try {
+            System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, "false");
+            RuntimeException ordinaryFailure = new RuntimeException("ordinary failure");
+
+            TimeoutExpiredException timeout = WaitDiagnostics.timeoutFailure(
+                    "fallback timeout",
+                    TimeoutKey.Waiter_WaitingTime,
+                    1L,
+                    "target",
+                    null);
+            WaitDiagnostics.attachTo(ordinaryFailure);
+
+            assertThat(WaitDiagnostics.isEnabled()).isFalse();
+            assertThat(timeout).hasMessage("fallback timeout");
+            assertThat(timeout.getSuppressed()).isEmpty();
+            assertThat(ordinaryFailure.getSuppressed()).isEmpty();
+        } finally {
+            restoreDiagnosticsProperty(configured);
+        }
+    }
+
+    private static void restoreDiagnosticsProperty(String configured) {
+        if (configured == null) {
+            System.clearProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        } else {
+            System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, configured);
+        }
+    }
+
     @Test
     void findsDiagnosticsInFailureMessage() {
         Throwable failure = new RuntimeException("failure\n--- wait diagnostics ---\nmouse: unavailable");
