@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.EventQueue;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -132,9 +134,12 @@ class JDialogOperatorTest {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.DialogWaiter_WaitDialogTimeout, 500L)) {
             Future<JDialog> laFutura = Executors.newSingleThreadExecutor().submit(new WaitJDialogCallable1());
             JDialogOperator.waitFor();
-            assertThatExceptionOfType(ExecutionException.class)
-                    .isThrownBy(laFutura::get)
-                    .withMessageContaining("timeout \"DialogWaiter_WaitDialogTimeout\" (500 ms) exceeded after (");
+            assertThatThrownBy(laFutura::get)
+                    .isInstanceOf(ExecutionException.class)
+                    .cause()
+                    .isInstanceOf(TimeoutExpiredException.class)
+                    .hasMessageContaining("Timed out after 500 ms")
+                    .hasMessageContaining("timeout key: DialogWaiter_WaitDialogTimeout");
         }
     }
 

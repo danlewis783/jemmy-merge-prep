@@ -101,7 +101,8 @@ class EventToolTest {
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
-                        .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (1000 ms) exceeded after (");
+                        .withMessageContaining("Timed out after 1 s")
+                        .withMessageContaining("timeout key: EventTool_WaitEventTimeout");
             }
 
             awaitQuiet(mover);
@@ -113,7 +114,8 @@ class EventToolTest {
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 2_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
-                        .withMessageContaining("timeout \"EventTool_WaitEventTimeout\" (2000 ms) exceeded after (");
+                        .withMessageContaining("Timed out after 2 s")
+                        .withMessageContaining("timeout key: EventTool_WaitEventTimeout");
             }
 
             awaitQuiet(mover);
@@ -158,7 +160,8 @@ class EventToolTest {
                     TimeoutOverride budget = Timeouts.override(TimeoutKey.EventTool_WaitNoEventTimeout, 3_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitNoEvent(AWTEvent.MOUSE_EVENT_MASK))
-                        .withMessageContaining("timeout \"EventTool_WaitNoEventTimeout\" (3000 ms) exceeded after (");
+                        .withMessageContaining("Timed out after 3 s")
+                        .withMessageContaining("timeout key: EventTool_WaitNoEventTimeout");
             }
 
             awaitQuiet(mover);
