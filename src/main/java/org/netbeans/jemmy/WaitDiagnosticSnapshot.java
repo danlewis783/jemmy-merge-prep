@@ -35,6 +35,8 @@ public final class WaitDiagnosticSnapshot implements Serializable {
     private final @Nullable Long waitDurationMillis;
     private final @Nullable String timeoutKey;
     private final @Nullable String waitTarget;
+    private final @Nullable ComponentSnapshot waitComponent;
+    private final @Nullable ComponentSnapshot waitComponentWindow;
     private final EdtStatus edtStatus;
     private final @Nullable Long edtResponseMillis;
     private final @Nullable ThreadSnapshot edtThread;
@@ -51,6 +53,8 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             @Nullable Long waitDurationMillis,
             @Nullable String timeoutKey,
             @Nullable String waitTarget,
+            @Nullable ComponentSnapshot waitComponent,
+            @Nullable ComponentSnapshot waitComponentWindow,
             EdtStatus edtStatus,
             @Nullable Long edtResponseMillis,
             @Nullable ThreadSnapshot edtThread,
@@ -65,6 +69,8 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         this.waitDurationMillis = waitDurationMillis;
         this.timeoutKey = timeoutKey;
         this.waitTarget = concise(waitTarget);
+        this.waitComponent = waitComponent;
+        this.waitComponentWindow = waitComponentWindow;
         this.edtStatus = edtStatus;
         this.edtResponseMillis = edtResponseMillis;
         this.edtThread = edtThread;
@@ -84,6 +90,8 @@ public final class WaitDiagnosticSnapshot implements Serializable {
                 waitDurationMillis,
                 timeoutKey,
                 waitTarget,
+                waitComponent,
+                waitComponentWindow,
                 edtStatus,
                 edtResponseMillis,
                 edtThread,
@@ -113,35 +121,63 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             }
         }
 
-        out.append("\n\nUI status:\n  ").append(renderEdtConclusion());
+        out.append("\nUI: ").append(renderEdtSummary());
         for (ThreadSnapshot actionThread : actionThreads) {
-            out.append("\n  ").append(classifyActionThread(actionThread));
+            out.append("; ").append(classifyActionThread(actionThread));
         }
-        out.append("\n  Active window: ").append(brief(activeWindow));
-        out.append("\n  Focus owner: ").append(brief(focusOwner));
-        out.append("\n\nAdditional diagnostics:");
-        out.append("\n  detailed wait diagnostics attached to the failure");
-        out.append("\n  component hierarchy available as a JUnit text attachment");
+        out.append("; active=").append(compactBrief(activeWindow));
+        out.append("; focus=").append(compactBrief(focusOwner));
+        if (waitComponent != null) {
+            out.append("\nWait component: ").append(waitComponent.summarizeState());
+            out.append("; window=").append(compactBrief(waitComponentWindow));
+        }
+        out.append("\nDiagnostics: detail attached to failure; component hierarchy attachment");
         return out.toString();
     }
 
     public String renderFailureDetail() {
         StringBuilder out = new StringBuilder(HEADER);
+        if (waitTarget != null) {
+            out.append("\nwait target: ").append(waitTarget);
+        }
         out.append("\nEDT probe: ").append(renderEdtConclusion());
         out.append("\nmouse: ").append(mousePosition);
         out.append("\nfocus: owner=").append(brief(focusOwner));
         out.append(", focusedWindow=").append(brief(focusedWindow));
         out.append(", activeWindow=").append(brief(activeWindow));
-        out.append("\nwindows (").append(windows.size()).append("):");
-        for (ComponentSnapshot window : windows) {
-            out.append("\n  ").append(window.describe());
+        if (waitComponent != null) {
+            out.append("\nwait component: ").append(waitComponent.describe());
+            out.append("; window=").append(brief(waitComponentWindow));
         }
 
-        out.append("\nEDT stack at timeout:");
-        appendThread(out, edtThread);
-        if (!actionThreads.isEmpty()) {
-            out.append("\naction threads at timeout:");
-            for (ThreadSnapshot thread : actionThreads) {
+        int showingWindowCount = 0;
+        for (ComponentSnapshot window : windows) {
+            if (window.showing) {
+                showingWindowCount++;
+            }
+        }
+        out.append("\nshowing windows (").append(showingWindowCount).append("):");
+        for (ComponentSnapshot window : windows) {
+            if (window.showing) {
+                out.append("\n  ").append(window.describe());
+            }
+        }
+        int hiddenWindowCount = windows.size() - showingWindowCount;
+        if (hiddenWindowCount > 0) {
+            out.append("\nhidden windows: ").append(hiddenWindowCount).append(" (roots in hierarchy attachment)");
+        }
+
+        if (edtStatus != EdtStatus.RESPONSIVE_IDLE && edtThread != null) {
+            out.append("\nEDT stack at timeout:");
+            appendThread(out, edtThread);
+        }
+        boolean actionHeaderWritten = false;
+        for (ThreadSnapshot thread : actionThreads) {
+            if (!isIdleActionThread(thread)) {
+                if (!actionHeaderWritten) {
+                    out.append("\naction threads at timeout:");
+                    actionHeaderWritten = true;
+                }
                 appendThread(out, thread);
             }
         }
@@ -158,6 +194,10 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         }
         out.append('\n');
 
+        if (waitTarget != null) {
+            out.append("\nWait target: ").append(waitTarget).append('\n');
+        }
+
         List<ComponentSnapshot> focusPath = findFocusPath();
         if (!focusPath.isEmpty()) {
             out.append("\nFocused component ancestry:\n");
@@ -167,16 +207,22 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         }
 
         if (waitTarget != null) {
-            List<ComponentSnapshot> matches = new ArrayList<>();
+            List<TargetMatch> matches = new ArrayList<>();
             for (ComponentSnapshot window : windows) {
-                findTargetMatches(window, waitTarget, matches);
+                findTargetMatches(window, window, waitTarget, matches);
             }
             if (!matches.isEmpty()) {
                 out.append("\nComponents related to wait target:\n");
-                for (ComponentSnapshot match : matches) {
-                    out.append("  MATCH: ").append(match.describe()).append('\n');
+                for (TargetMatch match : matches) {
+                    out.append("  MATCH: ").append(match.component.describe());
+                    out.append("; window=").append(match.window.brief()).append('\n');
                 }
             }
+        }
+
+        if (waitComponent != null) {
+            out.append("\nWait component state:\n  ").append(waitComponent.describe());
+            out.append("\n  containing window: ").append(brief(waitComponentWindow)).append('\n');
         }
 
         out.append("\nWindows:\n");
@@ -208,6 +254,22 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         }
     }
 
+    private String renderEdtSummary() {
+        String frame = firstApplicationFrame(edtThread);
+        switch (edtStatus) {
+            case RESPONSIVE_IDLE:
+                return "EDT idle (" + responseTime() + ")";
+            case RESPONSIVE:
+                return "EDT busy (" + responseTime() + ")" + (frame != null ? " at " + frame : "");
+            case SLOW:
+                return "EDT slow (" + responseTime() + ")" + (frame != null ? " at " + frame : "");
+            case BLOCKED:
+                return "EDT blocked (probe timed out)" + (frame != null ? " at " + frame : "");
+            default:
+                return "EDT unavailable";
+        }
+    }
+
     private String responseTime() {
         return edtResponseMillis == null ? "an unknown time" : edtResponseMillis + " ms";
     }
@@ -229,11 +291,15 @@ public final class WaitDiagnosticSnapshot implements Serializable {
     }
 
     static String classifyActionThread(ThreadSnapshot thread) {
-        if (thread.hasFrame("java.util.concurrent.LinkedBlockingQueue", "take")) {
+        if (isIdleActionThread(thread)) {
             return thread.name + " idle";
         }
         String frame = firstApplicationFrame(thread);
         return thread.name + " executing" + (frame != null ? " at " + frame : "");
+    }
+
+    private static boolean isIdleActionThread(ThreadSnapshot thread) {
+        return thread.hasFrame("java.util.concurrent.LinkedBlockingQueue", "take");
     }
 
     private static @Nullable String firstApplicationFrame(@Nullable ThreadSnapshot thread) {
@@ -241,19 +307,23 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             return null;
         }
         for (StackTraceElement frame : thread.stack) {
-            String owner = frame.getClassName();
-            if (!owner.startsWith("java.")
-                    && !owner.startsWith("javax.")
-                    && !owner.startsWith("sun.")
-                    && !owner.startsWith("com.sun.")
-                    && !owner.startsWith("jdk.")
-                    && !owner.startsWith("org.junit.")
-                    && !owner.startsWith("org.gradle.")
-                    && !owner.startsWith("org.netbeans.jemmy.")) {
+            if (isApplicationFrame(frame)) {
                 return frame.toString();
             }
         }
         return null;
+    }
+
+    static boolean isApplicationFrame(StackTraceElement frame) {
+        String owner = frame.getClassName();
+        return !owner.startsWith("java.")
+                && !owner.startsWith("javax.")
+                && !owner.startsWith("sun.")
+                && !owner.startsWith("com.sun.")
+                && !owner.startsWith("jdk.")
+                && !owner.startsWith("org.junit.")
+                && !owner.startsWith("org.gradle.")
+                && !owner.startsWith("org.netbeans.jemmy.");
     }
 
     private void appendThread(StringBuilder out, @Nullable ThreadSnapshot thread) {
@@ -304,12 +374,25 @@ public final class WaitDiagnosticSnapshot implements Serializable {
     }
 
     private static void findTargetMatches(
-            ComponentSnapshot component, String target, List<ComponentSnapshot> matches) {
+            ComponentSnapshot window,
+            ComponentSnapshot component,
+            String target,
+            List<TargetMatch> matches) {
         if (component.matchesTarget(target) && matches.size() < 20) {
-            matches.add(component);
+            matches.add(new TargetMatch(window, component));
         }
         for (ComponentSnapshot child : component.children) {
-            findTargetMatches(child, target, matches);
+            findTargetMatches(window, child, target, matches);
+        }
+    }
+
+    private static final class TargetMatch {
+        private final ComponentSnapshot window;
+        private final ComponentSnapshot component;
+
+        TargetMatch(ComponentSnapshot window, ComponentSnapshot component) {
+            this.window = window;
+            this.component = component;
         }
     }
 
@@ -336,6 +419,10 @@ public final class WaitDiagnosticSnapshot implements Serializable {
 
     private static String brief(@Nullable ComponentSnapshot component) {
         return component == null ? "none" : component.brief();
+    }
+
+    private static String compactBrief(@Nullable ComponentSnapshot component) {
+        return component == null ? "none" : component.compactBrief();
     }
 
     private static String formatDuration(long millis) {
@@ -392,6 +479,7 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         private final @Nullable String accessibleDescription;
         private final @Nullable String selectedText;
         private final @Nullable String selection;
+        private final @Nullable String details;
         private final String bounds;
         private final boolean visible;
         private final boolean showing;
@@ -410,6 +498,7 @@ public final class WaitDiagnosticSnapshot implements Serializable {
                 @Nullable String accessibleDescription,
                 @Nullable String selectedText,
                 @Nullable String selection,
+                @Nullable String details,
                 String bounds,
                 boolean visible,
                 boolean showing,
@@ -426,6 +515,7 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             this.accessibleDescription = accessibleDescription;
             this.selectedText = selectedText;
             this.selection = selection;
+            this.details = details;
             this.bounds = bounds;
             this.visible = visible;
             this.showing = showing;
@@ -439,6 +529,23 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             StringBuilder out = new StringBuilder(className);
             appendValue(out, "name", name);
             appendValue(out, "title", title);
+            return out.toString();
+        }
+
+        private String compactBrief() {
+            StringBuilder out = new StringBuilder(className);
+            appendCompactValue(out, "name", name);
+            appendCompactValue(out, "title", title);
+            return out.toString();
+        }
+
+        private String summarizeState() {
+            StringBuilder out = new StringBuilder(compactBrief());
+            appendCompactValue(out, "text", text);
+            appendCompactValue(out, "selection", selection);
+            appendCompactValue(out, "details", details);
+            out.append(showing ? " showing" : " !showing");
+            out.append(enabled ? " enabled" : " !enabled");
             return out.toString();
         }
 
@@ -460,6 +567,7 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             appendValue(out, "accessibleDescription", accessibleDescription);
             appendValue(out, "selectedText", selectedText);
             appendValue(out, "selection", selection);
+            appendValue(out, "details", details);
             return out.toString();
         }
 
@@ -479,6 +587,14 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             if (value != null && !value.isEmpty()) {
                 out.append(' ').append(label).append("=\"").append(value).append('"');
             }
+        }
+
+        private static void appendCompactValue(StringBuilder out, String label, @Nullable String value) {
+            if (value == null || value.isEmpty()) {
+                return;
+            }
+            String conciseValue = value.length() <= 120 ? value : value.substring(0, 117) + "...";
+            out.append(' ').append(label).append("=\"").append(conciseValue).append('"');
         }
     }
 }

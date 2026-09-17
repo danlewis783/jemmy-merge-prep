@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy;
 
+import java.awt.Component;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -30,26 +31,32 @@ public final class SupplierRepeater<R> {
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
     private final Object describedTarget;
+    private final @Nullable Component diagnosticComponent;
 
     private SupplierRepeater(
-            Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta, Object describedTarget) {
+            Supplier<R> supplier,
+            TimeoutKey waitKey,
+            TimeoutKey waitDelta,
+            Object describedTarget,
+            @Nullable Component diagnosticComponent) {
         this.supplier = supplier;
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
         this.describedTarget = describedTarget;
+        this.diagnosticComponent = diagnosticComponent;
     }
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier) {
         return new SupplierRepeater<>(
-                supplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, supplier);
+                supplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, supplier, null);
     }
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier, TimeoutKey waitKey) {
-        return new SupplierRepeater<>(supplier, waitKey, TimeoutKey.Waiter_TimeDelta, supplier);
+        return new SupplierRepeater<>(supplier, waitKey, TimeoutKey.Waiter_TimeDelta, supplier, null);
     }
 
     public static <R> SupplierRepeater<R> on(Supplier<R> supplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        return new SupplierRepeater<>(supplier, waitKey, waitDelta, supplier);
+        return new SupplierRepeater<>(supplier, waitKey, waitDelta, supplier, null);
     }
 
     /**
@@ -57,7 +64,14 @@ public final class SupplierRepeater<R> {
      * Its {@code toString()} is evaluated only on the failure path.
      */
     public SupplierRepeater<R> describedAs(Object target) {
-        return new SupplierRepeater<>(supplier, waitKey, waitDelta, Objects.requireNonNull(target, "target"));
+        return new SupplierRepeater<>(
+                supplier, waitKey, waitDelta, Objects.requireNonNull(target, "target"), diagnosticComponent);
+    }
+
+    /** Captures the component whose hierarchy is being searched if this wait times out. */
+    public SupplierRepeater<R> diagnosing(Component component) {
+        return new SupplierRepeater<>(
+                supplier, waitKey, waitDelta, describedTarget, Objects.requireNonNull(component, "component"));
     }
 
     public R runUntilNotNull() {
@@ -70,7 +84,8 @@ public final class SupplierRepeater<R> {
                 },
                 waitKey,
                 waitDelta,
-                describedTarget);
+                describedTarget,
+                diagnosticComponent);
 
         return Objects.requireNonNull(result.get());
     }

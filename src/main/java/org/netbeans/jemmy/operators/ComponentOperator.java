@@ -437,6 +437,7 @@ public class ComponentOperator extends Operator {
     public void waitHasFocus() {
         BooleanSupplierRepeater.on(this::hasFocus, TimeoutKey.ComponentOperator_WaitFocusTimeout)
                 .describedAs(getClass().getSimpleName() + " to have focus")
+                .diagnosing(getSource())
                 .runUntilTrue();
     }
 
@@ -939,6 +940,7 @@ public class ComponentOperator extends Operator {
         Predicate<Component> showingPredicate = PredicatesJ.ofShowing(predicate);
         return SupplierRepeater.on(() -> findComponent(cont, predicate, index))
                 .describedAs(new ComponentWaitDescription(cont, showingPredicate, index))
+                .diagnosing(cont)
                 .runUntilNotNull();
     }
 

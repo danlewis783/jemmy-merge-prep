@@ -16,8 +16,10 @@
  */
 package org.netbeans.jemmy;
 
+import java.awt.Component;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Polls a {@link BooleanSupplier} until it reports true; see {@link Repeater} for the loop,
@@ -28,33 +30,54 @@ public final class BooleanSupplierRepeater {
     private final TimeoutKey waitKey;
     private final TimeoutKey waitDelta;
     private final Object describedTarget;
+    private final @Nullable Component diagnosticComponent;
 
     private BooleanSupplierRepeater(
-            BooleanSupplier booleanSupplier, TimeoutKey waitKey, TimeoutKey waitDelta, Object describedTarget) {
+            BooleanSupplier booleanSupplier,
+            TimeoutKey waitKey,
+            TimeoutKey waitDelta,
+            Object describedTarget,
+            @Nullable Component diagnosticComponent) {
         this.booleanSupplier = booleanSupplier;
         this.waitKey = waitKey;
         this.waitDelta = waitDelta;
         this.describedTarget = describedTarget;
+        this.diagnosticComponent = diagnosticComponent;
     }
 
     public static BooleanSupplierRepeater on(BooleanSupplier booleanSupplier) {
         return new BooleanSupplierRepeater(
-                booleanSupplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, booleanSupplier);
+                booleanSupplier, TimeoutKey.Waiter_WaitingTime, TimeoutKey.Waiter_TimeDelta, booleanSupplier, null);
     }
 
     public static BooleanSupplierRepeater on(BooleanSupplier booleanSupplier, TimeoutKey waitKey) {
-        return new BooleanSupplierRepeater(booleanSupplier, waitKey, TimeoutKey.Waiter_TimeDelta, booleanSupplier);
+        return new BooleanSupplierRepeater(
+                booleanSupplier, waitKey, TimeoutKey.Waiter_TimeDelta, booleanSupplier, null);
     }
 
     public static BooleanSupplierRepeater on(
             BooleanSupplier booleanSupplier, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        return new BooleanSupplierRepeater(booleanSupplier, waitKey, waitDelta, booleanSupplier);
+        return new BooleanSupplierRepeater(booleanSupplier, waitKey, waitDelta, booleanSupplier, null);
     }
 
     /** Uses the supplied object's lazy {@code toString()} only when this wait times out. */
     public BooleanSupplierRepeater describedAs(Object target) {
         return new BooleanSupplierRepeater(
-                booleanSupplier, waitKey, waitDelta, Objects.requireNonNull(target, "target"));
+                booleanSupplier,
+                waitKey,
+                waitDelta,
+                Objects.requireNonNull(target, "target"),
+                diagnosticComponent);
+    }
+
+    /** Captures the component whose state is being polled if this wait times out. */
+    public BooleanSupplierRepeater diagnosing(Component component) {
+        return new BooleanSupplierRepeater(
+                booleanSupplier,
+                waitKey,
+                waitDelta,
+                describedTarget,
+                Objects.requireNonNull(component, "component"));
     }
 
     public static void waitFor(BooleanSupplier condition) {
@@ -66,10 +89,10 @@ public final class BooleanSupplierRepeater {
     }
 
     public static void waitFor(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        Repeater.repeatUntilTrue(condition, waitKey, waitDelta, condition);
+        Repeater.repeatUntilTrue(condition, waitKey, waitDelta, condition, null);
     }
 
     public void runUntilTrue() {
-        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta, describedTarget);
+        Repeater.repeatUntilTrue(booleanSupplier, waitKey, waitDelta, describedTarget, diagnosticComponent);
     }
 }

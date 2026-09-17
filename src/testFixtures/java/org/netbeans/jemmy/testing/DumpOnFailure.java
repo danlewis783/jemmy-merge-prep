@@ -12,7 +12,6 @@
  */
 package org.netbeans.jemmy.testing;
 
-import javax.swing.UIManager;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.netbeans.jemmy.WaitDiagnosticSnapshot;
@@ -32,9 +31,14 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
             return;
         }
         StringBuilder stderr = new StringBuilder();
-        stderr.append("===== DumpOnFailure: ")
+        stderr.append("UI diagnostics for ")
                 .append(context.getDisplayName())
-                .append(" =====\n");
+                .append(":\n");
+
+        String secondaryFailure = WaitDiagnostics.findSecondaryUiFailureSummary(cause);
+        if (secondaryFailure != null) {
+            stderr.append(secondaryFailure).append('\n');
+        }
 
         WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(cause);
         if (snapshot == null) {
@@ -51,30 +55,18 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
         if (snapshot != null) {
             snapshot = snapshot.withTestDisplayName(context.getDisplayName());
             stderr.append(snapshot.renderSummary()).append('\n');
-            stderr.append(WaitDiagnostics.isPresentIn(cause)
-                    ? "(wait diagnostics attached to failure)\n"
-                    : "(wait diagnostics unavailable)\n");
             try {
                 String fileName = JUnitAttachmentUtils.publishText(
                         context,
                         snapshot.renderComponentTree(),
                         "jemmy-diagnostics");
-                stderr.append("(component hierarchy attached as ").append(fileName).append(")\n");
+                stderr.append("Hierarchy attachment: ").append(fileName).append('\n');
             } catch (Throwable attachmentFailure) {
-                stderr.append("(component hierarchy attachment failed: ")
+                stderr.append("Hierarchy attachment failed: ")
                         .append(attachmentFailure.getClass().getSimpleName())
-                        .append(")\n");
+                        .append('\n');
             }
         }
-
-        try {
-            stderr.append("look and feel: ")
-                    .append(UIManager.getLookAndFeel().getClass().getSimpleName())
-                    .append('\n');
-        } catch (RuntimeException lookAndFeelFailure) {
-            stderr.append("look and feel: unavailable\n");
-        }
-        stderr.append("===== end DumpOnFailure =====");
         System.err.println(stderr);
     }
 }

@@ -288,7 +288,8 @@ public class JTreeOperator extends JComponentOperator {
         }
 
         FunctionRepeater<TreePathChooserAndTreePath, TreePathAndBoolean> waiter =
-                FunctionRepeater.on(new LoadedFunction(this), TimeoutKey.JTreeOperator_WaitNextNodeTimeout);
+                FunctionRepeater.on(new LoadedFunction(this), TimeoutKey.JTreeOperator_WaitNextNodeTimeout)
+                        .diagnosing(getSource());
         return waitPathPrimitive(rootPath, chooser, waiter);
     }
 
@@ -1196,7 +1197,8 @@ public class JTreeOperator extends JComponentOperator {
         }
         TreePathChooserAndTreePath arg = new TreePathChooserAndTreePath(chooser, path);
         TreePathAndBoolean waitResult;
-        waitResult = waiter.runUntilNotNull(arg);
+        waitResult = waiter.describedAs(new TreePathWaitDescription(path, chooser))
+                .runUntilNotNull(arg);
 
         TreePath nextPath = waitResult.getTreePath();
         if (waitResult.isChecked()) {
@@ -1249,6 +1251,27 @@ public class JTreeOperator extends JComponentOperator {
 
     public interface TreeRowChooser {
         boolean checkRow(JTreeOperator op, int row);
+    }
+
+    private static final class TreePathWaitDescription {
+        private final TreePath path;
+        private final TreePathChooser chooser;
+
+        TreePathWaitDescription(TreePath path, TreePathChooser chooser) {
+            this.path = path;
+            this.chooser = chooser;
+        }
+
+        @Override
+        public String toString() {
+            String description = chooser.toString();
+            String identityDefault = chooser.getClass().getName()
+                    + "@" + Integer.toHexString(chooser.hashCode());
+            if (description.equals(identityDefault) || description.contains("$$Lambda")) {
+                description = chooser.getClass().getSimpleName();
+            }
+            return "tree path below " + path + " matching " + description;
+        }
     }
 
     private static class JTreeOperatorIsRowExpandedPredicate implements Predicate<JTreeOperator> {
@@ -1478,6 +1501,13 @@ public class JTreeOperator extends JComponentOperator {
             }
 
             return true;
+        }
+
+        @Override
+        public String toString() {
+            return "path=" + Arrays.toString(arr)
+                    + ", indexes=" + Arrays.toString(indices)
+                    + ", comparator=" + comparator;
         }
     }
 }

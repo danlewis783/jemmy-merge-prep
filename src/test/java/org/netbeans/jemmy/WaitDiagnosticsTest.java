@@ -25,8 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTree;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
@@ -87,7 +90,8 @@ class WaitDiagnosticsTest {
             WaitDiagnostics.UiCapture capture = capture();
             assertThat(capture.component(wide, 0)).isNotNull();
             assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_COMPONENTS - 1);
-            assertThat(capture.warnings).contains("component capture truncated by hierarchy or time limit");
+            assertThat(capture.warnings)
+                    .contains("capture truncated: component limit reached (256 visited)");
             String values = render(capture().component(wide.getComponent(0), 0));
             assertThat(values).contains("...").doesNotContain(new String(chars));
 
@@ -104,7 +108,8 @@ class WaitDiagnosticsTest {
             WaitDiagnostics.UiCapture depthCapture = capture();
             assertThat(depthCapture.component(deep, 0)).isNotNull();
             assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_DEPTH - 1);
-            assertThat(depthCapture.warnings).contains("component capture truncated by hierarchy or time limit");
+            assertThat(depthCapture.warnings)
+                    .contains("capture truncated: hierarchy depth limit reached (32 levels)");
         });
     }
 
@@ -127,11 +132,60 @@ class WaitDiagnosticsTest {
                     abandoned, System.nanoTime());
             assertThat(capture.component(root, 0)).isNotNull();
             assertThat(visited.get()).isEqualTo(1);
+            assertThat(capture.warnings).contains("capture stopped: EDT probe abandoned");
             WaitDiagnostics.UiCapture expired = new WaitDiagnostics.UiCapture(
                     new AtomicBoolean(),
                     System.nanoTime() - TimeUnit.SECONDS.toNanos(1));
             assertThat(expired.component(root, 0)).isNull();
+            assertThat(expired.warnings).contains("capture truncated: EDT capture exceeded 300 ms");
             assertThat(visited.get()).isEqualTo(1);
+        });
+    }
+
+    @Test
+    void capturesTheRelevantBranchBeforeWideSiblings() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            JPanel root = new JPanel() {
+                @Override public boolean isShowing() { return true; }
+            };
+            for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
+                root.add(new JLabel("ordinary-" + i));
+            }
+            JLabel target = new JLabel("current target value");
+            target.setName("diagnostic-target");
+            root.add(target);
+
+            WaitDiagnostics.UiCapture capture = new WaitDiagnostics.UiCapture(
+                    new AtomicBoolean(), System.nanoTime(), target, target);
+            String rendered = render(capture.component(root, 0));
+
+            assertThat(rendered)
+                    .contains("name=\"diagnostic-target\"")
+                    .contains("text=\"current target value\"");
+            assertThat(capture.warnings)
+                    .contains("capture truncated: component limit reached (256 visited)");
+        });
+    }
+
+    @Test
+    void capturesBoundedTreeSelectionExpansionAndSiblings() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+            DefaultMutableTreeNode selected = new DefaultMutableTreeNode("selected");
+            root.add(selected);
+            root.add(new DefaultMutableTreeNode("sibling"));
+            JTree tree = new JTree(root);
+            TreePath rootPath = new TreePath(root.getPath());
+            TreePath selectedPath = new TreePath(selected.getPath());
+            tree.expandPath(rootPath);
+            tree.setSelectionPath(selectedPath);
+
+            String rendered = render(capture().component(tree, 0));
+
+            assertThat(rendered)
+                    .contains("selectedPaths=[[root, selected]]")
+                    .contains("expandedPaths=[[root]]")
+                    .contains("siblings=[selected, sibling]");
         });
     }
 
@@ -140,7 +194,7 @@ class WaitDiagnosticsTest {
     }
 
     private static String render(WaitDiagnosticSnapshot.ComponentSnapshot component) {
-        return new WaitDiagnosticSnapshot(null, null, null, null,
+        return new WaitDiagnosticSnapshot(null, null, null, null, null, null,
                 WaitDiagnosticSnapshot.EdtStatus.UNAVAILABLE, null, null, Collections.emptyList(),
                 null, null, null, Collections.singletonList(component), "unknown", Collections.emptyList()).renderComponentTree();
     }
@@ -169,6 +223,7 @@ class WaitDiagnosticsTest {
                     TimeoutKey.Waiter_WaitingTime,
                     1L,
                     "target",
+                    null,
                     null);
             WaitDiagnostics.attachTo(ordinaryFailure);
 
@@ -244,6 +299,24 @@ class WaitDiagnosticsTest {
                 failure, diagnosticsFailure);
 
         assertThat(failure.getSuppressed()).containsExactly(diagnosticsFailure);
+    }
+
+    @Test
+    void promotesASecondaryUiFailureWithoutItsFullStack() {
+        Throwable primary = new AssertionError("primary");
+        Throwable secondary = new NullPointerException("secondary");
+        secondary.setStackTrace(new StackTraceElement[] {
+            new StackTraceElement("java.awt.EventDispatchThread", "run", "EventDispatchThread.java", 90),
+            new StackTraceElement("example.ui.SampleView", "refresh", "SampleView.java", 42)
+        });
+
+        WaitDiagnostics.attachSecondaryUiFailure(primary, secondary);
+        WaitDiagnostics.attachSecondaryUiFailure(primary, secondary);
+
+        assertThat(WaitDiagnostics.findSecondaryUiFailureSummary(primary))
+                .isEqualTo("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)");
+        assertThat(primary.getSuppressed()).singleElement().satisfies(marker ->
+                assertThat(marker.getStackTrace()).isEmpty());
     }
 
 }

@@ -17,7 +17,6 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.io.ByteArrayOutputStream;
@@ -64,7 +63,7 @@ class DumpOnFailureTest {
         assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure -> {
             Throwable exception = failure.getException();
             assertThat(exception).isInstanceOf(AssertionError.class).hasMessage("deliberate failure");
-            assertThat(exception.getSuppressed()).hasSize(1);
+            assertThat(exception.getSuppressed()).hasSize(2);
 
             StringWriter rendered = new StringWriter();
             exception.printStackTrace(new PrintWriter(rendered));
@@ -75,9 +74,9 @@ class DumpOnFailureTest {
         });
 
         assertThat(capturedErr.toString(StandardCharsets.UTF_8.name()))
-                .contains("===== DumpOnFailure: deliberatelyFails() =====")
-                .contains("===== end DumpOnFailure =====")
-                .contains("(wait diagnostics attached to failure)")
+                .contains("UI diagnostics for deliberatelyFails():")
+                .contains("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)")
+                .contains("Hierarchy attachment:")
                 .doesNotContain("--- wait diagnostics ---");
     }
 
@@ -116,7 +115,13 @@ class DumpOnFailureTest {
     static class FailingFixture {
         @Test
         void deliberatelyFails() {
-            fail("deliberate failure");
+            AssertionError failure = new AssertionError("deliberate failure");
+            NullPointerException secondary = new NullPointerException("secondary");
+            secondary.setStackTrace(new StackTraceElement[] {
+                new StackTraceElement("example.ui.SampleView", "refresh", "SampleView.java", 42)
+            });
+            WaitDiagnostics.attachSecondaryUiFailure(failure, secondary);
+            throw failure;
         }
     }
 

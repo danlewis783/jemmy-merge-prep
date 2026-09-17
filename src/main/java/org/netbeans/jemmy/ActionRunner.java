@@ -100,6 +100,7 @@ final class ActionRunner<R> {
                     timeoutKey,
                     timeout,
                     "Jemmy action to complete",
+                    null,
                     e);
         } finally {
             // Future.cancel(true) only requests an interrupt; it does not wait for the

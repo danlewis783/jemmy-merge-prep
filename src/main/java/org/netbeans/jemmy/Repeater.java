@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.util.function.BooleanSupplier;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +36,7 @@ final class Repeater {
     private Repeater() {}
 
     static void repeatUntilTrue(BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta) {
-        repeatUntilTrue(condition, waitKey, waitDelta, null);
+        repeatUntilTrue(condition, waitKey, waitDelta, null, null);
     }
 
     /**
@@ -44,7 +45,11 @@ final class Repeater {
      *     (lambdas, plain Object identity strings) are dropped rather than printed
      */
     static void repeatUntilTrue(
-            BooleanSupplier condition, TimeoutKey waitKey, TimeoutKey waitDelta, @Nullable Object describedTarget) {
+            BooleanSupplier condition,
+            TimeoutKey waitKey,
+            TimeoutKey waitDelta,
+            @Nullable Object describedTarget,
+            @Nullable Component diagnosticComponent) {
         if (EventQueue.isDispatchThread()) {
             throw new RuntimeException(NO_WAITING_ALLOWED_ON_EDT);
         }
@@ -66,7 +71,7 @@ final class Repeater {
             try {
                 Timeouts.check(waitKey, startTime);
             } catch (TimeoutExpiredException e) {
-                throw enrich(e, waitKey, wait, describedTarget);
+                throw enrich(e, waitKey, wait, describedTarget, diagnosticComponent);
             }
         }
     }
@@ -77,7 +82,8 @@ final class Repeater {
             TimeoutExpiredException e,
             TimeoutKey waitKey,
             long waitMillis,
-            @Nullable Object describedTarget) {
+            @Nullable Object describedTarget,
+            @Nullable Component diagnosticComponent) {
         StringBuilder message = new StringBuilder(e.getMessage());
         String target = describe(describedTarget);
         if (target != null) {
@@ -89,6 +95,7 @@ final class Repeater {
                 waitKey,
                 waitMillis,
                 target,
+                diagnosticComponent,
                 e);
     }
 

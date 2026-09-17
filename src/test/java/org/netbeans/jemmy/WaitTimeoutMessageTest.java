@@ -38,7 +38,7 @@ class WaitTimeoutMessageTest {
 
     @Test
     void waitStateTimeoutMessageDescribesPredicate() {
-        JLabelOperator labelOp = JLabelOperator.of(onQueue(JLabel::new));
+        JLabelOperator labelOp = JLabelOperator.of(onQueue(() -> new JLabel("current text")));
 
         try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 200L);
                 TimeoutOverride delta = Timeouts.override(TimeoutKey.Waiter_TimeDelta, 20L)) {
@@ -48,7 +48,13 @@ class WaitTimeoutMessageTest {
                     .hasMessageContaining("waiting for:")
                     .hasMessageContaining("label=\"this text never appears\"")
                     .hasMessageNotContaining("--- wait diagnostics ---")
-                    .satisfies(WaitTimeoutMessageTest::assertHasAttachedDiagnostics);
+                    .satisfies(failure -> {
+                        assertHasAttachedDiagnostics(failure);
+                        assertThat(WaitDiagnostics.findSnapshot(failure).renderSummary())
+                                .contains("Wait component: JLabel")
+                                .contains("text=\"current text\"")
+                                .contains("showing", "enabled");
+                    });
         }
 
         assertThat(Timeouts.get(TimeoutKey.Waiter_WaitingTime))

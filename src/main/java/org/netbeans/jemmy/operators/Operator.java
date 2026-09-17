@@ -161,6 +161,7 @@ public abstract class Operator {
     @SuppressWarnings("unchecked") // the caller chooses T to match this operator's type
     public <T extends Operator> void waitState(Predicate<T> predicate, TimeoutKey timeoutKey) {
         FunctionRepeater.on(new OperatorPredicateFunction<>(new OnQueuePredicate<>(predicate), (T) this), timeoutKey)
+                .diagnosing(getSource())
                 .runUntilNotNull(null);
     }
 
@@ -179,6 +180,7 @@ public abstract class Operator {
         BooleanSupplierRepeater.on(
                         new StableOnQueueCondition<>(new OnQueuePredicate<>(predicate), (T) this, stableTimeMs),
                         timeoutKey)
+                .diagnosing(getSource())
                 .runUntilTrue();
     }
 
@@ -199,6 +201,7 @@ public abstract class Operator {
         BooleanSupplierRepeater.on(
                         () -> onQueuePredicate.test(operator) != initialState, timeoutKey)
                 .describedAs(new StateChangeDescription(predicate, getClass()))
+                .diagnosing(getSource())
                 .runUntilTrue();
     }
 

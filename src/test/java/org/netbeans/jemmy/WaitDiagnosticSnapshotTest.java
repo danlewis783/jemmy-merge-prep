@@ -53,16 +53,18 @@ class WaitDiagnosticSnapshotTest {
                         "Timed out after 60 s",
                         "waiting for:",
                         "showing JSpinner",
-                        "UI status:",
-                        "EDT responsive in 4 ms; idle",
+                        "UI:",
+                        "EDT idle (4 ms)",
                         "jemmy-action-1 idle",
-                        "Additional diagnostics:")
+                        "Wait component:",
+                        "Diagnostics:")
                 .doesNotContain("EventQueue.getNextEvent")
                 .doesNotContain("JPanel bounds=");
         assertThat(snapshot.renderFailureDetail())
                 .startsWith("--- wait diagnostics ---")
-                .contains("EDT stack at timeout:")
-                .contains("EventQueue.getNextEvent");
+                .doesNotContain("EDT stack at timeout:")
+                .doesNotContain("action threads at timeout:")
+                .doesNotContain("EventQueue.getNextEvent");
         assertThat(snapshot.renderComponentTree())
                 .contains("Focused component ancestry:")
                 .contains("JPanel name=")
@@ -70,7 +72,8 @@ class WaitDiagnosticSnapshotTest {
                 .contains("name=\"component value\"", "title=\"component value\"",
                         "text=\"component value\"", "tooltip=\"component value\"",
                         "accessibleName=\"component value\"", "accessibleDescription=\"component value\"",
-                        "selectedText=\"component value\"", "selection=\"component value\"");
+                        "selectedText=\"component value\"", "selection=\"component value\"",
+                        "details=\"component value\"");
     }
 
     @Test
@@ -101,10 +104,41 @@ class WaitDiagnosticSnapshotTest {
                 .contains("com.example.product.Editor.save");
     }
 
+    @Test
+    void retainsStacksOnlyForBusyThreads() {
+        WaitDiagnosticSnapshot.ThreadSnapshot busyEdt = thread(
+                "AWT-EventQueue-0", "com.example.product.Editor", "paint");
+        WaitDiagnosticSnapshot.ThreadSnapshot busyAction = thread(
+                "jemmy-action-1", "com.example.product.Editor", "save");
+        WaitDiagnosticSnapshot snapshot = new WaitDiagnosticSnapshot(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                WaitDiagnosticSnapshot.EdtStatus.RESPONSIVE,
+                4L,
+                busyEdt,
+                Collections.singletonList(busyAction),
+                null,
+                null,
+                null,
+                Collections.emptyList(),
+                "unknown",
+                Collections.emptyList());
+
+        assertThat(snapshot.renderFailureDetail())
+                .contains("EDT stack at timeout:")
+                .contains("action threads at timeout:")
+                .contains("com.example.product.Editor.paint", "com.example.product.Editor.save");
+    }
+
     private static WaitDiagnosticSnapshot snapshot() {
         WaitDiagnosticSnapshot.ComponentSnapshot focusedChild = component("JPanel", true, true);
         WaitDiagnosticSnapshot.ComponentSnapshot window = new WaitDiagnosticSnapshot.ComponentSnapshot(
                 "JFrame",
+                SENTINEL,
                 SENTINEL,
                 SENTINEL,
                 SENTINEL,
@@ -129,6 +163,8 @@ class WaitDiagnosticSnapshotTest {
                 60_000L,
                 "Waiter_WaitingTime",
                 "showing JSpinner",
+                focusedChild,
+                window,
                 WaitDiagnosticSnapshot.EdtStatus.RESPONSIVE_IDLE,
                 4L,
                 edt,
@@ -153,6 +189,7 @@ class WaitDiagnosticSnapshotTest {
                 SENTINEL,
                 SENTINEL,
                 SENTINEL,
+                null,
                 "[1,2 3x4]",
                 true,
                 showing,
