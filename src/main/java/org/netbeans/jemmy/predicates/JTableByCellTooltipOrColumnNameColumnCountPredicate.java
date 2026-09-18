@@ -55,11 +55,8 @@ public class JTableByCellTooltipOrColumnNameColumnCountPredicate extends JTableB
             return false;
         }
 
-        // Check for embedded unicode in the column name (i.e. superscripts in the units). Do
-        // not use the
-        // column name to match the table if it contains unicode - use the tooltip instead. This
-        // is being done
-        // to make sure the FIT HTML files execute correctly.
+        // Check for embedded unicode in the column name (i.e. superscripts in the units). Do not
+        // use the column name to match the table if it contains unicode - use the tooltip instead.
         String tableColumnName = table.getColumnName(c);
         if (columnName != null && isPureAscii(columnName) && isPureAscii(tableColumnName)
                 && !columnNameEquals(tableColumnName, columnName)) {
