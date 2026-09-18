@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -89,9 +90,11 @@ class WaitDiagnosticsTest {
             }
             WaitDiagnostics.UiCapture capture = capture();
             assertThat(capture.component(wide, 0)).isNotNull();
-            assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_COMPONENTS - 1);
+            assertThat(visited.get())
+                    .isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_UNRELATED_COMPONENTS - 1);
             assertThat(capture.warnings)
-                    .contains("capture truncated: component limit reached (256 visited)");
+                    .contains("capture pruned: unrelated component limit reached (128 visited)")
+                    .doesNotContain("capture truncated: component limit reached (256 visited)");
             String values = render(capture().component(wide.getComponent(0), 0));
             assertThat(values).contains("...").doesNotContain(new String(chars));
 
@@ -143,28 +146,50 @@ class WaitDiagnosticsTest {
     }
 
     @Test
-    void capturesTheRelevantBranchBeforeWideSiblings() throws Exception {
+    void capturesTheDiagnosticBranchBeforeAnUnrelatedWideFocusBranch() throws Exception {
         EventQueue.invokeAndWait(() -> {
             JPanel root = new JPanel() {
                 @Override public boolean isShowing() { return true; }
             };
+            JPanel focusBranch = new JPanel();
             for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
-                root.add(new JLabel("ordinary-" + i));
+                focusBranch.add(new JLabel("ordinary-" + i));
             }
+            JLabel focusOwner = new JLabel("focus owner") {
+                @Override public boolean hasFocus() { return true; }
+            };
+            focusBranch.add(focusOwner);
+            root.add(focusBranch);
             JLabel target = new JLabel("current target value");
             target.setName("diagnostic-target");
             root.add(target);
 
             WaitDiagnostics.UiCapture capture = new WaitDiagnostics.UiCapture(
-                    new AtomicBoolean(), System.nanoTime(), target, target);
+                    new AtomicBoolean(), System.nanoTime(), focusOwner, target);
             String rendered = render(capture.component(root, 0));
 
             assertThat(rendered)
                     .contains("name=\"diagnostic-target\"")
-                    .contains("text=\"current target value\"");
+                    .contains("text=\"current target value\"")
+                    .contains("Focused component ancestry:")
+                    .contains("text=\"focus owner\"");
             assertThat(capture.warnings)
-                    .contains("capture truncated: component limit reached (256 visited)");
+                    .contains("capture pruned: unrelated descendants omitted from priority paths")
+                    .doesNotContain("capture truncated: component limit reached (256 visited)");
         });
+    }
+
+    @Test
+    void attachesContextFromWaitsImplementedOutsideJemmyRepeaters() {
+        AssertionError failure = new AssertionError("value did not match");
+        JLabel component = new JLabel("actual value");
+
+        WaitDiagnostics.attachTo(failure, "field value to equal expected value", component);
+
+        WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(failure);
+        assertThat(snapshot).isNotNull();
+        assertThat(snapshot.renderSummary())
+                .contains("Wait failed for:", "field value to equal expected value", "Wait component:");
     }
 
     @Test
@@ -302,7 +327,7 @@ class WaitDiagnosticsTest {
     }
 
     @Test
-    void promotesASecondaryUiFailureWithoutItsFullStack() {
+    void promotesASecondaryUiFailureAndRetainsItsFullStackForAnAttachment() {
         Throwable primary = new AssertionError("primary");
         Throwable secondary = new NullPointerException("secondary");
         secondary.setStackTrace(new StackTraceElement[] {
@@ -315,8 +340,61 @@ class WaitDiagnosticsTest {
 
         assertThat(WaitDiagnostics.findSecondaryUiFailureSummary(primary))
                 .isEqualTo("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)");
+        assertThat(WaitDiagnostics.findSecondaryUiFailureDetail(primary))
+                .contains("java.lang.NullPointerException: secondary")
+                .contains("at example.ui.SampleView.refresh(SampleView.java:42)");
         assertThat(primary.getSuppressed()).singleElement().satisfies(marker ->
                 assertThat(marker.getStackTrace()).isEmpty());
+    }
+
+    @Test
+    void recordsAnEdtFailureAfterApplicationHandlerInstallation() {
+        Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
+        AtomicReference<Throwable> delegated = new AtomicReference<>();
+        NullPointerException secondary = new NullPointerException("secondary");
+        AssertionError primary = new AssertionError("primary");
+        try {
+            Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.set(failure));
+            WaitDiagnostics.installEdtFailureRecorder();
+            WaitDiagnostics.clearRecordedEdtFailure();
+
+            Thread.getDefaultUncaughtExceptionHandler()
+                    .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
+            WaitDiagnostics.attachRecordedEdtFailure(primary);
+
+            assertThat(delegated.get()).isNull();
+            assertThat(WaitDiagnostics.findSecondaryUiFailureSummary(primary))
+                    .startsWith("Secondary EDT failure: NullPointerException");
+
+            RuntimeException workerFailure = new RuntimeException("worker failed");
+            Thread.getDefaultUncaughtExceptionHandler()
+                    .uncaughtException(new Thread("worker-1"), workerFailure);
+            assertThat(delegated.get()).isSameAs(workerFailure);
+        } finally {
+            WaitDiagnostics.clearRecordedEdtFailure();
+            Thread.setDefaultUncaughtExceptionHandler(original);
+        }
+    }
+
+    @Test
+    void reportsAnEdtFailureThatWasNotAssociatedWithATestFailure() {
+        Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
+        AtomicReference<Throwable> delegated = new AtomicReference<>();
+        NullPointerException secondary = new NullPointerException("secondary");
+        try {
+            Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.set(failure));
+            WaitDiagnostics.installEdtFailureRecorder();
+            WaitDiagnostics.clearRecordedEdtFailure();
+
+            Thread.getDefaultUncaughtExceptionHandler()
+                    .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
+            WaitDiagnostics.reportRecordedEdtFailure();
+
+            assertThat(delegated.get()).isSameAs(secondary);
+        } finally {
+            WaitDiagnostics.clearRecordedEdtFailure();
+            Thread.setDefaultUncaughtExceptionHandler(original);
+        }
     }
 
 }

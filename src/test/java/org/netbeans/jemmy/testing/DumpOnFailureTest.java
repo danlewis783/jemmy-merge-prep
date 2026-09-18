@@ -76,7 +76,11 @@ class DumpOnFailureTest {
         assertThat(capturedErr.toString(StandardCharsets.UTF_8.name()))
                 .contains("UI diagnostics for deliberatelyFails():")
                 .contains("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)")
+                .contains("Secondary EDT attachment:")
                 .contains("Hierarchy attachment:")
+                .doesNotContain("UI failure diagnostics for deliberatelyFails()")
+                .doesNotContain("Diagnostics: detail attached to failure")
+                .doesNotContain("java.lang.NullPointerException: secondary")
                 .doesNotContain("--- wait diagnostics ---");
     }
 
@@ -120,7 +124,8 @@ class DumpOnFailureTest {
             secondary.setStackTrace(new StackTraceElement[] {
                 new StackTraceElement("example.ui.SampleView", "refresh", "SampleView.java", 42)
             });
-            WaitDiagnostics.attachSecondaryUiFailure(failure, secondary);
+            Thread.getDefaultUncaughtExceptionHandler()
+                    .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
             throw failure;
         }
     }

@@ -114,24 +114,22 @@ public final class WaitDiagnosticSnapshot implements Serializable {
             if (timeoutKey != null) {
                 out.append("\n  timeout key: ").append(timeoutKey);
             }
-        } else {
-            out.append("UI failure diagnostics");
-            if (testDisplayName != null) {
-                out.append(" for ").append(testDisplayName);
-            }
+            out.append('\n');
+        } else if (waitTarget != null) {
+            out.append("Wait failed for:\n  ").append(waitTarget).append('\n');
         }
 
-        out.append("\nUI: ").append(renderEdtSummary());
+        out.append("UI: ").append(renderEdtSummary());
         for (ThreadSnapshot actionThread : actionThreads) {
             out.append("; ").append(classifyActionThread(actionThread));
         }
-        out.append("; active=").append(compactBrief(activeWindow));
-        out.append("; focus=").append(compactBrief(focusOwner));
+        out.append("\n  active: ").append(compactBrief(activeWindow));
+        out.append("\n  focus: ").append(compactBrief(focusOwner));
         if (waitComponent != null) {
-            out.append("\nWait component: ").append(waitComponent.summarizeState());
-            out.append("; window=").append(compactBrief(waitComponentWindow));
+            out.append("\nWait component:");
+            out.append("\n  state: ").append(waitComponent.summarizeState());
+            out.append("\n  window: ").append(compactBrief(waitComponentWindow));
         }
-        out.append("\nDiagnostics: detail attached to failure; component hierarchy attachment");
         return out.toString();
     }
 
@@ -142,12 +140,14 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         }
         out.append("\nEDT probe: ").append(renderEdtConclusion());
         out.append("\nmouse: ").append(mousePosition);
-        out.append("\nfocus: owner=").append(brief(focusOwner));
-        out.append(", focusedWindow=").append(brief(focusedWindow));
-        out.append(", activeWindow=").append(brief(activeWindow));
+        out.append("\nfocus:");
+        out.append("\n  owner: ").append(brief(focusOwner));
+        out.append("\n  focused window: ").append(brief(focusedWindow));
+        out.append("\n  active window: ").append(brief(activeWindow));
         if (waitComponent != null) {
-            out.append("\nwait component: ").append(waitComponent.describe());
-            out.append("; window=").append(brief(waitComponentWindow));
+            out.append("\nwait component:");
+            out.append("\n  state: ").append(waitComponent.describe());
+            out.append("\n  window: ").append(brief(waitComponentWindow));
         }
 
         int showingWindowCount = 0;

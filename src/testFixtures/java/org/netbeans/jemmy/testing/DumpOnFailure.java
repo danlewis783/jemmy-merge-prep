@@ -12,13 +12,29 @@
  */
 package org.netbeans.jemmy.testing;
 
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.netbeans.jemmy.WaitDiagnosticSnapshot;
 import org.netbeans.jemmy.WaitDiagnostics;
 
 /** Captures one UI snapshot, attaches bounded detail, and publishes the hierarchy separately. */
-public final class DumpOnFailure implements TestExecutionExceptionHandler {
+public final class DumpOnFailure implements
+        BeforeTestExecutionCallback, AfterTestExecutionCallback, TestExecutionExceptionHandler {
+    @Override
+    public void beforeTestExecution(ExtensionContext context) {
+        if (WaitDiagnostics.isEnabled()) {
+            WaitDiagnostics.installEdtFailureRecorder();
+            WaitDiagnostics.clearRecordedEdtFailure();
+        }
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) {
+        WaitDiagnostics.reportRecordedEdtFailure();
+    }
+
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable cause) throws Throwable {
         dump(context, cause);
@@ -30,6 +46,7 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
         if (!WaitDiagnostics.isEnabled()) {
             return;
         }
+        WaitDiagnostics.attachRecordedEdtFailure(cause);
         StringBuilder stderr = new StringBuilder();
         stderr.append("UI diagnostics for ")
                 .append(context.getDisplayName())
@@ -38,6 +55,18 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
         String secondaryFailure = WaitDiagnostics.findSecondaryUiFailureSummary(cause);
         if (secondaryFailure != null) {
             stderr.append(secondaryFailure).append('\n');
+        }
+        String secondaryFailureDetail = WaitDiagnostics.findSecondaryUiFailureDetail(cause);
+        if (secondaryFailureDetail != null) {
+            try {
+                String fileName = JUnitAttachmentUtils.publishText(
+                        context, secondaryFailureDetail, "secondary-edt-failure");
+                stderr.append("Secondary EDT attachment: ").append(fileName).append('\n');
+            } catch (Throwable attachmentFailure) {
+                stderr.append("Secondary EDT attachment failed: ")
+                        .append(attachmentFailure.getClass().getSimpleName())
+                        .append('\n');
+            }
         }
 
         WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(cause);
@@ -67,6 +96,6 @@ public final class DumpOnFailure implements TestExecutionExceptionHandler {
                         .append('\n');
             }
         }
-        System.err.println(stderr);
+        System.err.print(stderr);
     }
 }

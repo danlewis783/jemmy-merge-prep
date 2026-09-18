@@ -42,6 +42,12 @@ public class WindowFunction<T extends Window> implements Function<Void, T> {
         return (T) WindowFunction.getWindow(owner, predicate, index);
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " matching " + predicate + " at index " + index
+                + (owner == null ? "" : " owned by " + owner.getClass().getSimpleName());
+    }
+
     // The entire enumeration + recursion + predicate evaluation happens inside one hop so the
     // whole window tree is read between events, while it is quiescent; the private doGetWindow
     // overloads recurse directly instead of back through this method, so descending into owned

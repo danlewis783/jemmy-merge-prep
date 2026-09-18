@@ -56,12 +56,17 @@ class WaitDiagnosticSnapshotTest {
                         "UI:",
                         "EDT idle (4 ms)",
                         "jemmy-action-1 idle",
-                        "Wait component:",
-                        "Diagnostics:")
+                        "Wait component:")
+                .contains("\n  active: JFrame", "\n  focus: JPanel")
+                .contains("\nWait component:\n  state: JPanel", "\n  window: JFrame")
+                .doesNotContain("Diagnostics:")
                 .doesNotContain("EventQueue.getNextEvent")
                 .doesNotContain("JPanel bounds=");
         assertThat(snapshot.renderFailureDetail())
                 .startsWith("--- wait diagnostics ---")
+                .contains("\nfocus:\n  owner: JPanel")
+                .contains("\n  focused window: JFrame", "\n  active window: JFrame")
+                .contains("\nwait component:\n  state: JPanel", "\n  window: JFrame")
                 .doesNotContain("EDT stack at timeout:")
                 .doesNotContain("action threads at timeout:")
                 .doesNotContain("EventQueue.getNextEvent");

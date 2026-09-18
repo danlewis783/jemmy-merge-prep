@@ -21,6 +21,8 @@ import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.awt.TextComponent;
 import java.awt.Window;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +58,8 @@ import org.jetbrains.annotations.Nullable;
 public final class WaitDiagnostics {
     public static final String ENABLED_PROPERTY = "jemmyDiagnosticsEnable";
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
+    private static final int MAX_SECONDARY_FAILURE_DETAIL_LENGTH = 100_000;
+    private static final AtomicReference<RecordedEdtFailure> recordedEdtFailure = new AtomicReference<>();
 
     private WaitDiagnostics() {}
 
@@ -68,6 +72,35 @@ public final class WaitDiagnostics {
     /** Captures and renders detail for compatibility with callers that need plain text. */
     public static String capture() {
         return captureSnapshot(null, null, null, null, null).renderFailureDetail();
+    }
+
+    /** Installs a test recorder after application setup; non-EDT failures still reach the handler. */
+    public static synchronized void installEdtFailureRecorder() {
+        Thread.UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
+        if (!(current instanceof EdtFailureRecorder)) {
+            Thread.setDefaultUncaughtExceptionHandler(new EdtFailureRecorder(current));
+        }
+    }
+
+    /** Clears any secondary EDT failure retained for a preceding test. */
+    public static void clearRecordedEdtFailure() {
+        recordedEdtFailure.set(null);
+    }
+
+    /** Attaches and consumes the latest EDT failure recorded during the current test. */
+    public static void attachRecordedEdtFailure(Throwable primaryFailure) {
+        RecordedEdtFailure recorded = recordedEdtFailure.getAndSet(null);
+        if (recorded != null) {
+            attachSecondaryUiFailure(primaryFailure, recorded.failure);
+        }
+    }
+
+    /** Sends an unassociated EDT failure to the application handler instead of silently losing it. */
+    public static void reportRecordedEdtFailure() {
+        RecordedEdtFailure recorded = recordedEdtFailure.getAndSet(null);
+        if (recorded != null) {
+            recorded.report();
+        }
     }
 
     public static WaitDiagnosticSnapshot captureSnapshot(@Nullable String testDisplayName) {
@@ -206,6 +239,27 @@ public final class WaitDiagnostics {
         }
     }
 
+    /**
+     * Attaches diagnostics for a wait implemented outside Jemmy's repeater classes.
+     *
+     * @param failure failure produced by the caller's wait
+     * @param waitTarget concise description of the condition that did not become true
+     * @param diagnosticComponent component whose current state is most relevant to the wait
+     */
+    public static void attachTo(
+            Throwable failure,
+            @Nullable String waitTarget,
+            @Nullable Component diagnosticComponent) {
+        if (!isEnabled()) {
+            return;
+        }
+        try {
+            attachTo(failure, captureSnapshot(null, null, null, waitTarget, diagnosticComponent));
+        } catch (Throwable ignored) {
+            // Diagnostics are best effort and must never replace the original failure.
+        }
+    }
+
     public static void attachTo(Throwable failure, WaitDiagnosticSnapshot snapshot) {
         if (!isEnabled()) {
             return;
@@ -248,13 +302,25 @@ public final class WaitDiagnostics {
             return;
         }
         try {
-            failure.addSuppressed(new SecondaryUiFailure(summarize(secondaryFailure)));
+            failure.addSuppressed(new SecondaryUiFailure(
+                    summarize(secondaryFailure), renderSecondaryFailure(secondaryFailure)));
         } catch (Throwable ignored) {
             // The primary failure wins even when recording the secondary failure fails.
         }
     }
 
     public static @Nullable String findSecondaryUiFailureSummary(Throwable failure) {
+        SecondaryUiFailure marker = findSecondaryUiFailure(failure);
+        return marker == null ? null : marker.getMessage();
+    }
+
+    /** Returns the full secondary EDT stack for a separate text attachment. */
+    public static @Nullable String findSecondaryUiFailureDetail(Throwable failure) {
+        SecondaryUiFailure marker = findSecondaryUiFailure(failure);
+        return marker == null ? null : marker.detail;
+    }
+
+    private static @Nullable SecondaryUiFailure findSecondaryUiFailure(Throwable failure) {
         Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
         ArrayDeque<Throwable> pending = new ArrayDeque<>();
         pending.add(failure);
@@ -264,7 +330,7 @@ public final class WaitDiagnostics {
                 continue;
             }
             if (current instanceof SecondaryUiFailure) {
-                return current.getMessage();
+                return (SecondaryUiFailure) current;
             }
             Throwable cause = current.getCause();
             if (cause != null) {
@@ -273,6 +339,16 @@ public final class WaitDiagnostics {
             Collections.addAll(pending, current.getSuppressed());
         }
         return null;
+    }
+
+    private static String renderSecondaryFailure(Throwable failure) {
+        StringWriter text = new StringWriter();
+        failure.printStackTrace(new PrintWriter(text));
+        String detail = text.toString();
+        return detail.length() <= MAX_SECONDARY_FAILURE_DETAIL_LENGTH
+                ? detail
+                : detail.substring(0, MAX_SECONDARY_FAILURE_DETAIL_LENGTH)
+                        + "\n... secondary EDT detail truncated ...\n";
     }
 
     private static String summarize(Throwable failure) {
@@ -425,6 +501,7 @@ public final class WaitDiagnostics {
     /** One EDT capture shares these limits across windows and focus references. */
     static final class UiCapture {
         static final int MAX_COMPONENTS = 256;
+        static final int MAX_UNRELATED_COMPONENTS = 128;
         static final int MAX_DEPTH = 32;
         static final int MAX_VALUE_LENGTH = 500;
         private final AtomicBoolean abandonedProbe;
@@ -437,8 +514,11 @@ public final class WaitDiagnostics {
                 Collections.newSetFromMap(new IdentityHashMap<Component, Boolean>());
         final List<String> warnings = new ArrayList<>();
         private int componentCount;
+        private int unrelatedComponentCount;
         private boolean reportedStop;
         private boolean reportedDepthLimit;
+        private boolean reportedUnrelatedLimit;
+        private boolean reportedPriorityPathPruning;
 
         UiCapture(AtomicBoolean abandonedProbe, long probeStart) {
             this(abandonedProbe, probeStart, null, null);
@@ -479,13 +559,21 @@ public final class WaitDiagnostics {
         }
 
         @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(@Nullable Component component, int depth) {
-            return component(component, depth, true);
+            return component(component, depth, true, false);
         }
 
         private @Nullable WaitDiagnosticSnapshot.ComponentSnapshot safeComponent(
                 @Nullable Component component, int depth, boolean traverseChildren) {
+            return safeComponent(component, depth, traverseChildren, false);
+        }
+
+        private @Nullable WaitDiagnosticSnapshot.ComponentSnapshot safeComponent(
+                @Nullable Component component,
+                int depth,
+                boolean traverseChildren,
+                boolean relevantOnly) {
             try {
-                return component(component, depth, traverseChildren);
+                return component(component, depth, traverseChildren, relevantOnly);
             } catch (RuntimeException e) {
                 warnings.add("component capture failed: " + e.getClass().getName());
                 return null;
@@ -494,12 +582,25 @@ public final class WaitDiagnostics {
 
         @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(
                 @Nullable Component component, int depth, boolean traverseChildren) {
+            return component(component, depth, traverseChildren, false);
+        }
+
+        private @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(
+                @Nullable Component component,
+                int depth,
+                boolean traverseChildren,
+                boolean relevantOnly) {
             if (component == null) {
                 return null;
             }
             WaitDiagnosticSnapshot.ComponentSnapshot existing = captured.get(component);
             if (existing != null) {
                 return existing;
+            }
+            boolean relevant = isRelevant(component);
+            if (!relevant && unrelatedComponentCount >= MAX_UNRELATED_COMPONENTS) {
+                reportUnrelatedPruning();
+                return null;
             }
             if (exhausted()) {
                 return null;
@@ -512,6 +613,9 @@ public final class WaitDiagnostics {
                 return null;
             }
             componentCount++;
+            if (!relevant) {
+                unrelatedComponentCount++;
+            }
 
             String name = bounded(component.getName());
             String title = null;
@@ -583,24 +687,40 @@ public final class WaitDiagnostics {
             List<WaitDiagnosticSnapshot.ComponentSnapshot> children = new ArrayList<>();
             if (traverseChildren && component instanceof java.awt.Container) {
                 java.awt.Container container = (java.awt.Container) component;
-                // Indexed access avoids allocating an array for a very wide hierarchy.
-                int priorityChild = priorityChild(container);
-                if (priorityChild >= 0) {
-                    addChild(children, container.getComponent(priorityChild), depth);
+                int diagnosticChild = priorityChild(container, diagnosticAncestry);
+                int focusChild = priorityChild(container, focusAncestry);
+                if (diagnosticChild >= 0) {
+                    addChild(children, container.getComponent(diagnosticChild), depth, true);
                 }
-                for (int i = 0; i < container.getComponentCount() && !exhausted(); i++) {
-                    if (i == priorityChild) {
-                        continue;
+                if (focusChild >= 0 && focusChild != diagnosticChild) {
+                    addChild(children, container.getComponent(focusChild), depth, true);
+                }
+                if (relevantOnly) {
+                    int priorityCount = (diagnosticChild >= 0 ? 1 : 0)
+                            + (focusChild >= 0 && focusChild != diagnosticChild ? 1 : 0);
+                    if (container.getComponentCount() > priorityCount) {
+                        reportPriorityPathPruning();
                     }
-                    if (depth + 1 >= MAX_DEPTH) {
-                        if (!reportedDepthLimit) {
-                            warnings.add("capture truncated: hierarchy depth limit reached ("
-                                    + MAX_DEPTH + " levels)");
-                            reportedDepthLimit = true;
+                } else {
+                    // Indexed access avoids allocating an array for a very wide hierarchy.
+                    for (int i = 0; i < container.getComponentCount() && !exhausted(); i++) {
+                        if (i == diagnosticChild || i == focusChild) {
+                            continue;
                         }
-                        break;
+                        if (unrelatedComponentCount >= MAX_UNRELATED_COMPONENTS) {
+                            reportUnrelatedPruning();
+                            break;
+                        }
+                        if (depth + 1 >= MAX_DEPTH) {
+                            if (!reportedDepthLimit) {
+                                warnings.add("capture truncated: hierarchy depth limit reached ("
+                                        + MAX_DEPTH + " levels)");
+                                reportedDepthLimit = true;
+                            }
+                            break;
+                        }
+                        addChild(children, container.getComponent(i), depth, false);
                     }
-                    addChild(children, container.getComponent(i), depth);
                 }
             }
             WaitDiagnosticSnapshot.ComponentSnapshot result = new WaitDiagnosticSnapshot.ComponentSnapshot(
@@ -621,14 +741,30 @@ public final class WaitDiagnostics {
             }
         }
 
-        private int priorityChild(java.awt.Container container) {
-            for (int i = 0; i < container.getComponentCount(); i++) {
-                if (focusAncestry.contains(container.getComponent(i))) {
-                    return i;
-                }
+        private boolean isRelevant(Component component) {
+            return diagnosticAncestry.contains(component)
+                    || focusAncestry.contains(component)
+                    || (component instanceof Window && component.isShowing());
+        }
+
+        private void reportUnrelatedPruning() {
+            if (!reportedUnrelatedLimit) {
+                warnings.add("capture pruned: unrelated component limit reached ("
+                        + MAX_UNRELATED_COMPONENTS + " visited)");
+                reportedUnrelatedLimit = true;
             }
+        }
+
+        private void reportPriorityPathPruning() {
+            if (!reportedPriorityPathPruning) {
+                warnings.add("capture pruned: unrelated descendants omitted from priority paths");
+                reportedPriorityPathPruning = true;
+            }
+        }
+
+        private int priorityChild(java.awt.Container container, Set<Component> ancestry) {
             for (int i = 0; i < container.getComponentCount(); i++) {
-                if (diagnosticAncestry.contains(container.getComponent(i))) {
+                if (ancestry.contains(container.getComponent(i))) {
                     return i;
                 }
             }
@@ -636,11 +772,15 @@ public final class WaitDiagnostics {
         }
 
         private void addChild(
-                List<WaitDiagnosticSnapshot.ComponentSnapshot> children, Component child, int parentDepth) {
+                List<WaitDiagnosticSnapshot.ComponentSnapshot> children,
+                Component child,
+                int parentDepth,
+                boolean relevantOnly) {
             if (exhausted()) {
                 return;
             }
-            WaitDiagnosticSnapshot.ComponentSnapshot snapshot = safeComponent(child, parentDepth + 1, true);
+            WaitDiagnosticSnapshot.ComponentSnapshot snapshot =
+                    safeComponent(child, parentDepth + 1, true, relevantOnly);
             if (snapshot != null) {
                 children.add(snapshot);
             }
@@ -786,9 +926,56 @@ public final class WaitDiagnostics {
 
     private static final class SecondaryUiFailure extends Throwable {
         private static final long serialVersionUID = 1L;
+        private final String detail;
 
-        SecondaryUiFailure(String summary) {
+        SecondaryUiFailure(String summary, String detail) {
             super(summary, null, false, false);
+            this.detail = detail;
+        }
+    }
+
+    private static final class EdtFailureRecorder implements Thread.UncaughtExceptionHandler {
+        private final @Nullable Thread.UncaughtExceptionHandler delegate;
+
+        EdtFailureRecorder(@Nullable Thread.UncaughtExceptionHandler delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void uncaughtException(Thread thread, Throwable failure) {
+            if (thread.getName().startsWith("AWT-EventQueue")) {
+                recordedEdtFailure.set(new RecordedEdtFailure(thread, failure, delegate));
+                return;
+            } else if (delegate != null) {
+                delegate.uncaughtException(thread, failure);
+            } else {
+                System.err.println("Exception in thread \"" + thread.getName() + "\" " + failure);
+                failure.printStackTrace(System.err);
+            }
+        }
+    }
+
+    private static final class RecordedEdtFailure {
+        private final Thread thread;
+        private final Throwable failure;
+        private final @Nullable Thread.UncaughtExceptionHandler delegate;
+
+        RecordedEdtFailure(
+                Thread thread,
+                Throwable failure,
+                @Nullable Thread.UncaughtExceptionHandler delegate) {
+            this.thread = thread;
+            this.failure = failure;
+            this.delegate = delegate;
+        }
+
+        void report() {
+            if (delegate != null) {
+                delegate.uncaughtException(thread, failure);
+            } else {
+                System.err.println("Exception in thread \"" + thread.getName() + "\" " + failure);
+                failure.printStackTrace(System.err);
+            }
         }
     }
 
