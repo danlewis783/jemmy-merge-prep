@@ -97,6 +97,7 @@ testing {
 
 tasks.named("check") {
     dependsOn(testing.suites.named("userInterfaceTest"))
+    dependsOn("checkLicenseHeaders")
 }
 
 tasks.register("compileAll") {
@@ -107,4 +108,22 @@ tasks.register("compileAll") {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+}
+
+// Every Java source must open with the GPLv2 + Classpath header. The 19e70d2 sweep applied it
+// once; this check keeps files added afterwards from drifting.
+tasks.register("checkLicenseHeaders") {
+    description = "Fails when a Java source under src/ lacks the GPLv2 license header."
+    group = "verification"
+    val sources = fileTree("src") { include("**/*.java") }
+    val baseDir = layout.projectDirectory.asFile
+    inputs.files(sources)
+    doLast {
+        val missing = sources.filter { file ->
+            file.useLines { lines -> lines.take(20).none { it.contains("GNU General Public License version 2 only") } }
+        }.map { it.relativeTo(baseDir).path }
+        if (missing.isNotEmpty()) {
+            throw GradleException("Java sources missing the license header:\n  " + missing.joinToString("\n  "))
+        }
+    }
 }
