@@ -274,6 +274,19 @@ public final class WaitDiagnostics {
     }
 
     public static @Nullable WaitDiagnosticSnapshot findSnapshot(Throwable failure) {
+        Diagnostics diagnostics = findDiagnostics(failure);
+        return diagnostics == null ? null : diagnostics.snapshot;
+    }
+
+    /** Replaces inline diagnostic detail with a short pointer once its report is published. */
+    public static void referenceDiagnosticsReport(Throwable failure) {
+        Diagnostics diagnostics = findDiagnostics(failure);
+        if (diagnostics != null) {
+            diagnostics.referenceReport();
+        }
+    }
+
+    private static @Nullable Diagnostics findDiagnostics(Throwable failure) {
         Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
         ArrayDeque<Throwable> pending = new ArrayDeque<>();
         pending.add(failure);
@@ -283,7 +296,7 @@ public final class WaitDiagnostics {
                 continue;
             }
             if (current instanceof Diagnostics) {
-                return ((Diagnostics) current).snapshot;
+                return (Diagnostics) current;
             }
             Throwable cause = current.getCause();
             if (cause != null) {
@@ -917,10 +930,22 @@ public final class WaitDiagnostics {
     private static final class Diagnostics extends Throwable {
         private static final long serialVersionUID = 1L;
         private final WaitDiagnosticSnapshot snapshot;
+        private volatile boolean reportPublished;
 
         Diagnostics(WaitDiagnosticSnapshot snapshot) {
             super(snapshot.renderFailureDetail(), null, false, false);
             this.snapshot = snapshot;
+        }
+
+        void referenceReport() {
+            reportPublished = true;
+        }
+
+        @Override
+        public String getMessage() {
+            return reportPublished
+                    ? "diagnostics report attached; see Standard Error"
+                    : super.getMessage();
         }
     }
 

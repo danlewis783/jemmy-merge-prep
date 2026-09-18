@@ -79,6 +79,16 @@ class WaitDiagnosticSnapshotTest {
                         "accessibleName=\"component value\"", "accessibleDescription=\"component value\"",
                         "selectedText=\"component value\"", "selection=\"component value\"",
                         "details=\"component value\"");
+        assertThat(snapshot.renderReport())
+                .startsWith("UI DIAGNOSTICS\n==============")
+                .contains("WAIT CONDITION\n--------------")
+                .contains("UI STATE\n--------")
+                .contains("FOCUSED COMPONENT ANCESTRY\n--------------------------")
+                .contains("COMPONENT HIERARCHY\n-------------------")
+                .contains("Target:\n  showing JSpinner")
+                .contains("Component:\n  JPanel")
+                .doesNotContain("--- wait diagnostics ---")
+                .doesNotContain("Jemmy component hierarchy");
     }
 
     @Test

@@ -316,6 +316,20 @@ class WaitDiagnosticsTest {
     }
 
     @Test
+    void replacesInlineDiagnosticDetailWithAReportPointer() {
+        Throwable failure = new RuntimeException("ordinary failure");
+        WaitDiagnostics.attachTo(failure);
+
+        WaitDiagnostics.referenceDiagnosticsReport(failure);
+
+        assertThat(failure.getSuppressed()).singleElement().satisfies(diagnostics ->
+                assertThat(diagnostics.getMessage())
+                        .isEqualTo("diagnostics report attached; see Standard Error")
+                        .doesNotContain("EDT probe:"));
+        assertThat(WaitDiagnostics.findSnapshot(failure)).isNotNull();
+    }
+
+    @Test
     void retainsCaptureFailure() {
         Throwable failure = new RuntimeException("timeout");
         Throwable diagnosticsFailure = new AssertionError(SENTINEL);

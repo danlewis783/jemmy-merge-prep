@@ -235,6 +235,103 @@ public final class WaitDiagnosticSnapshot implements Serializable {
         return out.toString();
     }
 
+    /** Renders one non-repeating report suitable for a standalone text attachment. */
+    public String renderReport() {
+        StringBuilder out = new StringBuilder("UI DIAGNOSTICS\n==============\n");
+
+        if (waitTarget != null || waitComponent != null) {
+            appendHeading(out, "WAIT CONDITION");
+            if (waitTarget != null) {
+                out.append("Target:\n  ").append(waitTarget).append('\n');
+            }
+            if (waitComponent != null) {
+                out.append("Component:\n  ").append(waitComponent.describe()).append('\n');
+                out.append("Containing window:\n  ").append(brief(waitComponentWindow)).append('\n');
+            }
+        }
+
+        appendHeading(out, "UI STATE");
+        out.append("EDT: ").append(renderEdtConclusion()).append('\n');
+        out.append("Mouse: ").append(mousePosition).append('\n');
+        out.append("Focus owner:\n  ").append(brief(focusOwner)).append('\n');
+        out.append("Focused window:\n  ").append(brief(focusedWindow)).append('\n');
+        out.append("Active window:\n  ").append(brief(activeWindow)).append('\n');
+        int showingWindowCount = 0;
+        for (ComponentSnapshot window : windows) {
+            if (window.showing) {
+                showingWindowCount++;
+            }
+        }
+        out.append("Windows: ").append(showingWindowCount).append(" showing, ")
+                .append(windows.size() - showingWindowCount).append(" hidden\n");
+
+        boolean hasThreadDetail = edtStatus != EdtStatus.RESPONSIVE_IDLE && edtThread != null;
+        for (ThreadSnapshot thread : actionThreads) {
+            if (!isIdleActionThread(thread)) {
+                hasThreadDetail = true;
+                break;
+            }
+        }
+        if (hasThreadDetail) {
+            appendHeading(out, "THREADS");
+            if (edtStatus != EdtStatus.RESPONSIVE_IDLE && edtThread != null) {
+                out.append("EDT stack:");
+                appendThread(out, edtThread);
+                out.append('\n');
+            }
+            for (ThreadSnapshot thread : actionThreads) {
+                if (!isIdleActionThread(thread)) {
+                    out.append("Action thread:");
+                    appendThread(out, thread);
+                    out.append('\n');
+                }
+            }
+        }
+
+        List<ComponentSnapshot> focusPath = findFocusPath();
+        if (!focusPath.isEmpty()) {
+            appendHeading(out, "FOCUSED COMPONENT ANCESTRY");
+            for (int i = 0; i < focusPath.size(); i++) {
+                indent(out, i).append(focusPath.get(i).describe()).append('\n');
+            }
+        }
+
+        if (waitTarget != null) {
+            List<TargetMatch> matches = new ArrayList<>();
+            for (ComponentSnapshot window : windows) {
+                findTargetMatches(window, window, waitTarget, matches);
+            }
+            if (!matches.isEmpty()) {
+                appendHeading(out, "COMPONENTS RELATED TO WAIT TARGET");
+                for (TargetMatch match : matches) {
+                    out.append("MATCH: ").append(match.component.describe());
+                    out.append("; window=").append(match.window.brief()).append('\n');
+                }
+            }
+        }
+
+        appendHeading(out, "COMPONENT HIERARCHY");
+        for (ComponentSnapshot window : windows) {
+            appendComponent(out, window, 0, window.showing || containsFocus(window));
+        }
+
+        if (!warnings.isEmpty()) {
+            appendHeading(out, "CAPTURE NOTES");
+            for (String warning : warnings) {
+                out.append("- ").append(warning).append('\n');
+            }
+        }
+        return out.toString();
+    }
+
+    private static void appendHeading(StringBuilder out, String heading) {
+        out.append('\n').append(heading).append('\n');
+        for (int i = 0; i < heading.length(); i++) {
+            out.append('-');
+        }
+        out.append('\n');
+    }
+
     private String renderEdtConclusion() {
         String frame = firstApplicationFrame(edtThread);
         switch (edtStatus) {

@@ -69,15 +69,17 @@ class DumpOnFailureTest {
             exception.printStackTrace(new PrintWriter(rendered));
             assertThat(rendered.toString()).containsSubsequence(
                     "deliberate failure",
-                    "Suppressed: org.netbeans.jemmy.WaitDiagnostics$Diagnostics: --- wait diagnostics ---",
-                    "EDT probe:");
+                    "Suppressed: org.netbeans.jemmy.WaitDiagnostics$Diagnostics: "
+                            + "diagnostics report attached; see Standard Error")
+                    .doesNotContain("EDT probe:");
         });
 
         assertThat(capturedErr.toString(StandardCharsets.UTF_8.name()))
                 .contains("UI diagnostics for deliberatelyFails():")
                 .contains("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)")
-                .contains("Secondary EDT attachment:")
-                .contains("Hierarchy attachment:")
+                .contains("Diagnostics report:")
+                .doesNotContain("Secondary EDT attachment:")
+                .doesNotContain("Hierarchy attachment:")
                 .doesNotContain("UI failure diagnostics for deliberatelyFails()")
                 .doesNotContain("Diagnostics: detail attached to failure")
                 .doesNotContain("java.lang.NullPointerException: secondary")

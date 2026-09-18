@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.netbeans.jemmy.WaitDiagnosticSnapshot;
 import org.netbeans.jemmy.WaitDiagnostics;
 
-/** Captures one UI snapshot, attaches bounded detail, and publishes the hierarchy separately. */
+/** Captures one UI snapshot and publishes a consolidated diagnostic report. */
 public final class DumpOnFailure implements
         BeforeTestExecutionCallback, AfterTestExecutionCallback, TestExecutionExceptionHandler {
     @Override
@@ -57,17 +57,6 @@ public final class DumpOnFailure implements
             stderr.append(secondaryFailure).append('\n');
         }
         String secondaryFailureDetail = WaitDiagnostics.findSecondaryUiFailureDetail(cause);
-        if (secondaryFailureDetail != null) {
-            try {
-                String fileName = JUnitAttachmentUtils.publishText(
-                        context, secondaryFailureDetail, "secondary-edt-failure");
-                stderr.append("Secondary EDT attachment: ").append(fileName).append('\n');
-            } catch (Throwable attachmentFailure) {
-                stderr.append("Secondary EDT attachment failed: ")
-                        .append(attachmentFailure.getClass().getSimpleName())
-                        .append('\n');
-            }
-        }
 
         WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(cause);
         if (snapshot == null) {
@@ -87,15 +76,27 @@ public final class DumpOnFailure implements
             try {
                 String fileName = JUnitAttachmentUtils.publishText(
                         context,
-                        snapshot.renderComponentTree(),
+                        renderDiagnostics(snapshot, secondaryFailureDetail),
                         "jemmy-diagnostics");
-                stderr.append("Hierarchy attachment: ").append(fileName).append('\n');
+                WaitDiagnostics.referenceDiagnosticsReport(cause);
+                stderr.append("Diagnostics report: ").append(fileName).append('\n');
             } catch (Throwable attachmentFailure) {
-                stderr.append("Hierarchy attachment failed: ")
+                stderr.append("Diagnostics report attachment failed: ")
                         .append(attachmentFailure.getClass().getSimpleName())
                         .append('\n');
             }
         }
         System.err.print(stderr);
+    }
+
+    private static String renderDiagnostics(
+            WaitDiagnosticSnapshot snapshot, String secondaryFailureDetail) {
+        StringBuilder report = new StringBuilder(snapshot.renderReport());
+        if (secondaryFailureDetail != null) {
+            report.append("\nSECONDARY EDT FAILURE\n")
+                    .append("---------------------\n")
+                    .append(secondaryFailureDetail.trim());
+        }
+        return report.toString();
     }
 }
