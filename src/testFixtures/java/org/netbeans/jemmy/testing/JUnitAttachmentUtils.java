@@ -55,9 +55,18 @@ public final class JUnitAttachmentUtils {
     }
 
     public static String publishText(ExtensionContext context, String text, String suffix) {
+        return publishText(context, text, suffix, "txt");
+    }
+
+    public static String publishMarkdown(ExtensionContext context, String markdown, String suffix) {
+        return publishText(context, markdown, suffix, "md");
+    }
+
+    private static String publishText(
+            ExtensionContext context, String text, String suffix, String extension) {
         Objects.requireNonNull(context, "context");
         Objects.requireNonNull(text, "text");
-        String fileName = uniqueFileName(context, suffix, "txt");
+        String fileName = uniqueFileName(context, suffix, extension);
         context.publishFile(fileName, MediaType.TEXT_PLAIN_UTF_8, path ->
                 Files.write(path, text.getBytes(StandardCharsets.UTF_8)));
         return fileName;

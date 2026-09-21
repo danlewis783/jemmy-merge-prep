@@ -50,7 +50,8 @@ class WaitTimeoutMessageTest {
                     .hasMessageNotContaining("--- wait diagnostics ---")
                     .satisfies(failure -> {
                         assertHasAttachedDiagnostics(failure);
-                        assertThat(WaitDiagnostics.findSnapshot(failure).renderSummary())
+                        assertThat(WaitDiagnostics.findSnapshot(failure).renderSummary(
+                                        WaitDiagnostics.findFailedWait(failure)))
                                 .contains("Wait component:\n  state: JLabel")
                                 .contains("text=\"current text\"")
                                 .contains("showing", "enabled");

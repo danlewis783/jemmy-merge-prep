@@ -186,9 +186,11 @@ class WaitDiagnosticsTest {
 
         WaitDiagnostics.attachTo(failure, "field value to equal expected value", component);
 
-        WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(failure);
+        DiagnosticCapture snapshot = WaitDiagnostics.findSnapshot(failure);
+        FailedWait waitFailure = WaitDiagnostics.findFailedWait(failure);
         assertThat(snapshot).isNotNull();
-        assertThat(snapshot.renderSummary())
+        assertThat(waitFailure).isNotNull();
+        assertThat(snapshot.renderSummary(waitFailure))
                 .contains("Wait failed for:", "field value to equal expected value", "Wait component:");
     }
 
@@ -218,9 +220,9 @@ class WaitDiagnosticsTest {
         return new WaitDiagnostics.UiCapture(new AtomicBoolean(), System.nanoTime());
     }
 
-    private static String render(WaitDiagnosticSnapshot.ComponentSnapshot component) {
-        return new WaitDiagnosticSnapshot(null, null, null, null, null, null,
-                WaitDiagnosticSnapshot.EdtStatus.UNAVAILABLE, null, null, Collections.emptyList(),
+    private static String render(DiagnosticCapture.ComponentSnapshot component) {
+        return new DiagnosticCapture(null,
+                DiagnosticCapture.EdtStatus.UNAVAILABLE, null, null, Collections.emptyList(),
                 null, null, null, Collections.singletonList(component), "unknown", Collections.emptyList()).renderComponentTree();
     }
 

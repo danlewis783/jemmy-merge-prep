@@ -15,12 +15,12 @@ import java.io.ObjectOutputStream;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
-class WaitDiagnosticSnapshotTest {
+class DiagnosticCaptureTest {
     private static final String SENTINEL = "component value";
 
     @Test
     void attachedSnapshotSurvivesFailureGraphSerialization() throws Exception {
-        WaitDiagnosticSnapshot snapshot = snapshot();
+        DiagnosticCapture snapshot = snapshot();
         TimeoutExpiredException timeout = new TimeoutExpiredException("timeout", new IllegalStateException("cause"));
         Throwable failure = new RuntimeException("test failure", timeout);
         WaitDiagnostics.attachTo(timeout, snapshot);
@@ -32,7 +32,7 @@ class WaitDiagnosticSnapshotTest {
         try (ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))) {
             restored = (Throwable) input.readObject();
         }
-        WaitDiagnosticSnapshot restoredSnapshot = WaitDiagnostics.findSnapshot(restored);
+        DiagnosticCapture restoredSnapshot = WaitDiagnostics.findSnapshot(restored);
         assertThat(restoredSnapshot).isNotNull();
         assertThat(restoredSnapshot.renderSummary()).isEqualTo(snapshot.renderSummary());
         assertThat(restoredSnapshot.renderFailureDetail()).isEqualTo(snapshot.renderFailureDetail());
@@ -46,9 +46,10 @@ class WaitDiagnosticSnapshotTest {
 
     @Test
     void rendersAConciseSummarySeparatelyFromStacksAndTree() {
-        WaitDiagnosticSnapshot snapshot = snapshot();
+        DiagnosticCapture snapshot = snapshot();
+        FailedWait waitFailure = waitFailure();
 
-        assertThat(snapshot.renderSummary())
+        assertThat(snapshot.renderSummary(waitFailure))
                 .containsSubsequence(
                         "Timed out after 60 s",
                         "waiting for:",
@@ -62,7 +63,7 @@ class WaitDiagnosticSnapshotTest {
                 .doesNotContain("Diagnostics:")
                 .doesNotContain("EventQueue.getNextEvent")
                 .doesNotContain("JPanel bounds=");
-        assertThat(snapshot.renderFailureDetail())
+        assertThat(snapshot.renderFailureDetail(waitFailure))
                 .startsWith("--- wait diagnostics ---")
                 .contains("\nfocus:\n  owner: JPanel")
                 .contains("\n  focused window: JFrame", "\n  active window: JFrame")
@@ -70,7 +71,7 @@ class WaitDiagnosticSnapshotTest {
                 .doesNotContain("EDT stack at timeout:")
                 .doesNotContain("action threads at timeout:")
                 .doesNotContain("EventQueue.getNextEvent");
-        assertThat(snapshot.renderComponentTree())
+        assertThat(snapshot.renderComponentTree(waitFailure))
                 .contains("Focused component ancestry:")
                 .contains("JPanel name=")
                 .contains("bounds=[1,2 3x4]")
@@ -79,12 +80,16 @@ class WaitDiagnosticSnapshotTest {
                         "accessibleName=\"component value\"", "accessibleDescription=\"component value\"",
                         "selectedText=\"component value\"", "selection=\"component value\"",
                         "details=\"component value\"");
-        assertThat(snapshot.renderReport())
-                .startsWith("UI DIAGNOSTICS\n==============")
-                .contains("WAIT CONDITION\n--------------")
-                .contains("UI STATE\n--------")
-                .contains("FOCUSED COMPONENT ANCESTRY\n--------------------------")
-                .contains("COMPONENT HIERARCHY\n-------------------")
+        JemmyFailureDiagnostics captured = JemmyFailureDiagnostics.builder(
+                        "fixture [5]", new AssertionError("failure"))
+                .capturedState(snapshot)
+                .failedWait(waitFailure)
+                .build();
+        assertThat(JemmyDiagnosticReport.render(captured))
+                .startsWith("# Jemmy Diagnostics Report")
+                .contains("## Failure", "## UI diagnostics")
+                .contains("### Wait condition", "### UI state")
+                .contains("### Focused component ancestry", "### Component hierarchy")
                 .contains("Target:\n  showing JSpinner")
                 .contains("Component:\n  JPanel")
                 .doesNotContain("--- wait diagnostics ---")
@@ -93,27 +98,27 @@ class WaitDiagnosticSnapshotTest {
 
     @Test
     void classifiesIdleBusySlowAndBlockedEdtStates() {
-        WaitDiagnosticSnapshot.ThreadSnapshot idle = thread(
+        DiagnosticCapture.ThreadSnapshot idle = thread(
                 "AWT-EventQueue-0", "java.awt.EventQueue", "getNextEvent");
-        WaitDiagnosticSnapshot.ThreadSnapshot busy = thread(
+        DiagnosticCapture.ThreadSnapshot busy = thread(
                 "AWT-EventQueue-0", "com.example.product.Editor", "save");
 
-        assertThat(WaitDiagnosticSnapshot.classifyEdt(true, 4L, idle))
-                .isEqualTo(WaitDiagnosticSnapshot.EdtStatus.RESPONSIVE_IDLE);
-        assertThat(WaitDiagnosticSnapshot.classifyEdt(true, 4L, busy))
-                .isEqualTo(WaitDiagnosticSnapshot.EdtStatus.RESPONSIVE);
-        assertThat(WaitDiagnosticSnapshot.classifyEdt(true, 150L, busy))
-                .isEqualTo(WaitDiagnosticSnapshot.EdtStatus.SLOW);
-        assertThat(WaitDiagnosticSnapshot.classifyEdt(false, null, busy))
-                .isEqualTo(WaitDiagnosticSnapshot.EdtStatus.BLOCKED);
+        assertThat(DiagnosticCapture.classifyEdt(true, 4L, idle))
+                .isEqualTo(DiagnosticCapture.EdtStatus.RESPONSIVE_IDLE);
+        assertThat(DiagnosticCapture.classifyEdt(true, 4L, busy))
+                .isEqualTo(DiagnosticCapture.EdtStatus.RESPONSIVE);
+        assertThat(DiagnosticCapture.classifyEdt(true, 150L, busy))
+                .isEqualTo(DiagnosticCapture.EdtStatus.SLOW);
+        assertThat(DiagnosticCapture.classifyEdt(false, null, busy))
+                .isEqualTo(DiagnosticCapture.EdtStatus.BLOCKED);
     }
 
     @Test
     void classifiesIdleAndExecutingActionThreads() {
-        assertThat(WaitDiagnosticSnapshot.classifyActionThread(thread(
+        assertThat(DiagnosticCapture.classifyActionThread(thread(
                         "jemmy-action-1", "java.util.concurrent.LinkedBlockingQueue", "take")))
                 .isEqualTo("jemmy-action-1 idle");
-        assertThat(WaitDiagnosticSnapshot.classifyActionThread(thread(
+        assertThat(DiagnosticCapture.classifyActionThread(thread(
                         "jemmy-action-1", "com.example.product.Editor", "save")))
                 .contains("jemmy-action-1 executing")
                 .contains("com.example.product.Editor.save");
@@ -121,18 +126,13 @@ class WaitDiagnosticSnapshotTest {
 
     @Test
     void retainsStacksOnlyForBusyThreads() {
-        WaitDiagnosticSnapshot.ThreadSnapshot busyEdt = thread(
+        DiagnosticCapture.ThreadSnapshot busyEdt = thread(
                 "AWT-EventQueue-0", "com.example.product.Editor", "paint");
-        WaitDiagnosticSnapshot.ThreadSnapshot busyAction = thread(
+        DiagnosticCapture.ThreadSnapshot busyAction = thread(
                 "jemmy-action-1", "com.example.product.Editor", "save");
-        WaitDiagnosticSnapshot snapshot = new WaitDiagnosticSnapshot(
+        DiagnosticCapture snapshot = new DiagnosticCapture(
                 null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                WaitDiagnosticSnapshot.EdtStatus.RESPONSIVE,
+                DiagnosticCapture.EdtStatus.RESPONSIVE,
                 4L,
                 busyEdt,
                 Collections.singletonList(busyAction),
@@ -149,9 +149,9 @@ class WaitDiagnosticSnapshotTest {
                 .contains("com.example.product.Editor.paint", "com.example.product.Editor.save");
     }
 
-    private static WaitDiagnosticSnapshot snapshot() {
-        WaitDiagnosticSnapshot.ComponentSnapshot focusedChild = component("JPanel", true, true);
-        WaitDiagnosticSnapshot.ComponentSnapshot window = new WaitDiagnosticSnapshot.ComponentSnapshot(
+    private static DiagnosticCapture snapshot() {
+        DiagnosticCapture.ComponentSnapshot focusedChild = component("JPanel", true, true);
+        DiagnosticCapture.ComponentSnapshot window = new DiagnosticCapture.ComponentSnapshot(
                 "JFrame",
                 SENTINEL,
                 SENTINEL,
@@ -169,18 +169,13 @@ class WaitDiagnosticSnapshotTest {
                 false,
                 true,
                 Collections.singletonList(focusedChild));
-        WaitDiagnosticSnapshot.ThreadSnapshot edt = thread(
+        DiagnosticCapture.ThreadSnapshot edt = thread(
                 "AWT-EventQueue-0", "java.awt.EventQueue", "getNextEvent");
-        WaitDiagnosticSnapshot.ThreadSnapshot action = thread(
+        DiagnosticCapture.ThreadSnapshot action = thread(
                 "jemmy-action-1", "java.util.concurrent.LinkedBlockingQueue", "take");
-        return new WaitDiagnosticSnapshot(
+        return new DiagnosticCapture(
                 "fixture [5]",
-                60_000L,
-                "Waiter_WaitingTime",
-                "showing JSpinner",
-                focusedChild,
-                window,
-                WaitDiagnosticSnapshot.EdtStatus.RESPONSIVE_IDLE,
+                DiagnosticCapture.EdtStatus.RESPONSIVE_IDLE,
                 4L,
                 edt,
                 Collections.singletonList(action),
@@ -192,9 +187,18 @@ class WaitDiagnosticSnapshotTest {
                 Collections.emptyList());
     }
 
-    private static WaitDiagnosticSnapshot.ComponentSnapshot component(
+    private static FailedWait waitFailure() {
+        return new FailedWait(
+                60_000L,
+                "Waiter_WaitingTime",
+                "showing JSpinner",
+                component("JPanel", true, true),
+                component("JFrame", true, false));
+    }
+
+    private static DiagnosticCapture.ComponentSnapshot component(
             String className, boolean showing, boolean focused) {
-        return new WaitDiagnosticSnapshot.ComponentSnapshot(
+        return new DiagnosticCapture.ComponentSnapshot(
                 className,
                 SENTINEL,
                 null,
@@ -211,12 +215,12 @@ class WaitDiagnosticSnapshotTest {
                 true,
                 focused,
                 false,
-                Collections.<WaitDiagnosticSnapshot.ComponentSnapshot>emptyList());
+                Collections.<DiagnosticCapture.ComponentSnapshot>emptyList());
     }
 
-    private static WaitDiagnosticSnapshot.ThreadSnapshot thread(
+    private static DiagnosticCapture.ThreadSnapshot thread(
             String name, String className, String methodName) {
-        return new WaitDiagnosticSnapshot.ThreadSnapshot(
+        return new DiagnosticCapture.ThreadSnapshot(
                 name,
                 Thread.State.WAITING,
                 new StackTraceElement[] {

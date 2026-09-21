@@ -24,11 +24,17 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -39,6 +45,7 @@ import org.netbeans.jemmy.WaitDiagnostics;
 @Isolated
 class DumpOnFailureTest {
     private static boolean nestedExecution;
+    private static final Pattern REPORT_NAME = Pattern.compile("Diagnostics report: (\\S+\\.md)");
 
     @Test
     void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce() throws Exception {
@@ -74,15 +81,35 @@ class DumpOnFailureTest {
                     .doesNotContain("EDT probe:");
         });
 
-        assertThat(capturedErr.toString(StandardCharsets.UTF_8.name()))
-                .contains("UI diagnostics for deliberatelyFails():")
-                .contains("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)")
+        String stderr = capturedErr.toString(StandardCharsets.UTF_8.name());
+        assertThat(stderr)
                 .contains("Diagnostics report:")
+                .contains(".md")
+                .doesNotContain("UI diagnostics for deliberatelyFails():")
+                .doesNotContain("Secondary EDT failure:")
                 .doesNotContain("Secondary EDT attachment:")
                 .doesNotContain("Hierarchy attachment:")
                 .doesNotContain("UI failure diagnostics for deliberatelyFails()")
                 .doesNotContain("Diagnostics: detail attached to failure")
                 .doesNotContain("java.lang.NullPointerException: secondary")
+                .doesNotContain("--- wait diagnostics ---");
+
+        Matcher reportName = REPORT_NAME.matcher(stderr);
+        assertThat(reportName.find()).isTrue();
+        Path outputDirectory = Paths.get(System.getProperty("junit.platform.reporting.output.dir"));
+        Path report;
+        try (java.util.stream.Stream<Path> files = Files.walk(outputDirectory)) {
+            report = files.filter(path -> path.getFileName().toString().equals(reportName.group(1)))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("diagnostics report not found"));
+        }
+        assertThat(new String(Files.readAllBytes(report), StandardCharsets.UTF_8))
+                .startsWith("# Jemmy Diagnostics Report")
+                .contains("## Failure", "## Attachments", "## UI diagnostics")
+                .contains("[Failure screenshot](failure.png)")
+                .contains("## Consumer context", "extra diagnostic context")
+                .contains("## Secondary EDT exception")
+                .doesNotContain("## UI diagnostics\n\n_(none)_")
                 .doesNotContain("--- wait diagnostics ---");
     }
 
@@ -117,7 +144,7 @@ class DumpOnFailureTest {
         assertThat(capturedErr.toString(StandardCharsets.UTF_8.name())).isEmpty();
     }
 
-    @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})
+    @ExtendWith({NestedExecutionOnly.class, ReportLinkOnFailure.class, DumpOnFailure.class})
     static class FailingFixture {
         @Test
         void deliberatelyFails() {
@@ -129,6 +156,16 @@ class DumpOnFailureTest {
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
             throw failure;
+        }
+    }
+
+    static class ReportLinkOnFailure implements TestExecutionExceptionHandler {
+        @Override
+        public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+            JemmyDiagnosticReportContributions.addLink(context, "Failure screenshot", "failure.png");
+            JemmyDiagnosticReportContributions.addSection(
+                    context, "Consumer context", "extra diagnostic context");
+            throw throwable;
         }
     }
 

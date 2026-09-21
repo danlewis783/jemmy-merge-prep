@@ -16,12 +16,17 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.netbeans.jemmy.WaitDiagnosticSnapshot;
+import org.netbeans.jemmy.JemmyFailureDiagnostics;
+import org.netbeans.jemmy.JemmyDiagnosticReport;
 import org.netbeans.jemmy.WaitDiagnostics;
 
 /** Captures one UI snapshot and publishes a consolidated diagnostic report. */
 public final class DumpOnFailure implements
         BeforeTestExecutionCallback, AfterTestExecutionCallback, TestExecutionExceptionHandler {
+    private static final ExtensionContext.Namespace NAMESPACE =
+            ExtensionContext.Namespace.create(DumpOnFailure.class);
+    private static final String FAILURE = "failure";
+
     @Override
     public void beforeTestExecution(ExtensionContext context) {
         if (WaitDiagnostics.isEnabled()) {
@@ -32,12 +37,17 @@ public final class DumpOnFailure implements
 
     @Override
     public void afterTestExecution(ExtensionContext context) {
+        Throwable failure = context.getStore(NAMESPACE).remove(FAILURE, Throwable.class);
+        if (failure != null) {
+            dump(context, failure);
+        }
         WaitDiagnostics.reportRecordedEdtFailure();
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable cause) throws Throwable {
-        dump(context, cause);
+        WaitDiagnostics.attachRecordedEdtFailure(cause);
+        context.getStore(NAMESPACE).put(FAILURE, cause);
         throw cause;
     }
 
@@ -47,56 +57,18 @@ public final class DumpOnFailure implements
             return;
         }
         WaitDiagnostics.attachRecordedEdtFailure(cause);
-        StringBuilder stderr = new StringBuilder();
-        stderr.append("UI diagnostics for ")
-                .append(context.getDisplayName())
-                .append(":\n");
-
-        String secondaryFailure = WaitDiagnostics.findSecondaryUiFailureSummary(cause);
-        if (secondaryFailure != null) {
-            stderr.append(secondaryFailure).append('\n');
+        try {
+            JemmyFailureDiagnostics.Builder captured =
+                    WaitDiagnostics.failureDiagnostics(context.getDisplayName(), cause);
+            JemmyDiagnosticReport.Builder report = JemmyDiagnosticReport.builder(captured.build());
+            JemmyDiagnosticReportContributions.applyTo(context, report);
+            String fileName = JUnitAttachmentUtils.publishMarkdown(
+                    context, report.render(), "jemmy-diagnostics");
+            WaitDiagnostics.referenceDiagnosticsReport(cause);
+            System.err.println("Diagnostics report: " + fileName);
+        } catch (Throwable attachmentFailure) {
+            System.err.println("Diagnostics report attachment failed: "
+                    + attachmentFailure.getClass().getSimpleName());
         }
-        String secondaryFailureDetail = WaitDiagnostics.findSecondaryUiFailureDetail(cause);
-
-        WaitDiagnosticSnapshot snapshot = WaitDiagnostics.findSnapshot(cause);
-        if (snapshot == null) {
-            try {
-                snapshot = WaitDiagnostics.captureSnapshot(context.getDisplayName());
-                WaitDiagnostics.attachTo(cause, snapshot);
-            } catch (Throwable diagnosticFailure) {
-                stderr.append("(diagnostic capture failed: ")
-                        .append(diagnosticFailure.getClass().getSimpleName())
-                        .append(")\n");
-            }
-        }
-
-        if (snapshot != null) {
-            snapshot = snapshot.withTestDisplayName(context.getDisplayName());
-            stderr.append(snapshot.renderSummary()).append('\n');
-            try {
-                String fileName = JUnitAttachmentUtils.publishText(
-                        context,
-                        renderDiagnostics(snapshot, secondaryFailureDetail),
-                        "jemmy-diagnostics");
-                WaitDiagnostics.referenceDiagnosticsReport(cause);
-                stderr.append("Diagnostics report: ").append(fileName).append('\n');
-            } catch (Throwable attachmentFailure) {
-                stderr.append("Diagnostics report attachment failed: ")
-                        .append(attachmentFailure.getClass().getSimpleName())
-                        .append('\n');
-            }
-        }
-        System.err.print(stderr);
-    }
-
-    private static String renderDiagnostics(
-            WaitDiagnosticSnapshot snapshot, String secondaryFailureDetail) {
-        StringBuilder report = new StringBuilder(snapshot.renderReport());
-        if (secondaryFailureDetail != null) {
-            report.append("\nSECONDARY EDT FAILURE\n")
-                    .append("---------------------\n")
-                    .append(secondaryFailureDetail.trim());
-        }
-        return report.toString();
     }
 }

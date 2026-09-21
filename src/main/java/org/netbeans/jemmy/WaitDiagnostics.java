@@ -71,7 +71,8 @@ public final class WaitDiagnostics {
 
     /** Captures and renders detail for compatibility with callers that need plain text. */
     public static String capture() {
-        return captureSnapshot(null, null, null, null, null).renderFailureDetail();
+        CapturedDiagnostics captured = captureDiagnostics(null, null, null, null, null);
+        return captured.snapshot.renderFailureDetail(captured.waitFailure);
     }
 
     /** Installs a test recorder after application setup; non-EDT failures still reach the handler. */
@@ -103,16 +104,16 @@ public final class WaitDiagnostics {
         }
     }
 
-    public static WaitDiagnosticSnapshot captureSnapshot(@Nullable String testDisplayName) {
-        return captureSnapshot(testDisplayName, null, null, null, null);
+    static DiagnosticCapture captureSnapshot(@Nullable String testDisplayName) {
+        return captureDiagnostics(testDisplayName, null, null, null, null).snapshot;
     }
 
-    static WaitDiagnosticSnapshot captureTimeout(
+    private static CapturedDiagnostics captureTimeout(
             long waitMillis,
             TimeoutKey timeoutKey,
             @Nullable String target,
             @Nullable Component diagnosticComponent) {
-        return captureSnapshot(null, waitMillis, timeoutKey.toString(), target, diagnosticComponent);
+        return captureDiagnostics(null, waitMillis, timeoutKey.toString(), target, diagnosticComponent);
     }
 
     static TimeoutExpiredException timeoutFailure(
@@ -129,11 +130,11 @@ public final class WaitDiagnostics {
         }
         TimeoutExpiredException failure;
         try {
-            WaitDiagnosticSnapshot snapshot = captureTimeout(waitMillis, timeoutKey, target, diagnosticComponent);
+            CapturedDiagnostics captured = captureTimeout(waitMillis, timeoutKey, target, diagnosticComponent);
             failure = cause == null
-                    ? new TimeoutExpiredException(snapshot.renderSummary())
-                    : new TimeoutExpiredException(snapshot.renderSummary(), cause);
-            attachTo(failure, snapshot);
+                    ? new TimeoutExpiredException(captured.snapshot.renderSummary(captured.waitFailure))
+                    : new TimeoutExpiredException(captured.snapshot.renderSummary(captured.waitFailure), cause);
+            attachTo(failure, captured);
         } catch (Throwable diagnosticsFailure) {
             failure = cause == null
                     ? new TimeoutExpiredException(fallbackMessage)
@@ -153,7 +154,7 @@ public final class WaitDiagnostics {
         }
     }
 
-    private static WaitDiagnosticSnapshot captureSnapshot(
+    private static CapturedDiagnostics captureDiagnostics(
             @Nullable String testDisplayName,
             @Nullable Long waitMillis,
             @Nullable String timeoutKey,
@@ -168,8 +169,9 @@ public final class WaitDiagnostics {
             warnings.add("thread capture failed: " + e);
         }
 
-        WaitDiagnosticSnapshot.ThreadSnapshot edt = findThread(threadStacks, "AWT-EventQueue");
-        List<WaitDiagnosticSnapshot.ThreadSnapshot> actionThreads = findThreads(threadStacks, "jemmy-action");
+        DiagnosticCapture.ThreadSnapshot edt = findThread(threadStacks, "AWT-EventQueue");
+        List<DiagnosticCapture.ThreadSnapshot> actionThreads =
+                findThreads(threadStacks, "jemmy-action");
         String mouse = mousePosition(warnings);
 
         AtomicReference<UiState> uiState = new AtomicReference<>();
@@ -206,15 +208,10 @@ public final class WaitDiagnostics {
             warnings.addAll(state.warnings);
         }
 
-        WaitDiagnosticSnapshot.EdtStatus edtStatus =
-                WaitDiagnosticSnapshot.classifyEdt(responded, responseMillis, edt);
-        return new WaitDiagnosticSnapshot(
+        DiagnosticCapture.EdtStatus edtStatus =
+                DiagnosticCapture.classifyEdt(responded, responseMillis, edt);
+        DiagnosticCapture snapshot = new DiagnosticCapture(
                 testDisplayName,
-                waitMillis,
-                timeoutKey,
-                target,
-                state.waitComponent,
-                state.waitComponentWindow,
                 edtStatus,
                 responseMillis,
                 edt,
@@ -225,6 +222,18 @@ public final class WaitDiagnostics {
                 state.windows,
                 mouse,
                 warnings);
+        FailedWait waitFailure = waitMillis == null
+                        && timeoutKey == null
+                        && target == null
+                        && diagnosticComponent == null
+                ? null
+                : new FailedWait(
+                        waitMillis,
+                        timeoutKey,
+                        target,
+                        state.waitComponent,
+                        state.waitComponentWindow);
+        return new CapturedDiagnostics(snapshot, waitFailure);
     }
 
     /** Attaches one structured, stackless diagnostic detail to the throwable graph. */
@@ -233,7 +242,7 @@ public final class WaitDiagnostics {
             return;
         }
         try {
-            attachTo(failure, captureSnapshot(null));
+            attachTo(failure, captureDiagnostics(null, null, null, null, null));
         } catch (Throwable ignored) {
             // Diagnostics are best effort and must never replace the original failure.
         }
@@ -254,28 +263,57 @@ public final class WaitDiagnostics {
             return;
         }
         try {
-            attachTo(failure, captureSnapshot(null, null, null, waitTarget, diagnosticComponent));
+            attachTo(failure, captureDiagnostics(null, null, null, waitTarget, diagnosticComponent));
         } catch (Throwable ignored) {
             // Diagnostics are best effort and must never replace the original failure.
         }
     }
 
-    public static void attachTo(Throwable failure, WaitDiagnosticSnapshot snapshot) {
+    static void attachTo(Throwable failure, DiagnosticCapture snapshot) {
+        attachTo(failure, new CapturedDiagnostics(snapshot, null));
+    }
+
+    private static void attachTo(Throwable failure, CapturedDiagnostics captured) {
         if (!isEnabled()) {
             return;
         }
         try {
             if (!isPresentIn(failure)) {
-                failure.addSuppressed(new Diagnostics(snapshot));
+                failure.addSuppressed(new Diagnostics(captured.snapshot, captured.waitFailure));
             }
         } catch (Throwable ignored) {
             // Diagnostics are best effort and must never replace the original failure.
         }
     }
 
-    public static @Nullable WaitDiagnosticSnapshot findSnapshot(Throwable failure) {
+    static @Nullable DiagnosticCapture findSnapshot(Throwable failure) {
         Diagnostics diagnostics = findDiagnostics(failure);
         return diagnostics == null ? null : diagnostics.snapshot;
+    }
+
+    /** Builds the composed diagnostic aggregate used by report renderers. */
+    public static JemmyFailureDiagnostics.Builder failureDiagnostics(
+            String testDisplayName, Throwable failure) {
+        Diagnostics diagnostics = findDiagnostics(failure);
+        if (diagnostics == null && isEnabled()) {
+            CapturedDiagnostics captured = captureDiagnostics(
+                    testDisplayName, null, null, null, null);
+            attachTo(failure, captured);
+            diagnostics = findDiagnostics(failure);
+        }
+        JemmyFailureDiagnostics.Builder result =
+                JemmyFailureDiagnostics.builder(testDisplayName, failure)
+                        .edtException(findCapturedEdtException(failure));
+        if (diagnostics != null) {
+            result.capturedState(diagnostics.snapshot.withTestDisplayName(testDisplayName))
+                    .failedWait(diagnostics.waitFailure);
+        }
+        return result;
+    }
+
+    public static @Nullable FailedWait findFailedWait(Throwable failure) {
+        Diagnostics diagnostics = findDiagnostics(failure);
+        return diagnostics == null ? null : diagnostics.waitFailure;
     }
 
     /** Replaces inline diagnostic detail with a short pointer once its report is published. */
@@ -315,22 +353,27 @@ public final class WaitDiagnostics {
             return;
         }
         try {
-            failure.addSuppressed(new SecondaryUiFailure(
-                    summarize(secondaryFailure), renderSecondaryFailure(secondaryFailure)));
+            failure.addSuppressed(new SecondaryUiFailure(new CapturedEdtException(
+                    summarize(secondaryFailure), renderSecondaryFailure(secondaryFailure))));
         } catch (Throwable ignored) {
             // The primary failure wins even when recording the secondary failure fails.
         }
     }
 
     public static @Nullable String findSecondaryUiFailureSummary(Throwable failure) {
-        SecondaryUiFailure marker = findSecondaryUiFailure(failure);
-        return marker == null ? null : marker.getMessage();
+        CapturedEdtException captured = findCapturedEdtException(failure);
+        return captured == null ? null : captured.summary();
     }
 
     /** Returns the full secondary EDT stack for a separate text attachment. */
     public static @Nullable String findSecondaryUiFailureDetail(Throwable failure) {
+        CapturedEdtException captured = findCapturedEdtException(failure);
+        return captured == null ? null : captured.detail();
+    }
+
+    public static @Nullable CapturedEdtException findCapturedEdtException(Throwable failure) {
         SecondaryUiFailure marker = findSecondaryUiFailure(failure);
-        return marker == null ? null : marker.detail;
+        return marker == null ? null : marker.captured;
     }
 
     private static @Nullable SecondaryUiFailure findSecondaryUiFailure(Throwable failure) {
@@ -371,7 +414,7 @@ public final class WaitDiagnostics {
         if (stack.length > 0) {
             StackTraceElement selected = stack[0];
             for (StackTraceElement frame : stack) {
-                if (WaitDiagnosticSnapshot.isApplicationFrame(frame)) {
+                if (DiagnosticCapture.isApplicationFrame(frame)) {
                     selected = frame;
                     break;
                 }
@@ -395,7 +438,7 @@ public final class WaitDiagnostics {
                 continue;
             }
             String message = current.getMessage();
-            if (message != null && message.contains(WaitDiagnosticSnapshot.HEADER)) {
+            if (message != null && message.contains(DiagnosticCapture.HEADER)) {
                 return true;
             }
             Throwable cause = current.getCause();
@@ -437,7 +480,7 @@ public final class WaitDiagnostics {
             Window activeWindow = manager.getActiveWindow();
             Window diagnosticWindow = containingWindow(diagnosticComponent);
             UiCapture capture = new UiCapture(abandonedProbe, probeStart, focusOwner, diagnosticComponent);
-            List<WaitDiagnosticSnapshot.ComponentSnapshot> windows = new ArrayList<>();
+            List<DiagnosticCapture.ComponentSnapshot> windows = new ArrayList<>();
 
             // Reserve state for the two most relevant components before any large window tree
             // can consume the shared budget. Their ancestors are filled in by window traversal.
@@ -449,7 +492,7 @@ public final class WaitDiagnostics {
                 if (capture.exhausted()) {
                     break;
                 }
-                WaitDiagnosticSnapshot.ComponentSnapshot snapshot =
+                DiagnosticCapture.ComponentSnapshot snapshot =
                         capture.safeComponent(window, 0, window.isShowing());
                 if (snapshot != null) {
                     windows.add(snapshot);
@@ -519,7 +562,7 @@ public final class WaitDiagnostics {
         static final int MAX_VALUE_LENGTH = 500;
         private final AtomicBoolean abandonedProbe;
         private final long probeStart;
-        private final IdentityHashMap<Component, WaitDiagnosticSnapshot.ComponentSnapshot> captured =
+        private final IdentityHashMap<Component, DiagnosticCapture.ComponentSnapshot> captured =
                 new IdentityHashMap<>();
         private final Set<Component> focusAncestry =
                 Collections.newSetFromMap(new IdentityHashMap<Component, Boolean>());
@@ -571,16 +614,16 @@ public final class WaitDiagnostics {
             }
         }
 
-        @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(@Nullable Component component, int depth) {
+        @Nullable DiagnosticCapture.ComponentSnapshot component(@Nullable Component component, int depth) {
             return component(component, depth, true, false);
         }
 
-        private @Nullable WaitDiagnosticSnapshot.ComponentSnapshot safeComponent(
+        private @Nullable DiagnosticCapture.ComponentSnapshot safeComponent(
                 @Nullable Component component, int depth, boolean traverseChildren) {
             return safeComponent(component, depth, traverseChildren, false);
         }
 
-        private @Nullable WaitDiagnosticSnapshot.ComponentSnapshot safeComponent(
+        private @Nullable DiagnosticCapture.ComponentSnapshot safeComponent(
                 @Nullable Component component,
                 int depth,
                 boolean traverseChildren,
@@ -593,12 +636,12 @@ public final class WaitDiagnostics {
             }
         }
 
-        @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(
+        @Nullable DiagnosticCapture.ComponentSnapshot component(
                 @Nullable Component component, int depth, boolean traverseChildren) {
             return component(component, depth, traverseChildren, false);
         }
 
-        private @Nullable WaitDiagnosticSnapshot.ComponentSnapshot component(
+        private @Nullable DiagnosticCapture.ComponentSnapshot component(
                 @Nullable Component component,
                 int depth,
                 boolean traverseChildren,
@@ -606,7 +649,7 @@ public final class WaitDiagnostics {
             if (component == null) {
                 return null;
             }
-            WaitDiagnosticSnapshot.ComponentSnapshot existing = captured.get(component);
+            DiagnosticCapture.ComponentSnapshot existing = captured.get(component);
             if (existing != null) {
                 return existing;
             }
@@ -697,7 +740,7 @@ public final class WaitDiagnostics {
                 }
             }
 
-            List<WaitDiagnosticSnapshot.ComponentSnapshot> children = new ArrayList<>();
+            List<DiagnosticCapture.ComponentSnapshot> children = new ArrayList<>();
             if (traverseChildren && component instanceof java.awt.Container) {
                 java.awt.Container container = (java.awt.Container) component;
                 int diagnosticChild = priorityChild(container, diagnosticAncestry);
@@ -736,7 +779,7 @@ public final class WaitDiagnostics {
                     }
                 }
             }
-            WaitDiagnosticSnapshot.ComponentSnapshot result = new WaitDiagnosticSnapshot.ComponentSnapshot(
+            DiagnosticCapture.ComponentSnapshot result = new DiagnosticCapture.ComponentSnapshot(
                     component.getClass().getSimpleName(), name, title, text, tooltip,
                     accessibleName, accessibleDescription, selectedText, selection, details,
                     "[" + component.getX() + ',' + component.getY() + ' '
@@ -785,14 +828,14 @@ public final class WaitDiagnostics {
         }
 
         private void addChild(
-                List<WaitDiagnosticSnapshot.ComponentSnapshot> children,
+                List<DiagnosticCapture.ComponentSnapshot> children,
                 Component child,
                 int parentDepth,
                 boolean relevantOnly) {
             if (exhausted()) {
                 return;
             }
-            WaitDiagnosticSnapshot.ComponentSnapshot snapshot =
+            DiagnosticCapture.ComponentSnapshot snapshot =
                     safeComponent(child, parentDepth + 1, true, relevantOnly);
             if (snapshot != null) {
                 children.add(snapshot);
@@ -906,21 +949,22 @@ public final class WaitDiagnostics {
         }
     }
 
-    private static @Nullable WaitDiagnosticSnapshot.ThreadSnapshot findThread(
+    private static @Nullable DiagnosticCapture.ThreadSnapshot findThread(
             Map<Thread, StackTraceElement[]> stacks, String prefix) {
-        List<WaitDiagnosticSnapshot.ThreadSnapshot> matches = findThreads(stacks, prefix);
+        List<DiagnosticCapture.ThreadSnapshot> matches = findThreads(stacks, prefix);
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private static List<WaitDiagnosticSnapshot.ThreadSnapshot> findThreads(
+    private static List<DiagnosticCapture.ThreadSnapshot> findThreads(
             Map<Thread, StackTraceElement[]> stacks, String prefix) {
         List<Map.Entry<Thread, StackTraceElement[]>> entries = new ArrayList<>(stacks.entrySet());
         Collections.sort(entries, Comparator.comparing(entry -> entry.getKey().getName()));
-        List<WaitDiagnosticSnapshot.ThreadSnapshot> result = new ArrayList<>();
+        List<DiagnosticCapture.ThreadSnapshot> result = new ArrayList<>();
         for (Map.Entry<Thread, StackTraceElement[]> entry : entries) {
             Thread thread = entry.getKey();
             if (thread.getName().startsWith(prefix)) {
-                result.add(new WaitDiagnosticSnapshot.ThreadSnapshot(thread.getName(), thread.getState(), entry.getValue()));
+                result.add(new DiagnosticCapture.ThreadSnapshot(
+                        thread.getName(), thread.getState(), entry.getValue()));
             }
         }
         return result;
@@ -929,12 +973,14 @@ public final class WaitDiagnostics {
     /** Rides structured diagnostics into failure-detail views; not an error in its own right. */
     private static final class Diagnostics extends Throwable {
         private static final long serialVersionUID = 1L;
-        private final WaitDiagnosticSnapshot snapshot;
+        private final DiagnosticCapture snapshot;
+        private final @Nullable FailedWait waitFailure;
         private volatile boolean reportPublished;
 
-        Diagnostics(WaitDiagnosticSnapshot snapshot) {
-            super(snapshot.renderFailureDetail(), null, false, false);
+        Diagnostics(DiagnosticCapture snapshot, @Nullable FailedWait waitFailure) {
+            super(snapshot.renderFailureDetail(waitFailure), null, false, false);
             this.snapshot = snapshot;
+            this.waitFailure = waitFailure;
         }
 
         void referenceReport() {
@@ -949,13 +995,24 @@ public final class WaitDiagnostics {
         }
     }
 
+    private static final class CapturedDiagnostics {
+        private final DiagnosticCapture snapshot;
+        private final @Nullable FailedWait waitFailure;
+
+        CapturedDiagnostics(
+                DiagnosticCapture snapshot, @Nullable FailedWait waitFailure) {
+            this.snapshot = snapshot;
+            this.waitFailure = waitFailure;
+        }
+    }
+
     private static final class SecondaryUiFailure extends Throwable {
         private static final long serialVersionUID = 1L;
-        private final String detail;
+        private final CapturedEdtException captured;
 
-        SecondaryUiFailure(String summary, String detail) {
-            super(summary, null, false, false);
-            this.detail = detail;
+        SecondaryUiFailure(CapturedEdtException captured) {
+            super(captured.summary(), null, false, false);
+            this.captured = captured;
         }
     }
 
@@ -1005,21 +1062,21 @@ public final class WaitDiagnostics {
     }
 
     private static final class UiState {
-        private final @Nullable WaitDiagnosticSnapshot.ComponentSnapshot focusOwner;
-        private final @Nullable WaitDiagnosticSnapshot.ComponentSnapshot focusedWindow;
-        private final @Nullable WaitDiagnosticSnapshot.ComponentSnapshot activeWindow;
-        private final @Nullable WaitDiagnosticSnapshot.ComponentSnapshot waitComponent;
-        private final @Nullable WaitDiagnosticSnapshot.ComponentSnapshot waitComponentWindow;
-        private final List<WaitDiagnosticSnapshot.ComponentSnapshot> windows;
+        private final @Nullable DiagnosticCapture.ComponentSnapshot focusOwner;
+        private final @Nullable DiagnosticCapture.ComponentSnapshot focusedWindow;
+        private final @Nullable DiagnosticCapture.ComponentSnapshot activeWindow;
+        private final @Nullable DiagnosticCapture.ComponentSnapshot waitComponent;
+        private final @Nullable DiagnosticCapture.ComponentSnapshot waitComponentWindow;
+        private final List<DiagnosticCapture.ComponentSnapshot> windows;
         private final List<String> warnings;
 
         UiState(
-                @Nullable WaitDiagnosticSnapshot.ComponentSnapshot focusOwner,
-                @Nullable WaitDiagnosticSnapshot.ComponentSnapshot focusedWindow,
-                @Nullable WaitDiagnosticSnapshot.ComponentSnapshot activeWindow,
-                @Nullable WaitDiagnosticSnapshot.ComponentSnapshot waitComponent,
-                @Nullable WaitDiagnosticSnapshot.ComponentSnapshot waitComponentWindow,
-                List<WaitDiagnosticSnapshot.ComponentSnapshot> windows,
+                @Nullable DiagnosticCapture.ComponentSnapshot focusOwner,
+                @Nullable DiagnosticCapture.ComponentSnapshot focusedWindow,
+                @Nullable DiagnosticCapture.ComponentSnapshot activeWindow,
+                @Nullable DiagnosticCapture.ComponentSnapshot waitComponent,
+                @Nullable DiagnosticCapture.ComponentSnapshot waitComponentWindow,
+                List<DiagnosticCapture.ComponentSnapshot> windows,
                 List<String> warnings) {
             this.focusOwner = focusOwner;
             this.focusedWindow = focusedWindow;
