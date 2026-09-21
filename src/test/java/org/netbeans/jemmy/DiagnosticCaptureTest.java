@@ -88,6 +88,7 @@ class DiagnosticCaptureTest {
         assertThat(JemmyDiagnosticReport.render(captured))
                 .startsWith("# Jemmy Diagnostics Report")
                 .contains("## Failure", "## UI diagnostics")
+                .contains("### Stack trace\n\n~~~text\njava.lang.AssertionError: failure\n  at ")
                 .contains("### Wait condition", "### UI state")
                 .contains("### Focused component ancestry", "### Component hierarchy")
                 .contains("Target:\n  showing JSpinner")

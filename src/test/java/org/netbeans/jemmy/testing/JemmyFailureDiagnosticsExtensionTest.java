@@ -19,6 +19,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -26,11 +27,16 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,9 +51,10 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.netbeans.jemmy.JemmyDiagnostics;
 
 @Isolated
-class DumpOnFailureTest {
+class JemmyFailureDiagnosticsExtensionTest {
     private static boolean nestedExecution;
     private static final Pattern REPORT_NAME = Pattern.compile("Diagnostics report: (\\S+\\.md)");
+    private static final Pattern ARCHIVE_NAME = Pattern.compile("Attachments archive: (\\S+\\.zip)");
 
     @Test
     void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce(@TempDir Path outputDirectory) throws Exception {
@@ -73,7 +80,7 @@ class DumpOnFailureTest {
         assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure -> {
             Throwable exception = failure.getException();
             assertThat(exception).isInstanceOf(AssertionError.class).hasMessage("deliberate failure");
-            assertThat(exception.getSuppressed()).hasSize(2);
+            assertThat(exception.getSuppressed()).hasSize(3);
 
             StringWriter rendered = new StringWriter();
             exception.printStackTrace(new PrintWriter(rendered));
@@ -87,6 +94,7 @@ class DumpOnFailureTest {
         String stderr = capturedErr.toString(StandardCharsets.UTF_8.name());
         assertThat(stderr)
                 .contains("Diagnostics report:")
+                .contains("Attachments archive:")
                 .contains(".md")
                 .doesNotContain("UI diagnostics for deliberatelyFails():")
                 .doesNotContain("Secondary EDT failure:")
@@ -107,12 +115,26 @@ class DumpOnFailureTest {
         }
         assertThat(new String(Files.readAllBytes(report), StandardCharsets.UTF_8))
                 .startsWith("# Jemmy Diagnostics Report")
+                .contains("**Test:** `org.netbeans.jemmy.testing."
+                        + "JemmyFailureDiagnosticsExtensionTest.FailingFixture.deliberatelyFails()`")
                 .contains("## Failure", "## Attachments", "## UI diagnostics")
                 .contains("[Failure screenshot](failure.png)")
                 .contains("## Consumer context", "extra diagnostic context")
-                .contains("## Secondary EDT exception")
+                .contains("### Secondary EDT exception 1", "java.lang.NullPointerException: secondary")
+                .contains("### Secondary EDT exception 2", "java.lang.IllegalStateException: later secondary")
                 .doesNotContain("## UI diagnostics\n\n_(none)_")
                 .doesNotContain("--- wait diagnostics ---");
+
+        Matcher archiveName = ARCHIVE_NAME.matcher(stderr);
+        assertThat(archiveName.find()).isTrue();
+        Path archive;
+        try (java.util.stream.Stream<Path> files = Files.walk(outputDirectory)) {
+            archive = files.filter(path -> path.getFileName().toString().equals(archiveName.group(1)))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("attachments archive not found"));
+        }
+        assertThat(zipEntryNames(archive))
+                .containsExactlyInAnyOrder("comparison.png", reportName.group(1));
     }
 
     @Test
@@ -146,6 +168,17 @@ class DumpOnFailureTest {
         assertThat(capturedErr.toString(StandardCharsets.UTF_8.name())).isEmpty();
     }
 
+    private static List<String> zipEntryNames(Path archive) throws Exception {
+        List<String> entries = new ArrayList<>();
+        try (ZipInputStream zip = new ZipInputStream(Files.newInputStream(archive))) {
+            ZipEntry entry;
+            while ((entry = zip.getNextEntry()) != null) {
+                entries.add(entry.getName());
+            }
+        }
+        return entries;
+    }
+
     @Test
     void reportsEdtFailuresRaisedDuringUserTeardown() {
         Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
@@ -174,10 +207,15 @@ class DumpOnFailureTest {
                 .hasMessage("teardown EDT failure");
     }
 
-    @ExtendWith({NestedExecutionOnly.class, ReportLinkOnFailure.class, DumpOnFailure.class})
+    @NoSaveScreenshotOnFailure
+    @ExtendWith({NestedExecutionOnly.class, ReportLinkOnFailure.class, JemmyFailureDiagnosticsExtension.class})
     static class FailingFixture {
         @Test
-        void deliberatelyFails() {
+        void deliberatelyFails(TestReporter reporter) {
+            if (JemmyDiagnostics.isEnabled()) {
+                JUnitAttachmentUtils.publishPng(
+                        reporter, new BufferedImage(2, 3, BufferedImage.TYPE_INT_ARGB), "comparison.png");
+            }
             AssertionError failure = new AssertionError("deliberate failure");
             NullPointerException secondary = new NullPointerException("secondary");
             secondary.setStackTrace(new StackTraceElement[] {
@@ -185,11 +223,14 @@ class DumpOnFailureTest {
             });
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
+            Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+                    new Thread("AWT-EventQueue-0"),
+                    new IllegalStateException("later secondary"));
             throw failure;
         }
     }
 
-    @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})
+    @ExtendWith({NestedExecutionOnly.class, JemmyFailureDiagnosticsExtension.class})
     static class TeardownEdtFailureFixture {
         @Test
         void succeeds() {

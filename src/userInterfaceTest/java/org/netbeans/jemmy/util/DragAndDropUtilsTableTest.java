@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.FunctionRepeater;
-import org.netbeans.jemmy.testing.DumpOnFailure;
+import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 
@@ -44,7 +44,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
  * Exercises the {@link DragAndDropUtils#dragAndDropTableColumn} overloads by dragging header
  * columns and asserting the resulting column order in the column model.
  */
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class DragAndDropUtilsTableTest {

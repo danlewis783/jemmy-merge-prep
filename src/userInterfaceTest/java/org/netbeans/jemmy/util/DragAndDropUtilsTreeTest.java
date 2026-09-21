@@ -26,7 +26,7 @@ import org.netbeans.jemmy.FunctionRepeater;
 import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JTreeOperator;
-import org.netbeans.jemmy.testing.DumpOnFailure;
+import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 
@@ -63,7 +63,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
  */
 // 60s rather than 10s: robot mode pays the one-time robot-coordinate calibration on scaled
 // displays, and the drag sequence itself is a dozen real mouse gestures with queue waits
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class DragAndDropUtilsTreeTest {

@@ -39,7 +39,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 
 // formerly scenario test jemmy_048
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class LateComponentDiscoveryTest {

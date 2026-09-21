@@ -52,7 +52,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_021
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class EditorScrollingInTabsTest {

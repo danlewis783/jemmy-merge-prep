@@ -53,7 +53,7 @@ import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_001
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class DialogComboListWorkflowTest {

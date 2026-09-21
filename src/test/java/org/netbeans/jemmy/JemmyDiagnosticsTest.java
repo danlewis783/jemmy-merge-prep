@@ -17,8 +17,10 @@
 package org.netbeans.jemmy;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -398,23 +400,31 @@ class JemmyDiagnosticsTest {
     }
 
     @Test
-    void promotesASecondaryUiFailureAndRetainsItsFullStackForAnAttachment() {
+    void promotesDistinctSecondaryUiFailuresAndRetainsTheirFullStacks() {
         Throwable primary = new AssertionError("primary");
         Throwable secondary = new NullPointerException("secondary");
         secondary.setStackTrace(new StackTraceElement[] {
             new StackTraceElement("java.awt.EventDispatchThread", "run", "EventDispatchThread.java", 90),
             new StackTraceElement("example.ui.SampleView", "refresh", "SampleView.java", 42)
         });
+        Throwable laterSecondary = new IllegalStateException("later secondary");
+        laterSecondary.setStackTrace(new StackTraceElement[0]);
 
         JemmyDiagnostics.attachSecondaryUiFailure(primary, secondary);
         JemmyDiagnostics.attachSecondaryUiFailure(primary, secondary);
+        JemmyDiagnostics.attachSecondaryUiFailure(primary, laterSecondary);
 
         assertThat(JemmyDiagnostics.findSecondaryUiFailureSummary(primary))
                 .isEqualTo("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)");
         assertThat(JemmyDiagnostics.findSecondaryUiFailureDetail(primary))
                 .contains("java.lang.NullPointerException: secondary")
                 .contains("at example.ui.SampleView.refresh(SampleView.java:42)");
-        assertThat(primary.getSuppressed()).singleElement().satisfies(marker ->
+        assertThat(JemmyDiagnostics.findCapturedEdtExceptions(primary))
+                .extracting(CapturedEdtException::detail)
+                .containsExactly(
+                        JemmyDiagnostics.findSecondaryUiFailureDetail(primary),
+                        renderStackTrace(laterSecondary));
+        assertThat(primary.getSuppressed()).hasSize(2).allSatisfy(marker ->
                 assertThat(marker.getStackTrace()).isEmpty());
     }
 
@@ -423,6 +433,11 @@ class JemmyDiagnosticsTest {
         Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
         AtomicReference<Throwable> delegated = new AtomicReference<>();
         NullPointerException secondary = new NullPointerException("secondary");
+        secondary.setStackTrace(new StackTraceElement[] {
+            new StackTraceElement("example.ui.SampleView", "refresh", "SampleView.java", 42)
+        });
+        IllegalStateException laterSecondary = new IllegalStateException("later secondary");
+        laterSecondary.setStackTrace(new StackTraceElement[0]);
         AssertionError primary = new AssertionError("primary");
         try {
             Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.set(failure));
@@ -431,11 +446,19 @@ class JemmyDiagnosticsTest {
 
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
+            Thread.getDefaultUncaughtExceptionHandler()
+                    .uncaughtException(new Thread("AWT-EventQueue-0"), laterSecondary);
             JemmyDiagnostics.attachRecordedEdtFailure(primary);
 
             assertThat(delegated.get()).isNull();
             assertThat(JemmyDiagnostics.findSecondaryUiFailureSummary(primary))
                     .startsWith("Secondary EDT failure: NullPointerException");
+            assertThat(JemmyDiagnostics.findCapturedEdtExceptions(primary))
+                    .extracting(CapturedEdtException::summary)
+                    .containsExactly(
+                            "Secondary EDT failure: NullPointerException at "
+                                    + "example.ui.SampleView.refresh(SampleView.java:42)",
+                            "Secondary EDT failure: IllegalStateException");
 
             RuntimeException workerFailure = new RuntimeException("worker failed");
             Thread.getDefaultUncaughtExceptionHandler()
@@ -450,22 +473,31 @@ class JemmyDiagnosticsTest {
     @Test
     void reportsAnEdtFailureThatWasNotAssociatedWithATestFailure() {
         Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
-        AtomicReference<Throwable> delegated = new AtomicReference<>();
+        List<Throwable> delegated = new ArrayList<>();
         NullPointerException secondary = new NullPointerException("secondary");
+        IllegalStateException laterSecondary = new IllegalStateException("later secondary");
         try {
-            Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.set(failure));
+            Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.add(failure));
             JemmyDiagnostics.installEdtFailureRecorder();
             JemmyDiagnostics.clearRecordedEdtFailure();
 
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
+            Thread.getDefaultUncaughtExceptionHandler()
+                    .uncaughtException(new Thread("AWT-EventQueue-0"), laterSecondary);
             JemmyDiagnostics.reportRecordedEdtFailure();
 
-            assertThat(delegated.get()).isSameAs(secondary);
+            assertThat(delegated).containsExactly(secondary, laterSecondary);
         } finally {
             JemmyDiagnostics.clearRecordedEdtFailure();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
+    }
+
+    private static String renderStackTrace(Throwable failure) {
+        java.io.StringWriter text = new java.io.StringWriter();
+        failure.printStackTrace(new java.io.PrintWriter(text));
+        return text.toString();
     }
 
 }

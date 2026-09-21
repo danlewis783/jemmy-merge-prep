@@ -51,7 +51,7 @@ import static org.netbeans.jemmy.util.StringComparators.caseInsensitiveSubstring
 import static org.netbeans.jemmy.util.StringComparators.strict;
 
 // formerly scenario test jemmy_002
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=15, unit=TimeUnit.SECONDS)
 class MenuNavigationTest {

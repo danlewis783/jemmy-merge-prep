@@ -32,8 +32,10 @@ import java.util.Enumeration;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -61,7 +63,7 @@ public final class JemmyDiagnostics {
     public static final String ENABLED_PROPERTY = "jemmy.diagnostics.enabled";
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
     private static final int MAX_SECONDARY_FAILURE_DETAIL_LENGTH = 100_000;
-    private static final AtomicReference<RecordedEdtFailure> recordedEdtFailure = new AtomicReference<>();
+    private static final Queue<RecordedEdtFailure> recordedEdtFailures = new ConcurrentLinkedQueue<>();
 
     private JemmyDiagnostics() {}
 
@@ -95,21 +97,21 @@ public final class JemmyDiagnostics {
 
     /** Clears any secondary EDT failure retained for a preceding test. */
     public static void clearRecordedEdtFailure() {
-        recordedEdtFailure.set(null);
+        recordedEdtFailures.clear();
     }
 
-    /** Attaches and consumes the latest EDT failure recorded during the current test. */
+    /** Attaches and consumes all EDT failures recorded during the current test. */
     public static void attachRecordedEdtFailure(Throwable primaryFailure) {
-        RecordedEdtFailure recorded = recordedEdtFailure.getAndSet(null);
-        if (recorded != null) {
+        RecordedEdtFailure recorded;
+        while ((recorded = recordedEdtFailures.poll()) != null) {
             attachSecondaryUiFailure(primaryFailure, recorded.failure);
         }
     }
 
-    /** Sends an unassociated EDT failure to the application handler instead of silently losing it. */
+    /** Sends all unassociated EDT failures to the application handler instead of silently losing them. */
     public static void reportRecordedEdtFailure() {
-        RecordedEdtFailure recorded = recordedEdtFailure.getAndSet(null);
-        if (recorded != null) {
+        RecordedEdtFailure recorded;
+        while ((recorded = recordedEdtFailures.poll()) != null) {
             recorded.report();
         }
     }
@@ -313,7 +315,7 @@ public final class JemmyDiagnostics {
         }
         JemmyFailureDiagnostics.Builder result =
                 JemmyFailureDiagnostics.builder(testDisplayName, failure)
-                        .edtException(findCapturedEdtException(failure));
+                        .edtExceptions(findCapturedEdtExceptions(failure));
         if (diagnostics != null) {
             result.capturedState(diagnostics.snapshot.withTestDisplayName(testDisplayName))
                     .failedWait(diagnostics.waitFailure);
@@ -359,11 +361,11 @@ public final class JemmyDiagnostics {
     public static void attachSecondaryUiFailure(Throwable failure, Throwable secondaryFailure) {
         if (!isEnabled()
                 || failure == secondaryFailure
-                || findSecondaryUiFailureSummary(failure) != null) {
+                || containsSecondaryUiFailure(failure, secondaryFailure)) {
             return;
         }
         try {
-            failure.addSuppressed(new SecondaryUiFailure(new CapturedEdtException(
+            failure.addSuppressed(new SecondaryUiFailure(secondaryFailure, new CapturedEdtException(
                     summarize(secondaryFailure), renderSecondaryFailure(secondaryFailure))));
         } catch (Throwable ignored) {
             // The primary failure wins even when recording the secondary failure fails.
@@ -382,11 +384,12 @@ public final class JemmyDiagnostics {
     }
 
     public static @Nullable CapturedEdtException findCapturedEdtException(Throwable failure) {
-        SecondaryUiFailure marker = findSecondaryUiFailure(failure);
-        return marker == null ? null : marker.captured;
+        List<CapturedEdtException> captured = findCapturedEdtExceptions(failure);
+        return captured.isEmpty() ? null : captured.get(0);
     }
 
-    private static @Nullable SecondaryUiFailure findSecondaryUiFailure(Throwable failure) {
+    public static List<CapturedEdtException> findCapturedEdtExceptions(Throwable failure) {
+        List<CapturedEdtException> captured = new ArrayList<>();
         Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
         ArrayDeque<Throwable> pending = new ArrayDeque<>();
         pending.add(failure);
@@ -396,7 +399,7 @@ public final class JemmyDiagnostics {
                 continue;
             }
             if (current instanceof SecondaryUiFailure) {
-                return (SecondaryUiFailure) current;
+                captured.add(((SecondaryUiFailure) current).captured);
             }
             Throwable cause = current.getCause();
             if (cause != null) {
@@ -404,7 +407,29 @@ public final class JemmyDiagnostics {
             }
             Collections.addAll(pending, current.getSuppressed());
         }
-        return null;
+        return Collections.unmodifiableList(captured);
+    }
+
+    private static boolean containsSecondaryUiFailure(Throwable failure, Throwable secondaryFailure) {
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
+        ArrayDeque<Throwable> pending = new ArrayDeque<>();
+        pending.add(failure);
+        while (!pending.isEmpty()) {
+            Throwable current = pending.removeFirst();
+            if (!visited.add(current)) {
+                continue;
+            }
+            if (current instanceof SecondaryUiFailure
+                    && ((SecondaryUiFailure) current).source == secondaryFailure) {
+                return true;
+            }
+            Throwable cause = current.getCause();
+            if (cause != null) {
+                pending.addLast(cause);
+            }
+            Collections.addAll(pending, current.getSuppressed());
+        }
+        return false;
     }
 
     private static String renderSecondaryFailure(Throwable failure) {
@@ -1025,10 +1050,12 @@ public final class JemmyDiagnostics {
 
     private static final class SecondaryUiFailure extends Throwable {
         private static final long serialVersionUID = 1L;
+        private final transient Throwable source;
         private final CapturedEdtException captured;
 
-        SecondaryUiFailure(CapturedEdtException captured) {
+        SecondaryUiFailure(Throwable source, CapturedEdtException captured) {
             super(captured.summary(), null, false, false);
+            this.source = source;
             this.captured = captured;
         }
     }
@@ -1043,7 +1070,7 @@ public final class JemmyDiagnostics {
         @Override
         public void uncaughtException(Thread thread, Throwable failure) {
             if (thread.getName().startsWith("AWT-EventQueue")) {
-                recordedEdtFailure.set(new RecordedEdtFailure(thread, failure, delegate));
+                recordedEdtFailures.add(new RecordedEdtFailure(thread, failure, delegate));
                 return;
             } else if (delegate != null) {
                 delegate.uncaughtException(thread, failure);

@@ -21,7 +21,7 @@ public final class JemmyFailureDiagnostics {
     private final List<JemmyActionThreadState> actionThreadStates;
     private final @Nullable MouseState mouseState;
     private final @Nullable FailedWait failedWait;
-    private final @Nullable CapturedEdtException edtException;
+    private final List<CapturedEdtException> edtExceptions;
     private final List<DiagnosticCaptureIssue> captureIssues;
 
     private JemmyFailureDiagnostics(Builder builder) {
@@ -32,7 +32,7 @@ public final class JemmyFailureDiagnostics {
         actionThreadStates = Collections.unmodifiableList(new ArrayList<>(builder.actionThreadStates));
         mouseState = builder.mouseState;
         failedWait = builder.failedWait;
-        edtException = builder.edtException;
+        edtExceptions = Collections.unmodifiableList(new ArrayList<>(builder.edtExceptions));
         captureIssues = Collections.unmodifiableList(new ArrayList<>(builder.captureIssues));
     }
 
@@ -68,8 +68,8 @@ public final class JemmyFailureDiagnostics {
         return failedWait;
     }
 
-    @Nullable CapturedEdtException edtException() {
-        return edtException;
+    List<CapturedEdtException> edtExceptions() {
+        return edtExceptions;
     }
 
     List<DiagnosticCaptureIssue> captureIssues() {
@@ -84,7 +84,7 @@ public final class JemmyFailureDiagnostics {
         private final List<JemmyActionThreadState> actionThreadStates = new ArrayList<>();
         private @Nullable MouseState mouseState;
         private @Nullable FailedWait failedWait;
-        private @Nullable CapturedEdtException edtException;
+        private final List<CapturedEdtException> edtExceptions = new ArrayList<>();
         private final List<DiagnosticCaptureIssue> captureIssues = new ArrayList<>();
 
         private Builder(String testDisplayName, Throwable primaryFailure) {
@@ -117,7 +117,16 @@ public final class JemmyFailureDiagnostics {
         }
 
         public Builder edtException(@Nullable CapturedEdtException value) {
-            edtException = value;
+            edtExceptions.clear();
+            if (value != null) {
+                edtExceptions.add(value);
+            }
+            return this;
+        }
+
+        Builder edtExceptions(List<CapturedEdtException> values) {
+            edtExceptions.clear();
+            edtExceptions.addAll(values);
             return this;
         }
 

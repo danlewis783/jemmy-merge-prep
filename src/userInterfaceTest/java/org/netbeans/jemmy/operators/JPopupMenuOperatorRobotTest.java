@@ -28,7 +28,7 @@ import org.netbeans.jemmy.JemmyContext;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
-import org.netbeans.jemmy.testing.DumpOnFailure;
+import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // 20s rather than 10s: on scaled displays the first robot move pays the one-time
 // robot-coordinate calibration (a few seconds of probing) inside this budget
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 final class JPopupMenuOperatorRobotTest {

@@ -46,9 +46,15 @@ public final class JemmyDiagnosticReport {
             appendUiDiagnostics(out, captured);
         }
 
-        CapturedEdtException edtException = captured.edtException();
-        if (edtException != null && !edtException.detail().trim().isEmpty()) {
-            appendCodeSection(out, "Secondary EDT exception", edtException.detail().trim());
+        List<CapturedEdtException> edtExceptions = captured.edtExceptions();
+        for (int index = 0; index < edtExceptions.size(); index++) {
+            CapturedEdtException edtException = edtExceptions.get(index);
+            if (!edtException.detail().trim().isEmpty()) {
+                String heading = edtExceptions.size() == 1
+                        ? "Secondary EDT exception"
+                        : "Secondary EDT exception " + (index + 1);
+                appendCodeSection(out, heading, edtException.detail().trim());
+            }
         }
         for (Section section : sections) {
             out.append("## ").append(section.heading).append("\n\n")
@@ -179,7 +185,7 @@ public final class JemmyDiagnosticReport {
     private static String cleanStackTrace(Throwable failure) {
         StringBuilder result = new StringBuilder();
         Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
-        appendStack(result, failure, "", false, visited);
+        appendStack(result, failure, "", true, visited);
         int length = result.length();
         if (length > 0 && result.charAt(length - 1) == '\n') {
             result.setLength(length - 1);
@@ -201,7 +207,7 @@ public final class JemmyDiagnosticReport {
             out.append(indent).append(describeFailure(failure)).append('\n');
         }
         for (StackTraceElement frame : failure.getStackTrace()) {
-            out.append(indent).append("at ").append(frame).append('\n');
+            out.append(indent).append("  at ").append(frame).append('\n');
         }
         for (Throwable suppressed : failure.getSuppressed()) {
             if (!isDiagnosticMarker(suppressed)) {

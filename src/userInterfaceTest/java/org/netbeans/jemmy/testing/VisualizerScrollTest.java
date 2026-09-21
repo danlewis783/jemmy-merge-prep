@@ -39,7 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 
 // formerly scenario test jemmy_028
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class VisualizerScrollTest {

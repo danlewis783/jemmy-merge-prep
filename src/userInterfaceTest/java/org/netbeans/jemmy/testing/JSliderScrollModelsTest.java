@@ -35,7 +35,7 @@ import org.netbeans.jemmy.operators.JSliderOperator;
 import org.netbeans.jemmy.util.StringComparators;
 
 // formerly scenario test jemmy_025
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class JSliderScrollModelsTest {

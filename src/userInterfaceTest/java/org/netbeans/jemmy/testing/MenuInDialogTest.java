@@ -40,7 +40,7 @@ import org.netbeans.jemmy.util.StringComparators;
 import javax.swing.*;
 
 // formerly scenario test jemmy_042
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
 class MenuInDialogTest {

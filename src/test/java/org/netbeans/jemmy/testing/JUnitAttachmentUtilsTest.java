@@ -32,21 +32,23 @@ class JUnitAttachmentUtilsTest {
     }
 
     @Test
-    void createsSafeUniqueNamesForParameterizedInvocations() {
+    void createsSafeCompactUniqueNamesForParameterizedInvocations() {
         String first = JUnitAttachmentUtils.uniqueFileName(
                 "Fixture/../../", "case 5: C:\\secret?<value>", "[engine:test]/5", "jemmy diagnostics", "txt");
         String second = JUnitAttachmentUtils.uniqueFileName(
                 "Fixture/../../", "case 5: C:\\secret?<value>", "[engine:test]/5", "jemmy diagnostics", "txt");
 
         assertThat(first)
-                .startsWith("Fixture-..-..-case-5-C-secret-value-")
+                .startsWith("Fixture-..-..-")
                 .endsWith("-jemmy-diagnostics.txt")
+                .hasSizeLessThan(80)
                 .doesNotContain("/")
                 .doesNotContain("\\")
                 .doesNotContain(":")
                 .doesNotContain("?")
                 .doesNotContain("<")
-                .doesNotContain(">");
+                .doesNotContain(">")
+                .doesNotContain("secret");
         assertThat(second).isNotEqualTo(first);
     }
 

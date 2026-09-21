@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 // formerly scenario test jemmy_006
 // fields are assigned at the start of the test before the checker reads them
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=10, unit=TimeUnit.SECONDS)
 class JTreeExpandCollapseTest {

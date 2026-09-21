@@ -50,12 +50,12 @@ import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.operators.JListOperator.ListItemChooser;
 import org.netbeans.jemmy.predicates.PredicatesJ;
-import org.netbeans.jemmy.testing.DumpOnFailure;
+import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JListOperatorTest {

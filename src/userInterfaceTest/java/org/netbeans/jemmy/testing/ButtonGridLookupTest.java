@@ -48,7 +48,7 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
 import static org.netbeans.jemmy.util.StringComparators.substring;
 
 // formerly scenario test jemmy_003
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class ButtonGridLookupTest {

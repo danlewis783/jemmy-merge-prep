@@ -50,7 +50,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
  * the queue to itself — a {@code nextQueue} cycle that spins every chain walk forever while
  * holding AWT's {@code pushPopLock}, freezing the whole process.
  */
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class JemmyQueueInstallInterruptTest {

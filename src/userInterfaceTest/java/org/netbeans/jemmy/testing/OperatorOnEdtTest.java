@@ -45,7 +45,7 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
  * without it they would park the EDT for the whole operator budget while the background action
  * waits on the very thread the caller occupies.
  */
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class OperatorOnEdtTest {

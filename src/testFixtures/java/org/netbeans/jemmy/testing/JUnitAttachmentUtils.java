@@ -26,12 +26,22 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /** Publishes image and text files through JUnit Platform's native attachment mechanism. */
 public final class JUnitAttachmentUtils {
     private static final String PNG_FORMAT = "png";
+    private static final ExtensionContext.Namespace NAMESPACE =
+            ExtensionContext.Namespace.create(JUnitAttachmentUtils.class);
+    private static final String ATTACHMENT_PATHS = "attachment-paths";
+    private static final ThreadLocal<List<Path>> TEST_REPORTER_ATTACHMENTS = new ThreadLocal<>();
     private static final AtomicLong UNIQUE_FILE_SEQUENCE = new AtomicLong();
 
     private JUnitAttachmentUtils() {}
@@ -42,7 +52,10 @@ public final class JUnitAttachmentUtils {
             String fileName) {
 
         Objects.requireNonNull(context, "context");
-        context.publishFile(fileName, MediaType.IMAGE_PNG, path -> writePng(image, path));
+        context.publishFile(fileName, MediaType.IMAGE_PNG, path -> {
+            writePng(image, path);
+            remember(context, path);
+        });
     }
 
     public static void publishPng(
@@ -51,7 +64,10 @@ public final class JUnitAttachmentUtils {
             String fileName) {
 
         Objects.requireNonNull(reporter, "reporter");
-        reporter.publishFile(fileName, MediaType.IMAGE_PNG, path -> writePng(image, path));
+        reporter.publishFile(fileName, MediaType.IMAGE_PNG, path -> {
+            writePng(image, path);
+            remember(path);
+        });
     }
 
     public static String publishText(ExtensionContext context, String text, String suffix) {
@@ -67,8 +83,41 @@ public final class JUnitAttachmentUtils {
         Objects.requireNonNull(context, "context");
         Objects.requireNonNull(text, "text");
         String fileName = uniqueFileName(context, suffix, extension);
-        context.publishFile(fileName, MediaType.TEXT_PLAIN_UTF_8, path ->
-                Files.write(path, text.getBytes(StandardCharsets.UTF_8)));
+        context.publishFile(fileName, MediaType.TEXT_PLAIN_UTF_8, path -> {
+            Files.write(path, text.getBytes(StandardCharsets.UTF_8));
+            remember(context, path);
+        });
+        return fileName;
+    }
+
+    static void beginTest() {
+        TEST_REPORTER_ATTACHMENTS.set(new ArrayList<>());
+    }
+
+    static void endTest() {
+        TEST_REPORTER_ATTACHMENTS.remove();
+    }
+
+    static String publishAttachmentsZip(ExtensionContext context) {
+        Set<Path> attachments = new LinkedHashSet<>();
+        AttachmentPaths contextAttachments =
+                context.getStore(NAMESPACE).get(ATTACHMENT_PATHS, AttachmentPaths.class);
+        if (contextAttachments != null) {
+            attachments.addAll(contextAttachments.paths);
+        }
+        List<Path> reporterAttachments = TEST_REPORTER_ATTACHMENTS.get();
+        if (reporterAttachments != null) {
+            attachments.addAll(reporterAttachments);
+        }
+        attachments.removeIf(path -> !Files.isRegularFile(path));
+        if (attachments.isEmpty()) {
+            return null;
+        }
+
+        String fileName = uniqueFileName(context, "junit-attachments", "zip");
+        List<Path> sources = new ArrayList<>(attachments);
+        context.publishFile(fileName, MediaType.create("application", "zip"), path ->
+                writeZip(sources, path));
         return fileName;
     }
 
@@ -89,7 +138,9 @@ public final class JUnitAttachmentUtils {
             String extension) {
         String unique = Integer.toUnsignedString(uniqueId.hashCode(), 36)
                 + '-' + Long.toUnsignedString(UNIQUE_FILE_SEQUENCE.incrementAndGet(), 36);
-        return sanitize(className) + '-' + sanitize(invocation) + '-' + unique + '-'
+        // JUnit already places attachments below a directory named for the invocation. Repeating
+        // that name here can push otherwise valid attachments beyond Windows' legacy MAX_PATH.
+        return sanitize(className) + '-' + unique + '-'
                 + sanitize(suffix) + '.' + sanitize(extension);
     }
 
@@ -102,11 +153,52 @@ public final class JUnitAttachmentUtils {
         return safe.length() <= 80 ? safe : safe.substring(0, 80);
     }
 
+    private static void remember(ExtensionContext context, Path path) {
+        AttachmentPaths attachments = context.getStore(NAMESPACE).getOrComputeIfAbsent(
+                ATTACHMENT_PATHS, ignored -> new AttachmentPaths(), AttachmentPaths.class);
+        attachments.paths.add(path.toAbsolutePath().normalize());
+    }
+
+    private static void remember(Path path) {
+        List<Path> attachments = TEST_REPORTER_ATTACHMENTS.get();
+        if (attachments != null) {
+            attachments.add(path.toAbsolutePath().normalize());
+        }
+    }
+
+    private static void writeZip(List<Path> attachments, Path archive) throws IOException {
+        Set<String> entryNames = new LinkedHashSet<>();
+        try (ZipOutputStream zip = new ZipOutputStream(Files.newOutputStream(archive))) {
+            for (Path attachment : attachments) {
+                String entryName = uniqueEntryName(entryNames, attachment.getFileName().toString());
+                ZipEntry entry = new ZipEntry(entryName);
+                entry.setTime(Files.getLastModifiedTime(attachment).toMillis());
+                zip.putNextEntry(entry);
+                Files.copy(attachment, zip);
+                zip.closeEntry();
+            }
+        }
+    }
+
+    private static String uniqueEntryName(Set<String> entryNames, String requestedName) {
+        String entryName = requestedName;
+        int duplicate = 2;
+        while (!entryNames.add(entryName)) {
+            entryName = duplicate + "-" + requestedName;
+            duplicate++;
+        }
+        return entryName;
+    }
+
     private static void writePng(RenderedImage image, Path path) throws IOException {
         Objects.requireNonNull(image, "image");
         Objects.requireNonNull(path, "path");
         if (!ImageIO.write(image, PNG_FORMAT, path.toFile())) {
             throw new IOException("No ImageIO writer is available for PNG files");
         }
+    }
+
+    private static final class AttachmentPaths {
+        private final List<Path> paths = new ArrayList<>();
     }
 }

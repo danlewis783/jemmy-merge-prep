@@ -55,7 +55,7 @@ import javax.swing.*;
 // formerly scenario test jemmy_043
 // 20s rather than 5s: on scaled displays the first robot action pays the one-time
 // robot-coordinate calibration (a few seconds of probing) inside this budget
-@ExtendWith(DumpOnFailure.class)
+@ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 final class RobotVsQueueDispatchTest {
