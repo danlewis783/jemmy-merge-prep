@@ -93,7 +93,7 @@ final class ActionRunner<R> {
             throwable.set(e);
             // capture before the finally-block cancel below interrupts the action: the
             // jemmy-action stack in the diagnostics shows where the action was stuck
-            throw WaitDiagnostics.timeoutFailure(
+            throw JemmyDiagnostics.timeoutFailure(
                     String.format(
                             "timeout \"%s\" (%d ms) exceeded after (%d ms)",
                             timeoutKey, timeout, (System.currentTimeMillis() - startTime)),

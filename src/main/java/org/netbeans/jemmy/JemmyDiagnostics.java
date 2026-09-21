@@ -13,6 +13,7 @@
 package org.netbeans.jemmy;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -42,6 +43,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -54,14 +56,14 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.jetbrains.annotations.Nullable;
 
-/** Failure-safe capture and attachment entry point for Jemmy wait diagnostics. */
-public final class WaitDiagnostics {
+/** Failure-safe capture and attachment entry point for Jemmy failure diagnostics. */
+public final class JemmyDiagnostics {
     public static final String ENABLED_PROPERTY = "jemmyDiagnosticsEnable";
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
     private static final int MAX_SECONDARY_FAILURE_DETAIL_LENGTH = 100_000;
     private static final AtomicReference<RecordedEdtFailure> recordedEdtFailure = new AtomicReference<>();
 
-    private WaitDiagnostics() {}
+    private JemmyDiagnostics() {}
 
     /** Returns whether automatic Jemmy failure diagnostics are enabled. */
     public static boolean isEnabled() {
@@ -80,6 +82,14 @@ public final class WaitDiagnostics {
         Thread.UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
         if (!(current instanceof EdtFailureRecorder)) {
             Thread.setDefaultUncaughtExceptionHandler(new EdtFailureRecorder(current));
+        }
+    }
+
+    /** Restores the handler that was active before the EDT failure recorder was installed. */
+    public static synchronized void restoreEdtFailureRecorder() {
+        Thread.UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
+        if (current instanceof EdtFailureRecorder) {
+            Thread.setDefaultUncaughtExceptionHandler(((EdtFailureRecorder) current).delegate);
         }
     }
 
@@ -482,10 +492,15 @@ public final class WaitDiagnostics {
             UiCapture capture = new UiCapture(abandonedProbe, probeStart, focusOwner, diagnosticComponent);
             List<DiagnosticCapture.ComponentSnapshot> windows = new ArrayList<>();
 
-            // Reserve state for the two most relevant components before any large window tree
-            // can consume the shared budget. Their ancestors are filled in by window traversal.
-            capture.safeComponent(focusOwner, 0, false);
-            capture.safeComponent(diagnosticComponent, 0, false);
+            // Reserve the diagnostic subtree and leaf focus state before any large window tree
+            // can consume the shared budget. Containers must not be cached as shallow snapshots.
+            if (!(focusOwner instanceof Container)) {
+                capture.safeComponent(focusOwner, 0, false);
+            }
+            capture.safeComponent(
+                    diagnosticComponent,
+                    0,
+                    diagnosticComponent instanceof Container);
 
             List<Window> orderedWindows = orderWindows(focusedWindow, diagnosticWindow, activeWindow);
             for (Window window : orderedWindows) {
@@ -695,6 +710,8 @@ public final class WaitDiagnostics {
                 AbstractButton button = (AbstractButton) component;
                 text = bounded(button.getText());
                 details = "selected=" + button.isSelected();
+            } else if (component instanceof JPasswordField) {
+                text = "<redacted>";
             } else if (component instanceof JTextComponent) {
                 JTextComponent editor = (JTextComponent) component;
                 Document document = editor.getDocument();

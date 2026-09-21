@@ -107,7 +107,7 @@ class QueueToolAbandonedCallerTest {
                     }))
                     .withMessageContaining("start latch")
                     .withMessageNotContaining("--- wait diagnostics ---")
-                    .satisfies(failure -> assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue());
+                    .satisfies(failure -> assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue());
         }
 
         blocked.releaseEdt();
@@ -131,7 +131,7 @@ class QueueToolAbandonedCallerTest {
                     }))
                     .withMessageContaining("EDT to finish queued caller")
                     .withMessageNotContaining("--- wait diagnostics ---")
-                    .satisfies(failure -> assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue());
+                    .satisfies(failure -> assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue());
         } finally {
             releaseWork.countDown();
             EventQueue.invokeAndWait(() -> {});

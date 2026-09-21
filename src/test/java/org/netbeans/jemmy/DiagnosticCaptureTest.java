@@ -23,7 +23,7 @@ class DiagnosticCaptureTest {
         DiagnosticCapture snapshot = snapshot();
         TimeoutExpiredException timeout = new TimeoutExpiredException("timeout", new IllegalStateException("cause"));
         Throwable failure = new RuntimeException("test failure", timeout);
-        WaitDiagnostics.attachTo(timeout, snapshot);
+        JemmyDiagnostics.attachTo(timeout, snapshot);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         try (ObjectOutputStream output = new ObjectOutputStream(bytes)) {
             output.writeObject(failure);
@@ -32,7 +32,7 @@ class DiagnosticCaptureTest {
         try (ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))) {
             restored = (Throwable) input.readObject();
         }
-        DiagnosticCapture restoredSnapshot = WaitDiagnostics.findSnapshot(restored);
+        DiagnosticCapture restoredSnapshot = JemmyDiagnostics.findSnapshot(restored);
         assertThat(restoredSnapshot).isNotNull();
         assertThat(restoredSnapshot.renderSummary()).isEqualTo(snapshot.renderSummary());
         assertThat(restoredSnapshot.renderFailureDetail()).isEqualTo(snapshot.renderFailureDetail());
@@ -40,7 +40,7 @@ class DiagnosticCaptureTest {
         assertThat(restored.getCause()).isInstanceOf(TimeoutExpiredException.class);
         assertThat(restored.getCause().getCause()).hasMessage("cause");
         assertThat(restored.getCause().getSuppressed()[0].getStackTrace()).isEmpty();
-        WaitDiagnostics.attachTo(restored, snapshot);
+        JemmyDiagnostics.attachTo(restored, snapshot);
         assertThat(restored.getSuppressed()).isEmpty();
     }
 

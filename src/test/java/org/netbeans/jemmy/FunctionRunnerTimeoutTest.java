@@ -78,7 +78,7 @@ class FunctionRunnerTimeoutTest {
                 .withMessageContaining("Jemmy action to complete")
                 .withMessageContaining("timeout key: " + TimeoutKey.Testing_A)
                 .withMessageNotContaining("--- wait diagnostics ---")
-                .satisfies(failure -> assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue());
+                .satisfies(failure -> assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue());
 
         assertThat(functionExited.await(EXIT_WAIT_TIME, TimeUnit.MILLISECONDS))
                 .as("check that the timed-out function exited")

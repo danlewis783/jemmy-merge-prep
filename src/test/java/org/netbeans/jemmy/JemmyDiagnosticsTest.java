@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.text.BadLocationException;
@@ -37,7 +38,7 @@ import org.junit.jupiter.api.parallel.Isolated;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Isolated
-class WaitDiagnosticsTest {
+class JemmyDiagnosticsTest {
     private static final String SENTINEL = "capture failure details";
 
     @Test
@@ -48,7 +49,7 @@ class WaitDiagnosticsTest {
             PlainDocument document = new PlainDocument() {
                 @Override public String getText(int offset, int length) throws BadLocationException {
                     if (checking.get()) {
-                        assertThat(length).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_VALUE_LENGTH);
+                        assertThat(length).isLessThanOrEqualTo(JemmyDiagnostics.UiCapture.MAX_VALUE_LENGTH);
                         reads.incrementAndGet();
                     }
                     return super.getText(offset, length);
@@ -81,17 +82,17 @@ class WaitDiagnosticsTest {
             JPanel wide = new JPanel();
             char[] chars = new char[10_000];
             Arrays.fill(chars, 'x');
-            for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
+            for (int i = 0; i < JemmyDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
                 JLabel label = new JLabel(new String(chars)) {
                     @Override public String getName() { visited.incrementAndGet(); return super.getName(); }
                 };
                 label.setToolTipText(new String(chars));
                 wide.add(label);
             }
-            WaitDiagnostics.UiCapture capture = capture();
+            JemmyDiagnostics.UiCapture capture = capture();
             assertThat(capture.component(wide, 0)).isNotNull();
             assertThat(visited.get())
-                    .isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_UNRELATED_COMPONENTS - 1);
+                    .isLessThanOrEqualTo(JemmyDiagnostics.UiCapture.MAX_UNRELATED_COMPONENTS - 1);
             assertThat(capture.warnings)
                     .contains("capture pruned: unrelated component limit reached (128 visited)")
                     .doesNotContain("capture truncated: component limit reached (256 visited)");
@@ -101,16 +102,16 @@ class WaitDiagnosticsTest {
             visited.set(0);
             JPanel deep = new JPanel();
             JPanel parent = deep;
-            for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_DEPTH * 2; i++) {
+            for (int i = 0; i < JemmyDiagnostics.UiCapture.MAX_DEPTH * 2; i++) {
                 JPanel child = new JPanel() {
                     @Override public String getName() { visited.incrementAndGet(); return super.getName(); }
                 };
                 parent.add(child);
                 parent = child;
             }
-            WaitDiagnostics.UiCapture depthCapture = capture();
+            JemmyDiagnostics.UiCapture depthCapture = capture();
             assertThat(depthCapture.component(deep, 0)).isNotNull();
-            assertThat(visited.get()).isLessThanOrEqualTo(WaitDiagnostics.UiCapture.MAX_DEPTH - 1);
+            assertThat(visited.get()).isLessThanOrEqualTo(JemmyDiagnostics.UiCapture.MAX_DEPTH - 1);
             assertThat(depthCapture.warnings)
                     .contains("capture truncated: hierarchy depth limit reached (32 levels)");
         });
@@ -131,12 +132,12 @@ class WaitDiagnosticsTest {
                     }
                 });
             }
-            WaitDiagnostics.UiCapture capture = new WaitDiagnostics.UiCapture(
+            JemmyDiagnostics.UiCapture capture = new JemmyDiagnostics.UiCapture(
                     abandoned, System.nanoTime());
             assertThat(capture.component(root, 0)).isNotNull();
             assertThat(visited.get()).isEqualTo(1);
             assertThat(capture.warnings).contains("capture stopped: EDT probe abandoned");
-            WaitDiagnostics.UiCapture expired = new WaitDiagnostics.UiCapture(
+            JemmyDiagnostics.UiCapture expired = new JemmyDiagnostics.UiCapture(
                     new AtomicBoolean(),
                     System.nanoTime() - TimeUnit.SECONDS.toNanos(1));
             assertThat(expired.component(root, 0)).isNull();
@@ -146,13 +147,67 @@ class WaitDiagnosticsTest {
     }
 
     @Test
+    void redactsPasswordFieldsWithoutReadingTheirDocuments() throws Exception {
+        EventQueue.invokeAndWait(() -> {
+            AtomicBoolean checking = new AtomicBoolean();
+            AtomicInteger reads = new AtomicInteger();
+            PlainDocument document = new PlainDocument() {
+                @Override public String getText(int offset, int length) throws BadLocationException {
+                    if (checking.get()) {
+                        reads.incrementAndGet();
+                    }
+                    return super.getText(offset, length);
+                }
+            };
+            JPasswordField password = new JPasswordField(document, null, 0);
+            try {
+                document.insertString(0, "top-secret-password", null);
+            } catch (BadLocationException e) {
+                throw new AssertionError(e);
+            }
+            password.selectAll();
+            checking.set(true);
+
+            String rendered = render(capture().component(password, 0));
+
+            assertThat(reads.get()).isZero();
+            assertThat(rendered)
+                    .contains("text=\"<redacted>\"")
+                    .doesNotContain("top-secret-password")
+                    .doesNotContain("selectedText=");
+        });
+    }
+
+    @Test
+    void capturesDescendantsWhenTheDiagnosticComponentIsAContainer() {
+        JPanel searchRoot = new JPanel();
+        JLabel soughtComponent = new JLabel("sought component state");
+        soughtComponent.setName("sought-component");
+        searchRoot.add(soughtComponent);
+        AssertionError failure = new AssertionError("component not found");
+
+        JemmyDiagnostics.attachTo(failure, "sought component", searchRoot);
+
+        DiagnosticCapture snapshot = JemmyDiagnostics.findSnapshot(failure);
+        FailedWait failedWait = JemmyDiagnostics.findFailedWait(failure);
+        assertThat(snapshot).isNotNull();
+        assertThat(failedWait).isNotNull();
+        DiagnosticCapture.ComponentSnapshot waitComponent = failedWait.component();
+        assertThat(waitComponent).isNotNull();
+        assertThat(waitComponent.children()).singleElement().satisfies(child ->
+                assertThat(render(child))
+                        .contains("name=\"sought-component\"")
+                        .contains("text=\"sought component state\""));
+    }
+
+    @Test
     void capturesTheDiagnosticBranchBeforeAnUnrelatedWideFocusBranch() throws Exception {
         EventQueue.invokeAndWait(() -> {
             JPanel root = new JPanel() {
                 @Override public boolean isShowing() { return true; }
             };
             JPanel focusBranch = new JPanel();
-            for (int i = 0; i < WaitDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
+            for (int i = 0; i < JemmyDiagnostics.UiCapture.MAX_COMPONENTS * 2; i++) {
                 focusBranch.add(new JLabel("ordinary-" + i));
             }
             JLabel focusOwner = new JLabel("focus owner") {
@@ -164,7 +219,7 @@ class WaitDiagnosticsTest {
             target.setName("diagnostic-target");
             root.add(target);
 
-            WaitDiagnostics.UiCapture capture = new WaitDiagnostics.UiCapture(
+            JemmyDiagnostics.UiCapture capture = new JemmyDiagnostics.UiCapture(
                     new AtomicBoolean(), System.nanoTime(), focusOwner, target);
             String rendered = render(capture.component(root, 0));
 
@@ -184,10 +239,10 @@ class WaitDiagnosticsTest {
         AssertionError failure = new AssertionError("value did not match");
         JLabel component = new JLabel("actual value");
 
-        WaitDiagnostics.attachTo(failure, "field value to equal expected value", component);
+        JemmyDiagnostics.attachTo(failure, "field value to equal expected value", component);
 
-        DiagnosticCapture snapshot = WaitDiagnostics.findSnapshot(failure);
-        FailedWait waitFailure = WaitDiagnostics.findFailedWait(failure);
+        DiagnosticCapture snapshot = JemmyDiagnostics.findSnapshot(failure);
+        FailedWait waitFailure = JemmyDiagnostics.findFailedWait(failure);
         assertThat(snapshot).isNotNull();
         assertThat(waitFailure).isNotNull();
         assertThat(snapshot.renderSummary(waitFailure))
@@ -216,8 +271,8 @@ class WaitDiagnosticsTest {
         });
     }
 
-    private static WaitDiagnostics.UiCapture capture() {
-        return new WaitDiagnostics.UiCapture(new AtomicBoolean(), System.nanoTime());
+    private static JemmyDiagnostics.UiCapture capture() {
+        return new JemmyDiagnostics.UiCapture(new AtomicBoolean(), System.nanoTime());
     }
 
     private static String render(DiagnosticCapture.ComponentSnapshot component) {
@@ -228,11 +283,11 @@ class WaitDiagnosticsTest {
 
     @Test
     void diagnosticsAreEnabledByDefault() {
-        String configured = System.getProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        String configured = System.getProperty(JemmyDiagnostics.ENABLED_PROPERTY);
         try {
-            System.clearProperty(WaitDiagnostics.ENABLED_PROPERTY);
+            System.clearProperty(JemmyDiagnostics.ENABLED_PROPERTY);
 
-            assertThat(WaitDiagnostics.isEnabled()).isTrue();
+            assertThat(JemmyDiagnostics.isEnabled()).isTrue();
         } finally {
             restoreDiagnosticsProperty(configured);
         }
@@ -240,21 +295,21 @@ class WaitDiagnosticsTest {
 
     @Test
     void disabledDiagnosticsUseTheFallbackTimeoutAndDoNotAttach() {
-        String configured = System.getProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        String configured = System.getProperty(JemmyDiagnostics.ENABLED_PROPERTY);
         try {
-            System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, "false");
+            System.setProperty(JemmyDiagnostics.ENABLED_PROPERTY, "false");
             RuntimeException ordinaryFailure = new RuntimeException("ordinary failure");
 
-            TimeoutExpiredException timeout = WaitDiagnostics.timeoutFailure(
+            TimeoutExpiredException timeout = JemmyDiagnostics.timeoutFailure(
                     "fallback timeout",
                     TimeoutKey.Waiter_WaitingTime,
                     1L,
                     "target",
                     null,
                     null);
-            WaitDiagnostics.attachTo(ordinaryFailure);
+            JemmyDiagnostics.attachTo(ordinaryFailure);
 
-            assertThat(WaitDiagnostics.isEnabled()).isFalse();
+            assertThat(JemmyDiagnostics.isEnabled()).isFalse();
             assertThat(timeout).hasMessage("fallback timeout");
             assertThat(timeout.getSuppressed()).isEmpty();
             assertThat(ordinaryFailure.getSuppressed()).isEmpty();
@@ -265,9 +320,9 @@ class WaitDiagnosticsTest {
 
     private static void restoreDiagnosticsProperty(String configured) {
         if (configured == null) {
-            System.clearProperty(WaitDiagnostics.ENABLED_PROPERTY);
+            System.clearProperty(JemmyDiagnostics.ENABLED_PROPERTY);
         } else {
-            System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, configured);
+            System.setProperty(JemmyDiagnostics.ENABLED_PROPERTY, configured);
         }
     }
 
@@ -275,7 +330,7 @@ class WaitDiagnosticsTest {
     void findsDiagnosticsInFailureMessage() {
         Throwable failure = new RuntimeException("failure\n--- wait diagnostics ---\nmouse: unavailable");
 
-        assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue();
+        assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue();
     }
 
     @Test
@@ -285,7 +340,7 @@ class WaitDiagnosticsTest {
                 new RuntimeException("--- wait diagnostics ---")
         );
 
-        assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue();
+        assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue();
     }
 
     @Test
@@ -293,22 +348,22 @@ class WaitDiagnosticsTest {
         Throwable failure = new RuntimeException("failure");
         failure.addSuppressed(new RuntimeException("--- wait diagnostics ---"));
 
-        assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue();
+        assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue();
     }
 
     @Test
     void reportsDiagnosticsAbsent() {
         Throwable failure = new RuntimeException("ordinary failure");
 
-        assertThat(WaitDiagnostics.isPresentIn(failure)).isFalse();
+        assertThat(JemmyDiagnostics.isPresentIn(failure)).isFalse();
     }
 
     @Test
     void attachesStacklessDiagnosticsOnlyOnce() {
         Throwable failure = new RuntimeException("ordinary failure");
 
-        WaitDiagnostics.attachTo(failure);
-        WaitDiagnostics.attachTo(failure);
+        JemmyDiagnostics.attachTo(failure);
+        JemmyDiagnostics.attachTo(failure);
 
         assertThat(failure.getSuppressed()).hasSize(1);
         assertThat(failure.getSuppressed()[0].getMessage())
@@ -320,15 +375,15 @@ class WaitDiagnosticsTest {
     @Test
     void replacesInlineDiagnosticDetailWithAReportPointer() {
         Throwable failure = new RuntimeException("ordinary failure");
-        WaitDiagnostics.attachTo(failure);
+        JemmyDiagnostics.attachTo(failure);
 
-        WaitDiagnostics.referenceDiagnosticsReport(failure);
+        JemmyDiagnostics.referenceDiagnosticsReport(failure);
 
         assertThat(failure.getSuppressed()).singleElement().satisfies(diagnostics ->
                 assertThat(diagnostics.getMessage())
                         .isEqualTo("diagnostics report attached; see Standard Error")
                         .doesNotContain("EDT probe:"));
-        assertThat(WaitDiagnostics.findSnapshot(failure)).isNotNull();
+        assertThat(JemmyDiagnostics.findSnapshot(failure)).isNotNull();
     }
 
     @Test
@@ -336,7 +391,7 @@ class WaitDiagnosticsTest {
         Throwable failure = new RuntimeException("timeout");
         Throwable diagnosticsFailure = new AssertionError(SENTINEL);
 
-        WaitDiagnostics.attachCaptureFailure(
+        JemmyDiagnostics.attachCaptureFailure(
                 failure, diagnosticsFailure);
 
         assertThat(failure.getSuppressed()).containsExactly(diagnosticsFailure);
@@ -351,12 +406,12 @@ class WaitDiagnosticsTest {
             new StackTraceElement("example.ui.SampleView", "refresh", "SampleView.java", 42)
         });
 
-        WaitDiagnostics.attachSecondaryUiFailure(primary, secondary);
-        WaitDiagnostics.attachSecondaryUiFailure(primary, secondary);
+        JemmyDiagnostics.attachSecondaryUiFailure(primary, secondary);
+        JemmyDiagnostics.attachSecondaryUiFailure(primary, secondary);
 
-        assertThat(WaitDiagnostics.findSecondaryUiFailureSummary(primary))
+        assertThat(JemmyDiagnostics.findSecondaryUiFailureSummary(primary))
                 .isEqualTo("Secondary EDT failure: NullPointerException at example.ui.SampleView.refresh(SampleView.java:42)");
-        assertThat(WaitDiagnostics.findSecondaryUiFailureDetail(primary))
+        assertThat(JemmyDiagnostics.findSecondaryUiFailureDetail(primary))
                 .contains("java.lang.NullPointerException: secondary")
                 .contains("at example.ui.SampleView.refresh(SampleView.java:42)");
         assertThat(primary.getSuppressed()).singleElement().satisfies(marker ->
@@ -371,15 +426,15 @@ class WaitDiagnosticsTest {
         AssertionError primary = new AssertionError("primary");
         try {
             Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.set(failure));
-            WaitDiagnostics.installEdtFailureRecorder();
-            WaitDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.installEdtFailureRecorder();
+            JemmyDiagnostics.clearRecordedEdtFailure();
 
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
-            WaitDiagnostics.attachRecordedEdtFailure(primary);
+            JemmyDiagnostics.attachRecordedEdtFailure(primary);
 
             assertThat(delegated.get()).isNull();
-            assertThat(WaitDiagnostics.findSecondaryUiFailureSummary(primary))
+            assertThat(JemmyDiagnostics.findSecondaryUiFailureSummary(primary))
                     .startsWith("Secondary EDT failure: NullPointerException");
 
             RuntimeException workerFailure = new RuntimeException("worker failed");
@@ -387,7 +442,7 @@ class WaitDiagnosticsTest {
                     .uncaughtException(new Thread("worker-1"), workerFailure);
             assertThat(delegated.get()).isSameAs(workerFailure);
         } finally {
-            WaitDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.clearRecordedEdtFailure();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
     }
@@ -399,16 +454,16 @@ class WaitDiagnosticsTest {
         NullPointerException secondary = new NullPointerException("secondary");
         try {
             Thread.setDefaultUncaughtExceptionHandler((thread, failure) -> delegated.set(failure));
-            WaitDiagnostics.installEdtFailureRecorder();
-            WaitDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.installEdtFailureRecorder();
+            JemmyDiagnostics.clearRecordedEdtFailure();
 
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
-            WaitDiagnostics.reportRecordedEdtFailure();
+            JemmyDiagnostics.reportRecordedEdtFailure();
 
             assertThat(delegated.get()).isSameAs(secondary);
         } finally {
-            WaitDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.clearRecordedEdtFailure();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
     }

@@ -30,7 +30,7 @@ import org.netbeans.jemmy.util.StringComparators;
 
 /**
  * Verifies that a timed-out wait describes what it was waiting for in a concise primary message
- * and attaches the full {@link WaitDiagnostics#capture()} separately.
+ * and attaches the full {@link JemmyDiagnostics#capture()} separately.
  */
 // mutates global state (the Timeouts singleton) via Timeouts.override; never run in parallel
 @Isolated
@@ -50,8 +50,8 @@ class WaitTimeoutMessageTest {
                     .hasMessageNotContaining("--- wait diagnostics ---")
                     .satisfies(failure -> {
                         assertHasAttachedDiagnostics(failure);
-                        assertThat(WaitDiagnostics.findSnapshot(failure).renderSummary(
-                                        WaitDiagnostics.findFailedWait(failure)))
+                        assertThat(JemmyDiagnostics.findSnapshot(failure).renderSummary(
+                                        JemmyDiagnostics.findFailedWait(failure)))
                                 .contains("Wait component:\n  state: JLabel")
                                 .contains("text=\"current text\"")
                                 .contains("showing", "enabled");
@@ -104,7 +104,7 @@ class WaitTimeoutMessageTest {
     }
 
     private static void assertHasAttachedDiagnostics(Throwable failure) {
-        assertThat(WaitDiagnostics.isPresentIn(failure)).isTrue();
+        assertThat(JemmyDiagnostics.isPresentIn(failure)).isTrue();
         assertThat(failure.getSuppressed()).hasSize(1);
         assertThat(failure.getSuppressed()[0].getMessage())
                 .startsWith("--- wait diagnostics ---")

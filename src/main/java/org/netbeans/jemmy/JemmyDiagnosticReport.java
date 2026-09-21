@@ -218,8 +218,8 @@ public final class JemmyDiagnosticReport {
 
     private static boolean isDiagnosticMarker(Throwable failure) {
         String className = failure.getClass().getName();
-        return className.equals("org.netbeans.jemmy.WaitDiagnostics$Diagnostics")
-                || className.equals("org.netbeans.jemmy.WaitDiagnostics$SecondaryUiFailure");
+        return className.equals("org.netbeans.jemmy.JemmyDiagnostics$Diagnostics")
+                || className.equals("org.netbeans.jemmy.JemmyDiagnostics$SecondaryUiFailure");
     }
 
     private static String escapeCode(String value) {

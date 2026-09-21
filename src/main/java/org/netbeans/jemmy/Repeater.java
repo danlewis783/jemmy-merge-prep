@@ -90,7 +90,7 @@ final class Repeater {
             message.append(" waiting for: ").append(target);
         }
 
-        return WaitDiagnostics.timeoutFailure(
+        return JemmyDiagnostics.timeoutFailure(
                 message.toString(),
                 waitKey,
                 waitMillis,

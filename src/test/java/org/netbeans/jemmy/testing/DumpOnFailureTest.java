@@ -29,6 +29,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -40,7 +42,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.netbeans.jemmy.WaitDiagnostics;
+import org.netbeans.jemmy.JemmyDiagnostics;
 
 @Isolated
 class DumpOnFailureTest {
@@ -76,7 +78,7 @@ class DumpOnFailureTest {
             exception.printStackTrace(new PrintWriter(rendered));
             assertThat(rendered.toString()).containsSubsequence(
                     "deliberate failure",
-                    "Suppressed: org.netbeans.jemmy.WaitDiagnostics$Diagnostics: "
+                    "Suppressed: org.netbeans.jemmy.JemmyDiagnostics$Diagnostics: "
                             + "diagnostics report attached; see Standard Error")
                     .doesNotContain("EDT probe:");
         });
@@ -115,7 +117,7 @@ class DumpOnFailureTest {
 
     @Test
     void disabledDiagnosticsProduceNoAttachmentOrOutput() throws Exception {
-        String configured = System.getProperty(WaitDiagnostics.ENABLED_PROPERTY);
+        String configured = System.getProperty(JemmyDiagnostics.ENABLED_PROPERTY);
         PrintStream originalErr = System.err;
         ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
@@ -124,7 +126,7 @@ class DumpOnFailureTest {
                 .build();
 
         try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
-            System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, "false");
+            System.setProperty(JemmyDiagnostics.ENABLED_PROPERTY, "false");
             System.setErr(replacement);
             nestedExecution = true;
             LauncherFactory.create().execute(request, listener);
@@ -132,9 +134,9 @@ class DumpOnFailureTest {
             nestedExecution = false;
             System.setErr(originalErr);
             if (configured == null) {
-                System.clearProperty(WaitDiagnostics.ENABLED_PROPERTY);
+                System.clearProperty(JemmyDiagnostics.ENABLED_PROPERTY);
             } else {
-                System.setProperty(WaitDiagnostics.ENABLED_PROPERTY, configured);
+                System.setProperty(JemmyDiagnostics.ENABLED_PROPERTY, configured);
             }
         }
 
@@ -142,6 +144,34 @@ class DumpOnFailureTest {
         assertThat(listener.getSummary().getFailures()).singleElement().satisfies(failure ->
                 assertThat(failure.getException().getSuppressed()).isEmpty());
         assertThat(capturedErr.toString(StandardCharsets.UTF_8.name())).isEmpty();
+    }
+
+    @Test
+    void reportsEdtFailuresRaisedDuringUserTeardown() {
+        Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
+        AtomicReference<Throwable> delegated = new AtomicReference<>();
+        Thread.UncaughtExceptionHandler delegate = (thread, failure) -> delegated.set(failure);
+        SummaryGeneratingListener listener = new SummaryGeneratingListener();
+        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+                .selectors(selectClass(TeardownEdtFailureFixture.class))
+                .build();
+
+        try {
+            Thread.setDefaultUncaughtExceptionHandler(delegate);
+            nestedExecution = true;
+            LauncherFactory.create().execute(request, listener);
+
+            assertThat(Thread.getDefaultUncaughtExceptionHandler()).isSameAs(delegate);
+        } finally {
+            nestedExecution = false;
+            JemmyDiagnostics.clearRecordedEdtFailure();
+            Thread.setDefaultUncaughtExceptionHandler(original);
+        }
+
+        assertThat(listener.getSummary().getTestsSucceededCount()).isEqualTo(1);
+        assertThat(delegated.get())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("teardown EDT failure");
     }
 
     @ExtendWith({NestedExecutionOnly.class, ReportLinkOnFailure.class, DumpOnFailure.class})
@@ -156,6 +186,20 @@ class DumpOnFailureTest {
             Thread.getDefaultUncaughtExceptionHandler()
                     .uncaughtException(new Thread("AWT-EventQueue-0"), secondary);
             throw failure;
+        }
+    }
+
+    @ExtendWith({NestedExecutionOnly.class, DumpOnFailure.class})
+    static class TeardownEdtFailureFixture {
+        @Test
+        void succeeds() {
+        }
+
+        @AfterEach
+        void raisesEdtFailure() {
+            Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+                    new Thread("AWT-EventQueue-0"),
+                    new IllegalStateException("teardown EDT failure"));
         }
     }
 

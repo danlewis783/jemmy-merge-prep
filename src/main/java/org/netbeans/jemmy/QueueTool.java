@@ -170,7 +170,7 @@ public final class QueueTool {
                 // to it, not replay clicks and reads long after this caller gave up on them
                 caller.cancel();
                 // the EDT never started our task: capture what it was doing instead
-                throw WaitDiagnostics.timeoutFailure(
+                throw JemmyDiagnostics.timeoutFailure(
                         String.format(
                                 "QueueTool_PreInvocationTimeout timeout (%d ms) exceeded waiting for start latch of caller",
                                 preInvocationTimeout),
@@ -188,7 +188,7 @@ public final class QueueTool {
         try {
             if (!caller.getEndGate().await(invocationTimeout, TimeUnit.MILLISECONDS)) {
                 // the EDT started our task but never finished it: the stack shows where it hangs
-                throw WaitDiagnostics.timeoutFailure(
+                throw JemmyDiagnostics.timeoutFailure(
                         String.format(
                                 "QueueTool_InvocationTimeout timeout (%d ms) exceeded waiting for end latch of caller",
                                 invocationTimeout),
