@@ -58,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
 
 /** Failure-safe capture and attachment entry point for Jemmy failure diagnostics. */
 public final class JemmyDiagnostics {
-    public static final String ENABLED_PROPERTY = "jemmyDiagnosticsEnable";
+    public static final String ENABLED_PROPERTY = "jemmy.diagnostics.enabled";
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
     private static final int MAX_SECONDARY_FAILURE_DETAIL_LENGTH = 100_000;
     private static final AtomicReference<RecordedEdtFailure> recordedEdtFailure = new AtomicReference<>();
