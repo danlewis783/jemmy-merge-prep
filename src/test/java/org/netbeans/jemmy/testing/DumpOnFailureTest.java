@@ -26,7 +26,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.concurrent.atomic.AtomicReference;
@@ -38,6 +37,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -50,12 +50,13 @@ class DumpOnFailureTest {
     private static final Pattern REPORT_NAME = Pattern.compile("Diagnostics report: (\\S+\\.md)");
 
     @Test
-    void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce() throws Exception {
+    void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce(@TempDir Path outputDirectory) throws Exception {
         PrintStream originalErr = System.err;
         ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
                 .selectors(selectClass(FailingFixture.class))
+                .configurationParameter("junit.platform.reporting.output.dir", outputDirectory.toString())
                 .build();
 
         try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
@@ -98,7 +99,6 @@ class DumpOnFailureTest {
 
         Matcher reportName = REPORT_NAME.matcher(stderr);
         assertThat(reportName.find()).isTrue();
-        Path outputDirectory = Paths.get(System.getProperty("junit.platform.reporting.output.dir"));
         Path report;
         try (java.util.stream.Stream<Path> files = Files.walk(outputDirectory)) {
             report = files.filter(path -> path.getFileName().toString().equals(reportName.group(1)))
