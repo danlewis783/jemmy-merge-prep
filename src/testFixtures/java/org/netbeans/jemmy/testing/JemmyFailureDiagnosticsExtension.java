@@ -71,9 +71,9 @@ public final class JemmyFailureDiagnosticsExtension implements
                 JemmyDiagnosticReport.Builder report = JemmyDiagnosticReport.builder(captured.build());
                 JemmyDiagnosticReportContributions.applyTo(context, report);
                 String fileName = JUnitAttachmentUtils.publishMarkdown(
-                        context, report.render(), "jemmy-diagnostics");
+                        context, report.render(), "diagnostics");
                 JemmyDiagnostics.referenceDiagnosticsReport(cause);
-                System.err.println("Diagnostics report: " + fileName);
+                System.err.println("Diagnostics report created: " + fileName);
             } catch (Throwable attachmentFailure) {
                 System.err.println("Diagnostics report attachment failed: "
                         + attachmentFailure.getClass().getSimpleName());
@@ -82,7 +82,7 @@ public final class JemmyFailureDiagnosticsExtension implements
         try {
             String archiveName = JUnitAttachmentUtils.publishAttachmentsZip(context);
             if (archiveName != null) {
-                System.err.println("Attachments archive: " + archiveName);
+                System.err.println("Attachments archive created: " + archiveName);
             }
         } catch (Throwable attachmentFailure) {
             System.err.println("Attachments archive failed: "

@@ -66,8 +66,9 @@ public final class SaveScreenshotOnFailureExtension implements TestExecutionExce
     }
 
     private static void publish(ExtensionContext context, BufferedImage image) {
-        String fileName = "failure-snapshot-" + context.getRequiredTestClass().getSimpleName() + ".png";
+        String fileName = JUnitAttachmentUtils.uniqueFileName(context, "screenshot", "png");
         JUnitAttachmentUtils.publishPng(context, image, fileName);
         JemmyDiagnosticReportContributions.addLink(context, "Failure screenshot", fileName);
+        System.err.println("Screenshot created: " + fileName);
     }
 }

@@ -31,7 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -41,8 +41,8 @@ public final class JUnitAttachmentUtils {
     private static final ExtensionContext.Namespace NAMESPACE =
             ExtensionContext.Namespace.create(JUnitAttachmentUtils.class);
     private static final String ATTACHMENT_PATHS = "attachment-paths";
+    private static final String ATTACHMENT_NAME_SEQUENCE_PREFIX = "attachment-name-sequence:";
     private static final ThreadLocal<List<Path>> TEST_REPORTER_ATTACHMENTS = new ThreadLocal<>();
-    private static final AtomicLong UNIQUE_FILE_SEQUENCE = new AtomicLong();
 
     private JUnitAttachmentUtils() {}
 
@@ -70,19 +70,19 @@ public final class JUnitAttachmentUtils {
         });
     }
 
-    public static String publishText(ExtensionContext context, String text, String suffix) {
-        return publishText(context, text, suffix, "txt");
+    public static String publishText(ExtensionContext context, String text, String kind) {
+        return publishText(context, text, kind, "txt");
     }
 
-    public static String publishMarkdown(ExtensionContext context, String markdown, String suffix) {
-        return publishText(context, markdown, suffix, "md");
+    public static String publishMarkdown(ExtensionContext context, String markdown, String kind) {
+        return publishText(context, markdown, kind, "md");
     }
 
     private static String publishText(
-            ExtensionContext context, String text, String suffix, String extension) {
+            ExtensionContext context, String text, String kind, String extension) {
         Objects.requireNonNull(context, "context");
         Objects.requireNonNull(text, "text");
-        String fileName = uniqueFileName(context, suffix, extension);
+        String fileName = uniqueFileName(context, kind, extension);
         context.publishFile(fileName, MediaType.TEXT_PLAIN_UTF_8, path -> {
             Files.write(path, text.getBytes(StandardCharsets.UTF_8));
             remember(context, path);
@@ -114,34 +114,36 @@ public final class JUnitAttachmentUtils {
             return null;
         }
 
-        String fileName = uniqueFileName(context, "junit-attachments", "zip");
+        String fileName = uniqueFileName(context, "attachments", "zip");
         List<Path> sources = new ArrayList<>(attachments);
         context.publishFile(fileName, MediaType.create("application", "zip"), path ->
                 writeZip(sources, path));
         return fileName;
     }
 
-    static String uniqueFileName(ExtensionContext context, String suffix, String extension) {
+    static String uniqueFileName(ExtensionContext context, String kind, String extension) {
+        Objects.requireNonNull(context, "context");
+        String safeKind = sanitize(kind);
+        String safeExtension = sanitize(extension);
+        String sequenceKey = ATTACHMENT_NAME_SEQUENCE_PREFIX + safeKind + '.' + safeExtension;
+        AtomicInteger sequence = context.getStore(NAMESPACE).getOrComputeIfAbsent(
+                sequenceKey, ignored -> new AtomicInteger(), AtomicInteger.class);
         return uniqueFileName(
-                context.getRequiredTestClass().getSimpleName(),
-                context.getDisplayName(),
-                context.getUniqueId(),
-                suffix,
-                extension);
+                context.getUniqueId(), safeKind, safeExtension, sequence.incrementAndGet());
     }
 
     static String uniqueFileName(
-            String className,
-            String invocation,
             String uniqueId,
-            String suffix,
-            String extension) {
-        String unique = Integer.toUnsignedString(uniqueId.hashCode(), 36)
-                + '-' + Long.toUnsignedString(UNIQUE_FILE_SEQUENCE.incrementAndGet(), 36);
-        // JUnit already places attachments below a directory named for the invocation. Repeating
-        // that name here can push otherwise valid attachments beyond Windows' legacy MAX_PATH.
-        return sanitize(className) + '-' + unique + '-'
-                + sanitize(suffix) + '.' + sanitize(extension);
+            String kind,
+            String extension,
+            int ordinal) {
+        Objects.requireNonNull(uniqueId, "uniqueId");
+        if (ordinal < 1) {
+            throw new IllegalArgumentException("ordinal must be positive");
+        }
+        String hash = Integer.toUnsignedString(uniqueId.hashCode(), 36);
+        String collisionSuffix = ordinal == 1 ? "" : "-" + Integer.toString(ordinal, 36);
+        return sanitize(kind) + '-' + hash + collisionSuffix + '.' + sanitize(extension);
     }
 
     private static String sanitize(String value) {

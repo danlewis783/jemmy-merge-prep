@@ -32,24 +32,23 @@ class JUnitAttachmentUtilsTest {
     }
 
     @Test
-    void createsSafeCompactUniqueNamesForParameterizedInvocations() {
+    void createsCompactNamesFromTheArtifactKindAndTestIdHash() {
         String first = JUnitAttachmentUtils.uniqueFileName(
-                "Fixture/../../", "case 5: C:\\secret?<value>", "[engine:test]/5", "jemmy diagnostics", "txt");
-        String second = JUnitAttachmentUtils.uniqueFileName(
-                "Fixture/../../", "case 5: C:\\secret?<value>", "[engine:test]/5", "jemmy diagnostics", "txt");
+                "[engine:test]/5", "diagnostics", "md", 1);
+        String repeated = JUnitAttachmentUtils.uniqueFileName(
+                "[engine:test]/5", "diagnostics", "md", 2);
+        String screenshot = JUnitAttachmentUtils.uniqueFileName(
+                "[engine:test]/5", "screenshot", "png", 1);
+        String otherTest = JUnitAttachmentUtils.uniqueFileName(
+                "[engine:test]/6", "diagnostics", "md", 1);
 
         assertThat(first)
-                .startsWith("Fixture-..-..-")
-                .endsWith("-jemmy-diagnostics.txt")
-                .hasSizeLessThan(80)
-                .doesNotContain("/")
-                .doesNotContain("\\")
-                .doesNotContain(":")
-                .doesNotContain("?")
-                .doesNotContain("<")
-                .doesNotContain(">")
-                .doesNotContain("secret");
-        assertThat(second).isNotEqualTo(first);
+                .matches("diagnostics-[0-9a-z]+\\.md")
+                .hasSizeLessThan(32);
+        assertThat(repeated).isEqualTo(first.replace(".md", "-2.md"));
+        assertThat(screenshot)
+                .isEqualTo(first.replace("diagnostics-", "screenshot-").replace(".md", ".png"));
+        assertThat(otherTest).isNotEqualTo(first);
     }
 
 }

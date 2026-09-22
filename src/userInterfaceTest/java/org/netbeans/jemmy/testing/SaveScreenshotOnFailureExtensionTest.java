@@ -16,6 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -43,37 +46,50 @@ class SaveScreenshotOnFailureExtensionTest {
     @Test
     void publishesScreenshotBeforeTheFailureAttachmentArchive(@TempDir Path outputDirectory)
             throws Exception {
+        PrintStream originalErr = System.err;
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
         SummaryGeneratingListener listener = new SummaryGeneratingListener();
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
                 .selectors(selectClass(FailingFixture.class))
                 .configurationParameter("junit.platform.reporting.output.dir", outputDirectory.toString())
                 .build();
 
-        try {
+        try (PrintStream replacement = new PrintStream(capturedErr, true, StandardCharsets.UTF_8.name())) {
+            System.setErr(replacement);
             nestedExecution = true;
             LauncherFactory.create().execute(request, listener);
         } finally {
             nestedExecution = false;
+            System.setErr(originalErr);
         }
 
         assertThat(listener.getSummary().getTestsFailedCount()).isEqualTo(1);
-        Path screenshot = findFile(outputDirectory, "failure-snapshot-FailingFixture.png");
+        Path screenshot = findFile(outputDirectory, "screenshot-", ".png");
         BufferedImage image = ImageIO.read(screenshot.toFile());
         assertThat(image).isNotNull();
         assertThat(image.getWidth()).isPositive();
         assertThat(image.getHeight()).isPositive();
 
-        Path archive = findFile(outputDirectory, "-junit-attachments.zip");
+        Path archive = findFile(outputDirectory, "attachments-", ".zip");
+        String screenshotName = screenshot.getFileName().toString();
+        String testHash = screenshotName.substring(
+                "screenshot-".length(), screenshotName.length() - ".png".length());
+        assertThat(archive.getFileName().toString()).isEqualTo("attachments-" + testHash + ".zip");
         assertThat(zipEntryNames(archive))
-                .contains(screenshot.getFileName().toString())
-                .anyMatch(name -> name.endsWith("-jemmy-diagnostics.md"));
+                .containsExactlyInAnyOrder(screenshotName, "diagnostics-" + testHash + ".md");
+        assertThat(capturedErr.toString(StandardCharsets.UTF_8.name()))
+                .contains("Screenshot created: " + screenshotName)
+                .contains("Diagnostics report created: diagnostics-" + testHash + ".md")
+                .contains("Attachments archive created: attachments-" + testHash + ".zip");
     }
 
-    private static Path findFile(Path directory, String suffix) throws Exception {
+    private static Path findFile(Path directory, String prefix, String suffix) throws Exception {
         try (Stream<Path> files = Files.walk(directory)) {
-            return files.filter(path -> path.getFileName().toString().endsWith(suffix))
+            return files.filter(path -> path.getFileName().toString().startsWith(prefix)
+                            && path.getFileName().toString().endsWith(suffix))
                     .findFirst()
-                    .orElseThrow(() -> new AssertionError("file ending with " + suffix + " not found"));
+                    .orElseThrow(() -> new AssertionError(
+                            "file starting with " + prefix + " and ending with " + suffix + " not found"));
         }
     }
 

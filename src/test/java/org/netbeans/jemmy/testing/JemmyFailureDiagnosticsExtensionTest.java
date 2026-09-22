@@ -53,8 +53,8 @@ import org.netbeans.jemmy.JemmyDiagnostics;
 @Isolated
 class JemmyFailureDiagnosticsExtensionTest {
     private static boolean nestedExecution;
-    private static final Pattern REPORT_NAME = Pattern.compile("Diagnostics report: (\\S+\\.md)");
-    private static final Pattern ARCHIVE_NAME = Pattern.compile("Attachments archive: (\\S+\\.zip)");
+    private static final Pattern REPORT_NAME = Pattern.compile("Diagnostics report created: (\\S+\\.md)");
+    private static final Pattern ARCHIVE_NAME = Pattern.compile("Attachments archive created: (\\S+\\.zip)");
 
     @Test
     void keepsThePrimaryFailureConciseAndReportsDiagnosticsOnce(@TempDir Path outputDirectory) throws Exception {
@@ -93,8 +93,8 @@ class JemmyFailureDiagnosticsExtensionTest {
 
         String stderr = capturedErr.toString(StandardCharsets.UTF_8.name());
         assertThat(stderr)
-                .contains("Diagnostics report:")
-                .contains("Attachments archive:")
+                .contains("Diagnostics report created:")
+                .contains("Attachments archive created:")
                 .contains(".md")
                 .doesNotContain("UI diagnostics for deliberatelyFails():")
                 .doesNotContain("Secondary EDT failure:")
