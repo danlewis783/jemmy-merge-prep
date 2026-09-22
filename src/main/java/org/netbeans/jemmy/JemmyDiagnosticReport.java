@@ -6,10 +6,13 @@
  */
 package org.netbeans.jemmy;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -53,7 +56,7 @@ public final class JemmyDiagnosticReport {
                 String heading = edtExceptions.size() == 1
                         ? "Secondary EDT exception"
                         : "Secondary EDT exception " + (index + 1);
-                appendCodeSection(out, heading, edtException.detail().trim());
+                appendCodeSection(out, heading, renderEdtException(edtException));
             }
         }
         for (Section section : sections) {
@@ -174,6 +177,30 @@ public final class JemmyDiagnosticReport {
             return;
         }
         out.append("~~~text\n").append(content).append("\n~~~\n\n");
+    }
+
+    private static String renderEdtException(CapturedEdtException exception) {
+        StringBuilder detail = new StringBuilder();
+        detail.append("Occurred: ")
+                .append(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
+                        exception.occurredAt().atZone(ZoneId.systemDefault())))
+                .append('\n');
+        detail.append("Elapsed since diagnostics started: +")
+                .append(String.format(Locale.ROOT, "%.3f", exception.elapsedNanos() / 1_000_000_000.0))
+                .append(" s\n");
+        detail.append("Thread: ").append(exception.threadName())
+                .append(" [id=").append(exception.threadId()).append("]\n");
+        detail.append("Capture: ").append(exception.captureMechanism()).append('\n');
+        if (exception.invokingThreadName() != null) {
+            detail.append("Invoking thread: ").append(exception.invokingThreadName())
+                    .append(" [id=").append(exception.invokingThreadId()).append("]\n");
+        }
+        detail.append('\n').append(exception.detail().trim());
+        if (exception.invocationDetail() != null) {
+            detail.append("\n\nInvocation handoff:\n")
+                    .append(exception.invocationDetail().trim());
+        }
+        return detail.toString();
     }
 
     private static String describeFailure(Throwable failure) {

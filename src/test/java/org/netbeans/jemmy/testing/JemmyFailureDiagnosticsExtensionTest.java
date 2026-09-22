@@ -29,9 +29,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.junit.jupiter.api.AfterEach;
@@ -122,6 +124,9 @@ class JemmyFailureDiagnosticsExtensionTest {
                 .contains("## Consumer context", "extra diagnostic context")
                 .contains("### Secondary EDT exception 1", "java.lang.NullPointerException: secondary")
                 .contains("### Secondary EDT exception 2", "java.lang.IllegalStateException: later secondary")
+                .contains("Occurred:", "Elapsed since diagnostics started:")
+                .contains("Thread: AWT-EventQueue-0 [id=", "Capture: uncaught EDT exception handler")
+                .contains("jemmy-action-present-at-failure")
                 .doesNotContain("## UI diagnostics\n\n_(none)_")
                 .doesNotContain("--- wait diagnostics ---");
 
@@ -210,8 +215,24 @@ class JemmyFailureDiagnosticsExtensionTest {
     @NoSaveScreenshotOnFailure
     @ExtendWith({NestedExecutionOnly.class, ReportLinkOnFailure.class, JemmyFailureDiagnosticsExtension.class})
     static class FailingFixture {
+        private final CountDownLatch releaseActionThread = new CountDownLatch(1);
+        private Thread actionThread;
+
         @Test
-        void deliberatelyFails(TestReporter reporter) {
+        void deliberatelyFails(TestReporter reporter) throws InterruptedException {
+            CountDownLatch actionThreadStarted = new CountDownLatch(1);
+            actionThread = new Thread(() -> {
+                actionThreadStarted.countDown();
+                try {
+                    releaseActionThread.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }, "jemmy-action-present-at-failure");
+            actionThread.setDaemon(true);
+            actionThread.start();
+            assertThat(actionThreadStarted.await(5, TimeUnit.SECONDS)).isTrue();
+
             if (JemmyDiagnostics.isEnabled()) {
                 JUnitAttachmentUtils.publishPng(
                         reporter, new BufferedImage(2, 3, BufferedImage.TYPE_INT_ARGB), "comparison.png");
@@ -227,6 +248,14 @@ class JemmyFailureDiagnosticsExtensionTest {
                     new Thread("AWT-EventQueue-0"),
                     new IllegalStateException("later secondary"));
             throw failure;
+        }
+
+        @AfterEach
+        void stopActionThread() throws InterruptedException {
+            releaseActionThread.countDown();
+            if (actionThread != null) {
+                actionThread.join(5_000L);
+            }
         }
     }
 

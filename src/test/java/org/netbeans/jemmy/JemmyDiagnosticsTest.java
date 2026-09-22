@@ -17,10 +17,13 @@
 package org.netbeans.jemmy;
 
 import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -459,6 +462,16 @@ class JemmyDiagnosticsTest {
                             "Secondary EDT failure: NullPointerException at "
                                     + "example.ui.SampleView.refresh(SampleView.java:42)",
                             "Secondary EDT failure: IllegalStateException");
+            assertThat(JemmyDiagnostics.findCapturedEdtExceptions(primary))
+                    .allSatisfy(captured -> {
+                        assertThat(captured.occurredAt()).isNotNull();
+                        assertThat(captured.elapsedNanos()).isNotNegative();
+                        assertThat(captured.threadName()).isEqualTo("AWT-EventQueue-0");
+                        assertThat(captured.threadId()).isPositive();
+                        assertThat(captured.captureMechanism()).isEqualTo("uncaught EDT exception handler");
+                        assertThat(captured.invokingThreadName()).isNull();
+                        assertThat(captured.invocationDetail()).isNull();
+                    });
 
             RuntimeException workerFailure = new RuntimeException("worker failed");
             Thread.getDefaultUncaughtExceptionHandler()
@@ -466,6 +479,75 @@ class JemmyDiagnosticsTest {
             assertThat(delegated.get()).isSameAs(workerFailure);
         } finally {
             JemmyDiagnostics.clearRecordedEdtFailure();
+            Thread.setDefaultUncaughtExceptionHandler(original);
+        }
+    }
+
+    @Test
+    void recordsAnEdtFailureCaughtByASynchronousDispatcher() {
+        Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
+        RuntimeException secondary = new RuntimeException("caught on EDT");
+        InvocationTargetException invocationFailure = new InvocationTargetException(secondary);
+        Thread edt = new Thread("AWT-EventQueue-7");
+        Thread invoker = new Thread("calculation-1");
+        AssertionError primary = new AssertionError("primary");
+        Instant occurredAt = Instant.parse("2026-09-22T02:43:44.123Z");
+        try {
+            JemmyDiagnostics.installEdtFailureRecorder();
+            JemmyDiagnostics.clearRecordedEdtFailure();
+
+            JemmyDiagnostics.recordCaughtEdtFailure(
+                    edt,
+                    secondary,
+                    occurredAt,
+                    System.nanoTime(),
+                    "EventQueueUtils.runOnEdtLogging",
+                    invoker,
+                    invocationFailure);
+            JemmyDiagnostics.attachRecordedEdtFailure(primary);
+
+            CapturedEdtException captured = JemmyDiagnostics.findCapturedEdtExceptions(primary).get(0);
+            assertThat(captured.occurredAt()).isEqualTo(occurredAt);
+            assertThat(captured.elapsedNanos()).isNotNegative();
+            assertThat(captured.threadName()).isEqualTo("AWT-EventQueue-7");
+            assertThat(captured.threadId()).isEqualTo(edt.getId());
+            assertThat(captured.captureMechanism()).isEqualTo("EventQueueUtils.runOnEdtLogging");
+            assertThat(captured.invokingThreadName()).isEqualTo("calculation-1");
+            assertThat(captured.invokingThreadId()).isEqualTo(invoker.getId());
+            assertThat(captured.invocationDetail()).contains("java.lang.reflect.InvocationTargetException");
+        } finally {
+            JemmyDiagnostics.clearRecordedEdtFailure();
+            Thread.setDefaultUncaughtExceptionHandler(original);
+        }
+    }
+
+    @Test
+    void recordsEdtFailureLoggedByNoBlockingAction() throws InterruptedException {
+        Thread.UncaughtExceptionHandler original = Thread.getDefaultUncaughtExceptionHandler();
+        RuntimeException secondary = new RuntimeException("non-blocking EDT failure");
+        AssertionError primary = new AssertionError("primary");
+        CountDownLatch actionsFinished = new CountDownLatch(1);
+        try {
+            JemmyDiagnostics.installEdtFailureRecorder();
+            JemmyDiagnostics.clearRecordedEdtFailure();
+
+            RunnableRunner.on(() -> QueueTool.getInstance().runOnQueue(() -> {
+                throw secondary;
+            })).runLater();
+            RunnableRunner.on(actionsFinished::countDown).runLater();
+
+            assertThat(actionsFinished.await(10, TimeUnit.SECONDS)).isTrue();
+            JemmyDiagnostics.attachRecordedEdtFailure(primary);
+
+            CapturedEdtException captured = JemmyDiagnostics.findCapturedEdtExceptions(primary).get(0);
+            assertThat(captured.detail()).contains("java.lang.RuntimeException: non-blocking EDT failure");
+            assertThat(captured.threadName()).startsWith("AWT-EventQueue-");
+            assertThat(captured.captureMechanism()).isEqualTo("QueueTool.runOnQueue");
+            assertThat(captured.invokingThreadName()).startsWith("jemmy-action-");
+            assertThat(captured.invocationDetail()).contains("QueueTool.runOnQueue");
+        } finally {
+            JemmyDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.restoreEdtFailureRecorder();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
     }

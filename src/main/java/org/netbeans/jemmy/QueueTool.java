@@ -111,7 +111,7 @@ public final class QueueTool {
             }
         }
 
-        return invokeAndWait(Caller.of(callable));
+        return invokeAndWait(Caller.of(callable, "QueueTool.callOnQueue"));
     }
 
     /**
@@ -135,7 +135,7 @@ public final class QueueTool {
         dispatchAndAwait(Caller.of(() -> {
             runnable.run();
             return null;
-        }));
+        }, "QueueTool.runOnQueue"));
     }
 
     private <R> R invokeAndWait(Caller<R> caller) {

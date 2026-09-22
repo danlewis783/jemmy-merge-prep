@@ -57,6 +57,7 @@ public final class JemmyFailureDiagnosticsExtension implements
     public void handleTestExecutionException(ExtensionContext context, Throwable cause) throws Throwable {
         SaveScreenshotOnFailureExtension.captureAndPublish(context);
         JemmyDiagnostics.attachRecordedEdtFailure(cause);
+        JemmyDiagnostics.attachTo(cause);
         context.getStore(NAMESPACE).put(FAILURE, cause);
         throw cause;
     }

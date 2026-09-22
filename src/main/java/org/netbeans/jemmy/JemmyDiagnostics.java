@@ -24,6 +24,7 @@ import java.awt.TextComponent;
 import java.awt.Window;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +39,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.accessibility.AccessibleContext;
 import javax.swing.AbstractButton;
@@ -64,6 +66,8 @@ public final class JemmyDiagnostics {
     private static final long EDT_PROBE_TIMEOUT_MS = 300L;
     private static final int MAX_SECONDARY_FAILURE_DETAIL_LENGTH = 100_000;
     private static final Queue<RecordedEdtFailure> recordedEdtFailures = new ConcurrentLinkedQueue<>();
+    private static final AtomicLong edtFailureSequence = new AtomicLong();
+    private static volatile long edtFailureRecordingStartNanos = System.nanoTime();
 
     private JemmyDiagnostics() {}
 
@@ -98,22 +102,63 @@ public final class JemmyDiagnostics {
     /** Clears any secondary EDT failure retained for a preceding test. */
     public static void clearRecordedEdtFailure() {
         recordedEdtFailures.clear();
+        edtFailureSequence.set(0L);
+        edtFailureRecordingStartNanos = System.nanoTime();
     }
 
     /** Attaches and consumes all EDT failures recorded during the current test. */
     public static void attachRecordedEdtFailure(Throwable primaryFailure) {
-        RecordedEdtFailure recorded;
-        while ((recorded = recordedEdtFailures.poll()) != null) {
-            attachSecondaryUiFailure(primaryFailure, recorded.failure);
+        for (RecordedEdtFailure recorded : drainRecordedEdtFailures()) {
+            attachSecondaryUiFailure(primaryFailure, recorded);
         }
     }
 
     /** Sends all unassociated EDT failures to the application handler instead of silently losing them. */
     public static void reportRecordedEdtFailure() {
-        RecordedEdtFailure recorded;
-        while ((recorded = recordedEdtFailures.poll()) != null) {
+        for (RecordedEdtFailure recorded : drainRecordedEdtFailures()) {
             recorded.report();
         }
+    }
+
+    /** Records an EDT failure caught by a synchronous-dispatch utility. */
+    public static void recordCaughtEdtFailure(
+            Thread eventDispatchThread,
+            Throwable failure,
+            Instant occurredAt,
+            long nanoTime,
+            String captureMechanism,
+            Thread invokingThread,
+            Throwable invocationFailure) {
+        if (!isEnabled()) {
+            return;
+        }
+        Thread.UncaughtExceptionHandler current = Thread.getDefaultUncaughtExceptionHandler();
+        if (current instanceof EdtFailureRecorder) {
+            EdtFailureRecorder recorder = (EdtFailureRecorder) current;
+            recordedEdtFailures.add(new RecordedEdtFailure(
+                    eventDispatchThread,
+                    failure,
+                    recorder.delegate,
+                    false,
+                    occurredAt,
+                    nanoTime,
+                    captureMechanism,
+                    invokingThread,
+                    invocationFailure,
+                    edtFailureSequence.incrementAndGet()));
+        }
+    }
+
+    private static List<RecordedEdtFailure> drainRecordedEdtFailures() {
+        List<RecordedEdtFailure> recorded = new ArrayList<>();
+        RecordedEdtFailure next;
+        while ((next = recordedEdtFailures.poll()) != null) {
+            recorded.add(next);
+        }
+        recorded.sort(Comparator
+                .comparingLong((RecordedEdtFailure failure) -> failure.nanoTime)
+                .thenComparingLong(failure -> failure.sequence));
+        return recorded;
     }
 
     static DiagnosticCapture captureSnapshot(@Nullable String testDisplayName) {
@@ -359,14 +404,40 @@ public final class JemmyDiagnostics {
 
     /** Adds a concise, stackless marker for a UI-thread exception related to the primary failure. */
     public static void attachSecondaryUiFailure(Throwable failure, Throwable secondaryFailure) {
+        long nanoTime = System.nanoTime();
+        attachSecondaryUiFailure(failure, new RecordedEdtFailure(
+                Thread.currentThread(),
+                secondaryFailure,
+                null,
+                false,
+                Instant.now(),
+                nanoTime,
+                "direct attachment",
+                null,
+                null,
+                edtFailureSequence.incrementAndGet()));
+    }
+
+    private static void attachSecondaryUiFailure(Throwable failure, RecordedEdtFailure recorded) {
+        Throwable secondaryFailure = recorded.failure;
         if (!isEnabled()
                 || failure == secondaryFailure
                 || containsSecondaryUiFailure(failure, secondaryFailure)) {
             return;
         }
         try {
+            long elapsedNanos = Math.max(0L, recorded.nanoTime - edtFailureRecordingStartNanos);
             failure.addSuppressed(new SecondaryUiFailure(secondaryFailure, new CapturedEdtException(
-                    summarize(secondaryFailure), renderSecondaryFailure(secondaryFailure))));
+                    summarize(secondaryFailure),
+                    renderSecondaryFailure(secondaryFailure),
+                    recorded.occurredAt,
+                    elapsedNanos,
+                    recorded.threadName,
+                    recorded.threadId,
+                    recorded.captureMechanism,
+                    recorded.invokingThreadName,
+                    recorded.invokingThreadId,
+                    renderInvocationDetail(recorded.invocationFailure))));
         } catch (Throwable ignored) {
             // The primary failure wins even when recording the secondary failure fails.
         }
@@ -440,6 +511,17 @@ public final class JemmyDiagnostics {
                 ? detail
                 : detail.substring(0, MAX_SECONDARY_FAILURE_DETAIL_LENGTH)
                         + "\n... secondary EDT detail truncated ...\n";
+    }
+
+    private static @Nullable String renderInvocationDetail(@Nullable Throwable failure) {
+        if (failure == null) {
+            return null;
+        }
+        StringBuilder detail = new StringBuilder(failure.toString()).append('\n');
+        for (StackTraceElement frame : failure.getStackTrace()) {
+            detail.append("\tat ").append(frame).append('\n');
+        }
+        return detail.toString();
     }
 
     private static String summarize(Throwable failure) {
@@ -1070,7 +1152,17 @@ public final class JemmyDiagnostics {
         @Override
         public void uncaughtException(Thread thread, Throwable failure) {
             if (thread.getName().startsWith("AWT-EventQueue")) {
-                recordedEdtFailures.add(new RecordedEdtFailure(thread, failure, delegate));
+                recordedEdtFailures.add(new RecordedEdtFailure(
+                        thread,
+                        failure,
+                        delegate,
+                        true,
+                        Instant.now(),
+                        System.nanoTime(),
+                        "uncaught EDT exception handler",
+                        null,
+                        null,
+                        edtFailureSequence.incrementAndGet()));
                 return;
             } else if (delegate != null) {
                 delegate.uncaughtException(thread, failure);
@@ -1085,17 +1177,47 @@ public final class JemmyDiagnostics {
         private final Thread thread;
         private final Throwable failure;
         private final @Nullable Thread.UncaughtExceptionHandler delegate;
+        private final boolean reportWhenUnassociated;
+        private final Instant occurredAt;
+        private final long nanoTime;
+        private final String threadName;
+        private final long threadId;
+        private final String captureMechanism;
+        private final @Nullable String invokingThreadName;
+        private final long invokingThreadId;
+        private final @Nullable Throwable invocationFailure;
+        private final long sequence;
 
         RecordedEdtFailure(
                 Thread thread,
                 Throwable failure,
-                @Nullable Thread.UncaughtExceptionHandler delegate) {
+                @Nullable Thread.UncaughtExceptionHandler delegate,
+                boolean reportWhenUnassociated,
+                Instant occurredAt,
+                long nanoTime,
+                String captureMechanism,
+                @Nullable Thread invokingThread,
+                @Nullable Throwable invocationFailure,
+                long sequence) {
             this.thread = thread;
             this.failure = failure;
             this.delegate = delegate;
+            this.reportWhenUnassociated = reportWhenUnassociated;
+            this.occurredAt = occurredAt;
+            this.nanoTime = nanoTime;
+            this.threadName = thread.getName();
+            this.threadId = thread.getId();
+            this.captureMechanism = captureMechanism;
+            this.invokingThreadName = invokingThread == null ? null : invokingThread.getName();
+            this.invokingThreadId = invokingThread == null ? -1L : invokingThread.getId();
+            this.invocationFailure = invocationFailure;
+            this.sequence = sequence;
         }
 
         void report() {
+            if (!reportWhenUnassociated) {
+                return;
+            }
             if (delegate != null) {
                 delegate.uncaughtException(thread, failure);
             } else {

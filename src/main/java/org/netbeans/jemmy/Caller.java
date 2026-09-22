@@ -17,6 +17,7 @@
 
 package org.netbeans.jemmy;
 
+import java.time.Instant;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
@@ -44,14 +45,18 @@ final class Caller<R> implements Runnable {
     private enum State { FRESH, RUNNING, CANCELLED }
 
     private final Callable<R> callable;
+    private final String captureMechanism;
     private final CountDownLatch endGate;
+    private final Thread invokingThread;
     private final AtomicReference<@Nullable Throwable> throwable;
     private final AtomicReference<@Nullable R> result;
     private final CountDownLatch startGate;
     private final AtomicReference<State> state;
 
-    private Caller(Callable<R> callable) {
+    private Caller(Callable<R> callable, String captureMechanism) {
         this.callable = callable;
+        this.captureMechanism = captureMechanism;
+        invokingThread = Thread.currentThread();
         throwable = new AtomicReference<>();
         result = new AtomicReference<>();
         startGate = new CountDownLatch(1);
@@ -94,8 +99,28 @@ final class Caller<R> implements Runnable {
             if (!throwable.compareAndSet(null, t)) {
                 throw new IllegalStateException("throwable already captured");
             }
+            recordCaughtEdtFailure(t);
         } finally {
             endGate.countDown();
+        }
+    }
+
+    private void recordCaughtEdtFailure(Throwable failure) {
+        try {
+            Instant occurredAt = Instant.now();
+            long nanoTime = System.nanoTime();
+            Throwable invocationFailure = new Throwable(captureMechanism + " invocation handoff");
+            invocationFailure.setStackTrace(invokingThread.getStackTrace());
+            JemmyDiagnostics.recordCaughtEdtFailure(
+                    Thread.currentThread(),
+                    failure,
+                    occurredAt,
+                    nanoTime,
+                    captureMechanism,
+                    invokingThread,
+                    invocationFailure);
+        } catch (Throwable recordingFailure) {
+            logger.warn("could not record caught EDT failure", recordingFailure);
         }
     }
 
@@ -118,6 +143,10 @@ final class Caller<R> implements Runnable {
     }
 
     static <RR> Caller<RR> of(Callable<RR> callable) {
-        return new Caller<>(callable);
+        return new Caller<>(callable, "QueueTool");
+    }
+
+    static <RR> Caller<RR> of(Callable<RR> callable, String captureMechanism) {
+        return new Caller<>(callable, captureMechanism);
     }
 }
