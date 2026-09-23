@@ -89,6 +89,7 @@ testing {
                 implementation(project())
                 implementation(testFixtures(project()))
                 implementation(libs.assertj.core)
+                implementation(libs.awaitility)
                 runtimeOnly(libs.logback.classic)
                 // SaveScreenshotOnFailureExtensionTest uses the Launcher API at compile time
                 implementation(libs.junit.platform.launcher)

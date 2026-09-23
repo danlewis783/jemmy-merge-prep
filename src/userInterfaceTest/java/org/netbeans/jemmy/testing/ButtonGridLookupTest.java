@@ -41,9 +41,12 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 import static org.netbeans.jemmy.util.StringComparators.strict;
 import static org.netbeans.jemmy.util.StringComparators.substring;
 
@@ -120,9 +123,22 @@ class ButtonGridLookupTest {
                 JToolTipOperator buttonToolTipOp = JToolTipOperator.of(buttonToolTip);
                 assertThat(buttonToolTipOp.getTipText()).isEqualTo(buttonText + " button");
                 byTextButtonOp.push();
-                statusLabelOp.waitText("Button \"" + buttonText + "\" has been pushed", strict());
-                progressBarOp.waitValue(buttonText, strict());
-                progressBarOp.waitValue(buttonIndex + 1);
+                await("feedback after clicking " + buttonText)
+                        .pollInSameThread() // retain Jemmy's test-local diagnostic recording
+                        .dontCatchUncaughtExceptions() // leave EDT failure capture to Jemmy's extension
+                        .pollDelay(Duration.ZERO)
+                        .pollInterval(Duration.ofMillis(50))
+                        .atMost(Duration.ofSeconds(5))
+                        .untilAsserted(() -> {
+                            // Read one EDT snapshot, then assert on the test thread so an
+                            // AssertionError reaches Awaitility without Jemmy wrapping it.
+                            Object[] feedback = onQueue(() -> new Object[] {
+                                    statusLabelOp.getText(), progressBarOp.getString(), progressBarOp.getValue()
+                            });
+                            assertThat(feedback).as("status text, progress text, progress value")
+                                    .containsExactly("Button \"" + buttonText + "\" has been pushed",
+                                            buttonText, buttonIndex + 1);
+                        });
             }
         }
 
