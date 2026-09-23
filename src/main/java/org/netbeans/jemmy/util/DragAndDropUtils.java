@@ -423,6 +423,7 @@ public final class DragAndDropUtils {
         try {
             SwingUtilities.invokeAndWait(runnable);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException("interrupted during run on the EDT", e);
         } catch (InvocationTargetException e) {
             throw new RuntimeException("exception occurred inside run on EDT (see cause)", e);

@@ -70,12 +70,16 @@ final class ActionRunner<R> {
         if (EventQueue.isDispatchThread()) {
             throw new RuntimeException("no waiting allowed on EDT");
         }
+        throwable.set(null);
         ActionScope actionScope = new ActionScope();
+        JemmyDiagnostics.Recording recording = JemmyDiagnostics.currentRecording();
         Future<R> laFutura = JEMMY_ACTION_SERVICE.submit(() -> {
             CURRENT_ACTION_SCOPE.set(actionScope);
+            JemmyDiagnostics.Recording previous = JemmyDiagnostics.useRecording(recording);
             try {
                 return work.call();
             } finally {
+                JemmyDiagnostics.useRecording(previous);
                 CURRENT_ACTION_SCOPE.remove();
             }
         });
@@ -85,10 +89,14 @@ final class ActionRunner<R> {
             return laFutura.get(timeout, TimeUnit.MILLISECONDS);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof TimeoutExpiredException) {
-                throw (TimeoutExpiredException) cause;
-            }
             throwable.set(cause);
+            if (cause instanceof JemmyException) {
+                throw (JemmyException) cause;
+            }
+            if (cause instanceof Error) {
+                throw (Error) cause;
+            }
+            throw new JemmyException("Throwable captured by action runner", cause);
         } catch (TimeoutException e) {
             throwable.set(e);
             // capture before the finally-block cancel below interrupts the action: the
@@ -113,18 +121,30 @@ final class ActionRunner<R> {
                 }
             }
         }
-
-        return null;
     }
 
     void submitLater(Runnable work) {
+        JemmyDiagnostics.Recording recording = JemmyDiagnostics.currentRecording();
+        Thread invoker = Thread.currentThread();
+        Throwable submission = new Throwable("Asynchronous Jemmy action submitted here by "
+                + invoker.getName() + " [id=" + invoker.getId() + "]");
         JEMMY_ACTION_SERVICE.execute(() -> {
+            throwable.set(null);
+            JemmyDiagnostics.Recording previous = JemmyDiagnostics.useRecording(recording);
             try {
                 work.run();
-            } catch (RuntimeException e) {
-                // the submitter has already returned and cannot be told; log so the failure
-                // is not lost, and keep the single worker thread alive for later actions
-                logger.warn("exception in no-blocking action", e);
+            } catch (Throwable failure) {
+                throwable.set(failure);
+                if (recording == null || !recording.recordAction(failure, submission)) {
+                    // Work that outlives its recording stays visible without contaminating
+                    // the next test. An unobserved action must never disappear silently.
+                    logger.warn("exception in no-blocking action", failure);
+                }
+                if (failure instanceof VirtualMachineError || failure instanceof ThreadDeath) {
+                    throw (Error) failure;
+                }
+            } finally {
+                JemmyDiagnostics.useRecording(previous);
             }
         });
     }

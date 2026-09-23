@@ -111,6 +111,7 @@ public final class Timeouts {
 
             Thread.sleep(value);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new JemmyException(
                     String.format("interrupted while sleeping for timeout \"%s\" (%d ms)", key, value), e);
         }

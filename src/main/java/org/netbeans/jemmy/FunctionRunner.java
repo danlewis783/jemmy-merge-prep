@@ -22,6 +22,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Runs a {@link Function} on the Jemmy action thread; see {@link ActionRunner} for the
  * timeout, cancellation, and exception-capture semantics shared by all runners.
+ * Blocking calls throw failures directly: JemmyException and Error propagate unchanged,
+ * and other failures are wrapped in JemmyException with their original cause.
+ * getThrowable() exposes the last execution failure and is cleared when the next execution starts.
  */
 public final class FunctionRunner<T, R> {
     private final Function<T, R> function;

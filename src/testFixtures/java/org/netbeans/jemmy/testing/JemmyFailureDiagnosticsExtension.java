@@ -20,7 +20,11 @@ import org.netbeans.jemmy.JemmyFailureDiagnostics;
 import org.netbeans.jemmy.JemmyDiagnosticReport;
 import org.netbeans.jemmy.JemmyDiagnostics;
 
-/** Captures one UI snapshot and publishes a consolidated diagnostic report. */
+/**
+ * Captures one UI snapshot and publishes a consolidated diagnostic report. Asynchronous
+ * Jemmy action failures recorded before afterEach also fail an otherwise successful test.
+ * Actions that finish after the recording closes are logged by their worker instead.
+ */
 public final class JemmyFailureDiagnosticsExtension implements
         BeforeEachCallback, AfterEachCallback, TestExecutionExceptionHandler {
     private static final ExtensionContext.Namespace NAMESPACE =
@@ -40,8 +44,20 @@ public final class JemmyFailureDiagnosticsExtension implements
     public void afterEach(ExtensionContext context) {
         try {
             Throwable failure = context.getStore(NAMESPACE).remove(FAILURE, Throwable.class);
+            if (failure == null) {
+                failure = context.getExecutionException().orElse(null);
+            }
+            Throwable primaryFailure = failure;
+            failure = JemmyDiagnostics.finishRecordedActions(failure);
             if (failure != null) {
+                if (primaryFailure == null) {
+                    SaveScreenshotOnFailureExtension.captureAndPublish(context);
+                    JemmyDiagnostics.attachTo(failure);
+                }
                 dump(context, failure);
+                if (primaryFailure == null) {
+                    throw (RuntimeException) failure;
+                }
             }
         } finally {
             try {

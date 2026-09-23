@@ -141,14 +141,18 @@ class QueueToolAbandonedCallerTest {
     @Test
     void abandonedWorkSkipsAfterAwaiterInterrupt() throws Exception {
         AtomicBoolean staleWorkRan = new AtomicBoolean(false);
+        AtomicBoolean interruptPreserved = new AtomicBoolean(false);
         AtomicReference<Throwable> thrown = new AtomicReference<>();
         BlockedEdt blocked = postBlockedEdt();
 
         Thread awaiter = new Thread(
-                () -> thrown.set(catchThrowable(() -> QueueTool.getInstance().callOnQueue(() -> {
-                    staleWorkRan.set(true);
-                    return null;
-                }))),
+                () -> {
+                    thrown.set(catchThrowable(() -> QueueTool.getInstance().callOnQueue(() -> {
+                        staleWorkRan.set(true);
+                        return null;
+                    })));
+                    interruptPreserved.set(Thread.currentThread().isInterrupted());
+                },
                 "abandoned-caller-awaiter");
         awaiter.start();
         awaitParked(awaiter);
@@ -159,6 +163,7 @@ class QueueToolAbandonedCallerTest {
         assertThat(thrown.get())
                 .isInstanceOf(JemmyException.class)
                 .hasCauseInstanceOf(InterruptedException.class);
+        assertThat(interruptPreserved).isTrue();
 
         blocked.releaseEdt();
         EventQueue.invokeAndWait(() -> {});
@@ -166,6 +171,36 @@ class QueueToolAbandonedCallerTest {
         assertThat(staleWorkRan)
                 .as("check that work abandoned on interrupt never ran once the EDT recovered")
                 .isFalse();
+    }
+
+    @Test
+    void interruptWhileWaitingForRunningWorkPreservesTheInterrupt() throws Exception {
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        AtomicReference<Throwable> thrown = new AtomicReference<>();
+        AtomicBoolean interruptPreserved = new AtomicBoolean(false);
+        Thread awaiter = new Thread(() -> {
+            thrown.set(catchThrowable(() -> QueueTool.getInstance().callOnQueue(() -> {
+                started.countDown();
+                release.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS);
+                return null;
+            })));
+            interruptPreserved.set(Thread.currentThread().isInterrupted());
+        }, "running-caller-awaiter");
+        try {
+            awaiter.start();
+            assertThat(started.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS)).isTrue();
+            awaitParked(awaiter);
+            awaiter.interrupt();
+            awaiter.join(LATCH_WAIT_TIME);
+            assertThat(awaiter.isAlive()).isFalse();
+            assertThat(thrown.get()).isInstanceOf(JemmyException.class)
+                    .hasMessageContaining("end latch").hasCauseInstanceOf(InterruptedException.class);
+            assertThat(interruptPreserved).isTrue();
+        } finally {
+            release.countDown();
+            EventQueue.invokeAndWait(() -> {});
+        }
     }
 
     @Test

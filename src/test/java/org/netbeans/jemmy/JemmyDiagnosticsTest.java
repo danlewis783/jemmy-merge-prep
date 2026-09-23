@@ -479,6 +479,7 @@ class JemmyDiagnosticsTest {
             assertThat(delegated.get()).isSameAs(workerFailure);
         } finally {
             JemmyDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.restoreEdtFailureRecorder();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
     }
@@ -517,6 +518,7 @@ class JemmyDiagnosticsTest {
             assertThat(captured.invocationDetail()).contains("java.lang.reflect.InvocationTargetException");
         } finally {
             JemmyDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.restoreEdtFailureRecorder();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
     }
@@ -572,6 +574,7 @@ class JemmyDiagnosticsTest {
             assertThat(delegated).containsExactly(secondary, laterSecondary);
         } finally {
             JemmyDiagnostics.clearRecordedEdtFailure();
+            JemmyDiagnostics.restoreEdtFailureRecorder();
             Thread.setDefaultUncaughtExceptionHandler(original);
         }
     }

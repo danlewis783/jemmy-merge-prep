@@ -207,52 +207,27 @@ public abstract class Operator {
 
     @SuppressWarnings("SameParameterValue")
     <R> @Nullable R supplyTimeRestricted(Supplier<@Nullable R> supplier, TimeoutKey timeoutKey) {
-        SupplierRunner<R> supplierRunner = SupplierRunner.on(supplier);
-        R result;
         try {
-            result = supplierRunner.getAndWait(timeoutKey);
+            return SupplierRunner.on(supplier).getAndWait(timeoutKey);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new JemmyException("interrupted waiting for supplier", e);
         }
-
-        Throwable throwable = supplierRunner.getThrowable();
-        if (throwable != null) {
-            if (throwable instanceof JemmyException) {
-                throw (JemmyException) throwable;
-            } else {
-                throw new JemmyException(
-                        String.format("throwable encountered during execution of supplier \"%s\"", supplier),
-                        throwable);
-            }
-        }
-
-        return result;
     }
 
     void runTimeRestricted(Runnable runnable, TimeoutKey timeoutKey) {
-        RunnableRunner runnableRunner = RunnableRunner.on(runnable);
         try {
-            runnableRunner.runAndWait(timeoutKey);
+            RunnableRunner.on(runnable).runAndWait(timeoutKey);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new JemmyException("interrupted waiting for runnable", e);
-        }
-
-        Throwable throwable = runnableRunner.getThrowable();
-        if (throwable != null) {
-            if (throwable instanceof JemmyException) {
-                throw (JemmyException) throwable;
-            } else {
-                throw new JemmyException(
-                        String.format("throwable encountered during execution of runnable \"%s\"", runnable),
-                        throwable);
-            }
         }
     }
 
     /**
      * Schedules the function on the Jemmy action thread and returns immediately. Because this
      * method does not wait, a failure cannot be rethrown here: an exception from the action is
-     * logged by the action thread instead.
+     * recorded for the active diagnostics test, or logged when no recording is active.
      *
      * @deprecated Use {@link #runNoBlocking(Runnable)} instead: the result is discarded by
      *     construction and the argument can be captured by the lambda.
@@ -265,7 +240,7 @@ public abstract class Operator {
     /**
      * Schedules the runnable on the Jemmy action thread and returns immediately. Because this
      * method does not wait, a failure cannot be rethrown here: an exception from the action is
-     * logged by the action thread instead.
+     * recorded for the active diagnostics test, or logged when no recording is active.
      */
     protected void runNoBlocking(Runnable runnable) {
         RunnableRunner.on(runnable).runLater();

@@ -48,6 +48,8 @@ final class Caller<R> implements Runnable {
     private final String captureMechanism;
     private final CountDownLatch endGate;
     private final Thread invokingThread;
+    private final JemmyDiagnostics.@Nullable Recording recording;
+    private final @Nullable Throwable invocationFailure;
     private final AtomicReference<@Nullable Throwable> throwable;
     private final AtomicReference<@Nullable R> result;
     private final CountDownLatch startGate;
@@ -57,6 +59,8 @@ final class Caller<R> implements Runnable {
         this.callable = callable;
         this.captureMechanism = captureMechanism;
         invokingThread = Thread.currentThread();
+        recording = JemmyDiagnostics.currentRecording();
+        invocationFailure = recording == null ? null : new Throwable(captureMechanism + " invocation handoff");
         throwable = new AtomicReference<>();
         result = new AtomicReference<>();
         startGate = new CountDownLatch(1);
@@ -83,6 +87,7 @@ final class Caller<R> implements Runnable {
             }
             throw new IllegalStateException("attempted to re-run Caller");
         }
+        JemmyDiagnostics.Recording previous = JemmyDiagnostics.useRecording(recording);
         try {
             startGate.countDown();
 
@@ -101,17 +106,20 @@ final class Caller<R> implements Runnable {
             }
             recordCaughtEdtFailure(t);
         } finally {
+            JemmyDiagnostics.useRecording(previous);
             endGate.countDown();
         }
     }
 
     private void recordCaughtEdtFailure(Throwable failure) {
+        if (recording == null || invocationFailure == null) {
+            return;
+        }
         try {
             Instant occurredAt = Instant.now();
             long nanoTime = System.nanoTime();
-            Throwable invocationFailure = new Throwable(captureMechanism + " invocation handoff");
-            invocationFailure.setStackTrace(invokingThread.getStackTrace());
             JemmyDiagnostics.recordCaughtEdtFailure(
+                    recording,
                     Thread.currentThread(),
                     failure,
                     occurredAt,

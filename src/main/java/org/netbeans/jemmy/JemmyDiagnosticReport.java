@@ -50,6 +50,10 @@ public final class JemmyDiagnosticReport {
         }
 
         List<CapturedEdtException> edtExceptions = captured.edtExceptions();
+        if (!edtExceptions.isEmpty()) {
+            out.append("EDT exceptions observed during this recording interval are listed below; ")
+                    .append("their presence does not establish the cause of the primary failure.\n\n");
+        }
         for (int index = 0; index < edtExceptions.size(); index++) {
             CapturedEdtException edtException = edtExceptions.get(index);
             if (!edtException.detail().trim().isEmpty()) {

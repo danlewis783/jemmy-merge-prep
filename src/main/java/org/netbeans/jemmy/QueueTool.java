@@ -182,6 +182,7 @@ public final class QueueTool {
             }
         } catch (InterruptedException e) {
             caller.cancel();
+            Thread.currentThread().interrupt();
             throw new JemmyException("InterruptedException raised while waiting for start latch of caller", e);
         }
 
@@ -199,6 +200,7 @@ public final class QueueTool {
                         null);
             }
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new JemmyException("InterruptedException raised while waiting for end latch of caller", e);
         }
 

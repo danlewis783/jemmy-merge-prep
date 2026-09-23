@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 import javax.swing.JTable;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.operators.JTableOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,25 +41,21 @@ public class JTableCellIndexIsPaintedFunction implements Function<Integer, Boole
     public @Nullable Boolean apply(Integer cellIdx) {
         int rowIdxCurrent = (cellIdx < 0) ? 0 : cellIdx;
 
-        try {
-            // the component fetch, row count, and both getCellRect reads must happen together
-            // on the EDT, so the whole read sequence for this apply() call is one hop
-            return QueueTool.getInstance().callOnQueue(() -> {
-                JTableOperator jTableOperator = JTableOperator.of(fileTableSupplier.get());
-                int rowIdxLast = jTableOperator.getModel().getRowCount() - 1;
-                if (rowIdxLast == -1) {
-                    return true;
-                }
-
-                if (jTableOperator.getCellRect(rowIdxCurrent, 0, false) != null) {
-                    return jTableOperator.getCellRect(rowIdxLast, 0, false) != null;
-                } else {
-                    return null;
-                }
-            });
-        } catch (NullPointerException e) {
-            logger.warn("sometimes thrown from JTable.getCellRect when row exists but not painted", e);
-            return null;
-        }
+        // Keep all Swing reads on the EDT and recover geometry failures before dispatch
+        // wraps them; unrelated supplier/model failures must reach the caller.
+        return QueueTool.getInstance().callOnQueue(() -> {
+            JTable table = fileTableSupplier.get();
+            int rowIdxLast = table.getModel().getRowCount() - 1;
+            if (rowIdxLast == -1) {
+                return true;
+            }
+            try {
+                return table.getCellRect(rowIdxCurrent, 0, false) != null
+                        ? table.getCellRect(rowIdxLast, 0, false) != null : null;
+            } catch (NullPointerException e) {
+                logger.warn("sometimes thrown from JTable.getCellRect when row exists but not painted", e);
+                return null;
+            }
+        });
     }
 }

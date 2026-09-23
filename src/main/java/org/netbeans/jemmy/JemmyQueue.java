@@ -65,7 +65,10 @@ public final class JemmyQueue extends EventQueue {
         } else {
             try {
                 EventQueue.invokeAndWait(runnable);
-            } catch (InterruptedException | InvocationTargetException e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new JemmyException("Interrupted while installing JemmyQueue", e);
+            } catch (InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }

@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 import javax.swing.JList;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.QueueTool;
-import org.netbeans.jemmy.operators.JListOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,25 +37,21 @@ public class JListCellIndexIsPaintedFunction implements Function<Integer, Boolea
     public @Nullable Boolean apply(Integer cellIdx) {
         int cellIdxCurrent = (cellIdx < 0) ? 0 : cellIdx;
 
-        try {
-            // the component fetch, model size, and both getCellBounds reads must happen
-            // together on the EDT, so the whole read sequence for this apply() call is one hop
-            return QueueTool.getInstance().callOnQueue(() -> {
-                JListOperator jListOperator = JListOperator.of(fileListSupplier.get());
-                int cellIdxLast = jListOperator.getModel().getSize() - 1;
-                if (cellIdxLast == -1) {
-                    return true;
-                }
-
-                if (jListOperator.getCellBounds(cellIdxCurrent, cellIdxCurrent) != null) {
-                    return jListOperator.getCellBounds(cellIdxLast, cellIdxLast) != null;
-                } else {
-                    return null;
-                }
-            });
-        } catch (NullPointerException e) {
-            logger.warn("sometimes thrown from JList.getCellBounds when item exists but not painted", e);
-            return null;
-        }
+        // Recover only the known geometry failure, before QueueTool wraps it. Supplier and
+        // model failures must still propagate rather than masquerading as an unpainted cell.
+        return QueueTool.getInstance().callOnQueue(() -> {
+            JList<?> list = fileListSupplier.get();
+            int cellIdxLast = list.getModel().getSize() - 1;
+            if (cellIdxLast == -1) {
+                return true;
+            }
+            try {
+                return list.getCellBounds(cellIdxCurrent, cellIdxCurrent) != null
+                        ? list.getCellBounds(cellIdxLast, cellIdxLast) != null : null;
+            } catch (NullPointerException e) {
+                logger.warn("sometimes thrown from JList.getCellBounds when item exists but not painted", e);
+                return null;
+            }
+        });
     }
 }
