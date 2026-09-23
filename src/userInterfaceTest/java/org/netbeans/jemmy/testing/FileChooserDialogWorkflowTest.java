@@ -25,6 +25,9 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Objects;
 import javax.swing.JButton;
@@ -40,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
@@ -82,6 +86,9 @@ class FileChooserDialogWorkflowTest {
 
             JFileChooser jFileChooser = new JFileChooser();
             jFileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+            // the tests compare the chooser against File.listFiles(), which includes hidden files;
+            // left enabled, hiding follows the desktop's show-hidden-files setting (.git on Windows)
+            jFileChooser.setFileHidingEnabled(false);
             jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             jFileChooser.addChoosableFileFilter(new NoDirFilter());
             jFileChooser.addChoosableFileFilter(new NothingFilter());
@@ -275,11 +282,15 @@ class FileChooserDialogWorkflowTest {
     }
 
     @Test
-    void test10() {
+    void test10(@TempDir Path tempDir) throws IOException {
+        // selectPathDirectory matches by name and prefers the deepest entry, so a parent named
+        // like its child (a CI checkout such as repo/repo) would be unreachable; use unique names
+        File parentFile = Files.createDirectory(tempDir.resolve("fc-parent")).toFile().getCanonicalFile();
+        File childDir = Files.createDirectory(parentFile.toPath().resolve("fc-child")).toFile();
+        String fn = Files.createFile(childDir.toPath().resolve("fc-file.txt")).toFile().getCanonicalPath();
         assertTimeoutPreemptively(Duration.ofSeconds(PREEMPTIVE_TIMEOUT_SEC), () -> {
-            String fn = userFiles()[0].getCanonicalPath();
             JFileChooserOperator fcOp = launchFileChooser();
-            File parentFile = userDir.getParentFile();
+            fcOp.setCurrentDirectory(childDir);
             fcOp.selectPathDirectory(parentFile.getName(), STRICT);
             assertThat(fcOp.getCurrentDirectory()).isEqualTo(parentFile);
             fcOp.chooseFile(fn);
