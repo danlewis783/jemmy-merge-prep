@@ -40,12 +40,12 @@ val nativeLookAndFeel: String? = providers.systemProperty("os.name").get().let {
 }
 
 // Forward test configuration from the Gradle invocation into the test JVMs, e.g.
-// gradlew test -DjemmyDiagnosticsEnable=false
+// gradlew test -Djemmy.diagnostics.enabled=false
 // gradlew test -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel
 fun Test.forwardTestProperties() {
     nativeLookAndFeel?.let { systemProperty("swing.defaultlaf", it) }
     listOf(
-        "jemmyDiagnosticsEnable",
+        "jemmy.diagnostics.enabled", // JemmyDiagnostics.ENABLED_PROPERTY
         "jemmy.testing.window.x",
         "jemmy.testing.window.y",
         "swing.defaultlaf",

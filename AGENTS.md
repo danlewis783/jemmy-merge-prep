@@ -54,12 +54,8 @@ JVMs (`forwardTestProperties()` in `build.gradle.kts`):
 | Property | Effect |
 |---|---|
 | `swing.defaultlaf` | Look and feel for the test JVM. Defaults to the native one: `WindowsLookAndFeel` on Windows, `AquaLookAndFeel` on macOS, unset (Swing's Metal) elsewhere |
+| `jemmy.diagnostics.enabled` | `false` turns off Jemmy's failure diagnostics: the Markdown diagnostics report and EDT-failure recording. Failure screenshots have their own opt-out, the `@NoSaveScreenshotOnFailure` tag. The old name `jemmyDiagnosticsEnable` is no longer read |
 | `jemmy.testing.window.x`, `jemmy.testing.window.y` | Where `TestWindows.place` puts test windows (default 300, 300) |
-
-**Known issue:** the build also forwards `jemmyDiagnosticsEnable`, but `JemmyDiagnostics` reads
-`jemmy.diagnostics.enabled` (`JemmyDiagnostics.ENABLED_PROPERTY`; renamed in `d560720`). So
-`-DjemmyDiagnosticsEnable=false` does nothing, and `jemmy.diagnostics.enabled` isn't forwarded.
-Until the build is fixed, there's no command-line switch to turn diagnostics off in the test JVMs.
 
 ### Look and feel pitfalls
 
