@@ -28,13 +28,27 @@ dependencies {
     testFixturesCompileOnly(libs.junit.jupiter.api)
 }
 
+// The platform's native look and feel, as UIManager.getSystemLookAndFeelClassName() would pick
+// it. Elsewhere (Linux) this stays unset so Swing uses its cross-platform default, Metal: Swing
+// only picks GTK on a GNOME desktop, which headless test runs lack.
+val nativeLookAndFeel: String? = providers.systemProperty("os.name").get().let { os ->
+    when {
+        os.startsWith("Windows") -> "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
+        os.startsWith("Mac") -> "com.apple.laf.AquaLookAndFeel"
+        else -> null
+    }
+}
+
 // Forward test configuration from the Gradle invocation into the test JVMs, e.g.
 // gradlew test -DjemmyDiagnosticsEnable=false
+// gradlew test -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel
 fun Test.forwardTestProperties() {
+    nativeLookAndFeel?.let { systemProperty("swing.defaultlaf", it) }
     listOf(
         "jemmyDiagnosticsEnable",
         "jemmy.testing.window.x",
         "jemmy.testing.window.y",
+        "swing.defaultlaf",
     ).forEach { key ->
         (providers.gradleProperty(key).orNull ?: providers.systemProperty(key).orNull)?.let {
             systemProperty(key, it)
@@ -59,7 +73,6 @@ testing {
                 all {
                     testTask.configure {
                         systemProperty("logback.configurationFile", "logback-automated-test.xml")
-                        systemProperty("swing.defaultlaf", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel")
                         forwardTestProperties()
                     }
                 }
@@ -88,7 +101,6 @@ testing {
                         maxParallelForks = 1
                         shouldRunAfter(tasks.test)
                         systemProperty("logback.configurationFile", "logback-automated-test.xml")
-                        systemProperty("swing.defaultlaf", "com.sun.java.swing.plaf.windows.WindowsLookAndFeel")
                         forwardTestProperties()
                     }
                 }
