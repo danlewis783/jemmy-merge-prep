@@ -46,14 +46,30 @@ public final class LookAndFeel {
     }
 
     public static boolean isWindows() {
-        return UIManager.getLookAndFeel().getClass().getSimpleName().equals("WindowsLookAndFeel");
+        return current().getClass().getSimpleName().equals("WindowsLookAndFeel");
     }
 
     public static boolean isWindowsClassic() {
-        return UIManager.getLookAndFeel().getClass().getSimpleName().equals("WindowsClassicLookAndFeel");
+        return current().getClass().getSimpleName().equals("WindowsClassicLookAndFeel");
     }
 
     private static boolean isLookAndFeel(String id) {
-        return UIManager.getLookAndFeel().getID().equals(id);
+        return current().getID().equals(id);
+    }
+
+    /**
+     * Returns the installed look and feel. UIManager marks itself initialized before loading
+     * the default look and feel, so when that load fails (for example swing.defaultlaf names
+     * a look and feel this platform does not support) only the first caller sees the Error;
+     * every later call gets null. Fail with the likely cause instead of a bare NPE.
+     */
+    private static javax.swing.LookAndFeel current() {
+        javax.swing.LookAndFeel laf = UIManager.getLookAndFeel();
+        if (laf == null) {
+            throw new IllegalStateException("No look and feel is installed; Swing failed to load its"
+                    + " default look and feel earlier (swing.defaultlaf="
+                    + System.getProperty("swing.defaultlaf") + ")");
+        }
+        return laf;
     }
 }

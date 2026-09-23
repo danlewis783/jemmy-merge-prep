@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import javax.swing.UIManager;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,21 @@ class LookAndFeelTest {
             assertThat(LookAndFeel.isNimbus()).isTrue();
             assertThat(LookAndFeel.isMetal()).isFalse();
             assertThat(LookAndFeel.isWindows()).isFalse();
+        } finally {
+            UIManager.setLookAndFeel(previous);
+        }
+    }
+
+    @Test
+    void failsWithCauseWhenNoLookAndFeelIsInstalled() throws Exception {
+        javax.swing.LookAndFeel previous = UIManager.getLookAndFeel();
+        try {
+            // the state UIManager is left in after its default look and feel fails to load
+            UIManager.setLookAndFeel((javax.swing.LookAndFeel) null);
+            assertThatThrownBy(LookAndFeel::isMetal)
+                    .isInstanceOf(IllegalStateException.class)
+                    .hasMessageContaining("swing.defaultlaf");
+            assertThatThrownBy(LookAndFeel::isWindows).isInstanceOf(IllegalStateException.class);
         } finally {
             UIManager.setLookAndFeel(previous);
         }
