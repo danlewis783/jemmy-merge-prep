@@ -54,7 +54,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: windows-test-reports
+          # junit-jupiter/ holds the JUnit file attachments: failure screenshots and diagnostic reports
           path: |
             build/reports/
             build/test-results/
+            build/junit-jupiter/
           if-no-files-found: warn
