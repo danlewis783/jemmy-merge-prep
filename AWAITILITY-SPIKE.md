@@ -71,10 +71,35 @@ The diagnostic report included the Awaitility condition alias and five-second
 timeout. Gradle's XML presented the underlying AssertJ assertion failure.
 The deliberately incorrect expectation was then restored.
 
-Run the representative test with:
+`JemmyFailureArtifactsTest.capturesAnUncaughtEdtFailureWhileAwaitilityWaits` now
+also covers a real uncaught EDT exception. A nested JUnit fixture starts profile
+loading once, after Awaitility's first condition evaluation. The posted Swing
+callback dereferences an unset profile name and throws `NullPointerException`,
+leaving the label at `Loading profile` instead of `Ready: Ada`.
+
+The outer test verifies that:
+
+- Awaitility times out with both label values and the named condition.
+- Jemmy's default uncaught-exception handler stays installed during polling and
+  the previous handler is restored after the fixture completes.
+- Exactly one EDT exception is attached to the timeout, with the original NPE
+  stack, EDT thread identity, and uncaught-handler capture mechanism.
+- The report retains the NPE after window teardown, the screenshot is readable,
+  and the attachment ZIP contains byte-identical copies of the report and screenshot.
+
+The nested fixture deliberately fails; the outer regression test passes only if
+the failure and artifacts match these expectations. It publishes those artifacts
+outside its temporary directory for inspection after the run.
+
+One diagnostic difference surfaced: Awaitility does not provide Jemmy's component
+wait target. In this fixture the hierarchy is pruned to the focused button's path,
+omitting the status label; the assertion message still contains its actual and
+expected text. No production diagnostic behavior was changed for this spike.
+
+Run the representative test and failure-artifact tests with:
 
 ```powershell
-.\gradlew.bat userInterfaceTest --tests org.netbeans.jemmy.testing.ButtonGridLookupTest checkLicenseHeaders --console=plain
+.\gradlew.bat userInterfaceTest --tests org.netbeans.jemmy.testing.ButtonGridLookupTest --tests org.netbeans.jemmy.testing.JemmyFailureArtifactsTest checkLicenseHeaders --console=plain
 ```
 
 ## Assessment
@@ -84,8 +109,9 @@ AssertJ's expected/actual reporting. It is more verbose than these existing Jemm
 waits. If adopted more broadly, extract the polling configuration into a UI-test
 helper after agreeing on timeout policy. Keep tests specifically verifying Jemmy's
 waiting APIs on those APIs, so they continue testing the library's own behavior.
-This spike validates one representative test and its assertion-failure path;
-it does not establish whole-suite compatibility or an uncaught-EDT-failure result.
+This spike validates one representative test, its assertion-failure path, and
+capture of an uncaught EDT exception during an Awaitility wait. It does not
+establish whole-suite compatibility.
 
 References: [Awaitility usage](https://github.com/awaitility/awaitility/wiki/Usage)
 and [setup](https://github.com/awaitility/awaitility/wiki/Getting_started).
