@@ -29,7 +29,11 @@ jobs:
             8.0.345+1
             21
 
-      - uses: gradle/actions/setup-gradle@v4
+      # 'basic' is the MIT-licensed provider built on actions/cache; v6 otherwise defaults to the
+      # proprietary 'enhanced' provider
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
 
       # The default 1024x768 desktop is small for UI tests; best effort, the tests still run without it
       - name: Raise screen resolution
@@ -47,7 +51,7 @@ jobs:
 
       - name: Upload test reports
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-test-reports
           path: |
