@@ -14,9 +14,6 @@
 # Ignore Gradle build output directory
 build
 
-# Ignore gradlew Linux script
-gradlew
-
 ############################################
 # IntelliJ IDEA
 ############################################
