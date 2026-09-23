@@ -1,0 +1,62 @@
+name: Windows UI tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      # The last version listed becomes JAVA_HOME and runs Gradle 9.x, which needs Java 17+.
+      # Temurin 8u345 is exposed as JAVA_HOME_8_X64 and serves as the Java 8 toolchain.
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: |
+            8.0.345+1
+            21
+
+      # 'basic' is the MIT-licensed provider built on actions/cache; v6 otherwise defaults to the
+      # proprietary 'enhanced' provider
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+
+      # The default 1024x768 desktop is small for UI tests; best effort, the tests still run without it
+      - name: Raise screen resolution
+        continue-on-error: true
+        shell: pwsh
+        run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
+
+      # check runs the unit tests, the userInterfaceTest suite and checkLicenseHeaders;
+      # --continue lets one failing suite not hide the other's results
+      - name: Build and test
+        run: >-
+          .\gradlew.bat check --continue --console=plain
+          "-Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64"
+          "-Porg.gradle.java.installations.auto-detect=false"
+
+      - name: Upload test reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-test-reports
+          # junit-jupiter/ holds the JUnit file attachments: failure screenshots and diagnostic reports
+          path: |
+            build/reports/
+            build/test-results/
+            build/junit-jupiter/
+          if-no-files-found: warn
