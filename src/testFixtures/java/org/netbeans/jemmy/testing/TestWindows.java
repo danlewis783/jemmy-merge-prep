@@ -25,8 +25,8 @@ import java.lang.reflect.InvocationTargetException;
  * Places test windows at a predictable screen location so real robot clicks land inside the test
  * window instead of on desktop icons or other applications. The base location defaults to
  * (300, 300) and can be overridden with the {@code jemmy.testing.window.x} and
- * {@code jemmy.testing.window.y} system properties, which the Gradle test tasks forward from the
- * invoking build (e.g. {@code gradlew userInterfaceTest -Djemmy.testing.window.x=900}).
+ * {@code jemmy.testing.window.y} system properties, which the Gradle test tasks set from the Gradle
+ * properties of the same name (e.g. {@code gradlew userInterfaceTest -Pjemmy.testing.window.x=900}).
  */
 public final class TestWindows {
 

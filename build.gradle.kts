@@ -39,9 +39,10 @@ val nativeLookAndFeel: String? = providers.systemProperty("os.name").get().let {
     }
 }
 
-// Forward test configuration from the Gradle invocation into the test JVMs, e.g.
-// gradlew test -Djemmy.diagnostics.enabled=false
-// gradlew test -Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel
+// Forward test configuration from Gradle properties into the test JVMs. -P is the only way in
+// (or a gradle.properties file); a -D of the same key is ignored with a warning. For example:
+// gradlew test -Pjemmy.diagnostics.enabled=false
+// gradlew test -Pswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel
 fun Test.forwardTestProperties() {
     nativeLookAndFeel?.let { systemProperty("swing.defaultlaf", it) }
     listOf(
@@ -50,8 +51,11 @@ fun Test.forwardTestProperties() {
         "jemmy.testing.window.y",
         "swing.defaultlaf",
     ).forEach { key ->
-        (providers.gradleProperty(key).orNull ?: providers.systemProperty(key).orNull)?.let {
-            systemProperty(key, it)
+        val value = providers.gradleProperty(key).orNull
+        if (value != null) {
+            systemProperty(key, value)
+        } else if (providers.systemProperty(key).isPresent) {
+            logger.warn("Ignoring -D$key for the test JVMs; pass it as -P$key")
         }
     }
 }

@@ -45,8 +45,10 @@ Use `--continue` with `check` so a failing unit suite doesn't hide the UI suite'
 
 ## Test properties
 
-The test tasks forward these from `-D...` or `-P...` on the Gradle command line into the test
-JVMs (`forwardTestProperties()` in `build.gradle.kts`):
+The test tasks forward these Gradle properties into the test JVMs as system properties
+(`forwardTestProperties()` in `build.gradle.kts`). Pass them with **`-P` only**, e.g.
+`./gradlew check -Pjemmy.diagnostics.enabled=false`, or set them in a `gradle.properties` file.
+A `-D` of the same key isn't forwarded; the build logs a warning instead.
 
 | Property | Effect |
 |---|---|
