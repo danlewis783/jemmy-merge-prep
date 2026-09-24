@@ -13,6 +13,7 @@
 package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
@@ -42,6 +43,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
@@ -84,6 +86,13 @@ class JemmyFailureArtifactsTest {
         new Color(43, 89, 211), new Color(239, 197, 41)
     };
     private static boolean nestedExecution;
+
+    @BeforeEach
+    void requireDiagnostics() {
+        assumeThat(JemmyDiagnostics.isEnabled())
+                .as("Jemmy diagnostics are enabled")
+                .isTrue();
+    }
 
     @Test
     void capturesTheUiAndMissingComponentBeforeTeardown(@TempDir Path outputDirectory)
