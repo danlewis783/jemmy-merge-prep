@@ -104,15 +104,20 @@ A `-D` of the same key isn't forwarded; the build logs a warning instead.
 
 ## CI
 
-`.github/workflows/windows-ui-tests.yml` runs `gradlew.bat check --continue` on
-`windows-latest` for pushes to `main`, for pull requests, and manually. It:
+`.github/workflows/ui-tests.yml` runs the full `check --continue` on `windows-latest` and
+`ubuntu-latest` side by side, for pushes to `main`, for pull requests, and manually. Neither job
+cancels the other when it fails. Each job:
 
 - installs Temurin 8u345 and 21 with `actions/setup-java` (21 runs Gradle),
 - uses `gradle/actions/setup-gradle` with `cache-provider: basic` (MIT-licensed; the action's
   default "enhanced" provider is proprietary),
-- tries to raise the desktop to 1920×1080 (best effort),
+- on Windows, tries to raise the desktop to 1920×1080 (best effort); on Linux, runs Gradle
+  under `xvfb-run` at 1920×1080,
 - uploads `build/reports/`, `build/test-results/` and `build/junit-jupiter/` (screenshots and
-  diagnostic reports) as the `windows-test-reports` artifact.
+  diagnostic reports) as the `windows-test-reports` or `linux-test-reports` artifact.
+
+The Linux job fails the UI tests that need a window manager, as described below; Windows remains
+the authority for UI results.
 
 A manual (`workflow_dispatch`) run only works once the workflow file is on `main`; on a branch,
 the dispatch API returns 404.

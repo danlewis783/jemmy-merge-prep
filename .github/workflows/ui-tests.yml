@@ -1,4 +1,4 @@
-name: Windows UI tests
+name: UI tests
 
 on:
   push:
@@ -15,7 +15,17 @@ permissions:
 
 jobs:
   check:
-    runs-on: windows-latest
+    name: check (${{ matrix.os }})
+    strategy:
+      # one platform's failures must not cancel the other's run
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            reports: windows-test-reports
+          - os: ubuntu-latest
+            reports: linux-test-reports
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v5
@@ -37,23 +47,38 @@ jobs:
 
       # The default 1024x768 desktop is small for UI tests; best effort, the tests still run without it
       - name: Raise screen resolution
+        if: runner.os == 'Windows'
         continue-on-error: true
         shell: pwsh
         run: Set-DisplayResolution -Width 1920 -Height 1080 -Force
 
+      # Linux runners have no display; the UI tests run on an Xvfb virtual one
+      - name: Install Xvfb
+        if: runner.os == 'Linux'
+        run: command -v xvfb-run || (sudo apt-get update && sudo apt-get install -y xvfb)
+
       # check runs the unit tests, the userInterfaceTest suite and checkLicenseHeaders;
       # --continue lets one failing suite not hide the other's results
       - name: Build and test
+        if: runner.os == 'Windows'
         run: >-
           .\gradlew.bat check --continue --console=plain
           "-Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64"
           "-Porg.gradle.java.installations.auto-detect=false"
 
+      - name: Build and test
+        if: runner.os == 'Linux'
+        run: >-
+          xvfb-run -a -s "-screen 0 1920x1080x24"
+          ./gradlew check --continue --console=plain
+          -Porg.gradle.java.installations.fromEnv=JAVA_HOME_8_X64
+          -Porg.gradle.java.installations.auto-detect=false
+
       - name: Upload test reports
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: windows-test-reports
+          name: ${{ matrix.reports }}
           # junit-jupiter/ holds the JUnit file attachments: failure screenshots and diagnostic reports
           path: |
             build/reports/
