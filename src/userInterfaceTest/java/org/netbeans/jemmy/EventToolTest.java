@@ -126,8 +126,9 @@ class EventToolTest {
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
-                assertThat(eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK))
-                        .as("Mouse event occurred in 500 milliseconds")
+                boolean quiet = eventTool.checkNoEvent(AWTEvent.MOUSE_EVENT_MASK);
+                assertThat(quiet)
+                        .as("Mouse event occurred in 500 milliseconds: %s", lastEvent(quiet))
                         .isTrue();
             }
 
@@ -140,8 +141,11 @@ class EventToolTest {
             awaitQuiet(mover);
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
-                assertThat(eventTool.checkNoEvent())
-                        .as("Some event occurred in 500 milliseconds")
+                // only on Linux, rarely, and only as the first UI class in its JVM so far; the
+                // message names the event so the next failure says what broke the silence
+                boolean quiet = eventTool.checkNoEvent();
+                assertThat(quiet)
+                        .as("Some event occurred in 500 milliseconds: %s", lastEvent(quiet))
                         .isTrue();
             }
 
@@ -175,6 +179,18 @@ class EventToolTest {
     private static void awaitQuiet(Future<Void> mover) throws Exception {
         mover.get(30, TimeUnit.SECONDS);
         QueueTool.getInstance().waitEmpty();
+    }
+
+    /** Describes the event that broke an expected silence, for the assertion message. */
+    private String lastEvent(boolean quiet) {
+        if (quiet) {
+            return "none";
+        }
+        AWTEvent last = eventTool.getLastEvent();
+        return (last == null)
+                ? "unknown"
+                : last.getClass().getSimpleName() + "[" + last.paramString() + "] from "
+                        + last.getSource().getClass().getName();
     }
 
     /** Enters and exits the frame with the mouse {@code count} times at a fixed cadence. */

@@ -112,7 +112,8 @@ cancels the other when it fails. Each job:
 - uses `gradle/actions/setup-gradle` with `cache-provider: basic` (MIT-licensed; the action's
   default "enhanced" provider is proprietary),
 - on Windows, tries to raise the desktop to 1920×1080 (best effort); on Linux, runs Gradle
-  under `xvfb-run` at 1920×1080,
+  under `xvfb-run` at 1920×1080 with `NO_AT_BRIDGE=1`, so GTK doesn't look up an accessibility
+  bus the runner lacks,
 - uploads `build/reports/`, `build/test-results/` and `build/junit-jupiter/` (screenshots and
   diagnostic reports) as the `windows-test-reports` or `linux-test-reports` artifact.
 
@@ -151,6 +152,12 @@ target platform:
     test frame 0×0), and a move made right after showing a frame can be undone a moment later.
   - **Metal is slower to scroll.** A pressed slider track moves one unit per 100 ms step, so
     full-range slider scrolls need longer timeouts than on Windows.
+  - **Text selection can hang the EDT.** Every selection change in a text component also sets
+    the X11 PRIMARY selection, which asks the X server for a timestamp and waits, with no
+    timeout, for a reply that occasionally never comes
+    (`XToolkit.getCurrentServerTime`, also reported as JetBrains IDEA-146644). Neither the
+    latest JDK 8 nor current OpenJDK bounds that wait. Keyboard selection in
+    `EditorScrollingInTabsTest` hits it in about 1 run in 20.
 - Treat Windows CI as the authority for UI results.
 - The container is temporary: the JDK install and Gradle download don't survive into a new
   session.
