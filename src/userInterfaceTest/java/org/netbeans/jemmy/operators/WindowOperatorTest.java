@@ -137,7 +137,7 @@ class WindowOperatorTest {
     }
 
     @Test
-    void activate() throws InterruptedException {
+    void activate() throws InterruptedException, InvocationTargetException {
         class LatchedWindowListener extends WindowAdapter {
             final CountDownLatch activatedLatch = new CountDownLatch(1);
             final CountDownLatch deactivatedLatch = new CountDownLatch(1);
@@ -151,25 +151,33 @@ class WindowOperatorTest {
             @Override
             public void windowDeactivated(WindowEvent e) {
                 events.add("deactivated");
-                deactivatedLatch.countDown();
+                // a deactivation from before this listener saw its activation is left over from
+                // showing the frame and its dialog; counting it would release the wait early
+                if (activatedLatch.getCount() == 0) {
+                    deactivatedLatch.countDown();
+                }
             }
         }
         LatchedWindowListener windowListener1 = new LatchedWindowListener();
         LatchedWindowListener windowListener2 = new LatchedWindowListener();
         FrameOperator frameOp = FrameOperator.of(mainFrame);
+        Frame other = null;
         try {
             frameOp.addWindowListener(windowListener1);
             frameOp.activate();
             awaitLatch(windowListener1.activatedLatch);
             assertThat(events).contains("activated");
-            assertThat(frameOp.isActive()).isTrue();
+            // the listener also hears the driver's synthetic event; the real activation follows
+            waitActive(frameOp, true);
             assertThat(frameOp.isFocused()).isTrue();
-            Frame other = createOtherFrame();
+            other = createOtherFrame();
             FrameOperator otherOp = FrameOperator.of(other);
             otherOp.setVisible(true);
+            // whether a newly shown frame takes focus is window manager policy; ask for it
+            otherOp.activate();
             awaitLatch(windowListener1.deactivatedLatch);
             assertThat(events).containsSequence("activated", "deactivated");
-            assertThat(frameOp.isActive()).isFalse();
+            waitActive(frameOp, false);
             assertThat(frameOp.isFocused()).isFalse();
             frameOp.removeWindowListener(windowListener1);
             frameOp.addWindowListener(windowListener2);
@@ -179,10 +187,15 @@ class WindowOperatorTest {
             otherOp.activate();
             awaitLatch(windowListener2.deactivatedLatch);
             assertThat(events).containsSequence("activated", "deactivated", "activated", "deactivated");
-            otherOp.dispose();
         } finally {
             frameOp.removeWindowListener(windowListener1);
             frameOp.removeWindowListener(windowListener2);
+            // the later tests look frames up with FrameOperator.waitFor(); a leftover "other"
+            // frame would answer in place of the main one
+            if (other != null) {
+                Frame leftover = other;
+                EventQueue.invokeAndWait(leftover::dispose);
+            }
         }
     }
 
@@ -304,7 +317,7 @@ class WindowOperatorTest {
     }
 
     @Test
-    void resize() throws InterruptedException {
+    void resize() throws InterruptedException, InvocationTargetException {
         FrameOperator frameOp = FrameOperator.of(mainFrame);
         frameOp.requestFocus();
         frameOp.waitHasFocus();
@@ -315,8 +328,9 @@ class WindowOperatorTest {
         AtomicInteger componentResizedCalledCount = new AtomicInteger(0);
         AtomicInteger componentResizedWidth = new AtomicInteger(0);
         AtomicInteger componentResizedHeight = new AtomicInteger(0);
-        // the frame delivers two componentResized events for one resize; wait for both
-        CountDownLatch resizedLatch = new CountDownLatch(2);
+        // one resize delivers two componentResized events on Windows, and one or two on X11
+        // without a window manager; wait for the first, then for the final size below
+        CountDownLatch resizedLatch = new CountDownLatch(1);
         Point locationAfterFocus = onQueue(mainFrame::getLocation);
         long listenerAddedNanos = System.nanoTime();
         frameOp.addComponentListener(new ComponentAdapter() {
@@ -342,19 +356,22 @@ class WindowOperatorTest {
         componentEventLog.add("resize(100, 200) called at +" + elapsedMillis(listenerAddedNanos) + "ms");
         frameOp.resize(100, 200);
         awaitLatch(resizedLatch);
+        frameOp.<FrameOperator>waitState(
+                op -> op.getSource().getHeight() == 200 && op.getSource().getWidth() >= 100);
+        // let a second resize event, if one is queued, reach the listener before the counts are read
+        EventQueue.invokeAndWait(() -> {});
         Point locationAfterResize = onQueue(mainFrame::getLocation);
         assertThat(moveEvents)
                 .as(
                         "location after focus %s, after resize %s; events: %s",
                         locationAfterFocus, locationAfterResize, componentEventLog)
                 .isEmpty();
-        assertThat(componentResizedCalledCount).hasValueGreaterThan(1);
-        assertThat(componentResizedCalledCount).hasValueLessThan(3);
-        // the requested width of 100 is clamped up to the OS minimum frame width, which varies
-        // with DPI scaling and window chrome; assert the clamp happened and the event reported
-        // the frame's real final width, rather than pinning one machine's chrome metrics
+        assertThat(componentResizedCalledCount).hasValueBetween(1, 2);
+        // the window manager may clamp the requested width of 100 up to its minimum frame width,
+        // which varies with DPI scaling and window chrome (Windows does; bare Xvfb has no window
+        // manager and does not); assert the event reported the frame's real final width
         assertThat(componentResizedWidth).hasValue(onQueue(mainFrame::getWidth));
-        assertThat(componentResizedWidth).hasValueGreaterThan(100);
+        assertThat(componentResizedWidth).hasValueGreaterThanOrEqualTo(100);
         assertThat(componentResizedHeight).hasValue(200);
     }
 
@@ -503,6 +520,8 @@ class WindowOperatorTest {
         Frame other = createOtherFrame();
         FrameOperator otherOp = FrameOperator.of(other);
         otherOp.setVisible(true);
+        // whether a newly shown frame takes focus is window manager policy; ask for it
+        otherOp.requestFocus();
         otherOp.waitHasFocus();
         frameOp.toFront();
         frameOp.toBack();
@@ -529,6 +548,10 @@ class WindowOperatorTest {
     }
 
     // generous ceiling: only costs time when the awaited event never arrives
+    private static void waitActive(WindowOperator windowOp, boolean active) {
+        windowOp.<WindowOperator>waitState(op -> op.getSource().isActive() == active);
+    }
+
     private static void awaitLatch(CountDownLatch latch) throws InterruptedException {
         assertThat(latch.await(10L, TimeUnit.SECONDS))
                 .as("timed out waiting for event")

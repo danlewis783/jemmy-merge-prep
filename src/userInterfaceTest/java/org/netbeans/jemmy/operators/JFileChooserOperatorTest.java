@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.jemmy.BooleanSupplierRepeater;
-import org.netbeans.jemmy.ComponentStreamer;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutKey;
 import org.netbeans.jemmy.TimeoutOverride;
@@ -292,8 +291,7 @@ final class JFileChooserOperatorTest {
         JFileChooserOperator chooserOp = JFileChooserOperator.of(fileChooser);
         JToggleButton detailsToggleButton = chooserOp.getDetailsToggleButton();
         JToggleButtonOperator.of(detailsToggleButton).push();
-        Component fileList = chooserOp.getFileList();
-        assertThat(onQueue(() -> ComponentStreamer.streamOfType((Container) fileList, JTable.class).findAny())).isPresent();
+        assertThat(chooserOp.getFileList()).isInstanceOf(JTable.class);
 
         assertThat(chooserOp.getFileCount()).isEqualTo(2);
         assertThat(chooserOp.getFiles()).extracting(File::getName).containsExactlyInAnyOrder(FN2, FN3);

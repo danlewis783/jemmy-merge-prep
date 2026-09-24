@@ -37,7 +37,9 @@ import org.netbeans.jemmy.util.StringComparators;
 // formerly scenario test jemmy_025
 @ExtendWith(JemmyFailureDiagnosticsExtension.class)
 @ExtendWith(JemmyStateResetExtension.class)
-@Timeout(value=30, unit=TimeUnit.SECONDS)
+// Metal scrolls a pressed or clicked slider track one unit per step (a 100 ms timer while held),
+// so the full-range scrolls here take about 33 s there; Windows steps by blocks
+@Timeout(value=90, unit=TimeUnit.SECONDS)
 class JSliderScrollModelsTest {
     private static final String FRAME_TITLE = "JSliderScrollModelsTest";
     private JFrame jFrame;

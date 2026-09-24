@@ -81,6 +81,10 @@ class ComponentOperatorTest {
             panel = new Panel();
             panel.setName("ComponentOperatorTest");
             frame.add(panel);
+            // a real size: X11 has no zero-size windows, and without a window manager to impose a
+            // minimum, a 0x0 frame's moves are not reliably reported back (Windows sizes it for us).
+            // Not 400x300, which testWaitComponentSize resizes to
+            frame.setSize(200, 100);
             TestWindows.place(frame);
             frame.setVisible(true);
         });
@@ -109,10 +113,21 @@ class ComponentOperatorTest {
         operator.waitComponentSize(new Dimension(300, 200), new Dimension(500, 400));
     }
 
+    /**
+     * On X11 without a window manager, AWT can re-apply a just-shown frame's original bounds a
+     * moment later, undoing a move made right after showing it: 11 of 200 such moves were lost in
+     * a stress run, none after a 300 ms pause. No AWT event marks the end of that window, so wait
+     * it out before moving.
+     */
+    private void moveFrameAfterItSettles(int x, int y) throws InterruptedException, InvocationTargetException {
+        Thread.sleep(300L);
+        EventQueue.invokeAndWait(() -> frame.setLocation(x, y));
+    }
+
     @Test
     void testWaitComponentLocation() throws InterruptedException, InvocationTargetException {
         ComponentOperator operator = ComponentOperator.of(frame);
-        EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
+        moveFrameAfterItSettles(200, 150);
         operator.waitComponentLocation(new Point(200, 150));
         operator.waitComponentLocation(new Point(100, 100), new Point(300, 250));
     }
@@ -120,7 +135,7 @@ class ComponentOperatorTest {
     @Test
     void testWaitComponentLocationOnScreen() throws InterruptedException, InvocationTargetException {
         ComponentOperator operator = ComponentOperator.of(frame);
-        EventQueue.invokeAndWait(() -> frame.setLocation(200, 150));
+        moveFrameAfterItSettles(200, 150);
         operator.waitComponentLocationOnScreen(new Point(200, 150));
         operator.waitComponentLocationOnScreen(new Point(100, 100), new Point(300, 250));
     }

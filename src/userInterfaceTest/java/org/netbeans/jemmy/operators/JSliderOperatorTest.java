@@ -48,6 +48,12 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JSliderOperatorTest {
 
+    /**
+     * Metal scrolls a pressed slider track one unit per 100 ms timer step, so scrolling the
+     * default slider from 50 to 0 takes about 5 s there; Windows steps by blocks.
+     */
+    private static final long SCROLL_TIMEOUT_SECONDS = 15;
+
     private JFrame frame;
     private JSlider slider;
 
@@ -102,6 +108,7 @@ class JSliderOperatorTest {
     }
 
     @Test
+    @Timeout(value=SCROLL_TIMEOUT_SECONDS, unit=TimeUnit.SECONDS)
     void testScrollTo() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSliderOperator operator2 = JSliderOperator.waitFor(operator);
@@ -110,6 +117,7 @@ class JSliderOperatorTest {
     }
 
     @Test
+    @Timeout(value=SCROLL_TIMEOUT_SECONDS, unit=TimeUnit.SECONDS)
     void testScrollToValue() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSliderOperator operator2 = JSliderOperator.waitFor(operator);
@@ -131,6 +139,7 @@ class JSliderOperatorTest {
     }
 
     @Test
+    @Timeout(value=SCROLL_TIMEOUT_SECONDS, unit=TimeUnit.SECONDS)
     void testScrollToMaximum() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSliderOperator operator2 = JSliderOperator.waitFor(operator);
@@ -141,6 +150,7 @@ class JSliderOperatorTest {
     }
 
     @Test
+    @Timeout(value=SCROLL_TIMEOUT_SECONDS, unit=TimeUnit.SECONDS)
     void testScrollToMinimum() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JSliderOperator operator2 = JSliderOperator.waitFor(operator);

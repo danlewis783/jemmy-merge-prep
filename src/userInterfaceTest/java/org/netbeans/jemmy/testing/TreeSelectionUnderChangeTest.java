@@ -19,6 +19,8 @@ package org.netbeans.jemmy.testing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.Frame;
+import java.awt.Toolkit;
 import java.util.function.Function;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -72,7 +74,10 @@ class TreeSelectionUnderChangeTest {
     @Test
     void selectPath() {
         JFrameOperator frameOp = JFrameOperator.waitFor("GrowingTreeApp");
-        frameOp.maximize();
+        // room for the growing tree; X11 without a window manager cannot maximize
+        if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
+            frameOp.maximize();
+        }
         JButtonOperator start = JButtonOperator.waitFor(frameOp);
         JTreeOperator tree = JTreeOperator.waitFor(frameOp);
         start.push();

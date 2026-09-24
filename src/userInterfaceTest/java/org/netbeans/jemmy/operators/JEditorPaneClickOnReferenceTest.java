@@ -157,6 +157,19 @@ class JEditorPaneClickOnReferenceTest {
 
             return (current != null) && current.toString().contains(page);
         });
-        operator.waitState(op -> ((JEditorPane) op.getSource()).getText().contains(text));
+        operator.waitState(op -> textContains((JEditorPane) op.getSource(), text));
+    }
+
+    /**
+     * getPage() reports the new URL as soon as the asynchronous load starts, so the text can be
+     * read while the loader is still inserting it; HTMLWriter then can throw (an
+     * EmptyStackException was seen), which only means the page is not loaded yet.
+     */
+    private static boolean textContains(JEditorPane pane, String text) {
+        try {
+            return pane.getText().contains(text);
+        } catch (RuntimeException stillLoading) {
+            return false;
+        }
     }
 }

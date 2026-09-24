@@ -111,8 +111,11 @@ class JFrameOperatorMenuNavigationTest {
         fo.activate();
         fo.resize(400, 400);
         fo.move(200, 200);
-        fo.maximize();
-        fo.demaximize();
+        // maximizing needs a window manager on X11; FrameOperatorTest covers the unsupported case
+        if (FrameOperatorTest.maximizeSupported()) {
+            fo.maximize();
+            fo.demaximize();
+        }
         fo.iconify();
         fo.deiconify();
         fo.requestClose();

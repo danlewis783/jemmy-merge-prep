@@ -17,9 +17,11 @@
 package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
@@ -98,6 +101,15 @@ class FrameOperatorTest {
     void testMaximize() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
+        if (!maximizeSupported()) {
+            // bare Xvfb: no window manager, so maximize must fail at once rather than time out
+            assertThatExceptionOfType(JemmyException.class)
+                    .isThrownBy(operator::maximize)
+                    .withMessageContaining("MAXIMIZED_BOTH");
+            assertThat(operator.getExtendedState()).isEqualTo(Frame.NORMAL);
+            return;
+        }
+
         operator.maximize();
         assertThat(operator.getExtendedState()).isEqualTo(Frame.MAXIMIZED_BOTH);
     }
@@ -106,7 +118,9 @@ class FrameOperatorTest {
     void testDemaximize() throws InterruptedException, InvocationTargetException {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
-        operator.maximize();
+        if (maximizeSupported()) {
+            operator.maximize();
+        }
         operator.demaximize();
         assertThat(operator.getExtendedState()).isEqualTo(Frame.NORMAL);
     }
@@ -144,5 +158,10 @@ class FrameOperatorTest {
         showFrame();
         FrameOperator operator = FrameOperator.waitFor();
         operator.setTitle(operator.getTitle());
+    }
+
+    /** False where the platform cannot maximize a frame, such as X11 without a window manager. */
+    static boolean maximizeSupported() {
+        return Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH);
     }
 }
