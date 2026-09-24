@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.JemmyContext;
@@ -76,6 +77,10 @@ import org.slf4j.LoggerFactory;
  * memory</li>
  * </ol>
  *
+ * <p>Before each test method, after its {@code @BeforeEach} methods have shown the test's windows,
+ * the extension waits briefly for the focus that showing the last of them requested (see {@link
+ * ShownWindowFocus}), so the test starts from settled focus as it would on Windows.
+ *
  * <p>After each test method, before its {@code @AfterEach} methods tear the UI down, the extension
  * also gives the test's no-blocking actions ({@code pushNoBlock}, {@code pushMenuNoBlock} and the
  * like) a short grace period to finish. All of them share the single Jemmy action thread, so one
@@ -87,7 +92,7 @@ import org.slf4j.LoggerFactory;
  * {@code @ExtendWith(JemmyStateResetExtension.class)}; consumer test classes should do the same.
  */
 public final class JemmyStateResetExtension
-        implements BeforeAllCallback, AfterAllCallback, AfterTestExecutionCallback {
+        implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback {
     private static final Logger logger = LoggerFactory.getLogger(JemmyStateResetExtension.class);
 
     /** How long a test's no-blocking actions may keep running after the test method returns. */
@@ -95,6 +100,9 @@ public final class JemmyStateResetExtension
 
     /** How long a cancelled no-blocking action gets to notice its interrupt and end. */
     private static final long CANCELLED_ACTION_EXIT_MS = 5_000L;
+
+    /** How long a test waits for the focus that showing its last window requested. */
+    private static final long SHOWN_WINDOW_FOCUS_TIMEOUT_MS = 2_000L;
 
     /** How long the event dispatch thread may take to run a trivial task before a class starts. */
     private static final long EDT_RESPONSE_TIMEOUT_MS = 10_000L;
@@ -122,6 +130,7 @@ public final class JemmyStateResetExtension
         }
 
         requireUsableDesktop();
+        ShownWindowFocus.install();
         capturePristineToolTipState();
         resetEverything();
     }
@@ -136,6 +145,13 @@ public final class JemmyStateResetExtension
 
         resetEverything();
         restoreToolTipState();
+    }
+
+    @Override
+    public void beforeTestExecution(ExtensionContext context) throws Exception {
+        if (unusableDesktop() == null) {
+            ShownWindowFocus.awaitFocus(SHOWN_WINDOW_FOCUS_TIMEOUT_MS);
+        }
     }
 
     @Override

@@ -116,8 +116,8 @@ cancels the other when it fails. Each job:
 - uploads `build/reports/`, `build/test-results/` and `build/junit-jupiter/` (screenshots and
   diagnostic reports) as the `windows-test-reports` or `linux-test-reports` artifact.
 
-The Linux job fails the UI tests that need a window manager, as described below; Windows remains
-the authority for UI results.
+Both jobs are expected to pass. Windows, the target platform, remains the authority for UI
+results; the Linux job also catches Metal-only and X11-only problems that Windows never shows.
 
 A manual (`workflow_dispatch`) run only works once the workflow file is on `main`; on a branch,
 the dispatch API returns 404.
@@ -134,9 +134,23 @@ target platform:
 - Run under a virtual display:
   `xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew check --continue`. Without one, every UI
   class fails with "UI tests need a display, but AWT is headless".
-- The unit suite passes. Expect some UI failures that don't reproduce on Windows. Xvfb has no
-  window manager, so maximize/demaximize, window activation, focus-owner and owned-window tests
-  fail, and some drag-and-drop and slider tests time out. Tests run under Metal, not the
-  Windows look and feel. Treat Windows CI as the authority for UI results.
+- The full `check` passes, as in the Linux CI job. Tests run under Metal, not the Windows look
+  and feel, and Xvfb has no window manager, which changes behavior UI tests must allow for:
+  - **No maximizing.** `Toolkit.isFrameStateSupported(Frame.MAXIMIZED_BOTH)` is false, and
+    `FrameOperator.maximize()` throws a `JemmyException` at once instead of timing out. Check
+    support before maximizing (see `FrameOperatorTest.maximizeSupported()`).
+  - **Focus arrives late.** AWT requests focus for each window it shows, but X11 grants it
+    asynchronously, and `toFront()` only raises a window. Before each test body,
+    `JemmyStateResetExtension` waits up to 2 s for the last shown window to get that focus, so
+    a late grant can't override the test's own focus changes, and a focused window exists for
+    tooltips (Metal and Windows show them only while the application has one). For a window
+    the test shows itself, don't assume it gets focus: `WindowOperator.activate()` requests it,
+    or call `requestFocus()`.
+  - **Geometry settles late.** Window events and sizes differ from Windows: one resize can
+    deliver one or two `componentResized` events, frames get no minimum size (don't leave a
+    test frame 0×0), and a move made right after showing a frame can be undone a moment later.
+  - **Metal is slower to scroll.** A pressed slider track moves one unit per 100 ms step, so
+    full-range slider scrolls need longer timeouts than on Windows.
+- Treat Windows CI as the authority for UI results.
 - The container is temporary: the JDK install and Gradle download don't survive into a new
   session.
