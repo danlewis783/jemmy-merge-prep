@@ -156,8 +156,9 @@ target platform:
     the X11 PRIMARY selection, which asks the X server for a timestamp and waits, with no
     timeout, for a reply that occasionally never comes
     (`XToolkit.getCurrentServerTime`, also reported as JetBrains IDEA-146644). Neither the
-    latest JDK 8 nor current OpenJDK bounds that wait. Keyboard selection in
-    `EditorScrollingInTabsTest` hits it in about 1 run in 20.
+    latest JDK 8 nor current OpenJDK bounds that wait. `EditorScrollingInTabsTest.test()`,
+    which hit it in about 1 run in 20, is skipped where a system selection exists (X11);
+    `typesIntoEditorsInTabs()` covers the rest of it everywhere.
 - Treat Windows CI as the authority for UI results.
 - The container is temporary: the JDK install and Gradle download don't survive into a new
   session.

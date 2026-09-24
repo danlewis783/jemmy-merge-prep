@@ -18,10 +18,12 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.util.function.Function;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -87,8 +89,37 @@ class EditorScrollingInTabsTest {
         }
     }
 
+    /** Everything {@link #test()} covers except selecting text, so it also runs on X11. */
+    @Test
+    void typesIntoEditorsInTabs() {
+        String allChars = "0123456789\n0123456789\n0123456789\n0123456789";
+        QueueTool.getInstance().waitEmpty();
+        JFrame frm = JFrameOperator.waitJFrame("EditorTabsApp");
+        JTabbedPaneOperator tp = JTabbedPaneOperator.of(
+                JTabbedPaneOperator.findJTabbedPane(frm, null, StringComparators.caseInsensitiveSubstring(), -1));
+        tp.selectPage("JEditorPane", StringComparators.substring());
+        JEditorPaneOperator to = JEditorPaneOperator.waitFor(JFrameOperator.of(frm));
+        to.typeText(allChars);
+        assertThat(to.getText().replace("\r\n", "\n")).isEqualTo(allChars);
+        testJEditorPane(to);
+        tp.selectPage("JTextArea", StringComparators.substring());
+        JTextAreaOperator tao = JTextAreaOperator.of(
+                JTextAreaOperator.findJTextArea(frm, null, StringComparators.caseInsensitiveSubstring()));
+        tao.typeText(allChars);
+        assertThat(tao.getText()).isEqualTo(allChars);
+        testJTabbedPane(tp);
+        testJTextArea(tao);
+    }
+
     @Test
     void test() {
+        // On X11 every selection change also sets the PRIMARY selection, and the JDK can wait
+        // forever for the X server timestamp that needs (XToolkit.getCurrentServerTime, also
+        // JetBrains IDEA-146644; unbounded in JDK 8u504 and current OpenJDK). Keyboard selection
+        // here hit it in about 1 run in 20. Only X11 has a system selection.
+        assumeThat(Toolkit.getDefaultToolkit().getSystemSelection())
+                .as("no X11 PRIMARY selection, whose update can hang the event dispatch thread")
+                .isNull();
         String allChars = "0123456789\n0123456789\n0123456789\n0123456789";
         QueueTool.getInstance().waitEmpty();
         JFrame frm = JFrameOperator.waitJFrame("EditorTabsApp");
