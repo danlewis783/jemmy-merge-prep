@@ -17,7 +17,10 @@
 package org.netbeans.jemmy;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -55,6 +58,9 @@ final class ActionRunner<R> {
             return thread;
         }
     });
+
+    /** No-blocking actions submitted but not yet finished, guarded by itself. */
+    private static final Set<PendingAction> PENDING_ACTIONS = new LinkedHashSet<>();
 
     private final AtomicReference<@Nullable Throwable> throwable = new AtomicReference<>();
 
@@ -128,25 +134,89 @@ final class ActionRunner<R> {
         Thread invoker = Thread.currentThread();
         Throwable submission = new Throwable("Asynchronous Jemmy action submitted here by "
                 + invoker.getName() + " [id=" + invoker.getId() + "]");
-        JEMMY_ACTION_SERVICE.execute(() -> {
-            throwable.set(null);
-            JemmyDiagnostics.Recording previous = JemmyDiagnostics.useRecording(recording);
-            try {
-                work.run();
-            } catch (Throwable failure) {
-                throwable.set(failure);
-                if (recording == null || !recording.recordAction(failure, submission)) {
-                    // Work that outlives its recording stays visible without contaminating
-                    // the next test. An unobserved action must never disappear silently.
-                    logger.warn("exception in no-blocking action", failure);
+        PendingAction pending = new PendingAction(submission);
+        synchronized (PENDING_ACTIONS) {
+            PENDING_ACTIONS.add(pending);
+        }
+        try {
+            JEMMY_ACTION_SERVICE.execute(() -> {
+                if (!pending.start()) {
+                    return;
                 }
-                if (failure instanceof VirtualMachineError || failure instanceof ThreadDeath) {
-                    throw (Error) failure;
+                throwable.set(null);
+                JemmyDiagnostics.Recording previous = JemmyDiagnostics.useRecording(recording);
+                try {
+                    work.run();
+                } catch (Throwable failure) {
+                    throwable.set(failure);
+                    if (recording == null || !recording.recordAction(failure, submission)) {
+                        // Work that outlives its recording stays visible without contaminating
+                        // the next test. An unobserved action must never disappear silently,
+                        // and the submission stack names the caller that left it behind.
+                        failure.addSuppressed(submission);
+                        logger.warn("exception in no-blocking action", failure);
+                    }
+                    if (failure instanceof VirtualMachineError || failure instanceof ThreadDeath) {
+                        throw (Error) failure;
+                    }
+                } finally {
+                    JemmyDiagnostics.useRecording(previous);
+                    pending.finish();
                 }
-            } finally {
-                JemmyDiagnostics.useRecording(previous);
+            });
+        } catch (RuntimeException rejected) {
+            removePending(pending);
+            throw rejected;
+        }
+    }
+
+    /**
+     * Waits until every no-blocking action submitted so far has finished or been cancelled.
+     *
+     * @return {@code false} if some are still queued or running when the timeout elapses
+     */
+    static boolean awaitNoBlockingActions(long timeoutMillis) throws InterruptedException {
+        long deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMillis);
+        synchronized (PENDING_ACTIONS) {
+            while (!PENDING_ACTIONS.isEmpty()) {
+                long remaining = deadline - System.nanoTime();
+                if (remaining <= 0L) {
+                    return false;
+                }
+                TimeUnit.NANOSECONDS.timedWait(PENDING_ACTIONS, remaining);
             }
-        });
+            return true;
+        }
+    }
+
+    /**
+     * Cancels every unfinished no-blocking action: queued ones never start, and a running one
+     * is interrupted. An interrupted action ends as soon as it next waits or sleeps; use
+     * {@link #awaitNoBlockingActions(long)} to wait for that.
+     *
+     * @return where each cancelled action was submitted, oldest first
+     */
+    static List<Throwable> cancelNoBlockingActions() {
+        List<PendingAction> cancelled;
+        synchronized (PENDING_ACTIONS) {
+            cancelled = new ArrayList<>(PENDING_ACTIONS);
+        }
+        List<Throwable> submissions = new ArrayList<>();
+        for (PendingAction pending : cancelled) {
+            if (pending.cancel()) {
+                // it never started, so it will never finish on its own
+                removePending(pending);
+            }
+            submissions.add(pending.submission);
+        }
+        return submissions;
+    }
+
+    private static void removePending(PendingAction pending) {
+        synchronized (PENDING_ACTIONS) {
+            PENDING_ACTIONS.remove(pending);
+            PENDING_ACTIONS.notifyAll();
+        }
     }
 
     static boolean registerPendingCaller(Caller<?> caller) {
@@ -158,6 +228,44 @@ final class ActionRunner<R> {
         ActionScope actionScope = CURRENT_ACTION_SCOPE.get();
         if (actionScope != null) {
             actionScope.unregister(caller);
+        }
+    }
+
+    /** One no-blocking action between submission and completion. */
+    private static final class PendingAction {
+        final Throwable submission;
+        private @Nullable Thread runner;
+        private boolean started;
+        private boolean cancelled;
+
+        PendingAction(Throwable submission) {
+            this.submission = submission;
+        }
+
+        /** Returns false when the action was cancelled before it could start. */
+        synchronized boolean start() {
+            if (cancelled) {
+                return false;
+            }
+            started = true;
+            runner = Thread.currentThread();
+            return true;
+        }
+
+        void finish() {
+            synchronized (this) {
+                runner = null;
+            }
+            removePending(this);
+        }
+
+        /** Returns true when the action had not started yet. */
+        synchronized boolean cancel() {
+            cancelled = true;
+            if (runner != null) {
+                runner.interrupt();
+            }
+            return !started;
         }
     }
 

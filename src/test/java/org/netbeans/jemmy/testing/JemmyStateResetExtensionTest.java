@@ -20,9 +20,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.netbeans.jemmy.NoBlockingActions;
+import org.netbeans.jemmy.RunnableRunner;
 
+@Isolated
 class JemmyStateResetExtensionTest {
+
+    /** Safety net so a broken test fails on the assertion instead of wedging the suite. */
+    private static final long LATCH_WAIT_TIME = 30_000L;
 
     @Test
     void parksAtTheUsableScreenCornerFurthestFromTestWindows() {
@@ -38,5 +47,49 @@ class JemmyStateResetExtensionTest {
                 JemmyStateResetExtension.pointerParkingPoint(new Rectangle(-100, -50, 100, 50), new Point(-90, -40));
 
         assertThat(parkingPoint).isEqualTo(new Point(-1, -1));
+    }
+
+    @Test
+    void passesWhenNoBlockingActionsFinishWithinTheGracePeriod() throws InterruptedException {
+        assertThat(NoBlockingActions.awaitCompletion(LATCH_WAIT_TIME)).isTrue();
+        CountDownLatch ran = new CountDownLatch(1);
+        RunnableRunner.on(ran::countDown).runLater();
+
+        assertThat(JemmyStateResetExtension.finishNoBlockingActions(LATCH_WAIT_TIME, LATCH_WAIT_TIME, "then"))
+                .isNull();
+        assertThat(ran.getCount()).isZero();
+    }
+
+    @Test
+    void cancelsAndReportsNoBlockingActionsThatOutliveTheGracePeriod() throws InterruptedException {
+        assertThat(NoBlockingActions.awaitCompletion(LATCH_WAIT_TIME)).isTrue();
+        CountDownLatch started = new CountDownLatch(1);
+        CountDownLatch neverReleased = new CountDownLatch(1);
+        RunnableRunner.on(() -> {
+                    started.countDown();
+                    try {
+                        neverReleased.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                })
+                .runLater();
+        assertThat(started.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS)).isTrue();
+
+        AssertionError failure = JemmyStateResetExtension.finishNoBlockingActions(
+                50L, LATCH_WAIT_TIME, "50 ms after the test method returned");
+
+        assertThat(failure)
+                .isNotNull()
+                .hasMessageStartingWith("1 no-blocking action was still unfinished 50 ms after the test method"
+                        + " returned, so it was cancelled.")
+                .hasMessageNotContaining("did not end");
+        assertThat(failure.getSuppressed()).singleElement().satisfies(submission -> assertThat(
+                        submission.getStackTrace())
+                .anySatisfy(frame -> assertThat(frame.getMethodName())
+                        .isEqualTo("cancelsAndReportsNoBlockingActionsThatOutliveTheGracePeriod")));
+        assertThat(NoBlockingActions.awaitCompletion(0L))
+                .as("the cancelled action no longer holds the action thread")
+                .isTrue();
     }
 }

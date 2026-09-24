@@ -40,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.predicates.PredicatesJ;
 import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
@@ -131,12 +132,28 @@ class JMenuBarOperatorTest {
     void testPushMenuNoBlock() {
         JFrameOperator operator = JFrameOperator.waitFor();
         JMenuBarOperator operator1 = JMenuBarOperator.waitFor(operator);
-        operator1.pushMenuNoBlock("JMenu1", StringComparators.strict());
-        operator1.pushMenuNoBlock("JMenu1", "/", StringComparators.caseInsensitiveSubstring());
-        operator1.pushMenuNoBlock(new String[] {"JMenu1"}, StringComparators.strict());
-        operator1.pushMenuNoBlock(new String[] {"JMenu1"}, StringComparators.caseInsensitiveSubstring());
-        operator1.pushMenuNoBlock("JMenu1", "/", StringComparators.regex());
-        operator1.pushMenuNoBlock("JMenu1", StringComparators.regex());
+        JMenuOperator menu1 = JMenuOperator.waitFor(operator1, "JMenu1", StringComparators.strict());
+        pushAndAwaitPopup(menu1, () -> operator1.pushMenuNoBlock("JMenu1", StringComparators.strict()));
+        pushAndAwaitPopup(menu1, () -> operator1.pushMenuNoBlock(
+                "JMenu1", "/", StringComparators.caseInsensitiveSubstring()));
+        pushAndAwaitPopup(menu1, () -> operator1.pushMenuNoBlock(
+                new String[] {"JMenu1"}, StringComparators.strict()));
+        pushAndAwaitPopup(menu1, () -> operator1.pushMenuNoBlock(
+                new String[] {"JMenu1"}, StringComparators.caseInsensitiveSubstring()));
+        pushAndAwaitPopup(menu1, () -> operator1.pushMenuNoBlock("JMenu1", "/", StringComparators.regex()));
+        pushAndAwaitPopup(menu1, () -> operator1.pushMenuNoBlock("JMenu1", StringComparators.regex()));
+    }
+
+    /**
+     * Runs one no-blocking push, waits for it to open the menu, then closes the menu so the next
+     * push has to open it again. A push still queued when the test ends would outlive the test
+     * on the shared Jemmy action thread.
+     */
+    private static void pushAndAwaitPopup(JMenuOperator menuOp, Runnable pushNoBlock) {
+        pushNoBlock.run();
+        menuOp.<JMenuOperator>waitState(op -> op.getSource().isPopupMenuVisible());
+        QueueTool.getInstance().runOnQueue(() -> MenuSelectionManager.defaultManager().clearSelectedPath());
+        menuOp.<JMenuOperator>waitState(op -> !op.getSource().isPopupMenuVisible());
     }
 
     @Test

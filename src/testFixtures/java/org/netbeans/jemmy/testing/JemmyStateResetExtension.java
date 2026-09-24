@@ -23,16 +23,19 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.JemmyContext;
+import org.netbeans.jemmy.NoBlockingActions;
 import org.netbeans.jemmy.QueueTool;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ import org.slf4j.LoggerFactory;
  * before and after each class (before defensively, in case the previous class died without its
  * callbacks), in an order that mirrors a fresh JVM:
  * <ol>
+ * <li>cancel no-blocking actions still queued or running on the Jemmy action thread</li>
  * <li>release a stray left mouse button, so a test that failed mid-drag cannot turn every later
  * click into a drag (right button and keyboard are left alone: a synthetic release without a
  * preceding press can pop platform menus)</li>
@@ -60,11 +64,26 @@ import org.slf4j.LoggerFactory;
  * <li>forget the events observed while settling, so the next class starts with no last-event
  * memory</li>
  * </ol>
- * Every class in the UI suite registers this explicitly with
+ *
+ * <p>After each test method, before its {@code @AfterEach} methods tear the UI down, the extension
+ * also gives the test's no-blocking actions ({@code pushNoBlock}, {@code pushMenuNoBlock} and the
+ * like) a short grace period to finish. All of them share the single Jemmy action thread, so one
+ * that outlives its test holds up every later action and makes unrelated tests time out. Any
+ * still unfinished after the grace period are cancelled, and the test that left them fails with
+ * the place each was submitted.
+ *
+ * <p>Every class in the UI suite registers this explicitly with
  * {@code @ExtendWith(JemmyStateResetExtension.class)}; consumer test classes should do the same.
  */
-public final class JemmyStateResetExtension implements BeforeAllCallback, AfterAllCallback {
+public final class JemmyStateResetExtension
+        implements BeforeAllCallback, AfterAllCallback, AfterTestExecutionCallback {
     private static final Logger logger = LoggerFactory.getLogger(JemmyStateResetExtension.class);
+
+    /** How long a test's no-blocking actions may keep running after the test method returns. */
+    private static final long NO_BLOCKING_ACTION_GRACE_MS = 5_000L;
+
+    /** How long a cancelled no-blocking action gets to notice its interrupt and end. */
+    private static final long CANCELLED_ACTION_EXIT_MS = 5_000L;
 
     /** The look and feel class active before any test class ran; first callback wins. */
     private static final AtomicReference<@Nullable String> pristineLookAndFeel = new AtomicReference<>();
@@ -97,6 +116,59 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
         restoreToolTipState();
     }
 
+    @Override
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        AssertionError leftover = finishNoBlockingActions(
+                NO_BLOCKING_ACTION_GRACE_MS,
+                CANCELLED_ACTION_EXIT_MS,
+                NO_BLOCKING_ACTION_GRACE_MS + " ms after the test method returned");
+        if (leftover != null) {
+            throw leftover;
+        }
+    }
+
+    /**
+     * Waits up to {@code graceMillis} for every no-blocking action to finish, then cancels the
+     * rest and waits up to {@code exitMillis} for a cancelled running action to end.
+     *
+     * @param when completes "N actions were still unfinished ..." in the failure message
+     * @return {@code null} when none had to be cancelled, otherwise a failure with one suppressed
+     *     throwable per cancelled action showing where it was submitted
+     */
+    static @Nullable AssertionError finishNoBlockingActions(long graceMillis, long exitMillis, String when)
+            throws InterruptedException {
+        if (NoBlockingActions.awaitCompletion(graceMillis)) {
+            return null;
+        }
+
+        List<Throwable> submissions = NoBlockingActions.cancelAll();
+        if (submissions.isEmpty()) {
+            // the last one finished between the timed-out wait and the cancellation
+            return null;
+        }
+
+        boolean ended = NoBlockingActions.awaitCompletion(exitMillis);
+        StringBuilder message = new StringBuilder()
+                .append(submissions.size())
+                .append(submissions.size() == 1 ? " no-blocking action was" : " no-blocking actions were")
+                .append(" still unfinished ")
+                .append(when)
+                .append(", so ")
+                .append(submissions.size() == 1 ? "it was" : "they were")
+                .append(" cancelled. Wait for each ...NoBlock call to take effect before the test ends;")
+                .append(" the suppressed exceptions show where each action was submitted.");
+        if (!ended) {
+            message.append(" The running action did not end within ")
+                    .append(exitMillis)
+                    .append(" ms of being interrupted and still holds the Jemmy action thread.");
+        }
+        AssertionError failure = new AssertionError(message.toString());
+        for (Throwable submission : submissions) {
+            failure.addSuppressed(submission);
+        }
+        return failure;
+    }
+
     /** A {@code @Nested} class runs inside its enclosing class; resetting there would sabotage it. */
     private static boolean isNestedClass(ExtensionContext context) {
         return context.getTestClass().map(testClass -> testClass.getEnclosingClass() != null).orElse(false);
@@ -113,6 +185,7 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
     }
 
     private static void resetEverything() throws Exception {
+        cancelLeftoverActions();
         releaseStrayMouseButton();
         parkPointerAwayFromTestWindows();
         TestWindows.disposeAll();
@@ -123,6 +196,18 @@ public final class JemmyStateResetExtension implements BeforeAllCallback, AfterA
         // disposal events that dispatched while the queue settled must not be remembered as the
         // next class's "last event"
         EventTool.getInstance().clearLastEvents();
+    }
+
+    /**
+     * Backstop for actions left by a class that does not register this extension: the per-test
+     * check fails the test that leaves one, so none should remain between classes.
+     */
+    private static void cancelLeftoverActions() throws InterruptedException {
+        AssertionError leftover = finishNoBlockingActions(0L, CANCELLED_ACTION_EXIT_MS, "between test classes");
+        if (leftover != null) {
+            // failing here would blame whichever class runs next, not the one that left them
+            logger.warn("cancelled no-blocking actions left over between test classes", leftover);
+        }
     }
 
     private static synchronized void releaseStrayMouseButton() throws AWTException {

@@ -27,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.TimeUnit;
 import javax.swing.Action;
@@ -153,15 +154,34 @@ class JMenuOperatorTest {
         JFrameOperator jFrameOp = JFrameOperator.waitFor();
         JMenuBarOperator jMenuBarOp = JMenuBarOperator.waitFor(jFrameOp);
         JMenuOperator jMenuOp = JMenuOperator.waitFor(jMenuBarOp);
-        NullMenuListener listener = new NullMenuListener();
+        OpenCountingMenuListener listener = new OpenCountingMenuListener();
         jMenuOp.addMenuListener(listener);
-        jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.strict());
-        jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.strict());
-        jMenuOp.pushMenuNoBlock("JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring());
-        jMenuOp.pushMenuNoBlock(new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring());
-        jMenuOp.pushMenuNoBlock("JMenuOperatorTest", ",", StringComparators.regex());
-        jMenuOp.pushMenuNoBlock("JMenuOperatorTest", StringComparators.regex());
+        pushAndAwaitMenuCycle(jMenuOp, listener, () -> jMenuOp.pushMenuNoBlock(
+                "JMenuOperatorTest", StringComparators.strict()));
+        pushAndAwaitMenuCycle(jMenuOp, listener, () -> jMenuOp.pushMenuNoBlock(
+                "JMenuOperatorTest", "/", StringComparators.strict()));
+        pushAndAwaitMenuCycle(jMenuOp, listener, () -> jMenuOp.pushMenuNoBlock(
+                "JMenuOperatorTest", "/", StringComparators.caseInsensitiveSubstring()));
+        pushAndAwaitMenuCycle(jMenuOp, listener, () -> jMenuOp.pushMenuNoBlock(
+                new String[] {"JMenuOperatorTest"}, StringComparators.caseInsensitiveSubstring()));
+        pushAndAwaitMenuCycle(jMenuOp, listener, () -> jMenuOp.pushMenuNoBlock(
+                "JMenuOperatorTest", ",", StringComparators.regex()));
+        pushAndAwaitMenuCycle(jMenuOp, listener, () -> jMenuOp.pushMenuNoBlock(
+                "JMenuOperatorTest", StringComparators.regex()));
         jMenuOp.removeMenuListener(listener);
+    }
+
+    /**
+     * Runs one no-blocking push and waits for its whole effect: pushing a menu by its own name
+     * presses it open and then pushes it closed again. A push still queued when the test ends
+     * would outlive the test on the shared Jemmy action thread.
+     */
+    private static void pushAndAwaitMenuCycle(
+            JMenuOperator menuOp, OpenCountingMenuListener listener, Runnable pushNoBlock) {
+        int openedBefore = listener.opened.get();
+        pushNoBlock.run();
+        menuOp.<JMenuOperator>waitState(
+                op -> listener.opened.get() > openedBefore && !op.getSource().isSelected());
     }
 
     @Test
@@ -372,6 +392,21 @@ class JMenuOperatorTest {
 
         @Override
         public void actionPerformed(ActionEvent e) {}
+    }
+
+    private static final class OpenCountingMenuListener implements MenuListener {
+        final AtomicInteger opened = new AtomicInteger();
+
+        @Override
+        public void menuSelected(MenuEvent e) {
+            opened.incrementAndGet();
+        }
+
+        @Override
+        public void menuDeselected(MenuEvent e) {}
+
+        @Override
+        public void menuCanceled(MenuEvent e) {}
     }
 
     private static class NullMenuListener implements MenuListener {
