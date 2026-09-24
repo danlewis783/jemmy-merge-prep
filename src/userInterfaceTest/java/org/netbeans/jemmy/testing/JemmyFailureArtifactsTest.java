@@ -125,13 +125,7 @@ class JemmyFailureArtifactsTest {
                 .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
         assertThat(report.resolveSibling(screenshot.getFileName())).isEqualTo(screenshot);
 
-        try (ZipFile zip = new ZipFile(archive.toFile())) {
-            assertThat(zip.stream().map(ZipEntry::getName).collect(Collectors.toList()))
-                    .containsExactlyInAnyOrder(
-                            screenshot.getFileName().toString(), report.getFileName().toString());
-            assertArchivedBytes(zip, screenshot);
-            assertArchivedBytes(zip, report);
-        }
+        assertArchiveHolds(archive, screenshot, report);
     }
 
     @Test
@@ -174,18 +168,8 @@ class JemmyFailureArtifactsTest {
                 .contains("Occurred:", "Elapsed since diagnostics started:")
                 .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
         assertThat(ImageIO.read(screenshot.toFile())).isNotNull();
-        try (ZipFile zip = new ZipFile(archive.toFile())) {
-            assertThat(zip.stream().map(ZipEntry::getName).collect(Collectors.toList()))
-                    .containsExactlyInAnyOrder(
-                            screenshot.getFileName().toString(), report.getFileName().toString());
-            assertArchivedBytes(zip, report);
-            assertArchivedBytes(zip, screenshot);
-        }
-
-        // Retain this example outside @TempDir so the real diagnostics can be inspected after a run.
-        publishArtifact(reporter, report, MediaType.TEXT_PLAIN_UTF_8);
-        publishArtifact(reporter, screenshot, MediaType.IMAGE_PNG);
-        publishArtifact(reporter, archive, MediaType.create("application", "zip"));
+        assertArchiveHolds(archive, screenshot, report);
+        publishArtifacts(reporter, report, screenshot, archive);
     }
 
     @Test
@@ -230,16 +214,8 @@ class JemmyFailureArtifactsTest {
                 .contains("Thread: AWT-EventQueue-", "Capture: uncaught EDT exception handler")
                 .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
         assertThat(ImageIO.read(screenshot.toFile())).isNotNull();
-        try (ZipFile zip = new ZipFile(archive.toFile())) {
-            assertThat(zip.stream().map(ZipEntry::getName).collect(Collectors.toList()))
-                    .containsExactlyInAnyOrder(
-                            screenshot.getFileName().toString(), report.getFileName().toString());
-            assertArchivedBytes(zip, report);
-            assertArchivedBytes(zip, screenshot);
-        }
-        publishArtifact(reporter, report, MediaType.TEXT_PLAIN_UTF_8);
-        publishArtifact(reporter, screenshot, MediaType.IMAGE_PNG);
-        publishArtifact(reporter, archive, MediaType.create("application", "zip"));
+        assertArchiveHolds(archive, screenshot, report);
+        publishArtifacts(reporter, report, screenshot, archive);
     }
 
     private static Throwable executeFailingFixture(Class<?> fixture, Path outputDirectory) throws Exception {
@@ -247,6 +223,7 @@ class JemmyFailureArtifactsTest {
         LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
                 .selectors(selectClass(fixture))
                 .configurationParameter("junit.platform.reporting.output.dir", outputDirectory.toString())
+                .configurationParameter("junit.jupiter.execution.parallel.enabled", "false")
                 .build();
         try {
             nestedExecution = true;
@@ -259,6 +236,13 @@ class JemmyFailureArtifactsTest {
         assertThat(listener.getSummary().getTestsFailedCount()).isEqualTo(1);
         assertThat(listener.getSummary().getFailures()).hasSize(1);
         return listener.getSummary().getFailures().get(0).getException();
+    }
+
+    /** Retains the real diagnostics outside @TempDir so they can be inspected after a run. */
+    private static void publishArtifacts(TestReporter reporter, Path report, Path screenshot, Path archive) {
+        publishArtifact(reporter, report, MediaType.TEXT_PLAIN_UTF_8);
+        publishArtifact(reporter, screenshot, MediaType.IMAGE_PNG);
+        publishArtifact(reporter, archive, MediaType.create("application", "zip"));
     }
 
     private static void publishArtifact(TestReporter reporter, Path source, MediaType mediaType) {
@@ -274,6 +258,18 @@ class JemmyFailureArtifactsTest {
                     .collect(Collectors.toList());
             assertThat(matches).as("one %s*%s attachment", prefix, suffix).hasSize(1);
             return matches.get(0);
+        }
+    }
+
+    private static void assertArchiveHolds(Path archive, Path... originals) throws Exception {
+        try (ZipFile zip = new ZipFile(archive.toFile())) {
+            assertThat(zip.stream().map(ZipEntry::getName).collect(Collectors.toList()))
+                    .containsExactlyInAnyOrderElementsOf(Stream.of(originals)
+                            .map(original -> original.getFileName().toString())
+                            .collect(Collectors.toList()));
+            for (Path original : originals) {
+                assertArchivedBytes(zip, original);
+            }
         }
     }
 
@@ -458,7 +454,6 @@ class JemmyFailureArtifactsTest {
     private static final class BrokenPaintPanel extends JPanel {
         private final JLabel status;
         private boolean renderRequested;
-        private boolean failPainting = true;
 
         BrokenPaintPanel(JLabel status) {
             this.status = status;
@@ -484,10 +479,8 @@ class JemmyFailureArtifactsTest {
             if (renderRequested) {
                 // Consume one render request so incidental repaints do not cause an exception storm.
                 renderRequested = false;
-                if (failPainting) {
-                    throw new RuntimeException(PAINT_FAILURE);
-                }
-                status.setText(PAINT_READY_TEXT);
+                // A working painter would set PAINT_READY_TEXT here; this one always fails first.
+                throw new RuntimeException(PAINT_FAILURE);
             }
         }
     }
