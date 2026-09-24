@@ -26,6 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 import javax.swing.SwingUtilities;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
@@ -188,9 +189,22 @@ class QueueToolAbandonedCallerTest {
             interruptPreserved.set(Thread.currentThread().isInterrupted());
         }, "running-caller-awaiter");
         try {
+            // hold the EDT so the awaiter can be seen parked on the start latch first
+            BlockedEdt blocked = postBlockedEdt();
             awaiter.start();
-            assertThat(started.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS)).isTrue();
             awaitParked(awaiter);
+            @Nullable Object startLatch = LockSupport.getBlocker(awaiter);
+            assertThat(startLatch).as("the awaiter is parked on the start latch").isNotNull();
+            blocked.releaseEdt();
+            assertThat(started.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS)).isTrue();
+            // the start latch is open once the work runs, but the awaiter may not have woken
+            // from it yet: interrupting then would hit the start latch, not the end latch
+            BooleanSupplierRepeater.waitFor(() -> {
+                @Nullable Object blocker = LockSupport.getBlocker(awaiter);
+                return (awaiter.getState() == Thread.State.TIMED_WAITING)
+                        && (blocker != null)
+                        && (blocker != startLatch);
+            });
             awaiter.interrupt();
             awaiter.join(LATCH_WAIT_TIME);
             assertThat(awaiter.isAlive()).isFalse();
