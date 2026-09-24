@@ -63,9 +63,10 @@ A `-D` of the same key isn't forwarded; the build logs a warning instead.
 - A look and feel class that can't load on the platform (e.g. `WindowsLookAndFeel` on Linux)
   breaks Swing for the whole JVM. `UIManager` marks itself initialized *before* loading the
   default, so only the first caller sees `Error: Cannot load ...`; after that
-  `UIManager.getLookAndFeel()` returns `null`. `org.netbeans.jemmy.util.LookAndFeel` turns that
-  `null` into an `IllegalStateException` naming `swing.defaultlaf`. If every UI test class fails
-  in `JemmyStateResetExtension.beforeAll`, check this first.
+  `UIManager.getLookAndFeel()` returns `null`. `JemmyStateResetExtension` checks for this before
+  the first UI class and fails it with an `IllegalStateException` naming `swing.defaultlaf`, with
+  Swing's `Cannot load` error as the cause; every later class then fails with the same message.
+  Outside the extension, `org.netbeans.jemmy.util.LookAndFeel` reports the `null` the same way.
 - Tests that switch look and feel must restore the previous one in `finally`
   (see `LookAndFeelTest`, `InternalFrameTitleButtonsLafTest`).
 
@@ -74,6 +75,19 @@ A `-D` of the same key isn't forwarded; the build logs a warning instead.
 - Register `@ExtendWith(JemmyStateResetExtension.class)` on every UI test class. The suite runs
   in one JVM, and this extension resets process-wide state (look and feel, tooltips, drivers,
   timeouts, event queue) between classes.
+- Before each class, the extension checks that the desktop can run UI tests at all. It fails the
+  class, rather than skipping it, when AWT is headless, Swing has no usable look and feel, a
+  `java.awt.Robot` can't be created, or the EDT doesn't respond within 10 s (the EDT's stack is
+  attached). None of these recover within a JVM, so the first failure is remembered and every
+  later class fails at once with the same message. Fix the first one.
+- **Wait for every `...NoBlock` call to take effect before the test ends.** No-block actions
+  (`pushNoBlock`, `pushMenuNoBlock` and the like) all run on the single Jemmy action thread, so
+  one that outlives its test holds up every later action and unrelated tests time out. Windows
+  CI once lost five menu tests in four classes that way. After each test method, before its
+  `@AfterEach` methods run, the extension gives unfinished no-block actions 5 s, then cancels
+  them and fails the test with "N no-blocking actions were still unfinished ...". Each suppressed
+  exception shows where one was submitted. Wait for the action's visible effect, for example
+  with `waitState` on the menu (see `JMenuBarOperatorTest.testPushMenuNoBlock`).
 - Follow CONVENTIONS.md: touch raw components only on the EDT, and use `of(...)`, `waitFor(...)`
   and `find...(...)` for what they promise.
 - **Don't depend on the machine or the checkout.** The first Windows CI run found tests that
@@ -113,7 +127,8 @@ target platform:
   release `jdk8u345-b01`, checked against its `.sha256.txt`), then pass
   `-Porg.gradle.java.installations.paths=...`.
 - Run under a virtual display:
-  `xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew check --continue`.
+  `xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew check --continue`. Without one, every UI
+  class fails with "UI tests need a display, but AWT is headless".
 - The unit suite passes. Expect some UI failures that don't reproduce on Windows. Xvfb has no
   window manager, so maximize/demaximize, window activation, focus-owner and owned-window tests
   fail, and some drag-and-drop and slider tests time out. Tests run under Metal, not the
