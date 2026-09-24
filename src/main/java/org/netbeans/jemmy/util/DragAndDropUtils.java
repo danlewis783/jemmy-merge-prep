@@ -248,6 +248,13 @@ public final class DragAndDropUtils {
         queueWait();
         treeOper.dragMouse(destPt.x, destPt.y);
         queueWait();
+        // X11 drag and drop tells the drop target where the drag is only from motion after the
+        // drag session has started, and rejects a release it has not answered; the jump above can
+        // start the session, so move once more over the destination before releasing
+        treeOper.dragMouse(destPt.x, destPt.y + 1);
+        queueWait();
+        treeOper.dragMouse(destPt.x, destPt.y);
+        queueWait();
 
         // treeOper.releaseMouse(srcEndPt.x,srcEndPt.y);
         treeOper.releaseMouse();

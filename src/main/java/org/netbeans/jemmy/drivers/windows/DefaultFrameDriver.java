@@ -26,9 +26,11 @@
 package org.netbeans.jemmy.drivers.windows;
 
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
+import org.netbeans.jemmy.JemmyException;
 import org.netbeans.jemmy.drivers.FrameDriver;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.input.EventDriver;
@@ -59,9 +61,18 @@ public final class DefaultFrameDriver extends LightSupportiveDriver implements F
         ((FrameOperator) op).setState(Frame.NORMAL);
     }
 
+    /**
+     * @throws JemmyException when the platform cannot maximize frames. On X11 the window manager
+     *     does the maximizing, so without one {@code setExtendedState} is silently ignored and
+     *     waiting for the maximized state could only time out.
+     */
     @Override
     public void maximize(ComponentOperator op) {
         checkSupported(op);
+        if (!Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
+            throw new JemmyException("cannot maximize: this platform does not support Frame.MAXIMIZED_BOTH"
+                    + " (on X11, maximizing needs a window manager)");
+        }
         ((FrameOperator) op).setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 

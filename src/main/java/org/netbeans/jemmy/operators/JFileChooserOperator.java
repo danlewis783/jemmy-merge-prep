@@ -184,14 +184,19 @@ public class JFileChooserOperator extends JComponentOperator {
      */
     public Component getFileList() {
         final String fileListName;
+        final @Nullable String fileTableName;
         if (LookAndFeel.isMotif() || LookAndFeel.isGTK()) {
             fileListName = UIManager.getString("FileChooser.filesLabelText", getLocale());
+            fileTableName = null;
         } else {
             fileListName = UIManager.getString("FileChooser.filesListAccessibleName", getLocale());
+            // the details view's table, named the same way by sun.swing.FilePane
+            fileTableName = UIManager.getString("FileChooser.filesDetailsAccessibleName", getLocale());
         }
 
         return Objects.requireNonNull(
-                innerSearcher.findComponent(new FileListPredicate(fileListName)), "file list not found");
+                innerSearcher.findComponent(new FileListPredicate(fileListName, fileTableName)),
+                "file list not found");
     }
 
     public void approve() {
@@ -794,25 +799,34 @@ public class JFileChooserOperator extends JComponentOperator {
         }
     }
 
+    /** Matches the list or details table by accessible name, never an arbitrary JList or JTable. */
     private static class FileListPredicate implements Predicate<Component> {
         private final @Nullable String fileListName;
+        private final @Nullable String fileTableName;
 
-        FileListPredicate(@Nullable String fileListName) {
+        FileListPredicate(@Nullable String fileListName, @Nullable String fileTableName) {
             this.fileListName = fileListName;
+            this.fileTableName = fileTableName;
         }
 
         @Override
         public boolean test(Component comp) {
-            return ((comp instanceof JList)
-                            && (fileListName != null)
-                            && fileListName.equals(comp.getAccessibleContext().getAccessibleName()))
-                    /*|| (comp instanceof JTable)*/;
+            return ((comp instanceof JList) && isNamed(comp, fileListName))
+                    || ((comp instanceof JTable) && isNamed(comp, fileTableName));
+        }
+
+        private static boolean isNamed(Component comp, @Nullable String name) {
+            return (name != null) && name.equals(comp.getAccessibleContext().getAccessibleName());
         }
 
         @Override
         public String toString() {
-            return "FileListPredicate{fileListName="
-                    + (fileListName == null ? "null" : "\"" + fileListName + "\"") + "}";
+            return "FileListPredicate{fileListName=" + quoted(fileListName)
+                    + ", fileTableName=" + quoted(fileTableName) + "}";
+        }
+
+        private static String quoted(@Nullable String name) {
+            return (name == null) ? "null" : "\"" + name + "\"";
         }
     }
 }

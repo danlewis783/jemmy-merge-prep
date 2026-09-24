@@ -48,8 +48,12 @@ public final class DefaultWindowDriver extends LightSupportiveDriver implements 
     public void activate(ComponentOperator op) {
         checkSupported(op);
 
-        if (((WindowOperator) op).getFocusOwner() == null) {
-            ((WindowOperator) op).toFront();
+        WindowOperator windowOp = (WindowOperator) op;
+        if (windowOp.getFocusOwner() == null) {
+            windowOp.toFront();
+            // toFront activates the window on Windows, but on X11 it only raises it: focus moves
+            // at the window manager's discretion, and without one only a focus request moves it
+            windowOp.requestFocus();
         }
 
         eventDriver.dispatchEvent(
