@@ -24,6 +24,9 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
@@ -43,9 +46,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Restores the JVM to a just-started condition around every test class, standing in for the
- * one-JVM-per-class isolation the UI suite used to buy with Gradle's {@code forkEvery = 1}. Runs
- * before and after each class (before defensively, in case the previous class died without its
- * callbacks), in an order that mirrors a fresh JVM:
+ * one-JVM-per-class isolation the UI suite used to buy with Gradle's {@code forkEvery = 1}.
+ *
+ * <p>Before each class it first checks that UI tests can run at all, and fails the class with
+ * the reason when they cannot: AWT is headless, Swing has no usable look and feel, a {@link
+ * Robot} cannot be created, or the event dispatch thread does not respond. It fails rather than
+ * skips, so a machine that cannot run the suite never reports it as passing. None of these
+ * recover within a JVM, so the first failure is remembered and every later class fails with it
+ * at once.
+ *
+ * <p>It then resets process-wide state before and after each class (before defensively, in case
+ * the previous class died without its callbacks), in an order that mirrors a fresh JVM:
  * <ol>
  * <li>cancel no-blocking actions still queued or running on the Jemmy action thread</li>
  * <li>release a stray left mouse button, so a test that failed mid-drag cannot turn every later
@@ -85,6 +96,15 @@ public final class JemmyStateResetExtension
     /** How long a cancelled no-blocking action gets to notice its interrupt and end. */
     private static final long CANCELLED_ACTION_EXIT_MS = 5_000L;
 
+    /** How long the event dispatch thread may take to run a trivial task before a class starts. */
+    private static final long EDT_RESPONSE_TIMEOUT_MS = 10_000L;
+
+    /** The first reason found that UI tests cannot run in this JVM; it is never cleared. */
+    private static @Nullable IllegalStateException unusableDesktop;
+
+    /** Whether the checks that cannot change during a JVM's life have passed. */
+    private static boolean desktopVerified;
+
     /** The look and feel class active before any test class ran; first callback wins. */
     private static final AtomicReference<@Nullable String> pristineLookAndFeel = new AtomicReference<>();
 
@@ -101,14 +121,16 @@ public final class JemmyStateResetExtension
             return;
         }
 
-        capturePristineLookAndFeel();
+        requireUsableDesktop();
         capturePristineToolTipState();
         resetEverything();
     }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        if (isNestedClass(context)) {
+        // the reset needs the event dispatch thread and the robot that the failed check found
+        // unusable; beforeAll has already failed this class with the reason
+        if (isNestedClass(context) || unusableDesktop() != null) {
             return;
         }
 
@@ -169,19 +191,117 @@ public final class JemmyStateResetExtension
         return failure;
     }
 
+    private static synchronized @Nullable IllegalStateException unusableDesktop() {
+        return unusableDesktop;
+    }
+
+    private static synchronized void requireUsableDesktop() throws Exception {
+        if (unusableDesktop == null) {
+            unusableDesktop = findDesktopProblem(!desktopVerified);
+            desktopVerified = unusableDesktop == null;
+        }
+        if (unusableDesktop != null) {
+            // a fresh exception per class: JUnit attaches later failures to the one it reports
+            IllegalStateException failure = new IllegalStateException(unusableDesktop.getMessage());
+            failure.initCause(unusableDesktop.getCause());
+            for (Throwable detail : unusableDesktop.getSuppressed()) {
+                failure.addSuppressed(detail);
+            }
+            throw failure;
+        }
+    }
+
+    /**
+     * @param fullCheck also run the checks whose outcome cannot change during the JVM's life
+     */
+    private static @Nullable IllegalStateException findDesktopProblem(boolean fullCheck) throws Exception {
+        if (fullCheck && GraphicsEnvironment.isHeadless()) {
+            String headless = System.getProperty("java.awt.headless");
+            return new IllegalStateException("UI tests need a display, but AWT is headless ("
+                    + (headless == null ? "no display was found" : "java.awt.headless=" + headless)
+                    + "). On Linux, run Gradle under xvfb-run.");
+        }
+
+        // before anything else touches the event dispatch thread, which would otherwise hang
+        IllegalStateException edtProblem = edtProblem(EDT_RESPONSE_TIMEOUT_MS);
+        if (edtProblem != null || !fullCheck) {
+            return edtProblem;
+        }
+
+        AtomicReference<javax.swing.@Nullable LookAndFeel> lookAndFeel = new AtomicReference<>();
+        AtomicReference<@Nullable Error> loadError = new AtomicReference<>();
+        EventQueue.invokeAndWait(() -> {
+            try {
+                lookAndFeel.set(UIManager.getLookAndFeel());
+            } catch (VirtualMachineError e) {
+                throw e;
+            } catch (Error e) {
+                // UIManager reports a default look and feel it cannot load this way, once
+                loadError.set(e);
+            }
+        });
+        javax.swing.LookAndFeel installed = lookAndFeel.get();
+        IllegalStateException lookAndFeelProblem = lookAndFeelProblem(installed, loadError.get());
+        if (lookAndFeelProblem != null || installed == null) {
+            return lookAndFeelProblem;
+        }
+        // the look and feel active before any test class ran, restored between classes
+        pristineLookAndFeel.compareAndSet(null, installed.getClass().getName());
+
+        try {
+            robot();
+        } catch (AWTException | SecurityException e) {
+            return new IllegalStateException(
+                    "UI tests need a java.awt.Robot to drive the mouse and keyboard, but one cannot be created", e);
+        }
+        return null;
+    }
+
+    /**
+     * Runs a trivial task on the event dispatch thread. When it does not run in time, a previous
+     * test has probably left the thread blocked, and nothing that needs it can run in this JVM.
+     *
+     * @return {@code null} when the thread responded, otherwise the failure with the thread's
+     *     stack attached as a suppressed exception
+     */
+    static @Nullable IllegalStateException edtProblem(long timeoutMillis) throws InterruptedException {
+        CountDownLatch responded = new CountDownLatch(1);
+        EventQueue.invokeLater(responded::countDown);
+        if (responded.await(timeoutMillis, TimeUnit.MILLISECONDS)) {
+            return null;
+        }
+
+        IllegalStateException problem = new IllegalStateException("The event dispatch thread did not respond"
+                + " within " + timeoutMillis + " ms, so no UI test can run in this JVM. A previous test probably"
+                + " left it blocked; its stack is attached.");
+        for (Map.Entry<Thread, StackTraceElement[]> thread : Thread.getAllStackTraces().entrySet()) {
+            if (thread.getKey().getName().startsWith("AWT-EventQueue")) {
+                Throwable stack = new Throwable(thread.getKey().getName() + " [" + thread.getKey().getState() + "]");
+                stack.setStackTrace(thread.getValue());
+                problem.addSuppressed(stack);
+            }
+        }
+        return problem;
+    }
+
+    /**
+     * @param loadError what {@code UIManager.getLookAndFeel()} threw, if it threw
+     * @return {@code null} when a look and feel is installed
+     */
+    static @Nullable IllegalStateException lookAndFeelProblem(
+            javax.swing.@Nullable LookAndFeel lookAndFeel, @Nullable Error loadError) {
+        if (lookAndFeel != null && loadError == null) {
+            return null;
+        }
+
+        return new IllegalStateException("Swing has no usable look and feel (swing.defaultlaf="
+                + System.getProperty("swing.defaultlaf") + "). A look and feel this platform cannot load,"
+                + " such as WindowsLookAndFeel on Linux, breaks Swing for the whole JVM.", loadError);
+    }
+
     /** A {@code @Nested} class runs inside its enclosing class; resetting there would sabotage it. */
     private static boolean isNestedClass(ExtensionContext context) {
         return context.getTestClass().map(testClass -> testClass.getEnclosingClass() != null).orElse(false);
-    }
-
-    private static void capturePristineLookAndFeel() throws Exception {
-        if (pristineLookAndFeel.get() != null) {
-            return;
-        }
-
-        AtomicReference<String> current = new AtomicReference<>();
-        EventQueue.invokeAndWait(() -> current.set(UIManager.getLookAndFeel().getClass().getName()));
-        pristineLookAndFeel.compareAndSet(null, current.get());
     }
 
     private static void resetEverything() throws Exception {
@@ -210,12 +330,17 @@ public final class JemmyStateResetExtension
         }
     }
 
-    private static synchronized void releaseStrayMouseButton() throws AWTException {
-        if (robot == null) {
-            robot = new Robot();
+    private static synchronized Robot robot() throws AWTException {
+        Robot current = robot;
+        if (current == null) {
+            current = new Robot();
+            robot = current;
         }
+        return current;
+    }
 
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+    private static void releaseStrayMouseButton() throws AWTException {
+        robot().mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
     }
 
     /**
@@ -224,15 +349,12 @@ public final class JemmyStateResetExtension
      * private hover component and timer state. Moving the OS pointer away while the old component
      * still exists supplies the normal Swing event that clears that state.
      */
-    private static synchronized void parkPointerAwayFromTestWindows() throws AWTException {
-        if (robot == null) {
-            robot = new Robot();
-        }
-
+    private static void parkPointerAwayFromTestWindows() throws AWTException {
         Rectangle screenBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         Point parkingPoint = pointerParkingPoint(screenBounds, TestWindows.baseLocation());
-        robot.mouseMove(parkingPoint.x, parkingPoint.y);
-        robot.waitForIdle();
+        Robot pointer = robot();
+        pointer.mouseMove(parkingPoint.x, parkingPoint.y);
+        pointer.waitForIdle();
     }
 
     /**

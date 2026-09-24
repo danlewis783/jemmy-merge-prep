@@ -209,6 +209,11 @@ final class ActionRunner<R> {
             }
             submissions.add(pending.submission);
         }
+        // only once every action is marked: an interrupted action can end, and the executor
+        // start the next queued one, before that one would otherwise have been marked
+        for (PendingAction pending : cancelled) {
+            pending.interruptIfRunning();
+        }
         return submissions;
     }
 
@@ -259,13 +264,16 @@ final class ActionRunner<R> {
             removePending(this);
         }
 
-        /** Returns true when the action had not started yet. */
+        /** Stops the action from starting; returns true when it had not started yet. */
         synchronized boolean cancel() {
             cancelled = true;
+            return !started;
+        }
+
+        synchronized void interruptIfRunning() {
             if (runner != null) {
                 runner.interrupt();
             }
-            return !started;
         }
     }
 

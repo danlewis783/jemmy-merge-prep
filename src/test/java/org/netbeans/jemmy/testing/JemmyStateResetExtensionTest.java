@@ -18,10 +18,12 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.netbeans.jemmy.NoBlockingActions;
@@ -91,5 +93,60 @@ class JemmyStateResetExtensionTest {
         assertThat(NoBlockingActions.awaitCompletion(0L))
                 .as("the cancelled action no longer holds the action thread")
                 .isTrue();
+    }
+
+    @Test
+    void acceptsAResponsiveEventDispatchThread() throws InterruptedException {
+        assertThat(JemmyStateResetExtension.edtProblem(LATCH_WAIT_TIME)).isNull();
+    }
+
+    @Test
+    void reportsABlockedEventDispatchThreadWithItsStack() throws Exception {
+        CountDownLatch blocking = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        EventQueue.invokeLater(() -> {
+            blocking.countDown();
+            try {
+                release.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+        try {
+            assertThat(blocking.await(LATCH_WAIT_TIME, TimeUnit.MILLISECONDS)).isTrue();
+
+            IllegalStateException problem = JemmyStateResetExtension.edtProblem(50L);
+
+            assertThat(problem)
+                    .isNotNull()
+                    .hasMessageStartingWith("The event dispatch thread did not respond within 50 ms");
+            assertThat(problem.getSuppressed()).anySatisfy(stack -> {
+                assertThat(stack).hasMessageStartingWith("AWT-EventQueue");
+                assertThat(stack.getStackTrace()).anySatisfy(frame -> assertThat(frame.getMethodName())
+                        .contains("reportsABlockedEventDispatchThreadWithItsStack"));
+            });
+        } finally {
+            release.countDown();
+            EventQueue.invokeAndWait(() -> {});
+        }
+    }
+
+    @Test
+    void acceptsAnInstalledLookAndFeel() {
+        assertThat(JemmyStateResetExtension.lookAndFeelProblem(new MetalLookAndFeel(), null)).isNull();
+    }
+
+    @Test
+    void reportsALookAndFeelThatFailedToLoad() {
+        Error loadError = new Error("Cannot load com.example.MissingLookAndFeel");
+
+        assertThat(JemmyStateResetExtension.lookAndFeelProblem(null, loadError))
+                .isNotNull()
+                .hasMessageStartingWith("Swing has no usable look and feel (swing.defaultlaf=")
+                .hasCause(loadError);
+        assertThat(JemmyStateResetExtension.lookAndFeelProblem(null, null))
+                .as("later callers get no error, only a missing look and feel")
+                .isNotNull()
+                .hasNoCause();
     }
 }
