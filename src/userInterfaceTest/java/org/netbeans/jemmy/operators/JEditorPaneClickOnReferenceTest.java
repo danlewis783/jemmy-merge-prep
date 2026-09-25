@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy.operators;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.BorderLayout;
@@ -32,6 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,6 +71,8 @@ class JEditorPaneClickOnReferenceTest {
 
     private JFrame frame;
     private JEditorPane editorPane;
+    /** The page JEditorPane last reported fully loaded; written and read on the EDT only. */
+    private @Nullable URL lastLoadedPage;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
@@ -110,11 +114,7 @@ class JEditorPaneClickOnReferenceTest {
 
         // long page: the anchor must be scrolled to first
         operator.clickOnReference(PAGE1);
-        operator.waitState(op -> {
-            URL page = ((JEditorPane) op.getSource()).getPage();
-
-            return (page != null) && page.toString().contains(PAGE1);
-        });
+        checkPageLoaded(operator, PAGE1, PAGE1_TEXT);
     }
 
     @Test
@@ -144,6 +144,9 @@ class JEditorPaneClickOnReferenceTest {
         try {
             JEditorPane pane = new JEditorPane(page1Url);
             pane.setEditable(false);
+            // HTML loads on a background thread, which fires "page" on the EDT once the whole
+            // document is in; that is later than this EDT task, so the first load is seen too
+            pane.addPropertyChangeListener("page", event -> lastLoadedPage = (URL) event.getNewValue());
 
             return pane;
         } catch (IOException e) {
@@ -151,25 +154,17 @@ class JEditorPaneClickOnReferenceTest {
         }
     }
 
-    private static void checkPageLoaded(JEditorPaneOperator operator, String page, String text) {
-        operator.waitState(op -> {
-            URL current = ((JEditorPane) op.getSource()).getPage();
-
-            return (current != null) && current.toString().contains(page);
-        });
-        operator.waitState(op -> textContains((JEditorPane) op.getSource(), text));
-    }
-
     /**
-     * getPage() reports the new URL as soon as the asynchronous load starts, so the text can be
-     * read while the loader is still inserting it; HTMLWriter then can throw (an
-     * EmptyStackException was seen), which only means the page is not loaded yet.
+     * Waits for the pane to finish loading {@code page}, then checks its text. getPage() reports
+     * the new URL as soon as the asynchronous load starts, and the text grows while the loader
+     * inserts it, so neither shows that the anchors further down are in the document yet.
      */
-    private static boolean textContains(JEditorPane pane, String text) {
-        try {
-            return pane.getText().contains(text);
-        } catch (RuntimeException stillLoading) {
-            return false;
-        }
+    private void checkPageLoaded(JEditorPaneOperator operator, String page, String text) {
+        operator.waitState(op -> {
+            URL loaded = lastLoadedPage;
+
+            return (loaded != null) && loaded.toString().contains(page);
+        });
+        assertThat(operator.getText()).contains(text);
     }
 }
