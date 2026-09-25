@@ -61,6 +61,7 @@ class JTreePathNavigationTest {
     private static final int WRONG_POPUP_SHOW_TIME_MS = 500;
 
     private JFrame jFrame;
+    private TestStatusPane status;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
@@ -115,7 +116,9 @@ class JTreePathNavigationTest {
             contentPane.setLayout(new BorderLayout());
             contentPane.add(showWrong, BorderLayout.SOUTH);
             contentPane.add(split, BorderLayout.CENTER);
-            jFrame.setSize(400, 200);
+            status = TestStatusPane.strip();
+            contentPane.add(status, BorderLayout.NORTH);
+            jFrame.setSize(400, 260);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
@@ -132,6 +135,7 @@ class JTreePathNavigationTest {
 
     @Test
     void test() {
+        status.show("Checking the child paths of node00");
         JFrame frm = JFrameOperator.waitJFrame(FRAME_TITLE);
         JTree jTree = JTreeOperator.findJTree(frm, null, StringComparators.strict(), -1);
         assertThat(jTree).isNotNull();
@@ -161,6 +165,7 @@ class JTreePathNavigationTest {
                 .changeSelection(true);
 
         for (int i = 0; i < strPaths.length; i++) {
+            status.show("Huge popup first, then the menu on path " + (i + 1) + " of " + strPaths.length);
             TreePath path = to.waitPath(strPaths[i], "|", StringComparators.strict());
             assertThat(path).isNotNull();
             paths[i] = path;
@@ -191,6 +196,7 @@ class JTreePathNavigationTest {
             FunctionRepeater.on(checker).runUntilNotNull(pths);
         }
 
+        status.show("Menu on a path found by substring");
         pth = to.waitPath(new String[] {"node", "node"}, new int[] {1, 1}, StringComparators.substring());
         assertThat(pth).isNotNull();
         to.callPopupOnPath(pth);
@@ -200,10 +206,12 @@ class JTreePathNavigationTest {
         JCheckBoxOperator.waitFor(JFrameOperator.of(frm), "Huge Popup", StringComparators.substring())
                 .changeSelection(false);
 
+        int selection = 0;
         for (int i = 0; i < strPaths.length; i++) {
             for (int j = i + 1; j < strPaths.length; j++) {
                 for (int k = j + 1; k < strPaths.length; k++) {
                     for (int l = k + 1; l < strPaths.length; l++) {
+                        status.show("Menu on 4-path selection " + (++selection));
                         TreePath[] pths = {paths[i], paths[j], paths[k], paths[l]};
                         pmo = JPopupMenuOperator.of(to.callPopupOnPaths(pths));
                         pmo.pushMenu("XXX|submenu|subsubmenu|menuItem", "|", StringComparators.strict());
@@ -213,6 +221,7 @@ class JTreePathNavigationTest {
             }
         }
 
+        status.show("Checking operator mirrors");
         assertMirrorsSource(jListOp);
         assertMirrorsSource(split);
     }

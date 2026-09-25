@@ -19,6 +19,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.lang.reflect.InvocationTargetException;
@@ -50,6 +51,7 @@ import org.netbeans.jemmy.util.StringComparators;
 class TabbedPanePageSwitchTest {
 
     private JFrame jFrame;
+    private TestStatusPane status;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
@@ -69,6 +71,8 @@ class TabbedPanePageSwitchTest {
             listPane.add(new JList<>(listItems));
             tp.add("List Page", listPane);
             jFrame.getContentPane().add(tp);
+            status = TestStatusPane.strip();
+            jFrame.getContentPane().add(status, BorderLayout.SOUTH);
             jFrame.setSize(400, 400);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
@@ -86,6 +90,7 @@ class TabbedPanePageSwitchTest {
     @Test
     void doit() throws Exception {
         try (TimeoutOverride override = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 3_000L)) {
+            status.show("Page1: checking which buttons are showing");
             JFrame win = JFrameOperator.waitJFrame("TabbedPagesApp");
             JTabbedPaneOperator tpo =
                     JTabbedPaneOperator.waitFor(JFrameOperator.of(win), "Page1", StringComparators.strict());
@@ -103,9 +108,11 @@ class TabbedPanePageSwitchTest {
                 btt1.setVisible(true);
             });
 
+            status.show("Missing Page3: selecting it must time out after 3 s");
             assertThatExceptionOfType(TimeoutExpiredException.class)
                     .isThrownBy(() -> tpo.selectPage("Page3", StringComparators.strict()));
 
+            status.show("Page2: checking which buttons are showing");
             tpo.selectPage("Page2", StringComparators.strict());
             tpo.waitSelected("Page2", StringComparators.strict());
             assertThat(btt1o.isVisible()).isTrue();
@@ -114,6 +121,7 @@ class TabbedPanePageSwitchTest {
                     .isNotNull();
             assertThat(JButtonOperator.findJButton(win, "button1", StringComparators.strict()))
                     .isNull();
+            status.show("List Page: clicking items");
             assertThat(tpo.selectPage("List Page", StringComparators.strict())).isNotNull();
             JList<?> list = JListOperator.findJList(win, null, StringComparators.strict(), 0);
             assertThat(list).isNotNull();

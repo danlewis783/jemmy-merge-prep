@@ -90,6 +90,13 @@ A `-D` of the same key isn't forwarded; the build logs a warning instead.
   with `waitState` on the menu (see `JMenuBarOperatorTest.testPushMenuNoBlock`).
 - Follow CONVENTIONS.md: touch raw components only on the EDT, and use `of(...)`, `waitFor(...)`
   and `find...(...)` for what they promise.
+- Make every test window identifiable to someone watching the suite. Place it with
+  `TestWindows.place(...)`: it titles an untitled frame or dialog `TestClass.testMethod`
+  (recorded by `JemmyStateResetExtension`) and widens the window until its title fits. Leave the
+  title empty unless the test looks the window up by title. When a test runs longer than a couple
+  of seconds, add a `TestStatusPane` and call `show(...)` at each phase. Use `contentPane()` when
+  the test doesn't inspect the window's content, and `strip()` next to the components under test.
+  `RobotCalibration`'s full-screen window paints its own progress.
 - **Don't depend on the machine or the checkout.** The first Windows CI run found tests that
   passed on a developer machine but failed on the runner:
   - `JFileChooser` hides whatever the desktop hides (the `awt.file.showHiddenFiles` desktop

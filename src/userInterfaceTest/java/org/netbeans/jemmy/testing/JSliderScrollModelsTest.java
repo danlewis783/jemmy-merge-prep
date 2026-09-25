@@ -43,6 +43,7 @@ import org.netbeans.jemmy.util.StringComparators;
 class JSliderScrollModelsTest {
     private static final String FRAME_TITLE = "JSliderScrollModelsTest";
     private JFrame jFrame;
+    private TestStatusPane status;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
@@ -78,6 +79,8 @@ class JSliderScrollModelsTest {
             pane.add(label, BorderLayout.CENTER);
             jFrame.getContentPane().setLayout(new BorderLayout());
             jFrame.getContentPane().add(pane, BorderLayout.CENTER);
+            status = TestStatusPane.strip();
+            jFrame.getContentPane().add(status, BorderLayout.SOUTH);
             jFrame.setSize(400, 400);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
@@ -94,6 +97,7 @@ class JSliderScrollModelsTest {
 
     @Test
     void test() {
+        status.show("Finding the sliders");
         JFrameOperator jFrameOp = JFrameOperator.waitFor(FRAME_TITLE);
         JFrame jFrame = (JFrame) jFrameOp.getSource();
         JSliderOperator[] ops = new JSliderOperator[4];
@@ -107,7 +111,9 @@ class JSliderScrollModelsTest {
         JLabel label = JLabelOperator.findJLabel(jFrame, "0", StringComparators.strict());
         assertThat(label).isNotNull();
         int value;
-        for (JSliderOperator op : ops) {
+        for (int i = 0; i < ops.length; i++) {
+            JSliderOperator op = ops[i];
+            status.show("Slider " + (i + 1) + " of " + ops.length + ": to maximum, 2/3, 1/3 and minimum");
             int min = op.getMinimum();
             int max = op.getMaximum();
             int range = max - min;
@@ -127,6 +133,7 @@ class JSliderScrollModelsTest {
             assertThat(Integer.parseInt(onQueue(label::getText))).isEqualTo(min);
         }
 
+        status.show("Checking operator mirrors");
         JSliderOperator op = ops[0];
         JSlider src = (JSlider) op.getSource();
         assertThat(op.getExtent()).isEqualTo(onQueue(src::getExtent));

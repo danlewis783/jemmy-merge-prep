@@ -16,19 +16,29 @@
  */
 package org.netbeans.jemmy.drivers.input;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.SecondaryLoop;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.swing.JPanel;
 import javax.swing.JWindow;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.jemmy.JemmyException;
@@ -218,6 +228,8 @@ public final class RobotCalibration {
             int[] observedY = new int[probeCount];
             for (int i = 0; i < probeCount; i++) {
                 Point request = at(bounds, FIT_FRACTIONS[i]);
+                screen.showStatus("Measuring: probe " + (i + 1) + " of " + probeCount
+                        + ", robot move to " + request.x + "," + request.y);
                 Point observed = probe(robot, screen, park, request);
                 requestsX[i] = request.x;
                 requestsY[i] = request.y;
@@ -260,6 +272,8 @@ public final class RobotCalibration {
                     bounds.x + (int) (bounds.width * TARGET_FRACTIONS[i]) + i,
                     bounds.y + (int) (bounds.height * TARGET_FRACTIONS[i]) + i);
             Point request = new Point(x.requestFor(target.x, AIM), y.requestFor(target.y, AIM));
+            screen.showStatus("Verifying: target " + (i + 1) + " of " + TARGET_FRACTIONS.length
+                    + " at " + target.x + "," + target.y);
             Point observed = probe(robot, screen, park, request);
             maxError = Math.max(maxError, Math.abs(observed.x - target.x));
             maxError = Math.max(maxError, Math.abs(observed.y - target.y));
@@ -300,6 +314,7 @@ public final class RobotCalibration {
                     + " (primary screen " + screen.bounds() + ")");
         }
 
+        screen.markLanding(observed);
         return observed;
     }
 
@@ -390,16 +405,19 @@ public final class RobotCalibration {
     /**
      * A non-focusable window covering the primary screen that records where mouse events land.
      * Non-focusable so that showing it mid-test cannot steal focus (which would, for example,
-     * dismiss an open popup menu).
+     * dismiss an open popup menu). It paints what the calibration is doing and marks each
+     * observed landing, so the sudden full-screen window explains itself to anyone watching.
      */
     private static final class CalibrationScreen {
         private final JWindow window;
         private final Rectangle bounds;
         private final LinkedBlockingQueue<Point> observed = new LinkedBlockingQueue<>();
+        private final StatusPanel statusPanel;
 
         private CalibrationScreen(JWindow window, Rectangle bounds) {
             this.window = window;
             this.bounds = bounds;
+            statusPanel = new StatusPanel(bounds.getLocation());
         }
 
         static CalibrationScreen show(Rectangle bounds, QueueTool queueTool) {
@@ -409,6 +427,7 @@ public final class RobotCalibration {
                 window.setFocusableWindowState(false);
                 window.setBounds(bounds);
                 CalibrationScreen screen = new CalibrationScreen(window, bounds);
+                window.setContentPane(screen.statusPanel);
                 MouseAdapter recorder = new MouseAdapter() {
                     @Override
                     public void mouseMoved(MouseEvent e) {
@@ -430,6 +449,16 @@ public final class RobotCalibration {
 
         Rectangle bounds() {
             return bounds;
+        }
+
+        /** Shows what the calibration is doing now. Callable from any thread. */
+        void showStatus(String status) {
+            statusPanel.setStatus(status);
+        }
+
+        /** Marks where a probe move landed, in screen coordinates. Callable from any thread. */
+        void markLanding(Point landing) {
+            statusPanel.addLanding(landing);
         }
 
         void reset() {
@@ -464,6 +493,89 @@ public final class RobotCalibration {
                 window.setVisible(false);
                 window.dispose();
             });
+        }
+    }
+
+    /**
+     * Paints the calibration's heading, current status and observed landings. The probes run
+     * along the screen's upper-left diagonal, so the text sits in the lower half, clear of them.
+     */
+    private static final class StatusPanel extends JPanel {
+        private static final Color BACKGROUND = new Color(0x1E2A38);
+        private static final Color HEADING_COLOR = new Color(0x9FC5E8);
+        private static final Color LANDING_COLOR = new Color(0xFFA040);
+        private static final int MARK_RADIUS = 12;
+
+        private final Point screenOrigin;
+        private final List<Point> landings = new ArrayList<>();
+        private String status = "Starting";
+
+        StatusPanel(Point screenOrigin) {
+            this.screenOrigin = screenOrigin;
+            setOpaque(true);
+            setBackground(BACKGROUND);
+        }
+
+        void setStatus(String status) {
+            synchronized (this) {
+                this.status = status;
+            }
+            repaint();
+        }
+
+        void addLanding(Point landing) {
+            synchronized (this) {
+                landings.add(new Point(landing));
+            }
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            String currentStatus;
+            List<Point> currentLandings;
+            synchronized (this) {
+                currentStatus = status;
+                currentLandings = new ArrayList<>(landings);
+            }
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            try {
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                g2.setColor(LANDING_COLOR);
+                g2.setStroke(new BasicStroke(2f));
+                for (Point landing : currentLandings) {
+                    int x = landing.x - screenOrigin.x;
+                    int y = landing.y - screenOrigin.y;
+                    g2.drawLine(x - MARK_RADIUS, y, x + MARK_RADIUS, y);
+                    g2.drawLine(x, y - MARK_RADIUS, x, y + MARK_RADIUS);
+                    g2.drawOval(x - MARK_RADIUS / 2, y - MARK_RADIUS / 2, MARK_RADIUS, MARK_RADIUS);
+                }
+
+                Font base = getFont();
+                int size = Math.max(14, getHeight() / 40);
+                int left = getWidth() / 10;
+                int y = getHeight() * 11 / 20;
+                y = drawLine(g2, base.deriveFont(Font.BOLD, size * 1.5f), HEADING_COLOR,
+                        "Jemmy robot calibration", left, y);
+                y = drawLine(g2, base.deriveFont(Font.PLAIN, (float) size), Color.WHITE,
+                        "Measuring where robot mouse moves land on this display."
+                                + " Please don't touch the mouse.", left, y);
+                drawLine(g2, base.deriveFont(Font.PLAIN, (float) size), Color.WHITE, currentStatus, left, y);
+            } finally {
+                g2.dispose();
+            }
+        }
+
+        /** Draws one line below the given top y; returns the top y of the next line. */
+        private static int drawLine(Graphics2D g2, Font font, Color color, String text, int x, int top) {
+            g2.setFont(font);
+            g2.setColor(color);
+            FontMetrics metrics = g2.getFontMetrics();
+            g2.drawString(text, x, top + metrics.getAscent());
+            return top + metrics.getHeight() + metrics.getHeight() / 3;
         }
     }
 }

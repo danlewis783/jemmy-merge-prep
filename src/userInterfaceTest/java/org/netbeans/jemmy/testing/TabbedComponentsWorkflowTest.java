@@ -45,6 +45,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -67,6 +68,7 @@ final class TabbedComponentsWorkflowTest {
 
     private TimeoutOverride override;
     private JFrame jFrame;
+    private TestStatusPane status;
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
@@ -130,6 +132,8 @@ final class TabbedComponentsWorkflowTest {
             String text2 = sb.substring(0, sb.length() - 1);
             jTabbedPane.add("Text Page", new JScrollPane(new JTextArea(text2)));
             jFrame.getContentPane().add(jTabbedPane);
+            status = TestStatusPane.strip();
+            jFrame.getContentPane().add(status, BorderLayout.SOUTH);
             jFrame.setSize(500, 500);
             TestWindows.place(jFrame);
 
@@ -151,6 +155,7 @@ final class TabbedComponentsWorkflowTest {
 
     @Test
     void test() throws InterruptedException, InvocationTargetException {
+        status.show("Finding the tabbed pane");
         JFrame jFrame = JFrameOperator.waitJFrame(FRAME_TITLE);
         JFrameOperator jFrameOp = JFrameOperator.of(jFrame);
         JTabbedPane tabbedPane = JTabbedPaneOperator.findJTabbedPane(jFrame, "Table Page", STRICT, 0);
@@ -166,6 +171,7 @@ final class TabbedComponentsWorkflowTest {
         assertThat(jTabbedPane)
                 .isSameAs(JTabbedPaneOperator.waitFor(jFrameOp, "Tree", substring(), 1, 0)
                         .getSource());
+        status.show("Table page: clicking, editing and scrolling cells");
         JTable table =
                 JTableOperator.findJTable(jFrame, null, caseInsensitiveSubstring(), -1, -1);
         assertThat(table).isNotNull();
@@ -190,6 +196,7 @@ final class TabbedComponentsWorkflowTest {
         jTableOp.changeCellObject(1, 0, "non null text");
         jTableOp.waitCellText("non null text", caseInsensitiveSubstring(), 1, 0);
         assertThat(jTableOp.findCellRow("-1-1", STRICT)).isEqualTo(-1);
+        status.show("Tree page: expanding, renaming and scrolling paths");
         jTabbedPaneOp.selectPage("Tree Page", STRICT);
         JTreeOperator jTreeOp = JTreeOperator.waitFor(JFrameOperator.of(jFrame));
         jTreeOp.setVisualizer(new EmptyVisualizer());
@@ -217,17 +224,20 @@ final class TabbedComponentsWorkflowTest {
         TreePath path0 = jTreeOp.waitPath("", "/", STRICT);
         assertThat(path0).isNotNull();
         jTreeOp.scrollToPath(path0);
+        status.show("List page: scrolling items");
         jTabbedPaneOp.selectPage("List Page", STRICT);
         JListOperator listOper = JListOperator.waitFor(JFrameOperator.of(jFrame));
         listOper.setVisualizer(new EmptyVisualizer());
         listOper.scrollToItem(49);
         listOper.scrollToItem(0);
+        status.show("Text page: scrolling and clearing text");
         jTabbedPaneOp.selectPage("Text Page", STRICT);
         JTextAreaOperator jTextAreaOp = JTextAreaOperator.waitFor(jFrameOp);
         jTextAreaOp.setVisualizer(new EmptyVisualizer());
         jTextAreaOp.scrollToPosition(jTextAreaOp.getText().length());
         jTextAreaOp.clearText();
         assertThat(jTextAreaOp.getText()).isEmpty();
+        status.show("Checking operator mirrors");
         JTree treeOpSource = (JTree) jTree;
         assertThat(onQueue(treeOpSource::getCellEditor)).isEqualTo(jTreeOp.getCellEditor());
         assertThat(onQueue(treeOpSource::getCellRenderer)).isEqualTo(jTreeOp.getCellRenderer());

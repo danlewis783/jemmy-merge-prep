@@ -33,8 +33,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.netbeans.jemmy.EventTool;
@@ -77,6 +79,9 @@ import org.slf4j.LoggerFactory;
  * memory</li>
  * </ol>
  *
+ * <p>Around each test method it records the running test's name for {@link TestWindows}, which
+ * titles test windows with it.
+ *
  * <p>Before each test method, after its {@code @BeforeEach} methods have shown the test's windows,
  * the extension waits briefly for the focus that showing the last of them requested (see {@link
  * ShownWindowFocus}), so the test starts from settled focus as it would on Windows.
@@ -92,7 +97,8 @@ import org.slf4j.LoggerFactory;
  * {@code @ExtendWith(JemmyStateResetExtension.class)}; consumer test classes should do the same.
  */
 public final class JemmyStateResetExtension
-        implements BeforeAllCallback, AfterAllCallback, BeforeTestExecutionCallback, AfterTestExecutionCallback {
+        implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback,
+                BeforeTestExecutionCallback, AfterTestExecutionCallback {
     private static final Logger logger = LoggerFactory.getLogger(JemmyStateResetExtension.class);
 
     /** How long a test's no-blocking actions may keep running after the test method returns. */
@@ -125,6 +131,7 @@ public final class JemmyStateResetExtension
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
+        TestWindows.setCurrentTestName(classTestName(context));
         if (isNestedClass(context)) {
             return;
         }
@@ -136,15 +143,38 @@ public final class JemmyStateResetExtension
     }
 
     @Override
+    public void beforeEach(ExtensionContext context) {
+        TestWindows.setCurrentTestName(
+                classTestName(context) + "." + context.getRequiredTestMethod().getName());
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) {
+        TestWindows.setCurrentTestName(classTestName(context));
+    }
+
+    @Override
     public void afterAll(ExtensionContext context) throws Exception {
+        if (isNestedClass(context)) {
+            // back to the enclosing class, whose remaining tests continue
+            Class<?> enclosing = context.getRequiredTestClass().getEnclosingClass();
+            TestWindows.setCurrentTestName(enclosing.getSimpleName());
+            return;
+        }
         // the reset needs the event dispatch thread and the robot that the failed check found
         // unusable; beforeAll has already failed this class with the reason
-        if (isNestedClass(context) || unusableDesktop() != null) {
+        if (unusableDesktop() != null) {
+            TestWindows.setCurrentTestName(null);
             return;
         }
 
         resetEverything();
         restoreToolTipState();
+        TestWindows.setCurrentTestName(null);
+    }
+
+    private static String classTestName(ExtensionContext context) {
+        return context.getRequiredTestClass().getSimpleName();
     }
 
     @Override

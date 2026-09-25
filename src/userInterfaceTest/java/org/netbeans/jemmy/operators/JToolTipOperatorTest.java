@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
@@ -40,6 +41,7 @@ import org.netbeans.jemmy.TimeoutOverride;
 import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
+import org.netbeans.jemmy.testing.TestStatusPane;
 import org.netbeans.jemmy.testing.TestWindows;
 import org.netbeans.jemmy.util.StringComparators;
 
@@ -59,6 +61,7 @@ class JToolTipOperatorTest {
 
     private JFrame frame;
     private JLabel label;
+    private TestStatusPane status;
     private int savedDismissDelay;
 
     @BeforeEach
@@ -72,6 +75,9 @@ class JToolTipOperatorTest {
             label = new JLabel(LABEL_TEXT);
             label.setToolTipText(TOOLTIP_TEXT);
             frame.getContentPane().add(label);
+            // no tooltip on the strip: tooltip lookups here must only ever find the label's
+            status = TestStatusPane.strip();
+            frame.getContentPane().add(status, BorderLayout.SOUTH);
             frame.setSize(400, 400);
             TestWindows.place(frame);
             frame.setVisible(true);
@@ -119,6 +125,7 @@ class JToolTipOperatorTest {
         EventQueue.invokeAndWait(() -> ToolTipManager.sharedInstance().setEnabled(false));
         try {
             JLabelOperator dummyLabel = JLabelOperator.of(onQueue(JLabel::new));
+            status.show("Five tooltip lookups, each must time out after 1 s");
             try (TimeoutOverride ignored = Timeouts.override(TimeoutKey.JToolTipOperator_WaitToolTipTimeout, 1_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> JToolTipOperator.waitFor(dummyLabel));

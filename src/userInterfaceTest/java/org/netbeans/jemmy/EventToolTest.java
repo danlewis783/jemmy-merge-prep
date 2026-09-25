@@ -41,6 +41,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.testing.JemmyFailureDiagnosticsExtension;
 import org.netbeans.jemmy.testing.JemmyStateResetExtension;
+import org.netbeans.jemmy.testing.TestStatusPane;
 import org.netbeans.jemmy.testing.TestWindows;
 
 // formerly scenario test jemmy_030
@@ -50,6 +51,7 @@ import org.netbeans.jemmy.testing.TestWindows;
 class EventToolTest {
 
     private JFrame jFrame;
+    private TestStatusPane statusPane;
     private EventTool eventTool;
 
     @BeforeAll
@@ -64,9 +66,11 @@ class EventToolTest {
         eventTool.addListeners(AWTEvent.CONTAINER_EVENT_MASK);
 
         EventQueue.invokeAndWait(() -> {
-            jFrame = new JFrame("EventToolTest");
+            jFrame = new JFrame();
+            statusPane = TestStatusPane.contentPane();
+            jFrame.setContentPane(statusPane);
+            jFrame.pack();
             TestWindows.place(jFrame);
-            jFrame.setSize(250, 100);
             jFrame.setVisible(true);
         });
     }
@@ -83,6 +87,7 @@ class EventToolTest {
     @Test
     void doit() throws Exception {
         JFrameOperator jFrameOp = JFrameOperator.of(jFrame);
+        statusPane.show("1/9 Listening for container events only: checking what was recorded");
         assertThat(eventTool.getLastEvent()).isInstanceOf(ContainerEvent.class);
         assertThat(eventTool.getCurrentEventMask()).isEqualTo(AWTEvent.CONTAINER_EVENT_MASK);
         assertThat(eventTool.getLastEvent(AWTEvent.WINDOW_EVENT_MASK))
@@ -94,10 +99,12 @@ class EventToolTest {
         eventTool.addListeners();
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
+            statusPane.show("2/9 All listeners on: waiting for the mouse mover's first event");
             Future<Void> mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
             eventTool.waitEvent(AWTEvent.MOUSE_EVENT_MASK);
 
             // the mover is already done, so nothing arrives during this window
+            statusPane.show("3/9 No key event may arrive within 1 s");
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 1_000L)) {
                 assertThatExceptionOfType(TimeoutExpiredException.class)
                         .isThrownBy(() -> eventTool.waitEvent(AWTEvent.KEY_EVENT_MASK))
@@ -107,6 +114,7 @@ class EventToolTest {
 
             awaitQuiet(mover);
             eventTool.removeListeners();
+            statusPane.show("4/9 Listeners removed: the mouse moves in 1 s, but nothing may be recorded for 2 s");
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
 
             // window sized so the mover's mouse activity (~1 s in) falls inside it: with the
@@ -120,9 +128,11 @@ class EventToolTest {
 
             awaitQuiet(mover);
             eventTool.addListeners();
+            statusPane.show("5/9 Listeners back on: waiting for any event from the mouse mover");
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
             eventTool.waitEvent();
             awaitQuiet(mover);
+            statusPane.show("6/9 The mouse moves in 1 s: none within 0.5 s, then one within 1.5 s");
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 1));
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
@@ -139,6 +149,7 @@ class EventToolTest {
             }
 
             awaitQuiet(mover);
+            statusPane.show("7/9 No event of any kind may arrive within 0.5 s");
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
                 // only on Linux, rarely, and only as the first UI class in its JVM so far; the
@@ -149,6 +160,7 @@ class EventToolTest {
                         .isTrue();
             }
 
+            statusPane.show("8/9 The mouse moves every 1 s: waiting for a 0.5 s pause between moves");
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 2));
 
             try (TimeoutOverride override = Timeouts.override(TimeoutKey.EventTool_WaitEventTimeout, 500L)) {
@@ -156,6 +168,7 @@ class EventToolTest {
             }
 
             awaitQuiet(mover);
+            statusPane.show("9/9 The mouse moves every 1 s: a 1.5 s pause must not be found within 3 s");
             mover = executorService.submit(new MouseMover(jFrameOp, 1_000, 2));
 
             // mouse events keep arriving less than 1500 ms apart for the whole 3000 ms budget,
@@ -169,6 +182,7 @@ class EventToolTest {
             }
 
             awaitQuiet(mover);
+            statusPane.show("Done");
         } finally {
             executorService.shutdown();
         }
