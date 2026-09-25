@@ -138,6 +138,35 @@ public final class QueueTool {
         }, "QueueTool.runOnQueue"));
     }
 
+    /**
+     * Runs a check on the AWT event dispatch thread and blocks until it completes, like
+     * {@link #runOnQueue}, except that an {@link AssertionError} the check throws propagates
+     * unchanged and is not recorded as an EDT failure. A failed check is the caller's result, for
+     * example one poll of {@link AssertionRepeater}, not a fault in the UI. Any other throwable is
+     * wrapped and recorded as {@link #runOnQueue} does.
+     *
+     * <p>Values the check reads come from one moment of the UI, so values that must agree with
+     * each other can be asserted together. Operator getters called inside run directly, without
+     * another hop. The check must be a pure, non-blocking read: it runs on the dispatch thread,
+     * where Jemmy's waits fail fast.
+     *
+     * @param check the assertions to run on the dispatch thread
+     */
+    public void assertOnQueue(Runnable check) {
+        if (EventQueue.isDispatchThread()) {
+            try {
+                check.run();
+            } catch (JemmyException e) {
+                throw e;
+            } catch (RuntimeException e) {
+                throw new JemmyException("Exception when calling", e);
+            }
+            return;
+        }
+
+        dispatchAndAwait(Caller.assertion(check, "QueueTool.assertOnQueue"));
+    }
+
     private <R> R invokeAndWait(Caller<R> caller) {
         dispatchAndAwait(caller);
         return caller.getResult();
@@ -205,6 +234,9 @@ public final class QueueTool {
         }
 
         Throwable thrown = caller.getThrowable();
+        if (thrown instanceof AssertionError && caller.isAssertion()) {
+            throw (AssertionError) thrown;
+        }
         if (thrown instanceof JemmyException) {
             throw (JemmyException) thrown;
         }

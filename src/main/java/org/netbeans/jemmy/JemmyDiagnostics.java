@@ -425,6 +425,34 @@ public final class JemmyDiagnostics {
         }
     }
 
+    /**
+     * Attaches diagnostics for a timed wait implemented outside Jemmy's repeater classes, such
+     * as one from a third-party polling library. Call it where the wait fails, before test teardown disposes
+     * the windows it waited on; diagnostics attached later by a test extension are then skipped.
+     *
+     * @param failure failure produced by the caller's wait
+     * @param waitTarget concise description of the condition that did not become true
+     * @param diagnosticComponent component whose current state is most relevant to the wait
+     * @param waitMillis how long the caller waited
+     * @param timeoutKey the key the wait's budget came from, or null if it had none
+     */
+    public static void attachTo(
+            Throwable failure,
+            @Nullable String waitTarget,
+            @Nullable Component diagnosticComponent,
+            long waitMillis,
+            @Nullable TimeoutKey timeoutKey) {
+        if (!isEnabled()) {
+            return;
+        }
+        try {
+            attachTo(failure, captureDiagnostics(null, waitMillis,
+                    timeoutKey == null ? null : timeoutKey.toString(), waitTarget, diagnosticComponent));
+        } catch (Throwable ignored) {
+            // Diagnostics are best effort and must never replace the original failure.
+        }
+    }
+
     static void attachTo(Throwable failure, DiagnosticCapture snapshot) {
         attachTo(failure, new CapturedDiagnostics(snapshot, null));
     }

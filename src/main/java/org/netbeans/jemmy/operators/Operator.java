@@ -37,6 +37,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.jemmy.AssertionRepeater;
 import org.netbeans.jemmy.BooleanSupplierRepeater;
 import org.netbeans.jemmy.CharBindingMap;
 import org.netbeans.jemmy.FunctionRepeater;
@@ -163,6 +164,26 @@ public abstract class Operator {
         FunctionRepeater.on(new OperatorPredicateFunction<>(new OnQueuePredicate<>(predicate), (T) this), timeoutKey)
                 .diagnosing(getSource())
                 .runUntilNotNull(null);
+    }
+
+    public void waitAsserted(Runnable check) {
+        waitAsserted(check, TimeoutKey.Waiter_AssertionWaitingTime);
+    }
+
+    /**
+     * Waits until the check's assertions pass. Each poll runs the check once on the event
+     * dispatch thread, so this operator's getters and those of related operators read one
+     * snapshot of the UI; the check must therefore be a pure, non-blocking read, as a
+     * {@link #waitState(Predicate, TimeoutKey)} predicate must. On timeout, the last
+     * {@link AssertionError} is the cause and this operator's component is in the diagnostics.
+     *
+     * @see AssertionRepeater
+     */
+    public void waitAsserted(Runnable check, TimeoutKey timeoutKey) {
+        AssertionRepeater.on(check, timeoutKey)
+                .describedAs("assertions on " + getClass().getSimpleName())
+                .diagnosing(getSource())
+                .runUntilPassed();
     }
 
     public <T extends Operator> void waitStateStable(Predicate<T> predicate, long stableTimeMs) {

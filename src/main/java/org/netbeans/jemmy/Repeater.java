@@ -19,6 +19,7 @@ package org.netbeans.jemmy;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,20 @@ final class Repeater {
             TimeoutKey waitDelta,
             @Nullable Object describedTarget,
             @Nullable Component diagnosticComponent) {
+        repeatUntilTrue(condition, waitKey, waitDelta, describedTarget, diagnosticComponent, null);
+    }
+
+    /**
+     * @param lastFailure supplies, on the timeout path only, the failure behind the condition's
+     *     last false result; when it supplies one, that failure becomes the timeout's cause
+     */
+    static void repeatUntilTrue(
+            BooleanSupplier condition,
+            TimeoutKey waitKey,
+            TimeoutKey waitDelta,
+            @Nullable Object describedTarget,
+            @Nullable Component diagnosticComponent,
+            @Nullable Supplier<? extends @Nullable Throwable> lastFailure) {
         if (EventQueue.isDispatchThread()) {
             throw new RuntimeException(NO_WAITING_ALLOWED_ON_EDT);
         }
@@ -71,7 +86,8 @@ final class Repeater {
             try {
                 Timeouts.check(waitKey, startTime);
             } catch (TimeoutExpiredException e) {
-                throw enrich(e, waitKey, wait, describedTarget, diagnosticComponent);
+                Throwable cause = lastFailure == null ? null : lastFailure.get();
+                throw enrich(e, waitKey, wait, describedTarget, diagnosticComponent, cause == null ? e : cause);
             }
         }
     }
@@ -83,7 +99,8 @@ final class Repeater {
             TimeoutKey waitKey,
             long waitMillis,
             @Nullable Object describedTarget,
-            @Nullable Component diagnosticComponent) {
+            @Nullable Component diagnosticComponent,
+            Throwable cause) {
         StringBuilder message = new StringBuilder(e.getMessage());
         String target = describe(describedTarget);
         if (target != null) {
@@ -96,7 +113,7 @@ final class Repeater {
                 waitMillis,
                 target,
                 diagnosticComponent,
-                e);
+                cause);
     }
 
     private static @Nullable String describe(@Nullable Object describedTarget) {

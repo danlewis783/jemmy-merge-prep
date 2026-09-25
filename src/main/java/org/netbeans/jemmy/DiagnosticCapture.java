@@ -460,7 +460,7 @@ final class DiagnosticCapture implements Serializable {
         return component == null ? "none" : component.compactBrief();
     }
 
-    private static String formatDuration(long millis) {
+    static String formatDuration(long millis) {
         if (millis >= 1000L && millis % 1000L == 0L) {
             return (millis / 1000L) + " s";
         }

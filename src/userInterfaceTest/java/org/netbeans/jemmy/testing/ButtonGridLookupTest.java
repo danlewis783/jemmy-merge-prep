@@ -120,9 +120,13 @@ class ButtonGridLookupTest {
                 JToolTipOperator buttonToolTipOp = JToolTipOperator.of(buttonToolTip);
                 assertThat(buttonToolTipOp.getTipText()).isEqualTo(buttonText + " button");
                 byTextButtonOp.push();
-                statusLabelOp.waitText("Button \"" + buttonText + "\" has been pushed", strict());
-                progressBarOp.waitValue(buttonText, strict());
-                progressBarOp.waitValue(buttonIndex + 1);
+                // One EDT snapshot per poll, so all three values come from the same moment.
+                statusLabelOp.waitAsserted(() -> assertThat(new Object[] {
+                            statusLabelOp.getText(), progressBarOp.getString(), progressBarOp.getValue()
+                        })
+                        .as("status text, progress text, progress value")
+                        .containsExactly("Button \"" + buttonText + "\" has been pushed",
+                                buttonText, buttonIndex + 1));
             }
         }
 

@@ -93,6 +93,10 @@ Use the narrowest waiting primitive that expresses the synchronization point:
   `wait...Count`, backed by a one-snapshot `count...` read.
 - **Absence** — wait for cardinality zero. Prefer an explicit `wait...Absent` method so callers
   do not have to encode absence as an inverted acquisition predicate.
+- **Assertion** — wait until a test's assertions about UI state pass. Use `waitAsserted` (or
+  `AssertionRepeater` when the check isn't tied to one operator). Each poll runs the check on
+  the EDT, so it is bound by the same pure-read rule as a `waitState` predicate. This is for
+  tests; library code keeps to predicates.
 
 All throwing waits use a `TimeoutKey`. Generic operator/container primitives expose a
 timeout-key overload; property-specific conveniences may select the established key for that
