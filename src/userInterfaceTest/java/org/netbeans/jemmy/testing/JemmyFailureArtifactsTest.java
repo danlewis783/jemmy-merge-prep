@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -43,13 +42,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MediaType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -171,53 +168,6 @@ class JemmyFailureArtifactsTest {
                 .contains("BrokenProfilePanel.finishLoading(JemmyFailureArtifactsTest.java:")
                 .contains("Thread: AWT-EventQueue-", "Capture: uncaught EDT exception handler")
                 .contains("Occurred:", "Elapsed since diagnostics started:")
-                .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
-        assertThat(ImageIO.read(screenshot.toFile())).isNotNull();
-        assertArchiveHolds(archive, screenshot, report);
-        publishArtifacts(reporter, report, screenshot, archive);
-    }
-
-    @Test
-    @Timeout(30)
-    void capturesAnUncaughtEdtFailureWhileAwaitilityWaits(
-            @TempDir Path outputDirectory, TestReporter reporter) throws Exception {
-        Thread.UncaughtExceptionHandler originalHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Throwable failure = executeFailingFixture(AwaitilityBrokenProfileFixture.class, outputDirectory);
-
-        assertThat(Thread.getDefaultUncaughtExceptionHandler()).isSameAs(originalHandler);
-        assertThat(failure)
-                .isInstanceOf(ConditionTimeoutException.class)
-                .hasMessageContaining("profile ready after loading")
-                .hasMessageContaining(READY_TEXT)
-                .hasMessageContaining(LOADING_TEXT)
-                .hasCauseInstanceOf(AssertionError.class);
-        assertThat(JemmyDiagnostics.findCapturedEdtExceptions(failure)).singleElement()
-                .satisfies(captured -> {
-                    assertThat(captured.captureMechanism()).isEqualTo("uncaught EDT exception handler");
-                    assertThat(captured.threadName()).startsWith("AWT-EventQueue-");
-                    assertThat(captured.detail())
-                            .contains("java.lang.NullPointerException")
-                            .contains("BrokenProfilePanel.finishLoading(JemmyFailureArtifactsTest.java:")
-                            .contains("java.awt.event.InvocationEvent.dispatch");
-                    assertThat(captured.invocationDetail()).isNull();
-                });
-
-        Path report = findSingleFile(outputDirectory, "diagnostics-", ".md");
-        Path screenshot = findSingleFile(outputDirectory, "screenshot-", ".png");
-        Path archive = findSingleFile(outputDirectory, "attachments-", ".zip");
-        String markdown = new String(Files.readAllBytes(report), StandardCharsets.UTF_8);
-        assertThat(markdown)
-                .contains("JemmyFailureArtifactsTest.AwaitilityBrokenProfileFixture.waitsForReadyProfile()")
-                .contains("org.awaitility.core.ConditionTimeoutException", "profile ready after loading")
-                .contains(READY_TEXT, LOADING_TEXT)
-                // JemmyAwait attaches the wait target, so the report names the label under test.
-                .contains("### Wait condition", "Target:\n  profile ready after loading")
-                .contains("Timeout:\n  2 s (Waiter_AssertionWaitingTime)")
-                .contains("title=\"" + PROFILE_TITLE + "\"")
-                .contains("BrokenProfilePanel", "text=\"" + LOADING_TEXT + "\"")
-                .contains("### Secondary EDT exception\n", "java.lang.NullPointerException")
-                .contains("BrokenProfilePanel.finishLoading(JemmyFailureArtifactsTest.java:")
-                .contains("Thread: AWT-EventQueue-", "Capture: uncaught EDT exception handler")
                 .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
         assertThat(ImageIO.read(screenshot.toFile())).isNotNull();
         assertArchiveHolds(archive, screenshot, report);
@@ -471,53 +421,6 @@ class JemmyFailureArtifactsTest {
             try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_WaitingTime, 500L);
                     TimeoutOverride delta = Timeouts.override(TimeoutKey.Waiter_TimeDelta, 20L)) {
                 status.waitText(READY_TEXT, StringComparators.strict());
-            }
-        }
-
-        @AfterEach
-        void disposeWindow() throws Exception {
-            TestWindows.disposeAll();
-        }
-    }
-
-    @ExtendWith({NestedExecutionOnly.class, JemmyFailureDiagnosticsExtension.class})
-    static class AwaitilityBrokenProfileFixture {
-        @Test
-        @Timeout(30)
-        void waitsForReadyProfile() throws Exception {
-            JFrame frame = onQueue(() -> {
-                JFrame window = new JFrame(PROFILE_TITLE);
-                window.add(new BrokenProfilePanel());
-                window.setSize(WINDOW_SIZE);
-                TestWindows.place(window);
-                window.setAlwaysOnTop(true);
-                window.setVisible(true);
-                window.toFront();
-                return window;
-            });
-            new Robot().waitForIdle();
-            JFrameOperator frameOperator = JFrameOperator.of(frame);
-            JLabelOperator status = JLabelOperator.waitFor(
-                    frameOperator, "Not loaded", StringComparators.strict());
-            JButtonOperator load = JButtonOperator.waitFor(
-                    frameOperator, "Load profile", StringComparators.strict());
-            Thread.UncaughtExceptionHandler recorder = Thread.getDefaultUncaughtExceptionHandler();
-            AtomicBoolean loadRequested = new AtomicBoolean();
-
-            try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_AssertionWaitingTime, 2_000L)) {
-                JemmyAwait.await("profile ready after loading")
-                        .diagnosing(status.getSource())
-                        .with(conditions -> conditions.conditionEvaluationListener(condition -> {
-                            assertThat(Thread.getDefaultUncaughtExceptionHandler())
-                                    .as("Jemmy's EDT recorder remains installed during Awaitility polling")
-                                    .isSameAs(recorder);
-                            // Start once, after the first poll, so the real posted EDT callback
-                            // fails while Awaitility is active rather than before await() starts.
-                            if (loadRequested.compareAndSet(false, true)) {
-                                load.push();
-                            }
-                        }))
-                        .untilAsserted(() -> assertThat(status.getText()).as("profile status").isEqualTo(READY_TEXT));
             }
         }
 

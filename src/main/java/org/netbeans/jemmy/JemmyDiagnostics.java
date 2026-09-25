@@ -427,7 +427,7 @@ public final class JemmyDiagnostics {
 
     /**
      * Attaches diagnostics for a timed wait implemented outside Jemmy's repeater classes, such
-     * as an Awaitility condition. Call it where the wait fails, before test teardown disposes
+     * as one from a third-party polling library. Call it where the wait fails, before test teardown disposes
      * the windows it waited on; diagnostics attached later by a test extension are then skipped.
      *
      * @param failure failure produced by the caller's wait

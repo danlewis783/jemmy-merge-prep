@@ -2,7 +2,6 @@
 
 [versions]
 assertj = "3.27.7"
-awaitility = "4.3.0"
 jetbrains-annotations = "26.1.0"
 jspecify = "1.0.0"
 junit-jupiter = "5.14.4"
@@ -12,7 +11,6 @@ slf4j = "2.0.18"
 
 [libraries]
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
-awaitility = { group = "org.awaitility", name = "awaitility", version.ref = "awaitility" }
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform" }
