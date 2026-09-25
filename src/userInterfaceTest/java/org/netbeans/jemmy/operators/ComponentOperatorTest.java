@@ -70,6 +70,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class ComponentOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(580, 100);
+
     private Frame frame;
     private Panel panel;
 
@@ -84,7 +87,7 @@ class ComponentOperatorTest {
             // a real size: X11 has no zero-size windows, and without a window manager to impose a
             // minimum, a 0x0 frame's moves are not reliably reported back (Windows sizes it for us).
             // Not 400x300, which testWaitComponentSize resizes to
-            frame.setSize(200, 100);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

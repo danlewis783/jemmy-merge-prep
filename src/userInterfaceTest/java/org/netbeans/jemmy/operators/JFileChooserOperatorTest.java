@@ -62,6 +62,8 @@ final class JFileChooserOperatorTest {
 
     private static final String FN2 = "showit.txt";
     private static final String FN3 = "showit";
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(740, 440);
 
     @TempDir
     private static Path tempDir;
@@ -85,7 +87,7 @@ final class JFileChooserOperatorTest {
             frame = new JFrame();
             fileChooser = new JFileChooser();
             frame.getContentPane().add(fileChooser);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
             fileChooser.setCurrentDirectory(tempDir.toFile());
@@ -148,7 +150,7 @@ final class JFileChooserOperatorTest {
             JDialog dialog = new JDialog();
             dialog.setModal(false);
             dialog.getContentPane().add(dialogChooser);
-            dialog.pack();
+            dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog);
             dialog.setVisible(true);
             chooserRef.set(dialogChooser);
@@ -196,7 +198,7 @@ final class JFileChooserOperatorTest {
             JDialog dialog = new JDialog();
             dialog.setModal(false);
             dialog.getContentPane().add(fileChooser);
-            dialog.pack();
+            dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog, 1);
             dialog.setVisible(true);
             dialogRef.set(dialog);

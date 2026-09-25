@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +42,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JSplitPaneOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(600, 300);
+
     private JFrame frame;
     private JPanel panel;
     private JSplitPane splitPane;
@@ -52,7 +56,7 @@ class JSplitPaneOperatorTest {
             splitPane = new JSplitPane();
             splitPane.setName("JSplitPane");
             frame.getContentPane().add(splitPane);
-            frame.setSize(400, 300);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

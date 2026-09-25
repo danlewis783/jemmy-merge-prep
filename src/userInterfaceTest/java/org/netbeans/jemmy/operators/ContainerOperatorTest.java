@@ -21,6 +21,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -44,6 +45,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class ContainerOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(520, 200);
+
     private Frame frame;
     private Panel panel;
 
@@ -54,6 +58,7 @@ class ContainerOperatorTest {
             panel = new Panel();
             panel.setName("ContainerOperatorTest");
             frame.add(panel);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

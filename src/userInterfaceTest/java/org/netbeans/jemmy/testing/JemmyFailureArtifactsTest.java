@@ -85,6 +85,8 @@ class JemmyFailureArtifactsTest {
         new Color(208, 37, 91), new Color(31, 183, 117),
         new Color(43, 89, 211), new Color(239, 197, 41)
     };
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(420, 240);
     private static boolean nestedExecution;
 
     @BeforeEach
@@ -325,7 +327,7 @@ class JemmyFailureArtifactsTest {
                 }
                 window.add(new JLabel(PRESENT_TEXT), BorderLayout.NORTH);
                 window.add(marker, BorderLayout.CENTER);
-                window.pack();
+                window.setSize(WINDOW_SIZE);
                 TestWindows.place(window);
                 // Automatic failure capture uses the primary screen; keep the whole fixture on it.
                 Rectangle screen = window.getGraphicsConfiguration().getBounds();
@@ -363,7 +365,7 @@ class JemmyFailureArtifactsTest {
             JFrame frame = onQueue(() -> {
                 JFrame window = new JFrame(PROFILE_TITLE);
                 window.add(new BrokenProfilePanel());
-                window.pack();
+                window.setSize(WINDOW_SIZE);
                 TestWindows.place(window);
                 window.setAlwaysOnTop(true);
                 window.setVisible(true);
@@ -426,7 +428,7 @@ class JemmyFailureArtifactsTest {
                 window.add(status, BorderLayout.NORTH);
                 window.add(preview, BorderLayout.CENTER);
                 window.add(render, BorderLayout.SOUTH);
-                window.pack();
+                window.setSize(WINDOW_SIZE);
                 TestWindows.place(window);
                 window.setAlwaysOnTop(true);
                 window.setVisible(true);

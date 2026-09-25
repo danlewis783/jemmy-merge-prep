@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -44,6 +45,9 @@ import org.netbeans.jemmy.operators.JLabelOperator;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class LateComponentDiscoveryTest {
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(300, 200);
+
     private final AtomicReference<@Nullable JFrame> jFrameRef = new AtomicReference<>();
 
     @AfterEach
@@ -56,7 +60,7 @@ class LateComponentDiscoveryTest {
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
             jFrame.setTitle("Test Frame");
-            jFrame.pack();
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
             jFrameRef.set(jFrame);
@@ -79,7 +83,7 @@ class LateComponentDiscoveryTest {
                 jLabel.setText("AAAAAAAAAAAAAA");
                 JFrame jFrame = Objects.requireNonNull(jFrameRef.get());
                 jFrame.getContentPane().add(jLabel);
-                jFrame.pack();
+                jFrame.validate();
                 jLabelRef.set(jLabel);
             });
 

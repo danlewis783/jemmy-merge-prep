@@ -24,6 +24,7 @@
  */
 package org.netbeans.jemmy.operators;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Panel;
@@ -57,6 +58,9 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class OperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(640, 200);
+
     private Frame frame;
     private Panel panel;
 
@@ -67,6 +71,7 @@ class OperatorTest {
             panel = new Panel();
             panel.setName("OperatorTest");
             frame.add(panel);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

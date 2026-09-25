@@ -16,6 +16,7 @@
  */
 package org.netbeans.jemmy.predicates;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
@@ -40,6 +41,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class AccessibleDescriptionPredicateTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(540, 200);
+
     private JButton button;
     private JDialog dialog;
     private JFrame frame;
@@ -53,10 +57,12 @@ class AccessibleDescriptionPredicateTest {
             button = new JButton("Button");
             button.getAccessibleContext().setAccessibleDescription("Accessible");
             frame.getContentPane().add(button);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
             dialog = new JDialog();
             dialog.getAccessibleContext().setAccessibleDescription("Dialog");
+            dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog, 1);
             dialog.setVisible(true);
             window = new JWindow(frame);

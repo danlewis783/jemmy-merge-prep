@@ -39,6 +39,7 @@ import javax.swing.TransferHandler;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -71,6 +72,8 @@ class DragAndDropUtilsTreeTest {
     private static final String FRAME_TITLE = "DragAndDropUtilsTreeTest";
     private static final List<String> STARTING_ROWS =
             Arrays.asList("Root", "R1", "R2", "R3", "Container", "T1", "T2");
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(400, 400);
 
     private JFrame frame;
     private JTree tree;
@@ -99,7 +102,7 @@ class DragAndDropUtilsTreeTest {
 
             JFrame jFrame = new JFrame(FRAME_TITLE);
             jFrame.getContentPane().add(new JScrollPane(jTree));
-            jFrame.setSize(300, 400);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             // the drag runs real Robot gestures at screen coordinates; if another window
             // overlaps this frame the gestures land on that window instead

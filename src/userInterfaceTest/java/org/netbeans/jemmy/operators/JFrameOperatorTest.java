@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
@@ -48,6 +49,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JFrameOperatorTest {
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(360, 200);
+
     private JFrame mainFrame;
 
     @BeforeEach
@@ -55,7 +59,7 @@ class JFrameOperatorTest {
         EventQueue.invokeAndWait(() -> {
             mainFrame = new JFrame("JFrameOperatorTest");
             mainFrame.setName("JFrameOperatorTest");
-            mainFrame.pack();
+            mainFrame.setSize(WINDOW_SIZE);
             TestWindows.place(mainFrame);
             mainFrame.setVisible(true);
         });

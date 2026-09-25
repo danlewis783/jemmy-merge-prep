@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.function.Function;
@@ -59,6 +60,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class EditorScrollingInTabsTest {
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(320, 400);
+
     private JFrame jFrame;
 
     @BeforeEach
@@ -72,7 +76,7 @@ class EditorScrollingInTabsTest {
             tp.add("JTextArea", new JScrollPane(area));
             jFrame.getContentPane().setLayout(new BorderLayout());
             jFrame.getContentPane().add(tp, BorderLayout.CENTER);
-            jFrame.setSize(200, 400);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });

@@ -92,10 +92,15 @@ A `-D` of the same key isn't forwarded; the build logs a warning instead.
   and `find...(...)` for what they promise.
 - Make every test window identifiable to someone watching the suite. Place it with
   `TestWindows.place(...)`: it titles an untitled frame or dialog `TestClass.testMethod`
-  (recorded by `JemmyStateResetExtension`) and widens the window until its title fits. Leave the
-  title empty unless the test looks the window up by title. When a test runs longer than a couple
+  (recorded by `JemmyStateResetExtension`). Leave the title empty unless the test looks the
+  window up by title. Give all of a class's windows one size, a `WINDOW_SIZE` constant wide enough
+  for the longest title any of its tests produces, and set it before `place(...)`. `place` logs a
+  warning with the width a title needs when the window is too narrow, e.g. after a test method is
+  renamed or added. When a test runs longer than a couple
   of seconds, add a `TestStatusPane` and call `show(...)` at each phase. Use `contentPane()` when
   the test doesn't inspect the window's content, and `strip()` next to the components under test.
+  `show` logs a warning when a status line doesn't fit on one line, naming how much wider the
+  window must be; account for the longest status in `WINDOW_SIZE`.
   `RobotCalibration`'s full-screen window paints its own progress.
 - **Don't depend on the machine or the checkout.** The first Windows CI run found tests that
   passed on a developer machine but failed on the runner:

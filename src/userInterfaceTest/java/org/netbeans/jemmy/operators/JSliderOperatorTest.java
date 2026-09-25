@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Dictionary;
@@ -54,6 +55,9 @@ class JSliderOperatorTest {
      */
     private static final long SCROLL_TIMEOUT_SECONDS = 15;
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(540, 200);
+
     private JFrame frame;
     private JSlider slider;
 
@@ -64,7 +68,7 @@ class JSliderOperatorTest {
             slider = new JSlider();
             slider.setName("JSliderOperatorTest");
             frame.getContentPane().add(slider);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

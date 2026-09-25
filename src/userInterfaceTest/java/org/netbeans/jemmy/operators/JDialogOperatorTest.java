@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -58,6 +59,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JDialogOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(500, 200);
+
     private JDialog dialog;
     private JFrame frame;
 
@@ -65,12 +69,13 @@ class JDialogOperatorTest {
     void beforeEach() throws InterruptedException, InvocationTargetException {
         EventQueue.invokeAndWait(() -> {
             JFrame jFrame = new JFrame();
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
             frame = jFrame;
             JDialog jDialog = new JDialog(jFrame, "JDialogOperatorTest");
             jDialog.setName("JDialogOperatorTest");
-            jDialog.pack();
+            jDialog.setSize(WINDOW_SIZE);
             TestWindows.place(jDialog, 1);
             jDialog.setVisible(true);
             dialog = jDialog;

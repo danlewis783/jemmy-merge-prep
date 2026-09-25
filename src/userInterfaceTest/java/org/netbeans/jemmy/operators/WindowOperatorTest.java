@@ -21,6 +21,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Label;
@@ -64,6 +65,12 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class WindowOperatorTest {
 
+    /**
+     * One size for every test's windows, wide enough for the whole title to show. Not 200 high,
+     * which {@link #resize()} resizes to.
+     */
+    private static final Dimension WINDOW_SIZE = new Dimension(320, 220);
+
     @BeforeAll
     static void beforeAll() {
         Timeouts.resetToDefaults();
@@ -82,7 +89,7 @@ class WindowOperatorTest {
             frame.setTitle("Main");
             frame.setName("Main" + "_" + "WindowOperatorTest");
             frame.add(new Label("Main"));
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             // explicit placement instead of setLocationByPlatform: the platform cascade can move
             // the window after show, which the move/resize tests would observe as a stray event
             TestWindows.place(frame);
@@ -91,7 +98,7 @@ class WindowOperatorTest {
             dialog.setTitle("Sub");
             dialog.setName("Sub" + "_" + "WindowOperatorTest");
             dialog.add(new Label("Sub"));
-            dialog.pack();
+            dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog, 1);
             frame.setVisible(true);
             dialog.setVisible(true);
@@ -535,7 +542,7 @@ class WindowOperatorTest {
             other.setTitle("other");
             other.setName("other" + "_" + "WindowOperatorTest");
             other.add(new Label("other"));
-            other.pack();
+            other.setSize(WINDOW_SIZE);
             TestWindows.place(other, 2);
 
             return other;
@@ -567,11 +574,11 @@ class WindowOperatorTest {
         try {
             EventQueue.invokeAndWait(() -> {
                 extra1.setName("CountMe");
-                extra1.pack();
+                extra1.setSize(WINDOW_SIZE);
                 TestWindows.place(extra1, 2);
                 extra1.setVisible(true);
                 extra2.setName("CountMe");
-                extra2.pack();
+                extra2.setSize(WINDOW_SIZE);
                 TestWindows.place(extra2, 3);
                 extra2.setVisible(true);
             });

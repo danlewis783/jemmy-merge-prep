@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.JDialog;
@@ -39,6 +40,8 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class ModalDialogWaitingTest {
     private static final String TITLE = "StagedDialogsApp";
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(360, 300);
 
     private StagedDialogsApp appInstance0;
     private StagedDialogsApp appInstance1;
@@ -118,7 +121,7 @@ class ModalDialogWaitingTest {
         StagedDialogsApp(int index) {
             super.setTitle("StagedDialogsApp/" + index);
             this.index = index;
-            setSize(300, 300);
+            setSize(WINDOW_SIZE);
             TestWindows.place(this, index);
         }
 

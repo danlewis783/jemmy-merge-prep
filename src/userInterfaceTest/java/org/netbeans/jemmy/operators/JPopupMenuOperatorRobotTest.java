@@ -53,6 +53,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 final class JPopupMenuOperatorRobotTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(500, 300);
+
     private JFrame frame;
     private JPopupMenu popup;
     private TimeoutOverride override;
@@ -78,7 +81,7 @@ final class JPopupMenuOperatorRobotTest {
             jPopupMenu.add(subMenu);
             popup = jPopupMenu;
 
-            jFrame.setSize(400, 300);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             // the popup tests drive real Robot clicks at screen coordinates; if another window
             // overlaps this frame the click lands on that window and the menu push times out

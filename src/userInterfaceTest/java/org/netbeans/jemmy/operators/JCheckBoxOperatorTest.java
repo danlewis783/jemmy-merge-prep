@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JCheckBoxOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(480, 200);
+
     private JCheckBox checkBox;
     private JFrame frame;
 
@@ -49,7 +53,7 @@ class JCheckBoxOperatorTest {
             checkBox = new JCheckBox("JCheckBoxOperatorTest");
             checkBox.setName("JCheckBoxOperatorTest");
             frame.getContentPane().add(checkBox);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

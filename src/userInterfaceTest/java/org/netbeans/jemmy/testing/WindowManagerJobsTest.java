@@ -17,6 +17,7 @@
 package org.netbeans.jemmy.testing;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.lang.reflect.InvocationTargetException;
@@ -51,6 +52,9 @@ import org.netbeans.jemmy.util.WindowManager;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=60, unit=TimeUnit.SECONDS)
 class WindowManagerJobsTest {
+
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(360, 300);
 
     @BeforeEach
     void beforeEach() throws InterruptedException, InvocationTargetException {
@@ -104,7 +108,7 @@ class WindowManagerJobsTest {
 
         private WindowSeriesFrame(int index) {
             super("WindowSeriesApp/" + index);
-            setSize(300, 300);
+            setSize(WINDOW_SIZE);
             TestWindows.place(this, index);
             getContentPane().setLayout(new FlowLayout());
             JLabel label = new JLabel("has not been processed");

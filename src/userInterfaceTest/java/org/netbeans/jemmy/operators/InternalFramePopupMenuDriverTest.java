@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class InternalFramePopupMenuDriverTest {
+
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(700, 400);
 
     private JFrame frame;
     private JInternalFrame internalFrame;
@@ -80,7 +84,7 @@ class InternalFramePopupMenuDriverTest {
             internalFrame.setSize(150, 150);
             internalFrame.setVisible(true);
             desktop.add(internalFrame);
-            frame.setSize(400, 400);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

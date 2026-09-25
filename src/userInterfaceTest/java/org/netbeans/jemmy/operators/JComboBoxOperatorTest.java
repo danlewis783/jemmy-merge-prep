@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,6 +51,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JComboBoxOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(640, 200);
+
     private BasicComboBoxEditor boxEditor;
     private JComboBox<String> comboBox;
     private JFrame frame;
@@ -63,7 +67,7 @@ class JComboBoxOperatorTest {
             comboBox.setEditable(true);
             comboBox.addItem("JComboBoxOperatorTest");
             frame.getContentPane().add(comboBox);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

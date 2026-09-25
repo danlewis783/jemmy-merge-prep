@@ -27,6 +27,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -65,6 +66,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JEditorPaneOperatorTest {
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(360, 200);
+
     private JEditorPane editorPane;
     private JFrame frame;
 
@@ -77,7 +81,7 @@ class JEditorPaneOperatorTest {
             editorPane.setName("JEditorPaneOperatorTest");
             frame.getContentPane().add(editorPane);
             frame.setName("JFrameOperatorTest");
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

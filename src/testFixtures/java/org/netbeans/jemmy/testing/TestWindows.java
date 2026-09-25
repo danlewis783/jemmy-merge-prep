@@ -17,18 +17,17 @@
 package org.netbeans.jemmy.testing;
 
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.UIManager;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Places test windows at a predictable screen location so real robot clicks land inside the test
@@ -40,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
  * {@link JemmyStateResetExtension} records.
  */
 public final class TestWindows {
+    private static final Logger logger = LoggerFactory.getLogger(TestWindows.class);
 
     /** Down-right offset between cascaded windows, enough to keep each title bar visible. */
     private static final int CASCADE_STEP = 40;
@@ -86,17 +86,16 @@ public final class TestWindows {
      * near the target area without fully covering each other. Call on the event dispatch thread.
      *
      * <p>So someone watching the suite can tell which test is running, an untitled frame or dialog
-     * is titled with {@link #currentTestName()}, and a decorated window is made wide enough for its
-     * whole title to show. The width is enforced as a minimum size until the window first opens,
-     * so {@code setSize} and {@code pack} calls made after this one are widened too, while
-     * resizing the open window (which some tests do on purpose) is unrestricted.
+     * is titled with {@link #currentTestName()}. Size the window first: each test class gives its
+     * windows one fixed size, wide enough for the longest title any of its tests produces, and
+     * this logs a warning when the window is too narrow for its title.
      */
     public static void place(Window window, int cascadeIndex) {
         Point base = baseLocation();
         window.setLocation(base.x + cascadeIndex * CASCADE_STEP, base.y + cascadeIndex * CASCADE_STEP);
         String title = titleWithTestName(window);
         if ((title != null) && !title.isEmpty()) {
-            widenToFitTitle(window, title);
+            warnIfTitleDoesNotFit(window, title);
         }
     }
 
@@ -131,33 +130,24 @@ public final class TestWindows {
         return (title == null) || title.trim().isEmpty();
     }
 
-    private static void widenToFitTitle(Window window, String title) {
-        Font font = captionFont();
-        int width = window.getFontMetrics(font).stringWidth(title) + TITLE_BAR_CHROME_EMS * font.getSize();
-        if (window.isShowing()) {
-            if (window.getWidth() < width) {
-                window.setSize(width, window.getHeight());
-            }
-            return;
+    /**
+     * Warns when a window that is already sized is too narrow for its whole title to show. Sizes
+     * are chosen per test class (see {@link #place(Window, int)}), so a renamed or added test
+     * method can outgrow them; the warning names the width the title needs.
+     */
+    private static void warnIfTitleDoesNotFit(Window window, String title) {
+        int needed = titleBarWidth(window, title);
+        if ((window.getWidth() > 0) && (window.getWidth() < needed)) {
+            logger.warn("{} window titled \"{}\" is {} px wide; its title needs about {} px to show in full",
+                    currentTestName, title, window.getWidth(), needed);
         }
-
-        Dimension previousMinimum = window.isMinimumSizeSet() ? window.getMinimumSize() : null;
-        int minimumHeight = (previousMinimum == null) ? 0 : previousMinimum.height;
-        if ((previousMinimum != null) && (previousMinimum.width >= width)) {
-            return;
-        }
-
-        // Window.setSize, setBounds and pack all enlarge to the minimum size
-        window.setMinimumSize(new Dimension(width, minimumHeight));
-        window.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                window.removeWindowListener(this);
-                window.setMinimumSize(previousMinimum);
-            }
-        });
     }
 
+    /** Estimates the window width at which the whole title shows in the title bar. */
+    private static int titleBarWidth(Window window, String title) {
+        Font font = captionFont();
+        return window.getFontMetrics(font).stringWidth(title) + TITLE_BAR_CHROME_EMS * font.getSize();
+    }
     private static Font captionFont() {
         Object windowsCaptionFont = Toolkit.getDefaultToolkit().getDesktopProperty("win.frame.captionFont");
         if (windowsCaptionFont instanceof Font) {

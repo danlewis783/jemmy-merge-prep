@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.lang.reflect.InvocationTargetException;
@@ -54,6 +55,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JTreeOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(560, 200);
+
     private JFrame frame;
     private JTree tree;
 
@@ -64,7 +68,7 @@ class JTreeOperatorTest {
             tree = new JTree();
             tree.setName("JTreeOperatorTest");
             frame.getContentPane().add(tree);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

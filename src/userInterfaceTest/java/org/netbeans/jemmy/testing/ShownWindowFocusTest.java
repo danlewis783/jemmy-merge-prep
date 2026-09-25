@@ -15,6 +15,7 @@ package org.netbeans.jemmy.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.KeyboardFocusManager;
 import java.awt.Window;
@@ -34,6 +35,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class ShownWindowFocusTest {
     private static final long LONG_WAIT_MS = 10_000L;
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(380, 200);
+
     @AfterEach
     void afterEach() throws InterruptedException, InvocationTargetException {
         TestWindows.disposeAll();
@@ -44,7 +48,7 @@ class ShownWindowFocusTest {
         JFrame frame = onQueue(() -> {
             JFrame shown = new JFrame("ShownWindowFocusTest");
             shown.add(new JLabel("focus me"));
-            shown.pack();
+            shown.setSize(WINDOW_SIZE);
             TestWindows.place(shown);
             shown.setVisible(true);
             return shown;

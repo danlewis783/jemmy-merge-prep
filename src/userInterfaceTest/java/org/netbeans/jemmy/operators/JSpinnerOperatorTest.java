@@ -20,6 +20,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -68,6 +69,8 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JSpinnerOperatorTest {
     private static final StringComparator STRICT = StringComparators.strict();
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(480, 200);
 
     private JFrame frame;
 
@@ -78,7 +81,7 @@ class JSpinnerOperatorTest {
             JSpinner jSpinner = new JSpinner();
             jSpinner.setName("JSpinnerOperatorTest");
             jFrame.getContentPane().add(jSpinner);
-            jFrame.pack();
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
             frame = jFrame;

@@ -61,6 +61,8 @@ import javax.swing.*;
 final class RobotVsQueueDispatchTest {
 
     private static final String FRAME_TITLE = "RobotVsQueueDispatchTest";
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(400, 100);
     private JFrame jFrame;
     private TimeoutOverride quietPeriod;
 
@@ -78,7 +80,7 @@ final class RobotVsQueueDispatchTest {
             jPanel.add(new JButton("Button"), BorderLayout.NORTH);
             jPanel.add(new JTextArea(), BorderLayout.CENTER);
             contentPane.add(jPanel, BorderLayout.CENTER);
-            jFrame.setSize(300, 100);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             // the robot rounds of RobotVsQueueDispatchTest click at real screen coordinates;
             // an overlapping window would swallow them - same mitigation as ListOperatorTest

@@ -57,6 +57,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class DialogComboListWorkflowTest {
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(420, 200);
+
     private JFrame jFrame;
     private JDialog jDialog;
 
@@ -108,7 +111,7 @@ class DialogComboListWorkflowTest {
             c.weighty = 1.0;
             gridbag.setConstraints(nonEditable, c);
             pane.add(nonEditable);
-            jDialog.setSize(200, 200);
+            jDialog.setSize(WINDOW_SIZE);
             jDialog.setModal(true);
             TestWindows.place(jDialog);
         });

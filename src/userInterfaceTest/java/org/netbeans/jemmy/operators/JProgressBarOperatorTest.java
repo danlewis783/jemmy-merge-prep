@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +46,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JProgressBarOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(520, 200);
+
     private JFrame frame;
     private JProgressBar progressBar;
 
@@ -56,7 +60,7 @@ class JProgressBarOperatorTest {
             jProgressBar.setName("JProgressBarOperatorTest");
             progressBar = jProgressBar;
             jFrame.getContentPane().add(jProgressBar);
-            jFrame.pack();
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
             frame = jFrame;

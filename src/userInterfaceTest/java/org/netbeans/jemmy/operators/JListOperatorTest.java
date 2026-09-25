@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -60,6 +61,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JListOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(540, 200);
+
     private JFrame frame;
 
     @BeforeEach
@@ -70,7 +74,7 @@ class JListOperatorTest {
             list.setName("JListOperatorTest");
             list.setSelectedIndex(0);
             frameNew.getContentPane().add(new JScrollPane(list));
-            frameNew.setSize(300, 200);
+            frameNew.setSize(WINDOW_SIZE);
             TestWindows.place(frameNew);
             frameNew.setVisible(true);
             frame = frameNew;

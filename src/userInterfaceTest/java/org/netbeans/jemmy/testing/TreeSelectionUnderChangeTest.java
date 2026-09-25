@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.Toolkit;
@@ -51,6 +52,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=15, unit=TimeUnit.SECONDS)
 class TreeSelectionUnderChangeTest {
+
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(340, 300);
 
     private GrowingTreeApp growingTreeApp;
 
@@ -125,7 +129,7 @@ class TreeSelectionUnderChangeTest {
             container.setLayout(new BorderLayout());
             container.add(start, BorderLayout.SOUTH);
             container.add(new JScrollPane(tree), BorderLayout.CENTER);
-            setSize(300, 300);
+            setSize(WINDOW_SIZE);
         }
 
         private void startGrowing() {

@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.lang.reflect.InvocationTargetException;
@@ -49,6 +50,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JTableHeaderOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(560, 480);
+
     private JFrame frame;
     private JTableHeader header;
     private JTable table;
@@ -70,7 +74,7 @@ class JTableHeaderOperatorTest {
             header = table.getTableHeader();
             header.setName("JTableHeaderOperatorTest");
             frame.getContentPane().add(scrollPane);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

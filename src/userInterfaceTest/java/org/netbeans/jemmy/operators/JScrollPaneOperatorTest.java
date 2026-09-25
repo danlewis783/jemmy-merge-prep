@@ -44,6 +44,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JScrollPaneOperatorTest {
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(560, 200);
+
     private JFrame frame;
     private JTextArea textArea;
 
@@ -61,7 +64,7 @@ class JScrollPaneOperatorTest {
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             frame.getContentPane().add(scrollPane);
-            frame.setSize(200, 200);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
         });
     }

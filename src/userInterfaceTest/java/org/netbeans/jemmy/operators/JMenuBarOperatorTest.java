@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
@@ -52,6 +53,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JMenuBarOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(520, 300);
+
     private JDialog dialog;
     private JFrame frame;
     private JMenu menu;
@@ -70,7 +74,7 @@ class JMenuBarOperatorTest {
             menu.add(new JMenuItem("JMenuItem1"));
             menu.add(new JMenuItem("JMenuItem11"));
             frame.setJMenuBar(menuBar);
-            frame.setSize(400, 300);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });
@@ -106,6 +110,7 @@ class JMenuBarOperatorTest {
         EventQueue.invokeAndWait(() -> {
             dialog = new JDialog();
             dialog.setJMenuBar(new JMenuBar());
+            dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog, 1);
             dialog.setVisible(true);
         });

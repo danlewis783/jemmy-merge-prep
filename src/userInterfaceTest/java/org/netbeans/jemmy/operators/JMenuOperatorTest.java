@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
@@ -59,6 +60,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JMenuOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(500, 100);
+
     @BeforeAll
     static void beforeAll() {
         Timeouts.resetToDefaults();
@@ -89,7 +93,7 @@ class JMenuOperatorTest {
             jSubMenu.add(jMenuItem2);
             jMenuBar.add(jMenu);
             jFrame.setJMenuBar(jMenuBar);
-            jFrame.setSize(250, 100);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
             frame = jFrame;

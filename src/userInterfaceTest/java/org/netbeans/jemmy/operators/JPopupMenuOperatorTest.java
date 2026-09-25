@@ -52,6 +52,9 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 final class JPopupMenuOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(540, 300);
+
     private JFrame jFrame;
     private JPopupMenu jPopupMenu;
     private TimeoutOverride override;
@@ -71,7 +74,7 @@ final class JPopupMenuOperatorTest {
             jPopupMenu.add(new JMenuItem("12"));
             jPopupMenu.add(new JMenuItem("123"));
             jPopupMenu.add(new JMenu("1234"));
-            jFrame.setSize(400, 300);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             // the popup tests drive real Robot clicks at screen coordinates; if another window
             // overlaps this frame the click lands on that window and the menu push times out

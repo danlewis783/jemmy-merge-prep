@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +42,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JRadioButtonMenuItemOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(520, 300);
+
     private JFrame frame;
     private JMenu menu;
     private JMenuBar menuBar;
@@ -57,7 +61,7 @@ class JRadioButtonMenuItemOperatorTest {
             menuItem = new JRadioButtonMenuItem("Radio Button 1");
             menuItem.setName("Radio Button 1");
             menu.add(menuItem);
-            frame.setSize(400, 300);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

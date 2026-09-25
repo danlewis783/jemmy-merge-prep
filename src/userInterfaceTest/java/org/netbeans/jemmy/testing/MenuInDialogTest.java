@@ -46,6 +46,8 @@ import javax.swing.*;
 class MenuInDialogTest {
 
     private static final String DELIM = "|";
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(340, 200);
 
     private JFrame jFrame;
     private JDialog jDialog;
@@ -115,7 +117,7 @@ class MenuInDialogTest {
             bar.add(menu1);
 
             jDialog.setJMenuBar(bar);
-            jDialog.setSize(300, 200);
+            jDialog.setSize(WINDOW_SIZE);
             TestWindows.place(jDialog);
             jDialog.setModal(true);
 

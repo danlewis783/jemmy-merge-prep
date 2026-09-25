@@ -18,6 +18,7 @@ package org.netbeans.jemmy.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
@@ -43,6 +44,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class AbstractButtonOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(560, 200);
+
     private JButton button;
     private JFrame frame;
 
@@ -53,6 +57,7 @@ class AbstractButtonOperatorTest {
             button = new JButton("AbstractButtonOperatorTest");
             button.setName("AbstractButtonOperatorTest");
             frame.getContentPane().add(button);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

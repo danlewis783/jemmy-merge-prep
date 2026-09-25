@@ -94,14 +94,41 @@ public final class TestStatusPane extends JComponent {
     /**
      * Shows a new status line and paints it before returning. Callable from any thread; the
      * status is also logged, so it shows up in the test output next to the step it describes.
+     * Logs a warning when the status does not fit on one line, since window sizes are fixed per
+     * test class and must be chosen to fit.
      */
     public void show(String newStatus) {
         logger.info("{}: {}", testName, newStatus);
         QueueTool.getInstance().runOnQueue(() -> {
             status = newStatus;
+            warnIfDoesNotFit(newStatus);
             // paint directly: repaint() would post a paint request after this method returns
             paintImmediately(0, 0, getWidth(), getHeight());
         });
+    }
+
+    private void warnIfDoesNotFit(String newStatus) {
+        int needed = Math.max(textWidth(testName, true), textWidth(newStatus, false))
+                + 2 * (strip ? STRIP_MARGIN : MARGIN);
+        if ((getWidth() > 0) && (getWidth() < needed)) {
+            logger.warn("{}: \"{}\" does not fit on one line; widen the window by {} px",
+                    testName, newStatus, needed - getWidth());
+        }
+    }
+
+    private int textWidth(@Nullable String text, boolean testNameLine) {
+        return (text == null) ? 0 : getFontMetrics(lineFont(testNameLine)).stringWidth(text);
+    }
+
+    /** The font of the test-name line or the status line, in this pane's form. */
+    private Font lineFont(boolean testNameLine) {
+        int style = testNameLine ? Font.BOLD : Font.PLAIN;
+        if (strip) {
+            return stripFont(style);
+        }
+
+        Font base = baseFont();
+        return base.deriveFont(style, base.getSize2D() * (testNameLine ? TEST_NAME_SCALE : STATUS_SCALE));
     }
 
     @Override
@@ -112,33 +139,30 @@ public final class TestStatusPane extends JComponent {
             g2.setColor(getBackground());
             g2.fillRect(0, 0, getWidth(), getHeight());
 
-            Font base = baseFont();
             if (strip) {
                 // the test name is repeated here because fixed window titles often name an app,
                 // not the test
-                FontMetrics metrics = g2.getFontMetrics(stripFont(Font.BOLD));
+                FontMetrics metrics = g2.getFontMetrics(lineFont(true));
                 int baseline = STRIP_MARGIN + metrics.getAscent();
                 if (testName != null) {
-                    g2.setFont(stripFont(Font.BOLD));
+                    g2.setFont(lineFont(true));
                     g2.setColor(TEST_NAME_COLOR);
                     g2.drawString(testName, STRIP_MARGIN, baseline);
                 }
-                g2.setFont(stripFont(Font.PLAIN));
+                g2.setFont(lineFont(false));
                 g2.setColor(STATUS_COLOR);
                 g2.drawString(status, STRIP_MARGIN, baseline + metrics.getHeight());
                 return;
             }
 
-            Font nameFont = base.deriveFont(Font.BOLD, base.getSize2D() * TEST_NAME_SCALE);
-            Font statusFont = base.deriveFont(Font.PLAIN, base.getSize2D() * STATUS_SCALE);
             int y = MARGIN;
             if (testName != null) {
-                g2.setFont(nameFont);
+                g2.setFont(lineFont(true));
                 g2.setColor(TEST_NAME_COLOR);
                 y = drawWrapped(g2, testName, y);
                 y += MARGIN / 2;
             }
-            g2.setFont(statusFont);
+            g2.setFont(lineFont(false));
             g2.setColor(STATUS_COLOR);
             drawWrapped(g2, status, y);
         } finally {

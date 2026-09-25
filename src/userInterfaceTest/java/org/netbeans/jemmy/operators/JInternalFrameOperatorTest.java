@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
@@ -64,6 +65,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JInternalFrameOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(580, 400);
+
     private JPanel contentPane;
     private JDesktopPane desktop;
     private JFrame frame;
@@ -85,7 +89,7 @@ class JInternalFrameOperatorTest {
             desktop.add(internalFrame);
             // roomy enough that the desktop pane still fits the resize target after the
             // native frame decorations grow under display scaling
-            frame.setSize(400, 400);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

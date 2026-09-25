@@ -45,6 +45,15 @@ import org.netbeans.jemmy.util.StringComparators;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class ScrollToComponentTest {
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(380, 220);
+
+    /**
+     * The scroll pane keeps the width it had filling a 220-wide frame, so the content still
+     * overflows it now that the frame is wider for its title.
+     */
+    private static final int SCROLL_PANE_WIDTH = 204;
+
     private JFrame jFrame;
 
     @BeforeEach
@@ -60,7 +69,8 @@ class ScrollToComponentTest {
             JScrollPane scrollPane = new JScrollPane(pane);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            contentPane.add(scrollPane, BorderLayout.CENTER);
+            scrollPane.setPreferredSize(new Dimension(SCROLL_PANE_WIDTH, 0));
+            contentPane.add(scrollPane, BorderLayout.WEST);
 
             // 7x7 rather than 5x5, in a larger frame: the content must overflow the viewport in
             // both axes at 100% scaling, while the scrollbar tracks must stay longer than the
@@ -72,7 +82,7 @@ class ScrollToComponentTest {
                 }
             }
 
-            jFrame.setSize(220, 220);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });

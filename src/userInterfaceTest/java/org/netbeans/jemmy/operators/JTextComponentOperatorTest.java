@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.Point;
@@ -62,6 +63,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @ExtendWith(JemmyStateResetExtension.class)
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JTextComponentOperatorTest {
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(620, 200);
+
     private JFrame frame;
 
     @BeforeEach
@@ -71,7 +75,7 @@ class JTextComponentOperatorTest {
             JTextComponent textComponent = new JTextField("JTextComponentOperatorTest");
             textComponent.setName("JTextComponentOperatorTest");
             frame.getContentPane().add(textComponent);
-            frame.pack();
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
         });
     }

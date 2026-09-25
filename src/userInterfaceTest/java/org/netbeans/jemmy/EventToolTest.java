@@ -50,6 +50,9 @@ import org.netbeans.jemmy.testing.TestWindows;
 @Timeout(value=45, unit=TimeUnit.SECONDS)
 class EventToolTest {
 
+    /** Wide enough for the whole title and every status line to show on one line. */
+    private static final Dimension WINDOW_SIZE = new Dimension(760, 280);
+
     private JFrame jFrame;
     private TestStatusPane statusPane;
     private EventTool eventTool;
@@ -69,7 +72,7 @@ class EventToolTest {
             jFrame = new JFrame();
             statusPane = TestStatusPane.contentPane();
             jFrame.setContentPane(statusPane);
-            jFrame.pack();
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });

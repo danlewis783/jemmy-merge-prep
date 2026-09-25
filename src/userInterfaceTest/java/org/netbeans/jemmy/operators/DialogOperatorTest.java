@@ -19,6 +19,7 @@ package org.netbeans.jemmy.operators;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +40,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class DialogOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(440, 200);
+
     private Dialog dialog;
     private Frame frame;
 
@@ -48,8 +52,10 @@ class DialogOperatorTest {
             frame = new Frame();
             dialog = new Dialog(frame, "DialogOperatorTest");
             dialog.setName("DialogOperatorTest");
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
+            dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog, 1);
             dialog.setVisible(true);
         });

@@ -57,6 +57,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JTableOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(700, 200);
+
     private DefaultCellEditor editor;
     private JFrame frame;
     private JTable table;
@@ -87,7 +90,7 @@ class JTableOperatorTest {
             table.setName("JTableOperatorTest");
             JScrollPane scrollPane = new JScrollPane(table);
             frame.getContentPane().add(scrollPane);
-            frame.setSize(300, 200);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

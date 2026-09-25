@@ -18,6 +18,7 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.lang.reflect.InvocationTargetException;
@@ -58,6 +59,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class ToggleButtonSelectionTest {
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(340, 300);
+
     private JCheckBoxOperator boxOper;
     private JRadioButtonOperator radio1Oper;
     private TimeoutOverride override;
@@ -89,7 +93,7 @@ class ToggleButtonSelectionTest {
             comp.putClientProperty("classname", "JRadioButton1");
             jFrame.getContentPane().add(comp);
             group.add((AbstractButton) comp);
-            jFrame.setSize(300, 300);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });

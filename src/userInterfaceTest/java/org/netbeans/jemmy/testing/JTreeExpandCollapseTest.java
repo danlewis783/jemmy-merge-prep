@@ -46,6 +46,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JTreeExpandCollapseTest {
 
     private static final String FRAME_TITLE = "JTreeExpandCollapseTest";
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(380, 300);
     private JFrame jFrame;
 
     @BeforeEach
@@ -81,7 +83,7 @@ class JTreeExpandCollapseTest {
             Container contentPane = jFrame.getContentPane();
             contentPane.setLayout(new BorderLayout());
             contentPane.add(tree, BorderLayout.CENTER);
-            jFrame.setSize(300, 300);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });

@@ -52,6 +52,9 @@ import org.netbeans.jemmy.util.StringComparators;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JComponentOperatorTest {
 
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(580, 200);
+
     private JComponent component;
     private JFrame frame;
     private JPanel panel;
@@ -65,7 +68,7 @@ class JComponentOperatorTest {
             component.setToolTipText("JComponentOperatorTest");
             frame.getContentPane().add(component);
             frame.setName("JFrameOperatorTest");
-            frame.setSize(300, 200);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

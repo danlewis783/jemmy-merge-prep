@@ -22,6 +22,7 @@ import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Predicate;
@@ -55,6 +56,8 @@ class JToolTipOperatorTest {
 
     private static final String TOOLTIP_TEXT = "A simple Tooltip";
     private static final String LABEL_TEXT = "Roll over here to see a tooltip";
+    /** One size for every test's windows, wide enough for the longest test-name title. */
+    private static final Dimension WINDOW_SIZE = new Dimension(560, 400);
 
     private final Predicate<Component> byLabelText =
             comp -> LABEL_TEXT.equals(((JLabel) ((JToolTip) comp).getComponent()).getText());
@@ -78,7 +81,7 @@ class JToolTipOperatorTest {
             // no tooltip on the strip: tooltip lookups here must only ever find the label's
             status = TestStatusPane.strip();
             frame.getContentPane().add(status, BorderLayout.SOUTH);
-            frame.setSize(400, 400);
+            frame.setSize(WINDOW_SIZE);
             TestWindows.place(frame);
             frame.setVisible(true);
         });

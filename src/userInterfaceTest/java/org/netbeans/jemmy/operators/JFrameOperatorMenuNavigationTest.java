@@ -38,6 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Timeout(value=5, unit=TimeUnit.SECONDS)
 class JFrameOperatorMenuNavigationTest {
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(360, 200);
+
     private JFrame frame;
 
     static class MenuNavigationApp extends JFrame {
@@ -83,7 +86,7 @@ class JFrameOperatorMenuNavigationTest {
             menuBar.add(menu1Item);
             setJMenuBar(menuBar);
             getContentPane().add(menuLabel);
-            setSize(200, 200);
+            setSize(WINDOW_SIZE);
         }
 
         private static class MyMenu extends JMenu {

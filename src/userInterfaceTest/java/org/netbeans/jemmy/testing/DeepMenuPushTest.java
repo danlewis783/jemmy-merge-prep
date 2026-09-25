@@ -42,6 +42,9 @@ import static org.netbeans.jemmy.util.StringComparators.strict;
 @Timeout(value=30, unit=TimeUnit.SECONDS)
 class DeepMenuPushTest {
 
+    /** One size for every test's windows, wide enough for the whole title to show. */
+    private static final Dimension WINDOW_SIZE = new Dimension(360, 200);
+
     private JFrame jFrame;
 
     @BeforeEach
@@ -67,7 +70,7 @@ class DeepMenuPushTest {
             menuBar.add(prevmenu);
             jFrame.setJMenuBar(menuBar);
             contentPane.add(menuLabel);
-            jFrame.setSize(200, 200);
+            jFrame.setSize(WINDOW_SIZE);
             TestWindows.place(jFrame);
             jFrame.setVisible(true);
         });
