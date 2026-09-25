@@ -25,11 +25,14 @@
 
 package org.netbeans.jemmy.drivers.windows;
 
+import java.awt.EventQueue;
 import java.awt.Window;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
+import org.netbeans.jemmy.TimeoutKey;
+import org.netbeans.jemmy.Timeouts;
 import org.netbeans.jemmy.drivers.LightSupportiveDriver;
 import org.netbeans.jemmy.drivers.WindowDriver;
 import org.netbeans.jemmy.drivers.input.EventDriver;
@@ -54,11 +57,37 @@ public final class DefaultWindowDriver extends LightSupportiveDriver implements 
             // toFront activates the window on Windows, but on X11 it only raises it: focus moves
             // at the window manager's discretion, and without one only a focus request moves it
             windowOp.requestFocus();
+            // Posting the synthetic events below right away would make Java report the window
+            // active before X11 grants the focus; the late native grant then makes the focus
+            // manager request focus for this window again, taking it back from whatever window
+            // the caller activates next. Only fall back to them when no native focus arrives.
+            if (!EventQueue.isDispatchThread() && waitFocused(windowOp)) {
+                return;
+            }
         }
 
         eventDriver.dispatchEvent(
                 op.getSource(), new WindowEvent((Window) op.getSource(), WindowEvent.WINDOW_ACTIVATED));
         eventDriver.dispatchEvent(op.getSource(), new FocusEvent(op.getSource(), FocusEvent.FOCUS_GAINED));
+    }
+
+    /**
+     * Polls for the window to be focused for at most {@code WindowOperator_ActivateTimeout}.
+     * Deliberately not a {@code Repeater}: a miss here is an expected fallback trigger, not a
+     * failure, so it must not pay for (or emit) timeout diagnostics.
+     */
+    private static boolean waitFocused(WindowOperator windowOp) {
+        long startTime = System.currentTimeMillis();
+        long budget = Timeouts.get(TimeoutKey.WindowOperator_ActivateTimeout);
+        while (!windowOp.isFocused()) {
+            if (System.currentTimeMillis() - startTime > budget) {
+                return false;
+            }
+
+            Timeouts.sleep(TimeoutKey.Waiter_TimeDelta);
+        }
+
+        return true;
     }
 
     @Override

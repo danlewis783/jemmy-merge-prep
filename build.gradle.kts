@@ -106,6 +106,13 @@ testing {
                         shouldRunAfter(tasks.test)
                         systemProperty("logback.configurationFile", "logback-automated-test.xml")
                         forwardTestProperties()
+                        // X11 only (XToolkit reads it; other toolkits ignore it): poll for X events
+                        // at most every 10 ms. The default adaptive timeout underflows (uint32 0 - 1)
+                        // into a blocking poll(), and a request another thread then issues without
+                        // a flush, such as XSetInputFocus, waits unsent until some unrelated X event
+                        // arrives. A fixed timeout skips that arithmetic; 10 ms keeps focus changes
+                        // as quick as the default (100 ms slowed the median from 5 to 60 ms).
+                        environment("_AWT_STATIC_POLL_TIMEOUT", "10")
                     }
                 }
             }

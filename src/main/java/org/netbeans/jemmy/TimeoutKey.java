@@ -58,6 +58,9 @@ public enum TimeoutKey {
     TextComponentOperator_BetweenKeysTimeout(0L),
     MouseVisualiser_BeforeClickTimeout(100L),
     WindowManager_TimeDelta(1_000L),
+    // how long DefaultWindowDriver.activate gives a focus request to take effect natively before
+    // posting synthetic activation events instead; a miss is a fallback trigger, not a failure
+    WindowOperator_ActivateTimeout(2_000L),
     DialogWaiter_WaitDialogTimeout(10_000L),
     FrameWaiter_WaitFrameTimeout(60_000L),
     Waiter_TimeDelta(50L),

@@ -158,7 +158,17 @@ target platform:
     a late grant can't override the test's own focus changes, and a focused window exists for
     tooltips (Metal and Windows show them only while the application has one). For a window
     the test shows itself, don't assume it gets focus: `WindowOperator.activate()` requests it,
-    or call `requestFocus()`.
+    or call `requestFocus()`. `activate()` waits up to `WindowOperator_ActivateTimeout` (2 s) for
+    that focus to arrive and only then falls back to synthetic activation events: posting them
+    at once made Java report the window focused before X11 did, and the late native grant then
+    took focus back from the next window the test activated.
+  - **X requests can sit unsent.** XToolkit's adaptive poll timeout underflows (`uint32_t` 0 - 1,
+    `update_poll_timeout` in `XToolkit.c`, still present in current OpenJDK) into a blocking
+    `poll()`. A request another thread issues then, such as the `XSetInputFocus` behind
+    `requestFocus()`, isn't flushed until an unrelated X event wakes the toolkit thread, so a
+    `waitHasFocus()` could stall until its test timed out. The `userInterfaceTest` task sets
+    `_AWT_STATIC_POLL_TIMEOUT=10`, which fixes the timeout at 10 ms and avoids the underflow. Test
+    JVMs you launch another way need the same environment variable.
   - **Geometry settles late.** Window events and sizes differ from Windows: one resize can
     deliver one or two `componentResized` events, frames get no minimum size (don't leave a
     test frame 0×0), and a move made right after showing a frame can be undone a moment later.
