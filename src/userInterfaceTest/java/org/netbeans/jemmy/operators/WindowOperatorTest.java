@@ -71,6 +71,9 @@ class WindowOperatorTest {
      */
     private static final Dimension WINDOW_SIZE = new Dimension(320, 220);
 
+    /** How long {@link #beforeEach()} waits for each window it shows to be focused. */
+    private static final long SHOWN_FOCUS_TIMEOUT_MS = 2_000L;
+
     @BeforeAll
     static void beforeAll() {
         Timeouts.resetToDefaults();
@@ -101,8 +104,34 @@ class WindowOperatorTest {
             dialog.setSize(WINDOW_SIZE);
             TestWindows.place(dialog, 1);
             frame.setVisible(true);
-            dialog.setVisible(true);
         });
+        // X11 grants the focus each show requests asynchronously; showing the dialog before the
+        // frame's grant arrives lets that grant land after the dialog's and leave the frame
+        // focused, so the tests would start from either window
+        awaitFocused(mainFrame);
+        EventQueue.invokeAndWait(() -> subDialog.setVisible(true));
+        awaitFocused(subDialog);
+    }
+
+    /**
+     * Waits up to {@link #SHOWN_FOCUS_TIMEOUT_MS} for a window just shown to be focused, asking
+     * for it once half of that has passed; returns either way, leaving the test to report a
+     * window that never got focus.
+     */
+    private static void awaitFocused(Window window) throws InterruptedException {
+        long start = System.nanoTime();
+        boolean requested = false;
+        while (!onQueue(window::isFocused)) {
+            long elapsed = elapsedMillis(start);
+            if (elapsed >= SHOWN_FOCUS_TIMEOUT_MS) {
+                return;
+            }
+            if (!requested && (elapsed >= SHOWN_FOCUS_TIMEOUT_MS / 2)) {
+                requested = true;
+                EventQueue.invokeLater(window::requestFocus);
+            }
+            Thread.sleep(20L);
+        }
     }
 
     @AfterEach
@@ -173,27 +202,25 @@ class WindowOperatorTest {
             frameOp.addWindowListener(windowListener1);
             frameOp.activate();
             awaitLatch(windowListener1.activatedLatch);
-            assertThat(events).contains("activated");
+            assertThat(recordedEvents()).contains("activated");
             // the listener also hears the driver's synthetic event; the real activation follows
-            waitActive(frameOp, true);
-            assertThat(frameOp.isFocused()).isTrue();
+            waitFocused(frameOp, true);
             other = createOtherFrame();
             FrameOperator otherOp = FrameOperator.of(other);
             otherOp.setVisible(true);
             // whether a newly shown frame takes focus is window manager policy; ask for it
             otherOp.activate();
             awaitLatch(windowListener1.deactivatedLatch);
-            assertThat(events).containsSequence("activated", "deactivated");
-            waitActive(frameOp, false);
-            assertThat(frameOp.isFocused()).isFalse();
+            assertThat(recordedEvents()).containsSequence("activated", "deactivated");
+            waitFocused(frameOp, false);
             frameOp.removeWindowListener(windowListener1);
             frameOp.addWindowListener(windowListener2);
             frameOp.activate();
             awaitLatch(windowListener2.activatedLatch);
-            assertThat(events).containsSequence("activated", "deactivated", "activated");
+            assertThat(recordedEvents()).containsSequence("activated", "deactivated", "activated");
             otherOp.activate();
             awaitLatch(windowListener2.deactivatedLatch);
-            assertThat(events).containsSequence("activated", "deactivated", "activated", "deactivated");
+            assertThat(recordedEvents()).containsSequence("activated", "deactivated", "activated", "deactivated");
         } finally {
             frameOp.removeWindowListener(windowListener1);
             frameOp.removeWindowListener(windowListener2);
@@ -230,7 +257,7 @@ class WindowOperatorTest {
             frameOp.requestClose();
             awaitLatch(closingLatch);
             awaitLatch(closedLatch);
-            assertThat(events).containsSequence("closing", "closed");
+            assertThat(recordedEvents()).containsSequence("closing", "closed");
         } finally {
             frameOp.removeWindowListener(windowListener);
         }
@@ -252,7 +279,7 @@ class WindowOperatorTest {
             frameOp.requestCloseAndThenHide();
             awaitLatch(closingLatch);
             assertThat(frameOp.isVisible()).isFalse();
-            assertThat(events).containsSequence("closing");
+            assertThat(recordedEvents()).containsSequence("closing");
         } finally {
             frameOp.removeWindowListener(windowListener);
         }
@@ -281,7 +308,7 @@ class WindowOperatorTest {
             assertThat(frameOp.isShowing())
                     .as("requestClose only fires windowClosing; the window stays up unless a listener closes it")
                     .isTrue();
-            assertThat(events).containsExactly("closing");
+            assertThat(recordedEvents()).containsExactly("closing");
         } finally {
             frameOp.removeWindowListener(windowListener);
         }
@@ -418,7 +445,7 @@ class WindowOperatorTest {
         frameOp.requestClose();
         frameOp.waitClosed();
         awaitLatch(closedLatch);
-        assertThat(events).containsSequence("closing", "disposing", "closed");
+        assertThat(recordedEvents()).containsSequence("closing", "disposing", "closed");
         frameOp.removeWindowListener(windowListener);
     }
 
@@ -554,9 +581,21 @@ class WindowOperatorTest {
         return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - sinceNanos);
     }
 
-    // generous ceiling: only costs time when the awaited event never arrives
-    private static void waitActive(WindowOperator windowOp, boolean active) {
-        windowOp.<WindowOperator>waitState(op -> op.getSource().isActive() == active);
+    // generous ceiling: only costs time when the awaited event never arrives. Waits for focus
+    // rather than activation followed by a one-off focus check: on X11 the two can change a
+    // moment apart
+    private static void waitFocused(WindowOperator windowOp, boolean focused) {
+        windowOp.<WindowOperator>waitState(op -> op.getSource().isFocused() == focused);
+    }
+
+    /**
+     * A copy of {@link #events}, taken under its lock: window listeners keep adding to it on the
+     * event dispatch thread while an assertion iterates it.
+     */
+    private List<String> recordedEvents() {
+        synchronized (events) {
+            return new ArrayList<>(events);
+        }
     }
 
     private static void awaitLatch(CountDownLatch latch) throws InterruptedException {
