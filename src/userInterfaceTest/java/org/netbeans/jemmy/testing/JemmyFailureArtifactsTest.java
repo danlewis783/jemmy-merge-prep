@@ -14,7 +14,6 @@ package org.netbeans.jemmy.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
-import static org.awaitility.Awaitility.await;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.netbeans.jemmy.testing.OnQueue.onQueue;
 
@@ -33,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -190,7 +188,6 @@ class JemmyFailureArtifactsTest {
         assertThat(failure)
                 .isInstanceOf(ConditionTimeoutException.class)
                 .hasMessageContaining("profile ready after loading")
-                .hasMessageContaining("5 seconds")
                 .hasMessageContaining(READY_TEXT)
                 .hasMessageContaining(LOADING_TEXT)
                 .hasCauseInstanceOf(AssertionError.class);
@@ -213,13 +210,54 @@ class JemmyFailureArtifactsTest {
                 .contains("JemmyFailureArtifactsTest.AwaitilityBrokenProfileFixture.waitsForReadyProfile()")
                 .contains("org.awaitility.core.ConditionTimeoutException", "profile ready after loading")
                 .contains(READY_TEXT, LOADING_TEXT)
+                // JemmyAwait attaches the wait target, so the report names the label under test.
+                .contains("### Wait condition", "Target:\n  profile ready after loading")
+                .contains("Timeout:\n  2 s (Waiter_AssertionWaitingTime)")
                 .contains("title=\"" + PROFILE_TITLE + "\"")
-                // Awaitility supplies no Jemmy wait target; the hierarchy may omit the label.
-                // Its actual and expected text are verified above in the assertion message.
-                .contains("BrokenProfilePanel")
+                .contains("BrokenProfilePanel", "text=\"" + LOADING_TEXT + "\"")
                 .contains("### Secondary EDT exception\n", "java.lang.NullPointerException")
                 .contains("BrokenProfilePanel.finishLoading(JemmyFailureArtifactsTest.java:")
                 .contains("Thread: AWT-EventQueue-", "Capture: uncaught EDT exception handler")
+                .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
+        assertThat(ImageIO.read(screenshot.toFile())).isNotNull();
+        assertArchiveHolds(archive, screenshot, report);
+        publishArtifacts(reporter, report, screenshot, archive);
+    }
+
+    @Test
+    void capturesAnUncaughtEdtFailureWhileWaitAssertedWaits(
+            @TempDir Path outputDirectory, TestReporter reporter) throws Exception {
+        Thread.UncaughtExceptionHandler originalHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Throwable failure = executeFailingFixture(WaitAssertedBrokenProfileFixture.class, outputDirectory);
+
+        assertThat(Thread.getDefaultUncaughtExceptionHandler()).isSameAs(originalHandler);
+        assertThat(failure)
+                .isInstanceOf(TimeoutExpiredException.class)
+                .hasMessageContaining("assertions on JLabelOperator; last failure: [profile status]")
+                .hasMessageContaining(READY_TEXT)
+                .hasMessageContaining(LOADING_TEXT)
+                .hasCauseInstanceOf(AssertionError.class);
+        assertThat(JemmyDiagnostics.findCapturedEdtExceptions(failure)).singleElement()
+                .satisfies(captured -> {
+                    assertThat(captured.captureMechanism()).isEqualTo("uncaught EDT exception handler");
+                    assertThat(captured.threadName()).startsWith("AWT-EventQueue-");
+                    assertThat(captured.detail())
+                            .contains("java.lang.NullPointerException")
+                            .contains("BrokenProfilePanel.finishLoading(JemmyFailureArtifactsTest.java:");
+                });
+
+        Path report = findSingleFile(outputDirectory, "diagnostics-", ".md");
+        Path screenshot = findSingleFile(outputDirectory, "screenshot-", ".png");
+        Path archive = findSingleFile(outputDirectory, "attachments-", ".zip");
+        String markdown = new String(Files.readAllBytes(report), StandardCharsets.UTF_8);
+        assertThat(markdown)
+                .contains("JemmyFailureArtifactsTest.WaitAssertedBrokenProfileFixture.waitsForReadyProfile()")
+                .contains("org.netbeans.jemmy.TimeoutExpiredException", "### Wait condition")
+                .contains("Timeout:\n  500 ms (Waiter_AssertionWaitingTime)")
+                .contains("Caused by: org.opentest4j.AssertionFailedError: [profile status]")
+                .contains("title=\"" + PROFILE_TITLE + "\"")
+                .contains("BrokenProfilePanel", "text=\"" + LOADING_TEXT + "\"")
+                .contains("### Secondary EDT exception\n", "java.lang.NullPointerException")
                 .contains("[Failure screenshot](" + screenshot.getFileName() + ")");
         assertThat(ImageIO.read(screenshot.toFile())).isNotNull();
         assertArchiveHolds(archive, screenshot, report);
@@ -466,23 +504,53 @@ class JemmyFailureArtifactsTest {
             Thread.UncaughtExceptionHandler recorder = Thread.getDefaultUncaughtExceptionHandler();
             AtomicBoolean loadRequested = new AtomicBoolean();
 
-            await("profile ready after loading")
-                    .pollInSameThread()
-                    .dontCatchUncaughtExceptions()
-                    .pollDelay(Duration.ZERO)
-                    .pollInterval(Duration.ofMillis(50))
-                    .atMost(Duration.ofSeconds(5))
-                    .conditionEvaluationListener(condition -> {
-                        assertThat(Thread.getDefaultUncaughtExceptionHandler())
-                                .as("Jemmy's EDT recorder remains installed during Awaitility polling")
-                                .isSameAs(recorder);
-                        // Start once, after the first poll, so the real posted EDT callback
-                        // fails while Awaitility is active rather than before await() starts.
-                        if (loadRequested.compareAndSet(false, true)) {
-                            load.push();
-                        }
-                    })
-                    .untilAsserted(() -> assertThat(status.getText()).as("profile status").isEqualTo(READY_TEXT));
+            try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_AssertionWaitingTime, 2_000L)) {
+                JemmyAwait.await("profile ready after loading")
+                        .diagnosing(status.getSource())
+                        .with(conditions -> conditions.conditionEvaluationListener(condition -> {
+                            assertThat(Thread.getDefaultUncaughtExceptionHandler())
+                                    .as("Jemmy's EDT recorder remains installed during Awaitility polling")
+                                    .isSameAs(recorder);
+                            // Start once, after the first poll, so the real posted EDT callback
+                            // fails while Awaitility is active rather than before await() starts.
+                            if (loadRequested.compareAndSet(false, true)) {
+                                load.push();
+                            }
+                        }))
+                        .untilAsserted(() -> assertThat(status.getText()).as("profile status").isEqualTo(READY_TEXT));
+            }
+        }
+
+        @AfterEach
+        void disposeWindow() throws Exception {
+            TestWindows.disposeAll();
+        }
+    }
+
+    @ExtendWith({NestedExecutionOnly.class, JemmyFailureDiagnosticsExtension.class})
+    static class WaitAssertedBrokenProfileFixture {
+        @Test
+        void waitsForReadyProfile() throws Exception {
+            JFrame frame = onQueue(() -> {
+                JFrame window = new JFrame(PROFILE_TITLE);
+                window.add(new BrokenProfilePanel());
+                window.setSize(WINDOW_SIZE);
+                TestWindows.place(window);
+                window.setAlwaysOnTop(true);
+                window.setVisible(true);
+                window.toFront();
+                return window;
+            });
+            new Robot().waitForIdle();
+            JFrameOperator frameOperator = JFrameOperator.of(frame);
+            JLabelOperator status = JLabelOperator.waitFor(
+                    frameOperator, "Not loaded", StringComparators.strict());
+            JButtonOperator.waitFor(frameOperator, "Load profile", StringComparators.strict()).push();
+
+            try (TimeoutOverride wait = Timeouts.override(TimeoutKey.Waiter_AssertionWaitingTime, 500L);
+                    TimeoutOverride delta = Timeouts.override(TimeoutKey.Waiter_TimeDelta, 20L)) {
+                status.waitAsserted(() -> assertThat(status.getText()).as("profile status").isEqualTo(READY_TEXT));
+            }
         }
 
         @AfterEach

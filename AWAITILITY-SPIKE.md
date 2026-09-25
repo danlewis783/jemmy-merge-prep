@@ -1,5 +1,10 @@
 # Awaitility UI-test spike
 
+> **Follow-up:** the [Jemmy-native `waitAsserted` prototype](#follow-up-jemmy-native-waitasserted-prototype)
+> at the end of this file changes Jemmy to remove the workarounds described below.
+> `ButtonGridLookupTest` now uses `waitAsserted`, and the Awaitility fixture uses the
+> `JemmyAwait` helper. The sections before it record the spike as first run.
+
 `ButtonGridLookupTest.doit()` clicks all 20 buttons and checks the resulting status
 label and progress bar. Awaitility 4.3.0 is added only to `userInterfaceTest` through
 the version catalog. Production code and shared test fixtures gain no dependency.
@@ -115,3 +120,89 @@ establish whole-suite compatibility.
 
 References: [Awaitility usage](https://github.com/awaitility/awaitility/wiki/Usage)
 and [setup](https://github.com/awaitility/awaitility/wiki/Getting_started).
+
+## Follow-up: Jemmy-native `waitAsserted` prototype
+
+The spike found four points of friction. Each is now addressed in Jemmy, and Jemmy
+also gained its own assertion wait, so a test doesn't need Awaitility for this job.
+
+| Friction in the spike | Change |
+|---|---|
+| Assertions inside `onQueue` get wrapped in `JemmyException`, so Awaitility stops retrying, and each failed poll is recorded as an EDT failure | `QueueTool.assertOnQueue(Runnable)` rethrows an `AssertionError` unchanged and doesn't record it. Any other throwable is wrapped and recorded, as `runOnQueue` does |
+| Hard-coded 5 s budget that ignores `Timeouts.override` | New `TimeoutKey.Waiter_AssertionWaitingTime` (10 s default). The poll interval comes from `Waiter_TimeDelta` |
+| The report has no wait target and cuts the component tree down to the focused component, so the label under test is missing | New `JemmyDiagnostics.attachTo(failure, target, component, waitMillis, timeoutKey)` overload. The report's *Wait condition* section now shows a `Timeout:` line |
+| Seven lines of Awaitility settings at each call site | `Operator.waitAsserted(check)` and `AssertionRepeater`, or the `JemmyAwait` test helper for Awaitility |
+
+### `waitAsserted`
+
+```java
+byTextButtonOp.push();
+statusLabelOp.waitAsserted(() -> assertThat(new Object[] {
+            statusLabelOp.getText(), progressBarOp.getString(), progressBarOp.getValue()
+        })
+        .as("status text, progress text, progress value")
+        .containsExactly("Button \"" + buttonText + "\" has been pushed",
+                buttonText, buttonIndex + 1));
+```
+
+`AssertionRepeater` is built on `Repeater`, the loop behind every Jemmy wait, so it
+behaves like `waitState`:
+
+- It refuses to wait on the EDT.
+- It polls at once, then every `Waiter_TimeDelta`, until its `TimeoutKey` runs out.
+- Each poll runs the check once on the EDT through `assertOnQueue`, so the values it
+  reads come from the same moment. The check must be a pure, non-blocking read, as a
+  `waitState` predicate must.
+- An `AssertionError` means "not yet". Any other throwable ends the wait at once.
+- On timeout it throws `TimeoutExpiredException`. The exception's wait target ends with
+  the last assertion message, e.g. `assertions on JLabelOperator; last failure:
+  [profile status] expected: "Ready: Ada" but was: "Loading profile"`. Its cause is
+  that last `AssertionError`, and the usual Jemmy diagnostics are attached, including
+  the operator's component.
+
+`AssertionRepeater.on(check).describedAs(...).diagnosing(component).runUntilPassed()`
+covers checks that aren't tied to one operator.
+
+### `JemmyAwait` (Awaitility with items 1-3)
+
+`src/userInterfaceTest/.../JemmyAwait.java` bundles the spike's settings: it polls on
+the test thread and leaves the uncaught-exception handler alone. It adds three things:
+
+- the budget and poll interval come from `TimeoutKey`s;
+- the check runs through `assertOnQueue`;
+- on `ConditionTimeoutException`, it calls the new `attachTo` overload before teardown.
+
+```java
+JemmyAwait.await("profile ready after loading")
+        .diagnosing(statusOp.getSource())
+        .untilAsserted(() -> assertThat(statusOp.getText()).isEqualTo("Ready: Ada"));
+```
+
+The Awaitility failure-artifact test now finds the label under test in the report,
+together with its `Loading profile` text and the budget
+(`Timeout: 2 s (Waiter_AssertionWaitingTime)`). The spike's version could only check
+for `BrokenProfilePanel`.
+
+### Tests
+
+- `AssertionRepeaterTest` (unit) covers:
+  - polling on the EDT until the check passes;
+  - a timeout carrying the last assertion as its cause, with diagnostics and the key;
+  - fast failure on any other exception;
+  - refusal to wait on the EDT;
+  - failed polls not being recorded as EDT failures (the test fails if that
+    `Caller` change is reverted);
+  - `Operator.waitAsserted`;
+  - the report's `Timeout:` line for the new `attachTo`.
+- `QueueToolExceptionWrappingTest` covers `assertOnQueue` on and off the EDT.
+- `JemmyFailureArtifactsTest.capturesAnUncaughtEdtFailureWhileWaitAssertedWaits`
+  mirrors the Awaitility artifact test for `waitAsserted`.
+
+### Assessment
+
+`waitAsserted` keeps Jemmy's timeout policy, thread rules and diagnostics, with no new
+dependency. For assertion-style waits it replaces what Awaitility offered in the
+spike. Awaitility remains an option through `JemmyAwait`, but it adds nothing Jemmy
+now lacks, apart from its own settings (for example condition evaluation listeners).
+If `waitAsserted` is adopted, the Awaitility dependency, `JemmyAwait` and the Awaitility
+artifact test can be dropped.
