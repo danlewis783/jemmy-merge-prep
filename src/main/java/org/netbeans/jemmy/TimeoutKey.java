@@ -65,6 +65,9 @@ public enum TimeoutKey {
     FrameWaiter_WaitFrameTimeout(60_000L),
     Waiter_TimeDelta(50L),
     Waiter_WaitingTime(60_000L),
+    // for AssertionRepeater and Operator.waitAsserted: a test's assertions on UI feedback that
+    // should arrive promptly, so a failing check reports in seconds rather than a minute
+    Waiter_AssertionWaitingTime(10_000L),
     WindowWaiter_WaitWindowTimeout(60_000L),
     Apple_SystemMenuDelay(100L),
     JScrollBar_Jump(0L),

@@ -109,6 +109,13 @@ public final class JemmyDiagnosticReport {
             if (failedWait.target() != null) {
                 wait.append("Target:\n  ").append(failedWait.target()).append('\n');
             }
+            if (failedWait.durationMillis() != null) {
+                wait.append("Timeout:\n  ").append(DiagnosticCapture.formatDuration(failedWait.durationMillis()));
+                if (failedWait.timeoutKey() != null) {
+                    wait.append(" (").append(failedWait.timeoutKey()).append(')');
+                }
+                wait.append('\n');
+            }
             if (failedWait.component() != null) {
                 wait.append("Component:\n  ").append(failedWait.component().describe()).append('\n');
                 wait.append("Containing window:\n  ")

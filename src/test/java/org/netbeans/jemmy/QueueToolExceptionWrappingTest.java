@@ -144,4 +144,38 @@ class QueueToolExceptionWrappingTest {
                 }))
                 .isSameAs(preWrapped));
     }
+
+    @Test
+    void assertOnQueuePropagatesAssertionErrorUnwrapped() {
+        AssertionError original = new AssertionError("expected ready");
+
+        assertThatExceptionOfType(AssertionError.class)
+                .isThrownBy(() -> queueTool.assertOnQueue(() -> {
+                    throw original;
+                }))
+                .isSameAs(original);
+    }
+
+    @Test
+    void assertOnQueuePropagatesAssertionErrorUnwrappedOnTheDispatchThread() throws Exception {
+        AssertionError original = new AssertionError("expected ready");
+
+        EventQueue.invokeAndWait(() -> assertThatExceptionOfType(AssertionError.class)
+                .isThrownBy(() -> queueTool.assertOnQueue(() -> {
+                    throw original;
+                }))
+                .isSameAs(original));
+    }
+
+    @Test
+    void assertOnQueueWrapsOtherThrowablesOnce() {
+        IllegalStateException original = new IllegalStateException("check failed to read");
+
+        assertThatExceptionOfType(JemmyException.class)
+                .isThrownBy(() -> queueTool.assertOnQueue(() -> {
+                    throw original;
+                }))
+                .withMessage("Throwable captured by caller")
+                .satisfies(e -> assertThat(e.getCause()).isSameAs(original));
+    }
 }

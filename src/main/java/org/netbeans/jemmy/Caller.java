@@ -46,6 +46,7 @@ final class Caller<R> implements Runnable {
 
     private final Callable<R> callable;
     private final String captureMechanism;
+    private final boolean assertion;
     private final CountDownLatch endGate;
     private final Thread invokingThread;
     private final JemmyDiagnostics.@Nullable Recording recording;
@@ -55,9 +56,10 @@ final class Caller<R> implements Runnable {
     private final CountDownLatch startGate;
     private final AtomicReference<State> state;
 
-    private Caller(Callable<R> callable, String captureMechanism) {
+    private Caller(Callable<R> callable, String captureMechanism, boolean assertion) {
         this.callable = callable;
         this.captureMechanism = captureMechanism;
+        this.assertion = assertion;
         invokingThread = Thread.currentThread();
         recording = JemmyDiagnostics.currentRecording();
         invocationFailure = recording == null ? null : new Throwable(captureMechanism + " invocation handoff");
@@ -104,7 +106,10 @@ final class Caller<R> implements Runnable {
             if (!throwable.compareAndSet(null, t)) {
                 throw new IllegalStateException("throwable already captured");
             }
-            recordCaughtEdtFailure(t);
+            // A failed check is the caller's result to report or retry, not a UI fault.
+            if (!(assertion && t instanceof AssertionError)) {
+                recordCaughtEdtFailure(t);
+            }
         } finally {
             JemmyDiagnostics.useRecording(previous);
             endGate.countDown();
@@ -150,11 +155,27 @@ final class Caller<R> implements Runnable {
         return throwable.get();
     }
 
+    /** True when an {@link AssertionError} from the work is the caller's to rethrow as-is. */
+    boolean isAssertion() {
+        return assertion;
+    }
+
     static <RR> Caller<RR> of(Callable<RR> callable) {
-        return new Caller<>(callable, "QueueTool");
+        return new Caller<>(callable, "QueueTool", false);
     }
 
     static <RR> Caller<RR> of(Callable<RR> callable, String captureMechanism) {
-        return new Caller<>(callable, captureMechanism);
+        return new Caller<>(callable, captureMechanism, false);
+    }
+
+    /**
+     * Adapts a check whose {@link AssertionError} is not recorded as an EDT failure; see
+     * {@link QueueTool#assertOnQueue(Runnable)}.
+     */
+    static Caller<Void> assertion(Runnable check, String captureMechanism) {
+        return new Caller<>(() -> {
+            check.run();
+            return null;
+        }, captureMechanism, true);
     }
 }
