@@ -203,7 +203,6 @@ class WindowOperatorTest {
             frameOp.activate();
             awaitLatch(windowListener1.activatedLatch);
             assertThat(recordedEvents()).contains("activated");
-            // the listener also hears the driver's synthetic event; the real activation follows
             waitFocused(frameOp, true);
             other = createOtherFrame();
             FrameOperator otherOp = FrameOperator.of(other);
